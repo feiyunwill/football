@@ -46,6 +46,8 @@ class Ball {
 
     void Mirror();
     boost::intrusive_ptr<Geometry> GetBallGeom() { DO_VALIDATION; return ball; }
+    // 2025-03-17 ECS 迁移：供 Match 注册 SceneNodeRef 与同步 Transform
+    boost::intrusive_ptr<Node> GetBallNode() { DO_VALIDATION; return ballNode; }
 
     inline Vector3 Predict(int predictTime_ms) const {
       int index = predictTime_ms;
@@ -72,6 +74,12 @@ class Ball {
 
     void ResetSituation(const Vector3 &focusPos);
     void ProcessState(EnvState *state);
+
+    /// 2025-03-17 ECS 迁移：将当前球状态写入 ECS 组件，供 RegisterEcsEntities/同步使用
+    struct BallComponent;
+    void FillBallComponent(BallComponent& out) const;
+    void ApplyBallComponent(const BallComponent& in);
+
   private:
     boost::intrusive_ptr<Node> ballNode;
     boost::intrusive_ptr<Geometry> ball;

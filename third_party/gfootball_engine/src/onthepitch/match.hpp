@@ -39,6 +39,11 @@
 #include "../types/messagequeue.hpp"
 #include "../types/command.hpp"
 
+#include "../ecs/world.hpp"
+#include "../ecs/entity.hpp"
+#include "../ecs/transform.hpp"
+#include "ecs_components.hpp"
+
 #include <boost/circular_buffer.hpp>
 
 #include <fstream>
@@ -155,6 +160,11 @@ class Match {
     int SecondTeam() { DO_VALIDATION; return second_team; }
     bool isBallMirrored() { DO_VALIDATION; return ball_mirrored; }
 
+    /// 2025-03-17 ECS 迁移：供 BallSystem 等访问
+    blunted::World& GetEcsWorld() { return ecs_world_; }
+    blunted::Entity GetEcsBallEntity() const { return ecs_ball_entity_; }
+    const std::vector<blunted::Entity>& GetEcsPlayerEntities() const { return ecs_player_entities_; }
+
   private:
     bool CheckForGoal(signed int side, const Vector3& previousBallPos);
 
@@ -165,6 +175,16 @@ class Match {
 
     void PrepareGoalNetting();
     void UpdateGoalNetting(bool ballTouchesNet = false);
+
+    /// 2025-03-17 ECS 迁移：注册比赛实体与组件，供 System 与 ProcessState 使用
+    void RegisterEcsEntities();
+    /// set_state 反序列化后从 OOP 同步到 ECS，保证 World 与 Ball/Player 一致
+    void SyncEcsFromOop();
+
+    blunted::World ecs_world_;
+    blunted::Entity ecs_ball_entity_ = blunted::kNullEntity;
+    std::vector<blunted::Entity> ecs_player_entities_;
+    blunted::Entity ecs_referee_entity_ = blunted::kNullEntity;
 
     MatchData *matchData;
     Team *teams[2];

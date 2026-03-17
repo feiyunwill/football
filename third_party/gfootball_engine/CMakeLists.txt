@@ -31,9 +31,10 @@ endif()
 project(gameplayfootball)
 set(PACKAGE gameplayfootball)
 
-# 2025-03-17 升级 C++ 标准以支持 C++23/20 现代化改造；若编译器不支持 C++23 可改为 20
+# 全工程现代化：统一 C++ 标准为 C++20，兼顾兼容性与现代特性；如需 C++23 可改为 23
+# 参见 doc/compile_engine.md 与 CXX_STANDARD.md
 # set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -104,30 +105,18 @@ else()
   set(Py_TARGETS ${Python_LIBRARIES})
 endif()
 
-# Include Boost Python.
-if(WIN32 OR APPLE)
-  set(BOOST_PYTHON_VERSION python${Python_VERSION_MAJOR}${Python_VERSION_MINOR})
-else()
-  # Unfortunately different linux distributions are using different naming for boost-python
-  # list of prefixes: newer Ubuntu and other distributions, older Ubuntu, Debian
-  set(BOOST_PYTHON_PREFIXES python python3-py python-py)
-  foreach(BP_PREFIX ${BOOST_PYTHON_PREFIXES})
-    set(BOOST_PYTHON_NAME ${BP_PREFIX}${Python_VERSION_MAJOR}${Python_VERSION_MINOR})
-    string(TOUPPER ${BOOST_PYTHON_NAME} BOOST_PYTHON_NAME_UPPER)
-    FIND_PACKAGE(Boost COMPONENTS ${BOOST_PYTHON_NAME})
-    if(Boost_${BOOST_PYTHON_NAME_UPPER}_FOUND)
-      set(BOOST_PYTHON_VERSION ${BOOST_PYTHON_NAME})
-      break()
-    endif()
-    message("${BOOST_PYTHON_NAME} not found. Trying other names.")
-  endforeach()
-  if(NOT DEFINED BOOST_PYTHON_VERSION)
-    message(FATAL_ERROR "Boost Python not found")
-  endif()
-endif()
-message("Using Boost.Python: ${BOOST_PYTHON_VERSION}")
+# pybind11 (replaces Boost.Python)
+include(FetchContent)
+FetchContent_Declare(
+  pybind11
+  GIT_REPOSITORY https://github.com/pybind/pybind11.git
+  GIT_TAG        v2.11.1
+)
+set(PYBIND11_FINDPYTHON ON)
+FetchContent_MakeAvailable(pybind11)
+message("Using pybind11 for Python bindings")
 
-FIND_PACKAGE(Boost REQUIRED COMPONENTS thread system filesystem ${BOOST_PYTHON_VERSION})
+FIND_PACKAGE(Boost REQUIRED COMPONENTS thread system filesystem)
 include_directories(${Boost_INCLUDE_DIRS})
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
@@ -170,8 +159,8 @@ elseif(WIN32)
 endif()
 
 set(LIBRARIES gamelib menulib datalib blunted2
-   Boost::filesystem Boost::system Boost::thread Boost::${BOOST_PYTHON_VERSION}
-   ${Py_TARGETS} ${SDL2_LIBS_ALL} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES})
+   Boost::filesystem Boost::system Boost::thread
+   pybind11::module ${Py_TARGETS} ${SDL2_LIBS_ALL} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES})
 
 add_library(${OUTPUT_LIB_NAME} SHARED ${CORE_SOURCES} ${CORE_HEADERS} ${AI_HEADERS} ${AI_SOURCES})
 target_link_libraries(${OUTPUT_LIB_NAME} ${LIBRARIES})

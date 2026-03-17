@@ -36,7 +36,7 @@ enum class MessageType : uint8_t {
 // Frame IDs start at 0 after SessionStart; increment by 1 per env step.
 // Timeout: server waits for all clients' FrameInput for frame N up to FRAME_INPUT_TIMEOUT_MS.
 // Default input: if a client does not send in time, use SlotInput::Default() (zero direction, no buttons).
-
+// 常量与 gfootball/frame_sync/schema/constants.yaml 保持一致（单一来源）；修改 YAML 后请同步此处。
 constexpr int FRAME_INPUT_TIMEOUT_MS = 200;
 
 // ----- Prediction cap (tunable) -----

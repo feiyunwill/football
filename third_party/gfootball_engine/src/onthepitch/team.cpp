@@ -401,13 +401,14 @@ void Team::Process() {
     }
   }
 
-  for (unsigned int i = 0; i < players.size(); i++) {
-    DO_VALIDATION;
-    if (players[i]->IsActive()) {
-      DO_VALIDATION;
-      players[i]->Process();
-    }
-  }
+  // 2025-03-17 ECS 迁移：球员 Process 改由 Match::Process() 内 RunPlayerSystems() 统一执行
+  // for (unsigned int i = 0; i < players.size(); i++) {
+  //   DO_VALIDATION;
+  //   if (players[i]->IsActive()) {
+  //     DO_VALIDATION;
+  //     players[i]->Process();
+  //   }
+  // }
 
   if (match->IsInPlay()) {
     DO_VALIDATION;

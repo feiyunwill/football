@@ -16,6 +16,7 @@
 // i do not offer support, so don't ask. to be used for inspiration :)
 
 #include "ball.hpp"
+#include "ecs_components.hpp"
 
 #include <cmath>
 
@@ -623,4 +624,35 @@ void Ball::ProcessState(EnvState *state) {
   state->process(positionBuffer);
   state->process(orientationBuffer);
   state->process(ballTouchesNet);
+}
+
+// 2025-03-17 ECS 迁移：Ball <-> BallComponent 同步
+void Ball::FillBallComponent(BallComponent& out) const {
+  DO_VALIDATION;
+  out.momentum = momentum;
+  out.rotation_ms = rotation_ms;
+  for (unsigned int x = 0; x < sizeof(predictions) / sizeof(predictions[0]); x++) {
+    out.predictions[x] = predictions[x];
+  }
+  out.valid_predictions = valid_predictions;
+  out.orientPrediction = orientPrediction;
+  out.ballPosHistory = ballPosHistory;
+  out.positionBuffer = positionBuffer;
+  out.orientationBuffer = orientationBuffer;
+  out.ballTouchesNet = ballTouchesNet;
+}
+
+void Ball::ApplyBallComponent(const BallComponent& in) {
+  DO_VALIDATION;
+  momentum = in.momentum;
+  rotation_ms = in.rotation_ms;
+  for (unsigned int x = 0; x < sizeof(predictions) / sizeof(predictions[0]); x++) {
+    predictions[x] = in.predictions[x];
+  }
+  valid_predictions = in.valid_predictions;
+  orientPrediction = in.orientPrediction;
+  ballPosHistory = in.ballPosHistory;
+  positionBuffer = in.positionBuffer;
+  orientationBuffer = in.orientationBuffer;
+  ballTouchesNet = in.ballTouchesNet;
 }

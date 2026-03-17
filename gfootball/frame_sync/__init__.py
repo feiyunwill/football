@@ -17,6 +17,8 @@ from gfootball.frame_sync.protocol import (
     pack_ready,
     FRAME_INPUT_TIMEOUT_MS,
 )
+from gfootball.frame_sync.server_async import FrameSyncServerAsync
+from gfootball.frame_sync.client_async import FrameSyncClientAsync
 
 __all__ = [
     'MessageType',
@@ -33,4 +35,6 @@ __all__ = [
     'unpack_session_start',
     'pack_ready',
     'FRAME_INPUT_TIMEOUT_MS',
+    'FrameSyncServerAsync',
+    'FrameSyncClientAsync',
 ]

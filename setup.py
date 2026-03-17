@@ -179,7 +179,7 @@ setup(
     license='Apache 2.0',
     packages=packages,
     package_dir={'gfootball_engine': 'third_party/gfootball_engine'},
-    # If you change the requirements here please don't forget to change the requirements.txt too
+    # 依赖与 requires-python 已迁至 pyproject.toml；此处保留以兼容旧 pip/setuptools，与 pyproject.toml 保持一致
     install_requires=[
         'pygame>=1.9.6',
         'opencv-python',

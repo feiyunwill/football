@@ -2,10 +2,11 @@
 # Run from here: cmake . && make
 # Or from engine root: cmake -S frame_sync_asio -B build_fs_asio && cmake --build build_fs_asio
 
+# 与主引擎统一：C++20（见 third_party/gfootball_engine/CMakeLists.txt）
 cmake_minimum_required(VERSION 3.10)
 project(frame_sync_asio CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 find_package(Boost REQUIRED COMPONENTS system)
 # Asio is header-only; Boost::system is needed on some platforms for linking.

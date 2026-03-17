@@ -16,6 +16,7 @@
 // i do not offer support, so don't ask. to be used for inspiration :)
 
 #include "match.hpp"
+#include "ecs_systems.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -262,6 +263,9 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
   lastBodyBallCollisionTime_ms = 0;
 
   menuTask->GetWindowManager()->GetPageFactory()->CreatePage((int)e_PageID_Game, 0);
+
+  // 2025-03-17 ECS 迁移：注册比赛实体与组件
+  RegisterEcsEntities();
 }
 
 Match::~Match() { DO_VALIDATION; }
@@ -286,6 +290,12 @@ void Match::Mirror(bool team_0, bool team_1, bool ball) {
 
 void Match::Exit() {
   DO_VALIDATION;
+  // 2025-03-17 ECS 迁移：先清理 ECS 再销毁 OOP 对象，避免悬空引用
+  ecs_world_.Clear();
+  ecs_ball_entity_ = blunted::kNullEntity;
+  ecs_player_entities_.clear();
+  ecs_referee_entity_ = blunted::kNullEntity;
+
   teams[first_team]->Exit();
   teams[second_team]->Exit();
   delete teams[first_team];
@@ -309,6 +319,52 @@ void Match::Exit() {
   delete scoreboard;
 
   menuTask.reset();
+}
+
+void Match::RegisterEcsEntities() {
+  DO_VALIDATION;
+  // 2025-03-17 ECS 迁移：创建球实体
+  ecs_ball_entity_ = ecs_world_.CreateEntity();
+  BallComponent ball_comp;
+  ball->FillBallComponent(ball_comp);
+  ecs_world_.AddComponent(ecs_ball_entity_, ball_comp);
+  Transform ball_tr;
+  ball_tr.position = ball_comp.positionBuffer;
+  ball_tr.rotation = ball_comp.orientationBuffer;
+  ball_tr.scale = Vector3(1.0f, 1.0f, 1.0f);
+  ecs_world_.AddComponent(ecs_ball_entity_, ball_tr);
+  SceneNodeRef ball_node_ref;
+  ball_node_ref.node = ball->GetBallNode();
+  ecs_world_.AddComponent(ecs_ball_entity_, ball_node_ref);
+
+  // 球员实体（两队所有球员）
+  ecs_player_entities_.clear();
+  std::vector<Player*> all_players;
+  teams[first_team]->GetAllPlayers(all_players);
+  teams[second_team]->GetAllPlayers(all_players);
+  for (Player* p : all_players) {
+    blunted::Entity e = ecs_world_.CreateEntity();
+    ecs_player_entities_.push_back(e);
+    PlayerMeta meta;
+    meta.stable_id = p->GetStableID();
+    meta.team_id = p->GetTeam()->GetID();
+    meta.is_active = p->IsActive();
+    meta.player_data = const_cast<PlayerData*>(p->GetPlayerData());
+    ecs_world_.AddComponent(e, meta);
+    ControllerRef cref;
+    cref.controller = p->GetController();
+    ecs_world_.AddComponent(e, cref);
+    PlayerRef pref;
+    pref.player = p;
+    ecs_world_.AddComponent(e, pref);
+    SceneNodeRef node_ref;
+    node_ref.node = p->GetHumanoidNode();
+    ecs_world_.AddComponent(e, node_ref);
+  }
+
+  // 裁判实体（仅标记，状态仍在 Referee 类）
+  ecs_referee_entity_ = ecs_world_.CreateEntity();
+  ecs_world_.AddComponent(ecs_referee_entity_, RefereeTag{});
 }
 
 void Match::SetRandomSunParams() {
@@ -754,6 +810,37 @@ void Match::ProcessState(EnvState* state) {
   resetNetting = true;
   nettingHasChanged = true;
   Mirror(team_0_mirror, team_1_mirror, ball_mirror);
+
+  // 2025-03-17 ECS 迁移：反序列化后从 OOP 同步到 ECS
+  if (state->Load()) SyncEcsFromOop();
+}
+
+void Match::SyncEcsFromOop() {
+  DO_VALIDATION;
+  if (ecs_ball_entity_ == blunted::kNullEntity) return;
+  BallComponent bc;
+  ball->FillBallComponent(bc);
+  ecs_world_.AddComponent(ecs_ball_entity_, bc);
+  Transform ball_tr;
+  ball_tr.position = bc.positionBuffer;
+  ball_tr.rotation = bc.orientationBuffer;
+  ball_tr.scale = Vector3(1.0f, 1.0f, 1.0f);
+  ecs_world_.AddComponent(ecs_ball_entity_, ball_tr);
+
+  std::vector<Player*> all_players;
+  teams[first_team]->GetAllPlayers(all_players);
+  teams[second_team]->GetAllPlayers(all_players);
+  if (all_players.size() != ecs_player_entities_.size()) return;
+  for (size_t i = 0; i < ecs_player_entities_.size(); ++i) {
+    Player* p = all_players[i];
+    blunted::Entity e = ecs_player_entities_[i];
+    PlayerMeta meta;
+    meta.stable_id = p->GetStableID();
+    meta.team_id = p->GetTeam()->GetID();
+    meta.is_active = p->IsActive();
+    meta.player_data = const_cast<PlayerData*>(p->GetPlayerData());
+    ecs_world_.AddComponent(e, meta);
+  }
 }
 
 void Match::GetTeamState(SharedInfo *state,
@@ -855,8 +942,8 @@ bool Match::Process() {
     CheckBallCollisions();
   }
 
-  // HIJ IS EEN HONDELUUUL
-  referee->Process();
+  // 2025-03-17 ECS 迁移：通过 RefereeSystem 执行裁判逻辑
+  RefereeSystemProcess(this);
   DO_VALIDATION;
   Vector3 previousBallPos = ball->Predict(0);
   Mirror(reverse, !reverse, reverse);
@@ -866,7 +953,8 @@ bool Match::Process() {
     return false;
   }
   Mirror(false, false, reverse);
-  ball->Process();
+  // 2025-03-17 ECS 迁移：通过 BallSystem 执行球逻辑并同步 ECS
+  BallSystemProcess(this);
   Mirror(false, false, reverse);
 
   // create mental images for the AI to use
@@ -888,6 +976,9 @@ bool Match::Process() {
   Mirror(true, true, true);
   teams[second_team]->Process();
   Mirror(first_team == 0, first_team == 1, first_team == 0);
+
+  // 2025-03-17 ECS 迁移：由 RunPlayerSystems 统一执行球员 controller/humanoid Process
+  RunPlayerSystems(this);
 
   Mirror(reverse, !reverse, reverse);
   officials->Process();

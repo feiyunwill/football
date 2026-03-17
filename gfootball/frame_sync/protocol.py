@@ -9,18 +9,18 @@ import hashlib
 import struct
 from collections import namedtuple
 
+from gfootball.frame_sync.config import (
+    FRAME_INPUT_TIMEOUT_MS,
+    MAX_FRAMES_WITHOUT_PACKET,
+    MAX_PREDICT_AHEAD_FRAMES,
+    STATE_HASH_INTERVAL_K,
+)
+
 # Match C++: 2 floats + uint16 = 10 bytes (no padding)
 SLOT_INPUT_FMT = '<ffH'
 SLOT_INPUT_BYTES = struct.calcsize(SLOT_INPUT_FMT)
 
-FRAME_INPUT_TIMEOUT_MS = 200
-
-# Prediction cap (tunable): max frames ahead of last confirmed; beyond this, wait for authority.
-MAX_PREDICT_AHEAD_FRAMES = 3
-# If no server packet for this many consecutive frames, stop predicting and wait for authority only.
-MAX_FRAMES_WITHOUT_PACKET = 5
-# State hash every K frames (server sends, client verifies).
-STATE_HASH_INTERVAL_K = 10
+# 常量由 config 集中定义，此处再导出以保持向后兼容
 
 SlotInput = namedtuple('SlotInput', ['dir_x', 'dir_y', 'buttons'])
 
