@@ -14,6 +14,7 @@
 #ifndef _GAME_ENV
 #define _GAME_ENV
 
+#include <cstddef>
 #include "onthepitch/match.hpp"
 #include "gamedefines.hpp"
 #include "gfootball_actions.h"
@@ -61,6 +62,8 @@ struct GameEnv {
   std::string set_state(const std::string& state);
   void tracker_setup(long start, long end) { GetTracker()->setup(start, end); }
   void step();
+  // Server headless: apply authoritative frame input and run one env step (no render).
+  void StepWithInput(const void* frame_input_buffer, size_t buffer_size);
   void ProcessState(EnvState* state);
   ScenarioConfig& config();
 

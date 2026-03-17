@@ -251,6 +251,15 @@ set(CLIENT_SOURCES
    src/game_env.hpp
 )
 
+set(FRAME_SYNC_HEADERS
+   src/frame_sync/protocol.hpp
+   src/frame_sync/input_codec.hpp
+)
+
+set(FRAME_SYNC_SOURCES
+   src/frame_sync/input_codec.cpp
+)
+
 set(CORE_HEADERS
    src/cmake/backtrace.h
    src/cmake/file.h
@@ -259,6 +268,7 @@ set(CORE_HEADERS
    src/main.hpp
    src/gametask.hpp
    src/misc/hungarian.h
+   ${FRAME_SYNC_HEADERS}
 )
 
 set(CORE_SOURCES
@@ -271,6 +281,7 @@ set(CORE_SOURCES
    src/main.cpp
    src/gamedefines.cpp
    src/defines.cpp
+   ${FRAME_SYNC_SOURCES}
 )
 
 set(GAME_HEADERS

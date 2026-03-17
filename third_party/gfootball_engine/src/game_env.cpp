@@ -25,6 +25,7 @@
 
 #include "ai/ai_keyboard.hpp"
 #include "file.h"
+#include "frame_sync/input_codec.hpp"
 #include "gametask.hpp"
 
 using std::string;
@@ -336,6 +337,27 @@ void GameEnv::step() {
       render();
     }
   }
+  if (context->gameTask->GetMatch()->IsInPlay()) {
+    DO_VALIDATION;
+    GetTracker()->setDisabled(true);
+    context->step++;
+    for (auto controller : GetControllers()) {
+      DO_VALIDATION;
+      controller->ResetNotSticky();
+    }
+    GetTracker()->setDisabled(false);
+  }
+}
+
+void GameEnv::StepWithInput(const void* frame_input_buffer, size_t buffer_size) {
+  DO_VALIDATION;
+  int left = scenario_config.left_agents;
+  int right = scenario_config.right_agents;
+  frame_sync::DecodeAndApplyFrameInput(
+      frame_input_buffer, buffer_size,
+      context->controllers, left, right);
+  int steps_to_do = GetGameConfig().physics_steps_per_frame;
+  do_step(steps_to_do);
   if (context->gameTask->GetMatch()->IsInPlay()) {
     DO_VALIDATION;
     GetTracker()->setDisabled(true);

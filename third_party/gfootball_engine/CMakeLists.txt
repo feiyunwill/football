@@ -179,3 +179,21 @@ target_link_libraries(${OUTPUT_LIB_NAME} ${LIBRARIES})
 if(WIN32)
   set_target_properties(${OUTPUT_LIB_NAME} PROPERTIES SUFFIX ".pyd")
 endif()
+
+# ----- Frame sync C++ server/client (Boost.Asio, no engine) -----
+add_executable(frame_sync_server src/frame_sync/asio_server.cpp)
+target_include_directories(frame_sync_server PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(frame_sync_server PRIVATE Boost::system)
+
+add_executable(frame_sync_client src/frame_sync/asio_client.cpp)
+target_include_directories(frame_sync_client PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(frame_sync_client PRIVATE Boost::system)
+
+# ----- Frame sync over reliable UDP -----
+add_executable(frame_sync_server_udp src/frame_sync/asio_server_udp.cpp)
+target_include_directories(frame_sync_server_udp PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(frame_sync_server_udp PRIVATE Boost::system)
+
+add_executable(frame_sync_client_udp src/frame_sync/asio_client_udp.cpp)
+target_include_directories(frame_sync_client_udp PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(frame_sync_client_udp PRIVATE Boost::system)

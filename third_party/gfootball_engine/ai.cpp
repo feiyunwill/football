@@ -58,6 +58,23 @@ class GameEnv_Python : public GameEnv {
     Py_BLOCK_THREADS;
   }
 
+  void step_with_input_python(bp::object buffer_obj) {
+    ContextHolder c(this);
+    PyThreadState* _save = NULL;
+    Py_UNBLOCK_THREADS;
+    PyObject* py_bytes = buffer_obj.ptr();
+    if (!PyBytes_Check(py_bytes)) {
+      Py_BLOCK_THREADS;
+      PyErr_SetString(PyExc_TypeError, "step_with_input expects bytes");
+      bp::throw_error_already_set();
+    }
+    char* buf = nullptr;
+    Py_ssize_t len = 0;
+    PyBytes_AsStringAndSize(py_bytes, &buf, &len);
+    StepWithInput(static_cast<const void*>(buf), static_cast<size_t>(len));
+    Py_BLOCK_THREADS;
+  }
+
   void render_python(bool swap_buffer) {
     ContextHolder c(this);
     PyThreadState* _save = NULL;
@@ -139,6 +156,7 @@ BOOST_PYTHON_MODULE(_gameplayfootball) {
       .def("perform_action", &GameEnv_Python::action)
       .def("sticky_action_state", &GameEnv_Python::sticky_action_state)
       .def("step", &GameEnv_Python::step_python)
+      .def("step_with_input", &GameEnv_Python::step_with_input_python)
       .def("get_state", &GameEnv_Python::get_state_python)
       .def("set_state", &GameEnv_Python::set_state_python)
       .def("reset", &GameEnv_Python::reset_python)
