@@ -18,6 +18,8 @@
 #ifndef _HPP_SPATIAL
 #define _HPP_SPATIAL
 
+#include <compare>
+
 #include "../defines.hpp"
 
 #include "../types/refcounted.hpp"
@@ -37,17 +39,26 @@ namespace blunted {
     e_LocalMode_Relative,
     e_LocalMode_Absolute
   };
+  constexpr std::strong_ordering operator<=>(e_LocalMode a, e_LocalMode b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_SpatialDataType {
     e_SpatialDataType_Position,
     e_SpatialDataType_Rotation,
     e_SpatialDataType_Both
   };
+  constexpr std::strong_ordering operator<=>(e_SpatialDataType a, e_SpatialDataType b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_Streaming_DataType {
     e_Streaming_DataType_File,
     e_Streaming_DataType_String
   };
+  constexpr std::strong_ordering operator<=>(e_Streaming_DataType a, e_Streaming_DataType b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   /// spatial object
   /** an object in a scene. responsibilities:
@@ -94,25 +105,20 @@ namespace blunted {
       virtual AABB GetAABB() const;
 
     protected:
-      std::string name;
-
-      Node *parent;
-
-      Vector3 position;
-      Quaternion rotation;
-      Vector3 scale;
-
-      // cache
-      mutable bool _dirty_DerivedPosition = false;
-      mutable bool _dirty_DerivedRotation = false;
-      mutable bool _dirty_DerivedScale = false;
-      mutable Vector3 _cache_DerivedPosition;
-      mutable Quaternion _cache_DerivedRotation;
-      mutable Vector3 _cache_DerivedScale;
-
-      e_LocalMode localMode;
-
-      mutable AABBCache aabb;
+      // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+      std::string name_;
+      Node *parent_ = nullptr;
+      Vector3 position_;
+      Quaternion rotation_;
+      Vector3 scale_;
+      mutable bool dirty_derived_position_ = false;
+      mutable bool dirty_derived_rotation_ = false;
+      mutable bool dirty_derived_scale_ = false;
+      mutable Vector3 cache_derived_position_;
+      mutable Quaternion cache_derived_rotation_;
+      mutable Vector3 cache_derived_scale_;
+      e_LocalMode local_mode_;
+      mutable AABBCache aabb_;
 
   };
 

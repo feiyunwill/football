@@ -41,35 +41,35 @@ void Image2D::Exit() {
   DO_VALIDATION;  // ATOMIC
   // printf("EXITING IMAGE\n");
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     IImage2DInterpreter *image2DInterpreter =
-        static_cast<IImage2DInterpreter *>(observers[i].get());
+        static_cast<IImage2DInterpreter *>(observers_[i].get());
     image2DInterpreter->OnUnload();
   }
 
   Object::Exit();
 
-  if (image) image.reset();
+  if (image_) image_.reset();
 }
 
 
 void Image2D::SetImage(boost::intrusive_ptr<Resource<Surface> > image) {
   DO_VALIDATION;
 
-  this->image = image;
+  image_ = image;
 
-  position[0] = 0;
-  position[1] = 0;
-  size[0] = image->GetResource()->GetData()->w;
-  size[1] = image->GetResource()->GetData()->h;
+  position_[0] = 0;
+  position_[1] = 0;
+  size_[0] = image->GetResource()->GetData()->w;
+  size_[1] = image->GetResource()->GetData()->h;
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     IImage2DInterpreter *image2DInterpreter =
-        static_cast<IImage2DInterpreter *>(observers[i].get());
+        static_cast<IImage2DInterpreter *>(observers_[i].get());
     image2DInterpreter->OnLoad(image);
   }
 }
@@ -77,20 +77,20 @@ void Image2D::SetImage(boost::intrusive_ptr<Resource<Surface> > image) {
 boost::intrusive_ptr<Resource<Surface> > Image2D::GetImage() {
   DO_VALIDATION;
 
-  return image;
+  return image_;
 }
 
 void Image2D::SetPosition(int x, int y) {
   DO_VALIDATION;
 
-  position[0] = x;
-  position[1] = y;
+  position_[0] = x;
+  position_[1] = y;
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     IImage2DInterpreter *image2DInterpreter =
-        static_cast<IImage2DInterpreter *>(observers[i].get());
+        static_cast<IImage2DInterpreter *>(observers_[i].get());
     image2DInterpreter->OnMove(x, y);
   }
 }
@@ -102,13 +102,13 @@ void Image2D::SetPosition(const Vector3 &newPosition, bool updateSpatialData) {
 }
 
   Vector3 Image2D::GetPosition() const {
-    Vector3 tmp(position[0], position[1], 0);
+    Vector3 tmp(position_[0], position_[1], 0);
 
     return tmp;
   }
 
   Vector3 Image2D::GetSize() const {
-    Vector3 tmp(size[0], size[1], 0);
+    Vector3 tmp(size_[0], size_[1], 0);
 
     return tmp;
   }
@@ -116,7 +116,7 @@ void Image2D::SetPosition(const Vector3 &newPosition, bool updateSpatialData) {
   void Image2D::DrawRectangle(int x, int y, int w, int h, const Vector3 &color,
                               int alpha) {
     DO_VALIDATION;
-    SDL_Surface *surface = image->GetResource()->GetData();
+    SDL_Surface *surface = image_->GetResource()->GetData();
     //SDL_LockSurface(surface);
 
     Uint32 color32;
@@ -134,18 +134,18 @@ void Image2D::SetPosition(const Vector3 &newPosition, bool updateSpatialData) {
 
   void Image2D::Resize(int w, int h) {
     DO_VALIDATION;
-    image->GetResource()->Resize(w, h);
-    size[0] = w;
-    size[1] = h;
+    image_->GetResource()->Resize(w, h);
+    size_[0] = w;
+    size_[1] = h;
   }
 
   void Image2D::Poke(e_SystemType targetSystemType) {
     DO_VALIDATION;
 
-    int observersSize = observers.size();
+    int observersSize = observers_.size();
     for (int i = 0; i < observersSize; i++) {
       DO_VALIDATION;
-      IImage2DInterpreter *image2DInterpreter = static_cast<IImage2DInterpreter*>(observers[i].get());
+      IImage2DInterpreter *image2DInterpreter = static_cast<IImage2DInterpreter*>(observers_[i].get());
       if (image2DInterpreter->GetSystemType() == targetSystemType) image2DInterpreter->OnPoke();
     }
   }
@@ -154,11 +154,11 @@ void Image2D::SetPosition(const Vector3 &newPosition, bool updateSpatialData) {
 
   void Image2D::OnChange() {
     DO_VALIDATION;
-    int observersSize = observers.size();
+    int observersSize = observers_.size();
     for (int i = 0; i < observersSize; i++) {
       DO_VALIDATION;
-      IImage2DInterpreter *image2DInterpreter = static_cast<IImage2DInterpreter*>(observers[i].get());
-      image2DInterpreter->OnChange(image);
+      IImage2DInterpreter *image2DInterpreter = static_cast<IImage2DInterpreter*>(observers_[i].get());
+      image2DInterpreter->OnChange(image_);
     }
   }
 }

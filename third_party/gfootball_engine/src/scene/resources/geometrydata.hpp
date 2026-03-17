@@ -51,6 +51,8 @@ namespace blunted {
       GeometryData();
       virtual ~GeometryData();
       GeometryData(const GeometryData &src);
+      GeometryData(GeometryData &&src) noexcept;
+      GeometryData &operator=(GeometryData &&src) noexcept;
 
 
       void AddTriangleMesh(Material material, float *vertices,
@@ -58,16 +60,15 @@ namespace blunted {
                            std::vector<unsigned int> indices);
       std::vector < MaterializedTriangleMesh > GetTriangleMeshes();
       std::vector < MaterializedTriangleMesh > &GetTriangleMeshesRef();
-      void SetDynamic(bool dynamic) { DO_VALIDATION; isDynamic = dynamic; }
-      bool IsDynamic() { DO_VALIDATION; return isDynamic; }
+      void SetDynamic(bool dynamic) { DO_VALIDATION; is_dynamic_ = dynamic; }
+      bool IsDynamic() { DO_VALIDATION; return is_dynamic_; }
 
       AABB GetAABB() const;
 
     protected:
-      bool isDynamic = false;
-      std::vector < MaterializedTriangleMesh > triangleMeshes;
-
-      mutable AABBCache aabb;
+      bool is_dynamic_ = false;
+      std::vector < MaterializedTriangleMesh > triangle_meshes_;
+      mutable AABBCache aabb_;
 
   };
 

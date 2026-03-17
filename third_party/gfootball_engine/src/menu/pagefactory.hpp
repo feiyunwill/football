@@ -18,6 +18,8 @@
 #ifndef _HPP_PAGEFACTORY
 #define _HPP_PAGEFACTORY
 
+#include <compare>
+
 #include "../utils/gui2/page.hpp"
 
 using namespace blunted;
@@ -26,6 +28,9 @@ enum e_PageID {
   e_PageID_Game,
   e_PageID_LoadingMatch,
 };
+constexpr std::strong_ordering operator<=>(e_PageID a, e_PageID b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 class PageFactory : public Gui2PageFactory {
 

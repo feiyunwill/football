@@ -28,18 +28,18 @@
 
 namespace blunted {
 
-GraphicsTask::GraphicsTask(GraphicsSystem *system) : graphicsSystem(system) {
+GraphicsTask::GraphicsTask(GraphicsSystem *system) : graphics_system_(system) {
   DO_VALIDATION;
 }
 
 GraphicsTask::~GraphicsTask() {
   DO_VALIDATION;
-  graphicsSystem = NULL;
+  graphics_system_ = nullptr;
 }
 
 void GraphicsTask::Render(bool swap_buffer) {
   DO_VALIDATION;
-  Renderer3D *renderer3D = graphicsSystem->GetRenderer3D();
+  Renderer3D *renderer3D = graphics_system_->GetRenderer3D();
 
   // poke all image2D objects
   if (GetContext().scene2D) {
@@ -65,7 +65,7 @@ void GraphicsTask::Render(bool swap_buffer) {
   // poke camera
   GetContext().scene3D->PokeObjects(e_ObjectType_Camera, e_SystemType_Graphics);
   // render the Overlay2D queue
-  auto &overlay2DQueue = graphicsSystem->GetOverlay2DQueue();
+  auto &overlay2DQueue = graphics_system_->GetOverlay2DQueue();
   bool isMessage = true;
   std::vector<Overlay2DQueueEntry> queue;
   while (isMessage) {

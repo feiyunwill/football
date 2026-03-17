@@ -1,0 +1,11 @@
+---
+description: gfootball_engine C++ 标准与改造范围（C++23 优先，C++20 备选）
+globs: third_party/gfootball_engine/**/*.cpp,third_party/gfootball_engine/**/*.hpp,third_party/gfootball_engine/**/*.h
+alwaysApply: false
+---
+
+# C++ 标准与引擎范围
+
+- **适用范围**：仅 `third_party/gfootball_engine` 内 C++ 源码（.cpp / .hpp / .h）。不约束仓库内其他目录。
+- **目标标准**：**C++23 优先**；若当前编译器不支持 C++23，则使用 **C++20**。在 CMake 中通过 `set(CMAKE_CXX_STANDARD 23)`（或 20）体现。
+- **修改习惯**：改动引擎代码时，注释掉原代码并注明**日期**与**原因**，再写入新代码；不做占位实现。

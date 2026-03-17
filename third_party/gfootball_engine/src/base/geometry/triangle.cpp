@@ -144,12 +144,12 @@ Triangle::Triangle() { DO_VALIDATION; }
 Triangle::Triangle(const Triangle &triangle) {
   DO_VALIDATION;
 
-  memcpy(vertices, triangle.vertices, sizeof(triangle.vertices));
-  memcpy(textureVertices, triangle.textureVertices,
-         sizeof(triangle.textureVertices));
-  memcpy(normals, triangle.normals, sizeof(triangle.normals));
-  memcpy(tangents, triangle.tangents, sizeof(triangle.tangents));
-  memcpy(biTangents, triangle.biTangents, sizeof(triangle.biTangents));
+  memcpy(vertices_, triangle.vertices_, sizeof(triangle.vertices_));
+  memcpy(texture_vertices_, triangle.texture_vertices_,
+         sizeof(triangle.texture_vertices_));
+  memcpy(normals_, triangle.normals_, sizeof(triangle.normals_));
+  memcpy(tangents_, triangle.tangents_, sizeof(triangle.tangents_));
+  memcpy(bi_tangents_, triangle.bi_tangents_, sizeof(triangle.bi_tangents_));
 }
 
 Triangle::Triangle(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3) {
@@ -161,19 +161,19 @@ Triangle::Triangle(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3) {
     DO_VALIDATION;
     for (int tu = 0; tu < 8; tu++) {
       DO_VALIDATION;
-      textureVertices[v][tu].Set(0, 0, 0);
+      texture_vertices_[v][tu].Set(0, 0, 0);
     }
-    normals[v].Set(0, 0, 0);
-    tangents[v].Set(0, 0, 0);
-    biTangents[v].Set(0, 0, 0);
+    normals_[v].Set(0, 0, 0);
+    tangents_[v].Set(0, 0, 0);
+    bi_tangents_[v].Set(0, 0, 0);
   }
 }
 
 Triangle::~Triangle() { DO_VALIDATION; }
 bool Triangle::operator==(const Triangle &triangle) const {
-  if (vertices[0] == triangle.GetVertex(0) &&
-      vertices[1] == triangle.GetVertex(1) &&
-      vertices[2] == triangle.GetVertex(2)) {
+  if (vertices_[0] == triangle.GetVertex(0) &&
+      vertices_[1] == triangle.GetVertex(1) &&
+      vertices_[2] == triangle.GetVertex(2)) {
     DO_VALIDATION;
     return true;
   }
@@ -186,13 +186,13 @@ bool Triangle::operator==(const Triangle &triangle) const {
     real       r, a, b;             // params to calc ray-plane intersect
 
     // get triangle edge vectors and plane normal
-    u = vertices[1] - vertices[0];
-    v = vertices[2] - vertices[0];
+    u = vertices_[1] - vertices_[0];
+    v = vertices_[2] - vertices_[0];
 
     dir = u_ray.GetVertex(1) - u_ray.GetVertex(0);             // ray direction vector
-    w0 = u_ray.GetVertex(0) - vertices[0];
-    a = -normals[0].GetDotProduct(w0);
-    b = normals[0].GetDotProduct(dir);
+    w0 = u_ray.GetVertex(0) - vertices_[0];
+    a = -normals_[0].GetDotProduct(w0);
+    b = normals_[0].GetDotProduct(dir);
     if (fabs(b) < 0.000001f) {
       // ray is parallel to triangle plane
       if (a == 0)                // ray lies in triangle plane
@@ -215,7 +215,7 @@ bool Triangle::operator==(const Triangle &triangle) const {
     uu = u.GetDotProduct(u);
     uv = u.GetDotProduct(v);
     vv = v.GetDotProduct(v);
-    w = intersectVec - vertices[0];
+    w = intersectVec - vertices_[0];
     wu = w.GetDotProduct(u);
     wv = w.GetDotProduct(v);
     D = uv * uv - uu * vv;
@@ -239,8 +239,8 @@ bool Triangle::operator==(const Triangle &triangle) const {
 
     // http://www.3dkingdoms.com/weekly/weekly.php?a=37
 
-    Vector3 edge1 = vertices[1] - vertices[0];
-    Vector3 edge2 = vertices[2] - vertices[0];
+    Vector3 edge1 = vertices_[1] - vertices_[0];
+    Vector3 edge2 = vertices_[2] - vertices_[0];
     Vector3 edge1uv = GetTextureVertex(1) - GetTextureVertex(0);
     Vector3 edge2uv = GetTextureVertex(2) - GetTextureVertex(0);
 
@@ -251,10 +251,10 @@ bool Triangle::operator==(const Triangle &triangle) const {
       float mul = 1.0f / cp;
       for (int v = 0; v < 3; v++) {
         DO_VALIDATION;
-        tangents[v]   = (edge1 * -edge2uv.coords[1] + edge2 * edge1uv.coords[1]) * mul;
-        biTangents[v] = (edge1 * -edge2uv.coords[0] + edge2 * edge1uv.coords[0]) * mul;
-        tangents[v].Normalize();
-        biTangents[v].Normalize();
+        tangents_[v]   = (edge1 * -edge2uv.coords[1] + edge2 * edge1uv.coords[1]) * mul;
+        bi_tangents_[v] = (edge1 * -edge2uv.coords[0] + edge2 * edge1uv.coords[0]) * mul;
+        tangents_[v].Normalize();
+        bi_tangents_[v].Normalize();
 
         // handedness check:
         // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-13-normal-mapping/#Handedness
@@ -267,21 +267,21 @@ bool Triangle::operator==(const Triangle &triangle) const {
         //  b) < 0.0f) { DO_VALIDATION;
         //    t = t * -1.0f;
         //  }"
-        Vector3 crossProduct = normals[v].GetCrossProduct(tangents[v]);
-        float dotProduct = crossProduct.GetDotProduct(biTangents[v]);
+        Vector3 crossProduct = normals_[v].GetCrossProduct(tangents_[v]);
+        float dotProduct = crossProduct.GetDotProduct(bi_tangents_[v]);
         //printf("dot: %f\n", dotProduct);
         // check for > 0 and change bitangents, since we want a left handed TBN (todo: is that so?)
         if (dotProduct > 0.0f) {
           DO_VALIDATION;
-          biTangents[v] = -biTangents[v];
+          bi_tangents_[v] = -bi_tangents_[v];
         }
       }
     } else {
       for (int v = 0; v < 3; v++) {
         DO_VALIDATION;
         // no texture coords; make something up
-        tangents[v].Set(1, 0, 0);
-        biTangents[v].Set(0, 1, 0);
+        tangents_[v].Set(1, 0, 0);
+        bi_tangents_[v].Set(0, 1, 0);
       }
     }
   }

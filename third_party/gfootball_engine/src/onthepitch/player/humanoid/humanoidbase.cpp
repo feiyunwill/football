@@ -118,14 +118,14 @@ HumanoidBase::HumanoidBase(PlayerBase *player, Match *match,
   std::vector < MaterializedTriangleMesh > &tmesh = bodyGeom->GetResource()->GetTriangleMeshesRef();
   for (unsigned int i = 0; i < tmesh.size(); i++) {
     DO_VALIDATION;
-    if (tmesh[i].material.diffuseTexture !=
+    if (tmesh[i].material.diffuse_texture_ !=
         boost::intrusive_ptr<Resource<Surface> >()) {
       DO_VALIDATION;
-      if (tmesh[i].material.diffuseTexture->GetIdentString() == "skin.jpg") {
+      if (tmesh[i].material.diffuse_texture_->GetIdentString() == "skin.jpg") {
         DO_VALIDATION;
-        tmesh[i].material.diffuseTexture = skin;
-        tmesh[i].material.specular_amount = 0.002f;
-        tmesh[i].material.shininess = 0.2f;
+        tmesh[i].material.diffuse_texture_ = skin;
+        tmesh[i].material.specular_amount_ = 0.002f;
+        tmesh[i].material.shininess_ = 0.2f;
       }
     }
   }
@@ -163,12 +163,12 @@ HumanoidBase::HumanoidBase(PlayerBase *player, Match *match,
 
   for (unsigned int i = 0; i < hairtmesh.size(); i++) {
     DO_VALIDATION;
-    if (hairtmesh[i].material.diffuseTexture !=
+    if (hairtmesh[i].material.diffuse_texture_ !=
         boost::intrusive_ptr<Resource<Surface> >()) {
       DO_VALIDATION;
-      hairtmesh[i].material.diffuseTexture = hairTexture;
-      hairtmesh[i].material.specular_amount = 0.01f;
-      hairtmesh[i].material.shininess = 0.05f;
+      hairtmesh[i].material.diffuse_texture_ = hairTexture;
+      hairtmesh[i].material.specular_amount_ = 0.01f;
+      hairtmesh[i].material.shininess_ = 0.05f;
     }
   }
   hairStyle->OnUpdateGeometryData();
@@ -939,15 +939,15 @@ void HumanoidBase::SetKit(boost::intrusive_ptr<Resource<Surface> > newKit) {
     DO_VALIDATION;
     for (unsigned int i = 0; i < tmesh.size(); i++) {
       DO_VALIDATION;
-      if (tmesh[i].material.diffuseTexture !=
+      if (tmesh[i].material.diffuse_texture_ !=
           boost::intrusive_ptr<Resource<Surface> >()) {
         DO_VALIDATION;
-        if (tmesh[i].material.diffuseTexture->GetIdentString() ==
+        if (tmesh[i].material.diffuse_texture_->GetIdentString() ==
             kitDiffuseTextureIdentString) {
           DO_VALIDATION;
-          tmesh[i].material.diffuseTexture = newKit;
-          tmesh[i].material.specular_amount = 0.01f;//0.02f;//0.033f;//0.01f;
-          tmesh[i].material.shininess = 0.01f;//0.005f;
+          tmesh[i].material.diffuse_texture_ = newKit;
+          tmesh[i].material.specular_amount_ = 0.01f;//0.02f;//0.033f;//0.01f;
+          tmesh[i].material.shininess_ = 0.01f;//0.005f;
         }
       }
     }

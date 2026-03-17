@@ -41,7 +41,8 @@ namespace blunted {
     protected:
 
     private:
-      volatile long refCount = 0;
+      // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+      volatile long refCount_ = 0;
       friend void intrusive_ptr_add_ref(RefCounted *p);
       friend void intrusive_ptr_release(RefCounted *p);
 

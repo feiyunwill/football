@@ -34,8 +34,12 @@ namespace blunted {
     public:
       Plane();
       Plane(const Vector3 vec1, const Vector3 vec2);
-      ~Plane();
-
+      // 2025-03-17 六大函数：显式 =default（规则 cpp-special-member-functions）
+      Plane(const Plane&) = default;
+      Plane(Plane&&) = default;
+      ~Plane() = default;
+      Plane& operator=(const Plane&) = default;
+      Plane& operator=(Plane&&) = default;
       void Set(const Vector3 &pos, const Vector3 &dir);
       void SetVertex(unsigned char pos, const Vector3 &vec);
       const Vector3 &GetVertex(unsigned char pos) const;
@@ -44,9 +48,10 @@ namespace blunted {
       real GetDeterminant() const;
 
     protected:
-      Vector3 vertices[2];
-      mutable real determinant;
-      mutable bool _dirty_determinant = false;
+      // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+      Vector3 vertices_[2];
+      mutable real determinant_;
+      mutable bool dirty_determinant_ = false;
 
     private:
 

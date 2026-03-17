@@ -36,22 +36,22 @@ namespace blunted {
       }
       
       virtual ~Subject() { DO_VALIDATION;
-        observers.clear();
+        observers_.clear();
       }
 
       virtual void Attach(boost::intrusive_ptr<T> observer, void *thisPtr = 0) { DO_VALIDATION;
 
         observer->SetSubjectPtr(thisPtr);
 
-        observers.push_back(observer);
+        observers_.push_back(observer);
       }
 
       virtual void Detach(boost::intrusive_ptr<T> observer) { DO_VALIDATION;
-        typename std::vector < boost::intrusive_ptr<T> >::iterator o_iter = observers.begin();
-        while (o_iter != observers.end()) { DO_VALIDATION;
+        typename std::vector < boost::intrusive_ptr<T> >::iterator o_iter = observers_.begin();
+        while (o_iter != observers_.end()) { DO_VALIDATION;
           if ((*o_iter).get() == observer.get()) { DO_VALIDATION;
             (*o_iter).reset();
-            o_iter = observers.erase(o_iter);
+            o_iter = observers_.erase(o_iter);
           } else {
             o_iter++;
           }
@@ -59,15 +59,16 @@ namespace blunted {
       }
 
       virtual void DetachAll() { DO_VALIDATION;
-        typename std::vector < boost::intrusive_ptr<T> >::iterator o_iter = observers.begin();
-        while (o_iter != observers.end()) { DO_VALIDATION;
+        typename std::vector < boost::intrusive_ptr<T> >::iterator o_iter = observers_.begin();
+        while (o_iter != observers_.end()) { DO_VALIDATION;
           (*o_iter).reset();
-          o_iter = observers.erase(o_iter);
+          o_iter = observers_.erase(o_iter);
         }
       }
 
     protected:
-      std::vector < boost::intrusive_ptr<T> > observers;
+      // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+      std::vector < boost::intrusive_ptr<T> > observers_;
 
   };
 

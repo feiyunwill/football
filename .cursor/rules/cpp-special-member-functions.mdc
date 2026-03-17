@@ -1,0 +1,42 @@
+---
+description: gfootball_engine 六大函数（构造/拷贝/移动/析构/赋值）的 =default 与 =delete
+globs: third_party/gfootball_engine/**/*.cpp,third_party/gfootball_engine/**/*.hpp,third_party/gfootball_engine/**/*.h
+alwaysApply: false
+---
+
+# 六大函数（特殊成员函数）
+
+以下六类函数：**该禁用的显式 `= delete`，该使用编译器生成的显式 `= default`**。避免依赖隐式生成导致的不清晰或误用。
+
+- **默认构造**：若类型可默认构造且无需额外逻辑，写 `= default`；若不应被默认构造（如仅通过工厂创建），写 `= delete`。
+- **拷贝构造 / 拷贝赋值**：若类型不可拷贝（唯一所有权、不可复制资源、单例等），显式 `= delete`；若可拷贝且行为与编译器生成一致，写 `= default`。
+- **移动构造 / 移动赋值**：若类型不可移动，显式 `= delete`；若可移动且行为与编译器生成一致，写 `= default`。
+- **析构**：若需虚析构（多态基类）或释放资源，显式实现；否则可 `= default`。**多态基类析构必须为 `virtual`**。
+
+示例（不可拷贝、可移动）：
+
+```cpp
+class OnlyMovable {
+public:
+  OnlyMovable() = default;
+  ~OnlyMovable() = default;
+  OnlyMovable(const OnlyMovable&) = delete;
+  OnlyMovable& operator=(const OnlyMovable&) = delete;
+  OnlyMovable(OnlyMovable&&) = default;
+  OnlyMovable& operator=(OnlyMovable&&) = default;
+};
+```
+
+示例（多态基类）：
+
+```cpp
+class Base {
+public:
+  Base() = default;
+  virtual ~Base() = default;
+  Base(const Base&) = default;
+  Base& operator=(const Base&) = default;
+  Base(Base&&) = default;
+  Base& operator=(Base&&) = default;
+};
+```

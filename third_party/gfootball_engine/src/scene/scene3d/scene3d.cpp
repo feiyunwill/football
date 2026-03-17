@@ -24,12 +24,12 @@ namespace blunted {
 Scene3D::Scene3D() {
   DO_VALIDATION;
   boost::intrusive_ptr<Node> root(new Node("Scene3D root node"));
-  hierarchyRoot = root;
+  hierarchy_root_ = root;
 
-  supportedObjectTypes.push_back(e_ObjectType_Geometry);
-  supportedObjectTypes.push_back(e_ObjectType_Skybox);
-  supportedObjectTypes.push_back(e_ObjectType_Camera);
-  supportedObjectTypes.push_back(e_ObjectType_Light);
+  supported_object_types_.push_back(e_ObjectType_Geometry);
+  supported_object_types_.push_back(e_ObjectType_Skybox);
+  supported_object_types_.push_back(e_ObjectType_Camera);
+  supported_object_types_.push_back(e_ObjectType_Light);
 }
 
 Scene3D::~Scene3D() { DO_VALIDATION; }
@@ -37,25 +37,25 @@ Scene3D::~Scene3D() { DO_VALIDATION; }
 void Scene3D::Init() {
   DO_VALIDATION;
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     IScene3DInterpreter *scene3DInterpreter =
-        static_cast<IScene3DInterpreter *>(observers[i].get());
+        static_cast<IScene3DInterpreter *>(observers_[i].get());
     scene3DInterpreter->OnLoad();
   }
 }
 
 void Scene3D::Exit() {
   DO_VALIDATION;  // ATOMIC
-  hierarchyRoot->Exit();
-  hierarchyRoot.reset();
+  hierarchy_root_->Exit();
+  hierarchy_root_.reset();
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     IScene3DInterpreter *scene3DInterpreter =
-        static_cast<IScene3DInterpreter *>(observers[i].get());
+        static_cast<IScene3DInterpreter *>(observers_[i].get());
     scene3DInterpreter->OnUnload();
   }
 
@@ -64,12 +64,12 @@ void Scene3D::Exit() {
 
 void Scene3D::AddNode(boost::intrusive_ptr<Node> node) {
   DO_VALIDATION;
-  hierarchyRoot->AddNode(node);
+  hierarchy_root_->AddNode(node);
 }
 
 void Scene3D::DeleteNode(boost::intrusive_ptr<Node> node) {
   DO_VALIDATION;
-  hierarchyRoot->DeleteNode(node);
+  hierarchy_root_->DeleteNode(node);
 }
 
 void Scene3D::PokeObjects(e_ObjectType targetObjectType,
@@ -83,6 +83,6 @@ void Scene3D::PokeObjects(e_ObjectType targetObjectType,
     return;
   }
 
-  hierarchyRoot->PokeObjects(targetObjectType, targetSystemType);
+  hierarchy_root_->PokeObjects(targetObjectType, targetSystemType);
 }
 }

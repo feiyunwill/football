@@ -46,12 +46,12 @@ namespace blunted {
       virtual void SetRotation(const Quaternion &newRotation);
       Quaternion GetRotation() const;
 
-      std::list<VertexBufferIndex> vertexBufferIndices;
-      boost::intrusive_ptr < Resource<VertexBuffer> > vertexBuffer;
+      std::list<VertexBufferIndex> vertex_buffer_indices_;
+      boost::intrusive_ptr < Resource<VertexBuffer> > vertex_buffer_;
 
     protected:
-      Vector3 position;
-      Quaternion rotation;
+      Vector3 position_;
+      Quaternion rotation_;
 
   };
 
@@ -73,9 +73,9 @@ namespace blunted {
       inline virtual void OnPoke();
 
     protected:
-      GraphicsGeometry *caller;
+      GraphicsGeometry *caller_;
 
-      bool usesIndices = false;
+      bool uses_indices_ = false;
 
   };
 

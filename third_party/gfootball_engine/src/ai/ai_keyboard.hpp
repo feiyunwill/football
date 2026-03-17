@@ -14,6 +14,8 @@
 #ifndef _AI_KEYBOARD
 #define _AI_KEYBOARD
 
+#include <compare>
+
 #include "../base/math/vector3.hpp"
 #include "../defines.hpp"
 #include "../hid/ihidevice.hpp"
@@ -34,6 +36,9 @@ enum e_ButtonFunction {
   e_ButtonFunction_Dribble,
   e_ButtonFunction_Size
 };
+constexpr std::strong_ordering operator<=>(e_ButtonFunction a, e_ButtonFunction b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 class AIControlledKeyboard {
 

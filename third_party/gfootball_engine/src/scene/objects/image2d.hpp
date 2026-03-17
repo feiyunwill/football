@@ -53,9 +53,9 @@ namespace blunted {
       void OnChange();
 
     protected:
-      int position[2];
-      int size[2];
-      boost::intrusive_ptr < Resource<Surface> > image;
+      int position_[2];
+      int size_[2];
+      boost::intrusive_ptr < Resource<Surface> > image_;
 
   };
 

@@ -18,6 +18,8 @@
 #ifndef _HPP_SYSTEMS_IFACE_SYSTEM
 #define _HPP_SYSTEMS_IFACE_SYSTEM
 
+#include <compare>
+
 #include "../defines.hpp"
 
 #include "../base/properties.hpp"
@@ -31,6 +33,9 @@ namespace blunted {
     e_SystemType_Audio = 3,
     e_SystemType_UserStart = 4
   };
+  constexpr std::strong_ordering operator<=>(e_SystemType a, e_SystemType b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 }
 
 #endif

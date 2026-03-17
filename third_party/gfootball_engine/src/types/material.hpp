@@ -23,14 +23,15 @@
 
 namespace blunted {
 
+  // 2025-03-17 Google 规范：struct 数据成员末尾下划线（cpp-google-style）
   struct Material {
-    boost::intrusive_ptr < Resource<Surface> > diffuseTexture;
-    boost::intrusive_ptr < Resource<Surface> > normalTexture;
-    boost::intrusive_ptr < Resource<Surface> > specularTexture;
-    boost::intrusive_ptr < Resource<Surface> > illuminationTexture;
-    float shininess = 0.0f;
-    float specular_amount = 0.0f;
-    Vector3 self_illumination;
+    boost::intrusive_ptr < Resource<Surface> > diffuse_texture_;
+    boost::intrusive_ptr < Resource<Surface> > normal_texture_;
+    boost::intrusive_ptr < Resource<Surface> > specular_texture_;
+    boost::intrusive_ptr < Resource<Surface> > illumination_texture_;
+    float shininess_ = 0.0f;
+    float specular_amount_ = 0.0f;
+    Vector3 self_illumination_;
   };
 
 }

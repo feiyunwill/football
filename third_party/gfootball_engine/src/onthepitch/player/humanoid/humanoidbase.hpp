@@ -18,6 +18,8 @@
 #ifndef _HPP_HUMANOIDBASE
 #define _HPP_HUMANOIDBASE
 
+#include <compare>
+
 #include "../../../base/math/vector3.hpp"
 #include "../../../scene/scene3d/node.hpp"
 
@@ -65,6 +67,9 @@ enum e_InterruptAnim {
   e_InterruptAnim_Cancel,
   e_InterruptAnim_ReQueue
 };
+constexpr std::strong_ordering operator<=>(e_InterruptAnim a, e_InterruptAnim b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 struct RotationSmuggle {
   RotationSmuggle() { DO_VALIDATION;

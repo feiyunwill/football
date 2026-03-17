@@ -44,7 +44,7 @@ namespace blunted {
       GraphicsSystem();
       virtual ~GraphicsSystem();
 
-      virtual void Initialize(bool render, int width_, int height_);
+      virtual void Initialize(bool render, int width, int height);
       virtual void Exit();
       void SetContext();
       void DisableContext();
@@ -60,20 +60,17 @@ namespace blunted {
 
       MessageQueue<Overlay2DQueueEntry> &GetOverlay2DQueue();
 
-      Vector3 GetContextSize() { DO_VALIDATION; return Vector3(width, height, bpp); }
+      Vector3 GetContextSize() { DO_VALIDATION; return Vector3(width_, height_, bpp_); }
 
       virtual std::string GetName() const { return "graphics"; }
 
     protected:
-      const e_SystemType systemType = e_SystemType_Graphics;
-
-      Renderer3D *renderer3DTask = 0;
-
-      GraphicsTask *task = 0;
-
-      MessageQueue<Overlay2DQueueEntry> overlay2DQueue;
-
-      int width = 0, height = 0, bpp = 0;
+      // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+      const e_SystemType system_type_ = e_SystemType_Graphics;
+      Renderer3D *renderer_3d_ = nullptr;
+      GraphicsTask *task_ = nullptr;
+      MessageQueue<Overlay2DQueueEntry> overlay_2d_queue_;
+      int width_ = 0, height_ = 0, bpp_ = 0;
 
   };
 

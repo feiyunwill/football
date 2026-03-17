@@ -76,7 +76,7 @@ namespace blunted {
     }
   }
 
-  Matrix3::~Matrix3() { DO_VALIDATION; }
+  // 2025-03-17 析构已改为头文件中 virtual ~Matrix3() = default
 
   // ----- operator overloading
 

@@ -29,13 +29,15 @@ namespace blunted {
   class Observer : public RefCounted {
 
     public:
-      Observer();
-      virtual ~Observer();
+      // 2025-03-17 六大函数：显式 default（cpp-special-member-functions）
+      Observer() = default;
+      virtual ~Observer() = default;
 
       void SetSubjectPtr(void *subjectPtr);
 
     protected:
-      void *subjectPtr;
+      // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+      void *subjectPtr_ = nullptr;
 
   };
 

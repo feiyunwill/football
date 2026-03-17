@@ -49,8 +49,7 @@ namespace blunted {
       void BuildTriangleMesh(const s_tree *data, boost::intrusive_ptr < Resource <GeometryData> > resource, std::vector <s_Material> materialList);
 
     protected:
-
-      int triangleCount = 0;
+      int triangle_count_ = 0;
 
   };
 

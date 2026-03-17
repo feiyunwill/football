@@ -48,15 +48,14 @@ namespace blunted {
       int GetVerticesDataSize();
 
      protected:
-      std::vector<float> vertices;
-      int verticesDataSize = 0;
-      std::vector<unsigned int> indices;
-      VertexBufferID vertexBufferID;
-      int vertexCount = 0;
-      Renderer3D *renderer3D;
-      bool dynamicBuffer = false;
-
-      bool sizeChanged = false;
+      std::vector<float> vertices_;
+      int vertices_data_size_ = 0;
+      std::vector<unsigned int> indices_;
+      VertexBufferID vertex_buffer_id_;
+      int vertex_count_ = 0;
+      Renderer3D *renderer_3d_ = nullptr;
+      bool dynamic_buffer_ = false;
+      bool size_changed_ = false;
 
   };
 

@@ -33,13 +33,13 @@ Geometry::Geometry(std::string name, e_ObjectType objectType)
 Geometry::Geometry(const Geometry &src, const std::string &postfix)
     : Object(src) {
   DO_VALIDATION;
-  if (src.geometryData != boost::intrusive_ptr<Resource<GeometryData> >()) {
+  if (src.geometry_data_ != boost::intrusive_ptr<Resource<GeometryData> >()) {
     DO_VALIDATION;
-    std::string srcName = src.geometryData->GetIdentString();
+    std::string srcName = src.geometry_data_->GetIdentString();
     bool alreadyThere = false;
 
 
-    geometryData = (GetContext().geometry_manager.FetchCopy(
+    geometry_data_ = (GetContext().geometry_manager.FetchCopy(
         srcName, srcName + postfix, alreadyThere));
     // geometryData = (GetContext().geometry_manager.Fetch(srcName, false,
     // alreadyThere, true));
@@ -52,17 +52,17 @@ Geometry::~Geometry() { DO_VALIDATION; }
 void Geometry::Exit() {
   DO_VALIDATION;  // ATOMIC
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     IGeometryInterpreter *geometryInterpreter =
-        static_cast<IGeometryInterpreter *>(observers[i].get());
+        static_cast<IGeometryInterpreter *>(observers_[i].get());
     geometryInterpreter->OnUnload();
   }
 
   Object::Exit();
 
-  if (geometryData) geometryData.reset();
+  if (geometry_data_) geometry_data_.reset();
 
   InvalidateBoundingVolume();
 }
@@ -72,13 +72,13 @@ void Geometry::SetGeometryData(
   DO_VALIDATION;
 
 
-  this->geometryData = geometryData;
+  geometry_data_ = geometryData;
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     IGeometryInterpreter *geometryInterpreter =
-        static_cast<IGeometryInterpreter *>(observers[i].get());
+        static_cast<IGeometryInterpreter *>(observers_[i].get());
     geometryInterpreter->OnLoad(this);
   }
 
@@ -89,11 +89,11 @@ void Geometry::OnUpdateGeometryData(bool updateMaterials) {
   DO_VALIDATION;
   GetTracker()->setDisabled(true);
   if (GetGameConfig().render) {
-    int observersSize = observers.size();
+    int observersSize = observers_.size();
     for (int i = 0; i < observersSize; i++) {
       DO_VALIDATION;
       IGeometryInterpreter *geometryInterpreter =
-          static_cast<IGeometryInterpreter *>(observers[i].get());
+          static_cast<IGeometryInterpreter *>(observers_[i].get());
       geometryInterpreter->OnUpdateGeometry(this, updateMaterials);
     }
     InvalidateBoundingVolume();
@@ -103,32 +103,30 @@ void Geometry::OnUpdateGeometryData(bool updateMaterials) {
 
 boost::intrusive_ptr<Resource<GeometryData> > Geometry::GetGeometryData() {
   DO_VALIDATION;
-  return geometryData;
+  return geometry_data_;
 }
 
 void Geometry::Poke(e_SystemType targetSystemType) {
   DO_VALIDATION;
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
 
     IGeometryInterpreter *geometryInterpreter =
-        static_cast<IGeometryInterpreter *>(observers[i].get());
+        static_cast<IGeometryInterpreter *>(observers_[i].get());
     if (geometryInterpreter->GetSystemType() == targetSystemType)
       geometryInterpreter->OnPoke();
   }
 
   // did a system object feedback a new pos/rot?
 
-  if (updateSpatialDataAfterPoke.haveTo == true) {
+  if (update_spatial_data_after_poke_.have_to_) {
     DO_VALIDATION;
     RecursiveUpdateSpatialData(e_SpatialDataType_Both,
-                               updateSpatialDataAfterPoke.excludeSystem);
-    MustUpdateSpatialData clear;
-    clear.haveTo = false;
-    clear.excludeSystem = e_SystemType_None;
-    updateSpatialDataAfterPoke = clear;
+                               update_spatial_data_after_poke_.exclude_system_);
+    update_spatial_data_after_poke_.have_to_ = false;
+    update_spatial_data_after_poke_.exclude_system_ = e_SystemType_None;
   }
 }
 
@@ -140,13 +138,13 @@ void Geometry::RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
 
   GetTracker()->setDisabled(true);
   if (GetGameConfig().render) {
-    int observersSize = observers.size();
+    int observersSize = observers_.size();
     for (int i = 0; i < observersSize; i++) {
       DO_VALIDATION;
-      if (observers[i]->GetSystemType() != excludeSystem) {
+      if (observers_[i]->GetSystemType() != excludeSystem) {
         DO_VALIDATION;
         IGeometryInterpreter *geometryInterpreter =
-            static_cast<IGeometryInterpreter *>(observers[i].get());
+            static_cast<IGeometryInterpreter *>(observers_[i].get());
         if (spatialDataType == e_SpatialDataType_Position) {
           DO_VALIDATION;
           geometryInterpreter->OnMove(GetDerivedPosition());
@@ -169,8 +167,8 @@ void Geometry::RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
   AABB Geometry::GetAABB() const {
     if (aabb.dirty == true) {
       DO_VALIDATION;
-      assert(geometryData->GetResource());
-      aabb.aabb = geometryData->GetResource()->GetAABB() * GetDerivedRotation() + GetDerivedPosition();
+      assert(geometry_data_->GetResource());
+      aabb.aabb = geometry_data_->GetResource()->GetAABB() * GetDerivedRotation() + GetDerivedPosition();
       aabb.dirty = false;
     }
 

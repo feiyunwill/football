@@ -381,17 +381,17 @@ void Match::RandomizeAdboards(boost::intrusive_ptr<Node> stadiumNode) {
 
     for (unsigned int i = 0; i < tmesh.size(); i++) {
       DO_VALIDATION;
-      if (tmesh[i].material.diffuseTexture !=
+      if (tmesh[i].material.diffuse_texture_ !=
           boost::intrusive_ptr<Resource<Surface> >()) {
         DO_VALIDATION;
-        std::string identString = tmesh[i].material.diffuseTexture->GetIdentString();
+        std::string identString = tmesh[i].material.diffuse_texture_->GetIdentString();
         //printf("%s\n", identString.c_str());
         if (identString.find("ad_placeholder") == 0) {
           DO_VALIDATION;
-          tmesh[i].material.diffuseTexture = adboardSurfaces.at(
+          tmesh[i].material.diffuse_texture_ = adboardSurfaces.at(
               int(std::floor(random_non_determ(0, adboardSurfaces.size() - 1.001f))));
-          tmesh[i].material.specular_amount = 0.2f;
-          tmesh[i].material.shininess = 0.1f;
+          tmesh[i].material.specular_amount_ = 0.2f;
+          tmesh[i].material.shininess_ = 0.1f;
         }
       }
     }

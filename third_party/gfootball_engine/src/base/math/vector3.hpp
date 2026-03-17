@@ -36,11 +36,12 @@ namespace blunted {
 
     public:
       Vector3();
-      Vector3(const Vector3 &src) {
-        coords[0] = src.coords[0];
-        coords[1] = src.coords[1];
-        coords[2] = src.coords[2];
-      }
+      // 2025-03-17 六大函数：显式 =default，与 cpp-special-member-functions 一致
+      Vector3(const Vector3 &src) = default;
+      Vector3(Vector3 &&src) = default;
+      ~Vector3() = default;
+      Vector3 &operator=(const Vector3 &src) = default;
+      Vector3 &operator=(Vector3 &&src) = default;
       Vector3(real xyz);
       Vector3(real x, real y, real z);
       void Mirror() { coords[0] = -coords[0]; coords[1] = -coords[1]; }
@@ -56,7 +57,6 @@ namespace blunted {
       bool operator != (const Vector3 &vector) const;
       void operator = (const Quaternion &quat);
       void operator = (const real src);
-      void operator = (const Vector3 &src);
       Vector3 operator * (const real scalar) const;
       Vector3 operator * (const Vector3 &scalar) const;
       Vector3 &operator *= (const real scalar);
@@ -142,12 +142,7 @@ namespace blunted {
     Set(src);
   }
 
-  inline
-  void Vector3::operator = (const Vector3 &src) {
-    coords[0] = src.coords[0];
-    coords[1] = src.coords[1];
-    coords[2] = src.coords[2];
-  }
+  // 2025-03-17 Vector3 拷贝/移动赋值已改为类内 = default，此处删除原 inline 实现
 
   inline
   Vector3 Vector3::operator * (const real scalar) const {
@@ -265,7 +260,8 @@ namespace blunted {
     return length;
   }
 
-  inline
+  // 2025-03-17 数学库优化：constexpr 便于编译期求值（规则 cpp-math-optimization）
+  inline constexpr
   real Vector3::GetSquaredLength() const {
     return coords[0] * coords[0] + coords[1] * coords[1] + coords[2] * coords[2];
   }

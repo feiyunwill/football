@@ -44,7 +44,7 @@ namespace blunted {
       void DeleteNode(boost::intrusive_ptr<Node> node);
 
       void GetObjects(std::deque < boost::intrusive_ptr<Object> > &gatherObjects, const vector_Planes &bounding) const {
-        hierarchyRoot->GetObjects(gatherObjects, bounding, true, 0);
+        hierarchy_root_->GetObjects(gatherObjects, bounding, true, 0);
       }
 
       template <class T>
@@ -54,7 +54,7 @@ namespace blunted {
           return;
         }
 
-        hierarchyRoot->GetObjects<T>(targetObjectType, gatherObjects, true, 0);
+        hierarchy_root_->GetObjects<T>(targetObjectType, gatherObjects, true, 0);
       }
 
       template <class T>
@@ -64,13 +64,13 @@ namespace blunted {
           return;
         }
 
-        hierarchyRoot->GetObjects<T>(targetObjectType, gatherObjects, bounding, true, 0);
+        hierarchy_root_->GetObjects<T>(targetObjectType, gatherObjects, bounding, true, 0);
       }
 
       void PokeObjects(e_ObjectType targetObjectType, e_SystemType targetSystemType);
 
     protected:
-      boost::intrusive_ptr<Node> hierarchyRoot;
+      boost::intrusive_ptr<Node> hierarchy_root_;
 
   };
 

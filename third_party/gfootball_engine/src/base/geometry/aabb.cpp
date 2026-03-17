@@ -28,11 +28,11 @@ AABB::AABB(const AABB &src) {
   DO_VALIDATION;
   this->minxyz = src.minxyz;
   this->maxxyz = src.maxxyz;
-  radius_needupdate = true;
-  center_needupdate = true;
+  radius_needupdate_ = true;
+  center_needupdate_ = true;
 }
 
-AABB::~AABB() { DO_VALIDATION; }
+// 2025-03-17 ~AABB() 已改为头文件中 virtual ~AABB() = default
 
 AABB AABB::operator+=(const AABB &add) {
   DO_VALIDATION;
@@ -48,8 +48,8 @@ AABB AABB::operator+=(const AABB &add) {
     maxxyz.coords[1] = add.maxxyz.coords[1];
   if (maxxyz.coords[2] < add.maxxyz.coords[2])
     maxxyz.coords[2] = add.maxxyz.coords[2];
-  radius_needupdate = true;
-  center_needupdate = true;
+  radius_needupdate_ = true;
+  center_needupdate_ = true;
   return *this;
 }
 
@@ -57,8 +57,8 @@ AABB AABB::operator+=(const AABB &add) {
     AABB aabb(*this);
     aabb.minxyz += vec;
     aabb.maxxyz += vec;
-    radius_needupdate = true;
-    center_needupdate = true;
+    radius_needupdate_ = true;
+    center_needupdate_ = true;
     return aabb;
   }
 
@@ -100,8 +100,8 @@ AABB AABB::operator+=(const AABB &add) {
       if (vecs[i].coords[2] > aabb.maxxyz.coords[2]) aabb.maxxyz.coords[2] = vecs[i].coords[2];
     }
 
-    radius_needupdate = true;
-    center_needupdate = true;
+    radius_needupdate_ = true;
+    center_needupdate_ = true;
     return aabb;
   }
 
@@ -110,8 +110,8 @@ AABB AABB::operator+=(const AABB &add) {
     const float max_v = std::numeric_limits<real>::max() / 100;
     minxyz.Set(max_v, max_v, max_v);
     maxxyz.Set(min_v, min_v, min_v);
-    radius_needupdate = true;
-    center_needupdate = true;
+    radius_needupdate_ = true;
+    center_needupdate_ = true;
   }
 
   void AABB::SetMinXYZ(const Vector3 &min) {
@@ -127,7 +127,7 @@ AABB AABB::operator+=(const AABB &add) {
   }
 
   real AABB::GetRadius() const {
-    if (radius_needupdate) {
+    if (radius_needupdate_) {
       DO_VALIDATION;
       real x, y, z;
       x = maxxyz.coords[0] - minxyz.coords[0];
@@ -135,19 +135,19 @@ AABB AABB::operator+=(const AABB &add) {
       z = maxxyz.coords[2] - minxyz.coords[2];
       real length = sqrt(std::pow(x, 2) + std::pow(y, 2));
       radius = sqrt(std::pow(length, 2) + std::pow(z, 2)) / 2.0;
-      radius_needupdate = false;
+      radius_needupdate_ = false;
     }
     return radius;
   }
 
   void AABB::GetCenter(Vector3 &center) const {
-    if (center_needupdate) {
+    if (center_needupdate_) {
       DO_VALIDATION;
       real x = (minxyz.coords[0] + maxxyz.coords[0]) / 2.0;
       real y = (minxyz.coords[1] + maxxyz.coords[1]) / 2.0;
       real z = (minxyz.coords[2] + maxxyz.coords[2]) / 2.0;
       this->center.Set(x, y, z);
-      center_needupdate = false;
+      center_needupdate_ = false;
     }
     center.Set(this->center);
   }

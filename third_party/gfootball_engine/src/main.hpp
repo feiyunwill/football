@@ -54,11 +54,16 @@ void DoValidation(int line, const char* file);
 #define SHARED_PTR boost::shared_ptr
 #define WEAK_PTR boost::weak_ptr
 
+#include <compare>
+
 enum e_RenderingMode {
   e_Disabled,
   e_Onscreen,
   e_Offscreen
 };
+constexpr std::strong_ordering operator<=>(e_RenderingMode a, e_RenderingMode b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 class GameConfig {
  public:

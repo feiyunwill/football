@@ -22,175 +22,174 @@
 namespace blunted {
 
 Spatial::Spatial(const std::string &name)
-    : name(name), parent(0), localMode(e_LocalMode_Relative) {
+    : name_(name), parent_(nullptr), local_mode_(e_LocalMode_Relative) {
   DO_VALIDATION;
-  scale.Set(1, 1, 1);
+  scale_.Set(1, 1, 1);
   Vector axis(0, 0, -1);
-  rotation.SetAngleAxis(0, axis);
-  position.Set(0, 0, 0);
-  aabb.aabb.Reset();
-  aabb.dirty = false;
+  rotation_.SetAngleAxis(0, axis);
+  position_.Set(0, 0, 0);
+  aabb_.aabb.Reset();
+  aabb_.dirty = false;
   InvalidateSpatialData();
 }
 
 Spatial::~Spatial() {
   DO_VALIDATION;
-  parent = 0;
+  parent_ = nullptr;
 }
 
 Spatial::Spatial(const Spatial &src) {
   DO_VALIDATION;
-  name = src.GetName();
-  position = src.position;
-  rotation = src.rotation;
-  scale = src.scale;
-  localMode = src.localMode;
-  aabb.aabb = src.GetAABB();
-  aabb.dirty = false;
-  parent = 0;
+  name_ = src.GetName();
+  position_ = src.position_;
+  rotation_ = src.rotation_;
+  scale_ = src.scale_;
+  local_mode_ = src.local_mode_;
+  aabb_.aabb = src.GetAABB();
+  aabb_.dirty = false;
+  parent_ = nullptr;
   InvalidateSpatialData();
 }
 
 void Spatial::SetLocalMode(e_LocalMode localMode) {
   DO_VALIDATION;
-  this->localMode = localMode;
+  local_mode_ = localMode;
   InvalidateBoundingVolume();
 }
 
 e_LocalMode Spatial::GetLocalMode() {
   DO_VALIDATION;
-  return localMode;
+  return local_mode_;
 }
 
 void Spatial::SetName(const std::string &name) {
   DO_VALIDATION;
-  this->name = name;
+  name_ = name;
 }
 
   const std::string Spatial::GetName() const {
-    return name.c_str();
+    return name_.c_str();
   }
 
   void Spatial::SetParent(Node *parent) {
     DO_VALIDATION;
-    this->parent = parent;
+    parent_ = parent;
     InvalidateBoundingVolume();
   }
 
   void Spatial::SetPosition(const Vector3 &newPosition,
                             bool updateSpatialData) {
     DO_VALIDATION;
-    position = newPosition;
+    position_ = newPosition;
     if (updateSpatialData) RecursiveUpdateSpatialData(e_SpatialDataType_Position);
   }
 
   Vector3 Spatial::GetPosition() const {
-    return position;
+    return position_;
   }
 
   void Spatial::SetRotation(const Quaternion &newRotation,
                             bool updateSpatialData) {
-    rotation = newRotation;
+    rotation_ = newRotation;
     if (updateSpatialData) RecursiveUpdateSpatialData(e_SpatialDataType_Both);
   }
 
   Quaternion Spatial::GetRotation() const {
-    return rotation;
+    return rotation_;
   }
 
   void Spatial::SetScale(const Vector3 &newScale) {
     DO_VALIDATION;
-    this->scale = newScale;
+    scale_ = newScale;
     RecursiveUpdateSpatialData(e_SpatialDataType_Rotation);
   }
 
   Vector3 Spatial::GetScale() const {
-    Vector3 retScale = scale;
-    return retScale;
+    return scale_;
   }
 
   Vector3 Spatial::GetDerivedPosition() const {
-    if (_dirty_DerivedPosition) {
+    if (dirty_derived_position_) {
       DO_VALIDATION;
-      if (localMode == e_LocalMode_Relative) {
+      if (local_mode_ == e_LocalMode_Relative) {
         DO_VALIDATION;
-        if (parent) {
+        if (parent_) {
           DO_VALIDATION;
-          const Quaternion parentDerivedRotation = parent->GetDerivedRotation();
-          const Vector3 parentDerivedScale = parent->GetDerivedScale();
-          const Vector3 parentDerivedPosition = parent->GetDerivedPosition();
+          const Quaternion parentDerivedRotation = parent_->GetDerivedRotation();
+          const Vector3 parentDerivedScale = parent_->GetDerivedScale();
+          const Vector3 parentDerivedPosition = parent_->GetDerivedPosition();
 
-          _cache_DerivedPosition.Set(parentDerivedRotation * (parentDerivedScale * GetPosition()));
-          _cache_DerivedPosition += parentDerivedPosition;
+          cache_derived_position_.Set(parentDerivedRotation * (parentDerivedScale * GetPosition()));
+          cache_derived_position_ += parentDerivedPosition;
         } else {
-          _cache_DerivedPosition = GetPosition();
+          cache_derived_position_ = GetPosition();
         }
       } else {
-        _cache_DerivedPosition = GetPosition();
+        cache_derived_position_ = GetPosition();
       }
-      _dirty_DerivedPosition = false;
+      dirty_derived_position_ = false;
     }
-    return _cache_DerivedPosition;
+    return cache_derived_position_;
   }
 
   Quaternion Spatial::GetDerivedRotation() const {
-    if (_dirty_DerivedRotation) {
+    if (dirty_derived_rotation_) {
       DO_VALIDATION;
-      if (localMode == e_LocalMode_Relative) {
+      if (local_mode_ == e_LocalMode_Relative) {
         DO_VALIDATION;
-        if (parent) {
+        if (parent_) {
           DO_VALIDATION;
-          _cache_DerivedRotation = (parent->GetDerivedRotation() * GetRotation()).GetNormalized();
+          cache_derived_rotation_ = (parent_->GetDerivedRotation() * GetRotation()).GetNormalized();
         } else {
-          _cache_DerivedRotation = GetRotation();
+          cache_derived_rotation_ = GetRotation();
         }
       } else {
-        _cache_DerivedRotation = GetRotation();
+        cache_derived_rotation_ = GetRotation();
       }
-      _dirty_DerivedRotation = false;
+      dirty_derived_rotation_ = false;
     }
-    return _cache_DerivedRotation;
+    return cache_derived_rotation_;
   }
 
   Vector3 Spatial::GetDerivedScale() const {
-    if (_dirty_DerivedScale) {
+    if (dirty_derived_scale_) {
       DO_VALIDATION;
-      if (localMode == e_LocalMode_Relative) {
+      if (local_mode_ == e_LocalMode_Relative) {
         DO_VALIDATION;
-        if (parent) {
+        if (parent_) {
           DO_VALIDATION;
-          _cache_DerivedScale = parent->GetDerivedScale() * GetScale();
+          cache_derived_scale_ = parent_->GetDerivedScale() * GetScale();
         } else {
-          _cache_DerivedScale = GetScale();
+          cache_derived_scale_ = GetScale();
         }
       } else {
-        _cache_DerivedScale = GetScale();
+        cache_derived_scale_ = GetScale();
       }
-      _dirty_DerivedScale = false;
+      dirty_derived_scale_ = false;
     }
-    return _cache_DerivedScale;
+    return cache_derived_scale_;
   }
 
   void Spatial::InvalidateBoundingVolume() {
     bool changed = false;
-    if (aabb.dirty == false) {
-      aabb.dirty = true;
-      aabb.aabb.Reset();
+    if (aabb_.dirty == false) {
+      aabb_.dirty = true;
+      aabb_.aabb.Reset();
       changed = true;
     }
-    if (changed) if (parent) parent->InvalidateBoundingVolume();
+    if (changed) if (parent_) parent_->InvalidateBoundingVolume();
   }
 
   void Spatial::InvalidateSpatialData() {
     DO_VALIDATION;
-    _dirty_DerivedPosition = true;
-    _dirty_DerivedRotation = true;
-    _dirty_DerivedScale = true;
+    dirty_derived_position_ = true;
+    dirty_derived_rotation_ = true;
+    dirty_derived_scale_ = true;
   }
 
   AABB Spatial::GetAABB() const {
     AABB tmp;
-    tmp = aabb.aabb;
+    tmp = aabb_.aabb;
     return tmp;
   }
 

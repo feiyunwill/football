@@ -1,0 +1,11 @@
+---
+description: gfootball_engine 中 Boost 向 std 迁移策略
+globs: third_party/gfootball_engine/**/*.cpp,third_party/gfootball_engine/**/*.hpp,third_party/gfootball_engine/**/*.h
+alwaysApply: false
+---
+
+# Boost 与 std 迁移
+
+- **新代码**：优先使用标准库（如 `std::bind`、`std::shared_ptr`、`<random>` 等）；在必须与现有 API 一致时再使用 Boost。
+- **替换已有 Boost**：在注释中写明**日期**与**原因**；单次改动范围可控，保证可编译、可测。Boost.Python 暂保留，其余（如 bind、shared_ptr、random）可逐步替换为 std。
+- **性能前提**：用标准库替代 Boost 时，需考虑**性能**（内存、CPU、时间复杂度）。仅在 **Boost 没有额外优势**（如更优实现、必需特性、或明显更省内存/更快）时用标准库替代；若某处 Boost 在性能或能力上有不可替代优势，则保留 Boost。

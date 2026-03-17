@@ -18,6 +18,8 @@
 #ifndef _HPP_RENDERER3D
 #define _HPP_RENDERER3D
 
+#include <compare>
+
 #include "../../../types/resource.hpp"
 
 #include "../../../base/sdl_surface.hpp"
@@ -79,6 +81,9 @@ namespace blunted {
     e_ViewRenderTarget_Texture,
     e_ViewRenderTarget_Context
   };
+  constexpr std::strong_ordering operator<=>(e_ViewRenderTarget a, e_ViewRenderTarget b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   struct View {
     e_ViewRenderTarget target;
@@ -113,22 +118,34 @@ namespace blunted {
     e_MatrixMode_Projection,
     e_MatrixMode_ModelView
   };
+  constexpr std::strong_ordering operator<=>(e_MatrixMode a, e_MatrixMode b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_CullingMode {
     e_CullingMode_Off,
     e_CullingMode_Front,
     e_CullingMode_Back
   };
+  constexpr std::strong_ordering operator<=>(e_CullingMode a, e_CullingMode b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_BlendingMode {
     e_BlendingMode_Off,
     e_BlendingMode_On
   };
+  constexpr std::strong_ordering operator<=>(e_BlendingMode a, e_BlendingMode b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_BlendingFunction {
     e_BlendingFunction_Zero,
     e_BlendingFunction_One
   };
+  constexpr std::strong_ordering operator<=>(e_BlendingFunction a, e_BlendingFunction b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_DepthFunction {
     e_DepthFunction_Never,
@@ -140,11 +157,17 @@ namespace blunted {
     e_DepthFunction_NotEqual,
     e_DepthFunction_Always
   };
+  constexpr std::strong_ordering operator<=>(e_DepthFunction a, e_DepthFunction b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_TextureMode {
     e_TextureMode_Off,
     e_TextureMode_2D
   };
+  constexpr std::strong_ordering operator<=>(e_TextureMode a, e_TextureMode b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_TargetAttachment {
     e_TargetAttachment_None,
@@ -157,6 +180,9 @@ namespace blunted {
     e_TargetAttachment_Color2,
     e_TargetAttachment_Color3
   };
+  constexpr std::strong_ordering operator<=>(e_TargetAttachment a, e_TargetAttachment b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_PixelFormat {
     e_PixelFormat_Alpha,
@@ -165,6 +191,9 @@ namespace blunted {
     e_PixelFormat_DepthComponent,
     e_PixelFormat_Luminance
   };
+  constexpr std::strong_ordering operator<=>(e_PixelFormat a, e_PixelFormat b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_InternalPixelFormat {
 //    e_InternalPixelFormat_RGB,
@@ -187,6 +216,9 @@ namespace blunted {
 		e_InternalPixelFormat_DepthComponent32F,
 		e_InternalPixelFormat_StencilIndex8
   };
+  constexpr std::strong_ordering operator<=>(e_InternalPixelFormat a, e_InternalPixelFormat b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_VertexBufferUsage {
     e_VertexBufferUsage_StreamDraw,
@@ -199,12 +231,18 @@ namespace blunted {
     e_VertexBufferUsage_DynamicRead,
     e_VertexBufferUsage_DynamicCopy
   };
+  constexpr std::strong_ordering operator<=>(e_VertexBufferUsage a, e_VertexBufferUsage b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_RenderMode {
     e_RenderMode_GeometryOnly,
     e_RenderMode_Diffuse,
     e_RenderMode_Full
   };
+  constexpr std::strong_ordering operator<=>(e_RenderMode a, e_RenderMode b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   struct Shader {
     std::string name;

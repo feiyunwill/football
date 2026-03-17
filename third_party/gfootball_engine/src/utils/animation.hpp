@@ -18,8 +18,10 @@
 #ifndef _HPP_ANIMATION
 #define _HPP_ANIMATION
 
-#include "../defines.hpp"
+#include <compare>
 #include <iostream>
+
+#include "../defines.hpp"
 
 #include "../scene/scene3d/node.hpp"
 
@@ -54,7 +56,9 @@ enum e_DefString {
   e_DefString_IncomingRetainState = 20,
   e_DefString_Size = 21
 };
-
+constexpr std::strong_ordering operator<=>(e_DefString a, e_DefString b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 e_FunctionType StringToFunctionType(e_DefString fun);
 
@@ -108,6 +112,9 @@ e_FunctionType StringToFunctionType(e_DefString fun);
     player,
     body_part_max
   };
+  constexpr std::strong_ordering operator<=>(BodyPart a, BodyPart b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   typedef boost::intrusive_ptr<Node> NodeMap[body_part_max];
 
@@ -191,6 +198,9 @@ e_FunctionType StringToFunctionType(e_DefString fun);
     e_Foot_Left,
     e_Foot_Right
   };
+  constexpr std::strong_ordering operator<=>(e_Foot a, e_Foot b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   struct BiasedOffset {
     Quaternion orientation;

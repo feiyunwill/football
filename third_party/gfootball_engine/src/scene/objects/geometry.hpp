@@ -48,7 +48,7 @@ namespace blunted {
       virtual AABB GetAABB() const;
 
     protected:
-      boost::intrusive_ptr < Resource<GeometryData> > geometryData;
+      boost::intrusive_ptr < Resource<GeometryData> > geometry_data_;
 
   };
 

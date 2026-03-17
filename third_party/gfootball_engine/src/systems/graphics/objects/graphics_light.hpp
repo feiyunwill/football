@@ -54,14 +54,14 @@ namespace blunted {
       virtual void SetShadow(bool shadow);
       virtual bool GetShadow() const;
 
-      std::vector<ShadowMap> shadowMaps;
+      std::vector<ShadowMap> shadow_maps_;
 
     protected:
-      Vector3 position;
-      Vector3 color;
-      float radius = 0.0f;
-      e_LightType lightType;
-      bool shadow = false;
+      Vector3 position_;
+      Vector3 color_;
+      float radius_ = 0.0f;
+      e_LightType light_type_;
+      bool shadow_ = false;
 
   };
 
@@ -82,7 +82,7 @@ namespace blunted {
       virtual void OnPoke();
 
     protected:
-      GraphicsLight *caller;
+      GraphicsLight *caller_;
 
   };
 }

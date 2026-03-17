@@ -21,9 +21,9 @@
 
 namespace blunted {
 
-Scene2D::Scene2D(int width, int height) : width(width) , height(height), bpp(32) {
+Scene2D::Scene2D(int width, int height) : width_(width), height_(height), bpp_(32) {
   DO_VALIDATION;
-  supportedObjectTypes.push_back(e_ObjectType_Image2D);
+  supported_object_types_.push_back(e_ObjectType_Image2D);
 }
 
 Scene2D::~Scene2D() { DO_VALIDATION; }
@@ -32,18 +32,18 @@ void Scene2D::Init() { DO_VALIDATION; }
 
 void Scene2D::Exit() {
   DO_VALIDATION;  // ATOMIC
-  for (int i = 0; i < (signed int)objects.size(); i++) {
+  for (int i = 0; i < (signed int)objects_.size(); i++) {
     DO_VALIDATION;
-    objects[i]->Exit();  // now in spatial intrusiveptr
-    objects[i].reset();
+    objects_[i]->Exit();  // now in spatial intrusiveptr
+    objects_[i].reset();
   }
-  objects.clear();
+  objects_.clear();
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     IScene2DInterpreter *scene2DInterpreter =
-        static_cast<IScene2DInterpreter *>(observers[i].get());
+        static_cast<IScene2DInterpreter *>(observers_[i].get());
     scene2DInterpreter->OnUnload();
   }
 
@@ -56,19 +56,19 @@ void Scene2D::AddObject(boost::intrusive_ptr<Object> object) {
     DO_VALIDATION;
     Log(e_FatalError, "Scene2D", "AddObject", "Object type not supported");
   }
-  objects.push_back(object);
+  objects_.push_back(object);
 }
 
 void Scene2D::DeleteObject(boost::intrusive_ptr<Object> object) {
   DO_VALIDATION;
   std::vector<boost::intrusive_ptr<Object> >::iterator objIter =
-      objects.begin();
-  while (objIter != objects.end()) {
+      objects_.begin();
+  while (objIter != objects_.end()) {
     DO_VALIDATION;
     if ((*objIter) == object) {
       DO_VALIDATION;
       (*objIter)->Exit();
-      objIter = objects.erase(objIter);
+      objIter = objects_.erase(objIter);
     } else {
       objIter++;
     }
@@ -85,20 +85,20 @@ void Scene2D::PokeObjects(e_ObjectType targetObjectType,
                           e_SystemType targetSystemType) {
   DO_VALIDATION;
   if (!SupportedObjectType(targetObjectType)) return;
-  std::stable_sort(objects.begin(), objects.end(), SortObjects);
-  int objectsSize = objects.size();
+  std::stable_sort(objects_.begin(), objects_.end(), SortObjects);
+  int objectsSize = objects_.size();
   for (int i = 0; i < objectsSize; i++) {
     DO_VALIDATION;
-    if (objects[i]->IsEnabled())
-      if (objects[i]->GetObjectType() == targetObjectType)
-        objects[i]->Poke(targetSystemType);
+    if (objects_[i]->IsEnabled())
+      if (objects_[i]->GetObjectType() == targetObjectType)
+        objects_[i]->Poke(targetSystemType);
   }
 }
 
 void Scene2D::GetContextSize(int &width, int &height, int &bpp) {
   DO_VALIDATION;
-  width = this->width;
-  height = this->height;
-  bpp = this->bpp;
+  width = width_;
+  height = height_;
+  bpp = bpp_;
 }
 }

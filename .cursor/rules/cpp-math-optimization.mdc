@@ -1,0 +1,11 @@
+---
+description: gfootball_engine 数学与几何库优先考虑性能优化（base/math、base/geometry）
+globs: third_party/gfootball_engine/src/base/math/**/*.cpp,third_party/gfootball_engine/src/base/math/**/*.hpp,third_party/gfootball_engine/src/base/geometry/**/*.cpp,third_party/gfootball_engine/src/base/geometry/**/*.hpp
+alwaysApply: false
+---
+
+# 数学库优化
+
+- **适用范围**：`src/base/math`（vector3、matrix3/4、quaternion、bluntmath）与 `src/base/geometry`（aabb、line、plane、triangle 等）。该路径被大量调用，**最大量考虑优化**。
+- **优化方向**：热路径尽量 `inline`；避免不必要的拷贝（小对象按值传/返，大对象按 const 引用）；能用 `constexpr` 的用 `constexpr`；数据布局考虑缓存局部性；在收益明确时可考虑 SIMD 或手写向量化；热路径避免堆分配与虚调用。
+- **修改时**：注释原代码并注明日期与原因，再写新实现；有性能敏感改动时建议保留基准或注释说明预期影响。

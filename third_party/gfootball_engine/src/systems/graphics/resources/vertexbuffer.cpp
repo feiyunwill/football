@@ -23,20 +23,19 @@
 namespace blunted {
 
 VertexBuffer::VertexBuffer()
-    : verticesDataSize(0),
-      vertexCount(0),
-      dynamicBuffer(false),
-      sizeChanged(false) {
+    : vertices_data_size_(0),
+      vertex_count_(0),
+      dynamic_buffer_(false),
+      size_changed_(false) {
   DO_VALIDATION;
-  // printf("CREATING VertexBufferID\n");
-  assert(vertexBufferID.bufferID == -1);
+  assert(vertex_buffer_id_.bufferID == -1);
 }
 
 VertexBuffer::~VertexBuffer() {
   DO_VALIDATION;
-  if (vertexBufferID.bufferID != -1) {
+  if (vertex_buffer_id_.bufferID != -1) {
     DO_VALIDATION;
-    renderer3D->DeleteVertexBuffer(vertexBufferID);
+    renderer_3d_->DeleteVertexBuffer(vertex_buffer_id_);
   }
 }
 
@@ -44,67 +43,64 @@ void VertexBuffer::SetTriangleMesh(const std::vector<float>& vertices,
                                    unsigned int verticesDataSize,
                                    std::vector<unsigned int> indices) {
   DO_VALIDATION;
-  this->vertices = vertices;
+  vertices_ = vertices;
   TriangleMeshWasUpdatedExternally(verticesDataSize, indices);
 }
 
 void VertexBuffer::TriangleMeshWasUpdatedExternally(
     unsigned int verticesDataSize, std::vector<unsigned int> indices) {
   DO_VALIDATION;
-  // printf("%i == %i ?  %i == %i ?\n", this->indices.size(), indices.size(),
-  // vertexCount, verticesDataSize / GetTriangleMeshElementCount() / 3);
   if (indices.size() > 0) {
     DO_VALIDATION;
-    if (indices.size() != this->indices.size()) sizeChanged = true;
-    this->indices = indices;
+    if (indices.size() != indices_.size()) size_changed_ = true;
+    indices_ = indices;
   }
-  this->verticesDataSize = verticesDataSize;
+  vertices_data_size_ = verticesDataSize;
   int tmpVertexCount = verticesDataSize / GetTriangleMeshElementCount() / 3;
-  if (tmpVertexCount != vertexCount) sizeChanged = true;
-  vertexCount = tmpVertexCount;
+  if (tmpVertexCount != vertex_count_) size_changed_ = true;
+  vertex_count_ = tmpVertexCount;
 }
 
 VertexBufferID VertexBuffer::CreateOrUpdateVertexBuffer(Renderer3D* renderer3D,
                                                         bool dynamicBuffer) {
   DO_VALIDATION;
-  this->renderer3D = renderer3D;
+  renderer_3d_ = renderer3D;
 
-  // changed size? delete vbo first!
-  if (vertexBufferID.bufferID != -1 && sizeChanged) {
+  if (vertex_buffer_id_.bufferID != -1 && size_changed_) {
     DO_VALIDATION;
-    renderer3D->DeleteVertexBuffer(vertexBufferID);
-    vertexBufferID.bufferID = -1;
+    renderer3D->DeleteVertexBuffer(vertex_buffer_id_);
+    vertex_buffer_id_.bufferID = -1;
   }
 
-  if (vertexBufferID.bufferID == -1) {
+  if (vertex_buffer_id_.bufferID == -1) {
     DO_VALIDATION;
-    this->dynamicBuffer = dynamicBuffer;
+    dynamic_buffer_ = dynamicBuffer;
     e_VertexBufferUsage usage = e_VertexBufferUsage_StaticDraw;
     if (dynamicBuffer) usage = e_VertexBufferUsage_DynamicDraw;
-    vertexBufferID = renderer3D->CreateVertexBuffer(
-        &vertices[0], verticesDataSize, indices, usage);
+    vertex_buffer_id_ = renderer3D->CreateVertexBuffer(
+        vertices_.data(), vertices_data_size_, indices_, usage);
   } else {
-    renderer3D->UpdateVertexBuffer(vertexBufferID, vertices.data(),
-                                   verticesDataSize);
+    renderer3D->UpdateVertexBuffer(vertex_buffer_id_, vertices_.data(),
+                                   vertices_data_size_);
   }
 
-  sizeChanged = false;
+  size_changed_ = false;
 
-  return vertexBufferID;
+  return vertex_buffer_id_;
 }
 
 float* VertexBuffer::GetTriangleMesh() {
   DO_VALIDATION;
-  return &vertices[0];
+  return vertices_.data();
 }
 
 int VertexBuffer::GetVaoID() {
   DO_VALIDATION;
-  return vertexBufferID.vertexArrayID;
+  return vertex_buffer_id_.vertexArrayID;
 }
 
 int VertexBuffer::GetVerticesDataSize() {
   DO_VALIDATION;
-  return verticesDataSize;
+  return vertices_data_size_;
 }
 }

@@ -32,36 +32,40 @@ namespace blunted {
       Triangle(const Triangle &triangle);
       Triangle(const Vector3 &v1, const Vector3 &v2, const Vector3 &v3);
       ~Triangle();
+      // 2025-03-17 六大函数：显式默认移动与拷贝赋值（规则 cpp-special-member-functions）
+      Triangle(Triangle&&) = default;
+      Triangle& operator=(const Triangle&) = default;
+      Triangle& operator=(Triangle&&) = default;
       bool operator == (const Triangle &triangle) const;
 
       inline void SetVertex(unsigned char pos, const Vector &vec) { DO_VALIDATION;
-        vertices[pos].coords[0] = vec.coords[0];
-        vertices[pos].coords[1] = vec.coords[1];
-        vertices[pos].coords[2] = vec.coords[2];
+        vertices_[pos].coords[0] = vec.coords[0];
+        vertices_[pos].coords[1] = vec.coords[1];
+        vertices_[pos].coords[2] = vec.coords[2];
       }
 
       inline void SetTextureVertex(unsigned char texture_unit, unsigned char pos, const real x, const real y, const real z) { DO_VALIDATION;
-        textureVertices[pos][texture_unit].coords[0] = x;
-        textureVertices[pos][texture_unit].coords[1] = y;
-        textureVertices[pos][texture_unit].coords[2] = z;
+        texture_vertices_[pos][texture_unit].coords[0] = x;
+        texture_vertices_[pos][texture_unit].coords[1] = y;
+        texture_vertices_[pos][texture_unit].coords[2] = z;
       }
 
       inline void SetNormal(unsigned char pos, const real x, const real y, const real z) { DO_VALIDATION;
-        normals[pos].coords[0] = x;
-        normals[pos].coords[1] = y;
-        normals[pos].coords[2] = z;
+        normals_[pos].coords[0] = x;
+        normals_[pos].coords[1] = y;
+        normals_[pos].coords[2] = z;
       }
 
       inline void SetNormals(const Vector &vec) { DO_VALIDATION;
         for (int i = 0; i < 3; i++) { DO_VALIDATION;
-          normals[i].coords[0] = vec.coords[0];
-          normals[i].coords[1] = vec.coords[1];
-          normals[i].coords[2] = vec.coords[2];
+          normals_[i].coords[0] = vec.coords[0];
+          normals_[i].coords[1] = vec.coords[1];
+          normals_[i].coords[2] = vec.coords[2];
         }
       }
 
       inline const Vector3 &GetVertex(unsigned char pos) const {
-        return vertices[pos];
+        return vertices_[pos];
       }
 
       inline const Vector3 &GetTextureVertex(unsigned char pos) const {
@@ -69,11 +73,11 @@ namespace blunted {
       }
 
       inline const Vector3 &GetTextureVertex(unsigned char texture_unit, unsigned char pos) const {
-        return textureVertices[pos][texture_unit];
+        return texture_vertices_[pos][texture_unit];
       }
 
       inline const Vector3 &GetNormal(unsigned char pos) const {
-        return normals[pos];
+        return normals_[pos];
       }
 
       // ----- intersections
@@ -83,19 +87,20 @@ namespace blunted {
       void CalculateTangents();
 
       inline const Vector3 &GetTangent(unsigned char pos) const {
-        return tangents[pos];
+        return tangents_[pos];
       }
 
       inline const Vector3 &GetBiTangent(unsigned char pos) const {
-        return biTangents[pos];
+        return bi_tangents_[pos];
       }
 
     protected:
-      Vector3 vertices[3];
-      Vector3 tangents[3];
-      Vector3 biTangents[3];
-      Vector3 textureVertices[3][8];
-      Vector3 normals[3];
+      // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+      Vector3 vertices_[3];
+      Vector3 tangents_[3];
+      Vector3 bi_tangents_[3];
+      Vector3 texture_vertices_[3][8];
+      Vector3 normals_[3];
 
     private:
 

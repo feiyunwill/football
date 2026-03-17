@@ -43,9 +43,9 @@ namespace blunted {
       virtual void Exit();
 
       virtual void SetFOV(float fov);
-      virtual float GetFOV() const { return fov; }
+      virtual float GetFOV() const { return fov_; }
       virtual void SetCapping(float nearCap, float farCap);
-      virtual void GetCapping(float &nearCap, float &farCap) const { nearCap = this->nearCap; farCap = this->farCap; }
+      virtual void GetCapping(float &nearCap, float &farCap) const { nearCap = near_cap_; farCap = far_cap_; }
 
 
       virtual void EnqueueView(std::deque < boost::intrusive_ptr<Geometry> > &visibleGeometry, std::deque < boost::intrusive_ptr<Light> > &visibleLights, std::deque < boost::intrusive_ptr<Skybox> > &skyboxes);
@@ -54,9 +54,9 @@ namespace blunted {
       virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
 
     protected:
-      float fov = 0.0f;
-      float nearCap = 0.0f;
-      float farCap = 0.0f;
+      float fov_ = 0.0f;
+      float near_cap_ = 0.0f;
+      float far_cap_ = 0.0f;
 
   };
 

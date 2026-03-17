@@ -31,7 +31,11 @@ endif()
 project(gameplayfootball)
 set(PACKAGE gameplayfootball)
 
-set(CMAKE_CXX_STANDARD 14)
+# 2025-03-17 升级 C++ 标准以支持 C++23/20 现代化改造；若编译器不支持 C++23 可改为 20
+# set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED OFF)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(UNIX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS} -fPIC -g -O3")

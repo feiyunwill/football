@@ -55,35 +55,34 @@ namespace blunted {
 
       template <class T>
       inline void GetObjects(e_ObjectType targetObjectType, std::list < boost::intrusive_ptr<T> > &gatherObjects, bool recurse = true, int depth = 0) const {
-        //objects.Lock();
-        int objectsSize = objects.size();
+        int objectsSize = objects_.size();
         for (int i = 0; i < objectsSize; i++) { DO_VALIDATION;
-          if (objects[i]->GetObjectType() == targetObjectType) { DO_VALIDATION;
-            gatherObjects.push_back(boost::static_pointer_cast<T>(objects[i]));
+          if (objects_[i]->GetObjectType() == targetObjectType) { DO_VALIDATION;
+            gatherObjects.push_back(boost::static_pointer_cast<T>(objects_[i]));
           }
         }
 
         if (recurse) { DO_VALIDATION;
-          int nodesSize = nodes.size();
+          int nodesSize = nodes_.size();
           for (int i = 0; i < nodesSize; i++) { DO_VALIDATION;
-            nodes[i]->GetObjects<T>(targetObjectType, gatherObjects, recurse, depth + 1);
+            nodes_[i]->GetObjects<T>(targetObjectType, gatherObjects, recurse, depth + 1);
           }
         }
       }
 
       template <class T>
       inline void GetObjects(e_ObjectType targetObjectType, std::deque < boost::intrusive_ptr<T> > &gatherObjects, const vector_Planes &bounding, bool recurse = true, int depth = 0) const {
-        int objectsSize = objects.size();
+        int objectsSize = objects_.size();
         for (int i = 0; i < objectsSize; i++) { DO_VALIDATION;
-          if (objects[i]->GetObjectType() == targetObjectType) { DO_VALIDATION;
-            if (objects[i]->GetAABB().Intersects(bounding)) gatherObjects.push_back(boost::static_pointer_cast<T>(objects[i]));
+          if (objects_[i]->GetObjectType() == targetObjectType) { DO_VALIDATION;
+            if (objects_[i]->GetAABB().Intersects(bounding)) gatherObjects.push_back(boost::static_pointer_cast<T>(objects_[i]));
           }
         }
 
         if (recurse) { DO_VALIDATION;
-          int nodesSize = nodes.size();
+          int nodesSize = nodes_.size();
           for (int i = 0; i < nodesSize; i++) { DO_VALIDATION;
-            if (nodes[i]->GetAABB().Intersects(bounding)) nodes[i]->GetObjects<T>(targetObjectType, gatherObjects, bounding, recurse, depth + 1);
+            if (nodes_[i]->GetAABB().Intersects(bounding)) nodes_[i]->GetObjects<T>(targetObjectType, gatherObjects, bounding, recurse, depth + 1);
           }
         }
       }
@@ -95,8 +94,8 @@ namespace blunted {
       virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
 
     protected:
-      mutable std::vector < boost::intrusive_ptr<Node> > nodes;
-      mutable std::vector < boost::intrusive_ptr<Object> > objects;
+      mutable std::vector < boost::intrusive_ptr<Node> > nodes_;
+      mutable std::vector < boost::intrusive_ptr<Object> > objects_;
   };
 
 }

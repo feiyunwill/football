@@ -30,55 +30,54 @@ GraphicsSystem::GraphicsSystem() { DO_VALIDATION; }
 
 GraphicsSystem::~GraphicsSystem() { DO_VALIDATION; }
 
-void GraphicsSystem::Initialize(bool render, int width_, int height_) {
+void GraphicsSystem::Initialize(bool render, int width, int height) {
   DO_VALIDATION;
 
   if (render) {
-    renderer3DTask = new OpenGLRenderer3D();
+    renderer_3d_ = new OpenGLRenderer3D();
   } else {
-    renderer3DTask = new MockRenderer3D();
+    renderer_3d_ = new MockRenderer3D();
   }
-  width = width_;
-  height = height_;
-  bpp = 32;
-  if (!static_cast<Renderer3D *>(renderer3DTask)
-           ->CreateContext(width, height, bpp, false)) {
+  width_ = width;
+  height_ = height;
+  bpp_ = 32;
+  if (!static_cast<Renderer3D *>(renderer_3d_)
+           ->CreateContext(width_, height_, bpp_, false)) {
     DO_VALIDATION;
     Log(e_FatalError, "GraphicsSystem", "Initialize",
         "Could not create context");
   }
 
-  task = new GraphicsTask(this);
+  task_ = new GraphicsTask(this);
 }
 
 void GraphicsSystem::SetContext() {
-  if (renderer3DTask) {
-    renderer3DTask->SetContext();
+  if (renderer_3d_) {
+    renderer_3d_->SetContext();
   }
 }
 
 void GraphicsSystem::DisableContext() {
-  if (renderer3DTask) {
-    renderer3DTask->DisableContext();
+  if (renderer_3d_) {
+    renderer_3d_->DisableContext();
   }
 }
 
 const screenshoot &GraphicsSystem::GetScreen() {
-  return renderer3DTask->GetScreen();
+  return renderer_3d_->GetScreen();
 }
 
 void GraphicsSystem::Exit() {
   DO_VALIDATION;
-  delete task;
-  task = NULL;
+  delete task_;
+  task_ = nullptr;
 
-  // shutdown renderer thread
-  delete renderer3DTask;
-  renderer3DTask = NULL;
+  delete renderer_3d_;
+  renderer_3d_ = nullptr;
 }
 
   e_SystemType GraphicsSystem::GetSystemType() const {
-    return systemType;
+    return system_type_;
   }
 
   GraphicsScene *GraphicsSystem::Create2DScene(
@@ -99,16 +98,16 @@ void GraphicsSystem::Exit() {
 
   GraphicsTask *GraphicsSystem::GetTask() {
     DO_VALIDATION;
-    return task;
+    return task_;
   }
 
   Renderer3D *GraphicsSystem::GetRenderer3D() {
     DO_VALIDATION;
-    return renderer3DTask;
+    return renderer_3d_;
   }
 
   MessageQueue<Overlay2DQueueEntry> &GraphicsSystem::GetOverlay2DQueue() {
     DO_VALIDATION;
-    return overlay2DQueue;
+    return overlay_2d_queue_;
   }
 }

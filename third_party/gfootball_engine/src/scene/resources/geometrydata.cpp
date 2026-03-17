@@ -25,35 +25,50 @@ namespace blunted {
 
 GeometryData::GeometryData() {
   DO_VALIDATION;
-  aabb.aabb.Reset();
-  aabb.dirty = false;
+  aabb_.aabb.Reset();
+  aabb_.dirty = false;
 }
 
 GeometryData::~GeometryData() {
   DO_VALIDATION;
   // printf("ANNIHILATING TMESH\n");
-  for (unsigned int i = 0; i < triangleMeshes.size(); i++) {
+  for (unsigned int i = 0; i < triangle_meshes_.size(); i++) {
     DO_VALIDATION;
-    delete[] triangleMeshes[i].vertices;
+    delete[] triangle_meshes_[i].vertices;
   }
 }
 
 GeometryData::GeometryData(const GeometryData &src) {
   DO_VALIDATION;
-  for (unsigned int i = 0; i < src.triangleMeshes.size(); i++) {
+  for (unsigned int i = 0; i < src.triangle_meshes_.size(); i++) {
     DO_VALIDATION;
     // shallow copy
-    MaterializedTriangleMesh mesh = src.triangleMeshes[i];
+    MaterializedTriangleMesh mesh = src.triangle_meshes_[i];
 
     // 'deepen' vertices
-    mesh.vertices = new float[src.triangleMeshes[i].verticesDataSize];
-    memcpy(mesh.vertices, src.triangleMeshes[i].vertices,
-           src.triangleMeshes[i].verticesDataSize * sizeof(float));
+    mesh.vertices = new float[src.triangle_meshes_[i].verticesDataSize];
+    memcpy(mesh.vertices, src.triangle_meshes_[i].vertices,
+           src.triangle_meshes_[i].verticesDataSize * sizeof(float));
 
-    triangleMeshes.push_back(mesh);
+    triangle_meshes_.push_back(mesh);
   }
-  aabb.aabb = src.GetAABB();
-  aabb.dirty = false;
+  aabb_.aabb = src.GetAABB();
+  aabb_.dirty = false;
+}
+
+GeometryData::GeometryData(GeometryData &&src) noexcept
+    : is_dynamic_(src.is_dynamic_),
+      triangle_meshes_(std::move(src.triangle_meshes_)),
+      aabb_(src.aabb_) {
+  src.aabb_.dirty = true;
+}
+
+GeometryData &GeometryData::operator=(GeometryData &&src) noexcept {
+  is_dynamic_ = src.is_dynamic_;
+  triangle_meshes_ = std::move(src.triangle_meshes_);
+  aabb_ = src.aabb_;
+  src.aabb_.dirty = true;
+  return *this;
 }
 
 void GeometryData::AddTriangleMesh(Material material, float *vertices,
@@ -67,32 +82,32 @@ void GeometryData::AddTriangleMesh(Material material, float *vertices,
   mesh.verticesDataSize = verticesDataSize;
   mesh.indices = indices;
 
-  triangleMeshes.push_back(mesh);
-  aabb.aabb.Reset();
-  aabb.dirty = true;
+  triangle_meshes_.push_back(mesh);
+  aabb_.aabb.Reset();
+  aabb_.dirty = true;
 }
 
 std::vector<MaterializedTriangleMesh> GeometryData::GetTriangleMeshes() {
   DO_VALIDATION;
-  return triangleMeshes;
+  return triangle_meshes_;
 }
 
 std::vector<MaterializedTriangleMesh> &GeometryData::GetTriangleMeshesRef() {
   DO_VALIDATION;
-  return triangleMeshes;
+  return triangle_meshes_;
 }
 
   AABB GeometryData::GetAABB() const {
-    if (aabb.dirty) {
+    if (aabb_.dirty) {
       DO_VALIDATION;
-      aabb.aabb.Reset();
-      for (int i = 0; i < (signed int)triangleMeshes.size(); i++) {
+      aabb_.aabb.Reset();
+      for (int i = 0; i < (signed int)triangle_meshes_.size(); i++) {
         DO_VALIDATION;
-        aabb.aabb += GetTriangleMeshAABB(triangleMeshes[i].vertices, triangleMeshes[i].verticesDataSize, triangleMeshes[i].indices);
+        aabb_.aabb += GetTriangleMeshAABB(triangle_meshes_[i].vertices, triangle_meshes_[i].verticesDataSize, triangle_meshes_[i].indices);
       }
-      aabb.dirty = false;
+      aabb_.dirty = false;
     }
-    return aabb.aabb;
+    return aabb_.aabb;
   }
 
 }

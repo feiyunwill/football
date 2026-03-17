@@ -39,7 +39,7 @@ namespace blunted {
       virtual bool SupportedObjectType(e_ObjectType objectType) const;
 
     protected:
-      std::vector<e_ObjectType> supportedObjectTypes;
+      std::vector<e_ObjectType> supported_object_types_;
   };
 
 }

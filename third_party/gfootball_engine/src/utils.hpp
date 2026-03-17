@@ -18,6 +18,8 @@
 #ifndef _HPP_FOOTBALL_UTILS
 #define _HPP_FOOTBALL_UTILS
 
+#include <compare>
+
 #include "gamedefines.hpp"
 
 #include "scene/objects/camera.hpp"
@@ -72,6 +74,9 @@ enum e_PositionName {
   e_PositionName_F,
   e_PositionName_ST
 };
+constexpr std::strong_ordering operator<=>(e_PositionName a, e_PositionName b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 struct WeightedPosition {
   e_PositionName positionName;
@@ -88,6 +93,9 @@ enum e_DevelopmentCurveType {
   e_DevelopmentCurveType_Normal,
   e_DevelopmentCurveType_Late
 };
+constexpr std::strong_ordering operator<=>(e_DevelopmentCurveType a, e_DevelopmentCurveType b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 float CalculateStat(float baseStat, float profileStat, float age, e_DevelopmentCurveType developmentCurveType);
 

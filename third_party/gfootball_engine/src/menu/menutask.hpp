@@ -18,6 +18,8 @@
 #ifndef _HPP_GUI2_MENUTASK
 #define _HPP_GUI2_MENUTASK
 
+#include <compare>
+
 #include "ingame/gamepage.hpp"
 
 #include "../utils/gui2/guitask.hpp"
@@ -38,6 +40,9 @@ enum e_MenuAction {
   e_MenuAction_Game, // start game
   e_MenuAction_None
 };
+constexpr std::strong_ordering operator<=>(e_MenuAction a, e_MenuAction b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 struct SideSelection {
   int controllerID = 0;

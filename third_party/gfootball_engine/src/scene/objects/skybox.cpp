@@ -21,7 +21,8 @@ namespace blunted {
 
 Skybox::Skybox(std::string name) : Geometry(name, e_ObjectType_Skybox) {
   DO_VALIDATION;
-  localMode = e_LocalMode_Absolute;
+  // 2025-03-17 Spatial 成员已改为 local_mode_（types 模块 Google 命名）
+  SetLocalMode(e_LocalMode_Absolute);
 }
 
 Skybox::~Skybox() { DO_VALIDATION; }

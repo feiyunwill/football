@@ -18,6 +18,7 @@
 #ifndef _HPP_GUI2_STYLE
 #define _HPP_GUI2_STYLE
 
+#include <compare>
 #include <map>
 #include "wrap_SDL_ttf.h"
 #include "../../base/math/vector3.hpp"
@@ -31,6 +32,9 @@ namespace blunted {
     e_TextType_Title,
     e_TextType_ToolTip
   };
+  constexpr std::strong_ordering operator<=>(e_TextType a, e_TextType b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   enum e_DecorationType {
     e_DecorationType_Dark1,
@@ -39,6 +43,9 @@ namespace blunted {
     e_DecorationType_Bright2,
     e_DecorationType_Toggled
   };
+  constexpr std::strong_ordering operator<=>(e_DecorationType a, e_DecorationType b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   class Gui2Style {
 

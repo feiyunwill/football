@@ -85,24 +85,24 @@ namespace blunted {
   template <typename T> class ValueHistory {
 
     public:
-      ValueHistory(unsigned int maxTime_ms = 10000) : maxTime_ms(maxTime_ms) { DO_VALIDATION;}
+      ValueHistory(unsigned int maxTime_ms = 10000) : max_time_ms_(maxTime_ms) { DO_VALIDATION;}
       virtual ~ValueHistory() { DO_VALIDATION;}
 
       void Insert(const T &value) { DO_VALIDATION;
-        values.push_back(value);
-        if (values.size() > maxTime_ms / 10) values.pop_front();
+        values_.push_back(value);
+        if (values_.size() > max_time_ms_ / 10) values_.pop_front();
       }
 
       T GetAverage(unsigned int time_ms) const {
         T total = 0;
         unsigned int count = 0;
-        if (!values.empty()) { DO_VALIDATION;
-          typename std::list<T>::const_iterator iter = values.end();
+        if (!values_.empty()) { DO_VALIDATION;
+          typename std::list<T>::const_iterator iter = values_.end();
           iter--;
           while (count <= time_ms / 10) { DO_VALIDATION;
             total += (*iter);
             count++;
-            if (iter == values.begin()) break; else iter--;
+            if (iter == values_.begin()) break; else iter--;
           }
         }
         if (count > 0) total /= (float)count;
@@ -110,16 +110,16 @@ namespace blunted {
       }
 
       void Clear() { DO_VALIDATION;
-        values.clear();
+        values_.clear();
       }
       void ProcessState(EnvState *state) { DO_VALIDATION;
-        state->process(maxTime_ms);
-        state->process(values);
+        state->process(max_time_ms_);
+        state->process(values_);
       }
 
     protected:
-      unsigned int maxTime_ms = 0;
-      std::list<T> values;
+      unsigned int max_time_ms_ = 0;
+      std::list<T> values_;
 
   };
 

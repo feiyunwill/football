@@ -20,9 +20,7 @@
 
 namespace blunted {
 
-Command::Command() { DO_VALIDATION; }
-
-Command::~Command() { DO_VALIDATION; }
+// 2025-03-17 构造/析构已移至头文件 = default
 
 bool Command::Handle(void *caller) {
   DO_VALIDATION;

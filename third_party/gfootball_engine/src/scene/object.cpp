@@ -22,19 +22,17 @@
 namespace blunted {
 
 Object::Object(std::string name, e_ObjectType objectType)
-    : Spatial(name), objectType(objectType) {
+    : Spatial(name), object_type_(objectType) {
   DO_VALIDATION;
-  MustUpdateSpatialData clear;
-  clear.haveTo = false;
-  clear.excludeSystem = e_SystemType_None;
-  updateSpatialDataAfterPoke = clear;
-  pokePriority = 0;
-  enabled = true;
+  update_spatial_data_after_poke_.have_to_ = false;
+  update_spatial_data_after_poke_.exclude_system_ = e_SystemType_None;
+  poke_priority_ = 0;
+  enabled_ = true;
 }
 
 Object::~Object() {
   DO_VALIDATION;
-  if (observers.size() != 0) {
+  if (observers_.size() != 0) {
     DO_VALIDATION;
     Log(e_FatalError, "Object", "~Object",
         "Observer(s) still present at destruction time (spatial named: " +
@@ -44,18 +42,24 @@ Object::~Object() {
 
 Object::Object(const Object &src) : Subject<Interpreter>(), Spatial(src) {
   DO_VALIDATION;
-  objectType = src.objectType;
-  properties = src.properties;
-  requestProperties.AddProperties(src.requestProperties);
+  object_type_ = src.object_type_;
+  properties_ = src.properties_;
+  request_properties_.AddProperties(src.request_properties_);
+  update_spatial_data_after_poke_.have_to_ = false;
+  update_spatial_data_after_poke_.exclude_system_ = e_SystemType_None;
+  poke_priority_ = src.GetPokePriority();
+  enabled_ = src.enabled_;
+  assert(observers_.size() == 0);
+}
 
-  MustUpdateSpatialData clear;
-  clear.haveTo = false;
-  clear.excludeSystem = e_SystemType_None;
-  updateSpatialDataAfterPoke = clear;
-  pokePriority = src.GetPokePriority();
-  enabled = src.enabled;
-
-  assert(observers.size() == 0);
+Object::Object(Object &&src) noexcept
+    : Subject<Interpreter>(), Spatial(src) {
+  object_type_ = src.object_type_;
+  properties_ = std::move(src.properties_);
+  request_properties_ = std::move(src.request_properties_);
+  update_spatial_data_after_poke_ = src.update_spatial_data_after_poke_;
+  poke_priority_ = src.poke_priority_;
+  enabled_ = src.enabled_;
 }
 
 void Object::Exit() {
@@ -67,59 +71,61 @@ void Object::Exit() {
 
 inline e_ObjectType Object::GetObjectType() {
   DO_VALIDATION;
-  return objectType;
+  return object_type_;
 }
 
   const Properties &Object::GetProperties() const {
-    return properties;
+    return properties_;
   }
 
   bool Object::PropertyExists(const char *property) const {
-    bool exists = properties.Exists(property);
-    return exists;
+    return properties_.Exists(property);
   }
 
   const std::string &Object::GetProperty(const char *property) const {
-    return properties.Get(property);
+    return properties_.Get(property);
   }
 
-  void Object::SetProperties(Properties newProperties) {
+  void Object::SetProperties(const Properties &props) {
     DO_VALIDATION;
-    properties.AddProperties(&newProperties);
+    properties_.AddProperties(props);
+  }
+
+  void Object::SetProperties(Properties &&props) {
+    DO_VALIDATION;
+    properties_.AddProperties(std::move(props));
   }
 
   void Object::SetProperty(const char *name, const char *value) {
     DO_VALIDATION;
-    properties.Set(name, value);
+    properties_.Set(name, value);
   }
 
   bool Object::RequestPropertyExists(const char *property) const {
-    bool exists = requestProperties.Exists(property);
-    return exists;
+    return request_properties_.Exists(property);
   }
 
   std::string Object::GetRequestProperty(const char *property) const {
-    std::string result = requestProperties.Get(property);
-    return result;
+    return request_properties_.Get(property);
   }
 
   void Object::AddRequestProperty(const char *property) {
     DO_VALIDATION;
-    requestProperties.Set(property, "");
+    request_properties_.Set(property, "");
   }
 
   void Object::SetRequestProperty(const char *property, const char *value) {
     DO_VALIDATION;
-    requestProperties.Set(property, value);
+    request_properties_.Set(property, value);
   }
 
   void Object::Synchronize() {
     DO_VALIDATION;
     boost::shared_ptr<Interpreter> result;
-    int observersSize = observers.size();
+    int observersSize = observers_.size();
     for (int i = 0; i < observersSize; i++) {
       DO_VALIDATION;
-      boost::intrusive_ptr<Interpreter> interpreter = boost::static_pointer_cast<Interpreter>(observers[i]);
+      boost::intrusive_ptr<Interpreter> interpreter = boost::static_pointer_cast<Interpreter>(observers_[i]);
       interpreter->OnSynchronize();
     }
   }
@@ -135,10 +141,10 @@ inline e_ObjectType Object::GetObjectType() {
       e_SystemType targetSystemType) {
     DO_VALIDATION;
     boost::intrusive_ptr<Interpreter> result;
-    int observersSize = observers.size();
+    int observersSize = observers_.size();
     for (int i = 0; i < observersSize; i++) {
       DO_VALIDATION;
-      boost::intrusive_ptr<Interpreter> interpreter = boost::static_pointer_cast<Interpreter>(observers[i]);
+      boost::intrusive_ptr<Interpreter> interpreter = boost::static_pointer_cast<Interpreter>(observers_[i]);
       if (interpreter->GetSystemType() == targetSystemType) result = interpreter;
     }
     return result;

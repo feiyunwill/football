@@ -34,11 +34,11 @@ Properties::Properties(std::vector<std::pair<std::string, float>> values) {
   DO_VALIDATION;
 }
 
-Properties::~Properties() { DO_VALIDATION; }
+// 2025-03-17 析构已改为头文件中 virtual ~Properties() = default
 
 bool Properties::Exists(const std::string &name) const {
-  auto iter = properties.find(name);
-  if (iter == properties.end()) {
+  auto iter = properties_.find(name);
+  if (iter == properties_.end()) {
     DO_VALIDATION;
     return false;
   } else {
@@ -48,7 +48,7 @@ bool Properties::Exists(const std::string &name) const {
 
   void Properties::Set(const std::string &name, const std::string &value) {
     DO_VALIDATION;
-    properties[name] = value;
+    properties_[name] = value;
   }
 
   void Properties::SetInt(const std::string &name, int value) {
@@ -70,8 +70,8 @@ bool Properties::Exists(const std::string &name) const {
   }
 
   const std::string &Properties::Get(const std::string &name, const std::string &defaultValue) const {
-    auto iter = properties.find(name);
-    if (iter == properties.end()) {
+    auto iter = properties_.find(name);
+    if (iter == properties_.end()) {
       DO_VALIDATION;
       return defaultValue;
     } else {
@@ -80,8 +80,8 @@ bool Properties::Exists(const std::string &name) const {
   }
 
   bool Properties::GetBool(const std::string &name, bool defaultValue) const {
-    auto iter = properties.find(name);
-    if (iter == properties.end()) {
+    auto iter = properties_.find(name);
+    if (iter == properties_.end()) {
       DO_VALIDATION;
       return defaultValue;
     } else {
@@ -90,8 +90,8 @@ bool Properties::Exists(const std::string &name) const {
   }
 
   real Properties::GetReal(const std::string& name, real defaultValue) const {
-    auto iter = properties.find(name);
-    if (iter == properties.end()) {
+    auto iter = properties_.find(name);
+    if (iter == properties_.end()) {
       DO_VALIDATION;
       return defaultValue;
     } else {
@@ -100,8 +100,8 @@ bool Properties::Exists(const std::string &name) const {
   }
 
   int Properties::GetInt(const std::string &name, int defaultValue) const {
-    auto iter = properties.find(name);
-    if (iter == properties.end()) {
+    auto iter = properties_.find(name);
+    if (iter == properties_.end()) {
       DO_VALIDATION;
       return defaultValue;
     } else {
@@ -118,7 +118,7 @@ bool Properties::Exists(const std::string &name) const {
 
     while (iter != userpropdata->end()) {
       DO_VALIDATION;
-      properties[iter->first] = iter->second;
+      properties_[iter->first] = iter->second;
       iter++;
     }
   }
@@ -130,20 +130,28 @@ bool Properties::Exists(const std::string &name) const {
 
     while (iter != userpropdata->end()) {
       DO_VALIDATION;
-      properties[iter->first] = iter->second;
+      properties_[iter->first] = iter->second;
       iter++;
     }
   }
 
+  void Properties::AddProperties(Properties &&other) {
+    DO_VALIDATION;
+    for (auto &kv : other.properties_) {
+      properties_[std::move(kv.first)] = std::move(kv.second);
+    }
+    other.properties_.clear();
+  }
+
   const map_Properties *Properties::GetProperties() const {
-    return &properties;
+    return &properties_;
   }
 
   void Properties::ProcessState(EnvState *state) {
     DO_VALIDATION;
     if (state->Load()) {
       DO_VALIDATION;
-      properties.clear();
+      properties_.clear();
       int size;
       state->process(size);
       while (size--) {
@@ -152,12 +160,12 @@ bool Properties::Exists(const std::string &name) const {
         string value;
         state->process(key);
         state->process(value);
-        properties[key] = value;
+        properties_[key] = value;
       }
     } else {
-      int size = properties.size();
+      int size = properties_.size();
       state->process(size);
-      for (const auto &x : properties) {
+      for (const auto &x : properties_) {
         DO_VALIDATION;
         string key = x.first;
         string value = x.second;

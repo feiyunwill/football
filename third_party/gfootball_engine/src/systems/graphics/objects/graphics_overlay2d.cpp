@@ -47,7 +47,7 @@ boost::intrusive_ptr<Interpreter> GraphicsOverlay2D::GetInterpreter(
 
 GraphicsOverlay2D_Image2DInterpreter::GraphicsOverlay2D_Image2DInterpreter(
     GraphicsOverlay2D *caller)
-    : caller(caller) {
+    : caller_(caller) {
   DO_VALIDATION;
 }
 
@@ -57,7 +57,7 @@ void GraphicsOverlay2D_Image2DInterpreter::OnLoad(
 
   bool alreadyThere = false;
 
-  caller->texture = GetContext().texture_manager.Fetch(
+  caller_->texture_ = GetContext().texture_manager.Fetch(
       surface->GetIdentString(), false, alreadyThere,
       true);  // false == don't try to use loader
 
@@ -66,32 +66,32 @@ void GraphicsOverlay2D_Image2DInterpreter::OnLoad(
   if (!alreadyThere) {
     DO_VALIDATION;
     Renderer3D *renderer3D =
-        caller->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
+        caller_->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
 
-    caller->texture->GetResource()->SetRenderer3D(renderer3D);
+    caller_->texture_->GetResource()->SetRenderer3D(renderer3D);
     bool alpha = SDL_ISPIXELFORMAT_ALPHA((image->format->format));
-    caller->texture->GetResource()->CreateTexture(
+    caller_->texture_->GetResource()->CreateTexture(
         e_InternalPixelFormat_RGBA8,
         alpha ? e_PixelFormat_RGBA : e_PixelFormat_RGB, image->w, image->h,
         alpha, false, false, false);
-    caller->texture->GetResource()->UpdateTexture(image, alpha, false);
-    caller->position[0] = 0;
-    caller->position[1] = 0;
-    caller->size[0] = image->w;
-    caller->size[1] = image->h;
+    caller_->texture_->GetResource()->UpdateTexture(image, alpha, false);
+    caller_->position_[0] = 0;
+    caller_->position_[1] = 0;
+    caller_->size_[0] = image->w;
+    caller_->size_[1] = image->h;
   } else {
     OnChange(surface);
   }
 
-  // printf("texture id: %i\n", caller->textureID);
+  // printf("texture id: %i\n", caller_->texture_ID);
 }
 
 void GraphicsOverlay2D_Image2DInterpreter::OnUnload() {
   DO_VALIDATION;
   // printf("resetting link to texture.. ");
-  caller->texture.reset();
-  delete caller;
-  caller = 0;
+  caller_->texture_.reset();
+  delete caller_;
+  caller_ = nullptr;
   // printf("[OK]\n");
 }
 
@@ -100,37 +100,37 @@ void GraphicsOverlay2D_Image2DInterpreter::OnChange(
   DO_VALIDATION;
   SDL_Surface *image = surface->GetResource()->GetData();
   assert(image);
-  assert(caller->texture);
+  assert(caller_->texture_);
   bool alpha = SDL_ISPIXELFORMAT_ALPHA((image->format->format));
-  if (caller->size[0] != image->w || caller->size[1] != image->h) {
+  if (caller_->size_[0] != image->w || caller_->size_[1] != image->h) {
     DO_VALIDATION;
     // surface was resized
-    caller->size[0] = image->w;
-    caller->size[1] = image->h;
-    caller->texture->GetResource()->ResizeTexture(
+    caller_->size_[0] = image->w;
+    caller_->size_[1] = image->h;
+    caller_->texture_->GetResource()->ResizeTexture(
         image, e_InternalPixelFormat_RGBA8,
         alpha ? e_PixelFormat_RGBA : e_PixelFormat_RGB, alpha, false);
   } else {
     // no resize, just update
-    caller->texture->GetResource()->UpdateTexture(image, alpha, false);
+    caller_->texture_->GetResource()->UpdateTexture(image, alpha, false);
   }
 }
 
 void GraphicsOverlay2D_Image2DInterpreter::OnMove(int x, int y) {
   DO_VALIDATION;
-  caller->position[0] = x;
-  caller->position[1] = y;
+  caller_->position_[0] = x;
+  caller_->position_[1] = y;
 }
 
 void GraphicsOverlay2D_Image2DInterpreter::OnPoke() {
   DO_VALIDATION;
   Overlay2DQueueEntry queueEntry;
-  queueEntry.texture = caller->texture;
-  queueEntry.position[0] = caller->position[0];
-  queueEntry.position[1] = caller->position[1];
-  queueEntry.size[0] = caller->size[0];
-  queueEntry.size[1] = caller->size[1];
-  caller->GetGraphicsScene()
+  queueEntry.texture = caller_->texture_;
+  queueEntry.position[0] = caller_->position_[0];
+  queueEntry.position[1] = caller_->position_[1];
+  queueEntry.size[0] = caller_->size_[0];
+  queueEntry.size[1] = caller_->size_[1];
+  caller_->GetGraphicsScene()
       ->GetGraphicsSystem()
       ->GetOverlay2DQueue()
       .PushMessage(queueEntry);

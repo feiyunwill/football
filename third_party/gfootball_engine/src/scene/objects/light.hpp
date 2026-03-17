@@ -25,6 +25,8 @@
 #include "../../base/math/vector3.hpp"
 #include "../../base/geometry/aabb.hpp"
 
+#include <compare>
+
 namespace blunted {
 
   class Camera;
@@ -34,6 +36,10 @@ namespace blunted {
     e_LightType_Directional,
     e_LightType_Point
   };
+
+  constexpr std::strong_ordering operator<=>(e_LightType a, e_LightType b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   class Light : public Object {
 
@@ -65,10 +71,10 @@ namespace blunted {
       virtual AABB GetAABB() const;
 
     protected:
-      Vector3 color;
-      float radius = 0.0f;
-      e_LightType lightType;
-      bool shadow = false;
+      Vector3 color_;
+      float radius_ = 0.0f;
+      e_LightType light_type_;
+      bool shadow_ = false;
 
   };
 

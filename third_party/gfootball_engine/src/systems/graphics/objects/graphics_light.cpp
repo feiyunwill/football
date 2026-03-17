@@ -28,10 +28,10 @@ namespace blunted {
 GraphicsLight::GraphicsLight(GraphicsScene *graphicsScene)
     : GraphicsObject(graphicsScene) {
   DO_VALIDATION;
-  radius = 512;
-  color.Set(1, 1, 1);
-  lightType = e_LightType_Point;
-  shadow = false;
+  radius_ = 512;
+  color_.Set(1, 1, 1);
+  light_type_ = e_LightType_Point;
+  shadow_ = false;
 }
 
 GraphicsLight::~GraphicsLight() { DO_VALIDATION; }
@@ -52,52 +52,52 @@ boost::intrusive_ptr<Interpreter> GraphicsLight::GetInterpreter(
 
 void GraphicsLight::SetPosition(const Vector3 &newPosition) {
   DO_VALIDATION;
-  position = newPosition;
+  position_ = newPosition;
 }
 
   Vector3 GraphicsLight::GetPosition() const {
-    return position;
+    return position_;
   }
 
   void GraphicsLight::SetColor(const Vector3 &newColor) {
     DO_VALIDATION;
-    color = newColor;
+    color_ = newColor;
   }
 
   Vector3 GraphicsLight::GetColor() const {
-    return color;
+    return color_;
   }
 
   void GraphicsLight::SetRadius(float radius) {
     DO_VALIDATION;
-    this->radius = radius;
+    radius_ = radius;
   }
 
   float GraphicsLight::GetRadius() const {
-    return radius;
+    return radius_;
   }
 
   void GraphicsLight::SetType(e_LightType lightType) {
     DO_VALIDATION;
-    this->lightType = lightType;
+    light_type_ = lightType;
   }
 
   e_LightType GraphicsLight::GetType() const {
-    return lightType;
+    return light_type_;
   }
 
   void GraphicsLight::SetShadow(bool shadow) {
     DO_VALIDATION;
-    this->shadow = shadow;
+    shadow_ = shadow;
   }
 
   bool GraphicsLight::GetShadow() const {
-    return shadow;
+    return shadow_;
   }
 
   GraphicsLight_LightInterpreter::GraphicsLight_LightInterpreter(
       GraphicsLight *caller)
-      : caller(caller) {
+      : caller_(caller) {
     DO_VALIDATION;
   }
 
@@ -106,62 +106,62 @@ void GraphicsLight::SetPosition(const Vector3 &newPosition) {
 
 
 
-    Renderer3D *renderer3D = caller->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
+    Renderer3D *renderer3D = caller_->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
 
-    std::vector<ShadowMap>::iterator iter = caller->shadowMaps.begin();
-    while (iter != caller->shadowMaps.end()) {
+    std::vector<ShadowMap>::iterator iter = caller_->shadow_maps_.begin();
+    while (iter != caller_->shadow_maps_.end()) {
       DO_VALIDATION;
       renderer3D->BindFrameBuffer((*iter).frameBufferID);
       renderer3D->SetFrameBufferTexture2D(e_TargetAttachment_Depth, 0);
       renderer3D->DeleteFrameBuffer((*iter).frameBufferID);
       (*iter).visibleGeometry.clear();
       (*iter).texture.reset();
-      iter = caller->shadowMaps.erase(iter);
+      iter = caller_->shadow_maps_.erase(iter);
     }
 
-    delete caller;
-    caller = 0;
+    delete caller_;
+    caller_ = nullptr;
   }
 
   void GraphicsLight_LightInterpreter::SetValues(const Vector3 &color,
                                                  float radius) {
     DO_VALIDATION;
-    caller->SetColor(color);
-    caller->SetRadius(radius);
+    caller_->SetColor(color);
+    caller_->SetRadius(radius);
   }
 
   void GraphicsLight_LightInterpreter::SetType(e_LightType lightType) {
     DO_VALIDATION;
-    caller->SetType(lightType);
+    caller_->SetType(lightType);
   }
 
   void GraphicsLight_LightInterpreter::SetShadow(bool shadow) {
     DO_VALIDATION;
-    caller->SetShadow(shadow);
+    caller_->SetShadow(shadow);
   }
 
   bool GraphicsLight_LightInterpreter::GetShadow() {
     DO_VALIDATION;
-    return caller->GetShadow();
+    return caller_->GetShadow();
   }
 
   void GraphicsLight_LightInterpreter::OnSpatialChange(
       const Vector3 &position, const Quaternion &rotation) {
     DO_VALIDATION;
-    caller->SetPosition(position);
-    //caller->SetRotation(rotation);
+    caller_->SetPosition(position);
+    //caller_->SetRotation(rotation);
   }
 
   void GraphicsLight_LightInterpreter::EnqueueShadowMap(
       boost::intrusive_ptr<Camera> camera,
       std::deque<boost::intrusive_ptr<Geometry> > visibleGeometry) {
     DO_VALIDATION;
-    if (!caller->GetShadow()) return;
+    if (!caller_->GetShadow()) return;
 
     int index = -1;
-    for (int i = 0; i < (signed int)caller->shadowMaps.size(); i++) {
+    for (int i = 0; i < (signed int)caller_->shadow_maps_.size(); i++) {
       DO_VALIDATION;
-      if (caller->shadowMaps[i].cameraName == camera->GetName()) {
+      if (caller_->shadow_maps_[i].cameraName == camera->GetName()) {
         DO_VALIDATION;
         index = i;
       }
@@ -178,7 +178,7 @@ void GraphicsLight::SetPosition(const Vector3 &newPosition) {
           false);  // false == don't try to use loader
       if (map.texture->GetResource()->GetID() == -1) {
         DO_VALIDATION;
-        Renderer3D *renderer3D = caller->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
+        Renderer3D *renderer3D = caller_->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
         map.texture->GetResource()->SetRenderer3D(renderer3D);
         map.texture->GetResource()->CreateTexture(e_InternalPixelFormat_DepthComponent16, e_PixelFormat_DepthComponent, 2048, 2048, false, false, false, true, true);
 
@@ -202,8 +202,8 @@ void GraphicsLight::SetPosition(const Vector3 &newPosition) {
 
       map.cameraName = camera->GetName();
 
-      caller->shadowMaps.push_back(map);
-      index = caller->shadowMaps.size() - 1;
+      caller_->shadow_maps_.push_back(map);
+      index = caller_->shadow_maps_.size() - 1;
     }
 
     // add geometry
@@ -214,18 +214,18 @@ void GraphicsLight::SetPosition(const Vector3 &newPosition) {
       boost::intrusive_ptr<GraphicsGeometry_GeometryInterpreter> interpreter = boost::static_pointer_cast<GraphicsGeometry_GeometryInterpreter>((*visibleGeometryIter)->GetInterpreter(e_SystemType_Graphics));
 
       // add buffers to visible geometry queue
-      interpreter->GetVertexBufferQueue(caller->shadowMaps.at(index).visibleGeometry);
+      interpreter->GetVertexBufferQueue(caller_->shadow_maps_.at(index).visibleGeometry);
 
       // unlocksubject used to be here
 
-      std::deque<VertexBufferQueueEntry>::iterator visibleGeometryBufferIter = caller->shadowMaps.at(index).visibleGeometry.end();
+      std::deque<VertexBufferQueueEntry>::iterator visibleGeometryBufferIter = caller_->shadow_maps_.at(index).visibleGeometry.end();
       visibleGeometryBufferIter--;
       (*visibleGeometryBufferIter).aabb = (*visibleGeometryIter)->GetAABB();
 
       visibleGeometryIter++;
     }
 
-    //std::sort(caller->shadowMaps.at(index).visibleGeometry.begin(), caller->shadowMaps.at(index).visibleGeometry.end(), GLLI_SortVertexBufferQueueEntries);
+    //std::sort(caller_->shadow_maps_.at(index).visibleGeometry.begin(), caller_->shadow_maps_.at(index).visibleGeometry.end(), GLLI_SortVertexBufferQueueEntries);
 
 
     // all this is way too hardcoded and should somehow heed the camera bounding box better
@@ -253,23 +253,23 @@ void GraphicsLight::SetPosition(const Vector3 &newPosition) {
     proj.elements[11] = -((farCap + nearCap) / (farCap - nearCap));
     proj.elements[15] = 1;
     Matrix4 identity = Matrix4(MATRIX4_IDENTITY);
-    caller->shadowMaps.at(index).lightProjectionMatrix = identity * proj;
+    caller_->shadow_maps_.at(index).lightProjectionMatrix = identity * proj;
 
     // view matrix
     Quaternion ident(QUATERNION_IDENTITY);
-    Vector3 pos = (caller->GetPosition().GetNormalized(Vector3(0, 0, -1))) + camera->GetDerivedPosition().Get2D() + Vector3(0, 70, 0);
-    Quaternion rot; rot = caller->GetPosition().GetNormalized(Vector3(0, 0, -1));
-    caller->shadowMaps.at(index).lightViewMatrix.ConstructInverse(pos, Vector3(1, 1, 1), rot);
+    Vector3 pos = (caller_->GetPosition().GetNormalized(Vector3(0, 0, -1))) + camera->GetDerivedPosition().Get2D() + Vector3(0, 70, 0);
+    Quaternion rot; rot = caller_->GetPosition().GetNormalized(Vector3(0, 0, -1));
+    caller_->shadow_maps_.at(index).lightViewMatrix.ConstructInverse(pos, Vector3(1, 1, 1), rot);
   }
 
   ShadowMap GraphicsLight_LightInterpreter::GetShadowMap(
       const std::string &camName) {
     DO_VALIDATION;
-    for (unsigned int i = 0; i < caller->shadowMaps.size(); i++) {
+    for (unsigned int i = 0; i < caller_->shadow_maps_.size(); i++) {
       DO_VALIDATION;
-      if (caller->shadowMaps[i].cameraName == camName) {
+      if (caller_->shadow_maps_[i].cameraName == camName) {
         DO_VALIDATION;
-        return caller->shadowMaps[i];
+        return caller_->shadow_maps_[i];
       }
     }
 
@@ -279,11 +279,11 @@ void GraphicsLight::SetPosition(const Vector3 &newPosition) {
 
   void GraphicsLight_LightInterpreter::OnPoke() {
     DO_VALIDATION;
-    if (!caller->GetShadow()) return;
+    if (!caller_->GetShadow()) return;
 
-    for (auto &map : caller->shadowMaps) {
+    for (auto &map : caller_->shadow_maps_) {
       DO_VALIDATION;
-      Renderer3D *renderer = caller->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
+      Renderer3D *renderer = caller_->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
       renderer->UseShader("zphase");
       renderer->BindFrameBuffer(map.frameBufferID);
 

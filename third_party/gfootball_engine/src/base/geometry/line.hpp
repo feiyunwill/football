@@ -27,10 +27,14 @@ namespace blunted {
   class Line {
 
     public:
-      Line();
+      // 2025-03-17 六大函数：显式 =default（规则 cpp-special-member-functions）
+      Line() = default;
       Line(const Vector3 vec1, const Vector3 vec2);
-      ~Line();
-
+      Line(const Line&) = default;
+      Line(Line&&) = default;
+      ~Line() = default;
+      Line& operator=(const Line&) = default;
+      Line& operator=(Line&&) = default;
       void SetVertex(unsigned char pos, const Vector3 &vec);
       const Vector3 &GetVertex(unsigned char pos) const;
 
@@ -41,10 +45,11 @@ namespace blunted {
       Vector3 GetIntersectionPoint(const Line &line, float &u) const;
 
       bool WhatSide(const Vector3 &point);
-      float GetLength() const { return (vertices[0] - vertices[1]).GetLength(); }
+      float GetLength() const { return (vertices_[0] - vertices_[1]).GetLength(); }
 
     protected:
-      Vector3 vertices[2];
+      // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+      Vector3 vertices_[2];
 
     private:
 

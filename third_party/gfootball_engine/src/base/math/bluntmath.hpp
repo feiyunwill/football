@@ -34,22 +34,29 @@ namespace blunted {
 
   // you can never be too specific ;)
   constexpr real pi = 3.1415926535897932384626433832795028841972f; // last decimal rounded ;)
+  // 2025-03-17 Class data members 改为 Google 规范：小写+下划线+末尾下划线（cpp-google-style）
   class radian {
    public:
     radian() { DO_VALIDATION;}
-    radian(float r) : _angle(r) { DO_VALIDATION;}
+    radian(float r) : angle_(r) { DO_VALIDATION;}
+    // 2025-03-17 六大函数：显式 =default 以符合 cpp-special-member-functions 规则
+    radian(const radian&) = default;
+    radian(radian&&) = default;
+    ~radian() = default;
+    radian& operator=(const radian&) = default;
+    radian& operator=(radian&&) = default;
     std::ostream& operator<<(std::ostream& os) {
-      os << _angle << " " << _rotated;
+      os << angle_ << " " << rotated_;
       return os;
     }
     radian &operator+=(radian r) { DO_VALIDATION;
-      _angle += r._angle;
-      _rotated ^= r._rotated;
+      angle_ += r.angle_;
+      rotated_ ^= r.rotated_;
       return *this;
     }
     radian &operator-=(radian r){
-      _angle -= r._angle;
-      _rotated ^= r._rotated;
+      angle_ -= r.angle_;
+      rotated_ ^= r.rotated_;
       return *this;
     }
     radian &operator/=(radian r) { DO_VALIDATION;
@@ -61,18 +68,18 @@ namespace blunted {
       return *this;
     }
     operator real() const {
-      if (_rotated) { DO_VALIDATION;
-        return _angle - pi;
+      if (rotated_) { DO_VALIDATION;
+        return angle_ - pi;
       }
-      return _angle;
+      return angle_;
     }
     void Mirror() { DO_VALIDATION;
-      _rotated = !_rotated;
+      rotated_ = !rotated_;
     }
    private:
-    float _angle = 0.0f;
+    float angle_ = 0.0f;
     // Was angle rotated by PI.
-    bool _rotated = false;
+    bool rotated_ = false;
   };
 
   void normalize(real v[3]);

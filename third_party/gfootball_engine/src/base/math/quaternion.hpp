@@ -39,6 +39,12 @@ namespace blunted {
         elements[2] = 0;
         elements[3] = 1;
       }
+      // 2025-03-17 六大函数：显式 =default（规则 cpp-special-member-functions）
+      Quaternion(const Quaternion&) = default;
+      Quaternion(Quaternion&&) = default;
+      ~Quaternion() = default;
+      Quaternion& operator=(const Quaternion&) = default;
+      Quaternion& operator=(Quaternion&&) = default;
       Quaternion(real x, real y, real z, real w);
       Quaternion(real values[4]);
 

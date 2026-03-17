@@ -31,12 +31,12 @@ namespace blunted {
       Surface(const Surface &src);
 
       SDL_Surface *GetData();
-      void SetData(SDL_Surface *surface);
+      void SetData(SDL_Surface *s);
 
       void Resize(int x, int y);  // 0 == dependent on other coord
 
     protected:
-      SDL_Surface *surface;
+      SDL_Surface *surface_;
 
   };
 

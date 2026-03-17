@@ -34,8 +34,11 @@ namespace blunted {
       Matrix3(real v1, real v2, real v3, real v4, real v5, real v6, real v7, real v8, real v9);
       Matrix3(const Matrix3 &mat3);
       Matrix3(const Matrix4 &mat4);
-      virtual ~Matrix3();
-
+      virtual ~Matrix3() = default;
+      // 2025-03-17 六大函数：显式默认移动与拷贝赋值（规则 cpp-special-member-functions）
+      Matrix3(Matrix3&&) = default;
+      Matrix3& operator=(const Matrix3&) = default;
+      Matrix3& operator=(Matrix3&&) = default;
       // ----- operator overloading
       void operator = (const Matrix4 &mat4);
       Matrix3 operator * (const Matrix3 &multiplier) const;

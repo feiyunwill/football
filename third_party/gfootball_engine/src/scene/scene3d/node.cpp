@@ -25,8 +25,8 @@ namespace blunted {
 
 Node::Node(const std::string &name) : Spatial(name) {
   DO_VALIDATION;
-  aabb.aabb.Reset();
-  aabb.dirty = false;
+  aabb_.aabb.Reset();
+  aabb_.dirty = false;
 }
 
 Node::Node(const Node &source, const std::string &postfix,
@@ -63,23 +63,23 @@ Node::~Node() { DO_VALIDATION; }
 
 void Node::Exit() {
   DO_VALIDATION;
-  int objCount = objects.size();
+  int objCount = objects_.size();
   for (int i = 0; i < objCount; i++) {
     DO_VALIDATION;
-    objects[i]->Exit();
+    objects_[i]->Exit();
   }
-  objects.clear();
-  int nodeCount = nodes.size();
+  objects_.clear();
+  int nodeCount = nodes_.size();
   for (int i = 0; i < nodeCount; i++) {
     DO_VALIDATION;
-    nodes[i]->Exit();
+    nodes_[i]->Exit();
   }
-  nodes.clear();
+  nodes_.clear();
 }
 
 void Node::AddNode(boost::intrusive_ptr<Node> node) {
   DO_VALIDATION;
-  nodes.push_back(node);
+  nodes_.push_back(node);
   node->SetParent(this);
   node->RecursiveUpdateSpatialData(e_SpatialDataType_Both);
   InvalidateBoundingVolume();
@@ -88,28 +88,28 @@ void Node::AddNode(boost::intrusive_ptr<Node> node) {
 void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
   DO_VALIDATION;
   std::vector<boost::intrusive_ptr<Node> >::iterator nodeIter =
-      find(nodes.begin(), nodes.end(), node);
-  if (nodeIter != nodes.end()) {
+      find(nodes_.begin(), nodes_.end(), node);
+  if (nodeIter != nodes_.end()) {
     DO_VALIDATION;
     (*nodeIter)->Exit();
-    nodes.erase(nodeIter);
+    nodes_.erase(nodeIter);
   }
   InvalidateBoundingVolume();
 }
 
   void Node::GetNodes(std::vector < boost::intrusive_ptr<Node> > &gatherNodes, bool recurse) const {
-    int nodesSize = nodes.size();
+    int nodesSize = nodes_.size();
     for (int i = 0; i < nodesSize; i++) {
       DO_VALIDATION;
-      gatherNodes.push_back(nodes[i]);
-      if (recurse) nodes[i]->GetNodes(gatherNodes, recurse);
+      gatherNodes.push_back(nodes_[i]);
+      if (recurse) nodes_[i]->GetNodes(gatherNodes, recurse);
     }
   }
 
   void Node::AddObject(boost::intrusive_ptr<Object> object) {
     DO_VALIDATION;
     assert(object.get());
-    objects.push_back(object);
+    objects_.push_back(object);
     object->SetParent(this);
 
     object->RecursiveUpdateSpatialData(e_SpatialDataType_Both);
@@ -118,8 +118,8 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
 
   boost::intrusive_ptr<Object> Node::GetObject(const std::string &name) {
     DO_VALIDATION;
-    std::vector < boost::intrusive_ptr<Object> >::iterator objIter = objects.begin();
-    while (objIter != objects.end()) {
+    std::vector < boost::intrusive_ptr<Object> >::iterator objIter = objects_.begin();
+    while (objIter != objects_.end()) {
       DO_VALIDATION;
       if ((*objIter)->GetName() == name) {
         DO_VALIDATION;
@@ -134,61 +134,61 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
   void Node::DeleteObject(boost::intrusive_ptr<Object> object,
                           bool exitObject) {
     DO_VALIDATION;
-    std::vector < boost::intrusive_ptr<Object> >::iterator objIter = find(objects.begin(), objects.end(), object);
-    if (objIter != objects.end()) {
+    std::vector < boost::intrusive_ptr<Object> >::iterator objIter = find(objects_.begin(), objects_.end(), object);
+    if (objIter != objects_.end()) {
       DO_VALIDATION;
       if (exitObject) (*objIter)->Exit();
       (*objIter)->SetParent(0);
-      objects.erase(objIter);
+      objects_.erase(objIter);
     } else
       Log(e_Error, "Node", "DeleteObject",
           "Object " + object->GetName() + " not found among node " + GetName() +
               "'s children!");
-    aabb.dirty = true;
+    aabb_.dirty = true;
   }
 
   void Node::GetObjects(std::list < boost::intrusive_ptr<Object> > &gatherObjects, bool recurse, int depth) const {
-    int objectsSize = objects.size();
+    int objectsSize = objects_.size();
     for (int i = 0; i < objectsSize; i++) {
       DO_VALIDATION;
-      gatherObjects.push_back(objects[i]);
+      gatherObjects.push_back(objects_[i]);
     }
     if (recurse) {
       DO_VALIDATION;
-      int nodesSize = nodes.size();
+      int nodesSize = nodes_.size();
       for (int i = 0; i < nodesSize; i++) {
         DO_VALIDATION;
-        nodes[i]->GetObjects(gatherObjects, recurse, depth + 1);
+        nodes_[i]->GetObjects(gatherObjects, recurse, depth + 1);
       }
     }
   }
 
   void Node::GetObjects(std::deque < boost::intrusive_ptr<Object> > &gatherObjects, const vector_Planes &bounding, bool recurse, int depth) const {
-    int objectsSize = objects.size();
+    int objectsSize = objects_.size();
     for (int i = 0; i < objectsSize; i++) {
       DO_VALIDATION;
-      if (objects[i]->GetAABB().Intersects(bounding)) gatherObjects.push_back(objects[i]);
+      if (objects_[i]->GetAABB().Intersects(bounding)) gatherObjects.push_back(objects_[i]);
     }
     if (recurse) {
       DO_VALIDATION;
-      int nodesSize = nodes.size();
+      int nodesSize = nodes_.size();
       for (int i = 0; i < nodesSize; i++) {
         DO_VALIDATION;
-        if (nodes[i]->GetAABB().Intersects(bounding)) nodes[i]->GetObjects(gatherObjects, bounding, recurse, depth + 1);
+        if (nodes_[i]->GetAABB().Intersects(bounding)) nodes_[i]->GetObjects(gatherObjects, bounding, recurse, depth + 1);
       }
     }
   }
 
   void Node::ProcessState(EnvState* state) {
-    state->process(position);
-    state->process(rotation);
-    state->process(scale);
-    state->process(localMode);
-    _dirty_DerivedPosition = true;
-    _dirty_DerivedRotation = true;
-    _dirty_DerivedScale = true;
-    aabb.dirty = true;
-    for (auto& node : nodes) {
+    state->process(position_);
+    state->process(rotation_);
+    state->process(scale_);
+    state->process(local_mode_);
+    dirty_derived_position_ = true;
+    dirty_derived_rotation_ = true;
+    dirty_derived_scale_ = true;
+    aabb_.dirty = true;
+    for (auto& node : nodes_) {
       node->ProcessState(state);
     }
 
@@ -197,15 +197,15 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
   void Node::PokeObjects(e_ObjectType targetObjectType,
                          e_SystemType targetSystemType) {
     DO_VALIDATION;
-    int objectsSize = objects.size();
+    int objectsSize = objects_.size();
     for (int i = 0; i < objectsSize; i++) {
       DO_VALIDATION;
-      if (objects[i]->IsEnabled()) if (objects[i]->GetObjectType() == targetObjectType) objects[i]->Poke(targetSystemType);
+      if (objects_[i]->IsEnabled()) if (objects_[i]->GetObjectType() == targetObjectType) objects_[i]->Poke(targetSystemType);
     }
-    int nodesSize = nodes.size();
+    int nodesSize = nodes_.size();
     for (int i = 0; i < nodesSize; i++) {
       DO_VALIDATION;
-      nodes[i]->PokeObjects(targetObjectType, targetSystemType);
+      nodes_[i]->PokeObjects(targetObjectType, targetSystemType);
     }
   }
 
@@ -215,38 +215,38 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
 
     InvalidateSpatialData();
     InvalidateBoundingVolume();
-    int nodesSize = nodes.size();
+    int nodesSize = nodes_.size();
     for (int i = 0; i < nodesSize; i++) {
       DO_VALIDATION;
 
-      nodes[i]->RecursiveUpdateSpatialData(spatialDataType, excludeSystem);
+      nodes_[i]->RecursiveUpdateSpatialData(spatialDataType, excludeSystem);
     }
-    int objectsSize = objects.size();
+    int objectsSize = objects_.size();
     for (int i = 0; i < objectsSize; i++) {
       DO_VALIDATION;
-      objects[i]->RecursiveUpdateSpatialData(spatialDataType, excludeSystem);
+      objects_[i]->RecursiveUpdateSpatialData(spatialDataType, excludeSystem);
     }
   }
 
   AABB Node::GetAABB() const {
     AABB tmp;
-    if (aabb.dirty == true) {
+    if (aabb_.dirty == true) {
       DO_VALIDATION;
       tmp.Reset();
-      int nodesSize = nodes.size();
+      int nodesSize = nodes_.size();
       for (int i = 0; i < nodesSize; i++) {
         DO_VALIDATION;
-        tmp += (nodes[i]->GetAABB());
+        tmp += (nodes_[i]->GetAABB());
       }
-      int objectsSize = objects.size();
+      int objectsSize = objects_.size();
       for (int i = 0; i < objectsSize; i++) {
         DO_VALIDATION;
-        tmp += (objects[i]->GetAABB());
+        tmp += (objects_[i]->GetAABB());
       }
-      aabb.dirty = false;
-      aabb.aabb = tmp;
+      aabb_.dirty = false;
+      aabb_.aabb = tmp;
     } else {
-      tmp = aabb.aabb;
+      tmp = aabb_.aabb;
     }
     return tmp;
   }

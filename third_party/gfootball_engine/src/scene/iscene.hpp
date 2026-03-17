@@ -23,6 +23,8 @@
 #include "../types/subject.hpp"
 #include "../scene/object.hpp"
 
+#include <compare>
+
 namespace blunted {
 
   class Object;
@@ -33,6 +35,10 @@ namespace blunted {
     e_SceneType_Scene2D = 1,
     e_SceneType_Scene3D = 2
   };
+
+  constexpr std::strong_ordering operator<=>(e_SceneType a, e_SceneType b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   class IScene : public Subject<ISceneInterpreter> {
 

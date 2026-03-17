@@ -20,14 +20,12 @@
 namespace blunted {
 
 GraphicsObject::GraphicsObject(GraphicsScene *graphicsScene)
-    : graphicsScene(graphicsScene) {
+    : graphics_scene_(graphicsScene) {
   DO_VALIDATION;
 }
 
-GraphicsObject::~GraphicsObject() { DO_VALIDATION; }
-
 GraphicsScene *GraphicsObject::GetGraphicsScene() {
   DO_VALIDATION;
-  return graphicsScene;
+  return graphics_scene_;
 }
 }

@@ -43,12 +43,12 @@ namespace blunted {
 
       int GetID();
 
-      void GetSize(int &width, int &height) const { width = this->width; height = this->height; }
+      void GetSize(int &width, int &height) const { width = width_; height = height_; }
 
     protected:
-      int textureID = 0;
-      Renderer3D *renderer3D;
-      int width, height;
+      int texture_id_ = 0;
+      Renderer3D *renderer_3d_ = nullptr;
+      int width_ = 0, height_ = 0;
 
   };
 

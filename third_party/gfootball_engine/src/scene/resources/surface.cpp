@@ -28,7 +28,7 @@ namespace blunted {
 #define SMOOTHING_OFF    0
 #define SMOOTHING_ON   1
 
-Surface::Surface() : surface(0) {
+Surface::Surface() : surface_(0) {
   DO_VALIDATION;
   // printf("CREATING SURFACE\n");
 }
@@ -36,59 +36,59 @@ Surface::Surface() : surface(0) {
 Surface::~Surface() {
   DO_VALIDATION;
   // printf("ANNIHILATING SURFACE.. ");
-  if (surface) {
+  if (surface_) {
     DO_VALIDATION;
-    SDL_FreeSurface(surface);
-    surface = 0;
+    SDL_FreeSurface(surface_);
+    surface_ = 0;
   }
 }
 
 Surface::Surface(const Surface &src) {
   DO_VALIDATION;
-  this->surface = SDL_ConvertSurface(src.surface, src.surface->format, 0);
-  assert(this->surface);
+  this->surface_ = SDL_ConvertSurface(src.surface_, src.surface_->format, 0);
+  assert(this->surface_);
 }
 
 SDL_Surface *Surface::GetData() {
   DO_VALIDATION;
-  return surface;
+  return surface_;
 }
 
-void Surface::SetData(SDL_Surface *surface) {
+void Surface::SetData(SDL_Surface *s) {
   DO_VALIDATION;
-  if (this->surface) SDL_FreeSurface(this->surface);
-  this->surface = surface;
+  if (surface_) SDL_FreeSurface(surface_);
+  surface_ = s;
 }
 
 void Surface::Resize(int x, int y) {
   DO_VALIDATION;
 
-  // zoomSurface doesn't seem to create a completely new surface; got some weird
+  // zoomSurface doesn't seem to create a completely new surface_; got some weird
   // segfaults. not 100% sure if it's their fault though, or if i'm doing
   // something wrong. either way, it works with this fix, though it's a bit of a
-  // performance hit, an extra surface copy.
+  // performance hit, an extra surface_ copy.
   bool buggyZoomSurface = true;
 
-  assert(this->surface);
-  int xcur = this->surface->w;
-  int ycur = this->surface->h;
+  assert(this->surface_);
+  int xcur = this->surface_->w;
+  int ycur = this->surface_->h;
   double xfac, yfac;
   xfac = x / (xcur * 1.0);
   yfac = y / (ycur * 1.0);
   if (yfac == 0) yfac = xfac;
   if (xfac == 0) xfac = yfac;
   if (xfac == 0 || yfac == 0) return;
-  SDL_Surface *newSurf = zoomSurface(this->surface, xfac, yfac, SMOOTHING_ON);
+  SDL_Surface *newSurf = zoomSurface(this->surface_, xfac, yfac, SMOOTHING_ON);
   // printf("resize factors: %f %f\n", xfac, yfac);
-  // printf("surface size: %i %i\n", this->surface->w, this->surface->h);
-  // printf("new surface size: %i %i\n", newSurf->w, newSurf->h);
-  SDL_FreeSurface(this->surface);
+  // printf("surface_ size: %i %i\n", this->surface_->w, this->surface_->h);
+  // printf("new surface_ size: %i %i\n", newSurf->w, newSurf->h);
+  SDL_FreeSurface(this->surface_);
   if (buggyZoomSurface) {
     DO_VALIDATION;
-    this->surface = SDL_ConvertSurface(newSurf, newSurf->format, 0);
+    this->surface_ = SDL_ConvertSurface(newSurf, newSurf->format, 0);
     SDL_FreeSurface(newSurf);
   } else {
-    this->surface = newSurf;
+    this->surface_ = newSurf;
   }
 }
 }

@@ -32,8 +32,12 @@ namespace blunted {
     public:
       Matrix4();
       Matrix4(const real values[16]);
-      virtual ~Matrix4();
-
+      virtual ~Matrix4() = default;
+      // 2025-03-17 六大函数：显式 =default（规则 cpp-special-member-functions）
+      Matrix4(const Matrix4&) = default;
+      Matrix4(Matrix4&&) = default;
+      Matrix4& operator=(const Matrix4&) = default;
+      Matrix4& operator=(Matrix4&&) = default;
       // ----- operator overloading
       void operator = (const Matrix3 &mat3);
       Matrix4 operator * (const Matrix4 &multiplier) const;

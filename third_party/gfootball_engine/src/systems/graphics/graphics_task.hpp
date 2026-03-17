@@ -39,7 +39,7 @@ namespace blunted {
       bool Execute(boost::intrusive_ptr<Camera> camera);
       void EnqueueShadowMap(boost::intrusive_ptr<Camera> camera, boost::intrusive_ptr<Light> light);
 
-      GraphicsSystem *graphicsSystem;
+      GraphicsSystem *graphics_system_;
   };
 }
 

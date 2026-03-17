@@ -1,0 +1,14 @@
+---
+description: gfootball_engine 遵循 C++ Core Guidelines（isocpp.github.io/CppCoreGuidelines）
+globs: third_party/gfootball_engine/**/*.cpp,third_party/gfootball_engine/**/*.hpp,third_party/gfootball_engine/**/*.h
+alwaysApply: false
+---
+
+# C++ Core Guidelines
+
+- **参考**：[C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)（isocpp.github.io/CppCoreGuidelines）。修改或新增引擎代码时遵循其原则，与本仓库已有规则冲突时以本仓库规则为准。
+- **资源与所有权**：用 RAII 管理资源；优先 `std::unique_ptr`/`std::shared_ptr`，避免裸 `new`/`delete`（与 cpp-smart-pointers-refcounted 一致）。
+- **类型与 const**：能用 `const` 的用 `const`；优先 `enum class`；避免魔法数字，用命名常量或 `constexpr`。
+- **接口**：参数传递：入参小对象按值或 const 引用，出参用引用或返回值；避免可变的全局状态。
+- **表达式与语句**：优先范围 for、`auto` 在类型明显或冗长时；保持表达式简单，复杂逻辑提取为命名函数。
+- **与现有规则**：六大函数、数学库优化、Boost 迁移等已有规则不变；本规则作为通用风格与设计补充。

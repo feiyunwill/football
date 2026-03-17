@@ -36,10 +36,9 @@ namespace blunted {
 
       virtual boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType);
 
-      boost::intrusive_ptr < Resource<Texture> > texture;
-
-      int position[2] = {0, 0};
-      int size[2] = {0, 0};
+      boost::intrusive_ptr < Resource<Texture> > texture_;
+      int position_[2] = {0, 0};
+      int size_[2] = {0, 0};
 
     protected:
 
@@ -58,7 +57,7 @@ namespace blunted {
       virtual void OnPoke();
 
     protected:
-      GraphicsOverlay2D *caller;
+      GraphicsOverlay2D *caller_;
 
   };
 }

@@ -19,15 +19,10 @@
 
 namespace blunted {
 
-Observer::Observer() {
-  DO_VALIDATION;
-  subjectPtr = 0;
-}
-
-Observer::~Observer() { DO_VALIDATION; }
+// 2025-03-17 构造/析构已移至头文件 = default，此处仅保留 SetSubjectPtr 实现
 
 void Observer::SetSubjectPtr(void *subjectPtr) {
   DO_VALIDATION;
-  this->subjectPtr = subjectPtr;
+  subjectPtr_ = subjectPtr;
 }
 }

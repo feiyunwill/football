@@ -18,6 +18,8 @@
 #ifndef _HPP_PLAYEROFFICIAL
 #define _HPP_PLAYEROFFICIAL
 
+#include <compare>
+
 #include "humanoid/humanoidbase.hpp"
 #include "playerbase.hpp"
 
@@ -25,6 +27,9 @@ enum e_OfficialType {
   e_OfficialType_Referee,
   e_OfficialType_Linesman
 };
+constexpr std::strong_ordering operator<=>(e_OfficialType a, e_OfficialType b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 class Match;
 class RefereeController;

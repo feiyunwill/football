@@ -53,25 +53,25 @@ boost::intrusive_ptr<Interpreter> GraphicsGeometry::GetInterpreter(
 
 void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
   DO_VALIDATION;
-  position = newPosition;
+  position_ = newPosition;
 }
 
   Vector3 GraphicsGeometry::GetPosition() const {
-    return position;
+    return position_;
   }
 
   void GraphicsGeometry::SetRotation(const Quaternion &newRotation) {
     DO_VALIDATION;
-    rotation = newRotation;
+    rotation_ = newRotation;
   }
 
   Quaternion GraphicsGeometry::GetRotation() const {
-    return rotation;
+    return rotation_;
   }
 
   GraphicsGeometry_GeometryInterpreter::GraphicsGeometry_GeometryInterpreter(
       GraphicsGeometry *caller)
-      : caller(caller), usesIndices(false) {
+      : caller_(caller), uses_indices_(false) {
     DO_VALIDATION;
   }
 
@@ -82,9 +82,9 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
     boost::intrusive_ptr < Resource<Texture> > normalTexture;
     boost::intrusive_ptr < Resource<Texture> > specularTexture;
     boost::intrusive_ptr < Resource<Texture> > illuminationTexture;
-    if (material->diffuseTexture) {
+    if (material->diffuse_texture_) {
       DO_VALIDATION;
-      boost::intrusive_ptr < Resource<Surface> > surface = material->diffuseTexture;
+      boost::intrusive_ptr < Resource<Surface> > surface = material->diffuse_texture_;
 
       bool texAlreadyThere = false;
       diffuseTexture = GetContext().texture_manager.Fetch(
@@ -105,9 +105,9 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
       }
     }
 
-    if (material->normalTexture) {
+    if (material->normal_texture_) {
       DO_VALIDATION;
-      boost::intrusive_ptr < Resource<Surface> > surface = material->normalTexture;
+      boost::intrusive_ptr < Resource<Surface> > surface = material->normal_texture_;
 
       bool texAlreadyThere = false;
       normalTexture = GetContext().texture_manager.Fetch(
@@ -123,9 +123,9 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
       }
     }
 
-    if (material->specularTexture) {
+    if (material->specular_texture_) {
       DO_VALIDATION;
-      boost::intrusive_ptr < Resource<Surface> > surface = material->specularTexture;
+      boost::intrusive_ptr < Resource<Surface> > surface = material->specular_texture_;
 
       bool texAlreadyThere = false;
       specularTexture = GetContext().texture_manager.Fetch(
@@ -141,9 +141,9 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
       }
     }
 
-    if (material->illuminationTexture) {
+    if (material->illumination_texture_) {
       DO_VALIDATION;
-      boost::intrusive_ptr < Resource<Surface> > surface = material->illuminationTexture;
+      boost::intrusive_ptr < Resource<Surface> > surface = material->illumination_texture_;
 
       bool texAlreadyThere = false;
       illuminationTexture = GetContext().texture_manager.Fetch(
@@ -163,9 +163,9 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
     if (normalTexture) r3dMaterial.normalTexture = normalTexture;
     if (specularTexture) r3dMaterial.specularTexture = specularTexture;
     if (illuminationTexture) r3dMaterial.illuminationTexture = illuminationTexture;
-    r3dMaterial.shininess = material->shininess;
-    r3dMaterial.specular_amount = material->specular_amount;
-    r3dMaterial.self_illumination = material->self_illumination;
+    r3dMaterial.shininess = material->shininess_;
+    r3dMaterial.specular_amount = material->specular_amount_;
+    r3dMaterial.self_illumination = material->self_illumination_;
   }
 
   void GraphicsGeometry_GeometryInterpreter::OnLoad(
@@ -182,13 +182,13 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
 
     bool alreadyThere = false;
 
-    caller->vertexBuffer = GetContext().vertices_manager.Fetch(
+    caller_->vertex_buffer_ = GetContext().vertices_manager.Fetch(
         resource->GetIdentString(), false, alreadyThere,
         true);  // false == don't try to use loader
     // printf("%s, %i\n", resource->GetIdentString().c_str(), alreadyThere);
 
     std::vector < MaterializedTriangleMesh > triangleMeshes = resource->GetResource()->GetTriangleMeshes();
-    Renderer3D *renderer3D = caller->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
+    Renderer3D *renderer3D = caller_->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
 
     //std::vector<Triangle*> triangles;
 
@@ -267,15 +267,15 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
       }
 
       vbIndex.material = r3dMaterial;
-      caller->vertexBufferIndices.push_back(vbIndex);
+      caller_->vertex_buffer_indices_.push_back(vbIndex);
     }
 
-    if (indices.size() > 0) usesIndices = true; else usesIndices = false;
+    if (indices.size() > 0) uses_indices_ = true; else uses_indices_ = false;
 
     if (!alreadyThere) {
       DO_VALIDATION;
-      caller->vertexBuffer->GetResource()->SetTriangleMesh(vertices, verticesDataSize, indices);
-      caller->vertexBuffer->GetResource()->CreateOrUpdateVertexBuffer(renderer3D, dynamicBuffer);
+      caller_->vertex_buffer_->GetResource()->SetTriangleMesh(vertices, verticesDataSize, indices);
+      caller_->vertex_buffer_->GetResource()->CreateOrUpdateVertexBuffer(renderer3D, dynamicBuffer);
     }
   }
 
@@ -289,11 +289,11 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
 
     bool dynamicBuffer = resource->GetResource()->IsDynamic();
     const std::vector < MaterializedTriangleMesh >& triangleMeshes = resource->GetResource()->GetTriangleMeshesRef();
-    Renderer3D *renderer3D = caller->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
+    Renderer3D *renderer3D = caller_->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
 
     std::vector<float> vertex_array;
     float* vertices = nullptr;
-    int currentVerticesDataSize = caller->vertexBuffer->GetResource()->GetVerticesDataSize();
+    int currentVerticesDataSize = caller_->vertex_buffer_->GetResource()->GetVerticesDataSize();
 
     std::vector<unsigned int> indices;
     int verticesDataSize = 0;
@@ -308,7 +308,7 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
     bool updateIndices = false;
     if (verticesDataSize == currentVerticesDataSize) {
       DO_VALIDATION;
-      vertices = caller->vertexBuffer->GetResource()->GetTriangleMesh();
+      vertices = caller_->vertex_buffer_->GetResource()->GetTriangleMesh();
       newFloatData = false;
       updateIndices = updateMaterials;
     } else {
@@ -322,7 +322,7 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
     int startIndicesIndex = 0; // omfg
     int currentSize = 0;
 
-    if (updateIndices) caller->vertexBufferIndices.clear();
+    if (updateIndices) caller_->vertex_buffer_indices_.clear();
 
     for (unsigned int i = 0; i < triangleMeshes.size(); i++) {
       DO_VALIDATION;
@@ -340,7 +340,7 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
                triangleMeshes[i].verticesDataSize / GetTriangleMeshElementCount() * sizeof(float));
       }
 
-      if (!usesIndices) {
+      if (!uses_indices_) {
         DO_VALIDATION;  // can only set indices once (todo: make OnUpdateIndices
                         // function, or something like that)
         for (unsigned int index = 0; index < triangleMeshes[i].indices.size();
@@ -370,7 +370,7 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
         // this code makes this version only work on meshes that are the same size/materialorder as their previous version
         vbIndex.material = r3dMaterial;
 
-        if ((!usesIndices && indices.size() > 0) || usesIndices) {
+        if ((!uses_indices_ && indices.size() > 0) || uses_indices_) {
           DO_VALIDATION;  // include the first time using indices
           vbIndex.startIndex = startIndicesIndex;
           vbIndex.size = triangleMeshes[i].indices.size(); // number of indices
@@ -384,40 +384,40 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
         //printf("st %i VS %i\n", (indices.size() - triangleMeshes[i].indices.size()), startIndex / 3);
         //printf("si %i VS %i\n", triangleMeshes[i].indices.size(), currentSize / 3);
 
-        caller->vertexBufferIndices.push_back(vbIndex);
+        caller_->vertex_buffer_indices_.push_back(vbIndex);
       }
     }
 
-    if (indices.size() > 0) usesIndices = true;
+    if (indices.size() > 0) uses_indices_ = true;
 
     if (newFloatData) {
       DO_VALIDATION;
-      caller->vertexBuffer->GetResource()->SetTriangleMesh(vertex_array, verticesDataSize, indices);
+      caller_->vertex_buffer_->GetResource()->SetTriangleMesh(vertex_array, verticesDataSize, indices);
     } else {
-      caller->vertexBuffer->GetResource()->TriangleMeshWasUpdatedExternally(verticesDataSize, indices);
+      caller_->vertex_buffer_->GetResource()->TriangleMeshWasUpdatedExternally(verticesDataSize, indices);
     }
-    caller->vertexBuffer->GetResource()->CreateOrUpdateVertexBuffer(renderer3D, dynamicBuffer);
+    caller_->vertex_buffer_->GetResource()->CreateOrUpdateVertexBuffer(renderer3D, dynamicBuffer);
   }
 
   void GraphicsGeometry_GeometryInterpreter::OnUnload() {
     DO_VALIDATION;
     //printf("resetting link to vertexbuffer.. ");
-    caller->vertexBuffer.reset();
-    caller->vertexBufferIndices.clear();
-    delete caller;
-    caller = 0;
+    caller_->vertex_buffer_.reset();
+    caller_->vertex_buffer_indices_.clear();
+    delete caller_;
+    caller_ = nullptr;
     //printf("[OK]\n");
   }
 
   void GraphicsGeometry_GeometryInterpreter::OnMove(const Vector3 &position) {
     DO_VALIDATION;
-    caller->SetPosition(position);
+    caller_->SetPosition(position);
   }
 
   void GraphicsGeometry_GeometryInterpreter::OnRotate(
       const Quaternion &rotation) {
     DO_VALIDATION;
-    caller->SetRotation(rotation);
+    caller_->SetRotation(rotation);
   }
 
   void GraphicsGeometry_GeometryInterpreter::GetVertexBufferQueue(
@@ -426,11 +426,11 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
     //printf("size: %i\n", size);
     VertexBufferQueueEntry queueEntry;
 
-    queueEntry.vertexBufferIndices = &caller->vertexBufferIndices;
+    queueEntry.vertexBufferIndices = &caller_->vertex_buffer_indices_;
 
-    queueEntry.vertexBuffer = caller->vertexBuffer;
-    queueEntry.position = caller->GetPosition();
-    queueEntry.rotation = caller->GetRotation();
+    queueEntry.vertexBuffer = caller_->vertex_buffer_;
+    queueEntry.position = caller_->GetPosition();
+    queueEntry.rotation = caller_->GetRotation();
     queue.push_back(queueEntry);
   }
 

@@ -31,7 +31,7 @@ namespace blunted {
 
     public:
       GraphicsScene(GraphicsSystem *graphicsSystem);
-      virtual ~GraphicsScene();
+      virtual ~GraphicsScene() = default;
 
       virtual GraphicsSystem *GetGraphicsSystem();
 
@@ -40,7 +40,7 @@ namespace blunted {
       virtual boost::intrusive_ptr<ISceneInterpreter> GetInterpreter(e_SceneType sceneType);
 
     protected:
-      GraphicsSystem *graphicsSystem;
+      GraphicsSystem *graphics_system_;
   };
 
 
@@ -60,7 +60,7 @@ namespace blunted {
       virtual void SetConstraintForceMixing(float value) { DO_VALIDATION;}
 
     protected:
-      GraphicsScene *caller;
+      GraphicsScene *caller_;
 
   };
 
@@ -76,7 +76,7 @@ namespace blunted {
       virtual ISystemObject *CreateSystemObject(Object* object);
 
     protected:
-      GraphicsScene *caller;
+      GraphicsScene *caller_;
 
   };
 

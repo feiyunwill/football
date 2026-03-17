@@ -30,14 +30,14 @@ namespace blunted {
 
     public:
       GraphicsObject(GraphicsScene *graphicsScene);
-      virtual ~GraphicsObject();
+      virtual ~GraphicsObject() = default;
 
       virtual boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType) = 0;
 
       GraphicsScene *GetGraphicsScene();
 
     protected:
-      GraphicsScene *graphicsScene;
+      GraphicsScene *graphics_scene_;
 
   };
 

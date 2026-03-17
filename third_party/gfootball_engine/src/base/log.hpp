@@ -18,6 +18,7 @@
 #ifndef _HPP_LOG
 #define _HPP_LOG
 
+#include <compare>
 #include <string>
 
 void DoValidation(int line, const char* file);
@@ -36,6 +37,10 @@ namespace blunted {
     e_Error,
     e_FatalError
   };
+
+  constexpr std::strong_ordering operator<=>(e_LogType a, e_LogType b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
 
   void Log(e_LogType logType, std::string className, std::string methodName, std::string message);
 

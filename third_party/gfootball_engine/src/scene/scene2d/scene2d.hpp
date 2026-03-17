@@ -44,9 +44,8 @@ namespace blunted {
       void GetContextSize(int &width, int &height, int &bpp);
 
      protected:
-      vector_Objects objects;
-
-      const int width, height, bpp;
+      vector_Objects objects_;
+      const int width_, height_, bpp_;
 
   };
 

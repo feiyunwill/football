@@ -29,8 +29,9 @@ namespace blunted {
   class Command : public RefCounted {
 
     public:
-      Command();
-      virtual ~Command();
+      // 2025-03-17 六大函数：显式 default（cpp-special-member-functions）
+      Command() = default;
+      virtual ~Command() = default;
       bool Handle(void *caller = NULL);
 
     protected:

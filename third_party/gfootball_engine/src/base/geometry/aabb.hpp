@@ -32,8 +32,11 @@ namespace blunted {
     public:
       AABB();
       AABB(const AABB &src);
-      virtual ~AABB();
-
+      virtual ~AABB() = default;
+      // 2025-03-17 六大函数：显式默认移动与拷贝/移动赋值（规则 cpp-special-member-functions）
+      AABB(AABB&&) = default;
+      AABB& operator=(const AABB&) = default;
+      AABB& operator=(AABB&&) = default;
       AABB operator += (const AABB &add);
       AABB operator + (const Vector3 &vec) const;
       AABB operator * (const Quaternion &rot) const;
@@ -49,15 +52,16 @@ namespace blunted {
       bool Intersects(const vector_Planes &planes) const;
       bool Intersects(const AABB &src) const;
 
-      void MakeDirty() { DO_VALIDATION; radius_needupdate = true; center_needupdate = true; }
+      void MakeDirty() { DO_VALIDATION; radius_needupdate_ = true; center_needupdate_ = true; }
       Vector3 minxyz;
       Vector3 maxxyz;
       mutable real radius = 0.0f;
       mutable Vector3 center;
 
     protected:
-      mutable bool radius_needupdate = false;
-      mutable bool center_needupdate = false;
+      // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+      mutable bool radius_needupdate_ = false;
+      mutable bool center_needupdate_ = false;
 
   };
 

@@ -18,6 +18,8 @@
 #ifndef _HPP_GAMEDEFINES
 #define _HPP_GAMEDEFINES
 
+#include <compare>
+
 #include "defines.hpp"
 
 #include "base/math/vector3.hpp"
@@ -84,6 +86,9 @@ enum e_Side {
   e_Side_Left,
   e_Side_Right
 };
+constexpr std::strong_ordering operator<=>(e_Side a, e_Side b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 enum e_Velocity {
   e_Velocity_Idle,
@@ -91,6 +96,9 @@ enum e_Velocity {
   e_Velocity_Walk,
   e_Velocity_Sprint
 };
+constexpr std::strong_ordering operator<=>(e_Velocity a, e_Velocity b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 enum e_FunctionType {
   e_FunctionType_None,
@@ -109,6 +117,9 @@ enum e_FunctionType {
   e_FunctionType_Sliding,
   e_FunctionType_Special
 };
+constexpr std::strong_ordering operator<=>(e_FunctionType a, e_FunctionType b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 enum e_TouchType {
   e_TouchType_Intentional_Kicked, // goalies can't touch this
@@ -117,17 +128,26 @@ enum e_TouchType {
   e_TouchType_None,
   e_TouchType_SIZE
 };
+constexpr std::strong_ordering operator<=>(e_TouchType a, e_TouchType b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 enum e_MatchPhase {
   e_MatchPhase_PreMatch,
   e_MatchPhase_1stHalf,
   e_MatchPhase_2ndHalf,
 };
+constexpr std::strong_ordering operator<=>(e_MatchPhase a, e_MatchPhase b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 enum e_PlayerCommandModifier {
   e_PlayerCommandModifier_None = 0,
   e_PlayerCommandModifier_KnockOn = 1
 };
+constexpr std::strong_ordering operator<=>(e_PlayerCommandModifier a, e_PlayerCommandModifier b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 class IController;
 
@@ -159,6 +179,9 @@ enum e_StrictMovement {
   e_StrictMovement_True,
   e_StrictMovement_Dynamic
 };
+constexpr std::strong_ordering operator<=>(e_StrictMovement a, e_StrictMovement b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 struct PlayerCommand {
 
@@ -324,11 +347,17 @@ enum e_DecayType {
   e_DecayType_Constant,
   e_DecayType_Variable
 };
+constexpr std::strong_ordering operator<=>(e_DecayType a, e_DecayType b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 enum e_MagnetType {
   e_MagnetType_Attract,
   e_MagnetType_Repel
 };
+constexpr std::strong_ordering operator<=>(e_MagnetType a, e_MagnetType b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 // forcefields consist of forcespots, representing a repelling or attracting force from a position, including linearity/etc parameters
 struct ForceSpot {

@@ -29,19 +29,15 @@
 namespace blunted {
 
 GraphicsScene::GraphicsScene(GraphicsSystem *graphicsSystem)
-    : graphicsSystem(graphicsSystem) {
+    : graphics_system_(graphicsSystem) {
   DO_VALIDATION;
-  // printf("CREATING GFX SCENE\n");
 }
 
-GraphicsScene::~GraphicsScene() {
-  DO_VALIDATION;
-  // printf("DELETING GFX SCENE\n");
-}
+// 2025-03-17 析构已改为头文件 = default（cpp-special-member-functions）
 
 GraphicsSystem *GraphicsScene::GetGraphicsSystem() {
   DO_VALIDATION;
-  return graphicsSystem;
+  return graphics_system_;
 }
 
 // void GraphicsScene::Exit() { DO_VALIDATION;
@@ -112,7 +108,7 @@ ISystemObject *GraphicsScene::CreateSystemObject(Object *object) {
 
 GraphicsScene_Scene3DInterpreter::GraphicsScene_Scene3DInterpreter(
     GraphicsScene *caller)
-    : caller(caller) {
+    : caller_(caller) {
   DO_VALIDATION;
 }
 
@@ -120,21 +116,21 @@ void GraphicsScene_Scene3DInterpreter::OnLoad() { DO_VALIDATION; }
 
 void GraphicsScene_Scene3DInterpreter::OnUnload() {
   DO_VALIDATION;
-  delete caller;
-  caller = 0;
+  delete caller_;
+  caller_ = nullptr;
 }
 
 ISystemObject *GraphicsScene_Scene3DInterpreter::CreateSystemObject(
     Object *object) {
   DO_VALIDATION;
-  return caller->CreateSystemObject(object);
+  return caller_->CreateSystemObject(object);
 }
 
   // Scene2D interpreter
 
 GraphicsScene_Scene2DInterpreter::GraphicsScene_Scene2DInterpreter(
     GraphicsScene *caller)
-    : caller(caller) {
+    : caller_(caller) {
   DO_VALIDATION;
 }
 
@@ -142,13 +138,13 @@ void GraphicsScene_Scene2DInterpreter::OnLoad() { DO_VALIDATION; }
 
 void GraphicsScene_Scene2DInterpreter::OnUnload() {
   DO_VALIDATION;
-  delete caller;
-  caller = 0;
+  delete caller_;
+  caller_ = nullptr;
 }
 
 ISystemObject *GraphicsScene_Scene2DInterpreter::CreateSystemObject(
     Object *object) {
   DO_VALIDATION;
-  return caller->CreateSystemObject(object);
+  return caller_->CreateSystemObject(object);
 }
 }

@@ -45,19 +45,19 @@ namespace blunted {
 
       void SetSize(float x_percent, float y_percent, float width_percent, float height_percent);
 
-      float x_percent = 0.0f;
-      float y_percent = 0.0f;
-      float width_percent = 0.0f;
-      float height_percent = 0.0f;
-      int viewID = 0;
-      ViewBuffer viewBuffer;
-      float fov = 0.0f;
-      float nearCap = 0.0f;
-      float farCap = 0.0f;
+      float x_percent_ = 0.0f;
+      float y_percent_ = 0.0f;
+      float width_percent_ = 0.0f;
+      float height_percent_ = 0.0f;
+      int view_id_ = 0;
+      ViewBuffer view_buffer_;
+      float fov_ = 0.0f;
+      float near_cap_ = 0.0f;
+      float far_cap_ = 0.0f;
 
     protected:
-      Vector3 position;
-      Quaternion rotation;
+      Vector3 position_;
+      Quaternion rotation_;
 
   };
 
@@ -76,7 +76,7 @@ namespace blunted {
       virtual void OnPoke();
 
     protected:
-      GraphicsCamera *caller = nullptr;
+      GraphicsCamera *caller_ = nullptr;
 
   };
 }

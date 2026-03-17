@@ -34,11 +34,11 @@ Camera::~Camera() { DO_VALIDATION; }
 void Camera::Init() {
   DO_VALIDATION;  // ATOMIC
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     ICameraInterpreter *CameraInterpreter =
-        static_cast<ICameraInterpreter *>(observers[i].get());
+        static_cast<ICameraInterpreter *>(observers_[i].get());
     CameraInterpreter->OnLoad(properties);
   }
 }
@@ -46,11 +46,11 @@ void Camera::Init() {
 void Camera::Exit() {
   DO_VALIDATION;  // ATOMIC
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     ICameraInterpreter *CameraInterpreter =
-        static_cast<ICameraInterpreter *>(observers[i].get());
+        static_cast<ICameraInterpreter *>(observers_[i].get());
     CameraInterpreter->OnUnload();
   }
 
@@ -60,13 +60,13 @@ void Camera::Exit() {
 void Camera::SetFOV(float fov) {
   DO_VALIDATION;
 
-  this->fov = fov;
+  fov_ = fov;
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     ICameraInterpreter *CameraInterpreter =
-        static_cast<ICameraInterpreter *>(observers[i].get());
+        static_cast<ICameraInterpreter *>(observers_[i].get());
     CameraInterpreter->SetFOV(fov);
   }
 }
@@ -74,14 +74,14 @@ void Camera::SetFOV(float fov) {
 void Camera::SetCapping(float nearCap, float farCap) {
   DO_VALIDATION;
 
-  this->nearCap = nearCap;
-  this->farCap = farCap;
+  near_cap_ = nearCap;
+  far_cap_ = farCap;
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     ICameraInterpreter *CameraInterpreter =
-        static_cast<ICameraInterpreter *>(observers[i].get());
+        static_cast<ICameraInterpreter *>(observers_[i].get());
     CameraInterpreter->SetCapping(nearCap, farCap);
   }
 }
@@ -92,11 +92,11 @@ void Camera::EnqueueView(
     std::deque<boost::intrusive_ptr<Skybox> > &skyboxes) {
   DO_VALIDATION;
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     ICameraInterpreter *CameraInterpreter =
-        static_cast<ICameraInterpreter *>(observers[i].get());
+        static_cast<ICameraInterpreter *>(observers_[i].get());
     CameraInterpreter->EnqueueView(GetName(), visibleGeometry, visibleLights,
                                    skyboxes);
   }
@@ -105,11 +105,11 @@ void Camera::EnqueueView(
 void Camera::Poke(e_SystemType targetSystemType) {
   DO_VALIDATION;
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     ICameraInterpreter *CameraInterpreter =
-        static_cast<ICameraInterpreter *>(observers[i].get());
+        static_cast<ICameraInterpreter *>(observers_[i].get());
     if (CameraInterpreter->GetSystemType() == targetSystemType)
       CameraInterpreter->OnPoke();
   }
@@ -120,13 +120,13 @@ void Camera::RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
   DO_VALIDATION;
   InvalidateSpatialData();
 
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
-    if (observers[i]->GetSystemType() != excludeSystem) {
+    if (observers_[i]->GetSystemType() != excludeSystem) {
       DO_VALIDATION;
       ICameraInterpreter *cameraInterpreter =
-          static_cast<ICameraInterpreter *>(observers[i].get());
+          static_cast<ICameraInterpreter *>(observers_[i].get());
       cameraInterpreter->OnSpatialChange(GetDerivedPosition(),
                                          GetDerivedRotation());
     }

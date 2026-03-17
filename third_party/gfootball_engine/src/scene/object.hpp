@@ -24,6 +24,8 @@
 #include "../types/spatial.hpp"
 #include "../base/properties.hpp"
 
+#include <compare>
+
 namespace blunted {
 
   class ISystemObject;
@@ -37,13 +39,20 @@ namespace blunted {
     e_ObjectType_UserStart = 7
   };
 
+  constexpr std::strong_ordering operator<=>(e_ObjectType a, e_ObjectType b) {
+    return static_cast<int>(a) <=> static_cast<int>(b);
+  }
+
   struct MustUpdateSpatialData {
-    bool haveTo = false;
-    e_SystemType excludeSystem;
+    bool have_to_ = false;
+    e_SystemType exclude_system_;
+    friend constexpr std::strong_ordering operator<=>(const MustUpdateSpatialData &a, const MustUpdateSpatialData &b) {
+      if (auto c = a.have_to_ <=> b.have_to_; c != 0) return c;
+      return static_cast<int>(a.exclude_system_) <=> static_cast<int>(b.exclude_system_);
+    }
+    friend constexpr bool operator==(const MustUpdateSpatialData &a, const MustUpdateSpatialData &b) = default;
   };
 
-  // ATOMICITY: this class is responsible for doing about everything concurrently without crashing.
-  // this implicitly accounts for atomicity in observers.
   class Object : public Subject<Interpreter>, public Spatial {
 
     public:
@@ -51,20 +60,22 @@ namespace blunted {
       virtual ~Object();
 
       Object(const Object &src);
+      Object(Object &&src) noexcept;
 
-      virtual void Exit(); // ATOMIC
+      virtual void Exit();
 
       virtual e_ObjectType GetObjectType();
 
-      virtual bool IsEnabled() { DO_VALIDATION; return enabled; }
-      virtual void Enable() { DO_VALIDATION; enabled = true; }
-      virtual void Disable() { DO_VALIDATION; enabled = false; }
+      virtual bool IsEnabled() { DO_VALIDATION; return enabled_; }
+      virtual void Enable() { DO_VALIDATION; enabled_ = true; }
+      virtual void Disable() { DO_VALIDATION; enabled_ = false; }
 
       virtual const Properties &GetProperties() const;
       virtual bool PropertyExists(const char *property) const;
       virtual const std::string &GetProperty(const char *property) const;
 
-      virtual void SetProperties(Properties properties);
+      virtual void SetProperties(const Properties &props);
+      virtual void SetProperties(Properties &&props);
       virtual void SetProperty(const char *name, const char *value);
 
       virtual bool RequestPropertyExists(const char *property) const;
@@ -77,28 +88,19 @@ namespace blunted {
 
       virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
 
-      MustUpdateSpatialData updateSpatialDataAfterPoke;
+      MustUpdateSpatialData update_spatial_data_after_poke_;
 
       virtual boost::intrusive_ptr<Interpreter> GetInterpreter(e_SystemType targetSystemType);
 
-      virtual void SetPokePriority(int prio) { DO_VALIDATION; pokePriority = prio; }
-      virtual int GetPokePriority() const { return pokePriority; }
-
-      // set these before creating system objects
-
-      Properties properties;
-
-
+      virtual void SetPokePriority(int prio) { DO_VALIDATION; poke_priority_ = prio; }
+      virtual int GetPokePriority() const { return poke_priority_; }
 
     protected:
-      e_ObjectType objectType;
-
-      mutable int pokePriority;
-
-      // request these to be set by observing objects
-      mutable Properties requestProperties;
-
-      bool enabled = false;
+      Properties properties_;
+      e_ObjectType object_type_;
+      mutable int poke_priority_;
+      mutable Properties request_properties_;
+      bool enabled_ = false;
 
   };
 

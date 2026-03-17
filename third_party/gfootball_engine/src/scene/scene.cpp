@@ -30,19 +30,19 @@ void Scene::Exit() {
 
 void Scene::CreateSystemObjects(boost::intrusive_ptr<Object> object) {
   DO_VALIDATION;
-  int observersSize = observers.size();
+  int observersSize = observers_.size();
   for (int i = 0; i < observersSize; i++) {
     DO_VALIDATION;
     ISceneInterpreter *sceneInterpreter =
-        static_cast<ISceneInterpreter *>(observers[i].get());
+        static_cast<ISceneInterpreter *>(observers_[i].get());
     sceneInterpreter->CreateSystemObject(object.get());
   }
 }
 
   bool Scene::SupportedObjectType(e_ObjectType objectType) const {
-    for (int i = 0; i < (signed int)supportedObjectTypes.size(); i++) {
+    for (size_t i = 0; i < supported_object_types_.size(); i++) {
       DO_VALIDATION;
-      if (objectType == supportedObjectTypes[i]) return true;
+      if (objectType == supported_object_types_[i]) return true;
     }
     return false;
   }

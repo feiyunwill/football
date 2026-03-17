@@ -38,7 +38,7 @@ Matrix4::Matrix4(const real values[16]) {
   }
 }
 
-Matrix4::~Matrix4() { DO_VALIDATION; }
+// 2025-03-17 析构已改为头文件中 virtual ~Matrix4() = default
 
 // ----- operator overloading
 

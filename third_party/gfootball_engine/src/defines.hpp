@@ -24,6 +24,7 @@
 #undef NOMINMAX
 #endif
 
+#include <compare>
 #include <cstdio>
 #include <cstdlib>
 #include <cassert>
@@ -224,6 +225,9 @@ enum e_PlayerRole {
   e_PlayerRole_AM,
   e_PlayerRole_CF,
 };
+constexpr std::strong_ordering operator<=>(e_PlayerRole a, e_PlayerRole b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 enum e_GameMode {
   e_GameMode_Normal,
@@ -234,6 +238,9 @@ enum e_GameMode {
   e_GameMode_ThrowIn,
   e_GameMode_Penalty,
 };
+constexpr std::strong_ordering operator<=>(e_GameMode a, e_GameMode b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 enum e_PlayerColor {
   e_PlayerColor_Blue,
@@ -243,11 +250,17 @@ enum e_PlayerColor {
   e_PlayerColor_Purple,
   e_PlayerColor_Default
 };
+constexpr std::strong_ordering operator<=>(e_PlayerColor a, e_PlayerColor b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 enum e_Team {
   e_Left,
   e_Right,
 };
+constexpr std::strong_ordering operator<=>(e_Team a, e_Team b) {
+  return static_cast<int>(a) <=> static_cast<int>(b);
+}
 
 // Information about the player (available from python).
 struct PlayerInfo {

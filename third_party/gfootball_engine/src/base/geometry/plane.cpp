@@ -22,19 +22,19 @@
 
 namespace blunted {
 
-Plane::Plane() : determinant(0) {
+Plane::Plane() : determinant_(0) {
   DO_VALIDATION;
-  _dirty_determinant = true;
+  dirty_determinant_ = true;
 }
 
 Plane::Plane(const Vector3 vec1, const Vector3 vec2) {
   DO_VALIDATION;
   SetVertex(0, vec1);
   SetVertex(1, vec2);
-  _dirty_determinant = true;
+  dirty_determinant_ = true;
 }
 
-Plane::~Plane() { DO_VALIDATION; }
+// 2025-03-17 ~Plane() 已改为头文件中 = default
 
 void Plane::Set(const Vector3 &pos, const Vector3 &dir) {
   DO_VALIDATION;
@@ -45,25 +45,25 @@ void Plane::Set(const Vector3 &pos, const Vector3 &dir) {
 void Plane::SetVertex(unsigned char pos, const Vector3 &vec) {
   DO_VALIDATION;
   assert(pos < 2);
-  vertices[pos].coords[0] = vec.coords[0];
-  vertices[pos].coords[1] = vec.coords[1];
-  vertices[pos].coords[2] = vec.coords[2];
-  _dirty_determinant = true;
+  vertices_[pos].coords[0] = vec.coords[0];
+  vertices_[pos].coords[1] = vec.coords[1];
+  vertices_[pos].coords[2] = vec.coords[2];
+  dirty_determinant_ = true;
 }
 
   const Vector3 &Plane::GetVertex(unsigned char pos) const {
     assert(pos < 2);
-    return vertices[pos];
+    return vertices_[pos];
   }
 
   void Plane::CalculateDeterminant() const {
-    determinant = -GetVertex(0).GetDotProduct(GetVertex(1));
-    _dirty_determinant = false;
+    determinant_ = -GetVertex(0).GetDotProduct(GetVertex(1));
+    dirty_determinant_ = false;
   }
 
   real Plane::GetDeterminant() const {
-    if (_dirty_determinant) CalculateDeterminant();
-    return determinant;
+    if (dirty_determinant_) CalculateDeterminant();
+    return determinant_;
   }
 
 }

@@ -28,7 +28,7 @@
 
 namespace blunted {
 
-ASELoader::ASELoader() : Loader<GeometryData>(), triangleCount(0) {
+ASELoader::ASELoader() : Loader<GeometryData>(), triangle_count_(0) {
   DO_VALIDATION;
 }
 
@@ -40,11 +40,11 @@ ASELoader::~ASELoader() { DO_VALIDATION; }
 void ASELoader::Load(std::string filename,
                      boost::intrusive_ptr<Resource<GeometryData> > resource) {
   DO_VALIDATION;
-  triangleCount = 0;
+  triangle_count_ = 0;
   s_tree *data = tree_load(filename);
   Build(data, resource);
   delete data;
-  // printf("%s: %i total triangles\n", filename.c_str(), triangleCount);
+  // printf("%s: %i total triangles\n", filename.c_str(), triangle_count_);
 }
 
   // ----- interpreter for the .ase treedata
@@ -104,9 +104,9 @@ void ASELoader::Build(const s_tree *data,
       }
     }
 
-    mat.shininess = shine->values.at(0);
-    mat.specular_amount = shinestrength->values.at(0);
-    mat.self_illumination.Set(atof(self_illumination->values.at(0).c_str()));
+    mat.shininess_ = shine->values.at(0);
+    mat.specular_amount_ = shinestrength->values.at(0);
+    mat.self_illumination_.Set(atof(self_illumination->values.at(0).c_str()));
 
     materialList.push_back(mat);
   }
@@ -491,7 +491,7 @@ void ASELoader::BuildTriangleMesh(
     }
   }
 
-  triangleCount += triangles.size();
+  triangle_count_ += triangles.size();
 
   for (unsigned int t = 0; t < triangles.size(); t++) {
     DO_VALIDATION;
@@ -518,32 +518,32 @@ void ASELoader::BuildTriangleMesh(
 
     // use texture filename as material name
     matname.assign(materialList.at(material_reference).maps[0]);
-    material.diffuseTexture =
+    material.diffuse_texture_ =
         GetContext().surface_manager.Fetch(matname, true, true);
     matname.assign(materialList.at(material_reference).maps[1]);
     if (matname.length() > 0) {
       DO_VALIDATION;
-      material.normalTexture =
+      material.normal_texture_ =
           GetContext().surface_manager.Fetch(matname, true, true);
     }
     matname.assign(materialList.at(material_reference).maps[2]);
     if (matname.length() > 0) {
       DO_VALIDATION;
-      material.specularTexture =
+      material.specular_texture_ =
           GetContext().surface_manager.Fetch(matname, true, true);
     }
     matname.assign(materialList.at(material_reference).maps[3]);
     if (matname.length() > 0) {
       DO_VALIDATION;
-      material.illuminationTexture =
+      material.illumination_texture_ =
           GetContext().surface_manager.Fetch(matname, true, true);
     }
 
-    material.shininess =
+    material.shininess_ =
         atof(materialList.at(material_reference).shininess.c_str());
-    material.specular_amount =
+    material.specular_amount_ =
         atof(materialList.at(material_reference).specular_amount.c_str());
-    material.self_illumination =
+    material.self_illumination_ =
         materialList.at(material_reference).self_illumination;
   }
 

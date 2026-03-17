@@ -30,7 +30,7 @@ namespace blunted {
 GraphicsCamera::GraphicsCamera(GraphicsScene *graphicsScene)
     : GraphicsObject(graphicsScene) {
   DO_VALIDATION;
-  fov = 45;
+  fov_ = 45;
 }
 
 GraphicsCamera::~GraphicsCamera() { DO_VALIDATION; }
@@ -51,71 +51,71 @@ boost::intrusive_ptr<Interpreter> GraphicsCamera::GetInterpreter(
 
 void GraphicsCamera::SetPosition(const Vector3 &newPosition) {
   DO_VALIDATION;
-  position = newPosition;
+  position_ = newPosition;
 }
 
   Vector3 GraphicsCamera::GetPosition() const {
-    return position;
+    return position_;
   }
 
   void GraphicsCamera::SetRotation(const Quaternion &newRotation) {
     DO_VALIDATION;
-    rotation = newRotation;
+    rotation_ = newRotation;
   }
 
   Quaternion GraphicsCamera::GetRotation() const {
-    return rotation;
+    return rotation_;
   }
 
   void GraphicsCamera::SetSize(float x_percent, float y_percent,
                                float width_percent, float height_percent) {
     DO_VALIDATION;
-    this->x_percent = x_percent;
-    this->y_percent = y_percent;
-    this->width_percent = width_percent;
-    this->height_percent = height_percent;
+    x_percent_ = x_percent;
+    y_percent_ = y_percent;
+    width_percent_ = width_percent;
+    height_percent_ = height_percent;
   }
 
   GraphicsCamera_CameraInterpreter::GraphicsCamera_CameraInterpreter(
       GraphicsCamera *caller)
-      : caller(caller) {
+      : caller_(caller) {
     DO_VALIDATION;
   }
 
   void GraphicsCamera_CameraInterpreter::OnLoad(const Properties &properties) {
     DO_VALIDATION;
-    caller->SetSize(properties.GetReal("x_percent", 0), properties.GetReal("y_percent", 0), properties.GetReal("width_percent", 100), properties.GetReal("height_percent", 100));
+    caller_->SetSize(properties.GetReal("x_percent", 0), properties.GetReal("y_percent", 0), properties.GetReal("width_percent", 100), properties.GetReal("height_percent", 100));
 
-    Renderer3D *renderer3D = caller->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
-    caller->viewID = renderer3D->CreateView(caller->x_percent, caller->y_percent, caller->width_percent, caller->height_percent);
+    Renderer3D *renderer3D = caller_->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
+    caller_->view_id_ = renderer3D->CreateView(caller_->x_percent_, caller_->y_percent_, caller_->width_percent_, caller_->height_percent_);
   }
 
   void GraphicsCamera_CameraInterpreter::OnUnload() {
     DO_VALIDATION;
-    Renderer3D *renderer3D = caller->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
+    Renderer3D *renderer3D = caller_->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
 
-    renderer3D->DeleteView(caller->viewID);
-    delete caller;
-    caller = 0;
+    renderer3D->DeleteView(caller_->view_id_);
+    delete caller_;
+    caller_ = nullptr;
   }
 
   void GraphicsCamera_CameraInterpreter::SetFOV(float fov) {
     DO_VALIDATION;
-    caller->fov = fov;
+    caller_->fov_ = fov;
   }
 
   void GraphicsCamera_CameraInterpreter::SetCapping(float nearCap,
                                                     float farCap) {
     DO_VALIDATION;
-    caller->nearCap = nearCap;
-    caller->farCap = farCap;
+    caller_->near_cap_ = nearCap;
+    caller_->far_cap_ = farCap;
   }
 
   void GraphicsCamera_CameraInterpreter::OnSpatialChange(
       const Vector3 &position, const Quaternion &rotation) {
     DO_VALIDATION;
-    caller->SetPosition(position);
-    caller->SetRotation(rotation);
+    caller_->SetPosition(position);
+    caller_->SetRotation(rotation);
   }
 
   void GraphicsCamera_CameraInterpreter::EnqueueView(
@@ -125,7 +125,7 @@ void GraphicsCamera::SetPosition(const Vector3 &newPosition) {
       std::deque<boost::intrusive_ptr<Skybox> > &skyboxes) {
     DO_VALIDATION;
 
-    ViewBuffer *buffer = &caller->viewBuffer;
+    ViewBuffer *buffer = &caller_->view_buffer_;
 
 
     // geometry
@@ -194,18 +194,17 @@ void GraphicsCamera::SetPosition(const Vector3 &newPosition) {
 
     // camera matrix
 
-    buffer->cameraMatrix.ConstructInverse(caller->GetPosition(), Vector3(1, 1, 1), caller->GetRotation());
-    //buffer->projectionMatrix.ConstructProjection(caller->fov, aspect, caller->nearCap, caller->farCap);
-    buffer->cameraFOV = caller->fov;
-    buffer->cameraNearCap = caller->nearCap;
-    buffer->cameraFarCap = caller->farCap;
+    buffer->cameraMatrix.ConstructInverse(caller_->GetPosition(), Vector3(1, 1, 1), caller_->GetRotation());
+    buffer->cameraFOV = caller_->fov_;
+    buffer->cameraNearCap = caller_->near_cap_;
+    buffer->cameraFarCap = caller_->far_cap_;
   }
 
   void GraphicsCamera_CameraInterpreter::OnPoke() {
     DO_VALIDATION;
-    Renderer3D *renderer = caller->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
-    auto viewID = caller->viewID;
-    auto &buffer = caller->viewBuffer;
+    Renderer3D *renderer = caller_->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
+    auto viewID = caller_->view_id_;
+    auto &buffer = caller_->view_buffer_;
     renderer->ClearBuffer(Vector3(0, 0, 0), false, true);
 
     View &view = renderer->GetView(viewID);

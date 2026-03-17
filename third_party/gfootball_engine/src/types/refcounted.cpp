@@ -19,11 +19,11 @@
 
 namespace blunted {
 
-RefCounted::RefCounted() : refCount(0) { DO_VALIDATION; }
+RefCounted::RefCounted() : refCount_(0) { DO_VALIDATION; }
 
 RefCounted::~RefCounted() { DO_VALIDATION; }
 
-RefCounted::RefCounted(const RefCounted &src) : refCount(0) { DO_VALIDATION; }
+RefCounted::RefCounted(const RefCounted &src) : refCount_(0) { DO_VALIDATION; }
 
 RefCounted &RefCounted::operator=(const RefCounted &src) {
   DO_VALIDATION;
@@ -32,20 +32,20 @@ RefCounted &RefCounted::operator=(const RefCounted &src) {
 
 unsigned long RefCounted::GetRefCount() {
   DO_VALIDATION;
-  int i = refCount;
+  int i = refCount_;
   return i;
 }
 
 void intrusive_ptr_add_ref(RefCounted *p) {
   DO_VALIDATION;
   assert(p);
-  ++(p->refCount);
+  ++(p->refCount_);
 }
 
 void intrusive_ptr_release(RefCounted *p) {
   DO_VALIDATION;
   assert(p);
-  if (--(p->refCount) == 0) {
+  if (--(p->refCount_) == 0) {
     DO_VALIDATION;
     delete p;
   }

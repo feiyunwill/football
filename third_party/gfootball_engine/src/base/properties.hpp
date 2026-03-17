@@ -33,8 +33,12 @@ namespace blunted {
     public:
       Properties();
       Properties(std::vector<std::pair<std::string, float>> values);
-      virtual ~Properties();
-
+      virtual ~Properties() = default;
+      // 2025-03-17 六大函数：显式 =default（规则 cpp-special-member-functions）
+      Properties(const Properties&) = default;
+      Properties(Properties&&) = default;
+      Properties& operator=(const Properties&) = default;
+      Properties& operator=(Properties&&) = default;
       bool Exists(const std::string &name) const;
 
       void Set(const std::string &name, const std::string &value);
@@ -49,11 +53,14 @@ namespace blunted {
       int GetInt(const std::string &name, int defaultValue = 0) const;
       void AddProperties(const Properties *userprops);
       void AddProperties(const Properties &userprops);
+      // 2025-03-17 移动语义：支持 Object::SetProperties(Properties&&)
+      void AddProperties(Properties &&other);
       const map_Properties *GetProperties() const;
       void ProcessState(EnvState* state);
 
      protected:
-      map_Properties properties;
+      // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+      map_Properties properties_;
   };
 
 }

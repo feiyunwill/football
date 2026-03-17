@@ -30,23 +30,23 @@ namespace blunted {
   class MessageQueue {
 
     public:
-      MessageQueue() { DO_VALIDATION;}
-      virtual ~MessageQueue() { DO_VALIDATION;}
+      MessageQueue() = default;
+      virtual ~MessageQueue() = default;
 
       inline void PushMessage(T message, bool notify = true) { DO_VALIDATION;
-        queue.push_back(message);
+        queue_.push_back(message);
         if (notify) NotifyWaiting();
       }
 
       inline void NotifyWaiting() { DO_VALIDATION;
-        messageNotification.notify_one();
+        message_notification_.notify_one();
       }
 
       inline T GetMessage(bool &MsgAvail) { DO_VALIDATION;
         T message;
-        if (queue.size() > 0) { DO_VALIDATION;
-          message = *queue.begin();
-          queue.pop_front();
+        if (queue_.size() > 0) { DO_VALIDATION;
+          message = *queue_.begin();
+          queue_.pop_front();
           MsgAvail = true;
         } else {
           MsgAvail = false;
@@ -55,8 +55,9 @@ namespace blunted {
       }
 
     protected:
-      std::list < T > queue;
-      boost::condition messageNotification;
+      // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+      std::list < T > queue_;
+      boost::condition message_notification_;
 
   };
 
