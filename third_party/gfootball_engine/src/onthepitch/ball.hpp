@@ -29,6 +29,9 @@ using namespace blunted;
 
 class Match;
 
+// 2026-04-02 修复：全局 BallComponent（ecs_components.hpp），勿在 class Ball 内再写 struct BallComponent 以免变成嵌套类型
+struct BallComponent;
+
 struct BallSpatialInfo {
   BallSpatialInfo(const Vector3 &momentum, const Quaternion &rotation_ms) { DO_VALIDATION;
     this->momentum = momentum;
@@ -45,9 +48,14 @@ class Ball {
     virtual ~Ball();
 
     void Mirror();
-    boost::intrusive_ptr<Geometry> GetBallGeom() { DO_VALIDATION; return ball; }
+    // 2026-04-02 修复：注释仅说明 GetBallNode；GetBallGeom/GetBallNode 加 const
+    // boost::intrusive_ptr<Geometry> GetBallGeom() { DO_VALIDATION; return ball; }
+    // // 2025-03-17 ECS 迁移：供 Match 注册 SceneNodeRef 与同步 Transform
+    // boost::intrusive_ptr<Node> GetBallNode() { DO_VALIDATION; return ballNode; }
+    boost::intrusive_ptr<Geometry> GetBallGeom() const { DO_VALIDATION; return ball; }
+
     // 2025-03-17 ECS 迁移：供 Match 注册 SceneNodeRef 与同步 Transform
-    boost::intrusive_ptr<Node> GetBallNode() { DO_VALIDATION; return ballNode; }
+    boost::intrusive_ptr<Node> GetBallNode() const { DO_VALIDATION; return ballNode; }
 
     inline Vector3 Predict(int predictTime_ms) const {
       int index = predictTime_ms;
@@ -76,7 +84,6 @@ class Ball {
     void ProcessState(EnvState *state);
 
     /// 2025-03-17 ECS 迁移：将当前球状态写入 ECS 组件，供 RegisterEcsEntities/同步使用
-    struct BallComponent;
     void FillBallComponent(BallComponent& out) const;
     void ApplyBallComponent(const BallComponent& in);
 

@@ -29,94 +29,101 @@ namespace blunted {
 
     public:
       OpenGLRenderer3D();
-      virtual void SetContext();
-      virtual void DisableContext();
-      virtual const screenshoot& GetScreen();
-      virtual ~OpenGLRenderer3D();
+      // 2026-04-02 现代 C++：具体渲染器禁切片拷贝/移动
+      OpenGLRenderer3D(const OpenGLRenderer3D &) = delete;
+      OpenGLRenderer3D &operator=(const OpenGLRenderer3D &) = delete;
+      OpenGLRenderer3D(OpenGLRenderer3D &&) = delete;
+      OpenGLRenderer3D &operator=(OpenGLRenderer3D &&) = delete;
 
-      virtual void SwapBuffers();
+      void SetContext() override;
+      void DisableContext() override;
+      const screenshoot& GetScreen() override;
+      ~OpenGLRenderer3D() override;
 
-      virtual void SetMatrix(const std::string &shaderUniformName, const Matrix4 &matrix);
+      void SwapBuffers() override;
 
-      virtual void RenderOverlay2D(const std::vector<Overlay2DQueueEntry> &overlay2DQueue);
-      virtual void RenderOverlay2D();
-      virtual void RenderLights(std::deque<LightQueueEntry> &lightQueue, const Matrix4 &projectionMatrix, const Matrix4 &viewMatrix);
+      void SetMatrix(const std::string &shaderUniformName, const Matrix4 &matrix) override;
+
+      void RenderOverlay2D(const std::vector<Overlay2DQueueEntry> &overlay2DQueue) override;
+      void RenderOverlay2D() override;
+      void RenderLights(std::deque<LightQueueEntry> &lightQueue, const Matrix4 &projectionMatrix, const Matrix4 &viewMatrix) override;
 
 
       // --- new & improved
 
       // init & exit
-      virtual bool CreateContext(int width, int height, int bpp, bool fullscreen);
-      virtual void Exit();
+      bool CreateContext(int width, int height, int bpp, bool fullscreen) override;
+      void Exit() override;
 
-      virtual int CreateView(float x_percent, float y_percent, float width_percent, float height_percent);
-      virtual View &GetView(int viewID);
-      virtual void DeleteView(int viewID);
+      int CreateView(float x_percent, float y_percent, float width_percent, float height_percent) override;
+      View &GetView(int viewID) override;
+      void DeleteView(int viewID) override;
 
       // general
-      virtual void SetCullingMode(e_CullingMode cullingMode);
-      virtual void SetBlendingMode(e_BlendingMode blendingMode);
-      virtual void SetDepthFunction(e_DepthFunction depthFunction);
-      virtual void SetDepthTesting(bool OnOff);
-      virtual void SetDepthMask(bool OnOff);
-      virtual void SetBlendingFunction(e_BlendingFunction blendingFunction1, e_BlendingFunction blendingFunction2);
-      virtual void SetTextureMode(e_TextureMode textureMode);
-      virtual void SetColor(const Vector3 &color, float alpha);
-      virtual void SetColorMask(bool r, bool g, bool b, bool alpha);
+      void SetCullingMode(e_CullingMode cullingMode) override;
+      void SetBlendingMode(e_BlendingMode blendingMode) override;
+      void SetDepthFunction(e_DepthFunction depthFunction) override;
+      void SetDepthTesting(bool OnOff) override;
+      void SetDepthMask(bool OnOff) override;
+      void SetBlendingFunction(e_BlendingFunction blendingFunction1, e_BlendingFunction blendingFunction2) override;
+      void SetTextureMode(e_TextureMode textureMode) override;
+      void SetColor(const Vector3 &color, float alpha) override;
+      void SetColorMask(bool r, bool g, bool b, bool alpha) override;
 
-      virtual void ClearBuffer(const Vector3 &color, bool clearDepth, bool clearColor);
+      void ClearBuffer(const Vector3 &color, bool clearDepth, bool clearColor) override;
 
-      virtual Matrix4 CreatePerspectiveMatrix(float aspectRatio, float nearCap = -1, float farCap = -1);
-      virtual Matrix4 CreateOrthoMatrix(float left, float right, float bottom, float top, float nearCap = -1, float farCap = -1);
+      Matrix4 CreatePerspectiveMatrix(float aspectRatio, float nearCap = -1, float farCap = -1) override;
+      Matrix4 CreateOrthoMatrix(float left, float right, float bottom, float top, float nearCap = -1, float farCap = -1) override;
 
       // vertex buffers
-      virtual VertexBufferID CreateVertexBuffer(float *vertices, unsigned int verticesDataSize, const std::vector<unsigned int>& indices, e_VertexBufferUsage usage);
-      virtual void UpdateVertexBuffer(VertexBufferID vertexBufferID, float *vertices, unsigned int verticesDataSize);
-      virtual void DeleteVertexBuffer(VertexBufferID vertexBufferID);
-      virtual void RenderVertexBuffer(const std::deque<VertexBufferQueueEntry> &vertexBufferQueue, e_RenderMode renderMode = e_RenderMode_Full);
+      VertexBufferID CreateVertexBuffer(float *vertices, unsigned int verticesDataSize, const std::vector<unsigned int>& indices, e_VertexBufferUsage usage) override;
+      void UpdateVertexBuffer(VertexBufferID vertexBufferID, float *vertices, unsigned int verticesDataSize) override;
+      void DeleteVertexBuffer(VertexBufferID vertexBufferID) override;
+      void RenderVertexBuffer(const std::deque<VertexBufferQueueEntry> &vertexBufferQueue, e_RenderMode renderMode = e_RenderMode_Full) override;
 
       // lights
-      virtual void SetLight(const Vector3 &position, const Vector3 &color, float radius);
+      void SetLight(const Vector3 &position, const Vector3 &color, float radius) override;
 
       // textures
-      virtual int CreateTexture(e_InternalPixelFormat internalPixelFormat, e_PixelFormat pixelFormat, int width, int height, bool alpha = false, bool repeat = true, bool mipmaps = true, bool filter = true, bool multisample = false, bool compareDepth = false);
-      virtual void ResizeTexture(int textureID, SDL_Surface *source, e_InternalPixelFormat internalPixelFormat, e_PixelFormat pixelFormat, bool alpha = false, bool mipmaps = true);
-      virtual void UpdateTexture(int textureID, SDL_Surface *source, bool alpha = false, bool mipmaps = true);
-      virtual void DeleteTexture(int textureID);
-      virtual void CopyFrameBufferToTexture(int textureID, int width, int height);
-      virtual void BindTexture(int textureID);
-      virtual void SetTextureUnit(int textureUnit);
-      virtual void SetClientTextureUnit(int textureUnit);
+      int CreateTexture(e_InternalPixelFormat internalPixelFormat, e_PixelFormat pixelFormat, int width, int height, bool alpha = false, bool repeat = true, bool mipmaps = true, bool filter = true, bool multisample = false, bool compareDepth = false) override;
+      void ResizeTexture(int textureID, SDL_Surface *source, e_InternalPixelFormat internalPixelFormat, e_PixelFormat pixelFormat, bool alpha = false, bool mipmaps = true) override;
+      void UpdateTexture(int textureID, SDL_Surface *source, bool alpha = false, bool mipmaps = true) override;
+      void DeleteTexture(int textureID) override;
+      void CopyFrameBufferToTexture(int textureID, int width, int height) override;
+      void BindTexture(int textureID) override;
+      void SetTextureUnit(int textureUnit) override;
+      void SetClientTextureUnit(int textureUnit) override;
 
       // frame buffers
-      virtual int CreateFrameBuffer();
-      virtual void DeleteFrameBuffer(int fbID);
-      virtual void BindFrameBuffer(int fbID);
-      virtual void SetFrameBufferRenderBuffer(e_TargetAttachment targetAttachment, int rbID);
-      virtual void SetFrameBufferTexture2D(e_TargetAttachment targetAttachment, int texID);
-      virtual bool CheckFrameBufferStatus();
-      virtual void SetFramebufferGammaCorrection(bool onOff);
+      int CreateFrameBuffer() override;
+      void DeleteFrameBuffer(int fbID) override;
+      void BindFrameBuffer(int fbID) override;
+      void SetFrameBufferRenderBuffer(e_TargetAttachment targetAttachment, int rbID) override;
+      void SetFrameBufferTexture2D(e_TargetAttachment targetAttachment, int texID) override;
+      bool CheckFrameBufferStatus() override;
+      void SetFramebufferGammaCorrection(bool onOff) override;
 
       // render targets
-      virtual void SetRenderTargets(std::vector<e_TargetAttachment> targetAttachments);
+      void SetRenderTargets(std::vector<e_TargetAttachment> targetAttachments) override;
 
       // utility
-      virtual void SetFOV(float angle);
-      virtual void PushAttribute(int attr);
-      virtual void PopAttribute();
-      virtual void SetViewport(int x, int y, int width, int height);
-      virtual void GetContextSize(int &width, int &height, int &bpp);
+      void SetFOV(float angle) override;
+      void PushAttribute(int attr) override;
+      void PopAttribute() override;
+      void SetViewport(int x, int y, int width, int height) override;
+      void GetContextSize(int &width, int &height, int &bpp) override;
 
       // shaders
-      virtual void LoadShader(const std::string &name, const std::string &filename);
-      virtual void UseShader(const std::string &name);
-      virtual void SetUniformInt(const std::string &shaderName, const std::string &varName, int value);
+      void LoadShader(const std::string &name, const std::string &filename) override;
+      void UseShader(const std::string &name) override;
+      void SetUniformInt(const std::string &shaderName, const std::string &varName, int value) override;
+      // 非 Renderer3D 接口扩展，非 override
       virtual void SetUniformInt3(const std::string &shaderName, const std::string &varName, int value1, int value2, int value3);
-      virtual void SetUniformFloat(const std::string &shaderName, const std::string &varName, float value);
-      virtual void SetUniformFloat2(const std::string &shaderName, const std::string &varName, float value1, float value2);
-      virtual void SetUniformFloat3(const std::string &shaderName, const std::string &varName, float value1, float value2, float value3);
-      virtual void SetUniformFloat3Array(const std::string &shaderName, const std::string &varName, int count, float *values);
-      virtual void SetUniformMatrix4(const std::string &shaderName, const std::string &varName, const Matrix4 &mat);
+      void SetUniformFloat(const std::string &shaderName, const std::string &varName, float value) override;
+      void SetUniformFloat2(const std::string &shaderName, const std::string &varName, float value1, float value2) override;
+      void SetUniformFloat3(const std::string &shaderName, const std::string &varName, float value1, float value2, float value3) override;
+      void SetUniformFloat3Array(const std::string &shaderName, const std::string &varName, int count, float *values) override;
+      void SetUniformMatrix4(const std::string &shaderName, const std::string &varName, const Matrix4 &mat) override;
 
     protected:
       SDL_GLContext context = 0;

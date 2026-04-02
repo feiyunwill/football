@@ -43,6 +43,13 @@ namespace blunted {
   class IScene : public Subject<ISceneInterpreter> {
 
     public:
+      // 2026-04-02 现代 C++：多态接口禁用值语义；显式 default 默认构造（否则 =delete 拷贝会抑制隐式默认构造）
+      IScene() = default;
+      IScene(const IScene &) = delete;
+      IScene &operator=(const IScene &) = delete;
+      IScene(IScene &&) = delete;
+      IScene &operator=(IScene &&) = delete;
+
       virtual void Init() = 0;
       virtual void Exit() = 0; // ATOMIC
 
@@ -58,6 +65,13 @@ namespace blunted {
   class ISceneInterpreter : public Interpreter {
 
     public:
+      // 2026-04-02 现代 C++：多态接口禁用值语义；显式 default 默认构造
+      ISceneInterpreter() = default;
+      ISceneInterpreter(const ISceneInterpreter &) = delete;
+      ISceneInterpreter &operator=(const ISceneInterpreter &) = delete;
+      ISceneInterpreter(ISceneInterpreter &&) = delete;
+      ISceneInterpreter &operator=(ISceneInterpreter &&) = delete;
+
       virtual void OnLoad() = 0;
       virtual void OnUnload() = 0;
 

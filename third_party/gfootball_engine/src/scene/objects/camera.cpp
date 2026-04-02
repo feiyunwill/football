@@ -39,7 +39,9 @@ void Camera::Init() {
     DO_VALIDATION;
     ICameraInterpreter *CameraInterpreter =
         static_cast<ICameraInterpreter *>(observers_[i].get());
-    CameraInterpreter->OnLoad(properties);
+    // 2026-04-02 对齐 Object 成员 properties_（scene/object.hpp）
+    // CameraInterpreter->OnLoad(properties);
+    CameraInterpreter->OnLoad(properties_);
   }
 }
 

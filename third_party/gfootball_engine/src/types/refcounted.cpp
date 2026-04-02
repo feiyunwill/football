@@ -17,6 +17,8 @@
 
 #include "refcounted.hpp"
 
+#include "../defines.hpp"
+
 namespace blunted {
 
 RefCounted::RefCounted() : refCount_(0) { DO_VALIDATION; }
@@ -32,20 +34,27 @@ RefCounted &RefCounted::operator=(const RefCounted &src) {
 
 unsigned long RefCounted::GetRefCount() {
   DO_VALIDATION;
-  int i = refCount_;
-  return i;
+  // 2026-04-02 refCount_ 为 std::atomic：原 volatile 直接读在并发下无保证。
+  // int i = refCount_;
+  // return i;
+  return static_cast<unsigned long>(
+      refCount_.load(std::memory_order_relaxed));
 }
 
 void intrusive_ptr_add_ref(RefCounted *p) {
   DO_VALIDATION;
   assert(p);
-  ++(p->refCount_);
+  // 2026-04-02 原子递增；与 boost::intrusive_ptr 钩子契约一致。
+  // ++(p->refCount_);
+  p->refCount_.fetch_add(1, std::memory_order_relaxed);
 }
 
 void intrusive_ptr_release(RefCounted *p) {
   DO_VALIDATION;
   assert(p);
-  if (--(p->refCount_) == 0) {
+  // 2026-04-02 fetch_sub 返回减之前的值；为 1 表示本次释放后 refcount 归零。
+  // if (--(p->refCount_) == 0) {
+  if (p->refCount_.fetch_sub(1, std::memory_order_acq_rel) == 1) {
     DO_VALIDATION;
     delete p;
   }

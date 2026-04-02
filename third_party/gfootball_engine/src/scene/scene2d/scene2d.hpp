@@ -30,16 +30,27 @@ namespace blunted {
 
     public:
       Scene2D(int width, int height);
-      virtual ~Scene2D();
+      // 2026-04-02 现代 C++：具体场景类禁用切片拷贝/移动
+      Scene2D(const Scene2D &) = delete;
+      Scene2D &operator=(const Scene2D &) = delete;
+      Scene2D(Scene2D &&) = delete;
+      Scene2D &operator=(Scene2D &&) = delete;
+      // 2026-04-02 现代 C++：override
+      // virtual ~Scene2D();
+      ~Scene2D() override;
 
-      virtual void Init();
-      virtual void Exit(); // ATOMIC
+      // virtual void Init();
+      void Init() override;
+      // virtual void Exit(); // ATOMIC
+      void Exit() override; // ATOMIC
 
       void AddObject(boost::intrusive_ptr<Object> object);
       void DeleteObject(boost::intrusive_ptr<Object> object);
 
+      // void PokeObjects(e_ObjectType targetObjectType,
+      //                  e_SystemType targetSystemType);
       void PokeObjects(e_ObjectType targetObjectType,
-                       e_SystemType targetSystemType);
+                       e_SystemType targetSystemType) override;
 
       void GetContextSize(int &width, int &height, int &bpp);
 

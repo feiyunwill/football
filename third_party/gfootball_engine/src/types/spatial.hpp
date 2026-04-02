@@ -73,6 +73,11 @@ namespace blunted {
       virtual ~Spatial();
 
       Spatial(const Spatial &src);
+      // 2026-04-02 现代 C++：禁止切片赋值与移动（仅保留用于克隆路径的拷贝构造）
+      // Spatial(Spatial &&src) = default; — unsafe for hierarchy
+      Spatial(Spatial &&) = delete;
+      Spatial &operator=(const Spatial &) = delete;
+      Spatial &operator=(Spatial &&) = delete;
 
       virtual void Exit() = 0;
 

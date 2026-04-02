@@ -35,10 +35,19 @@ namespace blunted {
 
     public:
       Scene3D();
-      virtual ~Scene3D();
+      // 2026-04-02 现代 C++：具体场景类禁用切片拷贝/移动
+      Scene3D(const Scene3D &) = delete;
+      Scene3D &operator=(const Scene3D &) = delete;
+      Scene3D(Scene3D &&) = delete;
+      Scene3D &operator=(Scene3D &&) = delete;
+      // 2026-04-02 现代 C++：override
+      // virtual ~Scene3D();
+      ~Scene3D() override;
 
-      virtual void Init();
-      virtual void Exit(); // ATOMIC
+      // virtual void Init();
+      void Init() override;
+      // virtual void Exit(); // ATOMIC
+      void Exit() override; // ATOMIC
 
       void AddNode(boost::intrusive_ptr<Node> node);
       void DeleteNode(boost::intrusive_ptr<Node> node);
@@ -67,7 +76,9 @@ namespace blunted {
         hierarchy_root_->GetObjects<T>(targetObjectType, gatherObjects, bounding, true, 0);
       }
 
-      void PokeObjects(e_ObjectType targetObjectType, e_SystemType targetSystemType);
+      // void PokeObjects(e_ObjectType targetObjectType, e_SystemType targetSystemType);
+      void PokeObjects(e_ObjectType targetObjectType,
+                       e_SystemType targetSystemType) override;
 
     protected:
       boost::intrusive_ptr<Node> hierarchy_root_;

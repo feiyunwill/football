@@ -25,6 +25,7 @@
 #include "../base/properties.hpp"
 
 #include <compare>
+#include <cstddef>
 
 namespace blunted {
 
@@ -38,6 +39,9 @@ namespace blunted {
     e_ObjectType_Light = 5,
     e_ObjectType_UserStart = 7
   };
+
+  // 2026-04-02 Scene 用 std::bitset 登记支持的 e_ObjectType（按下标存储），预留位数供 UserStart 之后扩展
+  inline constexpr std::size_t kObjectTypeSupportBitsetSize = 64;
 
   constexpr std::strong_ordering operator<=>(e_ObjectType a, e_ObjectType b) {
     return static_cast<int>(a) <=> static_cast<int>(b);
@@ -57,12 +61,18 @@ namespace blunted {
 
     public:
       Object(std::string name, e_ObjectType objectType);
-      virtual ~Object();
+      // 2026-04-02 现代 C++：覆盖 Spatial 析构使用 override
+      // virtual ~Object();
+      ~Object() override;
 
       Object(const Object &src);
       Object(Object &&src) noexcept;
+      // 2026-04-02 现代 C++：Rule of Five — 克隆走拷贝构造，禁止误用赋值切片
+      Object &operator=(const Object &) = delete;
+      Object &operator=(Object &&) = delete;
 
-      virtual void Exit();
+      // virtual void Exit();
+      void Exit() override;
 
       virtual e_ObjectType GetObjectType();
 
@@ -86,7 +96,10 @@ namespace blunted {
       virtual void Synchronize();
       virtual void Poke(e_SystemType targetSystemType);
 
-      virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
+      // virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
+      void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
+                                     e_SystemType excludeSystem =
+                                         e_SystemType_None) override;
 
       MustUpdateSpatialData update_spatial_data_after_poke_;
 

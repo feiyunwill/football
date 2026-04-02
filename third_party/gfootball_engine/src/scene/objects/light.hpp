@@ -45,9 +45,12 @@ namespace blunted {
 
     public:
       Light(std::string name);
-      virtual ~Light();
+      // 2026-04-02 现代 C++：override
+      // virtual ~Light();
+      ~Light() override;
 
-      virtual void Exit();
+      // virtual void Exit();
+      void Exit() override;
 
       virtual void SetColor(const Vector3 &color);
       virtual Vector3 GetColor() const;
@@ -64,11 +67,16 @@ namespace blunted {
       virtual void UpdateValues();
 
       virtual void EnqueueShadowMap(boost::intrusive_ptr<Camera> camera, std::deque < boost::intrusive_ptr<Geometry> > visibleGeometry);
-      virtual void Poke(e_SystemType targetSystemType);
+      // virtual void Poke(e_SystemType targetSystemType);
+      void Poke(e_SystemType targetSystemType) override;
 
-      virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
+      // virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
+      void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
+                                      e_SystemType excludeSystem =
+                                          e_SystemType_None) override;
 
-      virtual AABB GetAABB() const;
+      // virtual AABB GetAABB() const;
+      AABB GetAABB() const override;
 
     protected:
       Vector3 color_;

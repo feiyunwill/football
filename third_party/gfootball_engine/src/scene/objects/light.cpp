@@ -162,17 +162,24 @@ void Light::SetColor(const Vector3 &color) {
   }
 
   AABB Light::GetAABB() const {
-    //aabb.Lock();
-    if (aabb.dirty == true) {
+    //aabb_.Lock();
+    // 2026-04-02 对齐 Spatial 成员名 aabb_（types/spatial.hpp）
+    // if (aabb.dirty == true) {
+    if (aabb_.dirty == true) {
       DO_VALIDATION;
       Vector3 pos = GetDerivedPosition();
-      aabb.aabb.minxyz = pos - radius_;
-      aabb.aabb.maxxyz = pos + radius_;
-      aabb.aabb.MakeDirty();
-      aabb.dirty = false;
+      // aabb.aabb.minxyz = pos - radius_;
+      aabb_.aabb.minxyz = pos - radius_;
+      // aabb.aabb.maxxyz = pos + radius_;
+      aabb_.aabb.maxxyz = pos + radius_;
+      // aabb.aabb.MakeDirty();
+      aabb_.aabb.MakeDirty();
+      // aabb.dirty = false;
+      aabb_.dirty = false;
     }
-    AABB tmp = aabb.aabb;
-    //aabb.Unlock();
+    // AABB tmp = aabb.aabb;
+    AABB tmp = aabb_.aabb;
+    //aabb_.Unlock();
     return tmp;
   }
 

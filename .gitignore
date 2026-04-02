@@ -24,6 +24,9 @@ cmake_install.cmake
 *.pyd
 *.cbp
 
+# clangd：若将 build 内 compile_commands.json 复制/链接到引擎根，勿提交
+third_party/gfootball_engine/compile_commands.json
+
 # IDE
 .idea
 .vs*

@@ -29,6 +29,13 @@ namespace blunted {
   class ISystemObject {
 
     public:
+      // 2026-04-02 现代 C++：多态接口禁值语义（cpp-special-member-functions）
+      ISystemObject() = default;
+      ISystemObject(const ISystemObject &) = delete;
+      ISystemObject &operator=(const ISystemObject &) = delete;
+      ISystemObject(ISystemObject &&) = delete;
+      ISystemObject &operator=(ISystemObject &&) = delete;
+
       virtual ~ISystemObject() { DO_VALIDATION;};
 
       virtual boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType) = 0;

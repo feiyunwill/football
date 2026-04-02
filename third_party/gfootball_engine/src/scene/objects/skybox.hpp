@@ -26,7 +26,9 @@ namespace blunted {
 
     public:
       Skybox(std::string name);
-      virtual ~Skybox();
+      // 2026-04-02 现代 C++：override
+      // virtual ~Skybox();
+      ~Skybox() override;
 
     protected:
 

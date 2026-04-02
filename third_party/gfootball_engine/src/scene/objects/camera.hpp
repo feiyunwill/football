@@ -37,10 +37,13 @@ namespace blunted {
 
     public:
       Camera(std::string name);
-      virtual ~Camera();
+      // 2026-04-02 现代 C++：override
+      // virtual ~Camera();
+      ~Camera() override;
 
       virtual void Init();
-      virtual void Exit();
+      // virtual void Exit();
+      void Exit() override;
 
       virtual void SetFOV(float fov);
       virtual float GetFOV() const { return fov_; }
@@ -49,9 +52,13 @@ namespace blunted {
 
 
       virtual void EnqueueView(std::deque < boost::intrusive_ptr<Geometry> > &visibleGeometry, std::deque < boost::intrusive_ptr<Light> > &visibleLights, std::deque < boost::intrusive_ptr<Skybox> > &skyboxes);
-      virtual void Poke(e_SystemType targetSystemType);
+      // virtual void Poke(e_SystemType targetSystemType);
+      void Poke(e_SystemType targetSystemType) override;
 
-      virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
+      // virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
+      void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
+                                      e_SystemType excludeSystem =
+                                          e_SystemType_None) override;
 
     protected:
       float fov_ = 0.0f;

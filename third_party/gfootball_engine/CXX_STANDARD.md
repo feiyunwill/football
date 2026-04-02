@@ -14,3 +14,10 @@
 ## 修改方式
 
 在对应 `CMakeLists.txt` 中修改 `set(CMAKE_CXX_STANDARD 20)` 为所需标准即可；两处建议保持一致，便于帧同步与引擎共用代码时无 ABI 差异。
+
+## compile_commands.json 与 clangd
+
+主引擎与 `frame_sync_asio` 的 CMake 已设置 `CMAKE_EXPORT_COMPILE_COMMANDS ON`。配置成功后，在构建目录会生成 `compile_commands.json`（例如 `third_party/gfootball_engine/build/compile_commands.json`）。
+
+- **clangd**：在引擎目录可执行 `ln -sf build/compile_commands.json .`（路径按本机 build 目录调整），或在工作区设置 `clangd.arguments` 增加 `--compile-commands-dir=…/build`。
+- **勿将** 该文件提交仓库（根目录 `.gitignore` 已忽略引擎根下的 `compile_commands.json` 副本）。

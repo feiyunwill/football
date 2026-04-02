@@ -22,6 +22,8 @@
 
 #include "iscene.hpp"
 
+#include <bitset>
+
 namespace blunted {
 
   typedef std::vector < boost::intrusive_ptr<Object> > vector_Objects;
@@ -30,16 +32,30 @@ namespace blunted {
 
     public:
       Scene();
-      virtual ~Scene();
+      // 2026-04-02 现代 C++：抽象场景基类禁用切片拷贝/移动
+      // Scene(const Scene &) = default; — removed: polymorphic base
+      Scene(const Scene &) = delete;
+      Scene &operator=(const Scene &) = delete;
+      Scene(Scene &&) = delete;
+      Scene &operator=(Scene &&) = delete;
+      // 2026-04-02 现代 C++：覆盖 IScene 虚函数使用 override
+      // virtual ~Scene();
+      ~Scene() override;
 
-      virtual void Init() = 0; // ATOMIC
-      virtual void Exit(); // ATOMIC
+      // virtual void Init() = 0; // ATOMIC
+      void Init() override = 0; // ATOMIC
+      // virtual void Exit(); // ATOMIC
+      void Exit() override; // ATOMIC
 
-      virtual void CreateSystemObjects(boost::intrusive_ptr<Object> object);
-      virtual bool SupportedObjectType(e_ObjectType objectType) const;
+      // virtual void CreateSystemObjects(boost::intrusive_ptr<Object> object);
+      void CreateSystemObjects(boost::intrusive_ptr<Object> object) override;
+      // virtual bool SupportedObjectType(e_ObjectType objectType) const;
+      bool SupportedObjectType(e_ObjectType objectType) const override;
 
     protected:
-      std::vector<e_ObjectType> supported_object_types_;
+      // 2026-04-02 原 std::vector<e_ObjectType> 线性查找；改为 bitset 按枚举整数值置位，O(1) 查询
+      // std::vector<e_ObjectType> supported_object_types_;
+      std::bitset<kObjectTypeSupportBitsetSize> supported_object_types_{};
   };
 
 }

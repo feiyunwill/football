@@ -38,6 +38,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# 2026-04-02 原因：生成 compile_commands.json 供 clangd/ccls 等 LSP 解析 include/宏（位于 ${CMAKE_BINARY_DIR}/compile_commands.json）
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if(UNIX)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS} -fPIC -g -O3")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -O3 -g")
@@ -48,7 +51,12 @@ endif(UNIX)
 FIND_PACKAGE(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
-FIND_PACKAGE(SDL2 REQUIRED)
+# 2026-04-02 原因：先尝试 CONFIG（vcpkg）；失败则用 CMakeModules/FindSDL2.cmake（无 SDL2Config 的 Linux）
+# FIND_PACKAGE(SDL2 REQUIRED)
+find_package(SDL2 QUIET CONFIG)
+if(NOT SDL2_FOUND)
+  find_package(SDL2 MODULE REQUIRED)
+endif()
 include_directories(${SDL2_INCLUDE_DIRS})
 
 if(UNIX AND NOT APPLE)
@@ -72,7 +80,9 @@ include_directories(${SDL2_GFX_DIRS})
 
 if(UNIX)
   if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.12")
-    find_package(Python COMPONENTS Development REQUIRED)
+    # 2026-04-02 原因：pybind11 需要 Python Interpreter 组件，仅 Development 会配置失败
+    # find_package(Python COMPONENTS Development REQUIRED)
+    find_package(Python COMPONENTS Development Interpreter REQUIRED)
   else()
     # Starting from CMake 3.12 FindPythonLibs was deprecated in favour of FindPython.
     # But Ubuntu 18.04 and other older distributions are shipped with CMake version < 3.12,

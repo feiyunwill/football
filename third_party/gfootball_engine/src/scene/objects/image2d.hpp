@@ -33,22 +33,29 @@ namespace blunted {
 
     public:
       Image2D(std::string name);
-      virtual ~Image2D();
+      // 2026-04-02 现代 C++：override
+      // virtual ~Image2D();
+      ~Image2D() override;
 
-      virtual void Exit();
+      // virtual void Exit();
+      void Exit() override;
 
       void SetImage(boost::intrusive_ptr < Resource<Surface> > image);
       boost::intrusive_ptr < Resource<Surface> > GetImage();
 
       void SetPosition(int x, int y);
-      virtual void SetPosition(const Vector3 &newPosition, bool updateSpatialData = true);
-      virtual Vector3 GetPosition() const;
+      // virtual void SetPosition(const Vector3 &newPosition, bool updateSpatialData = true);
+      void SetPosition(const Vector3 &newPosition,
+                       bool updateSpatialData = true) override;
+      // virtual Vector3 GetPosition() const;
+      Vector3 GetPosition() const override;
       Vector3 GetSize() const;
       void DrawRectangle(int x, int y, int w, int h, const Vector3 &color,
                          int alpha = 255);
       void Resize(int w, int h);
 
-      virtual void Poke(e_SystemType targetSystemType);
+      // virtual void Poke(e_SystemType targetSystemType);
+      void Poke(e_SystemType targetSystemType) override;
 
       void OnChange();
 

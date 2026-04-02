@@ -26,10 +26,15 @@ Scene3D::Scene3D() {
   boost::intrusive_ptr<Node> root(new Node("Scene3D root node"));
   hierarchy_root_ = root;
 
-  supported_object_types_.push_back(e_ObjectType_Geometry);
-  supported_object_types_.push_back(e_ObjectType_Skybox);
-  supported_object_types_.push_back(e_ObjectType_Camera);
-  supported_object_types_.push_back(e_ObjectType_Light);
+  // 2026-04-02 原 vector push_back；与 Scene 基类 bitset 一致，按枚举值置位
+  // supported_object_types_.push_back(e_ObjectType_Geometry);
+  // supported_object_types_.push_back(e_ObjectType_Skybox);
+  // supported_object_types_.push_back(e_ObjectType_Camera);
+  // supported_object_types_.push_back(e_ObjectType_Light);
+  supported_object_types_.set(static_cast<std::size_t>(e_ObjectType_Geometry));
+  supported_object_types_.set(static_cast<std::size_t>(e_ObjectType_Skybox));
+  supported_object_types_.set(static_cast<std::size_t>(e_ObjectType_Camera));
+  supported_object_types_.set(static_cast<std::size_t>(e_ObjectType_Light));
 }
 
 Scene3D::~Scene3D() { DO_VALIDATION; }

@@ -32,6 +32,12 @@ namespace blunted {
 
     public:
       Texture();
+      // 2026-04-02 现代 C++：Rule of Five — 持有 GL 纹理 ID 与渲染器指针，禁拷贝/移动
+      Texture(const Texture &) = delete;
+      Texture &operator=(const Texture &) = delete;
+      Texture(Texture &&) = delete;
+      Texture &operator=(Texture &&) = delete;
+
       virtual ~Texture();
 
       void SetRenderer3D(Renderer3D *renderer3D);

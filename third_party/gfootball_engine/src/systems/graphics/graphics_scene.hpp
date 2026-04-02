@@ -49,15 +49,16 @@ namespace blunted {
     public:
       GraphicsScene_Scene3DInterpreter(GraphicsScene *caller);
 
-      virtual e_SystemType GetSystemType() const { return e_SystemType_Graphics; }
-      virtual void OnLoad();
-      virtual void OnUnload();
+      // 2026-04-02 现代 C++：override
+      e_SystemType GetSystemType() const override { return e_SystemType_Graphics; }
+      void OnLoad() override;
+      void OnUnload() override;
 
-      virtual ISystemObject *CreateSystemObject(Object* object);
+      ISystemObject *CreateSystemObject(Object* object) override;
 
-      virtual void SetGravity(const Vector3 &gravity) { DO_VALIDATION;}
-      virtual void SetErrorCorrection(float value) { DO_VALIDATION;}
-      virtual void SetConstraintForceMixing(float value) { DO_VALIDATION;}
+      void SetGravity(const Vector3 &gravity) override { DO_VALIDATION;}
+      void SetErrorCorrection(float value) override { DO_VALIDATION;}
+      void SetConstraintForceMixing(float value) override { DO_VALIDATION;}
 
     protected:
       GraphicsScene *caller_;
@@ -69,11 +70,12 @@ namespace blunted {
     public:
       GraphicsScene_Scene2DInterpreter(GraphicsScene *caller);
 
-      virtual e_SystemType GetSystemType() const { return e_SystemType_Graphics; }
-      virtual void OnLoad();
-      virtual void OnUnload();
+      // 2026-04-02 现代 C++：override（与 Scene3D 侧一致）
+      e_SystemType GetSystemType() const override { return e_SystemType_Graphics; }
+      void OnLoad() override;
+      void OnUnload() override;
 
-      virtual ISystemObject *CreateSystemObject(Object* object);
+      ISystemObject *CreateSystemObject(Object* object) override;
 
     protected:
       GraphicsScene *caller_;

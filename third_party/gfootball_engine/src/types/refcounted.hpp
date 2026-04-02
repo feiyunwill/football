@@ -18,12 +18,15 @@
 #ifndef _HPP_REFCOUNTED
 #define _HPP_REFCOUNTED
 
-#include "../defines.hpp"
+// 2026-04-02 头文件仅声明 RefCounted，不拉 defines.hpp，避免扩大包含面；DO_VALIDATION 仅在 .cpp 使用。
+// #include "../defines.hpp"
 
-#include <boost/detail/atomic_count.hpp>
-#ifdef WIN32
-#include <boost/detail/interlocked.hpp>
-#endif
+// 2026-04-02 移除 Boost：头文件未实际使用 atomic_count；实现侧曾用 volatile++/--，非线程安全。
+// #include <boost/detail/atomic_count.hpp>
+// #ifdef WIN32
+// #include <boost/detail/interlocked.hpp>
+// #endif
+#include <atomic>
 
 namespace blunted {
 
@@ -42,7 +45,9 @@ namespace blunted {
 
     private:
       // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
-      volatile long refCount_ = 0;
+      // 2026-04-02 标准库 std::atomic 替代 volatile long，保证引用计数原子性与去 Boost。
+      // volatile long refCount_ = 0;
+      std::atomic<long> refCount_{0};
       friend void intrusive_ptr_add_ref(RefCounted *p);
       friend void intrusive_ptr_release(RefCounted *p);
 

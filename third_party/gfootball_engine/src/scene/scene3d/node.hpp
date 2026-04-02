@@ -33,9 +33,17 @@ namespace blunted {
     public:
       Node(const std::string &name);
       Node(const Node &source, const std::string &postfix, boost::shared_ptr<Scene3D> scene3D);
-      virtual ~Node();
+      // 2026-04-02 现代 C++：禁止默认拷贝/移动；克隆使用三参构造函数
+      Node(const Node &) = delete;
+      Node &operator=(const Node &) = delete;
+      Node(Node &&) = delete;
+      Node &operator=(Node &&) = delete;
+      // 2026-04-02 现代 C++：override
+      // virtual ~Node();
+      ~Node() override;
 
-      virtual void Exit();
+      // virtual void Exit();
+      void Exit() override;
 
       void AddNode(boost::intrusive_ptr<Node> node);
       void DeleteNode(boost::intrusive_ptr<Node> node);
@@ -89,9 +97,13 @@ namespace blunted {
 
       void PokeObjects(e_ObjectType targetObjectType, e_SystemType targetSystem);
 
-      virtual AABB GetAABB() const;
+      // virtual AABB GetAABB() const;
+      AABB GetAABB() const override;
 
-      virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
+      // virtual void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
+      void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
+                                      e_SystemType excludeSystem =
+                                          e_SystemType_None) override;
 
     protected:
       mutable std::vector < boost::intrusive_ptr<Node> > nodes_;

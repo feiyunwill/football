@@ -32,20 +32,28 @@ namespace blunted {
     public:
       Geometry(std::string name, e_ObjectType objectType = e_ObjectType_Geometry);
       Geometry(const Geometry &src, const std::string &postfix);
-      virtual ~Geometry();
+      // 2026-04-02 现代 C++：override
+      // virtual ~Geometry();
+      ~Geometry() override;
 
-      virtual void Exit();
+      // virtual void Exit();
+      void Exit() override;
 
       void SetGeometryData(boost::intrusive_ptr < Resource<GeometryData> > geometryData);
       boost::intrusive_ptr < Resource<GeometryData> > GetGeometryData();
 
       void OnUpdateGeometryData(bool updateMaterials = true);
 
-      virtual void Poke(e_SystemType targetSystemType);
+      // virtual void Poke(e_SystemType targetSystemType);
+      void Poke(e_SystemType targetSystemType) override;
 
-      void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
+      // void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType, e_SystemType excludeSystem = e_SystemType_None);
+      void RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
+                                      e_SystemType excludeSystem =
+                                          e_SystemType_None) override;
 
-      virtual AABB GetAABB() const;
+      // virtual AABB GetAABB() const;
+      AABB GetAABB() const override;
 
     protected:
       boost::intrusive_ptr < Resource<GeometryData> > geometry_data_;

@@ -19,11 +19,15 @@
 
 #include "../../scene/objectfactory.hpp"
 
+#include <cstddef>
+
 namespace blunted {
 
 Scene2D::Scene2D(int width, int height) : width_(width), height_(height), bpp_(32) {
   DO_VALIDATION;
-  supported_object_types_.push_back(e_ObjectType_Image2D);
+  // 2026-04-02 原 vector push_back；与 Scene 基类 bitset 一致
+  // supported_object_types_.push_back(e_ObjectType_Image2D);
+  supported_object_types_.set(static_cast<std::size_t>(e_ObjectType_Image2D));
 }
 
 Scene2D::~Scene2D() { DO_VALIDATION; }

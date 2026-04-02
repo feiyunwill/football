@@ -35,9 +35,9 @@ namespace blunted {
 
     public:
       GraphicsLight(GraphicsScene *graphicsScene);
-      virtual ~GraphicsLight();
+      ~GraphicsLight() override;
 
-      virtual boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType);
+      boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType) override;
 
       virtual void SetPosition(const Vector3 &newPosition);
       virtual Vector3 GetPosition() const;
@@ -70,16 +70,16 @@ namespace blunted {
     public:
       GraphicsLight_LightInterpreter(GraphicsLight *caller);
 
-      virtual e_SystemType GetSystemType() const { return e_SystemType_Graphics; }
-      virtual void OnUnload();
-      virtual void SetValues(const Vector3 &color, float radius);
-      virtual void SetType(e_LightType lightType);
-      virtual void SetShadow(bool shadow);
-      virtual bool GetShadow();
-      virtual void OnSpatialChange(const Vector3 &position, const Quaternion &rotation);
-      virtual void EnqueueShadowMap(boost::intrusive_ptr<Camera> camera, std::deque < boost::intrusive_ptr<Geometry> > visibleGeometry);
+      e_SystemType GetSystemType() const override { return e_SystemType_Graphics; }
+      void OnUnload() override;
+      void SetValues(const Vector3 &color, float radius) override;
+      void SetType(e_LightType lightType) override;
+      void SetShadow(bool shadow) override;
+      bool GetShadow() override;
+      void OnSpatialChange(const Vector3 &position, const Quaternion &rotation) override;
+      void EnqueueShadowMap(boost::intrusive_ptr<Camera> camera, std::deque < boost::intrusive_ptr<Geometry> > visibleGeometry) override;
       virtual ShadowMap GetShadowMap(const std::string &camName);
-      virtual void OnPoke();
+      void OnPoke() override;
 
     protected:
       GraphicsLight *caller_;

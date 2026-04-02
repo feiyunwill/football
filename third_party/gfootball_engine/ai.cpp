@@ -26,6 +26,9 @@
 namespace py = pybind11;
 using std::string;
 
+// 2026-04-02 pybind11：使 boost::shared_ptr 成为合法 holder（否则 class_<T, boost::shared_ptr<T>> 静态断言失败）
+PYBIND11_DECLARE_HOLDER_TYPE(T, boost::shared_ptr<T>);
+
 class GameEnv_Python : public GameEnv {
  public:
   py::bytes get_frame_python() {
@@ -76,9 +79,14 @@ PYBIND11_MODULE(_gameplayfootball, m) {
         return v[i];
       });
 
-  py::class_<Position>(m, "Position", py::init<float, float, float, bool>(),
-                       py::arg("x") = 0.0f, py::arg("y") = 0.0f,
-                       py::arg("z") = 0.0f, py::arg("env_coords") = false)
+  // 2026-04-02 pybind11：构造器通过 .def(py::init<...>) 注册（不可再作为 class_ 构造参数）
+  // py::class_<Position>(m, "Position", py::init<float, float, float, bool>(),
+  //                      py::arg("x") = 0.0f, py::arg("y") = 0.0f,
+  //                      py::arg("z") = 0.0f, py::arg("env_coords") = false)
+  py::class_<Position>(m, "Position")
+      .def(py::init<float, float, float, bool>(),
+           py::arg("x") = 0.0f, py::arg("y") = 0.0f,
+           py::arg("z") = 0.0f, py::arg("env_coords") = false)
       .def("__getitem__", &Position::env_coord)
       .def("__str__", &Position::debug);
 
@@ -99,7 +107,9 @@ PYBIND11_MODULE(_gameplayfootball, m) {
         return v[i];
       });
 
-  py::class_<ControllerInfo>(m, "ControllerInfo", py::init<int>())
+  // py::class_<ControllerInfo>(m, "ControllerInfo", py::init<int>())
+  py::class_<ControllerInfo>(m, "ControllerInfo")
+      .def(py::init<int>())
       .def_readonly("controlled_player", &ControllerInfo::controlled_player);
 
   py::class_<std::vector<ControllerInfo>>(m, "ControllerInfoVec")
@@ -167,7 +177,9 @@ PYBIND11_MODULE(_gameplayfootball, m) {
                      &GameEnv_Python::waiting_for_game_count)
       .def("tracker_setup", &GameEnv::tracker_setup);
 
-  py::class_<Vector3>(m, "Vector3", py::init<float, float, float>())
+  // py::class_<Vector3>(m, "Vector3", py::init<float, float, float>())
+  py::class_<Vector3>(m, "Vector3")
+      .def(py::init<float, float, float>())
       .def("__getitem__", &Vector3::GetEnvCoord)
       .def("__setitem__", &Vector3::SetEnvCoord);
 
@@ -228,8 +240,10 @@ PYBIND11_MODULE(_gameplayfootball, m) {
       .value("e_PlayerRole_CF", e_PlayerRole::e_PlayerRole_CF)
       .export_values();
 
-  py::class_<FormationEntry>(m, "FormationEntry",
-                             py::init<float, float, e_PlayerRole, bool, bool>())
+  // py::class_<FormationEntry>(m, "FormationEntry",
+  //                          py::init<float, float, e_PlayerRole, bool, bool>())
+  py::class_<FormationEntry>(m, "FormationEntry")
+      .def(py::init<float, float, e_PlayerRole, bool, bool>())
       .def_readonly("role", &FormationEntry::role)
       .def_property_readonly("position", &FormationEntry::position_env)
       .def_readwrite("lazy", &FormationEntry::lazy)

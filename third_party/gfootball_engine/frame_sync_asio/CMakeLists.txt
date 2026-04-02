@@ -8,6 +8,9 @@ project(frame_sync_asio CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# 2026-04-02 原因：与主引擎一致，独立构建时也可生成 compile_commands.json 供 clangd
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 find_package(Boost REQUIRED COMPONENTS system)
 # Asio is header-only; Boost::system is needed on some platforms for linking.
 

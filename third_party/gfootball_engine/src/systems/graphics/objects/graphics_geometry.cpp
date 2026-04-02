@@ -436,8 +436,10 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
 
   void GraphicsGeometry_GeometryInterpreter::OnSynchronize() {
     DO_VALIDATION;
-    OnLoad(static_cast<Geometry*>(subjectPtr));
-    //OnUpdateGeometry(static_cast<Geometry*>(subjectPtr));
+    // 2026-04-02 修复：成员名为 subjectPtr_（Observer.hpp）
+    // OnLoad(static_cast<Geometry*>(subjectPtr));
+    OnLoad(static_cast<Geometry*>(subjectPtr_));
+    //OnUpdateGeometry(static_cast<Geometry*>(subjectPtr_));
 
   }
 

@@ -35,6 +35,12 @@ namespace blunted {
 
     public:
       VertexBuffer();
+      // 2026-04-02 现代 C++：Rule of Five — GPU 缓冲句柄语义，禁拷贝/移动
+      VertexBuffer(const VertexBuffer &) = delete;
+      VertexBuffer &operator=(const VertexBuffer &) = delete;
+      VertexBuffer(VertexBuffer &&) = delete;
+      VertexBuffer &operator=(VertexBuffer &&) = delete;
+
       virtual ~VertexBuffer();
 
       void SetTriangleMesh(const std::vector<float>& vertices, unsigned int verticesDataSize, std::vector<unsigned int> indices);

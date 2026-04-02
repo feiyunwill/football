@@ -17,6 +17,8 @@
 
 #include "scene.hpp"
 
+#include <cstddef>
+
 namespace blunted {
 
 Scene::Scene() { DO_VALIDATION; }
@@ -39,12 +41,19 @@ void Scene::CreateSystemObjects(boost::intrusive_ptr<Object> object) {
   }
 }
 
-  bool Scene::SupportedObjectType(e_ObjectType objectType) const {
-    for (size_t i = 0; i < supported_object_types_.size(); i++) {
-      DO_VALIDATION;
-      if (objectType == supported_object_types_[i]) return true;
-    }
+bool Scene::SupportedObjectType(e_ObjectType objectType) const {
+  // 2026-04-02 原 vector 线性比较；supported_object_types_ 已改为 bitset，用 test 并防止越界
+  // for (size_t i = 0; i < supported_object_types_.size(); i++) {
+  //   DO_VALIDATION;
+  //   if (objectType == supported_object_types_[i]) return true;
+  // }
+  // return false;
+  const std::size_t idx = static_cast<std::size_t>(objectType);
+  DO_VALIDATION;
+  if (idx >= supported_object_types_.size()) {
     return false;
   }
+  return supported_object_types_.test(idx);
+}
 
 }

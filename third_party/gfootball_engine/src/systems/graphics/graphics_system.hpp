@@ -42,6 +42,12 @@ namespace blunted {
 
     public:
       GraphicsSystem();
+      // 2026-04-02 现代 C++：grep 无按值/拷贝使用；禁切片拷贝移动
+      GraphicsSystem(const GraphicsSystem &) = delete;
+      GraphicsSystem &operator=(const GraphicsSystem &) = delete;
+      GraphicsSystem(GraphicsSystem &&) = delete;
+      GraphicsSystem &operator=(GraphicsSystem &&) = delete;
+
       virtual ~GraphicsSystem();
 
       virtual void Initialize(bool render, int width, int height);

@@ -34,9 +34,9 @@ namespace blunted {
 
     public:
       GraphicsCamera(GraphicsScene *graphicsScene);
-      virtual ~GraphicsCamera();
+      ~GraphicsCamera() override;
 
-      virtual boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType);
+      boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType) override;
 
       virtual void SetPosition(const Vector3 &newPosition);
       Vector3 GetPosition() const;
@@ -66,14 +66,14 @@ namespace blunted {
     public:
       GraphicsCamera_CameraInterpreter(GraphicsCamera *caller);
 
-      virtual e_SystemType GetSystemType() const { return e_SystemType_Graphics; }
-      virtual void OnLoad(const Properties &properties);
-      virtual void OnUnload();
-      virtual void SetFOV(float fov);
-      virtual void SetCapping(float nearCap, float farCap);
-      virtual void OnSpatialChange(const Vector3 &position, const Quaternion &rotation);
-      virtual void EnqueueView(const std::string &camName, std::deque < boost::intrusive_ptr<Geometry> > &visibleGeometry, std::deque < boost::intrusive_ptr<Light> > &visibleLights, std::deque < boost::intrusive_ptr<Skybox> > &skyboxes);
-      virtual void OnPoke();
+      e_SystemType GetSystemType() const override { return e_SystemType_Graphics; }
+      void OnLoad(const Properties &properties) override;
+      void OnUnload() override;
+      void SetFOV(float fov) override;
+      void SetCapping(float nearCap, float farCap) override;
+      void OnSpatialChange(const Vector3 &position, const Quaternion &rotation) override;
+      void EnqueueView(const std::string &camName, std::deque < boost::intrusive_ptr<Geometry> > &visibleGeometry, std::deque < boost::intrusive_ptr<Light> > &visibleLights, std::deque < boost::intrusive_ptr<Skybox> > &skyboxes) override;
+      void OnPoke() override;
 
     protected:
       GraphicsCamera *caller_ = nullptr;

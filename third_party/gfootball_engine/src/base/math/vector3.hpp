@@ -95,7 +95,9 @@ namespace blunted {
       // this function does not make much sense does it? Vector3 GetNormalizedMax(float length, const Vector3 &ifNull) const;
       real GetDistance(const Vector3 &fac) const;
       real GetLength() const;
-      real GetSquaredLength() const;
+      // 2026-04-02 修复：与类外 constexpr 定义一致，避免 GCC 报声明与定义 constexpr 不一致
+      // real GetSquaredLength() const;
+      constexpr real GetSquaredLength() const;
       radian GetAngle2D() const;
       // both need to be normalized!
       radian GetAngle2D(const Vector3 &test) const;

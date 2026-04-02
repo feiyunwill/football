@@ -37,9 +37,10 @@ namespace blunted {
 
     public:
       GraphicsGeometry(GraphicsScene *graphicsScene);
-      virtual ~GraphicsGeometry();
+      // 2026-04-02 现代 C++：override
+      ~GraphicsGeometry() override;
 
-      virtual boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType);
+      boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType) override;
 
       virtual void SetPosition(const Vector3 &newPosition);
       Vector3 GetPosition() const;
@@ -60,17 +61,17 @@ namespace blunted {
     public:
       GraphicsGeometry_GeometryInterpreter(GraphicsGeometry *caller);
 
-      virtual e_SystemType GetSystemType() const { return e_SystemType_Graphics; }
-      virtual void OnLoad(boost::intrusive_ptr<Geometry> geometry);
-      virtual void OnUpdateGeometry(boost::intrusive_ptr<Geometry> geometry, bool updateMaterials);
-      virtual void OnUnload();
-      inline virtual void OnMove(const Vector3 &position);
-      inline virtual void OnRotate(const Quaternion &rotation);
-      virtual void OnSynchronize();
+      e_SystemType GetSystemType() const override { return e_SystemType_Graphics; }
+      void OnLoad(boost::intrusive_ptr<Geometry> geometry) override;
+      void OnUpdateGeometry(boost::intrusive_ptr<Geometry> geometry, bool updateMaterials) override;
+      void OnUnload() override;
+      inline void OnMove(const Vector3 &position) override;
+      inline void OnRotate(const Quaternion &rotation) override;
+      void OnSynchronize() override;
 
       virtual void GetVertexBufferQueue(std::deque<VertexBufferQueueEntry> &queue);
 
-      inline virtual void OnPoke();
+      inline void OnPoke() override;
 
     protected:
       GraphicsGeometry *caller_;
@@ -84,7 +85,7 @@ namespace blunted {
     public:
       GraphicsGeometry_SkyboxInterpreter(GraphicsGeometry *caller);
 
-      inline virtual void OnPoke();
+      inline void OnPoke() override;
 
     protected:
 

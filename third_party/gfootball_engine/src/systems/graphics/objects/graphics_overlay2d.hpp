@@ -32,9 +32,9 @@ namespace blunted {
 
     public:
       GraphicsOverlay2D(GraphicsScene *graphicsScene);
-      virtual ~GraphicsOverlay2D();
+      ~GraphicsOverlay2D() override;
 
-      virtual boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType);
+      boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType) override;
 
       boost::intrusive_ptr < Resource<Texture> > texture_;
       int position_[2] = {0, 0};
@@ -49,12 +49,12 @@ namespace blunted {
     public:
       GraphicsOverlay2D_Image2DInterpreter(GraphicsOverlay2D *caller);
 
-      virtual e_SystemType GetSystemType() const { return e_SystemType_Graphics; }
-      virtual void OnLoad(boost::intrusive_ptr < Resource<Surface> > surface);
-      virtual void OnUnload();
-      virtual void OnChange(boost::intrusive_ptr < Resource<Surface> > surface);
-      virtual void OnMove(int x, int y);
-      virtual void OnPoke();
+      e_SystemType GetSystemType() const override { return e_SystemType_Graphics; }
+      void OnLoad(boost::intrusive_ptr < Resource<Surface> > surface) override;
+      void OnUnload() override;
+      void OnChange(boost::intrusive_ptr < Resource<Surface> > surface) override;
+      void OnMove(int x, int y) override;
+      void OnPoke() override;
 
     protected:
       GraphicsOverlay2D *caller_;

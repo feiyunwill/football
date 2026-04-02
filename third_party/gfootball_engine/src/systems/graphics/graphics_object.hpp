@@ -30,6 +30,12 @@ namespace blunted {
 
     public:
       GraphicsObject(GraphicsScene *graphicsScene);
+      // 2026-04-02 现代 C++：多态系统对象根类显式禁值语义（基类 ISystemObject 已 delete）
+      GraphicsObject(const GraphicsObject &) = delete;
+      GraphicsObject &operator=(const GraphicsObject &) = delete;
+      GraphicsObject(GraphicsObject &&) = delete;
+      GraphicsObject &operator=(GraphicsObject &&) = delete;
+
       virtual ~GraphicsObject() = default;
 
       virtual boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType) = 0;

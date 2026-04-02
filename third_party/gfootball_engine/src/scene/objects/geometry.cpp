@@ -165,14 +165,19 @@ void Geometry::RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
 }
 
   AABB Geometry::GetAABB() const {
-    if (aabb.dirty == true) {
+    // 2026-04-02 对齐 Spatial 成员名 aabb_
+    // if (aabb.dirty == true) {
+    if (aabb_.dirty == true) {
       DO_VALIDATION;
       assert(geometry_data_->GetResource());
-      aabb.aabb = geometry_data_->GetResource()->GetAABB() * GetDerivedRotation() + GetDerivedPosition();
-      aabb.dirty = false;
+      // aabb.aabb = geometry_data_->GetResource()->GetAABB() * GetDerivedRotation() + GetDerivedPosition();
+      aabb_.aabb = geometry_data_->GetResource()->GetAABB() * GetDerivedRotation() + GetDerivedPosition();
+      // aabb.dirty = false;
+      aabb_.dirty = false;
     }
 
-    AABB tmp = aabb.aabb;
+    // AABB tmp = aabb.aabb;
+    AABB tmp = aabb_.aabb;
     return tmp;
   }
 

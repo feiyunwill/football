@@ -104,9 +104,13 @@ void ASELoader::Build(const s_tree *data,
       }
     }
 
-    mat.shininess_ = shine->values.at(0);
-    mat.specular_amount_ = shinestrength->values.at(0);
-    mat.self_illumination_.Set(atof(self_illumination->values.at(0).c_str()));
+    // 2026-04-02 对齐 aseloader.hpp 中 s_Material 字段名（非 Google 风格尾缀）
+    // mat.shininess_ = shine->values.at(0);
+    mat.shininess = shine->values.at(0);
+    // mat.specular_amount_ = shinestrength->values.at(0);
+    mat.specular_amount = shinestrength->values.at(0);
+    // mat.self_illumination_.Set(atof(self_illumination->values.at(0).c_str()));
+    mat.self_illumination.Set(atof(self_illumination->values.at(0).c_str()));
 
     materialList.push_back(mat);
   }
