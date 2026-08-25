@@ -10,6 +10,7 @@ football-env*/
 
 # CMake related directories and files
 third_party/gfootball_engine/build*
+third_party/gfootball_engine/_deps/
 third_party/gfootball_engine/CMakeFiles/
 third_party/gfootball_engine/Testing/
 third_party/gfootball_engine/.cmake/

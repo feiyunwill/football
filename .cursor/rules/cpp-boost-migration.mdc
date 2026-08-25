@@ -7,5 +7,6 @@ alwaysApply: false
 # Boost 与 std 迁移
 
 - **新代码**：优先使用标准库（如 `std::bind`、`std::shared_ptr`、`<random>` 等）；在必须与现有 API 一致时再使用 Boost。
-- **替换已有 Boost**：在注释中写明**日期**与**原因**；单次改动范围可控，保证可编译、可测。Boost.Python 暂保留，其余（如 bind、shared_ptr、random）可逐步替换为 std。
+- **替换已有 Boost**：在注释中写明**日期**与**原因**；单次改动范围可控，保证可编译、可测。其余（如 bind、shared_ptr、random）可逐步替换为 std。
+- **Python 绑定**：Boost.Python 已被 pybind11 取代（2026-04-02 完成迁移；pybind11 经 CMake FetchContent 引入，绑定定义在引擎根 `ai.cpp`）。绑定层相关改动一律使用 pybind11，不再新增 Boost.Python。
 - **性能前提**：用标准库替代 Boost 时，需考虑**性能**（内存、CPU、时间复杂度）。仅在 **Boost 没有额外优势**（如更优实现、必需特性、或明显更省内存/更快）时用标准库替代；若某处 Boost 在性能或能力上有不可替代优势，则保留 Boost。

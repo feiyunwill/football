@@ -8,4 +8,6 @@ alwaysApply: false
 
 - **现有约定**：继承自 `RefCounted` 的类使用 `boost::intrusive_ptr`；部分场景使用 `boost::shared_ptr` / `boost::weak_ptr`。
 - **新代码**：优先使用 `std::unique_ptr` / `std::shared_ptr`；仅在必须与现有 RefCounted 体系交互时使用 `boost::intrusive_ptr`。
-- **改动 RefCounted / intrusive_ptr**：需考虑多线程安全（如 refCount 原子化）与 ABI（与 Python/Boost.Python 的兼容性）；单次改动保持可编译、可测。
+- **改动 RefCounted / intrusive_ptr**：需考虑多线程安全与 ABI 兼容性；单次改动保持可编译、可测。
+  - 多线程：RefCounted 引用计数已改为 `std::atomic`（已完成），后续改动不得回退为非原子。
+  - ABI / 绑定：Python 绑定现为 pybind11（2026-04-02 起，见 `ai.cpp`），且已声明 `PYBIND11_DECLARE_HOLDER_TYPE(T, boost::shared_ptr<T>)` 使 `boost::shared_ptr` 成为合法 holder——涉及被绑定类所有权类型（holder）的改动需同步核对 `ai.cpp` 的绑定声明。
