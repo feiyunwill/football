@@ -14,6 +14,13 @@
 
 set -e
 
+# 2026-08-26 原因：切换到 gcc-toolset-15（GCC 15.2，完整 C++23 / C++26 flag），
+# 存在时置于 PATH 前列，使 cmake 探测与后续 make 都使用 GTS-15 编译器；
+# 系统默认 gcc 11 不支持 C++23。GTS-16 尚未进入 Rocky 9 仓库，进源后再升级。
+if [ -d /opt/rh/gcc-toolset-15/root/usr/bin ]; then
+    export PATH=/opt/rh/gcc-toolset-15/root/usr/bin:$PATH
+fi
+
 LIB_EXTENSION="so"
 
 if [[ "$OSTYPE" == "darwin"* ]] ; then

@@ -2,11 +2,13 @@
 # Run from here: cmake . && make
 # Or from engine root: cmake -S frame_sync_asio -B build_fs_asio && cmake --build build_fs_asio
 
-# 与主引擎统一：C++20（见 third_party/gfootball_engine/CMakeLists.txt）
+# 与主引擎统一（见 third_party/gfootball_engine/CMakeLists.txt）
 cmake_minimum_required(VERSION 3.10)
 project(frame_sync_asio CXX)
 
-set(CMAKE_CXX_STANDARD 20)
+# set(CMAKE_CXX_STANDARD 20)
+# 2026-08-26 升级原因：与主引擎同步切到 C++23（gcc-toolset-15，GCC 15.2）
+set(CMAKE_CXX_STANDARD 23)
 
 # 2026-04-02 原因：与主引擎一致，独立构建时也可生成 compile_commands.json 供 clangd
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)

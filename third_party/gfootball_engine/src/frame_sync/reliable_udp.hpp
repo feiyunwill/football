@@ -4,6 +4,9 @@
 #ifndef GFOOTBALL_FRAME_SYNC_RELIABLE_UDP_HPP
 #define GFOOTBALL_FRAME_SYNC_RELIABLE_UDP_HPP
 
+// 2026-08-26 兼容修复（原因）：GCC 15 的 libstdc++ 不再向系统 Boost 1.75 的
+// awaitable.hpp 传递提供 <utility>（std::exchange 未声明），须先于 asio 显式包含。
+#include <utility>
 #include <boost/asio.hpp>
 #include <chrono>
 #include <cstdint>

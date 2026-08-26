@@ -31,10 +31,13 @@ endif()
 project(gameplayfootball)
 set(PACKAGE gameplayfootball)
 
-# 全工程现代化：统一 C++ 标准为 C++20，兼顾兼容性与现代特性；如需 C++23 可改为 23
+# 全工程现代化：统一 C++ 标准，兼顾兼容性与现代特性
 # 参见 doc/compile_engine.md 与 CXX_STANDARD.md
 # set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD 20)
+# set(CMAKE_CXX_STANDARD 20)
+# 2026-08-26 升级原因：工具链切换到 gcc-toolset-15（GCC 15.2），C++23 支持完整，
+# 按仓库规则「目标 C++23 优先」从 20 升级；需配合 GTS-15 编译器重新 cmake 配置
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
