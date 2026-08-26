@@ -4,6 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概览
 
+**项目定位（2026-08-26 明确）**：学习型项目 —— 借这个真实代码库练习四条主线：游戏引擎架构、网络编程、AI（游戏 AI 与 RL）、Modern C++（C++23/C++26 实现改造）。技术选型和重构方向优先服务学习价值；确定性帧同步联机是当前的主线工程。
+
 Google Research Football 的二次开发仓库：基于 GameplayFootball 引擎的强化学习足球环境。三部分组成：
 
 - **`gfootball/`** — Python 包：Gym 环境（`env/`）、场景（`scenarios/`）、PPO 训练示例（`examples/`）、`play_game.py`
@@ -77,7 +79,7 @@ Python 测试均为 absltest 风格（`gfootball/env/*_test.py`）。C++ 侧无�
 
 - **修改流程（最重要）**：注释掉原代码并注明**日期**与**原因**，再写入新代码；不做占位实现，实现须真实可用。
 - **Git 提交**：仅在用户明确回复「提交 git」或等价确认后才执行 add/commit/push。
-- **C++ 标准**：目标 C++23 优先，编译器不支持则 C++20；当前两处 CMakeLists 均 `set(CMAKE_CXX_STANDARD 20)`（见 `CXX_STANDARD.md`，主引擎与 frame_sync_asio 保持一致）。
+- **C++ 标准**：目标 C++23（两处 CMakeLists 均 `set(CMAKE_CXX_STANDARD 23)`，见 `CXX_STANDARD.md`，主引擎与 frame_sync_asio 保持一致）。**工具链为 gcc-toolset-15（GCC 15.2，`/opt/rh/gcc-toolset-15/root/usr/bin/`）**，`build_game_engine.sh` 已自动置于 PATH；手动 cmake 时须导出 `CC/CXX` 指向 GTS-15（系统默认 gcc 11 不支持 C++23）。学习方向含 C++26 改造：GTS-15 已接受 `-std=c++26`，按特性可用性渐进采用。
 - **风格**：Google C++ Style Guide —— 类型 PascalCase、函数/变量 snake_case、常量 kConstantName、类成员尾下划线 `name_`、2 空格缩进；同时参考 C++ Core Guidelines，冲突时以本仓库规则为准。
 - **六大特殊成员函数**显式 `=default` / `=delete`，不依赖隐式生成；多态基类析构必须 `virtual`。
 - **智能指针**：新代码优先 `std::unique_ptr` / `std::shared_ptr`；仅在与 RefCounted 体系交互时用 `boost::intrusive_ptr`（refCount 已改为 std::atomic）。
