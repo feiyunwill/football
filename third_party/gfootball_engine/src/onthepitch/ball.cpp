@@ -641,18 +641,3 @@ void Ball::FillBallComponent(BallComponent& out) const {
   out.orientationBuffer = orientationBuffer;
   out.ballTouchesNet = ballTouchesNet;
 }
-
-void Ball::ApplyBallComponent(const BallComponent& in) {
-  DO_VALIDATION;
-  momentum = in.momentum;
-  rotation_ms = in.rotation_ms;
-  for (unsigned int x = 0; x < sizeof(predictions) / sizeof(predictions[0]); x++) {
-    predictions[x] = in.predictions[x];
-  }
-  valid_predictions = in.valid_predictions;
-  orientPrediction = in.orientPrediction;
-  ballPosHistory = in.ballPosHistory;
-  positionBuffer = in.positionBuffer;
-  orientationBuffer = in.orientationBuffer;
-  ballTouchesNet = in.ballTouchesNet;
-}

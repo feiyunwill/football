@@ -334,7 +334,9 @@ void Match::RegisterEcsEntities() {
   ball_tr.scale = Vector3(1.0f, 1.0f, 1.0f);
   ecs_world_.AddComponent(ecs_ball_entity_, ball_tr);
   SceneNodeRef ball_node_ref;
-  ball_node_ref.node = ball->GetBallNode();
+  // 2026-08-25 ECS Phase 2：指向 Ball::Put 实际驱动的内层 Geometry
+  //（intrusive_ptr<Geometry> 隐式上转 intrusive_ptr<Spatial>）
+  ball_node_ref.node = ball->GetBallGeom();
   ecs_world_.AddComponent(ecs_ball_entity_, ball_node_ref);
 
   // 球员实体（两队所有球员）
@@ -931,32 +933,59 @@ void Match::GetState(SharedInfo *state) {
 
 // THE SPICE
 
-bool Match::Process() {
-  DO_VALIDATION;
-  bool reverse = GetScenarioConfig().reverse_team_processing;
-  DO_VALIDATION;
+// 2026-08-25 ECS Phase 2：有序帧管线。步骤体为原 Match::Process 散布调用逐行搬移
+//（含裸 DO_VALIDATION; 与 Mirror 三明治），执行顺序与旧实现严格一致，勿调序。
+using MatchStepFn = bool (Match::*)(bool reverse);
+struct MatchStep {
+  const char* name;
+  MatchStepFn fn;
+};
 
+bool Match::StepBallCollisions(bool reverse) {
+  DO_VALIDATION;
   Mirror(reverse, !reverse, reverse);
   if (IsInPlay()) {
     DO_VALIDATION;
     CheckBallCollisions();
   }
+  return true;
+}
 
+bool Match::StepReferee(bool reverse) {
+  DO_VALIDATION;
   // 2025-03-17 ECS 迁移：通过 RefereeSystem 执行裁判逻辑
   RefereeSystemProcess(this);
+  return true;
+}
+
+bool Match::StepCapturePreviousBallPos(bool reverse) {
   DO_VALIDATION;
-  Vector3 previousBallPos = ball->Predict(0);
+  process_previous_ball_pos_ = ball->Predict(0);
   Mirror(reverse, !reverse, reverse);
+  return true;
+}
+
+bool Match::StepHoldCheck(bool reverse) {
+  DO_VALIDATION;
   if (!IsInPlay() && referee->GetBuffer().prepareTime + 10 < GetActualTime_ms()) {
     // Do not do simulation when game is on hold to save CPU.
     BumpActualTime_ms(10);
     return false;
   }
+  return true;
+}
+
+bool Match::StepBall(bool reverse) {
+  DO_VALIDATION;
   Mirror(false, false, reverse);
   // 2025-03-17 ECS 迁移：通过 BallSystem 执行球逻辑并同步 ECS
   BallSystemProcess(this);
   Mirror(false, false, reverse);
+  return true;
+}
 
+bool Match::StepMentalImages(bool reverse) {
+  DO_VALIDATION;
   // create mental images for the AI to use
   if (mentalImages.empty() || GetActualTime_ms() % 100 == 0) {
     DO_VALIDATION;
@@ -966,30 +995,54 @@ bool Match::Process() {
       mentalImages.pop_back();
     }
   }
+  return true;
+}
 
+bool Match::StepTeamSwitch(bool reverse) {
+  DO_VALIDATION;
   // obvious
   teams[first_team]->UpdateSwitch();
   teams[second_team]->UpdateSwitch();
+  return true;
+}
 
+bool Match::StepTeamsProcess(bool reverse) {
+  DO_VALIDATION;
   Mirror(first_team == 1, first_team == 0, first_team == 1);
   teams[first_team]->Process();
   Mirror(true, true, true);
   teams[second_team]->Process();
   Mirror(first_team == 0, first_team == 1, first_team == 0);
+  return true;
+}
 
+bool Match::StepPlayersProcess(bool reverse) {
+  DO_VALIDATION;
   // 2025-03-17 ECS 迁移：由 RunPlayerSystems 统一执行球员 controller/humanoid Process
   RunPlayerSystems(this);
+  return true;
+}
 
+bool Match::StepOfficialsProcess(bool reverse) {
+  DO_VALIDATION;
   Mirror(reverse, !reverse, reverse);
   officials->Process();
   Mirror(reverse, !reverse, reverse);
+  return true;
+}
 
+bool Match::StepPossessionStats(bool reverse) {
+  DO_VALIDATION;
   Mirror(first_team == 1, first_team == 0, first_team == 1);
   teams[first_team]->UpdatePossessionStats();
   Mirror(true, true, true);
   teams[second_team]->UpdatePossessionStats();
   Mirror(first_team == 0, first_team == 1, first_team == 0);
+  return true;
+}
 
+bool Match::StepPossessionDecision(bool reverse) {
+  DO_VALIDATION;
   CalculateBestPossessionTeamID();
 
   if (GetBallRetainer() == 0) {
@@ -1011,11 +1064,75 @@ bool Match::Process() {
   } else {
     designatedPossessionPlayer = GetBallRetainer();
   }
+  return true;
+}
 
+bool Match::StepHumanoidCollisions(bool reverse) {
+  DO_VALIDATION;
   Mirror(reverse, !reverse, reverse);
   CheckHumanoidCollisions();
+  return true;
+}
+
+/*
+// 2026-08-25 编译修复（原因）：命名空间作用域构造此表需取 private 成员指针
+//（&Match::StepXxx），而 C++ 访问控制按类判定、与编译单元无关，命名空间作用域
+// 无类内访问权，GCC 报 "'...' is private within this context"。改将表移入
+// RunFramePipeline 函数体（见下方）：成员函数作用域具完整类内访问权，且无需把
+// Step* 放宽为 public。表内容与顺序不变。
+constexpr MatchStep kFramePipeline[] = {
+    {"ball_collisions", &Match::StepBallCollisions},
+    {"referee", &Match::StepReferee},
+    {"capture_prev_ball", &Match::StepCapturePreviousBallPos},
+    {"hold_check", &Match::StepHoldCheck},
+    {"ball", &Match::StepBall},
+    {"mental_images", &Match::StepMentalImages},
+    {"team_switch", &Match::StepTeamSwitch},
+    {"teams", &Match::StepTeamsProcess},
+    {"players", &Match::StepPlayersProcess},
+    {"officials", &Match::StepOfficialsProcess},
+    {"possession_stats", &Match::StepPossessionStats},
+    {"possession_decision", &Match::StepPossessionDecision},
+    {"humanoid_collisions", &Match::StepHumanoidCollisions},
+};
+*/
+
+bool Match::RunFramePipeline(bool reverse) {
+  DO_VALIDATION;
+  // 2026-08-25 由命名空间作用域 constexpr 表迁入（原因见上方注释块）；static 保证
+  // 单实例驻留 .rodata，指针常量初始化合法。步骤顺序即旧 Match::Process 执行顺序，勿调序。
+  static constexpr MatchStep kFramePipeline[] = {
+      {"ball_collisions", &Match::StepBallCollisions},
+      {"referee", &Match::StepReferee},
+      {"capture_prev_ball", &Match::StepCapturePreviousBallPos},
+      {"hold_check", &Match::StepHoldCheck},
+      {"ball", &Match::StepBall},
+      {"mental_images", &Match::StepMentalImages},
+      {"team_switch", &Match::StepTeamSwitch},
+      {"teams", &Match::StepTeamsProcess},
+      {"players", &Match::StepPlayersProcess},
+      {"officials", &Match::StepOfficialsProcess},
+      {"possession_stats", &Match::StepPossessionStats},
+      {"possession_decision", &Match::StepPossessionDecision},
+      {"humanoid_collisions", &Match::StepHumanoidCollisions},
+  };
+  for (const MatchStep& step : kFramePipeline) {
+    if (!(this->*step.fn)(reverse)) return false;
+  }
+  return true;
+}
+
+bool Match::Process() {
+  DO_VALIDATION;
+  const bool reverse = GetScenarioConfig().reverse_team_processing;
+  DO_VALIDATION;
+  if (!RunFramePipeline(reverse)) return false;
 
   BumpActualTime_ms(10);
+
+  // Phase 2：previousBallPos 由 StepCapturePreviousBallPos 捕获；管线中止时
+  // 提前 return，不会读到陈旧值（本成员不序列化）
+  Vector3 previousBallPos = process_previous_ball_pos_;
 
   // check for goals
   bool first_team_goal = false;
@@ -1167,6 +1284,9 @@ void Match::Put() {
   bool reverse = GetScenarioConfig().reverse_team_processing;
 
   DO_VALIDATION;
+  // 2026-08-25 ECS Phase 2：ECS→场景写回（幂等，值与下方 legacy Put 等价；
+  // 脏传播由下方 RecursiveUpdateSpatialData 统一进行）
+  PutEcsSync(this);
   ball->Put();
   teams[first_team]->Put(reverse);
   teams[second_team]->Put(!reverse);

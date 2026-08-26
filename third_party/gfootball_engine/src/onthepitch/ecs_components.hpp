@@ -13,6 +13,7 @@
 
 #include "../ecs/entity.hpp"
 #include "../ecs/transform.hpp"
+#include "../types/spatial.hpp"
 #include "../base/math/vector3.hpp"
 #include "../base/math/quaternion.hpp"
 #include "../gamedefines.hpp"
@@ -38,8 +39,6 @@ struct BallComponent {
   Vector3 positionBuffer;
   Quaternion orientationBuffer;
   bool ballTouchesNet = false;
-
-  void ProcessState(EnvState* state);
 };
 
 /// 球员元数据（stable_id, team_id, is_active；PlayerData* 用于兼容 getter）
@@ -48,8 +47,6 @@ struct PlayerMeta {
   int team_id = 0;
   bool is_active = false;
   PlayerData* player_data = nullptr;
-
-  void ProcessState(EnvState* state);
 };
 
 /// 对现有 IController 的引用，便于渐进迁移仍调 Controller::Process
@@ -62,15 +59,13 @@ struct PlayerRef {
   Player* player = nullptr;
 };
 
-/// 对场景 Node 的引用，Put 阶段将 Transform 写回 Node
+/// 对场景 Spatial 的引用，Put 阶段将 Transform 写回（2026-08-25 Phase 2：
+/// 球的可驱动节点是内层 Geometry(Object 分支)，与 Node 同级，故用公共基类 Spatial）
 struct SceneNodeRef {
-  boost::intrusive_ptr<Node> node;
+  boost::intrusive_ptr<Spatial> node;
 };
 
 /// 裁判实体标记（状态仍在 Referee 类中，System 调用 Referee::Process）
 struct RefereeTag {};
-
-/// 边裁实体标记
-struct LinesmanTag {};
 
 #endif

@@ -22,4 +22,8 @@ void RefereeSystemProcess(Match* match);
 /// 对全部球员实体执行 Controller::Process 与 Humanoid::Process（替代 Team 内循环）
 void RunPlayerSystems(Match* match);
 
+/// 2026-08-25 ECS Phase 2：Put 阶段把 Transform 幂等写回 SceneNodeRef 指向的
+/// Spatial（值等价于 legacy Put，由 Match::Put 末尾统一做脏传播）
+void PutEcsSync(Match* match);
+
 #endif

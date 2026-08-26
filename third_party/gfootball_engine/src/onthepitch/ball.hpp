@@ -85,7 +85,6 @@ class Ball {
 
     /// 2025-03-17 ECS 迁移：将当前球状态写入 ECS 组件，供 RegisterEcsEntities/同步使用
     void FillBallComponent(BallComponent& out) const;
-    void ApplyBallComponent(const BallComponent& in);
 
   private:
     boost::intrusive_ptr<Node> ballNode;

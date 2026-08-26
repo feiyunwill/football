@@ -11,6 +11,7 @@
 
 #include "entity.hpp"
 
+#include <algorithm>
 #include <memory>
 #include <typeindex>
 #include <unordered_map>
@@ -49,6 +50,9 @@ class ComponentPool : public IComponentPool {
     std::vector<Entity> out;
     out.reserve(storage_.size());
     for (const auto& p : storage_) out.push_back(p.first);
+    // 2026-08-25 ECS Phase 2：确定性遍历（unordered_map 桶序跨平台不定；
+    // id 单调递增 == 创建序，排序后与插入序一致）
+    std::sort(out.begin(), out.end());
     return out;
   }
 

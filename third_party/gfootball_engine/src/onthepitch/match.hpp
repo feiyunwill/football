@@ -181,6 +181,25 @@ class Match {
     /// set_state 反序列化后从 OOP 同步到 ECS，保证 World 与 Ball/Player 一致
     void SyncEcsFromOop();
 
+    // 2026-08-25 ECS Phase 2：有序帧管线步骤；返回 false = 提前结束本帧（等价旧 early-return）
+    bool StepBallCollisions(bool reverse);
+    bool StepReferee(bool reverse);
+    bool StepCapturePreviousBallPos(bool reverse);
+    bool StepHoldCheck(bool reverse);
+    bool StepBall(bool reverse);
+    bool StepMentalImages(bool reverse);
+    bool StepTeamSwitch(bool reverse);
+    bool StepTeamsProcess(bool reverse);
+    bool StepPlayersProcess(bool reverse);
+    bool StepOfficialsProcess(bool reverse);
+    bool StepPossessionStats(bool reverse);
+    bool StepPossessionDecision(bool reverse);
+    bool StepHumanoidCollisions(bool reverse);
+    bool RunFramePipeline(bool reverse);
+
+    /// 单次 Process 内的临时量（不序列化，勿加入 ProcessState）
+    Vector3 process_previous_ball_pos_;
+
     blunted::World ecs_world_;
     blunted::Entity ecs_ball_entity_ = blunted::kNullEntity;
     std::vector<blunted::Entity> ecs_player_entities_;

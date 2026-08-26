@@ -20,15 +20,22 @@ void BallSystemProcess(Match* match) {
   ball->Process();
 
   // 同步到 ECS，供 ProcessState / 后续系统使用
+  //（2026-08-25 Phase 2：已有组件时原地写，省去每 tick predictions[401]+list 深拷贝）
   blunted::Entity e = match->GetEcsBallEntity();
   if (e == blunted::kNullEntity) return;
   blunted::World& w = match->GetEcsWorld();
-  BallComponent comp;
-  ball->FillBallComponent(comp);
-  w.AddComponent(e, comp);
+  BallComponent* comp = w.GetComponent<BallComponent>(e);
+  if (comp) {
+    ball->FillBallComponent(*comp);
+  } else {
+    BallComponent fresh;
+    ball->FillBallComponent(fresh);
+    w.AddComponent(e, fresh);
+    comp = w.GetComponent<BallComponent>(e);
+  }
   Transform tr;
-  tr.position = comp.positionBuffer;
-  tr.rotation = comp.orientationBuffer;
+  tr.position = comp->positionBuffer;
+  tr.rotation = comp->orientationBuffer;
   tr.scale = Vector3(1.0f, 1.0f, 1.0f);
   w.AddComponent(e, tr);
 }
@@ -43,11 +50,28 @@ void RunPlayerSystems(Match* match) {
   blunted::World& w = match->GetEcsWorld();
   for (blunted::Entity e : match->GetEcsPlayerEntities()) {
     PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
-    if (!meta || !meta->is_active) continue;
-    ControllerRef* cref = w.GetComponent<ControllerRef>(e);
     PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+    // 2026-08-25 ECS Phase 2：实时刷新活跃快照，与旧 Team 内循环判定等价
+    if (!meta || !pref || !pref->player) continue;
+    meta->is_active = pref->player->IsActive();
+    if (!meta->is_active) continue;
+    ControllerRef* cref = w.GetComponent<ControllerRef>(e);
     if (cref && cref->controller) cref->controller->Process();
-    if (pref && pref->player && pref->player->CastHumanoid())
-      pref->player->CastHumanoid()->Process();
+    if (pref->player->CastHumanoid()) pref->player->CastHumanoid()->Process();
   }
+}
+
+void PutEcsSync(Match* match) {
+  DO_VALIDATION;
+  blunted::World& w = match->GetEcsWorld();
+  w.ForEach<Transform, SceneNodeRef>(
+      [](blunted::Entity, Transform& tr, SceneNodeRef& ref) {
+        if (!ref.node) return;
+        // 与 Ball::Put 一致：updateSpatialData=false，脏传播由 Match::Put 末尾的
+        // RecursiveUpdateSpatialData 统一进行（scale 不同步：SetScale 无开关、必触发传播）
+        if (tr.position != ref.node->GetPosition())
+          ref.node->SetPosition(tr.position, false);
+        if (tr.rotation != ref.node->GetRotation())
+          ref.node->SetRotation(tr.rotation, false);
+      });
 }

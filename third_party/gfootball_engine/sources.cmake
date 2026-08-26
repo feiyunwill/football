@@ -320,7 +320,6 @@ set(GAME_HEADERS
 )
 
 set(GAME_SOURCES
-   src/onthepitch/ecs_components.cpp
    src/onthepitch/ecs_systems.cpp
    src/onthepitch/officials.cpp
    src/onthepitch/player/humanoid/humanoid_utils.cpp
