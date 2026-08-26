@@ -266,9 +266,12 @@ class FrameSyncServerAsync(object):
     frame_id = await self.get_frame_id()
     await self.send_to_all(pack_authoritative_frame(frame_id, slot_inputs))
     if self._state_hash_interval > 0 and frame_id % self._state_hash_interval == 0:
-      state_str = self._env.get_state('')
+      # 2026-08-26 改用 canonical digest（原因）：全量 get_state 含 setValidate(false)
+      # 不稳定区段，跨进程 hash 必不同会误报；digest 仅含比赛逻辑状态（与 server.py 同改）。
+      # state_str = self._env.get_state('')
+      digest = self._env.get_state_digest()
       h = compute_state_hash(
-          state_str if isinstance(state_str, bytes) else state_str.encode()
+          digest if isinstance(digest, bytes) else digest.encode()
       )
       await self.send_to_all(pack_state_hash(frame_id, h))
     await self.advance_frame_id()

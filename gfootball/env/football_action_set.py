@@ -62,7 +62,9 @@ class CoreAction(object):
     return self._backend_action >= other._backend_action
 
   def __hash__(self):
-    return self._backend_action
+    # 2026-08-25 兼容修复（原因）：引擎绑定迁移到 pybind11 后 e_BackendAction 值不再是
+    # 纯 int，而 Python 3.11+ 要求 __hash__ 必须返回整数；显式转 int。
+    return int(self._backend_action)
 
   def __repr__(self):
     return self._name

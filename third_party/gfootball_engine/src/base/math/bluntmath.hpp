@@ -24,7 +24,9 @@
 #include <iostream>
 #include "../log.hpp"
 
-
+// 2026-08-26 确定性修复：全局前置声明，供 radian 的友元声明（friend ::EnvState）
+// 在未包含 defines.hpp 的编译单元中也能解析。
+class EnvState;
 
 namespace blunted {
   typedef float real;
@@ -77,6 +79,10 @@ namespace blunted {
       rotated_ = !rotated_;
     }
    private:
+    // 2026-08-26 确定性修复：EnvState 需逐成员序列化 radian（整体 memcpy 会把
+    // 3 字节 padding 的堆垃圾写进 state，造成跨进程 StateHash 漂移，
+    // 见 defines.cpp process(radian&)），声明友元以访问私有成员。
+    friend class ::EnvState;
     float angle_ = 0.0f;
     // Was angle rotated by PI.
     bool rotated_ = false;

@@ -28,6 +28,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cassert>
+#include <cstring>
 
 #include <fstream>
 #include <cmath>
@@ -64,6 +65,8 @@ using namespace boost::placeholders;
 
 namespace blunted {
   class Animation;
+  // 2026-08-26 确定性修复：radian 专用序列化重载（见 process(blunted::radian&)）
+  class radian;
   //using namespace boost;
 }
 
@@ -86,6 +89,7 @@ class EnvState {
   void process(std::string &value);
   void process(blunted::Animation* &value);
   template<typename T> void process(std::vector<T>& collection) {
+    if (canonicalSkip()) return;
     int size = collection.size();
     process(size);
     collection.resize(size);
@@ -94,6 +98,7 @@ class EnvState {
     }
   }
   template<typename T> void process(std::list<T>& collection) {
+    if (canonicalSkip()) return;
     int size = collection.size();
     process(size);
     collection.resize(size);
@@ -103,6 +108,9 @@ class EnvState {
   }
   void process(Player*& value);
   void process(HumanGamer*& value);
+  // 2026-08-26 确定性修复：radian 整体 memcpy 会把 padding 堆垃圾写进 state
+  // （跨进程 StateHash 漂移的根因），改为逐成员序列化，见 defines.cpp。
+  void process(blunted::radian& value);
   void process(AIControlledKeyboard*& value);
   void process(Team*& value);
   bool isFailure() {
@@ -114,8 +122,24 @@ class EnvState {
   void setValidate(bool validate) {
     this->disable_cnt += validate ? -1 : 1;
   }
+  // 2026-08-26 canonical 摘要模式：save 方向跳过 setValidate(false) 包住的不稳定
+  // 区段（相机/球员颜色缓冲/边裁/HID），使跨进程 state digest 可比较；load 与
+  // reference 比对行为不受影响。排除集随 setValidate 调用点自动维护。
+  void setCanonical(bool canonical) {
+    this->canonical = canonical;
+  }
+  bool canonicalSkip() {
+    return this->canonical && !this->load && this->disable_cnt != 0;
+  }
   void setCrash(bool crash) {
     this->crash = crash;
+  }
+  // 2026-08-26 位级差异调试模式：compare 时对每个序列化对象额外做 memcmp 比对
+  // （不受 disable_cnt/failure 影响，也不置 failure），把「operator!= 判等但字节
+  // 不同」的对象（结构体 padding、非规范 bool 等）记录进 divergence_log，
+  // 用于定位跨进程 state 字节漂移的来源字段。
+  void setBitwise(bool bitwise) {
+    this->bitwise = bitwise;
   }
   bool Load() { return load; }
   int getpos() {
@@ -123,6 +147,7 @@ class EnvState {
   }
   bool eos();
   template<typename T> void process(T& obj) {
+    if (canonicalSkip()) return;
     if (load) {
       if (pos + sizeof(T) > state.size()) {
         Log(blunted::e_FatalError, "EnvState", "state", "state is invalid");
@@ -145,6 +170,33 @@ class EnvState {
         }
       }
       pos += sizeof(T);
+      // 2026-08-26 位级差异调试：memcmp 比对（operator!= 会把非零 bool、
+      // -0.0、结构体 padding 等判等），记录 pos/typeid/长度/双方十六进制。
+      // 仅在 setBitwise(true) 时生效，上限 256 条防刷屏。
+      if (bitwise && divergence_log.size() < 256 && !reference.empty() &&
+          static_cast<size_t>(pos) <= reference.size() &&
+          memcmp(&state[pos - sizeof(T)], &reference[pos - sizeof(T)],
+                 sizeof(T)) != 0) {
+        std::string entry = "pos=" + std::to_string(pos - sizeof(T)) +
+                            " type=" + typeid(obj).name() +
+                            " size=" + std::to_string(sizeof(T)) + " A=";
+        const unsigned char* pa =
+            reinterpret_cast<const unsigned char*>(&state[pos - sizeof(T)]);
+        const unsigned char* pb =
+            reinterpret_cast<const unsigned char*>(&reference[pos - sizeof(T)]);
+        size_t n = sizeof(T) < 32 ? sizeof(T) : 32;
+        char hex[3];
+        for (size_t i = 0; i < n; i++) {
+          snprintf(hex, sizeof(hex), "%02x", pa[i]);
+          entry += hex;
+        }
+        entry += " B=";
+        for (size_t i = 0; i < n; i++) {
+          snprintf(hex, sizeof(hex), "%02x", pb[i]);
+          entry += hex;
+        }
+        divergence_log.push_back(entry);
+      }
       if (pos > 10000000) {
         Log(blunted::e_FatalError, "EnvState", "state", "state is too big");
       }
@@ -156,10 +208,18 @@ class EnvState {
   void SetAnimations(const std::vector<blunted::Animation*>& animations);
   void SetTeams(Team* team0, Team* team1);
   const std::string& GetState();
+  // 2026-08-26 位级差异调试：setBitwise(true) 的 compare 之后读取差异记录
+  const std::vector<std::string>& GetDivergenceLog() {
+    return divergence_log;
+  }
  protected:
   bool failure = false;
   bool stack = true;
   bool load = false;
+  bool canonical = false;
+  // 2026-08-26 位级差异调试（见 setBitwise）
+  bool bitwise = false;
+  std::vector<std::string> divergence_log;
   char disable_cnt = 0;
   bool crash = false;
   std::vector<Player*> players;

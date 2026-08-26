@@ -60,6 +60,17 @@ struct GameEnv {
   void render(bool swap_buffer = true);
   std::string get_state(const std::string& pickle);
   std::string set_state(const std::string& state);
+  // 2026-08-26 确定性调试：以 reference 为基准序列化当前状态（EnvState save 模式
+  // 比对），在第一个不一致字段处打印 Position/Type/Value/Reference；返回当前状态。
+  std::string compare_state(const std::string& reference);
+  // 2026-08-26 位级差异调试：同 compare_state，但额外启用 memcmp 级比对，
+  // 返回全部「判等但字节不同」对象的记录（pos/type/size/A/B 十六进制），
+  // 用于定位结构体 padding / 非规范 bool 造成的跨进程字节漂移。
+  std::vector<std::string> compare_state_bitwise(const std::string& reference);
+  // 2026-08-26 canonical 状态摘要：与 get_state 同构，但跳过 setValidate(false)
+  // 标记的不稳定区段，输出仅含比赛逻辑状态，供帧同步 StateHash 校验使用。
+  // 不可作为 set_state 的输入（字节布局与全量序列化不同）。
+  std::string get_state_digest();
   void tracker_setup(long start, long end) { GetTracker()->setup(start, end); }
   void step();
   // Server headless: apply authoritative frame input and run one env step (no render).

@@ -47,9 +47,34 @@ class GameEnv_Python : public GameEnv {
     return py::bytes(from_pickle.data(), from_pickle.size());
   }
 
-  void step_with_input_python(py::bytes buffer_obj) {
+  // 2026-08-26 确定性调试：以 reference 状态为基准比对当前状态，第一个不一致
+  // 字段会在 stdout 打印 Position/Type/Value/Reference（EnvState save 模式）。
+  void compare_state_python(const std::string& reference) {
     ContextHolder c(this);
-    string buf = buffer_obj;
+    compare_state(reference);
+  }
+
+  // 2026-08-26 位级差异调试：memcmp 级比对，返回全部「判等但字节不同」记录，
+  // 用于定位结构体 padding / 非规范 bool 的跨进程字节漂移（见 game_env.hpp）。
+  std::vector<std::string> compare_state_bitwise_python(
+      const std::string& reference) {
+    ContextHolder c(this);
+    return compare_state_bitwise(reference);
+  }
+
+  // 2026-08-26 canonical 状态摘要：跳过 setValidate(false) 不稳定区段，跨进程可比，
+  // 供帧同步 StateHash 校验使用（见 game_env.hpp get_state_digest）。
+  py::bytes get_state_digest_python() {
+    std::string digest = get_state_digest();
+    return py::bytes(digest.data(), digest.size());
+  }
+
+  // 2026-08-25 修复（原因）：原签名收 py::bytes 按值拷贝（INCREF）与析构（DECREF）
+  // 均落在绑定层 gil_scoped_release 区间内，触发 pybind11 "dec_ref() PyGILState_Check()
+  // failure" 断言中止。改为收 std::string：pybind11 的参数转换发生在 call_guard 构造
+  // 之前，受保护区间内不再触碰任何 Python 对象。
+  void step_with_input_python(std::string buf) {
+    ContextHolder c(this);
     StepWithInput(static_cast<const void*>(buf.data()), buf.size());
   }
 
@@ -144,20 +169,29 @@ PYBIND11_MODULE(_gameplayfootball, m) {
       .export_values();
 
   py::class_<GameEnv_Python>(m, "GameEnv")
+      // 2026-08-25 修复（原因）：pybind11 不自动导出构造器，Boost.Python 时代默认构造
+      // 可直接调用，迁移后缺 .def(py::init<>()) 导致 Python 侧 libgame.GameEnv() 报
+      // "_gameplayfootball.GameEnv: No constructor defined!"。补注册默认构造。
+      .def(py::init<>())
       .def("start_game", &GameEnv_Python::start_game)
       .def("get_info", &GameEnv_Python::get_info)
-      .def("get_frame", &GameEnv_Python::get_frame_python,
-           py::call_guard<py::gil_scoped_release>())
+      // 2026-08-25 修复（原因）：返回 py::bytes 的方法（get_frame/get_state/set_state）
+      // 原挂 gil_scoped_release，bytes 的构造与引用计数发生在已释放 GIL 区间内，
+      // 触发 pybind11 "dec_ref() PyGILState_Check() failure" 断言中止。移除这三处
+      // call_guard（step/step_with_input/reset 返回 void，仍保留释放 GIL）。
+      .def("get_frame", &GameEnv_Python::get_frame_python)
       .def("perform_action", &GameEnv_Python::action)
       .def("sticky_action_state", &GameEnv_Python::sticky_action_state)
       .def("step", &GameEnv_Python::step,
            py::call_guard<py::gil_scoped_release>())
       .def("step_with_input", &GameEnv_Python::step_with_input_python,
            py::call_guard<py::gil_scoped_release>())
-      .def("get_state", &GameEnv_Python::get_state_python,
-           py::call_guard<py::gil_scoped_release>())
-      .def("set_state", &GameEnv_Python::set_state_python,
-           py::call_guard<py::gil_scoped_release>())
+      .def("get_state", &GameEnv_Python::get_state_python)
+      .def("set_state", &GameEnv_Python::set_state_python)
+      .def("compare_state", &GameEnv_Python::compare_state_python)
+      .def("compare_state_bitwise",
+           &GameEnv_Python::compare_state_bitwise_python)
+      .def("get_state_digest", &GameEnv_Python::get_state_digest_python)
       .def("reset", &GameEnv_Python::reset_python,
            py::call_guard<py::gil_scoped_release>())
       .def("render", &GameEnv_Python::render,

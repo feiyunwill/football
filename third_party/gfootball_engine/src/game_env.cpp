@@ -290,6 +290,40 @@ std::string GameEnv::get_state(const std::string& pickle) {
   return reader.GetState();
 }
 
+// 2026-08-26 确定性调试：与 get_state 同构，但把 reference 传入 EnvState 构造器，
+// 启用 save 模式逐字段比对（见 defines.hpp process(T&)），第一个不一致字段即打印。
+std::string GameEnv::compare_state(const std::string& reference) {
+  ContextHolder c(this);
+  EnvState reader(this, "", reference);
+  string pickle = "";
+  reader.process(pickle);
+  ProcessState(&reader);
+  return reader.GetState();
+}
+
+// 2026-08-26 位级差异调试：在 compare_state 基础上启用 memcmp 级比对，
+// 返回 divergence_log（见 defines.hpp setBitwise）。
+std::vector<std::string> GameEnv::compare_state_bitwise(
+    const std::string& reference) {
+  ContextHolder c(this);
+  EnvState reader(this, "", reference);
+  reader.setBitwise(true);
+  string pickle = "";
+  reader.process(pickle);
+  ProcessState(&reader);
+  return reader.GetDivergenceLog();
+}
+
+// 2026-08-26 canonical 状态摘要：跳过 setValidate(false) 不稳定区段；不含
+// get_state 开头的 pickle 长度头，digest 自 env.state 字段起。
+std::string GameEnv::get_state_digest() {
+  ContextHolder c(this);
+  EnvState reader(this, "");
+  reader.setCanonical(true);
+  ProcessState(&reader);
+  return reader.GetState();
+}
+
 std::string GameEnv::set_state(const std::string& state) {
   SetGame(this);
   EnvState writer(this, state);

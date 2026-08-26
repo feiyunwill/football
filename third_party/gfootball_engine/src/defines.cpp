@@ -32,6 +32,7 @@ EnvState::EnvState(GameEnv* game, const std::string& state,
 }
 
 void EnvState::process(std::string& value) {
+  if (canonicalSkip()) return;
   int s = value.size();
   process(s);
   value.resize(s);
@@ -41,6 +42,7 @@ void EnvState::process(std::string& value) {
 }
 
 void EnvState::process(void** collection, int size, void*& element) {
+  if (canonicalSkip()) return;
   DO_VALIDATION;
   if (load) {
     DO_VALIDATION;
@@ -108,6 +110,29 @@ void EnvState::process(blunted::Animation*& value) {
   void* v = value;
   process(reinterpret_cast<void**>(&animations[0]), animations.size(), v);
   value = static_cast<blunted::Animation*>(v);
+}
+
+// 2026-08-26 确定性修复（原因）：radian 布局为 float angle_(4B) + bool
+// rotated_(1B) + 3B padding。原走泛型模板整体 memcpy，把 padding 里的堆垃圾
+// 一并写进 state；而 EnvState 的比较经 radian::operator real() 只看角度值，
+// 形成「判等但字节不同」，跨进程 StateHash 必然漂移（帧同步校验误报的根因，
+// 位级比对仪表定位：全部差异对象 type=blunted::radian）。
+// 改为逐成员序列化：angle_ + 规范化为 0/1 的 rotated_ + 固定 3 字节零填充。
+// 总长仍为 8 字节，与旧 state 格式偏移兼容；load 时读入并丢弃填充字节。
+void EnvState::process(blunted::radian& value) {
+  if (canonicalSkip()) return;
+  DO_VALIDATION;
+  process(value.angle_);
+  unsigned char rotated = value.rotated_ ? 1 : 0;
+  process(rotated);
+  if (load) {
+    value.rotated_ = rotated != 0;
+  }
+  // 固定填充：save 写全 0（canonical），load 读入后丢弃，维持旧布局总长。
+  unsigned char pad0 = 0;
+  process(pad0);
+  process(pad0);
+  process(pad0);
 }
 
 bool EnvState::eos() {

@@ -33,6 +33,8 @@
 - **MAX_PREDICT_AHEAD_FRAMES** (default 3): If (current predicted frame − last confirmed authoritative frame) > N, client does not predict this frame; waits for next authoritative frame.
 - **MAX_FRAMES_WITHOUT_PACKET** (default 5): If no server packet received for M consecutive frames, client enters wait-for-authority mode (stops predicting until packet received again).
 - **STATE_HASH_INTERVAL_K** (default 10): Server sends state hash every K frames; client compares with local hash for verification.
+  - 2026-08-26: Hash 输入改为 **canonical state digest**（引擎 `GameEnv::get_state_digest()`）：序列化时跳过 `EnvState::setValidate(false)` 标记的不稳定区段（相机轨迹、球员颜色缓冲、边裁、HID 等）。这些区段含跨进程不定的字节（堆布局垃圾值），若用全量 `get_state('')` 计算 hash，即使比赛逻辑完全一致也必然误报不同步。客户端本地校验须传 `get_state_digest()` 返回值。
+  - 2026-08-26: digest 启用后仍残留 ~77–400 字节/对的间歇性跨进程差异，根因是 `blunted::radian`（float angle_ + bool rotated_ + 3B padding）整体 memcpy 序列化把 padding 堆垃圾写进 state，而比较经 `operator real()` 只看角度值。已改为逐成员序列化（`EnvState::process(radian&)`，总长仍 8B、布局兼容）；定位工具为引擎 `GameEnv::compare_state_bitwise()`（memcmp 级差异日志）。
 
 ## Binary layout (summary)
 

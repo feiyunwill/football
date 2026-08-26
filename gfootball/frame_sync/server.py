@@ -38,8 +38,15 @@ from gfootball.frame_sync.protocol import (
 def get_scenario_config(scenario_name, left_agents, right_agents, seed):
   """Build ScenarioConfig for the given scenario and agent counts."""
   from gfootball.env import config as cfg
+  # 2026-08-26 确定性修复（原因）：不预先提供 game_engine_random_seed 时，
+  # NewScenario 内部（env/scenario_builder.py）会用全局 random.randint 兜底，
+  # 并令 reverse_team_processing = bool(该随机 seed 的奇偶)；本函数随后仅覆写
+  # game_engine_random_seed，reverse 标志残留每进程随机值，导致相同 seed 跨进程
+  # 队伍处理顺序不同、模拟真实分叉。改为在 Config 中预置 seed（消除 randint），
+  # 并显式按入参 seed 同步派生 reverse_team_processing。
   cfg_obj = cfg.Config({
       'level': scenario_name,
+      'game_engine_random_seed': seed,
       'players': [
           'agent:left_players=%d,right_players=%d' % (left_agents, right_agents)
       ],
@@ -47,6 +54,7 @@ def get_scenario_config(scenario_name, left_agents, right_agents, seed):
   cfg_obj.NewScenario(inc=0)
   scenario_config = cfg_obj.ScenarioConfig()
   scenario_config.game_engine_random_seed = seed
+  scenario_config.reverse_team_processing = bool(seed % 2)
   return scenario_config
 
 
@@ -136,7 +144,10 @@ class FrameSyncServer(object):
   def _assign_slots_for_new_client(self):
     """Assign slots to the new client (simple: one client = one slot in order)."""
     used = set()
-    for _conn, _addr, slots in self._clients:
+    # 2026-08-25 修复（原因）：_clients 元素为 4 元组 (conn, addr, slots, ready_flag)，
+    # 旧 3 元组解包在槽位分配路径会抛 ValueError
+    # for _conn, _addr, slots in self._clients:
+    for _conn, _addr, slots, _ready in self._clients:
       used.update(slots)
     for slot in range(self.num_slots):
       if slot not in used:
@@ -205,6 +216,14 @@ class FrameSyncServer(object):
             )
         )
         conn.sendall(pack_slot_assignment(slots))
+      # 2026-08-26 修复（原因）：settimeout(1.0) 使 accept() 无连接时每秒抛 socket.timeout
+      #（socket.error 子类），旧 except 在 _running 时 re-raise，accept 线程启动 1 秒后即
+      # 死亡，此后任何客户端都无法接入。超时属预期轮询，吞掉并继续循环。
+      # except socket.error:
+      #   if self._running:
+      #     raise
+      except socket.timeout:
+        continue
       except socket.error:
         if self._running:
           raise
@@ -229,7 +248,10 @@ class FrameSyncServer(object):
       except socket.error:
         pass
       self._sock = None
-    for conn, _addr, _ in self._clients:
+    # 2026-08-25 修复（原因）：_clients 为 4 元组（含 ready_flag），旧 3 元组解包在
+    # stop() 关闭连接时抛 ValueError: too many values to unpack
+    # for conn, _addr, _ in self._clients:
+    for conn, _addr, _slots, _ready in self._clients:
       if conn:
         try:
           conn.close()
@@ -276,7 +298,9 @@ class FrameSyncServer(object):
 
   def send_to_all(self, data):
     with self._lock:
-      for conn, _, _ in self._clients:
+      # 2026-08-25 修复（原因）：_clients 为 4 元组（含 ready_flag），旧 3 元组解包会抛 ValueError
+      # for conn, _, _ in self._clients:
+      for conn, _, _slots, _ready in self._clients:
         if conn:
           try:
             conn.sendall(data)
@@ -316,9 +340,13 @@ class FrameSyncServer(object):
     frame_id = self.get_frame_id()
     self.send_to_all(pack_authoritative_frame(frame_id, slot_inputs))
     if getattr(self, '_state_hash_interval', 0) > 0 and frame_id % self._state_hash_interval == 0:
-      state_str = self._env.get_state('')
+      # 2026-08-26 改用 canonical digest（原因）：全量 get_state 序列化含引擎
+      # setValidate(false) 标记的不稳定区段（相机/球员颜色缓冲/边裁/HID），
+      # 跨进程 hash 必然不同，校验会误报；digest 跳过这些区段，仅含比赛逻辑状态。
+      # state_str = self._env.get_state('')
+      digest = self._env.get_state_digest()
       h = compute_state_hash(
-          state_str if isinstance(state_str, bytes) else state_str.encode()
+          digest if isinstance(digest, bytes) else digest.encode()
       )
       self.send_to_all(pack_state_hash(frame_id, h))
     self.advance_frame_id()

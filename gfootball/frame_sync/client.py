@@ -213,8 +213,14 @@ class FrameSyncClient(object):
       self._last_state_hash = None
       return out
 
+  # 2026-08-26 参数语义变更（原因）：服务器 StateHash 改用 canonical digest
+  # （get_state_digest，跳过 setValidate(false) 不稳定区段），本地侧必须同样传
+  # get_state_digest() 的返回值；全量 get_state hash 跨进程必然不同会误报。
   def check_state_hash(self, frame_id, local_state_str):
-    """If server sent a state hash for this frame, compare with local; return True if match or no hash."""
+    """If server sent a state hash for this frame, compare with local; return True if match or no hash.
+
+    2026-08-26: local_state_str 必须是 env.get_state_digest() 的返回值（canonical
+    摘要），不再是 get_state('') 全量状态。"""
     h = self.pop_state_hash()
     if h is None:
       return True
