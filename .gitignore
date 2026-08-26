@@ -28,6 +28,12 @@ cmake_install.cmake
 # clangd：若将 build 内 compile_commands.json 复制/链接到引擎根，勿提交
 third_party/gfootball_engine/compile_commands.json
 
+# 2026-08-26：开发安装 symlink 与 frame_sync_asio 可执行构建产物（勿提交；
+# 注意不可用 frame_sync_* 通配，会误伤源码目录 frame_sync_asio）
+/gfootball_engine
+third_party/gfootball_engine/frame_sync_client*
+third_party/gfootball_engine/frame_sync_server*
+
 # IDE
 .idea
 .vs*

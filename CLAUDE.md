@@ -21,6 +21,7 @@ GFOOTBALL_USE_PREBUILT_SO=1 python3 -m pip install .   # 使用预编译 so，�
 ```
 
 - 开发安装（`pip install -e .`）会在仓库根创建 `gfootball_engine` → `third_party/gfootball_engine` 的 symlink。
+- **编译一律单线程（2026-08-26 约定）**：`make -j 1`；`cmake --build` 显式加 `-j 1`，不要并行编译。
 - **新增引擎源文件必须登记到 `sources.cmake`**（由根 CMakeLists.txt include），否则不参与编译。
 - 独立帧同步 server/client（仅需 Boost.Asio，无引擎依赖）：在 `third_party/gfootball_engine` 下执行 `cmake -S frame_sync_asio -B build_fs_asio && cmake --build build_fs_asio`。
 - 引擎构建已导出 `compile_commands.json` 供 clangd 使用；勿提交（.gitignore 已忽略）。
