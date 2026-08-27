@@ -83,7 +83,7 @@ HumanoidBase::HumanoidBase(PlayerBase *player, Match *match,
                            boost::intrusive_ptr<Node> humanoidSourceNode,
                            boost::intrusive_ptr<Node> fullbodySourceNode,
                            std::map<Vector3, Vector3> &colorCoords,
-                           boost::shared_ptr<AnimCollection> animCollection,
+                           std::shared_ptr<AnimCollection> animCollection,
                            boost::intrusive_ptr<Node> fullbodyTargetNode,
                            boost::intrusive_ptr<Resource<Surface> > kit)
     : fullbodyTargetNode(fullbodyTargetNode),
@@ -792,19 +792,22 @@ int HumanoidBase::GetIdleMovementAnimID() {
   anims->CrudeSelection(dataSet, query);
 
   SetIdlePredicate(1);
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareIdleVariable, this, _1, _2));
+  // 2026-08-26 移除 Boost：本文件 16 处 std::stable_sort 谓词由
+  // boost::bind(&<Humanoid|HumanoidBase>::Compare*, this[, spatialState.foot], _1, _2)
+  // 批量改写为等价 lambda（成员指针绑定 this + 占位符 → 捕获调用），语义不变。
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareIdleVariable(animIndex1, animIndex2); });
 
   SetIncomingBodyDirectionSimilarityPredicate(Vector3(0, -1, 0));
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareIncomingBodyDirectionSimilarity, this, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareIncomingBodyDirectionSimilarity(animIndex1, animIndex2); });
 
   SetIncomingVelocitySimilarityPredicate(e_Velocity_Idle);
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareIncomingVelocitySimilarity, this, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareIncomingVelocitySimilarity(animIndex1, animIndex2); });
 
   SetMovementSimilarityPredicate(Vector3(0, -1, 0), e_Velocity_Idle);
   SetBodyDirectionSimilarityPredicate(spatialState.position + Vector3(0, -10, 0).GetRotated2D(spatialState.angle)); // lookat
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&HumanoidBase::CompareBodyDirectionSimilarity, this, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareBodyDirectionSimilarity(animIndex1, animIndex2); });
 
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&HumanoidBase::CompareMovementSimilarity, this, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareMovementSimilarity(animIndex1, animIndex2); });
 
   //printf("%s\n", anims->GetAnim(*dataSet.begin())->GetName().c_str());
 
@@ -997,14 +1000,14 @@ void HumanoidBase::_KeepBestDirectionAnims(DataSet &dataSet,
       DO_VALIDATION;
       anims->GetAnim(anim)->order_float = GetMovementSimilarity(anim, predicate_RelDesiredDirection, predicate_DesiredVelocity, predicate_CorneringBias);
     }
-    std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&HumanoidBase::CompareByOrderFloat, this, _1, _2));
+    std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareByOrderFloat(animIndex1, animIndex2); });
 
     // we want the best anim to be a baseanim, and compare other anims to it
     if (strict) {
       DO_VALIDATION;
       if (command.desiredFunctionType != e_FunctionType_Movement) {
         DO_VALIDATION;
-        std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareBaseanimSimilarity, this, _1, _2));
+        std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareBaseanimSimilarity(animIndex1, animIndex2); });
       }
     }
 
@@ -1066,14 +1069,14 @@ void HumanoidBase::_KeepBestBodyDirectionAnims(DataSet &dataSet,
     DO_VALIDATION;
     anims->GetAnim(anim)->order_float = DirectionSimilarityRating(anim);
   }
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&HumanoidBase::CompareByOrderFloat, this, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareByOrderFloat(animIndex1, animIndex2); });
 
   // we want the best anim to be a baseanim, and compare other anims to it
   if (strict) {
     DO_VALIDATION;
     if (command.desiredFunctionType != e_FunctionType_Movement) {
       DO_VALIDATION;
-      std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareBaseanimSimilarity, this, _1, _2));
+      std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareBaseanimSimilarity(animIndex1, animIndex2); });
     }
   }
 
@@ -1176,33 +1179,33 @@ bool HumanoidBase::SelectAnim(const PlayerCommand &command,
     }
 
     else {  // undefined animtype
-      std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&HumanoidBase::CompareMovementSimilarity, this, _1, _2));
+      std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareMovementSimilarity(animIndex1, animIndex2); });
     }
   }
 
   int desiredIdleLevel = 1;
   SetIdlePredicate(desiredIdleLevel);
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareIdleVariable, this, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareIdleVariable(animIndex1, animIndex2); });
 
   SetFootSimilarityPredicate(spatialState.foot);
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&HumanoidBase::CompareFootSimilarity, this, spatialState.foot, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareFootSimilarity(spatialState.foot, animIndex1, animIndex2); });
 
   SetIncomingBodyDirectionSimilarityPredicate(spatialState.relBodyDirectionVec);
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&HumanoidBase::CompareIncomingBodyDirectionSimilarity, this, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareIncomingBodyDirectionSimilarity(animIndex1, animIndex2); });
 
   SetIncomingVelocitySimilarityPredicate(spatialState.enumVelocity);
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&HumanoidBase::CompareIncomingVelocitySimilarity, this, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareIncomingVelocitySimilarity(animIndex1, animIndex2); });
 
   if (command.useDesiredTripDirection) {
     DO_VALIDATION;
     Vector3 relDesiredTripDirection = command.desiredTripDirection.GetRotated2D(-spatialState.angle);
     SetTripDirectionSimilarityPredicate(relDesiredTripDirection);
-    std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&HumanoidBase::CompareTripDirectionSimilarity, this, _1, _2));
+    std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareTripDirectionSimilarity(animIndex1, animIndex2); });
   }
 
   if (command.desiredFunctionType != e_FunctionType_Movement) {
     DO_VALIDATION;
-    std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&HumanoidBase::CompareBaseanimSimilarity, this, _1, _2));
+    std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareBaseanimSimilarity(animIndex1, animIndex2); });
   }
 
   // process result

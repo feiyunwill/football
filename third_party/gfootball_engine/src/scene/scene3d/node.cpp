@@ -30,7 +30,7 @@ Node::Node(const std::string &name) : Spatial(name) {
 }
 
 Node::Node(const Node &source, const std::string &postfix,
-           boost::shared_ptr<Scene3D> scene3D)
+           std::shared_ptr<Scene3D> scene3D)
     : Spatial(source) {
   DO_VALIDATION;
   SetName(source.GetName() + postfix);

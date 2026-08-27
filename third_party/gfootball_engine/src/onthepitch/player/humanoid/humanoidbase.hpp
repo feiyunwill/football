@@ -231,7 +231,7 @@ struct SpatialState {
 class HumanoidBase {
 
   public:
-    HumanoidBase(PlayerBase *player, Match *match, boost::intrusive_ptr<Node> humanoidSourceNode, boost::intrusive_ptr<Node> fullbodySourceNode, std::map<Vector3, Vector3> &colorCoords, boost::shared_ptr<AnimCollection> animCollection, boost::intrusive_ptr<Node> fullbodyTargetNode, boost::intrusive_ptr < Resource<Surface> > kit);
+    HumanoidBase(PlayerBase *player, Match *match, boost::intrusive_ptr<Node> humanoidSourceNode, boost::intrusive_ptr<Node> fullbodySourceNode, std::map<Vector3, Vector3> &colorCoords, std::shared_ptr<AnimCollection> animCollection, boost::intrusive_ptr<Node> fullbodyTargetNode, boost::intrusive_ptr < Resource<Surface> > kit);
     virtual ~HumanoidBase();
     void Mirror();
 
@@ -362,7 +362,7 @@ class HumanoidBase {
     Match *match;
     PlayerBase *player;
     // Shared between all players, no need to snapshot.
-    boost::shared_ptr<AnimCollection> anims;
+    std::shared_ptr<AnimCollection> anims;
     // Pointers from elements in humanoidNode to Nodes.
     NodeMap nodeMap;
     // Seems to contain current animation context.

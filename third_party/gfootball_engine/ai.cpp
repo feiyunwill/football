@@ -21,13 +21,15 @@
 #include <pybind11/stl.h>
 #include <pybind11/functional.h>
 
-#include <boost/shared_ptr.hpp>
+// 2026-08-26 移除 Boost：shared_ptr 全面改用 std，pybind11 holder 本就是 std::shared_ptr。
+// #include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace py = pybind11;
 using std::string;
 
-// 2026-04-02 pybind11：使 boost::shared_ptr 成为合法 holder（否则 class_<T, boost::shared_ptr<T>> 静态断言失败）
-PYBIND11_DECLARE_HOLDER_TYPE(T, boost::shared_ptr<T>);
+// 2026-04-02 pybind11：使 std::shared_ptr 成为合法 holder（否则 class_<T, std::shared_ptr<T>> 静态断言失败）
+PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class GameEnv_Python : public GameEnv {
  public:
@@ -217,7 +219,7 @@ PYBIND11_MODULE(_gameplayfootball, m) {
       .def("__getitem__", &Vector3::GetEnvCoord)
       .def("__setitem__", &Vector3::SetEnvCoord);
 
-  py::class_<GameConfig, boost::shared_ptr<GameConfig>>(m, "GameConfig")
+  py::class_<GameConfig, std::shared_ptr<GameConfig>>(m, "GameConfig")
       .def_static("make", &GameConfig::make)
       .def_readwrite("render", &GameConfig::render)
       .def_readwrite("physics_steps_per_frame",
@@ -225,7 +227,7 @@ PYBIND11_MODULE(_gameplayfootball, m) {
       .def_readwrite("render_resolution_x", &GameConfig::render_resolution_x)
       .def_readwrite("render_resolution_y", &GameConfig::render_resolution_y);
 
-  py::class_<ScenarioConfig, boost::shared_ptr<ScenarioConfig>>(m, "ScenarioConfig")
+  py::class_<ScenarioConfig, std::shared_ptr<ScenarioConfig>>(m, "ScenarioConfig")
       .def_static("make", &ScenarioConfig::make)
       .def_readwrite("ball_position", &ScenarioConfig::ball_position)
       .def_readwrite("left_team", &ScenarioConfig::left_team)

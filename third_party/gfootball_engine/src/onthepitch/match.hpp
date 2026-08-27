@@ -44,7 +44,8 @@
 #include "../ecs/transform.hpp"
 #include "ecs_components.hpp"
 
-#include <boost/circular_buffer.hpp>
+// 2026-08-26 移除 Boost（原因）：circular_buffer 无任何实例，纯死 include。
+// #include <boost/circular_buffer.hpp>
 
 #include <fstream>
 #include <iostream>
@@ -72,7 +73,7 @@ class Match {
     Team *GetTeam(int teamID) { DO_VALIDATION; return teams[teamID]; }
     void GetActiveTeamPlayers(int teamID, std::vector<Player*> &players);
     void GetOfficialPlayers(std::vector<PlayerBase*> &players);
-    boost::shared_ptr<AnimCollection> GetAnimCollection();
+    std::shared_ptr<AnimCollection> GetAnimCollection();
 
     MentalImage* GetMentalImage(int history_ms);
     void UpdateLatestMentalImageBallPredictions();
@@ -266,9 +267,9 @@ class Match {
 
     Referee *referee;
 
-    boost::shared_ptr<MenuTask> menuTask;
+    std::shared_ptr<MenuTask> menuTask;
 
-    boost::shared_ptr<Scene3D> scene3D;
+    std::shared_ptr<Scene3D> scene3D;
 
     bool resetNetting = false;
     bool nettingHasChanged = false;

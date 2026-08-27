@@ -36,7 +36,7 @@ namespace blunted {
   class Gui2WindowManager {
 
     public:
-      Gui2WindowManager(boost::shared_ptr<Scene2D> scene2D, float aspectRatio, float margin);
+      Gui2WindowManager(std::shared_ptr<Scene2D> scene2D, float aspectRatio, float margin);
       virtual ~Gui2WindowManager();
 
       void Exit();
@@ -71,7 +71,7 @@ namespace blunted {
       Gui2PagePath *GetPagePath() { DO_VALIDATION; return pagePath; }
 
     protected:
-      boost::shared_ptr<Scene2D> scene2D;
+      std::shared_ptr<Scene2D> scene2D;
       float aspectRatio = 0.0f;
       float margin = 0.0f;
       float effectiveW = 0.0f;

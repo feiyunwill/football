@@ -33,7 +33,7 @@ namespace blunted {
   };
 
   boost::intrusive_ptr<Resource<GeometryData> > GetGridGeom(
-      const std::string &name, boost::shared_ptr<Scene3D> scene3D,
+      const std::string &name, std::shared_ptr<Scene3D> scene3D,
       std::vector<GeomIndex> &geomVec, const AABB &aabb, float gridSize) {
     DO_VALIDATION;
 
@@ -79,7 +79,7 @@ namespace blunted {
   }
 
   boost::intrusive_ptr<Node> SplitGeometry(
-      boost::shared_ptr<Scene3D> scene3D, boost::intrusive_ptr<Geometry> source,
+      std::shared_ptr<Scene3D> scene3D, boost::intrusive_ptr<Geometry> source,
       float gridSize) {
     DO_VALIDATION;
 

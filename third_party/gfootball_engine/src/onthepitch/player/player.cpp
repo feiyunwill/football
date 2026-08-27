@@ -89,7 +89,7 @@ void Player::Activate(boost::intrusive_ptr<Node> humanoidSourceNode,
                       boost::intrusive_ptr<Node> fullbodySourceNode,
                       std::map<Vector3, Vector3> &colorCoords,
                       boost::intrusive_ptr<Resource<Surface> > kit,
-                      boost::shared_ptr<AnimCollection> animCollection,
+                      std::shared_ptr<AnimCollection> animCollection,
                       bool lazyPlayer) {
   DO_VALIDATION;
 

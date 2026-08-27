@@ -16,7 +16,9 @@
 #include "../base/log.hpp"
 #include "../main.hpp"
 
-namespace fs = boost::filesystem;
+// 2026-08-26 移除 Boost：boost::filesystem → std::filesystem（别名在 file.h 中定义）。
+// namespace fs = boost::filesystem;
+namespace fs = std::filesystem;
 
 std::string GetFile(const std::string &fileName) {
   DO_VALIDATION;
@@ -28,7 +30,8 @@ std::string GetFile(const std::string &fileName) {
   return str;
 }
 
-void GetFilesRec(boost::filesystem::path path, const std::string &extension,
+// 2026-08-26 移除 Boost：签名与实现改用 std::filesystem::path，逻辑不变。
+void GetFilesRec(std::filesystem::path path, const std::string &extension,
                  std::vector<std::string> &files) {
   DO_VALIDATION;
   if (!fs::exists(path) || !fs::is_directory(path)) {
@@ -42,11 +45,12 @@ void GetFilesRec(boost::filesystem::path path, const std::string &extension,
     DO_VALIDATION;
     if (is_directory(dirIter->status())) {
       DO_VALIDATION;
-      boost::filesystem::path thePath(path);
+      // 2026-08-26 移除 Boost：boost::filesystem::path → std::filesystem::path。
+      std::filesystem::path thePath(path);
       thePath /= dirIter->path().filename();
       GetFilesRec(thePath, extension, files);
     } else {
-      boost::filesystem::path thePath(path);
+      std::filesystem::path thePath(path);
       thePath /= dirIter->path().filename();
 
       if (thePath.extension() == "." + extension) {

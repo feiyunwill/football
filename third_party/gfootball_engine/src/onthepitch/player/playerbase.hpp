@@ -41,7 +41,7 @@ class PlayerBase {
     inline bool IsActive() { DO_VALIDATION; return isActive; }
 
     // get ready for some action
-    virtual void Activate(boost::intrusive_ptr<Node> humanoidSourceNode, boost::intrusive_ptr<Node> fullbodySourceNode, std::map<Vector3, Vector3> &colorCoords, boost::intrusive_ptr < Resource<Surface> > kit, boost::shared_ptr<AnimCollection> animCollection, bool lazyPlayer) = 0;
+    virtual void Activate(boost::intrusive_ptr<Node> humanoidSourceNode, boost::intrusive_ptr<Node> fullbodySourceNode, std::map<Vector3, Vector3> &colorCoords, boost::intrusive_ptr < Resource<Surface> > kit, std::shared_ptr<AnimCollection> animCollection, bool lazyPlayer) = 0;
     // go back to bench/take a shower
     virtual void Deactivate();
 

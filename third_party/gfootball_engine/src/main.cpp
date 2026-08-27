@@ -64,11 +64,11 @@ GameContext& GetContext() {
 
 void SetGame(GameEnv* c) { game = c; }
 
-boost::shared_ptr<Scene2D> GetScene2D() {
+std::shared_ptr<Scene2D> GetScene2D() {
   return game->context->scene2D;
 }
 
-boost::shared_ptr<Scene3D> GetScene3D() {
+std::shared_ptr<Scene3D> GetScene3D() {
   return game->context->scene3D;
 }
 
@@ -76,11 +76,11 @@ GraphicsSystem* GetGraphicsSystem() {
   return &game->context->graphicsSystem;
 }
 
-boost::shared_ptr<GameTask> GetGameTask() {
+std::shared_ptr<GameTask> GetGameTask() {
   return game->context->gameTask;
 }
 
-boost::shared_ptr<MenuTask> GetMenuTask() {
+std::shared_ptr<MenuTask> GetMenuTask() {
   return game->context->menuTask;
 }
 
@@ -135,7 +135,7 @@ void run_game(Properties* input_config, bool render) {
   }
   // sequences
 
-  game->context->gameTask = boost::shared_ptr<GameTask>(new GameTask());
+  game->context->gameTask = std::shared_ptr<GameTask>(new GameTask());
   std::string fontfilename = game->context->config->Get(
       "font_filename", "media/fonts/alegreya/AlegreyaSansSC-ExtraBold.ttf");
 #ifdef WIN32
@@ -156,7 +156,7 @@ void run_game(Properties* input_config, bool render) {
     Log(e_FatalError, "football", "main",
         "Could not load font " + fontfilename);
   TTF_SetFontOutline(game->context->defaultOutlineFont, 2);
-  game->context->menuTask = boost::shared_ptr<MenuTask>(
+  game->context->menuTask = std::shared_ptr<MenuTask>(
       new MenuTask(5.0f / 4.0f, 0, game->context->defaultFont,
                    game->context->defaultOutlineFont, game->context->config));
 }

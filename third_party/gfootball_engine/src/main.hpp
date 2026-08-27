@@ -46,13 +46,16 @@ void DoValidation(int line, const char* file);
 #include "loaders/imageloader.hpp"
 #include "base/properties.hpp"
 #include <boost/random.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
+// 2026-08-26 移除 Boost：全仓库 74 处 boost::shared_ptr/weak_ptr 已批量改为 std 版本，
+// SHARED_PTR/WEAK_PTR 宏随之删除；<memory> 由 defines.hpp 统一提供。
+// #include <boost/shared_ptr.hpp>
+// #include <boost/weak_ptr.hpp>
+// #define SHARED_PTR boost::shared_ptr
+// #define WEAK_PTR boost::weak_ptr
 #include <condition_variable>
+#include <filesystem>
+#include <memory>
 #include <mutex>
-
-#define SHARED_PTR boost::shared_ptr
-#define WEAK_PTR boost::weak_ptr
 
 #include <compare>
 
@@ -67,8 +70,8 @@ constexpr std::strong_ordering operator<=>(e_RenderingMode a, e_RenderingMode b)
 
 class GameConfig {
  public:
-  static SHARED_PTR<GameConfig> make() {
-    return SHARED_PTR<GameConfig>(new GameConfig());
+  static std::shared_ptr<GameConfig> make() {
+    return std::shared_ptr<GameConfig>(new GameConfig());
   }
   // Is rendering enabled.
   bool render = false;
@@ -80,13 +83,14 @@ class GameConfig {
   int render_resolution_y = 720;
   std::string updatePath(const std::string& path) {
 #ifdef WIN32
-    boost::filesystem::path boost_path(path);
-    if (boost_path.is_absolute()) {
+    // 2026-08-26 移除 Boost：boost::filesystem → std::filesystem。
+    std::filesystem::path fs_path(path);
+    if (fs_path.is_absolute()) {
       return path;
     }
-    boost::filesystem::path data_dir_boost(data_dir);
-    data_dir_boost /= boost_path;
-    return data_dir_boost.string();
+    std::filesystem::path data_dir_fs(data_dir);
+    data_dir_fs /= fs_path;
+    return data_dir_fs.string();
 #else
     if (path[0] == '/') {
       return path;
@@ -107,8 +111,8 @@ class GameConfig {
 
 struct ScenarioConfig {
  public:
-  static SHARED_PTR<ScenarioConfig> make() {
-    return SHARED_PTR<ScenarioConfig>(new ScenarioConfig());
+  static std::shared_ptr<ScenarioConfig> make() {
+    return std::shared_ptr<ScenarioConfig>(new ScenarioConfig());
   }
   bool DynamicPlayerSelection() {
     ComputeCache();
@@ -246,10 +250,10 @@ class GameContext {
  public:
   GameContext() : rng(BaseGenerator(), Distribution()), rng_non_deterministic(BaseGenerator(), Distribution()) { }
   GraphicsSystem graphicsSystem;
-  boost::shared_ptr<GameTask> gameTask;
-  boost::shared_ptr<MenuTask> menuTask;
-  boost::shared_ptr<Scene2D> scene2D;
-  boost::shared_ptr<Scene3D> scene3D;
+  std::shared_ptr<GameTask> gameTask;
+  std::shared_ptr<MenuTask> menuTask;
+  std::shared_ptr<Scene2D> scene2D;
+  std::shared_ptr<Scene3D> scene3D;
   boost::intrusive_ptr<Node> fullbodyNode;
   boost::intrusive_ptr<Node> goalsNode;
   boost::intrusive_ptr<Node> stadiumRender;
@@ -282,7 +286,7 @@ class GameContext {
   int playerCount = 0;
   int stablePlayerCount = 0;
   BiasedOffsets emptyOffsets;
-  boost::shared_ptr<AnimCollection> anims;
+  std::shared_ptr<AnimCollection> anims;
   std::map<Animation*, std::vector<Vector3>> animPositionCache;
   std::map<Vector3, Vector3> colorCoords;
   int step = 0;
@@ -295,11 +299,11 @@ class Match;
 
 void SetGame(GameEnv* c);
 GameContext& GetContext();
-boost::shared_ptr<Scene2D> GetScene2D();
-boost::shared_ptr<Scene3D> GetScene3D();
+std::shared_ptr<Scene2D> GetScene2D();
+std::shared_ptr<Scene3D> GetScene3D();
 GraphicsSystem *GetGraphicsSystem();
-boost::shared_ptr<GameTask> GetGameTask();
-boost::shared_ptr<MenuTask> GetMenuTask();
+std::shared_ptr<GameTask> GetGameTask();
+std::shared_ptr<MenuTask> GetMenuTask();
 
 Properties *GetConfiguration();
 ScenarioConfig& GetScenarioConfig();

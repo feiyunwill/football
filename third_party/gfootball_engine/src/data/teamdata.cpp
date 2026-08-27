@@ -18,7 +18,10 @@
 
 #include "teamdata.hpp"
 
-#include <boost/algorithm/string.hpp>
+// 2026-08-26 移除 Boost（原因）：唯一用点 to_upper_copy 改为手写 ASCII 大写循环，
+// 行为一致且避免引入整个 algorithm/string。
+// #include <boost/algorithm/string.hpp>
+#include <cctype>
 
 #include "../base/utils.hpp"
 #include "../main.hpp"
@@ -156,7 +159,13 @@ TeamData::TeamData(int teamDatabaseID, const std::vector<FormationEntry> &f) {
     shortName = name;
     shortName.erase(remove_if(shortName.begin(), shortName.end(), isspace),
                     shortName.end());
-    shortName = boost::to_upper_copy(shortName.substr(0, 3));
+    // 2026-08-26 移除 Boost：boost::to_upper_copy → 手写 ASCII 大写（等价，按 unsigned char 传参避免 UB）。
+    // shortName = boost::to_upper_copy(shortName.substr(0, 3));
+    std::string shortPrefix = shortName.substr(0, 3);
+    for (char& c : shortPrefix) {
+      c = static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+    }
+    shortName = shortPrefix;
   }
 
   logo_url = "databases/default/" + logo_url;

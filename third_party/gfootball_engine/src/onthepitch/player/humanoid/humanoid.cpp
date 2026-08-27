@@ -63,7 +63,7 @@ Humanoid::Humanoid(Player *player,
                    boost::intrusive_ptr<Node> humanoidSourceNode,
                    boost::intrusive_ptr<Node> fullbodySourceNode,
                    std::map<Vector3, Vector3> &colorCoords,
-                   boost::shared_ptr<AnimCollection> animCollection,
+                   std::shared_ptr<AnimCollection> animCollection,
                    boost::intrusive_ptr<Node> fullbodyTargetNode,
                    boost::intrusive_ptr<Resource<Surface> > kit)
     : HumanoidBase(player, player->GetTeam()->GetMatch(), humanoidSourceNode,
@@ -359,7 +359,7 @@ void Humanoid::Process() {
     DO_VALIDATION;
 
     Vector3 desiredBallPosition;
-    boost::static_pointer_cast<FootballAnimationExtension>(currentAnim.anim->GetExtension("football"))->GetTouchPos(currentAnim.touchFrame, desiredBallPosition);
+    std::static_pointer_cast<FootballAnimationExtension>(currentAnim.anim->GetExtension("football"))->GetTouchPos(currentAnim.touchFrame, desiredBallPosition);
     float desiredBallHeight = desiredBallPosition.coords[2];
 
     float touchableDistance = 0.4f;
@@ -1068,7 +1068,10 @@ void Humanoid::SelectRetainAnim() {
   assert(dataSet.size() != 0);
 
   GetContext().tracker_disabled++;
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareMovementSimilarity, this, _1, _2));
+  // 2026-08-26 移除 Boost：本文件 9 处 std::stable_sort 谓词由
+  // boost::bind(&<Humanoid|HumanoidBase>::Compare*, this[, spatialState.foot], _1, _2)
+  // 批量改写为等价 lambda（成员指针绑定 this + 占位符 → 捕获调用），语义不变。
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareMovementSimilarity(animIndex1, animIndex2); });
   GetContext().tracker_disabled--;
 
   startAngle = FixAngle((Vector3(0) - startPos).GetAngle2D());//0.5 * pi; (facing right)
@@ -1459,45 +1462,45 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
   }
 
   GetContext().tracker_disabled++;
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::ComparePriorityVariable, this, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return ComparePriorityVariable(animIndex1, animIndex2); });
 
   int desiredIdleLevel = 0;
   if (!match->IsInPlay()) desiredIdleLevel = 2;
   if (match->IsInSetPiece()) desiredIdleLevel = 1;
   else if ((match->GetBall()->Predict(200) - spatialState.position).GetLength() > 16.0f) desiredIdleLevel = 1;
   SetIdlePredicate(desiredIdleLevel);
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareIdleVariable, this, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareIdleVariable(animIndex1, animIndex2); });
 
   SetFootSimilarityPredicate(spatialState.foot);
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareFootSimilarity, this, spatialState.foot, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareFootSimilarity(spatialState.foot, animIndex1, animIndex2); });
 
   if (command.desiredFunctionType != e_FunctionType_BallControl) {
     DO_VALIDATION;
     SetIncomingBodyDirectionSimilarityPredicate(spatialState.relBodyDirectionVec);
-    std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareIncomingBodyDirectionSimilarity, this, _1, _2));
+    std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareIncomingBodyDirectionSimilarity(animIndex1, animIndex2); });
   }
 
   // moved down
   SetIncomingVelocitySimilarityPredicate(spatialState.enumVelocity);
-  std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareIncomingVelocitySimilarity, this, _1, _2));
+  std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareIncomingVelocitySimilarity(animIndex1, animIndex2); });
 
   // OLD METHOD
   if (command.useDesiredTripDirection) {
     DO_VALIDATION;
     Vector3 relDesiredTripDirection = command.desiredTripDirection.GetRotated2D(-spatialState.angle);
     SetTripDirectionSimilarityPredicate(relDesiredTripDirection);
-    std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareTripDirectionSimilarity, this, _1, _2));
+    std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareTripDirectionSimilarity(animIndex1, animIndex2); });
   }
 
   // OLD METHOD
   if (command.desiredFunctionType != e_FunctionType_Movement) {
     DO_VALIDATION;
-    std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareBaseanimSimilarity, this, _1, _2));
+    std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareBaseanimSimilarity(animIndex1, animIndex2); });
   }
 
   if (command.desiredFunctionType == e_FunctionType_Deflect) {
     DO_VALIDATION;
-    std::stable_sort(dataSet.begin(), dataSet.end(), boost::bind(&Humanoid::CompareCatchOrDeflect, this, _1, _2));
+    std::stable_sort(dataSet.begin(), dataSet.end(), [this](int animIndex1, int animIndex2) { return CompareCatchOrDeflect(animIndex1, animIndex2); });
   }
   GetContext().tracker_disabled--;
 
@@ -1844,7 +1847,7 @@ signed int Humanoid::GetBestCheatableAnimID(const DataSet &sortedDataSet, bool u
 
     int frameCount = anim->GetEffectiveFrameCount();
 
-    boost::shared_ptr<FootballAnimationExtension> footballExtension = boost::static_pointer_cast<FootballAnimationExtension>(anim->GetExtension("football"));
+    std::shared_ptr<FootballAnimationExtension> footballExtension = std::static_pointer_cast<FootballAnimationExtension>(anim->GetExtension("football"));
 
     int totalTouches = footballExtension->GetTouchCount();
 #ifdef WIN32

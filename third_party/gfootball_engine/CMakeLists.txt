@@ -129,7 +129,12 @@ set(PYBIND11_FINDPYTHON ON)
 FetchContent_MakeAvailable(pybind11)
 message("Using pybind11 for Python bindings")
 
-FIND_PACKAGE(Boost REQUIRED COMPONENTS thread system filesystem)
+# 2026-08-26 移除 Boost（原因）：filesystem/thread/bind/shared_ptr 均已迁移到 std；
+# 引擎 so 本身只剩 Boost 头文件需求（frame_sync 的 asio），不再链接任何 Boost 库。
+# 保留 system 组件仅为下方 frame_sync_* 独立可执行目标的 Boost::system 导入目标
+#（Boost≥1.69 asio 头文件即用，该链接项是历史兼容写法）。
+# FIND_PACKAGE(Boost REQUIRED COMPONENTS thread system filesystem)
+FIND_PACKAGE(Boost REQUIRED COMPONENTS system)
 include_directories(${Boost_INCLUDE_DIRS})
 
 include_directories(${PROJECT_SOURCE_DIR}/src)
@@ -172,7 +177,8 @@ elseif(WIN32)
 endif()
 
 set(LIBRARIES gamelib menulib datalib blunted2
-   Boost::filesystem Boost::system Boost::thread
+   # 2026-08-26 移除 Boost：Boost::filesystem/system/thread 链接项随组件精简一并移除
+   # （asio 自 Boost 1.69 起头文件即用，frame_sync_* 独立目标保留各自的 Boost::system）。
    pybind11::module ${Py_TARGETS} ${SDL2_LIBS_ALL} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES})
 
 add_library(${OUTPUT_LIB_NAME} SHARED ${CORE_SOURCES} ${CORE_HEADERS} ${AI_HEADERS} ${AI_SOURCES})

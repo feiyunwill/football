@@ -16,12 +16,15 @@
 
 #include "../defines.hpp"
 
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#define BOOST_FILESYSTEM_VERSION 3
-#include "../base/log.hpp"
-#include "boost/filesystem.hpp"
+// 2026-08-26 移除 Boost（原因）：filesystem → std::filesystem，别名 fs 保持不变。
+// #define BOOST_FILESYSTEM_NO_DEPRECATED
+// #define BOOST_FILESYSTEM_VERSION 3
+// #include "boost/filesystem.hpp"
+#include <filesystem>
 
-namespace fs = boost::filesystem;
+#include "../base/log.hpp"
+
+namespace fs = std::filesystem;
 
 std::string GetFile(const std::string& fileName);
 

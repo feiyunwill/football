@@ -33,7 +33,7 @@ Officials::Officials(Match *match,
                      boost::intrusive_ptr<Node> fullbodySourceNode,
                      std::map<Vector3, Vector3> &colorCoords,
                      boost::intrusive_ptr<Resource<Surface> > kit,
-                     boost::shared_ptr<AnimCollection> animCollection)
+                     std::shared_ptr<AnimCollection> animCollection)
     : match(match) {
   DO_VALIDATION;
   ObjectLoader loader;

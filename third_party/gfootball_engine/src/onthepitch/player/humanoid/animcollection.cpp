@@ -419,7 +419,7 @@ void AnimCollection::Load() {
   for (unsigned int i = 0; i < autoAnims.size(); i++) {
     DO_VALIDATION;
     Animation *animation = new Animation(*autoAnims[i]);
-    boost::shared_ptr<FootballAnimationExtension> extension(new FootballAnimationExtension(animation));
+    std::shared_ptr<FootballAnimationExtension> extension(new FootballAnimationExtension(animation));
     animation->AddExtension("football", extension);
     animation->Mirror();
     _PrepareAnim(animation, playerNode, bodyParts, nodeMap, false);
@@ -452,7 +452,7 @@ void AnimCollection::Load() {
       for (int mirror = 0; mirror < 2; mirror++) {
         DO_VALIDATION;
         Animation *animation = new Animation();
-        boost::shared_ptr<FootballAnimationExtension> extension(new FootballAnimationExtension(animation));
+        std::shared_ptr<FootballAnimationExtension> extension(new FootballAnimationExtension(animation));
         animation->AddExtension("football", extension);
         animation->Load(files[i]);
         if (mirror == 1) animation->Mirror();
@@ -477,7 +477,7 @@ void AnimCollection::Load() {
         e_Velocity_Dribble) { DO_VALIDATION;
 
               Animation *animation2 = new Animation();
-              boost::shared_ptr<FootballAnimationExtension> extension(new
+              std::shared_ptr<FootballAnimationExtension> extension(new
         FootballAnimationExtension(animation));
               animation2->AddExtension("football", extension);
               animation2->Load(files[i], mirror == 0 ? false : true);
@@ -890,7 +890,7 @@ int AddExtraTouches(Animation *animation, boost::intrusive_ptr<Node> playerNode,
   DO_VALIDATION;
   Vector3 animBallPos;
   int animTouchFrame = -1;
-  bool isTouch = boost::static_pointer_cast<FootballAnimationExtension>(animation->GetExtension("football"))->GetFirstTouch(animBallPos, animTouchFrame);
+  bool isTouch = std::static_pointer_cast<FootballAnimationExtension>(animation->GetExtension("football"))->GetFirstTouch(animBallPos, animTouchFrame);
   //printf("touchframe: %i\n", animTouchFrame);
   if (isTouch) {
     DO_VALIDATION;
@@ -928,7 +928,7 @@ int AddExtraTouches(Animation *animation, boost::intrusive_ptr<Node> playerNode,
 
     int frameOffset = 0;
 
-    boost::static_pointer_cast<FootballAnimationExtension>(animation->GetExtension("football"))->DeleteKeyFrame(animTouchFrame);
+    std::static_pointer_cast<FootballAnimationExtension>(animation->GetExtension("football"))->DeleteKeyFrame(animTouchFrame);
 
     /*
         float bodypartBias = 0.9f;
@@ -979,7 +979,7 @@ int AddExtraTouches(Animation *animation, boost::intrusive_ptr<Node> playerNode,
         */
 
         Quaternion orientation;
-        boost::static_pointer_cast<FootballAnimationExtension>(animation->GetExtension("football"))->SetKeyFrame(i + frameOffset, orientation, resultPosition, 0);
+        std::static_pointer_cast<FootballAnimationExtension>(animation->GetExtension("football"))->SetKeyFrame(i + frameOffset, orientation, resultPosition, 0);
       }
     }
     return animTouchFrame + frameOffset;
@@ -992,7 +992,7 @@ float CalculateAnimDifficulty(Animation *animation, float &absoluteDifficulty) {
   DO_VALIDATION;
   Vector3 animBallPos;
   int animTouchFrame = 0;
-  bool isTouch = boost::static_pointer_cast<FootballAnimationExtension>(animation->GetExtension("football"))->GetFirstTouch(animBallPos, animTouchFrame);
+  bool isTouch = std::static_pointer_cast<FootballAnimationExtension>(animation->GetExtension("football"))->GetFirstTouch(animBallPos, animTouchFrame);
 
   float bodyDirDifficulty = clamp(fabs(animation->GetIncomingBodyDirection().GetAngle2D(animation->GetOutgoingBodyDirection()) / pi), 0.0, 1.0);
 
@@ -1050,7 +1050,7 @@ void AnimCollection::_PrepareAnim(
 
   Vector3 animBallPos;
   int animTouchFrame = 0;
-  bool isTouch = boost::static_pointer_cast<FootballAnimationExtension>(animation->GetExtension("football"))->GetFirstTouch(animBallPos, animTouchFrame);
+  bool isTouch = std::static_pointer_cast<FootballAnimationExtension>(animation->GetExtension("football"))->GetFirstTouch(animBallPos, animTouchFrame);
   if (isTouch && (animation->GetAnimType() == e_DefString_Movement || animation->GetAnimType() == e_DefString_Trip || animation->GetAnimType() == e_DefString_Special)) printf("invalid ball touch for animtype: %s\n", animation->GetName().c_str());
   if (!isTouch && (animation->GetAnimType() != e_DefString_Movement && animation->GetAnimType() != e_DefString_Trip && animation->GetAnimType() != e_DefString_Special)) printf("invalid ball touch for animtype: %s\n", animation->GetName().c_str());
 

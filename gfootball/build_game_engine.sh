@@ -27,9 +27,10 @@ if [[ "$OSTYPE" == "darwin"* ]] ; then
     LIB_EXTENSION="dylib"
 fi
 
-# Take into account # of cores and available RAM for deciding on compilation parallelism.
-# TODO: Try importing psutil and if failed fall back to 1 thread
-PARALLELISM=$(python3 -c 'import psutil; import multiprocessing as mp; print(int(max(1,min((psutil.virtual_memory().available/1000000000-1)/0.5, mp.cpu_count()))))')
+# 2026-08-27 原因：执行 2026-08-26 用户约定的「编译一律单线程」，并行编译会导致
+# 本机卡死；原按 CPU 核数与可用内存动态计算 PARALLELISM 的逻辑（psutil）注释废弃。
+# PARALLELISM=$(python3 -c 'import psutil; import multiprocessing as mp; print(int(max(1,min((psutil.virtual_memory().available/1000000000-1)/0.5, mp.cpu_count()))))')
+PARALLELISM=1
 
 # Delete pre-existing version of CMakeCache.txt to make 'python3 -m pip install' work.
 rm -f third_party/gfootball_engine/CMakeCache.txt

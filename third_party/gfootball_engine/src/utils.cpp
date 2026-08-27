@@ -20,7 +20,8 @@
 #include "utils.hpp"
 
 #include "systems/graphics/resources/texture.hpp"
-#include <boost/algorithm/string.hpp>
+// 2026-08-26 移除 Boost（原因）：本文件未使用任何 boost::algorithm 函数，纯死 include。
+// #include <boost/algorithm/string.hpp>
 #include <cmath>
 
 float GetQuantizedDirectionBias() {

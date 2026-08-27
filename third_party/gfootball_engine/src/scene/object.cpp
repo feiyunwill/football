@@ -121,7 +121,7 @@ inline e_ObjectType Object::GetObjectType() {
 
   void Object::Synchronize() {
     DO_VALIDATION;
-    boost::shared_ptr<Interpreter> result;
+    std::shared_ptr<Interpreter> result;
     int observersSize = observers_.size();
     for (int i = 0; i < observersSize; i++) {
       DO_VALIDATION;

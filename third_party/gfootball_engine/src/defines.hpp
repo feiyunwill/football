@@ -40,12 +40,20 @@
 #include <map>
 #include <deque>
 
-#include <boost/shared_ptr.hpp>
+// 2026-08-26 移除 Boost：shared_ptr/weak_ptr 全面改用 std（含 ai.cpp 绑定层）；
+// intrusive_ptr 按 RefCounted 体系约定保留。
+// #include <boost/shared_ptr.hpp>
+#include <memory>
 #include <boost/intrusive_ptr.hpp>
-#include <boost/thread/condition.hpp>
-#include <boost/signals2.hpp>
-#include <boost/signals2/slot.hpp>
-#include <boost/bind/bind.hpp>
+// 2026-08-26 移除 Boost（原因）：全仓库无任何 boost::condition 使用点，
+// 唯一实例 messagequeue.hpp 已改用 std::condition_variable 并自行包含 <condition_variable>。
+// #include <boost/thread/condition.hpp>
+// 2026-08-26 移除 Boost（原因）：signals2 全仓库 0 个 signal 实例，纯死 include。
+// #include <boost/signals2.hpp>
+// #include <boost/signals2/slot.hpp>
+// 2026-08-26 移除 Boost（原因）：全部 boost::bind 谓词已改写为 lambda
+// （humanoidbase.cpp / humanoid.cpp），bind 头与占位符 using 声明随之移除。
+// #include <boost/bind/bind.hpp>
 #include "backtrace.h"
 #include "base/log.hpp"
 
@@ -61,7 +69,8 @@ constexpr float EPSILON = 0.000001;
 
 typedef std::string screenshoot;
 
-using namespace boost::placeholders;
+// 2026-08-26 移除 Boost：占位符 _1/_2 已无使用者（谓词全部 lambda 化）。
+// using namespace boost::placeholders;
 
 namespace blunted {
   class Animation;

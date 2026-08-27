@@ -20,6 +20,10 @@
 
 #include "../defines.hpp"
 
+// 2026-08-26 Modern C++ 迁移（原因）：boost::condition → std::condition_variable；
+// 本类仅调用 notify_one()，无 wait，语义完全一致。
+#include <condition_variable>
+
 #include "../base/properties.hpp"
 
 #include "../types/command.hpp"
@@ -57,7 +61,9 @@ namespace blunted {
     protected:
       // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
       std::list < T > queue_;
-      boost::condition message_notification_;
+      // 2026-08-26 移除 Boost：boost::condition → std::condition_variable（唯一调用点是 notify_one）。
+      // boost::condition message_notification_;
+      std::condition_variable message_notification_;
 
   };
 

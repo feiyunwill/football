@@ -80,7 +80,7 @@ Animation::Animation(const Animation &src) {
   // attention! shallow copy!
   extensions = src.extensions;
 
-  boost::shared_ptr<XMLTree> tmpCustomData(new XMLTree(*src.customData));
+  std::shared_ptr<XMLTree> tmpCustomData(new XMLTree(*src.customData));
   customData = tmpCustomData;
 
   variableCache = src.variableCache;
@@ -346,7 +346,7 @@ void Animation::DirtyCache() {
       animIter++;
     }
 
-    std::map < std::string, boost::shared_ptr<AnimationExtension> >::iterator extensionIter = extensions.begin();
+    std::map < std::string, std::shared_ptr<AnimationExtension> >::iterator extensionIter = extensions.begin();
     while (extensionIter != extensions.end()) {
       DO_VALIDATION;
       extensionIter->second->Rotate2D(-incomingBodyAngle);
@@ -1062,7 +1062,7 @@ void Animation::DirtyCache() {
       DO_VALIDATION;
       std::vector<std::string> tokenizedLine;
       tokenize(file[i], tokenizedLine, ",");
-      std::map < std::string, boost::shared_ptr<AnimationExtension> >::iterator extensionIter;
+      std::map < std::string, std::shared_ptr<AnimationExtension> >::iterator extensionIter;
       if (tokenizedLine.at(0) == "extension") {
         DO_VALIDATION;
         tokenizedLines.push_back(tokenizedLine);
@@ -1079,12 +1079,12 @@ void Animation::DirtyCache() {
       xmlData.append(file[i]);
     }
     XMLLoader xmlLoader;
-    customData = boost::shared_ptr<XMLTree>(new XMLTree(xmlLoader.Load(xmlData)));
+    customData = std::shared_ptr<XMLTree>(new XMLTree(xmlLoader.Load(xmlData)));
 
     // load extension data
     for (unsigned int i = 0; i < tokenizedLines.size(); i++) {
       DO_VALIDATION;
-      std::map < std::string, boost::shared_ptr<AnimationExtension> >::iterator extensionIter;
+      std::map < std::string, std::shared_ptr<AnimationExtension> >::iterator extensionIter;
       extensionIter = extensions.find(tokenizedLines[i].at(1));
       if (extensionIter != extensions.end()) (*extensionIter).second->Load(tokenizedLines[i]);
     }
@@ -1195,7 +1195,7 @@ void Animation::DirtyCache() {
     }
 
     // extensions!
-    std::map < std::string, boost::shared_ptr<AnimationExtension> >::iterator extensionIter = extensions.begin();
+    std::map < std::string, std::shared_ptr<AnimationExtension> >::iterator extensionIter = extensions.begin();
     while (extensionIter != extensions.end()) {
       DO_VALIDATION;
       extensionIter->second->Mirror();
@@ -1230,9 +1230,9 @@ void Animation::DirtyCache() {
     state->process(frameCount);
     state->process(name);
 
-    // std::map < std::string, boost::shared_ptr<AnimationExtension> >
+    // std::map < std::string, std::shared_ptr<AnimationExtension> >
     // extensions;
-    // boost::shared_ptr<XMLTree> customData;
+    // std::shared_ptr<XMLTree> customData;
     // VariableCache variableCache;
     state->process(currentFoot);
     state->process(cache_translation_dirty);
@@ -1287,12 +1287,12 @@ void Animation::DirtyCache() {
 
   void Animation::AddExtension(
       const std::string &name,
-      boost::shared_ptr<AnimationExtension> extension) {
+      std::shared_ptr<AnimationExtension> extension) {
     DO_VALIDATION;
-    extensions.insert(std::pair < std::string, boost::shared_ptr<AnimationExtension> >(name, extension));
+    extensions.insert(std::pair < std::string, std::shared_ptr<AnimationExtension> >(name, extension));
   }
 
-  boost::shared_ptr<AnimationExtension> Animation::GetExtension(
+  std::shared_ptr<AnimationExtension> Animation::GetExtension(
       const std::string &name) {
     DO_VALIDATION;
     return extensions.find(name)->second;

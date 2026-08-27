@@ -81,7 +81,7 @@ void GraphicsSystem::Exit() {
   }
 
   GraphicsScene *GraphicsSystem::Create2DScene(
-      boost::shared_ptr<IScene> scene) {
+      std::shared_ptr<IScene> scene) {
     DO_VALIDATION;
     GraphicsScene *graphicsScene = new GraphicsScene(this);
     scene->Attach(graphicsScene->GetInterpreter(e_SceneType_Scene2D));
@@ -89,7 +89,7 @@ void GraphicsSystem::Exit() {
   }
 
   GraphicsScene *GraphicsSystem::Create3DScene(
-      boost::shared_ptr<IScene> scene) {
+      std::shared_ptr<IScene> scene) {
     DO_VALIDATION;
     GraphicsScene *graphicsScene = new GraphicsScene(this);
     scene->Attach(graphicsScene->GetInterpreter(e_SceneType_Scene3D));

@@ -20,9 +20,12 @@
 
 #include "../defines.hpp"
 
-#define BOOST_FILESYSTEM_VERSION 3
-#define BOOST_FILESYSTEM_NO_DEPRECATED
-#include <boost/filesystem.hpp>
+// 2026-08-26 移除 Boost（原因）：filesystem → std::filesystem（API 一一对应，
+// GCC 15/libstdc++ 无需额外链接库）。
+// #define BOOST_FILESYSTEM_VERSION 3
+// #define BOOST_FILESYSTEM_NO_DEPRECATED
+// #include <boost/filesystem.hpp>
+#include <filesystem>
 
 namespace blunted {
 

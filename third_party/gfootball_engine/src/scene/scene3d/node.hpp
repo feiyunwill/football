@@ -32,7 +32,7 @@ namespace blunted {
 
     public:
       Node(const std::string &name);
-      Node(const Node &source, const std::string &postfix, boost::shared_ptr<Scene3D> scene3D);
+      Node(const Node &source, const std::string &postfix, std::shared_ptr<Scene3D> scene3D);
       // 2026-04-02 现代 C++：禁止默认拷贝/移动；克隆使用三参构造函数
       Node(const Node &) = delete;
       Node &operator=(const Node &) = delete;

@@ -361,7 +361,7 @@ e_FunctionType StringToFunctionType(e_DefString fun);
       void Apply(const NodeMap& nodeMap,
                  int frame, int timeOffset_ms = 0, bool smooth = true,
                  float smoothFactor = 1.0f,
-                 /*const boost::shared_ptr<Animation> previousAnimation, int
+                 /*const std::shared_ptr<Animation> previousAnimation, int
                     smoothFrames, */
                  const Vector3 &basePos = Vector3(0), radian baseRot = 0,
                  BiasedOffsets &offsets = emptyOffsets,
@@ -390,8 +390,8 @@ e_FunctionType StringToFunctionType(e_DefString fun);
       std::string GetName() const;
       void SetName(const std::string &name) { DO_VALIDATION; this->name = name; }
 
-      void AddExtension(const std::string &name, boost::shared_ptr<AnimationExtension> extension);
-      boost::shared_ptr<AnimationExtension> GetExtension(const std::string &name);
+      void AddExtension(const std::string &name, std::shared_ptr<AnimationExtension> extension);
+      std::shared_ptr<AnimationExtension> GetExtension(const std::string &name);
 
       const std::string GetVariable(const char *name) const;
       const VariableCache& GetVariableCache() const {
@@ -411,9 +411,9 @@ e_FunctionType StringToFunctionType(e_DefString fun);
       int frameCount = 0;
       std::string name;
 
-      std::map < std::string, boost::shared_ptr<AnimationExtension> > extensions;
+      std::map < std::string, std::shared_ptr<AnimationExtension> > extensions;
 
-      boost::shared_ptr<XMLTree> customData;
+      std::shared_ptr<XMLTree> customData;
       VariableCache variableCache;
 
       // this hack only applies to humanoids

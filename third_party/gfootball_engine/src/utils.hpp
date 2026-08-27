@@ -24,7 +24,8 @@
 
 #include "scene/objects/camera.hpp"
 
-#include <boost/circular_buffer.hpp>
+// 2026-08-26 移除 Boost（原因）：circular_buffer 在本文件及全仓库无任何实例，纯死 include。
+// #include <boost/circular_buffer.hpp>
 
 using namespace blunted;
 

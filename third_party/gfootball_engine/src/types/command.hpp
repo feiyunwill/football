@@ -20,7 +20,8 @@
 
 #include "../defines.hpp"
 
-#include <boost/thread/condition.hpp>
+// 2026-08-26 移除 Boost（原因）：本文件从未使用 boost::condition，纯死 include。
+// #include <boost/thread/condition.hpp>
 
 #include "../types/refcounted.hpp"
 

@@ -38,7 +38,7 @@
 constexpr unsigned int replaySize_ms = 10000;
 constexpr unsigned int camPosSize = 150;
 
-boost::shared_ptr<AnimCollection> Match::GetAnimCollection() {
+std::shared_ptr<AnimCollection> Match::GetAnimCollection() {
   DO_VALIDATION;
   return GetContext().anims;
 }
@@ -76,7 +76,7 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
 
   if (!anims) {
     DO_VALIDATION;
-    anims = boost::shared_ptr<AnimCollection>(new AnimCollection());
+    anims = std::shared_ptr<AnimCollection>(new AnimCollection());
     anims->Load();
     // cache animation positions
 

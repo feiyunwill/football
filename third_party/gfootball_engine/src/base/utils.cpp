@@ -198,8 +198,9 @@ void file_to_vector(std::string filename,
 std::string get_file_name(const std::string &filename) {
   DO_VALIDATION;
 #ifdef WIN32
+  // 2026-08-26 移除 Boost：boost::filesystem → std::filesystem。
   std::string chompedFilename =
-      boost::filesystem::path(filename).filename().string();
+      std::filesystem::path(filename).filename().string();
 #else
   std::string chompedFilename =
       filename.substr(filename.find_last_of('\\') + 1);

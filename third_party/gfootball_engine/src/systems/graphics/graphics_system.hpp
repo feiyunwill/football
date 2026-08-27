@@ -58,8 +58,8 @@ namespace blunted {
 
       e_SystemType GetSystemType() const;
 
-      GraphicsScene *Create2DScene(boost::shared_ptr<IScene> scene);
-      GraphicsScene *Create3DScene(boost::shared_ptr<IScene> scene);
+      GraphicsScene *Create2DScene(std::shared_ptr<IScene> scene);
+      GraphicsScene *Create3DScene(std::shared_ptr<IScene> scene);
 
       GraphicsTask *GetTask();
       virtual Renderer3D *GetRenderer3D();
