@@ -12,6 +12,7 @@
 #include <cstring>
 #include <deque>
 #include <iostream>
+#include <print>
 #include <memory>
 #include <mutex>
 #include <queue>
@@ -34,12 +35,12 @@ class FrameSyncClient {
     tcp::resolver resolver(io_);
     auto endpoints = resolver.resolve(host_, std::to_string(port_), ec);
     if (ec) {
-      std::cerr << "Resolve failed: " << ec.message() << std::endl;
+      std::println(stderr, "Resolve failed: {}", ec.message());
       return false;
     }
     asio::connect(socket_, endpoints, ec);
     if (ec) {
-      std::cerr << "Connect failed: " << ec.message() << std::endl;
+      std::println(stderr, "Connect failed: {}", ec.message());
       return false;
     }
     recv_buf_.clear();
@@ -167,7 +168,7 @@ class FrameSyncClient {
 
 int main(int argc, char* argv[]) {
   if (argc < 3) {
-    std::cerr << "Usage: " << argv[0] << " <host> <port> [slot_index]\n";
+    std::println(stderr, "Usage: {} <host> <port> [slot_index]", argv[0]);
     return 1;
   }
   std::string host = argv[1];
@@ -177,8 +178,7 @@ int main(int argc, char* argv[]) {
   asio::io_context io;
   FrameSyncClient client(io, host, port);
   if (!client.connect()) return 1;
-  std::cout << "Connected. My slots: " << client.my_slots().size()
-            << " seed=" << client.seed() << std::endl;
+  std::println("Connected. My slots: {} seed={}", client.my_slots().size(), client.seed());
 
   frame_sync::frame_id_t next_send_frame = 0;
   std::vector<frame_sync::SlotInput> my_inputs(1, frame_sync::SlotInput::Default());

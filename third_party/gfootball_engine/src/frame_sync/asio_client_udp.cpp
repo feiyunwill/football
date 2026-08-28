@@ -12,6 +12,7 @@
 #include <chrono>
 #include <cstring>
 #include <iostream>
+#include <print>
 #include <memory>
 #include <mutex>
 #include <queue>
@@ -33,19 +34,19 @@ class FrameSyncClientUDP {
     udp::resolver resolver(io_);
     auto endpoints = resolver.resolve(udp::v4(), host_, std::to_string(port_), ec);
     if (ec || endpoints.empty()) {
-      std::cerr << "Resolve failed: " << (ec ? ec.message() : "no endpoints") << std::endl;
+      std::println(stderr, "Resolve failed: {}", ec ? ec.message() : "no endpoints");
       return false;
     }
     server_endpoint_ = *endpoints.begin();
     socket_.open(udp::v4(), ec);
-    if (ec) { std::cerr << "Open failed: " << ec.message() << std::endl; return false; }
+    if (ec) { std::println(stderr, "Open failed: {}", ec.message()); return false; }
     socket_.bind(udp::endpoint(udp::v4(), 0), ec);
-    if (ec) { std::cerr << "Bind failed: " << ec.message() << std::endl; return false; }
+    if (ec) { std::println(stderr, "Bind failed: {}", ec.message()); return false; }
 
     // Send Connect so server creates our session
     uint8_t connect_byte = static_cast<uint8_t>(frame_sync::MessageType::Connect);
     socket_.send_to(asio::buffer(&connect_byte, 1), server_endpoint_, 0, ec);
-    if (ec) { std::cerr << "Connect send failed: " << ec.message() << std::endl; return false; }
+    if (ec) { std::println(stderr, "Connect send failed: {}", ec.message()); return false; }
 
     do_receive();
     do_tick_retransmit();
@@ -78,7 +79,7 @@ class FrameSyncClientUDP {
       std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     if (!ready_sent_) {
-      std::cerr << "Timeout waiting for SessionStart/SlotAssignment\n";
+      std::println(stderr, "Timeout waiting for SessionStart/SlotAssignment");
       return false;
     }
     return true;
@@ -191,7 +192,7 @@ class FrameSyncClientUDP {
 
 int main(int argc, char* argv[]) {
   if (argc < 3) {
-    std::cerr << "Usage: " << argv[0] << " <host> <port> [slot_index]\n";
+    std::println(stderr, "Usage: {} <host> <port> [slot_index]", argv[0]);
     return 1;
   }
   std::string host = argv[1];
@@ -201,8 +202,7 @@ int main(int argc, char* argv[]) {
   asio::io_context io;
   FrameSyncClientUDP client(io, host, port);
   if (!client.connect()) return 1;
-  std::cout << "Connected (UDP). My slots: " << client.my_slots().size()
-            << " seed=" << client.seed() << std::endl;
+  std::println("Connected (UDP). My slots: {} seed={}", client.my_slots().size(), client.seed());
 
   std::thread io_thread([&io]() { io.run(); });
 

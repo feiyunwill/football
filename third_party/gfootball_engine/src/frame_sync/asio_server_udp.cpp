@@ -12,6 +12,7 @@
 #include <chrono>
 #include <cstring>
 #include <iostream>
+#include <print>
 #include <memory>
 #include <mutex>
 #include <set>
@@ -264,7 +265,7 @@ int main(int argc, char* argv[]) {
   asio::io_context io;
   FrameSyncServerUDP server(io, port, left, right, seed);
   std::thread io_thread([&io]() { io.run(); });
-  std::cout << "Frame sync server (reliable UDP) on port " << port << std::endl;
+  std::println("Frame sync server (reliable UDP) on port {}", port);
   server.run_frame_loop();
   server.stop();
   io.stop();
