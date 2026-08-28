@@ -105,7 +105,7 @@ void init_game_env() {
   scenario.right_agents = 0;  // right team uses built-in AI
   scenario.real_time = false;
   scenario.deterministic = true;
-  scenario.end_episode_on_score = true;
+  scenario.end_episode_on_score = false;  // let episodes run full length for better training
   scenario.game_duration = 3000;
 
   // Standard 4-4-2 formation for 11 players

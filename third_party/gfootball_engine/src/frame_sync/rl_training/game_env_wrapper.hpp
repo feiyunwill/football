@@ -255,6 +255,22 @@ static void print_action_stats() {
   }
 }
 
+// ---- Print running metrics every N episodes ----
+static void print_periodic_metrics() {
+  if (g_metrics_episodes == 0) return;
+  auto& s = g_episode_metrics_sum;
+  int ne = g_metrics_episodes;
+  std::println("[ep {:4d}] goals: {:.1f}/{:.1f} | poss: {:.0f}% | pass: {:.0f}% | shots: {:.1f} | reward: {:.2f}",
+    ne,
+    static_cast<float>(s.goals_for) / ne,
+    static_cast<float>(s.goals_against) / ne,
+    s.total_frames > 0 ? 100.0f * s.possession_frames / s.total_frames : 0.0f,
+    (s.pass_count + s.lost_possession_count) > 0
+      ? 100.0f * s.pass_count / (s.pass_count + s.lost_possession_count) : 0.0f,
+    static_cast<float>(s.shot_count) / ne,
+    g_episode_idx > 0 ? g_episode_rewards[(g_episode_idx - 1) % 100] : 0.0f);
+}
+
 // ---- initial_state: reset engine + extract first observation ----
 template <typename DEVICE, typename SPEC, typename RNG>
 static void initial_state(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
@@ -316,24 +332,29 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
     return action_id < 0 ? 0 : (action_id > 19 ? 19 : action_id);
   };
 
-  // Single shared policy output — apply same action to all 11 players
-  // Each player uses the same action but the engine's built-in AI
-  // provides role-specific behavior (GK stays in goal, etc.)
+  // Single shared policy output — apply ONLY to player nearest to ball
+  // Other players use built-in AI (proper positioning, GK stays in goal)
   float raw = rl_tools::get(action, 0, 0);
-  int shared_action_id = map_to_action(raw);
-  constexpr int N_LEFT = 11;
-  for (int i = 0; i < N_LEFT; i++) {
-    g_rl_env->action(shared_action_id, true, i);
+  int rl_action_id = map_to_action(raw);
+  // Find nearest left player to ball
+  int nearest = 0;
+  float min_dist = 1e9f;
+  for (int i = 0; i < 11; i++) {
+    float dx = state.ball_pos[0] - state.left_pos[i * 2];
+    float dy = state.ball_pos[1] - state.left_pos[i * 2 + 1];
+    float d = dx * dx + dy * dy;
+    if (d < min_dist) { min_dist = d; nearest = i; }
   }
-  if (shared_action_id >= 0 && shared_action_id < 20) g_action_counts[shared_action_id]++;
+  g_rl_env->action(rl_action_id, true, nearest);
+  if (rl_action_id >= 0 && rl_action_id < 20) g_action_counts[rl_action_id]++;
 
   // Advance engine by one env step
   g_rl_env->step();
 
   // Extract next observation
   SharedInfo info = safe_get_info();
-  extract_info_to_state(info, next.step_count + 1, next);
-  next.step_count = next.step_count + 1;
+  extract_info_to_state(info, state.step_count + 1, next);
+  next.step_count = state.step_count + 1;
 
   // ---- Rich reward signal ----
   float step_reward = 0.0f;
@@ -384,40 +405,31 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
   // 8. Small per-step penalty (encourage fast play)
   step_reward -= 0.001f;
 
-  g_current_episode_reward += step_reward;
+  // NEVER set done=true — the on-policy runner handles truncation via STEP_LIMIT
+  // (Pendulum-style: environment runs continuously, runner truncates at step limit)
+  next.done = false;
 
-  // ---- Track evaluation metrics ----
+  // Track metrics
   g_current_episode_metrics.total_frames++;
   if (next.score[0] > state.score[0]) g_current_episode_metrics.goals_for++;
   if (next.score[1] > state.score[1]) g_current_episode_metrics.goals_against++;
   if (next.ball_owned_team == 0) g_current_episode_metrics.possession_frames++;
   if (next.ball_owned_team == 0 && state.ball_owned_team != 0) g_current_episode_metrics.pass_count++;
   if (next.ball_owned_team != 0 && state.ball_owned_team == 0) g_current_episode_metrics.lost_possession_count++;
-  if (shared_action_id >= 9 && shared_action_id <= 12) g_current_episode_metrics.shot_count++;
-  g_current_episode_metrics.total_ball_dist += next.prev_ball_dist;
 
-  // Termination: only on episode step limit (let agent play full episodes)
-  if (next.step_count >= static_cast<typename SPEC::TI>(SPEC::PARAMETERS::EPISODE_STEP_LIMIT)) {
-    next.done = true;
-  }
-
-  // Track episode return + accumulate metrics
-  if (next.done) {
-    g_episode_rewards[g_episode_idx % 100] = g_current_episode_reward;
-    g_episode_idx++;
-    g_episode_count++;
-    g_current_episode_reward = 0.0f;
-    // Accumulate metrics for averaging
-    g_episode_metrics_sum.goals_for += g_current_episode_metrics.goals_for;
-    g_episode_metrics_sum.goals_against += g_current_episode_metrics.goals_against;
-    g_episode_metrics_sum.possession_frames += g_current_episode_metrics.possession_frames;
-    g_episode_metrics_sum.total_frames += g_current_episode_metrics.total_frames;
-    g_episode_metrics_sum.pass_count += g_current_episode_metrics.pass_count;
-    g_episode_metrics_sum.lost_possession_count += g_current_episode_metrics.lost_possession_count;
-    g_episode_metrics_sum.shot_count += g_current_episode_metrics.shot_count;
-    g_episode_metrics_sum.total_ball_dist += g_current_episode_metrics.total_ball_dist;
-    g_metrics_episodes++;
-    g_current_episode_metrics = {};
+  // Log running metrics every 500 steps (use modular counter)
+  static int g_log_counter = 0;
+  g_log_counter++;
+  if (g_log_counter % 500 == 0) {
+    auto& s = g_current_episode_metrics;
+    if (s.total_frames > 0) {
+      std::println("[step {:5d}] goals: {}/{} | poss: {:.0f}% | pass: {:.0f}% | reward: {:.2f}",
+        g_log_counter, s.goals_for, s.goals_against,
+        100.0f * s.possession_frames / s.total_frames,
+        (s.pass_count + s.lost_possession_count) > 0
+          ? 100.0f * s.pass_count / (s.pass_count + s.lost_possession_count) : 0.0f,
+        g_current_episode_reward);
+    }
   }
 
   return 1.0f;
