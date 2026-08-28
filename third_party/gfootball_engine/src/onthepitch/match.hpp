@@ -166,6 +166,10 @@ class Match {
     blunted::Entity GetEcsBallEntity() const { return ecs_ball_entity_; }
     const std::vector<blunted::Entity>& GetEcsPlayerEntities() const { return ecs_player_entities_; }
 
+    // 2026-08-28 ECS Phase 3：碰撞系统 wrapper 需访问 private 碰撞方法
+    friend void HumanoidCollisionSystemProcess(Match* match);
+    friend void BallCollisionSystemProcess(Match* match);
+
   private:
     bool CheckForGoal(signed int side, const Vector3& previousBallPos);
 

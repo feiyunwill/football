@@ -75,3 +75,17 @@ void PutEcsSync(Match* match) {
           ref.node->SetRotation(tr.rotation, false);
       });
 }
+
+// 2026-08-28 ECS Phase 3：碰撞系统 wrapper
+// 委托已有 Match 方法，使管线步骤可通过 ECS System 接口统一调度。
+// 不重写碰撞逻辑（逐步迁移策略），仅建立 System 入口。
+
+void HumanoidCollisionSystemProcess(Match* match) {
+  DO_VALIDATION;
+  match->CheckHumanoidCollisions();
+}
+
+void BallCollisionSystemProcess(Match* match) {
+  DO_VALIDATION;
+  match->CheckBallCollisions();
+}

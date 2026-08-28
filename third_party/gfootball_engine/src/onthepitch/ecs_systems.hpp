@@ -26,4 +26,10 @@ void RunPlayerSystems(Match* match);
 /// Spatial（值等价于 legacy Put，由 Match::Put 末尾统一做脏传播）
 void PutEcsSync(Match* match);
 
+// 2026-08-28 ECS Phase 3：碰撞系统 wrapper
+/// 包装 Match::CheckHumanoidCollisions()，委托已有球员碰撞逻辑
+void HumanoidCollisionSystemProcess(Match* match);
+/// 包装 Match::CheckBallCollisions()，委托已有球碰撞逻辑
+void BallCollisionSystemProcess(Match* match);
+
 #endif

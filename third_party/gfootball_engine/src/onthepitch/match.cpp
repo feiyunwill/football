@@ -946,7 +946,8 @@ bool Match::StepBallCollisions(bool reverse) {
   Mirror(reverse, !reverse, reverse);
   if (IsInPlay()) {
     DO_VALIDATION;
-    CheckBallCollisions();
+    // 2026-08-28 ECS Phase 3：委托 BallCollisionSystem（wrapper）
+    BallCollisionSystemProcess(this);
   }
   return true;
 }
@@ -1070,7 +1071,8 @@ bool Match::StepPossessionDecision(bool reverse) {
 bool Match::StepHumanoidCollisions(bool reverse) {
   DO_VALIDATION;
   Mirror(reverse, !reverse, reverse);
-  CheckHumanoidCollisions();
+  // 2026-08-28 ECS Phase 3：委托 HumanoidCollisionSystem（wrapper）
+  HumanoidCollisionSystemProcess(this);
   return true;
 }
 
