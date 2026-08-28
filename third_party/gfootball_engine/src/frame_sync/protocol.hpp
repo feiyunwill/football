@@ -30,7 +30,13 @@ enum class MessageType : uint8_t {
   Ready = 6,             // client -> server: ready after SessionStart applied
   SlotAssignment = 7,    // server -> client: which slot indices this client controls
   Heartbeat = 8,         // 2026-08-28 双向心跳：周期性保活包，载荷 frame_id(4B) + timestamp(4B)
+  VersionNegotiate = 9,  // 2026-08-28 版本协商：客户端→服务器，载荷 protocol_version(2B) + min_version(2B)
 };
+
+// 2026-08-28 协议版本
+constexpr uint16_t PROTOCOL_VERSION = 1;      // 当前协议版本
+constexpr uint16_t PROTOCOL_MIN_VERSION = 1;  // 客户端支持的最低版本
+constexpr size_t VERSION_NEGOTIATE_BYTES = 1 + sizeof(uint16_t) + sizeof(uint16_t);  // msg(1) + ver(2) + min(2) = 5
 
 // 2026-08-28 心跳间隔（毫秒）：服务器/客户端周期性发送 Heartbeat；
 // 连续 HEARTBEAT_MISS_LIMIT 个间隔无包则判定断连。

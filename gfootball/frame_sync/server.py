@@ -30,9 +30,12 @@ from gfootball.frame_sync.protocol import (
     pack_state_hash,
     compute_state_hash,
     unpack_client_frame_input,
+    unpack_version_negotiate,
     pack_heartbeat,
     SLOT_INPUT_BYTES,
     FRAME_INPUT_TIMEOUT_MS,
+    PROTOCOL_VERSION,
+    VERSION_NEGOTIATE_BYTES,
 )
 from gfootball.frame_sync.config import HEARTBEAT_INTERVAL_MS
 
@@ -138,6 +141,14 @@ class FrameSyncServer(object):
             return None, None
           buf.extend(chunk)
         return msg_type, bytes(buf)
+      if msg_type == MessageType.VersionNegotiate:
+        # 2026-08-28 读取版本协商剩余 4 字节：version(2) + min_version(2)
+        while len(buf) < VERSION_NEGOTIATE_BYTES:
+          chunk = conn.recv(VERSION_NEGOTIATE_BYTES - len(buf))
+          if not chunk:
+            return None, None
+          buf.extend(chunk)
+        return msg_type, bytes(buf)
       if msg_type in (MessageType.Connect, MessageType.Ready, MessageType.Disconnect):
         return msg_type, bytes(buf)
       return msg_type, None
@@ -160,6 +171,8 @@ class FrameSyncServer(object):
   def _handle_client(self, conn, addr, client_index):
     """Handle one client: read messages and update current frame inputs."""
     assigned_slots = self._clients[client_index][2]
+    # 2026-08-28 版本协商标记：收到 VersionNegotiate 后发送 SessionStart
+    version_negotiated = False
     while self._running:
       msg_type, data = self._read_message(conn)
       if data is None:
@@ -173,6 +186,27 @@ class FrameSyncServer(object):
                 if 0 <= slot_index < self.num_slots and slot_index in assigned_slots:
                   self._current_frame_inputs[slot_index] = slot_inp
               self._received_from.add(client_index)
+        except ValueError:
+          pass
+      elif msg_type == MessageType.VersionNegotiate:
+        # 2026-08-28 版本协商：检查客户端版本兼容性
+        try:
+          client_ver, client_min = unpack_version_negotiate(data)
+          if client_ver < PROTOCOL_VERSION or PROTOCOL_VERSION < client_min:
+            # 版本不兼容：断开连接
+            conn.close()
+            return
+          # 版本兼容：发送 SessionStart + SlotAssignment
+          if not version_negotiated:
+            version_negotiated = True
+            conn.sendall(
+                pack_session_start(
+                    self.game_engine_random_seed,
+                    self.left_agents,
+                    self.right_agents,
+                )
+            )
+            conn.sendall(pack_slot_assignment(assigned_slots))
         except ValueError:
           pass
       elif msg_type == MessageType.Heartbeat:
@@ -207,21 +241,15 @@ class FrameSyncServer(object):
             continue
           self._clients.append((conn, addr, slots, False))
           idx = len(self._clients) - 1
+        # 2026-08-28 版本协商由 handle_client 线程在消息循环中处理。
+        # 服务器不在 accept 循环中阻塞读取，避免与 handle_client 的竞态。
+        # 启动 handle_client 线程
         t = threading.Thread(
             target=self._handle_client,
             args=(conn, addr, idx),
             daemon=True,
         )
         t.start()
-        # Session start: send ScenarioConfig params and this client's slot assignment
-        conn.sendall(
-            pack_session_start(
-                self.game_engine_random_seed,
-                self.left_agents,
-                self.right_agents,
-            )
-        )
-        conn.sendall(pack_slot_assignment(slots))
       # 2026-08-26 修复（原因）：settimeout(1.0) 使 accept() 无连接时每秒抛 socket.timeout
       #（socket.error 子类），旧 except 在 _running 时 re-raise，accept 线程启动 1 秒后即
       # 死亡，此后任何客户端都无法接入。超时属预期轮询，吞掉并继续循环。

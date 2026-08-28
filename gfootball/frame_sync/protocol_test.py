@@ -32,12 +32,17 @@ from gfootball.frame_sync.protocol import (
     unpack_state_hash,
     pack_heartbeat,
     unpack_heartbeat,
+    pack_version_negotiate,
+    unpack_version_negotiate,
     compute_state_hash,
     SLOT_INPUT_BYTES,
     STATE_HASH_BYTES,
     HEARTBEAT_BYTES,
     SESSION_START_PAYLOAD_BYTES,
     AUTH_FRAME_HEADER_BYTES,
+    VERSION_NEGOTIATE_BYTES,
+    PROTOCOL_VERSION,
+    PROTOCOL_MIN_VERSION,
 )
 from gfootball.frame_sync.config import (
     FRAME_INPUT_TIMEOUT_MS,
@@ -93,12 +98,15 @@ class TestMessageType:
     def test_heartbeat_value(self):
         assert MessageType.Heartbeat == 8
 
+    def test_version_negotiate_value(self):
+        assert MessageType.VersionNegotiate == 9
+
     def test_all_unique(self):
         vals = [
             MessageType.Connect, MessageType.Disconnect, MessageType.FrameInput,
             MessageType.AuthoritativeFrame, MessageType.StateHash,
             MessageType.SessionStart, MessageType.Ready, MessageType.SlotAssignment,
-            MessageType.Heartbeat,
+            MessageType.Heartbeat, MessageType.VersionNegotiate,
         ]
         assert len(vals) == len(set(vals))
 
@@ -107,7 +115,7 @@ class TestMessageType:
             MessageType.Connect, MessageType.Disconnect, MessageType.FrameInput,
             MessageType.AuthoritativeFrame, MessageType.StateHash,
             MessageType.SessionStart, MessageType.Ready, MessageType.SlotAssignment,
-            MessageType.Heartbeat,
+            MessageType.Heartbeat, MessageType.VersionNegotiate,
         ]
         for t in types:
             assert 0 <= t <= 255
@@ -247,6 +255,34 @@ class TestStateHashCompute:
 
 
 # ===== Config constants =====
+
+class TestVersionNegotiate:
+    def test_pack_unpack(self):
+        buf = pack_version_negotiate(2, 1)
+        ver, min_ver = unpack_version_negotiate(buf)
+        assert ver == 2
+        assert min_ver == 1
+
+    def test_defaults(self):
+        buf = pack_version_negotiate()
+        ver, min_ver = unpack_version_negotiate(buf)
+        assert ver == PROTOCOL_VERSION
+        assert min_ver == PROTOCOL_MIN_VERSION
+
+    def test_size(self):
+        assert VERSION_NEGOTIATE_BYTES == 5  # 1 + 2 + 2
+
+    def test_boundary(self):
+        buf = pack_version_negotiate(0xFFFF, 0)
+        ver, min_ver = unpack_version_negotiate(buf)
+        assert ver == 0xFFFF
+        assert min_ver == 0
+
+    def test_rejects_non_version(self):
+        auth = pack_authoritative_frame(1, [default_slot_input()])
+        with pytest.raises(ValueError, match='Not VersionNegotiate'):
+            unpack_version_negotiate(auth)
+
 
 class TestConfig:
     def test_heartbeat(self):

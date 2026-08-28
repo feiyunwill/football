@@ -26,6 +26,7 @@ from gfootball.frame_sync.protocol import (
     pack_client_frame_input,
     pack_slot_input,
     pack_ready,
+    pack_version_negotiate,
     compute_state_hash,
     unpack_authoritative_frame,
     unpack_session_start,
@@ -78,6 +79,8 @@ class FrameSyncClient(object):
     self._running = True
     self._last_heartbeat_ms = int(time.time() * 1000)
     self._heartbeat_miss_count = 0
+    # 2026-08-28 发送版本协商
+    self._sock.sendall(pack_version_negotiate())
     self._recv_thread = threading.Thread(target=self._recv_loop, daemon=True)
     self._recv_thread.start()
     # Wait for SessionStart + SlotAssignment (handled in _recv_loop)

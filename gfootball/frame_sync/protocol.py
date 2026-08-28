@@ -39,6 +39,7 @@ class MessageType:
   Ready = 6
   SlotAssignment = 7  # server -> client: which slot indices this client controls
   Heartbeat = 8       # 2026-08-28 双向心跳：保活包，载荷 frame_id(4B) + timestamp_ms(4B)
+  VersionNegotiate = 9  # 2026-08-28 版本协商：客户端→服务器，载荷 protocol_version(2B) + min_version(2B)
 
 
 def pack_slot_input(slot_input):
@@ -201,10 +202,37 @@ def compute_state_hash(state_str):
   return struct.unpack_from('<Q', h.digest(), 0)[0]
 
 
+# ----- 2026-08-28 协议版本 -----
+PROTOCOL_VERSION = 1
+PROTOCOL_MIN_VERSION = 1
+VERSION_NEGOTIATE_FMT = '<BHH'  # msg_type(1) + version(2) + min_version(2)
+VERSION_NEGOTIATE_BYTES = struct.calcsize(VERSION_NEGOTIATE_FMT)
+
+
 # ----- 2026-08-28 心跳包 -----
 # Layout: msg_type (1) + frame_id (4) + timestamp_ms (4)
 HEARTBEAT_FMT = '<BII'
 HEARTBEAT_BYTES = struct.calcsize(HEARTBEAT_FMT)
+
+
+def pack_version_negotiate(version=None, min_version=None):
+  """打包版本协商包。version/min_version 默认使用当前协议版本。"""
+  if version is None:
+    version = PROTOCOL_VERSION
+  if min_version is None:
+    min_version = PROTOCOL_MIN_VERSION
+  return struct.pack(VERSION_NEGOTIATE_FMT, MessageType.VersionNegotiate, version, min_version)
+
+
+def unpack_version_negotiate(data):
+  """解包版本协商包，返回 (version, min_version)。"""
+  if len(data) < VERSION_NEGOTIATE_BYTES:
+    raise ValueError('VersionNegotiate too short')
+  if data[0] != MessageType.VersionNegotiate:
+    raise ValueError('Not VersionNegotiate')
+  version = struct.unpack_from('<H', data, 1)[0]
+  min_version = struct.unpack_from('<H', data, 3)[0]
+  return version, min_version
 
 
 def pack_heartbeat(frame_id, timestamp_ms):
