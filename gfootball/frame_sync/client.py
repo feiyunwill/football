@@ -38,7 +38,10 @@ from gfootball.frame_sync.protocol import (
     MAX_PREDICT_AHEAD_FRAMES,
     MAX_FRAMES_WITHOUT_PACKET,
 )
-from gfootball.frame_sync.config import HEARTBEAT_INTERVAL_MS, HEARTBEAT_MISS_LIMIT
+from gfootball.frame_sync.config import (
+    HEARTBEAT_INTERVAL_MS, HEARTBEAT_MISS_LIMIT,
+    RECONNECT_BASE_MS, RECONNECT_MAX_MS, RECONNECT_MAX_ATTEMPTS,
+)
 
 
 class FrameSyncClient(object):
@@ -275,6 +278,22 @@ class FrameSyncClient(object):
         pass
       self._sock = None
 
+  # 2026-08-28 重连支持 -----
+  def reset_for_reconnect(self):
+    """重置内部状态以准备重连，保留 slot_assignment 和 controlled_slots_callback。"""
+    with self._lock:
+      self._sock = None
+      self._recv_buf = bytearray()
+      self._auth_frame_queue.clear()
+      self._session_start = None
+      self._slot_assignment = None  # 将由新 SessionStart 更新
+      self._last_state_hash = None
+      self._last_auth_frame_id = -1
+      self._frames_without_packet = 0
+      self._disconnected = False
+      self._last_heartbeat_ms = 0
+      self._heartbeat_miss_count = 0
+
 
 def _build_frame_input_buffer(slot_inputs):
   buf = bytearray()
@@ -413,3 +432,114 @@ class ClientLogicLoop(object):
 
   def stop(self):
     self._running = False
+
+
+class ReconnectingFrameSyncClient(object):
+  """2026-08-28 断线重连包装器：检测断连后以指数退避自动重连。
+  重连成功后重新接收 SessionStart + SlotAssignment，重置逻辑层状态。
+
+  用法:
+    rclient = ReconnectingFrameSyncClient(host, port, callback)
+    session, slots = rclient.connect()  # 首次连接
+    # ... 帧循环中 ...
+    rclient.tick()  # 检测断连并自动重连
+    if rclient.is_reconnecting():
+        print('重连中...')
+  """
+
+  def __init__(self, host, port, controlled_slots_callback=None):
+    self.host = host
+    self.port = port
+    self.controlled_slots_callback = controlled_slots_callback
+    self._client = FrameSyncClient(host, port, controlled_slots_callback)
+    self._reconnecting = False
+    self._reconnect_attempts = 0
+    self._next_reconnect_ms = 0
+    self._on_reconnect_callback = None  # callable(session_start, slot_assignment)
+    self._on_disconnect_callback = None  # callable()
+    self._on_give_up_callback = None  # callable()
+
+  def set_on_reconnect(self, callback):
+    """设置重连成功回调：callback(session_start, slot_assignment)。"""
+    self._on_reconnect_callback = callback
+
+  def set_on_disconnect(self, callback):
+    """设置断连回调：callback()。"""
+    self._on_disconnect_callback = callback
+
+  def set_on_give_up(self, callback):
+    """设置放弃重连回调：callback()。"""
+    self._on_give_up_callback = callback
+
+  def connect(self):
+    """首次连接。"""
+    session, slots = self._client.connect()
+    self._reconnecting = False
+    self._reconnect_attempts = 0
+    return session, slots
+
+  def tick(self):
+    """每帧调用：检测断连并自动重连。"""
+    if not self._reconnecting:
+      # 检测是否断连
+      self._client.tick_disconnect_detection()
+      if self._client.is_disconnected():
+        self._start_reconnect()
+      return
+
+    # 重连中：检查是否到了重连时间
+    now_ms = int(time.time() * 1000)
+    if now_ms < self._next_reconnect_ms:
+      return
+
+    # 尝试重连
+    self._reconnect_attempts += 1
+    max_attempts = RECONNECT_MAX_ATTEMPTS
+    if max_attempts > 0 and self._reconnect_attempts > max_attempts:
+      # 放弃重连
+      self._reconnecting = False
+      if self._on_give_up_callback:
+        self._on_give_up_callback()
+      return
+
+    try:
+      self._client.reset_for_reconnect()
+      self._client = FrameSyncClient(self.host, self.port, self.controlled_slots_callback)
+      session, slots = self._client.connect()
+      # 重连成功
+      self._reconnecting = False
+      self._reconnect_attempts = 0
+      if self._on_reconnect_callback:
+        self._on_reconnect_callback(session, slots)
+    except (socket.error, RuntimeError, OSError):
+      # 重连失败，增加退避时间
+      delay_ms = min(
+          RECONNECT_BASE_MS * (2 ** (self._reconnect_attempts - 1)),
+          RECONNECT_MAX_MS,
+      )
+      self._next_reconnect_ms = now_ms + delay_ms
+
+  def _start_reconnect(self):
+    """开始重连流程。"""
+    self._reconnecting = True
+    self._reconnect_attempts = 0
+    self._next_reconnect_ms = int(time.time() * 1000)  # 立即尝试第一次
+    if self._on_disconnect_callback:
+      self._on_disconnect_callback()
+
+  @property
+  def client(self):
+    """获取底层 FrameSyncClient（用于 send_frame_input 等）。"""
+    return self._client
+
+  @property
+  def is_reconnecting(self):
+    return self._reconnecting
+
+  @property
+  def reconnect_attempts(self):
+    return self._reconnect_attempts
+
+  def close(self):
+    self._reconnecting = False
+    self._client.close()
