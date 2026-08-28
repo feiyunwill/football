@@ -26,6 +26,7 @@
 
 #include <compare>
 #include <utility>  // std::to_underlying (C++23)
+#include <format>   // std::format (C++23)
 #include <cstdio>
 #include <cstdlib>
 #include <cassert>
@@ -195,15 +196,12 @@ class EnvState {
         const unsigned char* pb =
             reinterpret_cast<const unsigned char*>(&reference[pos - sizeof(T)]);
         size_t n = sizeof(T) < 32 ? sizeof(T) : 32;
-        char hex[3];
         for (size_t i = 0; i < n; i++) {
-          snprintf(hex, sizeof(hex), "%02x", pa[i]);
-          entry += hex;
+          entry += std::format("{:02x}", pa[i]);
         }
         entry += " B=";
         for (size_t i = 0; i < n; i++) {
-          snprintf(hex, sizeof(hex), "%02x", pb[i]);
-          entry += hex;
+          entry += std::format("{:02x}", pb[i]);
         }
         divergence_log.push_back(entry);
       }

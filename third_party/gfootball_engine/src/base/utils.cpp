@@ -17,6 +17,8 @@
 
 #include "utils.hpp"
 
+#include <format>
+#include <print>
 #include "../main.hpp"
 #include "file.h"
 #include "log.hpp"
@@ -216,37 +218,24 @@ std::string get_file_extension(const std::string &filename) {
 
 std::string int_to_str(int i) {
   DO_VALIDATION;
-  std::string i_str;
-  char i_c[16];
-  snprintf(i_c, 16, "%i", i);
-  i_str.assign(i_c);
-  return i_str;
+  return std::format("{}", i);
 }
 
 std::string real_to_str(real r) {
   DO_VALIDATION;
-  std::string r_str;
-  char r_c[32];
-  snprintf(r_c, 32, "%f", r);
-  r_str.assign(r_c);
-  return r_str;
+  return std::format("{}", r);
 }
 
 std::string GetStringFromVector(const Vector3 &vec) {
   DO_VALIDATION;
-  std::string tmp;
-  tmp = "";
-  char tmpC[1000];
-  sprintf(tmpC, "%f, %f, %f", vec.coords[0], vec.coords[1], vec.coords[2]);
-  tmp.assign(tmpC);
-  return tmp;
+  return std::format("{}, {}, {}", vec.coords[0], vec.coords[1], vec.coords[2]);
 }
 
 Vector3 GetVectorFromString(const std::string &vecString) {
   DO_VALIDATION;
   if (vecString.compare("") == 0) {
     DO_VALIDATION;
-    printf("vectorfromstring warning, no value\n");
+    std::println("vectorfromstring warning, no value");
     return Vector3(0.0f);
   }
   std::vector<std::string> tokenizedString;

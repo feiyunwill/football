@@ -34,13 +34,10 @@
  ** PURPOSE.  
  **
  ********************************************************************
- ********************************************************************/
-
-#include "hungarian.h"
-
+ ********************************************************************/#include "hungarian.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <print>
 #include "../main.hpp"
 
 #define INF (0x7FFFFFFF)
@@ -118,7 +115,7 @@ int hungarian_init(hungarian_problem_t* p, int** cost_matrix, int rows,
     DO_VALIDATION;
     // nothing to do
   } else
-    fprintf(stderr,"%s: unknown mode. Mode was set to HUNGARIAN_MODE_MINIMIZE_COST !\n", __FUNCTION__);
+    std::println(stderr, "{}: unknown mode. Mode was set to HUNGARIAN_MODE_MINIMIZE_COST!", __FUNCTION__);
   
   return rows;
 }

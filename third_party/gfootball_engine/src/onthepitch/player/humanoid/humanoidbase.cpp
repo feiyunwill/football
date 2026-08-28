@@ -16,6 +16,7 @@
 // i do not offer support, so don't ask. to be used for inspiration :)
 
 #include <cmath>
+#include <print>
 #include "humanoid.hpp"
 
 #include "humanoid_utils.hpp"
@@ -336,7 +337,7 @@ void HumanoidBase::PrepareFullbodyModel(
 
       if (colorCoords.find(vertexPos) == colorCoords.end()) {
         DO_VALIDATION;
-        printf("color coord not found: %f, %f, %f\n", vertexPos.coords[0], vertexPos.coords[1], vertexPos.coords[2]);
+        std::println("color coord not found: {}, {}, {}", vertexPos.coords[0], vertexPos.coords[1], vertexPos.coords[2]);
       }
       assert(colorCoords.find(vertexPos) != colorCoords.end());
       const Vector3 &color = colorCoords.find(vertexPos)->second;
@@ -362,7 +363,7 @@ void HumanoidBase::PrepareFullbodyModel(
         DO_VALIDATION;
         if (c == 0) {
           DO_VALIDATION;
-          if (weightedBones[c].weight == 0.f) printf("offending jointID: %i (coord %i) (vertexpos %f, %f, %f)\n", weightedBones[c].jointID, c, vertexPos.coords[0], vertexPos.coords[1], vertexPos.coords[2]);
+          if (weightedBones[c].weight == 0.f) std::println("offending jointID: {} (coord {}) (vertexpos {}, {}, {})", weightedBones[c].jointID, c, vertexPos.coords[0], vertexPos.coords[1], vertexPos.coords[2]);
           assert(weightedBones[c].weight != 0.f);
         }
         if (weightedBones[c].weight > 0.01f) {
@@ -676,11 +677,11 @@ void HumanoidBase::Process() {
 
     if (interruptAnim != e_InterruptAnim_ReQueue && !found) {
       DO_VALIDATION;
-      printf("RED ALERT! NO APPLICABLE ANIM FOUND FOR HUMANOIDBASE! NOOOO!\n");
-      printf("currentanimtype: %s\n", currentAnim.anim->GetVariable("type").c_str());
+      std::println("RED ALERT! NO APPLICABLE ANIM FOUND FOR HUMANOIDBASE! NOOOO!");
+      std::println("currentanimtype: {}", currentAnim.anim->GetVariable("type"));
       for (unsigned int i = 0; i < commandQueue.size(); i++) {
         DO_VALIDATION;
-        printf("desiredanimtype: %i\n", commandQueue[i].desiredFunctionType);
+        std::println("desiredanimtype: {}", static_cast<int>(commandQueue[i].desiredFunctionType));
       }
     }
 
