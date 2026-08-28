@@ -53,7 +53,7 @@ struct ConfigFactory {
     static constexpr TI CRITIC_HIDDEN_DIM = 256;
     static constexpr TI ON_POLICY_RUNNER_STEPS_PER_ENV = 512;
     static constexpr TI N_ENVIRONMENTS = 1;  // GameEnv is a singleton
-    static constexpr TI TOTAL_STEP_LIMIT = 20000;  // Quick test (increase for real training)
+    static constexpr TI TOTAL_STEP_LIMIT = 200000;  // ~11 min at 30 SPS
     static constexpr TI STEP_LIMIT = TOTAL_STEP_LIMIT / (ON_POLICY_RUNNER_STEPS_PER_ENV * N_ENVIRONMENTS) + 1;
     static constexpr TI EPISODE_STEP_LIMIT = 3000;
     using ACTOR_OPTIMIZER_PARAMETERS = rlt::nn::optimizers::adam::DEFAULT_PARAMETERS_PYTORCH<TYPE_POLICY>;
@@ -184,6 +184,8 @@ int main(int argc, char** argv) {
   if (argc > 1) {
     seed = static_cast<TI>(std::stoul(argv[1]));
   }
+  // Usage: ./rl_football_training [seed]
+  std::println("Usage: {} [seed] (default: 42)", argv[0]);
 
   try {
     return run(seed);
