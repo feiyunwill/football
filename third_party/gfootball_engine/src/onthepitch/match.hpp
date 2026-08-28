@@ -30,6 +30,7 @@
 #include "../menu/menutask.hpp"
 
 #include "../utils/gui2/widgets/caption.hpp"
+#include "../ecs/system_graph.hpp"
 #include "../menu/ingame/scoreboard.hpp"
 #include "../menu/ingame/radar.hpp"
 
@@ -204,6 +205,10 @@ class Match {
 
     /// 单次 Process 内的临时量（不序列化，勿加入 ProcessState）
     Vector3 process_previous_ball_pos_;
+
+    blunted::SystemGraph system_graph_;
+    bool system_graph_initialized_ = false;
+    void InitSystemGraph();
 
     blunted::World ecs_world_;
     blunted::Entity ecs_ball_entity_ = blunted::kNullEntity;

@@ -1101,29 +1101,111 @@ constexpr MatchStep kFramePipeline[] = {
 };
 */
 
+// 2026-08-28 P2-Phase5：SystemGraph 管线上下文
+struct PipelineContext {
+  Match* match;
+  bool reverse;
+};
+
+void Match::InitSystemGraph() {
+  DO_VALIDATION;
+  if (system_graph_initialized_) return;
+  system_graph_initialized_ = true;
+
+  // 注册系统，声明依赖关系
+  // 依赖基于数据流：A → B 表示 B 需要 A 的输出
+  system_graph_.Register("ball_collisions",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepBallCollisions(pc->reverse);
+      });
+
+  system_graph_.Register("referee",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepReferee(pc->reverse);
+      });
+
+  system_graph_.Register("capture_prev_ball",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepCapturePreviousBallPos(pc->reverse);
+      });
+
+  system_graph_.Register("hold_check",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepHoldCheck(pc->reverse);
+      });
+
+  system_graph_.Register("ball",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepBall(pc->reverse);
+      },
+      {"ball_collisions"});
+
+  system_graph_.Register("mental_images",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepMentalImages(pc->reverse);
+      },
+      {"ball"});
+
+  system_graph_.Register("team_switch",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepTeamSwitch(pc->reverse);
+      },
+      {"mental_images"});
+
+  system_graph_.Register("teams",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepTeamsProcess(pc->reverse);
+      },
+      {"team_switch"});
+
+  system_graph_.Register("players",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepPlayersProcess(pc->reverse);
+      },
+      {"teams"});
+
+  system_graph_.Register("officials",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepOfficialsProcess(pc->reverse);
+      });
+
+  system_graph_.Register("possession_stats",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepPossessionStats(pc->reverse);
+      },
+      {"players"});
+
+  system_graph_.Register("possession_decision",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepPossessionDecision(pc->reverse);
+      },
+      {"possession_stats"});
+
+  system_graph_.Register("humanoid_collisions",
+      [this](void* ctx) -> bool {
+        auto* pc = static_cast<PipelineContext*>(ctx);
+        return StepHumanoidCollisions(pc->reverse);
+      },
+      {"players"});
+}
+
 bool Match::RunFramePipeline(bool reverse) {
   DO_VALIDATION;
-  // 2026-08-25 由命名空间作用域 constexpr 表迁入（原因见上方注释块）；static 保证
-  // 单实例驻留 .rodata，指针常量初始化合法。步骤顺序即旧 Match::Process 执行顺序，勿调序。
-  static constexpr MatchStep kFramePipeline[] = {
-      {"ball_collisions", &Match::StepBallCollisions},
-      {"referee", &Match::StepReferee},
-      {"capture_prev_ball", &Match::StepCapturePreviousBallPos},
-      {"hold_check", &Match::StepHoldCheck},
-      {"ball", &Match::StepBall},
-      {"mental_images", &Match::StepMentalImages},
-      {"team_switch", &Match::StepTeamSwitch},
-      {"teams", &Match::StepTeamsProcess},
-      {"players", &Match::StepPlayersProcess},
-      {"officials", &Match::StepOfficialsProcess},
-      {"possession_stats", &Match::StepPossessionStats},
-      {"possession_decision", &Match::StepPossessionDecision},
-      {"humanoid_collisions", &Match::StepHumanoidCollisions},
-  };
-  for (const MatchStep& step : kFramePipeline) {
-    if (!(this->*step.fn)(reverse)) return false;
-  }
-  return true;
+  InitSystemGraph();
+  PipelineContext ctx{this, reverse};
+  return system_graph_.Execute(&ctx);
 }
 
 bool Match::Process() {
