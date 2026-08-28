@@ -32,6 +32,7 @@
 #include <memory>
 #include <cstdlib>
 #include <chrono>
+#include <cstring>
 
 namespace rlt = rl_tools;
 
@@ -142,9 +143,9 @@ void init_game_env() {
 }
 
 // ===== Training entry =====
-auto run(TI seed) {
+auto run(TI seed, bool eval_mode = false) {
   DEVICE device;
-  std::println("=== Football PPO Training (Real Engine) ===");
+  std::println("=== Football PPO {} (Real Engine) ===", eval_mode ? "Evaluation" : "Training");
   std::println("Seed: {}", seed);
 
   // Initialize engine
@@ -181,14 +182,19 @@ auto run(TI seed) {
 
 int main(int argc, char** argv) {
   TI seed = 42;
-  if (argc > 1) {
-    seed = static_cast<TI>(std::stoul(argv[1]));
+  bool eval_mode = false;
+  for (int i = 1; i < argc; i++) {
+    if (std::strcmp(argv[i], "--eval") == 0) {
+      eval_mode = true;
+    } else {
+      seed = static_cast<TI>(std::stoul(argv[i]));
+    }
   }
-  // Usage: ./rl_football_training [seed]
-  std::println("Usage: {} [seed] (default: 42)", argv[0]);
+  std::println("Usage: {} [--eval] [seed]", argv[0]);
+  std::println("  --eval  Run evaluation (short training + action stats)");
 
   try {
-    return run(seed);
+    return run(seed, eval_mode);
   } catch (const std::exception& e) {
     std::cerr << "Error: " << e.what() << std::endl;
     return 1;
