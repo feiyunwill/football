@@ -170,6 +170,28 @@ auto run(TI seed, bool eval_mode = false,
     rlt::init(device, ts, seed);
   }
 
+  // ---- Play mode: print game state during training ----
+  if (eval_mode) {
+    std::println("\n--- Play mode: running trained policy ---");
+    // Just run the training loop (which uses the loaded policy)
+    // The on-policy runner will evaluate the trained actor
+    TI step_count = 0;
+    while (!rlt::step(device, ts)) {
+      step_count++;
+      SharedInfo info = rl_tools::safe_get_info();
+      if (step_count % 10 == 0) {
+        std::println("[{:4d}] ball:({:.2f},{:.2f}) score:{}/{} poss:{}",
+          step_count, info.ball_position[0], info.ball_position[1],
+          info.left_goals, info.right_goals, info.ball_owned_team == 0 ? "yes" : "no");
+      }
+    }
+    std::println("Play complete! Final score: {}/{}",
+      g_rl_env->get_info().left_goals, g_rl_env->get_info().right_goals);
+    rl_tools::print_action_stats();
+    rlt::free(device, ts);
+    return 0;
+  }
+
   TI step_count = 0;
   TI total_env_steps = 0;
   auto wall_start = std::chrono::steady_clock::now();
