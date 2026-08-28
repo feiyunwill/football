@@ -81,7 +81,6 @@ class FrameSyncClient(object):
     self._recv_thread = threading.Thread(target=self._recv_loop, daemon=True)
     self._recv_thread.start()
     # Wait for SessionStart + SlotAssignment (handled in _recv_loop)
-    import time
     for _ in range(100):
       with self._lock:
         if self._session_start is not None and self._slot_assignment is not None:
@@ -420,7 +419,6 @@ class ClientLogicLoop(object):
       )
 
   def run_loop(self):
-    import time
     period = 1.0 / self._rate_hz
     self._running = True
     while self._running:
