@@ -31,6 +31,7 @@
 #include <print>
 #include <memory>
 #include <cstdlib>
+#include <chrono>
 
 namespace rlt = rl_tools;
 
@@ -155,18 +156,24 @@ auto run(TI seed) {
 
   TI step_count = 0;
   TI total_env_steps = 0;
+  auto wall_start = std::chrono::steady_clock::now();
   while (!rlt::step(device, ts)) {
     step_count++;
     total_env_steps += CONFIG::LOOP_CORE_CONFIG::CORE_PARAMETERS::ON_POLICY_RUNNER_STEPS_PER_ENV
                      * CONFIG::LOOP_CORE_CONFIG::CORE_PARAMETERS::N_ENVIRONMENTS;
+    auto wall_now = std::chrono::steady_clock::now();
+    float wall_sec = std::chrono::duration<float>(wall_now - wall_start).count();
+    float sps = (wall_sec > 0.0f) ? static_cast<float>(total_env_steps) / wall_sec : 0.0f;
     if (step_count % 5 == 0) {
-      float elapsed = static_cast<float>(step_count) * CONFIG::LOOP_CORE_CONFIG::CORE_PARAMETERS::ON_POLICY_RUNNER_STEPS_PER_ENV / 100.0f;
-      std::println("Loop step: {}, env step: {}, elapsed: {:.0f}s",
-                   step_count, total_env_steps, elapsed);
+      std::println("Loop step: {:4d}, env step: {:6d}, SPS: {:.1f} (wall: {:.0f}s)",
+                   step_count, total_env_steps, sps, wall_sec);
     }
   }
 
-  std::println("Training complete! Total steps: {}", ts.step);
+  auto wall_end = std::chrono::steady_clock::now();
+  float total_wall = std::chrono::duration<float>(wall_end - wall_start).count();
+  std::println("Training complete! Steps: {}, Wall: {:.1f}s, SPS: {:.1f}",
+               ts.step, total_wall, static_cast<float>(ts.step) / total_wall);
   rlt::free(device, ts);
   return 0;
 }
