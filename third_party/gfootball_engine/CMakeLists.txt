@@ -205,3 +205,29 @@ target_link_libraries(frame_sync_server_udp PRIVATE Boost::system)
 add_executable(frame_sync_client_udp src/frame_sync/asio_client_udp.cpp)
 target_include_directories(frame_sync_client_udp PRIVATE ${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(frame_sync_client_udp PRIVATE Boost::system)
+
+# ----- RLtools PPO 训练（接入真实 GameEnv）-----
+option(BUILD_RL_TRAINING "Build RLtools PPO training with real engine" OFF)
+if(BUILD_RL_TRAINING)
+  set(RLTOOLS_DIR "${PROJECT_SOURCE_DIR}/../rl-tools/include")
+  add_executable(rl_football_training
+    src/frame_sync/rl_training/training.cpp
+  )
+  target_include_directories(rl_football_training PRIVATE
+    ${PROJECT_SOURCE_DIR}/src
+    ${RLTOOLS_DIR}
+  )
+  target_compile_definitions(rl_football_training PRIVATE
+    RL_TOOLS_USE_THIS_VERSION=1
+  )
+  target_link_libraries(rl_football_training PRIVATE
+    -Wl,--no-as-needed
+    ${OUTPUT_LIB_NAME}
+    gamelib menulib datalib blunted2
+    ${SDL2_LIBS_ALL} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES}
+    ${Python_LIBRARIES}
+    Boost::system
+  )
+  target_compile_options(rl_football_training PRIVATE -O3 -ffast-math)
+  message(STATUS "RLtools PPO training with real engine enabled")
+endif()

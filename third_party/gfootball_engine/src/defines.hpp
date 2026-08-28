@@ -277,6 +277,8 @@ struct Position {
   // [-0.42,0.42] for y (1).
   float env_coord(int index) const;
   std::string debug();
+  // 2026-08-28 公开访问：供 C++ 训练代码直接读取原始坐标
+  float operator[](int index) const { return value[index]; }
  private:
   float value[3];
 };
