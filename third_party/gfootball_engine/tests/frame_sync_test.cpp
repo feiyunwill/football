@@ -28,13 +28,9 @@ TEST(SlotInputTest, Equality) {
 }
 
 TEST(SlotInputTest, BinaryLayoutSize) {
-  // float(4) + float(4) + uint16(2) = 10 字节逻辑数据
-  // 但 sizeof(SlotInput) = 12（2 字节尾部 padding 对齐到 4）
-  // SLOT_INPUT_BYTES = sizeof(SlotInput) = 12
-  // ⚠️ 注意：Python 侧 struct.pack('<ffH') = 10 字节，与 C++ 不兼容！
-  // 此处验证 C++ 侧实际大小。
-  EXPECT_EQ(SLOT_INPUT_BYTES, sizeof(SlotInput));
-  EXPECT_GE(SLOT_INPUT_BYTES, 10u);  // 至少包含逻辑数据
+  // 2026-08-28 修复后：SLOT_INPUT_BYTES = 10，与 Python 一致
+  EXPECT_EQ(SLOT_INPUT_BYTES, 10u);
+  EXPECT_EQ(sizeof(SlotInput), 10u);
 }
 
 TEST(SlotInputTest, MemcpyRoundTrip) {
@@ -124,11 +120,11 @@ TEST(SessionStartTest, ParamsSize) {
 
 // ===== 指针布局验证 =====
 
-TEST(LayoutTest, SlotInputPadding) {
-  // SlotInput 有 2 字节尾部 padding（uint16 后对齐到 4 字节边界）
-  // sizeof(SlotInput) = 12，逻辑数据 = 10
-  // memcpy 安全（padding 不影响），但网络传输须用 10 字节（与 Python 一致）
-  EXPECT_EQ(sizeof(SlotInput), 12u);
+TEST(LayoutTest, SlotInputNoPadding) {
+  // 2026-08-28 修复：#pragma pack(push, 1) 消除 padding
+  // sizeof(SlotInput) = 10 = 4 + 4 + 2，与 Python struct.pack('<ffH') 一致
+  EXPECT_EQ(sizeof(SlotInput), 10u);
+  EXPECT_EQ(SLOT_INPUT_BYTES, 10u);
   EXPECT_EQ(sizeof(SlotInput::dir_x), 4u);
   EXPECT_EQ(sizeof(SlotInput::dir_y), 4u);
   EXPECT_EQ(sizeof(SlotInput::buttons), 2u);

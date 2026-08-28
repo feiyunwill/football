@@ -58,6 +58,7 @@ constexpr int STATE_HASH_INTERVAL_K = 10;
 // Buttons: bitmask of e_ButtonFunction (0..e_ButtonFunction_Size-1). Bit i = 1 means button i pressed.
 constexpr int BUTTON_COUNT = 12;  // e_ButtonFunction_Size
 
+#pragma pack(push, 1)  // 2026-08-28 修复 padding bug：与 Python struct.pack('<ffH') 对齐，10 字节无填充
 struct SlotInput {
   float dir_x = 0.f;
   float dir_y = 0.f;
@@ -72,6 +73,7 @@ struct SlotInput {
     return dir_x == o.dir_x && dir_y == o.dir_y && buttons == o.buttons;
   }
 };
+#pragma pack(pop)
 
 constexpr size_t SLOT_INPUT_BYTES = sizeof(SlotInput);
 
