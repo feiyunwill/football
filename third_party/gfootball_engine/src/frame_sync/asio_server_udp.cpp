@@ -11,6 +11,7 @@
 #include <boost/asio.hpp>
 #include <chrono>
 #include <cstring>
+#include <algorithm>
 #include <iostream>
 #include <print>
 #include <memory>
@@ -55,15 +56,11 @@ class FrameSyncServerUDP {
 
   bool all_ready() const {
     std::lock_guard<std::mutex> lock(mu_);
-    int connected = 0;
-    for (const auto& p : clients_) {
-      if (!p.second->disconnected) ++connected;
-    }
+    auto connected = std::ranges::count_if(clients_,
+        [](const auto& p) { return !p.second->disconnected; });
     if (connected == 0) return false;
-    int ready = 0;
-    for (const auto& p : clients_) {
-      if (!p.second->disconnected && p.second->ready) ++ready;
-    }
+    auto ready = std::ranges::count_if(clients_,
+        [](const auto& p) { return !p.second->disconnected && p.second->ready; });
     return ready == connected;
   }
 
@@ -83,9 +80,8 @@ class FrameSyncServerUDP {
       while (std::chrono::steady_clock::now() < deadline) {
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
         std::lock_guard<std::mutex> lock(mu_);
-        int connected = 0;
-        for (const auto& p : clients_)
-          if (!p.second->disconnected) ++connected;
+        auto connected = std::ranges::count_if(clients_,
+            [](const auto& p) { return !p.second->disconnected; });
         if (connected == 0) break;
         if (static_cast<int>(received_from_.size()) >= connected) break;
       }
