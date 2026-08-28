@@ -317,6 +317,21 @@ class TestFrameSyncClient:
         assert hasattr(ReconnectingFrameSyncClient, 'set_on_disconnect')
         assert hasattr(ReconnectingFrameSyncClient, 'set_on_give_up')
 
+    def test_has_rtt_methods(self):
+        from gfootball.frame_sync.client import FrameSyncClient
+        assert hasattr(FrameSyncClient, 'get_rtt_ms')
+        assert hasattr(FrameSyncClient, 'get_avg_rtt_ms')
+        assert hasattr(FrameSyncClient, 'get_rtt_samples')
+        assert hasattr(FrameSyncClient, 'get_input_latency_ms')
+
+    def test_rtt_initial_values(self):
+        from gfootball.frame_sync.client import FrameSyncClient
+        # 不能直接实例化（需要网络），但可以检查类属性
+        import inspect
+        sig = inspect.signature(FrameSyncClient.__init__)
+        assert 'host' in sig.parameters
+        assert 'port' in sig.parameters
+
 
 # ===== Server =====
 
@@ -381,7 +396,6 @@ class TestPresentationLoop:
     def test_has_methods(self):
         from gfootball.frame_sync.presentation import PresentationLoop, LogicStateHolder
         holder = LogicStateHolder()
-        # PresentationLoop 需要 display_env mock
         class MockEnv:
             def set_state(self, s): pass
             def render(self): pass

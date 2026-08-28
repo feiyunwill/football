@@ -72,6 +72,11 @@ class FrameSyncClient(object):
     # 2026-08-28 心跳状态：追踪最后一次收到心跳的时间
     self._last_heartbeat_ms = 0
     self._heartbeat_miss_count = 0
+    # 2026-08-28 RTT 追踪：用于输入延迟补偿
+    self._send_timestamps = {}  # frame_id -> send_time
+    self._rtt_samples = collections.deque(maxlen=50)  # 最近 50 个 RTT 样本
+    self._last_rtt_ms = 0.0  # 最新 RTT（毫秒）
+    self._avg_rtt_ms = 0.0   # 平均 RTT（毫秒）
 
   def connect(self):
     self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -185,6 +190,14 @@ class FrameSyncClient(object):
               self._auth_frame_queue.append(payload)
               self._last_auth_frame_id = payload[0]
               self._frames_without_packet = 0
+              # 2026-08-28 RTT 计算：权威帧到达时间 - 对应 FrameInput 发送时间
+              auth_fid = payload[0]
+              if auth_fid in self._send_timestamps:
+                rtt = (time.time() - self._send_timestamps.pop(auth_fid)) * 1000.0
+                self._rtt_samples.append(rtt)
+                self._last_rtt_ms = rtt
+                if self._rtt_samples:
+                  self._avg_rtt_ms = sum(self._rtt_samples) / len(self._rtt_samples)
             elif msg_type == MessageType.Heartbeat:
               # 2026-08-28 收到心跳：重置计数器
               self._last_heartbeat_ms = int(time.time() * 1000)
@@ -209,6 +222,9 @@ class FrameSyncClient(object):
       return
     if self._sock:
       self._sock.sendall(pack_client_frame_input(frame_id, entries))
+      # 2026-08-28 记录发送时间戳用于 RTT 计算
+      with self._lock:
+        self._send_timestamps[frame_id] = time.time()
 
   def pop_authoritative_frame(self):
     """Return (frame_id, slot_inputs) or None if queue empty. In order."""
@@ -280,6 +296,23 @@ class FrameSyncClient(object):
         pass
       self._sock = None
 
+  # 2026-08-28 RTT / 延迟补偿 API -----
+  def get_rtt_ms(self):
+    """返回最新 RTT（毫秒）。"""
+    return self._last_rtt_ms
+
+  def get_avg_rtt_ms(self):
+    """返回平均 RTT（毫秒）。"""
+    return self._avg_rtt_ms
+
+  def get_rtt_samples(self):
+    """返回 RTT 样本列表（毫秒）。"""
+    return list(self._rtt_samples)
+
+  def get_input_latency_ms(self):
+    """返回估计的输入延迟（RTT/2，毫秒）。"""
+    return self._avg_rtt_ms / 2.0
+
   # 2026-08-28 重连支持 -----
   def reset_for_reconnect(self):
     """重置内部状态以准备重连，保留 slot_assignment 和 controlled_slots_callback。"""
@@ -349,8 +382,22 @@ class ClientLogicLoop(object):
   def is_waiting_for_authority(self):
     """True when prediction is stopped (cap or M frames without packet). For presentation layer."""
     return self._only_authority_mode or (
-        self._current_frame_id - self._last_confirmed_frame_id >= MAX_PREDICT_AHEAD_FRAMES
+        self._current_frame_id - self._last_confirmed_frame_id >= self._adaptive_predict_cap
     )
+
+  @property
+  def _adaptive_predict_cap(self):
+    """2026-08-28 自适应预测上限：基于 RTT 动态调整。
+    RTT < 50ms → 3 帧（默认）
+    RTT 50-100ms → 2 帧
+    RTT > 100ms → 1 帧
+    """
+    rtt = self._client.get_avg_rtt_ms()
+    if rtt > 100:
+      return 1
+    elif rtt > 50:
+      return 2
+    return MAX_PREDICT_AHEAD_FRAMES
 
   def run_one_tick(self):
     self._client.send_frame_input(self._current_frame_id)
