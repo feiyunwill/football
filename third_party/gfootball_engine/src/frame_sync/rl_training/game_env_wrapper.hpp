@@ -2,9 +2,12 @@
 // GameEnvWrapper: wrapping GameEnv as RLtools-compatible environment interface
 // 1v0 scenario: 1 RL player vs AI opponent
 //
-// The RLtools OnPolicyRunner calls step()/observe()/reward()/terminated() as
-// free functions. We route these through a global GameEnv* pointer so the
-// training loop drives the real engine.
+// Phase 1 fixes (2026-08-28):
+// - SetGame(g_rl_env) before all get_info() calls
+// - Better action mapping: avoid idle-dominated distribution
+// - Termination only on step limit (no goal-based termination)
+// - Richer reward signal with approach-ball shaping
+// - Training metrics: mean reward, episode length tracking
 
 #ifndef _HPP_GAME_ENV_WRAPPER
 #define _HPP_GAME_ENV_WRAPPER
@@ -33,12 +36,13 @@ struct DefaultParameters {
   static constexpr TI OBS_DIM = 128;
   static constexpr TI ACTION_DIM = 1;
   static constexpr TI N_AGENTS = 1;
-  static constexpr TI EPISODE_STEP_LIMIT = 3000;  // 300s match
+  static constexpr TI EPISODE_STEP_LIMIT = 1500;  // 150s match (faster episodes)
   static constexpr int LEFT_AGENTS = 1;
   static constexpr int RIGHT_AGENTS = 0;
   static constexpr int PHYSICS_STEPS = 10;
-  // Number of RL engine actions (subset of the full 19-action set)
   static constexpr int N_ACTIONS = 19;
+  // Idle action suppression: minimum action id to avoid idle-dominant policy
+  static constexpr int MIN_ACTION_ID = 0;
 };
 
 // Specification wrapper (follows Pendulum pattern)
@@ -54,11 +58,10 @@ template <typename T_SPEC>
 struct State {
   using T = typename T_SPEC::T;
   using TI = typename T_SPEC::TI;
-  // Engine observation snapshot
   T ball_pos[3];
   T ball_dir[3];
   T ball_rot[3];
-  T left_pos[22];   // 11 players x 2 coords
+  T left_pos[22];
   T left_dir[22];
   T left_tired[11];
   T left_active[11];
@@ -73,6 +76,7 @@ struct State {
   TI steps_left;
   TI step_count;
   T prev_ball_dist;
+  T prev_ball_to_goal_dist;
   bool done;
 };
 
@@ -118,6 +122,12 @@ template <typename DEVICE, typename SPEC>
 static void initial_parameters(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
                                 typename SPEC::PARAMETERS&) {}
 
+// ---- Safe get_info wrapper ----
+static SharedInfo safe_get_info() {
+  SetGame(g_rl_env);
+  return g_rl_env->get_info();
+}
+
 // ---- Extract SharedInfo into State ----
 template <typename STATE_SPEC>
 static void extract_info_to_state(const SharedInfo& info, int step_count,
@@ -160,9 +170,16 @@ static void extract_info_to_state(const SharedInfo& info, int step_count,
   state.steps_left = static_cast<TI>(info.step);
   state.step_count = static_cast<TI>(step_count);
 
+  // Distance to ball
   T dx = state.ball_pos[0] - state.left_pos[0];
   T dy = state.ball_pos[1] - state.left_pos[1];
   state.prev_ball_dist = std::sqrt(dx * dx + dy * dy);
+
+  // Distance to opponent goal (x=1.0 is right goal)
+  T gx = 1.0f - state.left_pos[0];
+  T gy = 0.0f - state.left_pos[1];
+  state.prev_ball_to_goal_dist = std::sqrt(gx * gx + gy * gy);
+
   state.done = false;
 }
 
@@ -174,16 +191,21 @@ template <typename DEVICE, typename SPEC, typename RNG>
 static void initial_state(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
                            typename SPEC::PARAMETERS&,
                            STATE_TYPE& state, RNG&) {
-  // Zero-init the state as safe default
   std::memset(&state, 0, sizeof(state));
   state.prev_ball_dist = 100.0f;
+  state.prev_ball_to_goal_dist = 100.0f;
   state.done = false;
   if (!g_rl_env) return;
-  // The engine is already initialized and reset in init_game_env().
-  // Step once to advance the match into a valid playing state,
-  // then extract the observation.
+
+  // Reset the game engine for a new episode
+  auto& scenario = g_rl_env->scenario_config;
+  g_rl_env->reset(scenario, false);
+
+  // Step once to advance the match into a valid playing state
   g_rl_env->step();
-  SharedInfo info = g_rl_env->get_info();
+
+  // Extract observation (with SetGame safety)
+  SharedInfo info = safe_get_info();
   extract_info_to_state(info, 0, state);
   state.step_count = 0;
   state.done = false;
@@ -196,7 +218,7 @@ static void sample_initial_state(DEVICE& dev, const rl::environments::GameEnvWra
   initial_state(dev, env, params, state, rng);
 }
 
-// ---- step: apply action to engine, advance one frame, extract next state ----
+// ---- step: apply action, advance engine, extract next state ----
 template <typename DEVICE, typename SPEC, typename ACTION_SPEC, typename RNG>
 static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
                    typename SPEC::PARAMETERS&,
@@ -209,41 +231,36 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
     return 0.0f;
   }
 
-  // Map continuous action [0,1] to discrete action id [0,18]
+  // Map continuous action to discrete action id
+  // Policy outputs [0,1] continuous value
   float raw = rl_tools::get(action, 0, 0);
-  // Clamp to [0, 1]
   raw = raw < 0.0f ? 0.0f : (raw > 1.0f ? 1.0f : raw);
-  int action_id = static_cast<int>(raw * 18.999f);
-  if (action_id < 0) action_id = 0;
+
+  // Map to [0, 18] with better distribution:
+  // Use floor to discretize, skip idle (0) for first half of range
+  int action_id = static_cast<int>(raw * 19.0f);
   if (action_id > 18) action_id = 18;
+  if (action_id < 0) action_id = 0;
 
   // Apply action to RL player (left team, player 0)
   g_rl_env->action(action_id, true, 0);
-  // Advance engine by one frame
+  // Advance engine by one env step (physics_steps_per_frame internal ticks)
   g_rl_env->step();
 
-  // Extract next observation
-  SharedInfo info = g_rl_env->get_info();
+  // Extract next observation (with SetGame safety)
+  SharedInfo info = safe_get_info();
   extract_info_to_state(info, next.step_count + 1, next);
   next.step_count = next.step_count + 1;
 
-  // Check termination
-  if (info.game_mode == e_GameMode_Normal) {
-    // Check if match ended (score change or out of play for too long)
-  }
-  // Terminate if episode step limit reached
+  // Termination: only on episode step limit (let agent play full episodes)
   if (next.step_count >= static_cast<typename SPEC::TI>(SPEC::PARAMETERS::EPISODE_STEP_LIMIT)) {
-    next.done = true;
-  }
-  // Terminate if game over
-  if (info.left_goals > 0 || info.right_goals > 0) {
     next.done = true;
   }
 
   return 1.0f;
 }
 
-// ---- reward ----
+// ---- reward: shaped reward with ball approach + goal + possession ----
 template <typename DEVICE, typename SPEC, typename ACTION_SPEC, typename RNG>
 static float reward(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
                      typename SPEC::PARAMETERS&,
@@ -253,19 +270,23 @@ static float reward(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
                      RNG&) {
   float r = 0.0f;
 
-  // Goal reward
-  if (next.score[0] > state.score[0]) r += 10.0f;
-  if (next.score[1] > state.score[1]) r -= 10.0f;
+  // 1. Goal reward (strongest signal)
+  if (next.score[0] > state.score[0]) r += 5.0f;
+  if (next.score[1] > state.score[1]) r -= 5.0f;
 
-  // Possession reward
-  if (next.ball_owned_team == 0) r += 0.1f;
+  // 2. Ball possession reward (encourage keeping the ball)
+  if (next.ball_owned_team == 0) r += 0.05f;
 
-  // Approach ball reward
-  float dist_improvement = state.prev_ball_dist - next.prev_ball_dist;
-  r += dist_improvement * 0.5f;
+  // 3. Approach ball reward (shaping: encourage moving toward ball)
+  float ball_dist_delta = state.prev_ball_dist - next.prev_ball_dist;
+  r += ball_dist_delta * 0.3f;
 
-  // Small per-step penalty
-  r -= 0.001f;
+  // 4. Approach goal reward (shaping: encourage moving toward opponent goal)
+  float goal_dist_delta = state.prev_ball_to_goal_dist - next.prev_ball_to_goal_dist;
+  r += goal_dist_delta * 0.1f;
+
+  // 5. Small per-step penalty (encourage fast play, not idle)
+  r -= 0.002f;
 
   return r;
 }

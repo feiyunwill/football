@@ -154,10 +154,15 @@ auto run(TI seed) {
   rlt::init(device, ts, seed);
 
   TI step_count = 0;
+  TI total_env_steps = 0;
   while (!rlt::step(device, ts)) {
     step_count++;
-    if (step_count % 10 == 0) {
-      std::println("Step {}/{}", step_count, CONFIG::LOOP_CORE_CONFIG::CORE_PARAMETERS::STEP_LIMIT);
+    total_env_steps += CONFIG::LOOP_CORE_CONFIG::CORE_PARAMETERS::ON_POLICY_RUNNER_STEPS_PER_ENV
+                     * CONFIG::LOOP_CORE_CONFIG::CORE_PARAMETERS::N_ENVIRONMENTS;
+    if (step_count % 5 == 0) {
+      float elapsed = static_cast<float>(step_count) * CONFIG::LOOP_CORE_CONFIG::CORE_PARAMETERS::ON_POLICY_RUNNER_STEPS_PER_ENV / 100.0f;
+      std::println("Loop step: {}, env step: {}, elapsed: {:.0f}s",
+                   step_count, total_env_steps, elapsed);
     }
   }
 
