@@ -193,10 +193,24 @@ using STATE_TYPE = rl::environments::game_env_wrapper::State<STATE_SPEC>;
 // ---- Action frequency tracking (for training diagnostics) ----
 static int g_action_counts[20] = {};
 static int g_episode_count = 0;
-static float g_total_reward = 0.0f;
 static float g_episode_rewards[100] = {};
 static int g_episode_idx = 0;
 static float g_current_episode_reward = 0.0f;
+
+// ---- Per-episode metrics for evaluation ----
+struct EpisodeMetrics {
+  int goals_for = 0;
+  int goals_against = 0;
+  int possession_frames = 0;    // frames where left team has ball
+  int total_frames = 0;
+  int pass_count = 0;           // ball ownership changes to left team
+  int lost_possession_count = 0;
+  int shot_count = 0;           // actions 9-12 (pass/shot family)
+  float total_ball_dist = 0.0f; // sum of ball distances from player 0
+};
+static EpisodeMetrics g_current_episode_metrics;
+static EpisodeMetrics g_episode_metrics_sum;
+static int g_metrics_episodes = 0;
 
 static void print_action_stats() {
   int total = 0;
@@ -221,6 +235,24 @@ static void print_action_stats() {
   for (int i = 0; i < n; i++) mean += g_episode_rewards[i];
   if (n > 0) mean /= n;
   std::println("  Mean return (last {}): {:.3f}", n, mean);
+
+  // Print evaluation metrics
+  if (g_metrics_episodes > 0) {
+    auto& s = g_episode_metrics_sum;
+    int ne = g_metrics_episodes;
+    std::println("\n=== Evaluation Metrics ({} episodes) ===", ne);
+    std::println("  Goals for/against:     {:.1f} / {:.1f}",
+                 static_cast<float>(s.goals_for) / ne,
+                 static_cast<float>(s.goals_against) / ne);
+    std::println("  Possession rate:       {:.1f}%",
+                 s.total_frames > 0 ? 100.0f * s.possession_frames / s.total_frames : 0.0f);
+    std::println("  Pass success rate:     {:.1f}%",
+                 (s.pass_count + s.lost_possession_count) > 0
+                   ? 100.0f * s.pass_count / (s.pass_count + s.lost_possession_count) : 0.0f);
+    std::println("  Shots per game:        {:.1f}", static_cast<float>(s.shot_count) / ne);
+    std::println("  Avg ball dist (p0):    {:.3f}",
+                 s.total_frames > 0 ? s.total_ball_dist / s.total_frames : 0.0f);
+  }
 }
 
 // ---- initial_state: reset engine + extract first observation ----
@@ -354,17 +386,38 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
 
   g_current_episode_reward += step_reward;
 
+  // ---- Track evaluation metrics ----
+  g_current_episode_metrics.total_frames++;
+  if (next.score[0] > state.score[0]) g_current_episode_metrics.goals_for++;
+  if (next.score[1] > state.score[1]) g_current_episode_metrics.goals_against++;
+  if (next.ball_owned_team == 0) g_current_episode_metrics.possession_frames++;
+  if (next.ball_owned_team == 0 && state.ball_owned_team != 0) g_current_episode_metrics.pass_count++;
+  if (next.ball_owned_team != 0 && state.ball_owned_team == 0) g_current_episode_metrics.lost_possession_count++;
+  if (shared_action_id >= 9 && shared_action_id <= 12) g_current_episode_metrics.shot_count++;
+  g_current_episode_metrics.total_ball_dist += next.prev_ball_dist;
+
   // Termination: only on episode step limit (let agent play full episodes)
   if (next.step_count >= static_cast<typename SPEC::TI>(SPEC::PARAMETERS::EPISODE_STEP_LIMIT)) {
     next.done = true;
   }
 
-  // Track episode return
+  // Track episode return + accumulate metrics
   if (next.done) {
     g_episode_rewards[g_episode_idx % 100] = g_current_episode_reward;
     g_episode_idx++;
     g_episode_count++;
     g_current_episode_reward = 0.0f;
+    // Accumulate metrics for averaging
+    g_episode_metrics_sum.goals_for += g_current_episode_metrics.goals_for;
+    g_episode_metrics_sum.goals_against += g_current_episode_metrics.goals_against;
+    g_episode_metrics_sum.possession_frames += g_current_episode_metrics.possession_frames;
+    g_episode_metrics_sum.total_frames += g_current_episode_metrics.total_frames;
+    g_episode_metrics_sum.pass_count += g_current_episode_metrics.pass_count;
+    g_episode_metrics_sum.lost_possession_count += g_current_episode_metrics.lost_possession_count;
+    g_episode_metrics_sum.shot_count += g_current_episode_metrics.shot_count;
+    g_episode_metrics_sum.total_ball_dist += g_current_episode_metrics.total_ball_dist;
+    g_metrics_episodes++;
+    g_current_episode_metrics = {};
   }
 
   return 1.0f;
