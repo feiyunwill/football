@@ -27,12 +27,14 @@
 #include <rl_tools/rl/loop/steps/evaluation/operations_generic.h>
 #include <rl_tools/rl/loop/steps/timing/operations_cpu.h>
 
+#include "checkpoint.hpp"
 #include <iostream>
 #include <print>
 #include <memory>
 #include <cstdlib>
 #include <chrono>
 #include <cstring>
+#include <string>
 
 namespace rlt = rl_tools;
 
@@ -143,7 +145,10 @@ void init_game_env() {
 }
 
 // ===== Training entry =====
-auto run(TI seed, bool eval_mode = false) {
+auto run(TI seed, bool eval_mode = false,
+         const std::string& load_path = "",
+         const std::string& save_prefix = "",
+         TI save_interval = 10000) {
   DEVICE device;
   std::println("=== Football PPO {} (Real Engine) ===", eval_mode ? "Evaluation" : "Training");
   std::println("Seed: {}", seed);
@@ -153,7 +158,17 @@ auto run(TI seed, bool eval_mode = false) {
 
   LOOP_STATE ts;
   rlt::malloc(device, ts);
-  rlt::init(device, ts, seed);
+
+  // Load checkpoint if specified
+  if (!load_path.empty()) {
+    std::println("Loading checkpoint: {}", load_path);
+    if (!rl_tools::checkpoint::load_checkpoint(device, ts, load_path.c_str())) {
+      std::println(stderr, "Failed to load checkpoint, starting from scratch");
+      rlt::init(device, ts, seed);
+    }
+  } else {
+    rlt::init(device, ts, seed);
+  }
 
   TI step_count = 0;
   TI total_env_steps = 0;
@@ -169,6 +184,12 @@ auto run(TI seed, bool eval_mode = false) {
       std::println("Loop step: {:4d}, env step: {:6d}, SPS: {:.1f} (wall: {:.0f}s)",
                    step_count, total_env_steps, sps, wall_sec);
     }
+
+    // Auto-save checkpoint
+    if (!save_prefix.empty() && ts.step > 0 && (ts.step % save_interval == 0)) {
+      std::string ckpt_path = save_prefix + "_step" + std::to_string(ts.step) + ".tar";
+      rl_tools::checkpoint::save_checkpoint(device, ts, ckpt_path.c_str());
+    }
   }
 
   auto wall_end = std::chrono::steady_clock::now();
@@ -176,6 +197,13 @@ auto run(TI seed, bool eval_mode = false) {
   std::println("Training complete! Steps: {}, Wall: {:.1f}s, SPS: {:.1f}",
                ts.step, total_wall, static_cast<float>(ts.step) / total_wall);
   rl_tools::print_action_stats();
+
+  // Save final checkpoint
+  if (!save_prefix.empty()) {
+    std::string final_path = save_prefix + "_final.tar";
+    rl_tools::checkpoint::save_checkpoint(device, ts, final_path.c_str());
+  }
+
   rlt::free(device, ts);
   return 0;
 }
@@ -183,18 +211,34 @@ auto run(TI seed, bool eval_mode = false) {
 int main(int argc, char** argv) {
   TI seed = 42;
   bool eval_mode = false;
+  std::string load_path;
+  std::string save_prefix;
+  TI save_interval = 10000;
+
   for (int i = 1; i < argc; i++) {
-    if (std::strcmp(argv[i], "--eval") == 0) {
+    std::string arg = argv[i];
+    if (arg == "--eval") {
       eval_mode = true;
+    } else if (arg == "--load" && i + 1 < argc) {
+      load_path = argv[++i];
+    } else if (arg == "--save" && i + 1 < argc) {
+      save_prefix = argv[++i];
+    } else if (arg == "--save-interval" && i + 1 < argc) {
+      save_interval = static_cast<TI>(std::stoul(argv[++i]));
+    } else if (arg == "--help" || arg == "-h") {
+      std::println("Usage: {} [options] [seed]", argv[0]);
+      std::println("  --eval                Run evaluation mode");
+      std::println("  --load <path.tar>     Load checkpoint before training");
+      std::println("  --save <prefix>       Save checkpoints with prefix (auto-saves at intervals + final)");
+      std::println("  --save-interval <N>   Save every N steps (default: 10000)");
+      return 0;
     } else {
-      seed = static_cast<TI>(std::stoul(argv[i]));
+      seed = static_cast<TI>(std::stoul(arg));
     }
   }
-  std::println("Usage: {} [--eval] [seed]", argv[0]);
-  std::println("  --eval  Run evaluation (short training + action stats)");
 
   try {
-    return run(seed, eval_mode);
+    return run(seed, eval_mode, load_path, save_prefix, save_interval);
   } catch (const std::exception& e) {
     std::cerr << "Error: " << e.what() << std::endl;
     return 1;
