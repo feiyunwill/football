@@ -97,7 +97,8 @@ class World {
 
   template <typename T>
   bool HasComponent(Entity e) const {
-    return Pool<T>()->Has(e);
+    const auto* pool = Pool<T>();
+    return pool && pool->Has(e);
   }
 
   template <typename T>
