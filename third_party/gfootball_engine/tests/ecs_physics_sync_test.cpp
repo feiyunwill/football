@@ -5,6 +5,7 @@
 #include "ecs/world.hpp"
 #include "ecs/entity.hpp"
 #include "ecs/serializer.hpp"
+#include "ecs/system_graph.hpp"
 #include <typeindex>
 
 #include <gtest/gtest.h>
@@ -519,4 +520,122 @@ TEST(WorldSerializerTest, DeterministicEntityOrder) {
   for (int i = 0; i < 10; ++i) {
     EXPECT_FLOAT_EQ(positions[i], float(i));
   }
+}
+
+// ===== SystemGraph 测试 =====
+
+TEST(SystemGraphTest, EmptyGraph) {
+  blunted::SystemGraph g;
+  EXPECT_EQ(g.Size(), 0u);
+  EXPECT_TRUE(g.Sort().empty());
+  EXPECT_TRUE(g.Execute(nullptr));
+}
+
+TEST(SystemGraphTest, SingleSystem) {
+  blunted::SystemGraph g;
+  int call_count = 0;
+  g.Register("a", [&](void*) -> bool { call_count++; return true; });
+  EXPECT_EQ(g.Size(), 1u);
+  EXPECT_TRUE(g.Execute(nullptr));
+  EXPECT_EQ(call_count, 1);
+}
+
+TEST(SystemGraphTest, LinearDependency) {
+  blunted::SystemGraph g;
+  std::vector<std::string> order;
+  g.Register("a", [&](void*) -> bool { order.push_back("a"); return true; });
+  g.Register("b", [&](void*) -> bool { order.push_back("b"); return true; }, {"a"});
+  g.Register("c", [&](void*) -> bool { order.push_back("c"); return true; }, {"b"});
+
+  EXPECT_TRUE(g.Execute(nullptr));
+  ASSERT_EQ(order.size(), 3u);
+  EXPECT_EQ(order[0], "a");
+  EXPECT_EQ(order[1], "b");
+  EXPECT_EQ(order[2], "c");
+}
+
+TEST(SystemGraphTest, DiamondDependency) {
+  blunted::SystemGraph g;
+  std::vector<std::string> order;
+  g.Register("a", [&](void*) -> bool { order.push_back("a"); return true; });
+  g.Register("b", [&](void*) -> bool { order.push_back("b"); return true; }, {"a"});
+  g.Register("c", [&](void*) -> bool { order.push_back("c"); return true; }, {"a"});
+  g.Register("d", [&](void*) -> bool { order.push_back("d"); return true; }, {"b", "c"});
+
+  EXPECT_TRUE(g.Execute(nullptr));
+  ASSERT_EQ(order.size(), 4u);
+  // a 必须在 b 和 c 之前，d 必须在 b 和 c 之后
+  EXPECT_EQ(order[0], "a");
+  EXPECT_EQ(order[3], "d");
+  // b 和 c 的相对顺序不固定
+  bool b_before_c = (order[1] == "b" && order[2] == "c");
+  bool c_before_b = (order[1] == "c" && order[2] == "b");
+  EXPECT_TRUE(b_before_c || c_before_b);
+}
+
+TEST(SystemGraphTest, CycleDetection) {
+  blunted::SystemGraph g;
+  g.Register("a", [](void*) -> bool { return true; }, {"c"});
+  g.Register("b", [](void*) -> bool { return true; }, {"a"});
+  g.Register("c", [](void*) -> bool { return true; }, {"b"});
+
+  EXPECT_TRUE(g.HasCycle());
+  EXPECT_TRUE(g.Sort().empty());
+  EXPECT_FALSE(g.Execute(nullptr));
+}
+
+TEST(SystemGraphTest, EarlyAbort) {
+  blunted::SystemGraph g;
+  std::vector<std::string> order;
+  // b 依赖 a，c 依赖 b → 顺序确定：a → b → c
+  g.Register("a", [&](void*) -> bool { order.push_back("a"); return true; });
+  g.Register("b", [&](void*) -> bool { order.push_back("b"); return false; }, {"a"});
+  g.Register("c", [&](void*) -> bool { order.push_back("c"); return true; }, {"b"});
+
+  EXPECT_FALSE(g.Execute(nullptr));
+  ASSERT_EQ(order.size(), 2u);
+  EXPECT_EQ(order[0], "a");
+  EXPECT_EQ(order[1], "b");
+  // c 不应被执行（b 返回 false 中断了管线）
+}
+
+TEST(SystemGraphTest, ContextPassing) {
+  blunted::SystemGraph g;
+  int value = 0;
+  g.Register("inc", [&](void* ctx) -> bool {
+    int* v = static_cast<int*>(ctx);
+    (*v)++;
+    return true;
+  });
+  g.Register("double", [&](void* ctx) -> bool {
+    int* v = static_cast<int*>(ctx);
+    (*v) *= 2;
+    return true;
+  }, {"inc"});
+
+  EXPECT_TRUE(g.Execute(&value));
+  EXPECT_EQ(value, 2);  // 0 → 1 → 2
+}
+
+TEST(SystemGraphTest, ClearResetsState) {
+  blunted::SystemGraph g;
+  g.Register("a", [](void*) -> bool { return true; });
+  g.Register("b", [](void*) -> bool { return true; }, {"a"});
+  EXPECT_EQ(g.Size(), 2u);
+
+  g.Clear();
+  EXPECT_EQ(g.Size(), 0u);
+  EXPECT_TRUE(g.Sort().empty());
+}
+
+TEST(SystemGraphTest, IndependentSystems) {
+  blunted::SystemGraph g;
+  std::vector<std::string> order;
+  g.Register("a", [&](void*) -> bool { order.push_back("a"); return true; });
+  g.Register("b", [&](void*) -> bool { order.push_back("b"); return true; });
+  g.Register("c", [&](void*) -> bool { order.push_back("c"); return true; });
+
+  EXPECT_TRUE(g.Execute(nullptr));
+  EXPECT_EQ(order.size(), 3u);
+  // 无依赖时，所有系统都会执行（顺序不确定）
 }
