@@ -68,6 +68,24 @@ add_executable(ecs_physics_sync_test
 target_include_directories(ecs_physics_sync_test PRIVATE ${ENGINE_SRC})
 target_link_libraries(ecs_physics_sync_test PRIVATE gtest_main)
 
+# ===== RLtools PPO 训练 POC =====
+option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
+if(ENABLE_RLTOOLS)
+  set(RLTOOLS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../rl-tools/include")
+  add_executable(rl_football_training
+    rl_football_training.cpp
+  )
+  target_include_directories(rl_football_training PRIVATE
+    ${ENGINE_SRC}
+    ${RLTOOLS_DIR}
+  )
+  target_compile_definitions(rl_football_training PRIVATE
+    RL_TOOLS_USE_THIS_VERSION=1
+  )
+  target_compile_options(rl_football_training PRIVATE -O3 -ffast-math)
+  message(STATUS "RLtools PPO training POC enabled")
+endif()
+
 # 自动发现测试
 gtest_discover_tests(frame_sync_test)
 gtest_discover_tests(ecs_test)
