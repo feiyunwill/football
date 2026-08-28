@@ -303,13 +303,55 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
   extract_info_to_state(info, next.step_count + 1, next);
   next.step_count = next.step_count + 1;
 
-  // Compute immediate reward for this step
+  // ---- Rich reward signal ----
   float step_reward = 0.0f;
+
+  // 1. Goal reward (strongest signal)
   if (next.score[0] > state.score[0]) step_reward += 10.0f;
   if (next.score[1] > state.score[1]) step_reward -= 10.0f;
-  if (next.ball_owned_team == 0) step_reward += 0.05f;
-  step_reward += (state.prev_ball_dist - next.prev_ball_dist) * 0.3f;
-  step_reward += (state.prev_ball_to_goal_dist - next.prev_ball_to_goal_dist) * 0.2f;
+
+  // 2. Ball possession continuity
+  if (next.ball_owned_team == 0 && state.ball_owned_team == 0) {
+    step_reward += 0.03f;  // sustained possession
+  } else if (next.ball_owned_team == 0 && state.ball_owned_team != 0) {
+    step_reward += 0.08f;  // interception / regain possession
+  } else if (next.ball_owned_team != 0 && state.ball_owned_team == 0) {
+    step_reward -= 0.02f;  // lost possession
+  }
+
+  // 3. Ball approach (closer to ball = easier to control)
+  float ball_dist_delta = state.prev_ball_dist - next.prev_ball_dist;
+  step_reward += ball_dist_delta * 0.15f;
+
+  // 4. Goal approach (progressive play toward opponent goal at x=+1)
+  float goal_dist_delta = state.prev_ball_to_goal_dist - next.prev_ball_to_goal_dist;
+  step_reward += goal_dist_delta * 0.2f;
+
+  // 5. Ball velocity toward goal (ball moving in the right direction)
+  if (next.ball_owned_team == 0) {
+    // Ball direction x-component: positive = toward opponent goal
+    float ball_dx = next.ball_dir[0];
+    step_reward += ball_dx * 0.05f;
+  }
+
+  // 6. Shot proximity bonus (close to goal + has ball)
+  if (next.ball_owned_team == 0 && next.left_pos[0] > 0.7f) {
+    step_reward += 0.02f;
+  }
+
+  // 7. Team spread (encourage players to spread out, not cluster)
+  float spread_bonus = 0.0f;
+  for (int i = 1; i < 11; i++) {
+    float dx = next.left_pos[i * 2] - next.left_pos[0];
+    float dy = next.left_pos[i * 2 + 1] - next.left_pos[1];
+    float dist = std::sqrt(dx * dx + dy * dy);
+    if (dist > 0.05f && dist < 0.8f) spread_bonus += 0.002f;
+  }
+  step_reward += spread_bonus;
+
+  // 8. Small per-step penalty (encourage fast play)
+  step_reward -= 0.001f;
+
   g_current_episode_reward += step_reward;
 
   // Termination: only on episode step limit (let agent play full episodes)
