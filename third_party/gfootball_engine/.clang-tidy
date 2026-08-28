@@ -1,0 +1,19 @@
+# clang-tidy 配置：针对帧同步代码的检查规则。
+# 运行：clang-tidy -p build_tests src/frame_sync/*.cpp
+# 忽略命名风格（项目已有 Google C++ Style 约定，clang-tidy 命名检查过于严格）
+
+Checks: >
+  -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-narrowing-conversions,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  -modernize-avoid-c-arrays,
+  -modernize-use-nodiscard,
+  performance-*,
+  -performance-unnecessary-value-param,
+
+WarningsAsErrors: ''
+
+HeaderFilterRegex: 'src/frame_sync/.*\.hpp$'

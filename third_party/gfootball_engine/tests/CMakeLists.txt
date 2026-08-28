@@ -21,6 +21,29 @@ FetchContent_MakeAvailable(googletest)
 
 include(GoogleTest)
 
+# ===== Sanitizer 选项 =====
+# 用法：cmake -S tests -B build_tests -DENABLE_ASAN=ON
+option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
+option(ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer" OFF)
+option(ENABLE_TSAN "Enable ThreadSanitizer" OFF)
+
+if(ENABLE_ASAN)
+  # 需要 libasan 运行时：yum install gcc-toolset-15-libasan-devel 或使用系统 gcc
+  add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
+  add_link_options(-fsanitize=address)
+  message(STATUS "AddressSanitizer enabled (requires libasan runtime)")
+endif()
+if(ENABLE_UBSAN)
+  add_compile_options(-fsanitize=undefined -fno-omit-frame-pointer)
+  add_link_options(-fsanitize=undefined)
+  message(STATUS "UndefinedBehaviorSanitizer enabled")
+endif()
+if(ENABLE_TSAN)
+  add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
+  add_link_options(-fsanitize=thread)
+  message(STATUS "ThreadSanitizer enabled")
+endif()
+
 # 引擎源码目录
 set(ENGINE_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../src")
 
