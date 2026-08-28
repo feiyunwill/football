@@ -327,3 +327,86 @@ class TestFrameSyncServer:
         assert hasattr(FrameSyncServer, 'stop')
         assert hasattr(FrameSyncServer, 'run_one_frame')
         assert hasattr(FrameSyncServer, 'run_loop')
+
+
+class TestLogicStateHolder:
+    def test_write_and_read(self):
+        from gfootball.frame_sync.presentation import LogicStateHolder
+        holder = LogicStateHolder()
+        holder.write('state_1', frame_id=0)
+        state, fid, confirmed, ts, waiting = holder.read()
+        assert state == 'state_1'
+        assert fid == 0
+        assert not waiting
+
+    def test_read_interpolated_single_frame(self):
+        from gfootball.frame_sync.presentation import LogicStateHolder
+        holder = LogicStateHolder()
+        holder.write('state_1', frame_id=0)
+        state, alpha = holder.read_interpolated()
+        assert state == 'state_1'
+        assert alpha == 0.0
+
+    def test_read_interpolated_two_frames(self):
+        from gfootball.frame_sync.presentation import LogicStateHolder
+        holder = LogicStateHolder(buffer_size=4)
+        holder.set_logic_fps(10.0)
+        holder.write('state_1', frame_id=0)
+        time.sleep(0.02)  # 20ms
+        holder.write('state_2', frame_id=1)
+        state, alpha = holder.read_interpolated()
+        assert state == 'state_2'
+        assert 0.0 <= alpha <= 1.0
+
+    def test_buffer_depth(self):
+        from gfootball.frame_sync.presentation import LogicStateHolder
+        holder = LogicStateHolder(buffer_size=3)
+        assert holder.buffer_depth == 0
+        holder.write('s1', frame_id=0)
+        assert holder.buffer_depth == 1
+        holder.write('s2', frame_id=1)
+        holder.write('s3', frame_id=2)
+        assert holder.buffer_depth == 3
+        holder.write('s4', frame_id=3)  # 溢出，最旧被丢弃
+        assert holder.buffer_depth == 3
+
+    def test_set_logic_fps(self):
+        from gfootball.frame_sync.presentation import LogicStateHolder
+        holder = LogicStateHolder()
+        holder.set_logic_fps(15.0)
+        assert holder._logic_fps == 15.0
+
+
+class TestPresentationLoop:
+    def test_has_methods(self):
+        from gfootball.frame_sync.presentation import PresentationLoop, LogicStateHolder
+        holder = LogicStateHolder()
+        # PresentationLoop 需要 display_env mock
+        class MockEnv:
+            def set_state(self, s): pass
+            def render(self): pass
+        loop = PresentationLoop(MockEnv(), holder, rate_hz=60)
+        assert hasattr(loop, 'run_one_frame')
+        assert hasattr(loop, 'run_loop')
+        assert hasattr(loop, 'stop')
+        assert hasattr(loop, 'get_jitter_stats')
+        assert hasattr(loop, 'render_count')
+
+    def test_run_one_frame(self):
+        from gfootball.frame_sync.presentation import PresentationLoop, LogicStateHolder
+        holder = LogicStateHolder()
+        rendered = []
+        class MockEnv:
+            def set_state(self, s): self._state = s
+            def render(self): rendered.append(True)
+        loop = PresentationLoop(MockEnv(), holder, rate_hz=60)
+        holder.write('test_state', frame_id=0)
+        loop.run_one_frame()
+        assert len(rendered) == 1
+        assert loop.render_count == 1
+
+    def test_jitter_stats_empty(self):
+        from gfootball.frame_sync.presentation import PresentationLoop, LogicStateHolder
+        loop = PresentationLoop(type('E', (), {'set_state': lambda s: None, 'render': lambda: None})(), LogicStateHolder())
+        avg, mx, p95 = loop.get_jitter_stats()
+        assert avg == 0.0 and mx == 0.0 and p95 == 0.0
