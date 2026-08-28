@@ -57,7 +57,7 @@ enum e_DefString {
   e_DefString_Size = 21
 };
 constexpr std::strong_ordering operator<=>(e_DefString a, e_DefString b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 e_FunctionType StringToFunctionType(e_DefString fun);
@@ -113,7 +113,7 @@ e_FunctionType StringToFunctionType(e_DefString fun);
     body_part_max
   };
   constexpr std::strong_ordering operator<=>(BodyPart a, BodyPart b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   typedef boost::intrusive_ptr<Node> NodeMap[body_part_max];
@@ -199,7 +199,7 @@ e_FunctionType StringToFunctionType(e_DefString fun);
     e_Foot_Right
   };
   constexpr std::strong_ordering operator<=>(e_Foot a, e_Foot b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   struct BiasedOffset {

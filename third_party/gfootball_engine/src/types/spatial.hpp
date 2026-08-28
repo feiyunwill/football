@@ -40,7 +40,7 @@ namespace blunted {
     e_LocalMode_Absolute
   };
   constexpr std::strong_ordering operator<=>(e_LocalMode a, e_LocalMode b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_SpatialDataType {
@@ -49,7 +49,7 @@ namespace blunted {
     e_SpatialDataType_Both
   };
   constexpr std::strong_ordering operator<=>(e_SpatialDataType a, e_SpatialDataType b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_Streaming_DataType {
@@ -57,7 +57,7 @@ namespace blunted {
     e_Streaming_DataType_String
   };
   constexpr std::strong_ordering operator<=>(e_Streaming_DataType a, e_Streaming_DataType b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   /// spatial object

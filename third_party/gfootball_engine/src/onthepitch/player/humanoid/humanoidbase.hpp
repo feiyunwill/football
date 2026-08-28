@@ -68,7 +68,7 @@ enum e_InterruptAnim {
   e_InterruptAnim_ReQueue
 };
 constexpr std::strong_ordering operator<=>(e_InterruptAnim a, e_InterruptAnim b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 struct RotationSmuggle {

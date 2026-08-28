@@ -1,4 +1,5 @@
 // Copyright 2019 Google LLC & Bastiaan Konings
+#include <utility>  // std::to_underlying (C++23)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -82,7 +83,7 @@ namespace blunted {
     e_ViewRenderTarget_Context
   };
   constexpr std::strong_ordering operator<=>(e_ViewRenderTarget a, e_ViewRenderTarget b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   struct View {
@@ -119,7 +120,7 @@ namespace blunted {
     e_MatrixMode_ModelView
   };
   constexpr std::strong_ordering operator<=>(e_MatrixMode a, e_MatrixMode b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_CullingMode {
@@ -128,7 +129,7 @@ namespace blunted {
     e_CullingMode_Back
   };
   constexpr std::strong_ordering operator<=>(e_CullingMode a, e_CullingMode b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_BlendingMode {
@@ -136,7 +137,7 @@ namespace blunted {
     e_BlendingMode_On
   };
   constexpr std::strong_ordering operator<=>(e_BlendingMode a, e_BlendingMode b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_BlendingFunction {
@@ -144,7 +145,7 @@ namespace blunted {
     e_BlendingFunction_One
   };
   constexpr std::strong_ordering operator<=>(e_BlendingFunction a, e_BlendingFunction b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_DepthFunction {
@@ -158,7 +159,7 @@ namespace blunted {
     e_DepthFunction_Always
   };
   constexpr std::strong_ordering operator<=>(e_DepthFunction a, e_DepthFunction b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_TextureMode {
@@ -166,7 +167,7 @@ namespace blunted {
     e_TextureMode_2D
   };
   constexpr std::strong_ordering operator<=>(e_TextureMode a, e_TextureMode b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_TargetAttachment {
@@ -181,7 +182,7 @@ namespace blunted {
     e_TargetAttachment_Color3
   };
   constexpr std::strong_ordering operator<=>(e_TargetAttachment a, e_TargetAttachment b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_PixelFormat {
@@ -192,7 +193,7 @@ namespace blunted {
     e_PixelFormat_Luminance
   };
   constexpr std::strong_ordering operator<=>(e_PixelFormat a, e_PixelFormat b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_InternalPixelFormat {
@@ -217,7 +218,7 @@ namespace blunted {
 		e_InternalPixelFormat_StencilIndex8
   };
   constexpr std::strong_ordering operator<=>(e_InternalPixelFormat a, e_InternalPixelFormat b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_VertexBufferUsage {
@@ -232,7 +233,7 @@ namespace blunted {
     e_VertexBufferUsage_DynamicCopy
   };
   constexpr std::strong_ordering operator<=>(e_VertexBufferUsage a, e_VertexBufferUsage b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_RenderMode {
@@ -241,7 +242,7 @@ namespace blunted {
     e_RenderMode_Full
   };
   constexpr std::strong_ordering operator<=>(e_RenderMode a, e_RenderMode b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   struct Shader {

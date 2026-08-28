@@ -1,4 +1,5 @@
 // Copyright 2019 Google LLC & Bastiaan Konings
+#include <utility>  // std::to_underlying (C++23)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -33,7 +34,7 @@ namespace blunted {
     e_TextType_ToolTip
   };
   constexpr std::strong_ordering operator<=>(e_TextType a, e_TextType b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   enum e_DecorationType {
@@ -44,7 +45,7 @@ namespace blunted {
     e_DecorationType_Toggled
   };
   constexpr std::strong_ordering operator<=>(e_DecorationType a, e_DecorationType b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   class Gui2Style {

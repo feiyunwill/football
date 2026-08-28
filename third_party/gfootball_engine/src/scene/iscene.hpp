@@ -37,7 +37,7 @@ namespace blunted {
   };
 
   constexpr std::strong_ordering operator<=>(e_SceneType a, e_SceneType b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   class IScene : public Subject<ISceneInterpreter> {

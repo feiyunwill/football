@@ -34,7 +34,7 @@ namespace blunted {
     e_SystemType_UserStart = 4
   };
   constexpr std::strong_ordering operator<=>(e_SystemType a, e_SystemType b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 }
 

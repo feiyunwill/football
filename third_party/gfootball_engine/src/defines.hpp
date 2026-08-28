@@ -25,6 +25,7 @@
 #endif
 
 #include <compare>
+#include <utility>  // std::to_underlying (C++23)
 #include <cstdio>
 #include <cstdlib>
 #include <cassert>
@@ -295,7 +296,7 @@ enum e_PlayerRole {
   e_PlayerRole_CF,
 };
 constexpr std::strong_ordering operator<=>(e_PlayerRole a, e_PlayerRole b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 enum e_GameMode {
@@ -308,7 +309,7 @@ enum e_GameMode {
   e_GameMode_Penalty,
 };
 constexpr std::strong_ordering operator<=>(e_GameMode a, e_GameMode b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 enum e_PlayerColor {
@@ -320,7 +321,7 @@ enum e_PlayerColor {
   e_PlayerColor_Default
 };
 constexpr std::strong_ordering operator<=>(e_PlayerColor a, e_PlayerColor b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 enum e_Team {
@@ -328,7 +329,7 @@ enum e_Team {
   e_Right,
 };
 constexpr std::strong_ordering operator<=>(e_Team a, e_Team b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 // Information about the player (available from python).

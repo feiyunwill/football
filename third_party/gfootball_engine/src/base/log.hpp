@@ -1,4 +1,5 @@
 // Copyright 2019 Google LLC & Bastiaan Konings
+#include <utility>  // std::to_underlying (C++23)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -39,7 +40,7 @@ namespace blunted {
   };
 
   constexpr std::strong_ordering operator<=>(e_LogType a, e_LogType b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   void Log(e_LogType logType, std::string className, std::string methodName, std::string message);

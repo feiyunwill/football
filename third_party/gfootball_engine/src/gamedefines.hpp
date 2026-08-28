@@ -87,7 +87,7 @@ enum e_Side {
   e_Side_Right
 };
 constexpr std::strong_ordering operator<=>(e_Side a, e_Side b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 enum e_Velocity {
@@ -97,7 +97,7 @@ enum e_Velocity {
   e_Velocity_Sprint
 };
 constexpr std::strong_ordering operator<=>(e_Velocity a, e_Velocity b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 enum e_FunctionType {
@@ -118,7 +118,7 @@ enum e_FunctionType {
   e_FunctionType_Special
 };
 constexpr std::strong_ordering operator<=>(e_FunctionType a, e_FunctionType b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 enum e_TouchType {
@@ -129,7 +129,7 @@ enum e_TouchType {
   e_TouchType_SIZE
 };
 constexpr std::strong_ordering operator<=>(e_TouchType a, e_TouchType b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 enum e_MatchPhase {
@@ -138,7 +138,7 @@ enum e_MatchPhase {
   e_MatchPhase_2ndHalf,
 };
 constexpr std::strong_ordering operator<=>(e_MatchPhase a, e_MatchPhase b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 enum e_PlayerCommandModifier {
@@ -146,7 +146,7 @@ enum e_PlayerCommandModifier {
   e_PlayerCommandModifier_KnockOn = 1
 };
 constexpr std::strong_ordering operator<=>(e_PlayerCommandModifier a, e_PlayerCommandModifier b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 class IController;
@@ -180,7 +180,7 @@ enum e_StrictMovement {
   e_StrictMovement_Dynamic
 };
 constexpr std::strong_ordering operator<=>(e_StrictMovement a, e_StrictMovement b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 struct PlayerCommand {
@@ -348,7 +348,7 @@ enum e_DecayType {
   e_DecayType_Variable
 };
 constexpr std::strong_ordering operator<=>(e_DecayType a, e_DecayType b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 enum e_MagnetType {
@@ -356,7 +356,7 @@ enum e_MagnetType {
   e_MagnetType_Repel
 };
 constexpr std::strong_ordering operator<=>(e_MagnetType a, e_MagnetType b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 // forcefields consist of forcespots, representing a repelling or attracting force from a position, including linearity/etc parameters

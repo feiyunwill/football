@@ -44,7 +44,7 @@ namespace blunted {
   inline constexpr std::size_t kObjectTypeSupportBitsetSize = 64;
 
   constexpr std::strong_ordering operator<=>(e_ObjectType a, e_ObjectType b) {
-    return static_cast<int>(a) <=> static_cast<int>(b);
+    return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
   struct MustUpdateSpatialData {
@@ -52,7 +52,7 @@ namespace blunted {
     e_SystemType exclude_system_;
     friend constexpr std::strong_ordering operator<=>(const MustUpdateSpatialData &a, const MustUpdateSpatialData &b) {
       if (auto c = a.have_to_ <=> b.have_to_; c != 0) return c;
-      return static_cast<int>(a.exclude_system_) <=> static_cast<int>(b.exclude_system_);
+      return std::to_underlying(a.exclude_system_) <=> std::to_underlying(b.exclude_system_);
     }
     friend constexpr bool operator==(const MustUpdateSpatialData &a, const MustUpdateSpatialData &b) = default;
   };

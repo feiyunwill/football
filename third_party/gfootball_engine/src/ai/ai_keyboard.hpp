@@ -37,7 +37,7 @@ enum e_ButtonFunction {
   e_ButtonFunction_Size
 };
 constexpr std::strong_ordering operator<=>(e_ButtonFunction a, e_ButtonFunction b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 class AIControlledKeyboard {

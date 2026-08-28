@@ -41,7 +41,7 @@ enum e_MenuAction {
   e_MenuAction_None
 };
 constexpr std::strong_ordering operator<=>(e_MenuAction a, e_MenuAction b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 struct SideSelection {

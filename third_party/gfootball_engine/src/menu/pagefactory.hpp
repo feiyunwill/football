@@ -1,4 +1,5 @@
 // Copyright 2019 Google LLC & Bastiaan Konings
+#include <utility>  // std::to_underlying (C++23)
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -29,7 +30,7 @@ enum e_PageID {
   e_PageID_LoadingMatch,
 };
 constexpr std::strong_ordering operator<=>(e_PageID a, e_PageID b) {
-  return static_cast<int>(a) <=> static_cast<int>(b);
+  return std::to_underlying(a) <=> std::to_underlying(b);
 }
 
 class PageFactory : public Gui2PageFactory {
