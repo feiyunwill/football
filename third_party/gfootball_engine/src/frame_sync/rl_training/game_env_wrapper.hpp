@@ -40,7 +40,7 @@ struct DefaultParameters {
   static constexpr int LEFT_AGENTS = 1;
   static constexpr int RIGHT_AGENTS = 0;
   static constexpr int PHYSICS_STEPS = 10;
-  static constexpr int N_ACTIONS = 19;
+  static constexpr int N_ACTIONS = 20;  // 0=idle, 1-8=dir, 9-12=pass/shot, 13-19=tactical/dribble
   // Idle action suppression: minimum action id to avoid idle-dominant policy
   static constexpr int MIN_ACTION_ID = 0;
 };
@@ -127,6 +127,13 @@ static SharedInfo safe_get_info() {
   SetGame(g_rl_env);
   return g_rl_env->get_info();
 }
+
+// ---- Map continuous [0,1] to discrete football action id ----
+// Actions: 0=idle, 1-8=directions, 9=long_pass, 10=high_pass, 11=short_pass,
+//          12=shot, 13=keeper_rush, 14=sliding, 15=pressure, 16=team_pressure,
+//          17=switch, 18=sprint, 19=dribble
+// We map: [0, 0.3) -> direction (1-8), [0.3, 0.6) -> pass/shot (9-12),
+//          [0.6, 0.8) -> tactical (13-16), [0.8, 1.0) -> sprint/dribble (17-19)
 
 // ---- Extract SharedInfo into State ----
 template <typename STATE_SPEC>
@@ -236,10 +243,22 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
   float raw = rl_tools::get(action, 0, 0);
   raw = raw < 0.0f ? 0.0f : (raw > 1.0f ? 1.0f : raw);
 
-  // Map to [0, 18] with better distribution:
-  // Use floor to discretize, skip idle (0) for first half of range
-  int action_id = static_cast<int>(raw * 19.0f);
-  if (action_id > 18) action_id = 18;
+  // Weighted mapping: emphasize movement and ball actions over idle
+  int action_id;
+  if (raw < 0.3f) {
+    // Movement directions (1-8)
+    action_id = 1 + static_cast<int>(raw / 0.3f * 8.0f);
+  } else if (raw < 0.55f) {
+    // Pass/shot (9-12)
+    action_id = 9 + static_cast<int>((raw - 0.3f) / 0.25f * 4.0f);
+  } else if (raw < 0.75f) {
+    // Tactical (13-17): keeper_rush, sliding, pressure, team_pressure, switch
+    action_id = 13 + static_cast<int>((raw - 0.55f) / 0.2f * 5.0f);
+  } else {
+    // Sprint/dribble (18-19)
+    action_id = 18 + static_cast<int>((raw - 0.75f) / 0.25f * 2.0f);
+  }
+  if (action_id > 19) action_id = 19;
   if (action_id < 0) action_id = 0;
 
   // Apply action to RL player (left team, player 0)
@@ -271,22 +290,29 @@ static float reward(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
   float r = 0.0f;
 
   // 1. Goal reward (strongest signal)
-  if (next.score[0] > state.score[0]) r += 5.0f;
-  if (next.score[1] > state.score[1]) r -= 5.0f;
+  if (next.score[0] > state.score[0]) r += 10.0f;
+  if (next.score[1] > state.score[1]) r -= 10.0f;
 
   // 2. Ball possession reward (encourage keeping the ball)
   if (next.ball_owned_team == 0) r += 0.05f;
 
-  // 3. Approach ball reward (shaping: encourage moving toward ball)
+  // 3. Ball approach reward (shaping: move toward ball)
   float ball_dist_delta = state.prev_ball_dist - next.prev_ball_dist;
   r += ball_dist_delta * 0.3f;
 
-  // 4. Approach goal reward (shaping: encourage moving toward opponent goal)
+  // 4. Goal approach reward (shaping: move toward opponent goal at x=+1)
   float goal_dist_delta = state.prev_ball_to_goal_dist - next.prev_ball_to_goal_dist;
-  r += goal_dist_delta * 0.1f;
+  r += goal_dist_delta * 0.2f;
 
-  // 5. Small per-step penalty (encourage fast play, not idle)
-  r -= 0.002f;
+  // 5. Shot proximity bonus (if close to goal, encourage shooting)
+  // The right goal is at x=+1.0 in env coords
+  float player_x = next.left_pos[0];  // player 0 x position
+  if (player_x > 0.7f) {
+    r += 0.01f;  // close to goal bonus
+  }
+
+  // 6. Small per-step penalty (encourage fast play)
+  r -= 0.001f;
 
   return r;
 }
