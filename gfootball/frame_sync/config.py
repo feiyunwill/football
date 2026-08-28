@@ -16,3 +16,9 @@ MAX_PREDICT_AHEAD_FRAMES = 3
 MAX_FRAMES_WITHOUT_PACKET = 5
 # 状态校验：每 K 帧服务器下发一次 state hash，客户端比对
 STATE_HASH_INTERVAL_K = 10
+
+# ----- 2026-08-28 心跳 -----
+# 服务器/客户端周期性发送心跳包的间隔（毫秒），与 C++ protocol.hpp 一致
+HEARTBEAT_INTERVAL_MS = 1000
+# 连续多少个心跳间隔无包则判定断连
+HEARTBEAT_MISS_LIMIT = 5

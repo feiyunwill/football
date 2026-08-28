@@ -30,9 +30,11 @@ from gfootball.frame_sync.protocol import (
     pack_state_hash,
     compute_state_hash,
     unpack_client_frame_input,
+    pack_heartbeat,
     SLOT_INPUT_BYTES,
     FRAME_INPUT_TIMEOUT_MS,
 )
+from gfootball.frame_sync.config import HEARTBEAT_INTERVAL_MS
 
 
 def get_scenario_config(scenario_name, left_agents, right_agents, seed):
@@ -86,6 +88,7 @@ class FrameSyncServer(object):
     self._sock = None
     self._clients = []  # list of (conn, addr, assigned_slots, ready_flag)
     self._lock = threading.Lock()
+    self._heartbeat_thread = None  # 2026-08-28 心跳广播线程
     # Current frame pending: slot index -> SlotInput (default until overwritten by client)
     self._current_frame_inputs = None
     # Set of client indices that have sent input for current frame
@@ -172,6 +175,9 @@ class FrameSyncServer(object):
               self._received_from.add(client_index)
         except ValueError:
           pass
+      elif msg_type == MessageType.Heartbeat:
+        # 2026-08-28 客户端心跳回复：仅确认连接存活，不需回复
+        pass
       elif msg_type == MessageType.Ready:
         with self._lock:
           if client_index < len(self._clients) and self._clients[client_index][0] is conn:
@@ -228,6 +234,18 @@ class FrameSyncServer(object):
         if self._running:
           raise
 
+  def _heartbeat_loop(self):
+    """2026-08-28 心跳广播线程：周期性向所有已连接客户端发送 Heartbeat。"""
+    period = HEARTBEAT_INTERVAL_MS / 1000.0
+    while self._running:
+      time.sleep(period)
+      if not self._running:
+        break
+      with self._lock:
+        frame_id = self._frame_id
+      hb = pack_heartbeat(frame_id, int(time.time() * 1000) & 0xFFFFFFFF)
+      self.send_to_all(hb)
+
   def start(self):
     """Initialize headless env and start TCP listener."""
     self._init_env()
@@ -239,9 +257,14 @@ class FrameSyncServer(object):
     self._running = True
     accept_thread = threading.Thread(target=self._accept_loop, daemon=True)
     accept_thread.start()
+    # 2026-08-28 启动心跳广播线程
+    self._heartbeat_thread = threading.Thread(target=self._heartbeat_loop, daemon=True)
+    self._heartbeat_thread.start()
 
   def stop(self):
     self._running = False
+    if self._heartbeat_thread and self._heartbeat_thread.is_alive():
+      self._heartbeat_thread.join(timeout=2.0)
     if self._sock:
       try:
         self._sock.close()

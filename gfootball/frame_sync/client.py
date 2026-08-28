@@ -9,6 +9,7 @@ from __future__ import print_function
 import socket
 import struct
 import threading
+import time
 import collections
 
 try:
@@ -30,11 +31,14 @@ from gfootball.frame_sync.protocol import (
     unpack_session_start,
     unpack_slot_assignment,
     unpack_state_hash,
+    unpack_heartbeat,
     SLOT_INPUT_BYTES,
     STATE_HASH_BYTES,
+    HEARTBEAT_BYTES,
     MAX_PREDICT_AHEAD_FRAMES,
     MAX_FRAMES_WITHOUT_PACKET,
 )
+from gfootball.frame_sync.config import HEARTBEAT_INTERVAL_MS, HEARTBEAT_MISS_LIMIT
 
 
 class FrameSyncClient(object):
@@ -61,11 +65,16 @@ class FrameSyncClient(object):
     self._frames_without_packet = 0
     self._disconnect_after_frames = 30  # consider disconnected if no packet for 30 logic frames
     self._disconnected = False
+    # 2026-08-28 心跳状态：追踪最后一次收到心跳的时间
+    self._last_heartbeat_ms = 0
+    self._heartbeat_miss_count = 0
 
   def connect(self):
     self._sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     self._sock.connect((self.host, self.port))
     self._running = True
+    self._last_heartbeat_ms = int(time.time() * 1000)
+    self._heartbeat_miss_count = 0
     self._recv_thread = threading.Thread(target=self._recv_loop, daemon=True)
     self._recv_thread.start()
     # Wait for SessionStart + SlotAssignment (handled in _recv_loop)
@@ -94,6 +103,16 @@ class FrameSyncClient(object):
     if len(self._recv_buf) < 1:
       return None, None
     msg_type = self._recv_buf[0]
+    if msg_type == MessageType.Heartbeat:
+      if len(self._recv_buf) < HEARTBEAT_BYTES:
+        return None, None
+      data = bytes(self._recv_buf[:HEARTBEAT_BYTES])
+      del self._recv_buf[:HEARTBEAT_BYTES]
+      try:
+        frame_id, ts = unpack_heartbeat(data)
+        return msg_type, (frame_id, ts)
+      except ValueError:
+        return None, None
     if msg_type == MessageType.AuthoritativeFrame:
       if len(self._recv_buf) < 7:
         return None, None
@@ -161,6 +180,10 @@ class FrameSyncClient(object):
               self._auth_frame_queue.append(payload)
               self._last_auth_frame_id = payload[0]
               self._frames_without_packet = 0
+            elif msg_type == MessageType.Heartbeat:
+              # 2026-08-28 收到心跳：重置计数器
+              self._last_heartbeat_ms = int(time.time() * 1000)
+              self._heartbeat_miss_count = 0
             elif msg_type == MessageType.StateHash:
               self._last_state_hash = payload
             elif msg_type == MessageType.SessionStart:
@@ -195,12 +218,23 @@ class FrameSyncClient(object):
       return len(self._auth_frame_queue) > 0
 
   def tick_disconnect_detection(self):
-    """Call once per logic frame; marks disconnected if no auth packet for N frames."""
+    """Call once per logic frame; marks disconnected if no auth packet for N frames.
+    2026-08-28: 同时检查心跳超时（连续 HEARTBEAT_MISS_LIMIT 个间隔无心跳）。
+    """
     with self._lock:
       if not self._auth_frame_queue:
         self._frames_without_packet += 1
       if self._frames_without_packet >= self._disconnect_after_frames:
         self._disconnected = True
+      # 2026-08-28 心跳超时检测
+      now_ms = int(time.time() * 1000)
+      if self._last_heartbeat_ms > 0:
+        elapsed = now_ms - self._last_heartbeat_ms
+        expected_misses = elapsed // HEARTBEAT_INTERVAL_MS
+        if expected_misses > self._heartbeat_miss_count:
+          self._heartbeat_miss_count = expected_misses
+        if self._heartbeat_miss_count >= HEARTBEAT_MISS_LIMIT:
+          self._disconnected = True
 
   def is_disconnected(self):
     with self._lock:

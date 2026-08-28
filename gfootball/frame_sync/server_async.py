@@ -27,9 +27,11 @@ from gfootball.frame_sync.protocol import (
     pack_state_hash,
     compute_state_hash,
     unpack_client_frame_input,
+    pack_heartbeat,
     SLOT_INPUT_BYTES,
     FRAME_INPUT_TIMEOUT_MS,
 )
+from gfootball.frame_sync.config import HEARTBEAT_INTERVAL_MS
 
 
 class FrameSyncServerAsync(object):
@@ -131,6 +133,9 @@ class FrameSyncServerAsync(object):
                   self._received_from.add(client_index)
           except ValueError:
             pass
+        elif msg_type == MessageType.Heartbeat:
+          # 2026-08-28 客户端心跳回复：确认连接存活
+          pass
         elif msg_type == MessageType.Ready:
           async with self._lock:
             if client_index < len(self._clients):
@@ -276,6 +281,18 @@ class FrameSyncServerAsync(object):
       await self.send_to_all(pack_state_hash(frame_id, h))
     await self.advance_frame_id()
 
+  async def _heartbeat_loop(self):
+    """2026-08-28 心跳广播：周期性向所有客户端发送 Heartbeat。"""
+    period = HEARTBEAT_INTERVAL_MS / 1000.0
+    while self._running:
+      await asyncio.sleep(period)
+      if not self._running:
+        break
+      async with self._lock:
+        frame_id = self._frame_id
+      hb = pack_heartbeat(frame_id, int(asyncio.get_event_loop().time() * 1000) & 0xFFFFFFFF)
+      await self.send_to_all(hb)
+
   async def run_loop_async(self, rate_hz=10, wait_for_ready=True):
     """Run frame loop at fixed rate until stop()."""
     if self._server is None:
@@ -283,10 +300,19 @@ class FrameSyncServerAsync(object):
     if wait_for_ready:
       while self._running and not await self.all_clients_ready():
         await asyncio.sleep(0.05)
+    # 2026-08-28 启动心跳广播任务
+    heartbeat_task = asyncio.create_task(self._heartbeat_loop())
     period = 1.0 / rate_hz
-    while self._running:
-      t0 = asyncio.get_event_loop().time()
-      await self.run_one_frame()
-      elapsed = asyncio.get_event_loop().time() - t0
-      if elapsed < period:
-        await asyncio.sleep(period - elapsed)
+    try:
+      while self._running:
+        t0 = asyncio.get_event_loop().time()
+        await self.run_one_frame()
+        elapsed = asyncio.get_event_loop().time() - t0
+        if elapsed < period:
+          await asyncio.sleep(period - elapsed)
+    finally:
+      heartbeat_task.cancel()
+      try:
+        await heartbeat_task
+      except asyncio.CancelledError:
+        pass

@@ -23,6 +23,7 @@
 | StateHash | Server -> Client | Optional; every K frames for verification. |
 | SessionStart | Server -> Client | Scenario params, seed, left_agents, right_agents; client applies setConfig + reset. |
 | Ready | Client -> Server | Sent after client applied SessionStart; server starts frame 0 when all ready. |
+| Heartbeat | Bidirectional | 2026-08-28: 保活包，载荷 frame_id(4B) + timestamp_ms(4B)。服务器每 HEARTBEAT_INTERVAL_MS(1000ms) 广播一次；客户端收到后重置超时计数器。连续 HEARTBEAT_MISS_LIMIT(5) 个间隔无心跳则判定断连。 |
 
 ## Full action per slot
 

@@ -29,7 +29,13 @@ enum class MessageType : uint8_t {
   SessionStart = 5,      // server -> client: scenario params, seed, left_agents, right_agents
   Ready = 6,             // client -> server: ready after SessionStart applied
   SlotAssignment = 7,    // server -> client: which slot indices this client controls
+  Heartbeat = 8,         // 2026-08-28 双向心跳：周期性保活包，载荷 frame_id(4B) + timestamp(4B)
 };
+
+// 2026-08-28 心跳间隔（毫秒）：服务器/客户端周期性发送 Heartbeat；
+// 连续 HEARTBEAT_MISS_LIMIT 个间隔无包则判定断连。
+constexpr int HEARTBEAT_INTERVAL_MS = 1000;
+constexpr int HEARTBEAT_MISS_LIMIT = 5;  // 5s 无心跳判定断连
 
 // ----- Frame semantics -----
 // One network frame = one env step = physics_steps_per_frame (default 10) ProcessPhase() ticks.
@@ -69,11 +75,17 @@ struct SlotInput {
 
 constexpr size_t SLOT_INPUT_BYTES = sizeof(SlotInput);
 
+// ----- Type aliases (used by several packet layouts) -----
+using frame_id_t = uint32_t;
+using state_hash_t = uint64_t;
+
+// ----- Heartbeat packet (2026-08-28) -----
+// Layout: message_type (1) + frame_id (4) + timestamp_ms (4B uint32_t)
+constexpr size_t HEARTBEAT_PACKET_BYTES = 1 + sizeof(frame_id_t) + sizeof(uint32_t);
+
 // ----- Authoritative frame packet (server -> client) -----
 // Layout: message_type (1) + frame_id (4) + num_slots (2) + slot_inputs (num_slots * SLOT_INPUT_BYTES)
 // Optional trailer: state_hash (4 or 8 bytes) if MessageType has hash.
-using frame_id_t = uint32_t;
-using state_hash_t = uint64_t;
 
 constexpr size_t AUTHORITATIVE_FRAME_HEADER_BYTES = 1 + sizeof(frame_id_t) + sizeof(uint16_t);
 

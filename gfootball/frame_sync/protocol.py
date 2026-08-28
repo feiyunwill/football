@@ -38,6 +38,7 @@ class MessageType:
   SessionStart = 5
   Ready = 6
   SlotAssignment = 7  # server -> client: which slot indices this client controls
+  Heartbeat = 8       # 2026-08-28 双向心跳：保活包，载荷 frame_id(4B) + timestamp_ms(4B)
 
 
 def pack_slot_input(slot_input):
@@ -198,3 +199,25 @@ def compute_state_hash(state_str):
   """64-bit hash of state string for optional verification."""
   h = hashlib.sha256(state_str if isinstance(state_str, bytes) else state_str.encode())
   return struct.unpack_from('<Q', h.digest(), 0)[0]
+
+
+# ----- 2026-08-28 心跳包 -----
+# Layout: msg_type (1) + frame_id (4) + timestamp_ms (4)
+HEARTBEAT_FMT = '<BII'
+HEARTBEAT_BYTES = struct.calcsize(HEARTBEAT_FMT)
+
+
+def pack_heartbeat(frame_id, timestamp_ms):
+  """打包心跳包。timestamp_ms 为 monotonic 毫秒级时间戳。"""
+  return struct.pack(HEARTBEAT_FMT, MessageType.Heartbeat, frame_id & 0xFFFFFFFF, timestamp_ms & 0xFFFFFFFF)
+
+
+def unpack_heartbeat(data):
+  """解包心跳包，返回 (frame_id, timestamp_ms)。"""
+  if len(data) < HEARTBEAT_BYTES:
+    raise ValueError('Heartbeat too short')
+  if data[0] != MessageType.Heartbeat:
+    raise ValueError('Not Heartbeat')
+  frame_id = struct.unpack_from('<I', data, 1)[0]
+  timestamp_ms = struct.unpack_from('<I', data, 5)[0]
+  return frame_id, timestamp_ms
