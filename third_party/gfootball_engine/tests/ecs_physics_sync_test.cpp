@@ -1,9 +1,11 @@
 // Copyright 2026 Google LLC & Contributors
-// P2-Phase1 测试：PlayerPhysicsComponent 在 ECS World 中的操作
+// P2-Phase1/2/3/4 测试：ECS 组件操作与序列化
 // 纯 POD 组件，不依赖引擎 math 库。
 
 #include "ecs/world.hpp"
 #include "ecs/entity.hpp"
+#include "ecs/serializer.hpp"
+#include <typeindex>
 
 #include <gtest/gtest.h>
 
@@ -397,4 +399,124 @@ TEST(PlayerPhysicsTest, BidirectionalSyncPattern) {
   float dstAngle = check->angle;
   EXPECT_FLOAT_EQ(dstPx, 42.0f);
   EXPECT_FLOAT_EQ(dstAngle, 3.14f);
+}
+
+// ===== WorldSerializer 测试 =====
+
+TEST(WorldSerializerTest, SerializeEmptyWorld) {
+  World w;
+  SerializedWorld data = WorldSerializer::Serialize<TestPhysics>(w);
+  auto key = std::type_index(typeid(TestPhysics));
+  EXPECT_EQ(data.pools[key].size(), 0u);
+}
+
+TEST(WorldSerializerTest, SerializeDeserializeRoundTrip) {
+  World w;
+  Entity e1 = w.CreateEntity();
+  Entity e2 = w.CreateEntity();
+  w.AddComponent(e1, TestPhysics{1.0f, 2.0f, 0, 0, 0, 0, 0, 0, 5.0f, 1});
+  w.AddComponent(e2, TestPhysics{3.0f, 4.0f, 0, 0, 0, 0, 0, 2, 8.0f, 0});
+
+  SerializedWorld data = WorldSerializer::Serialize<TestPhysics>(w);
+  auto key = std::type_index(typeid(TestPhysics));
+  EXPECT_EQ(data.pools[key].size(), 2u);
+
+  // 反序列化到新 World
+  World w2;
+  WorldSerializer::Deserialize<TestPhysics>(w2, data);
+
+  // 验证实体数量
+  int count = 0;
+  w2.ForEach<TestPhysics>([&](Entity, TestPhysics& c) {
+    count++;
+  });
+  EXPECT_EQ(count, 2);
+}
+
+TEST(WorldSerializerTest, PreserveComponentData) {
+  World w;
+  Entity e = w.CreateEntity();
+  TestPhysics src;
+  src.px = 42.0f;
+  src.py = -15.0f;
+  src.angle = 3.14f;
+  src.enumVelocity = 3;
+  src.floatVelocity = 8.5f;
+  src.foot = 0;
+  w.AddComponent(e, src);
+
+  SerializedWorld data = WorldSerializer::Serialize<TestPhysics>(w);
+
+  World w2;
+  WorldSerializer::Deserialize<TestPhysics>(w2, data);
+
+  TestPhysics* got = nullptr;
+  w2.ForEach<TestPhysics>([&](Entity, TestPhysics& c) {
+    got = &c;
+  });
+  ASSERT_NE(got, nullptr);
+  EXPECT_FLOAT_EQ(got->px, 42.0f);
+  EXPECT_FLOAT_EQ(got->py, -15.0f);
+  EXPECT_FLOAT_EQ(got->angle, 3.14f);
+  EXPECT_EQ(got->enumVelocity, 3);
+  EXPECT_FLOAT_EQ(got->floatVelocity, 8.5f);
+  EXPECT_EQ(got->foot, 0);
+}
+
+TEST(WorldSerializerTest, MultipleComponentTypes) {
+  World w;
+  Entity e = w.CreateEntity();
+  w.AddComponent(e, TestPhysics{1.0f, 2.0f, 0, 0, 0, 0, 0, 0, 5.0f, 1});
+  w.AddComponent(e, TestMeta{42, 0, true});
+  w.AddComponent(e, TestTacticsComponent{true, 500, 0.7f, 0.65f, -1, 0});
+
+  SerializedWorld data =
+      WorldSerializer::Serialize<TestPhysics, TestMeta, TestTacticsComponent>(w);
+  auto key_p = std::type_index(typeid(TestPhysics));
+  EXPECT_EQ(data.pools[key_p].size(), 1u);
+
+  World w2;
+  WorldSerializer::Deserialize<TestPhysics, TestMeta, TestTacticsComponent>(w2, data);
+
+  int count = 0;
+  w2.ForEach<TestPhysics>([&](Entity e2, TestPhysics& p) {
+    count++;
+    EXPECT_FLOAT_EQ(p.px, 1.0f);
+    EXPECT_TRUE(w2.HasComponent<TestMeta>(e2));
+    EXPECT_TRUE(w2.HasComponent<TestTacticsComponent>(e2));
+    TestMeta* m = w2.GetComponent<TestMeta>(e2);
+    ASSERT_NE(m, nullptr);
+    EXPECT_EQ(m->stable_id, 42);
+    EXPECT_TRUE(m->is_active);
+    TestTacticsComponent* t = w2.GetComponent<TestTacticsComponent>(e2);
+    ASSERT_NE(t, nullptr);
+    EXPECT_TRUE(t->hasPossession);
+    EXPECT_EQ(t->timeNeededToGetToBall_ms, 500);
+  });
+  EXPECT_EQ(count, 1);
+}
+
+TEST(WorldSerializerTest, DeterministicEntityOrder) {
+  World w;
+  for (int i = 0; i < 10; ++i) {
+    Entity e = w.CreateEntity();
+    w.AddComponent(e, TestPhysics{float(i), 0, 0, 0, 0, 0, 0, 0, 0.0f, 1});
+  }
+
+  SerializedWorld data = WorldSerializer::Serialize<TestPhysics>(w);
+  auto key = std::type_index(typeid(TestPhysics));
+  EXPECT_EQ(data.pools[key].size(), 10u);
+
+  World w2;
+  WorldSerializer::Deserialize<TestPhysics>(w2, data);
+
+  std::vector<float> positions;
+  w2.ForEach<TestPhysics>([&](Entity, TestPhysics& c) {
+    positions.push_back(c.px);
+  });
+
+  ASSERT_EQ(positions.size(), 10u);
+  for (int i = 0; i < 10; ++i) {
+    EXPECT_FLOAT_EQ(positions[i], float(i));
+  }
 }
