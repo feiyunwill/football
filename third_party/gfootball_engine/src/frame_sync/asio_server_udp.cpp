@@ -12,6 +12,7 @@
 #include <chrono>
 #include <cstring>
 #include <algorithm>
+#include <flat_set>
 #include <iostream>
 #include <print>
 #include <memory>
@@ -131,7 +132,7 @@ class FrameSyncServerUDP {
     if (it != clients_.end()) return it->second;
     auto client = std::make_shared<ClientSessionUDP>();
     client->endpoint = sender;
-    std::set<uint16_t> used;
+    std::flat_set<uint16_t> used;
     for (const auto& p : clients_) {
       for (uint16_t s : p.second->assigned_slots) used.insert(s);
     }

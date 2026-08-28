@@ -12,6 +12,7 @@
 #include <chrono>
 #include <cstdint>
 #include <algorithm>
+#include <flat_set>
 #include <iostream>
 #include <print>
 #include <memory>
@@ -100,7 +101,7 @@ class FrameSyncServer {
       std::lock_guard<std::mutex> lock(mu_);
       auto client = std::make_shared<ClientSession>(io_);
       client->socket = std::move(socket);
-      std::set<uint16_t> used;
+      std::flat_set<uint16_t> used;
       for (const auto& c : clients_) {
         for (uint16_t s : c->assigned_slots) used.insert(s);
       }
