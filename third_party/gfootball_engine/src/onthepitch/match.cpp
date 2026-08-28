@@ -1001,18 +1001,19 @@ bool Match::StepMentalImages(bool reverse) {
 
 bool Match::StepTeamSwitch(bool reverse) {
   DO_VALIDATION;
-  // obvious
-  teams[first_team]->UpdateSwitch();
-  teams[second_team]->UpdateSwitch();
+  // 2026-08-28 ECS Phase 4：委托 TeamSwitchSystem
+  TeamSwitchSystemProcess(this, first_team);
+  TeamSwitchSystemProcess(this, second_team);
   return true;
 }
 
 bool Match::StepTeamsProcess(bool reverse) {
   DO_VALIDATION;
+  // 2026-08-28 ECS Phase 4：委托 TeamTacticsSystem
   Mirror(first_team == 1, first_team == 0, first_team == 1);
-  teams[first_team]->Process();
+  TeamTacticsSystemProcess(this, first_team);
   Mirror(true, true, true);
-  teams[second_team]->Process();
+  TeamTacticsSystemProcess(this, second_team);
   Mirror(first_team == 0, first_team == 1, first_team == 0);
   return true;
 }
@@ -1034,10 +1035,11 @@ bool Match::StepOfficialsProcess(bool reverse) {
 
 bool Match::StepPossessionStats(bool reverse) {
   DO_VALIDATION;
+  // 2026-08-28 ECS Phase 4：委托 TeamPossessionStatsSystem
   Mirror(first_team == 1, first_team == 0, first_team == 1);
-  teams[first_team]->UpdatePossessionStats();
+  TeamPossessionStatsSystemProcess(this, first_team);
   Mirror(true, true, true);
-  teams[second_team]->UpdatePossessionStats();
+  TeamPossessionStatsSystemProcess(this, second_team);
   Mirror(first_team == 0, first_team == 1, first_team == 0);
   return true;
 }

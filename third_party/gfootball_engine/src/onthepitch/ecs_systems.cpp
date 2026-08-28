@@ -89,3 +89,22 @@ void BallCollisionSystemProcess(Match* match) {
   DO_VALIDATION;
   match->CheckBallCollisions();
 }
+
+// 2026-08-28 ECS Phase 4：Team 战术系统 wrapper
+// Team 方法均为 public，无需 friend 声明。
+// 不重写战术逻辑，仅建立 System 入口供帧管线调度。
+
+void TeamTacticsSystemProcess(Match* match, int team_id) {
+  DO_VALIDATION;
+  match->GetTeam(team_id)->Process();
+}
+
+void TeamSwitchSystemProcess(Match* match, int team_id) {
+  DO_VALIDATION;
+  match->GetTeam(team_id)->UpdateSwitch();
+}
+
+void TeamPossessionStatsSystemProcess(Match* match, int team_id) {
+  DO_VALIDATION;
+  match->GetTeam(team_id)->UpdatePossessionStats();
+}

@@ -32,4 +32,12 @@ void HumanoidCollisionSystemProcess(Match* match);
 /// 包装 Match::CheckBallCollisions()，委托已有球碰撞逻辑
 void BallCollisionSystemProcess(Match* match);
 
+// 2026-08-28 ECS Phase 4：Team 战术系统 wrapper
+/// 包装 Team::Process()，执行队伍 AI 战术决策
+void TeamTacticsSystemProcess(Match* match, int team_id);
+/// 包装 Team::UpdateSwitch()，执行球员切换逻辑
+void TeamSwitchSystemProcess(Match* match, int team_id);
+/// 包装 Team::UpdatePossessionStats()，更新控球统计
+void TeamPossessionStatsSystemProcess(Match* match, int team_id);
+
 #endif
