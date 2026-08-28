@@ -53,7 +53,7 @@ struct ConfigFactory {
     static constexpr TI CRITIC_HIDDEN_DIM = 256;
     static constexpr TI ON_POLICY_RUNNER_STEPS_PER_ENV = 512;
     static constexpr TI N_ENVIRONMENTS = 1;  // GameEnv is a singleton
-    static constexpr TI TOTAL_STEP_LIMIT = 200000;
+    static constexpr TI TOTAL_STEP_LIMIT = 20000;  // Quick test (increase for real training)
     static constexpr TI STEP_LIMIT = TOTAL_STEP_LIMIT / (ON_POLICY_RUNNER_STEPS_PER_ENV * N_ENVIRONMENTS) + 1;
     static constexpr TI EPISODE_STEP_LIMIT = 3000;
     using ACTOR_OPTIMIZER_PARAMETERS = rlt::nn::optimizers::adam::DEFAULT_PARAMETERS_PYTORCH<TYPE_POLICY>;
@@ -174,6 +174,7 @@ auto run(TI seed) {
   float total_wall = std::chrono::duration<float>(wall_end - wall_start).count();
   std::println("Training complete! Steps: {}, Wall: {:.1f}s, SPS: {:.1f}",
                ts.step, total_wall, static_cast<float>(ts.step) / total_wall);
+  rl_tools::print_action_stats();
   rlt::free(device, ts);
   return 0;
 }

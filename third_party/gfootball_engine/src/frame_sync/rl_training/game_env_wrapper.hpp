@@ -20,6 +20,7 @@
 #include <cmath>
 #include <vector>
 #include <cstring>
+#include <print>
 
 // Global engine pointer (set in training.cpp before RLtools loop starts)
 class GameEnv;
@@ -193,6 +194,39 @@ static void extract_info_to_state(const SharedInfo& info, int step_count,
 using STATE_SPEC = rl::environments::game_env_wrapper::Specification<float, unsigned long>;
 using STATE_TYPE = rl::environments::game_env_wrapper::State<STATE_SPEC>;
 
+// ---- Action frequency tracking (for training diagnostics) ----
+static int g_action_counts[20] = {};
+static int g_episode_count = 0;
+static float g_total_reward = 0.0f;
+static float g_episode_rewards[100] = {};
+static int g_episode_idx = 0;
+static float g_current_episode_reward = 0.0f;
+
+static void print_action_stats() {
+  int total = 0;
+  for (int i = 0; i < 20; i++) total += g_action_counts[i];
+  if (total == 0) return;
+  std::println("\n=== Action Frequency ({} total actions) ===", total);
+  const char* names[] = {
+    "idle", "left", "top_left", "top", "top_right", "right",
+    "bot_right", "bot", "bot_left", "long_pass", "high_pass",
+    "short_pass", "shot", "keeper_rush", "sliding", "pressure",
+    "team_press", "switch", "sprint", "dribble"
+  };
+  for (int i = 0; i < 20; i++) {
+    if (g_action_counts[i] > 0) {
+      float pct = 100.0f * g_action_counts[i] / total;
+      std::println("  {:12s}: {:6d} ({:5.1f}%)", names[i], g_action_counts[i], pct);
+    }
+  }
+  std::println("\n=== Episode Returns (last {} episodes) ===", g_episode_idx);
+  float mean = 0;
+  int n = g_episode_idx < 100 ? g_episode_idx : 100;
+  for (int i = 0; i < n; i++) mean += g_episode_rewards[i];
+  if (n > 0) mean /= n;
+  std::println("  Mean return (last {}): {:.3f}", n, mean);
+}
+
 // ---- initial_state: reset engine + extract first observation ----
 template <typename DEVICE, typename SPEC, typename RNG>
 static void initial_state(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
@@ -229,7 +263,7 @@ static void sample_initial_state(DEVICE& dev, const rl::environments::GameEnvWra
 template <typename DEVICE, typename SPEC, typename ACTION_SPEC, typename RNG>
 static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
                    typename SPEC::PARAMETERS&,
-                   const STATE_TYPE&,
+                   const STATE_TYPE& state,
                    const Matrix<ACTION_SPEC>& action,
                    STATE_TYPE& next,
                    RNG&) {
@@ -271,9 +305,29 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
   extract_info_to_state(info, next.step_count + 1, next);
   next.step_count = next.step_count + 1;
 
+  // Track action frequency
+  if (action_id >= 0 && action_id < 20) g_action_counts[action_id]++;
+
+  // Compute immediate reward for this step
+  float step_reward = 0.0f;
+  if (next.score[0] > state.score[0]) step_reward += 10.0f;
+  if (next.score[1] > state.score[1]) step_reward -= 10.0f;
+  if (next.ball_owned_team == 0) step_reward += 0.05f;
+  step_reward += (state.prev_ball_dist - next.prev_ball_dist) * 0.3f;
+  step_reward += (state.prev_ball_to_goal_dist - next.prev_ball_to_goal_dist) * 0.2f;
+  g_current_episode_reward += step_reward;
+
   // Termination: only on episode step limit (let agent play full episodes)
   if (next.step_count >= static_cast<typename SPEC::TI>(SPEC::PARAMETERS::EPISODE_STEP_LIMIT)) {
     next.done = true;
+  }
+
+  // Track episode return
+  if (next.done) {
+    g_episode_rewards[g_episode_idx % 100] = g_current_episode_reward;
+    g_episode_idx++;
+    g_episode_count++;
+    g_current_episode_reward = 0.0f;
   }
 
   return 1.0f;
