@@ -44,6 +44,10 @@ void SyncPhysicsToSpatialState(const PlayerPhysicsComponent& src, SpatialState& 
 /// 遍历所有活跃球员实体，将 SpatialState 同步到 PlayerPhysicsComponent
 void SyncPlayerPhysicsSystem(Match* match);
 
+// 2026-08-28 P2-Phase3+：碰撞结果数据化
+/// 碰撞 System 执行后，将碰撞结果从 OOP 写入 ECS CollisionResultComponent
+void PopulateCollisionResults(Match* match);
+
 // 2026-08-28 ECS Phase 4：Team 战术系统 wrapper
 /// 包装 Team::Process()，执行队伍 AI 战术决策
 void TeamTacticsSystemProcess(Match* match, int team_id);

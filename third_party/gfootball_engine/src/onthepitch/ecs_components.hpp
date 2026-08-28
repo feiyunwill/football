@@ -93,6 +93,15 @@ struct TacticsComponent {
   int team_id = 0;
 };
 
+/// 2026-08-28 P2-Phase3+：碰撞结果组件
+/// 碰撞 System 执行后将结果写入此组件，下游系统可从 ECS 查询而非调用 OOP。
+struct CollisionResultComponent {
+  bool collided_with_ball = false;
+  bool collided_with_player = false;
+  int collided_player_id = -1;
+  Vector3 collision_normal;
+};
+
 /// 裁判实体标记（状态仍在 Referee 类中，System 调用 Referee::Process）
 struct RefereeTag {};
 

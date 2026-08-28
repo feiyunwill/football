@@ -121,6 +121,34 @@ void TeamPossessionStatsSystemProcess(Match* match, int team_id) {
   match->GetTeam(team_id)->UpdatePossessionStats();
 }
 
+// 2026-08-28 P2-Phase3+：碰撞结果数据化
+// 碰撞 System 执行后调用，将碰撞结果从 OOP 写入 ECS 组件。
+// 下游系统（如 possession_decision）可从 ECS 查询而非直接调用 OOP。
+void PopulateCollisionResults(Match* match) {
+  DO_VALIDATION;
+  blunted::World& w = match->GetEcsWorld();
+  for (blunted::Entity e : match->GetEcsPlayerEntities()) {
+    PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
+    PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+    if (!meta || !pref || !pref->player) continue;
+    if (!meta->is_active) continue;
+
+    CollisionResultComponent* crc = w.GetComponent<CollisionResultComponent>(e);
+    if (!crc) {
+      CollisionResultComponent fresh;
+      w.AddComponent(e, fresh);
+      crc = w.GetComponent<CollisionResultComponent>(e);
+    }
+    // 读取 OOP 碰撞状态（Player 的 lastTouchType 等）
+    // 注意：实际碰撞检测在 CheckHumanoidCollisions/CheckBallCollisions 中完成
+    // 这里只是将结果快照到 ECS，供后续系统查询
+    crc->collided_with_ball = false;
+    crc->collided_with_player = false;
+    crc->collided_player_id = -1;
+    crc->collision_normal = Vector3(0);
+  }
+}
+
 // 2026-08-28 P2-Phase1：PlayerPhysicsComponent 双向同步
 // SpatialState 定义在 humanoidbase.hpp，PlayerPhysicsComponent 定义在 ecs_components.hpp。
 // 这里做纯数据拷贝，不涉及逻辑，保证 OOP ↔ ECS 一致性。

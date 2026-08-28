@@ -1199,6 +1199,14 @@ void Match::InitSystemGraph() {
         return StepHumanoidCollisions(pc->reverse);
       },
       {"players"});
+
+  // 2026-08-28 P2-Phase3+：碰撞结果数据化 — 碰撞 System 后将结果写入 ECS
+  system_graph_.Register("populate_collision_results",
+      [this](void* ctx) -> bool {
+        PopulateCollisionResults(this);
+        return true;
+      },
+      {"humanoid_collisions", "ball_collisions"});
 }
 
 bool Match::RunFramePipeline(bool reverse) {
