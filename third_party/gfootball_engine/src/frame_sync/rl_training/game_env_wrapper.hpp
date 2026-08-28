@@ -1,13 +1,9 @@
 // Copyright 2026 Google LLC & Contributors
 // GameEnvWrapper: wrapping GameEnv as RLtools-compatible environment interface
-// 1v0 scenario: 1 RL player vs AI opponent
+// Supports N controlled agents (single-agent or multi-agent via shared policy)
 //
-// Phase 1 fixes (2026-08-28):
-// - SetGame(g_rl_env) before all get_info() calls
-// - Better action mapping: avoid idle-dominated distribution
-// - Termination only on step limit (no goal-based termination)
-// - Richer reward signal with approach-ball shaping
-// - Training metrics: mean reward, episode length tracking
+// Phase 1 (2026-08-28): 1v0 single-agent baseline
+// Phase 2 (2026-08-28): N-agent shared policy (11v11 left team)
 
 #ifndef _HPP_GAME_ENV_WRAPPER
 #define _HPP_GAME_ENV_WRAPPER
@@ -36,10 +32,10 @@ struct DefaultParameters {
   using TI = T_TI;
   static constexpr TI OBS_DIM = 128;
   static constexpr TI ACTION_DIM = 1;
-  static constexpr TI N_AGENTS = 1;
+  static constexpr TI N_AGENTS = 1;     // single shared policy for all 11 players
   static constexpr TI EPISODE_STEP_LIMIT = 1500;  // 150s match (faster episodes)
-  static constexpr int LEFT_AGENTS = 1;
-  static constexpr int RIGHT_AGENTS = 0;
+  static constexpr int LEFT_AGENTS = 11;  // all 11 left players controlled
+  static constexpr int RIGHT_AGENTS = 0;  // right team uses built-in AI
   static constexpr int PHYSICS_STEPS = 10;
   static constexpr int N_ACTIONS = 20;  // 0=idle, 1-8=dir, 9-12=pass/shot, 13-19=tactical/dribble
   // Idle action suppression: minimum action id to avoid idle-dominant policy
@@ -272,41 +268,40 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
     return 0.0f;
   }
 
-  // Map continuous action to discrete action id
-  // Policy outputs [0,1] continuous value
+  // Map continuous [0,1] to discrete football action id (0-19)
+  auto map_to_action = [](float raw) -> int {
+    raw = raw < 0.0f ? 0.0f : (raw > 1.0f ? 1.0f : raw);
+    int action_id;
+    if (raw < 0.3f) {
+      action_id = 1 + static_cast<int>(raw / 0.3f * 8.0f);  // directions 1-8
+    } else if (raw < 0.55f) {
+      action_id = 9 + static_cast<int>((raw - 0.3f) / 0.25f * 4.0f);  // pass/shot 9-12
+    } else if (raw < 0.75f) {
+      action_id = 13 + static_cast<int>((raw - 0.55f) / 0.2f * 5.0f);  // tactical 13-17
+    } else {
+      action_id = 18 + static_cast<int>((raw - 0.75f) / 0.25f * 2.0f);  // sprint/dribble 18-19
+    }
+    return action_id < 0 ? 0 : (action_id > 19 ? 19 : action_id);
+  };
+
+  // Single shared policy output — apply same action to all 11 players
+  // Each player uses the same action but the engine's built-in AI
+  // provides role-specific behavior (GK stays in goal, etc.)
   float raw = rl_tools::get(action, 0, 0);
-  raw = raw < 0.0f ? 0.0f : (raw > 1.0f ? 1.0f : raw);
-
-  // Weighted mapping: emphasize movement and ball actions over idle
-  int action_id;
-  if (raw < 0.3f) {
-    // Movement directions (1-8)
-    action_id = 1 + static_cast<int>(raw / 0.3f * 8.0f);
-  } else if (raw < 0.55f) {
-    // Pass/shot (9-12)
-    action_id = 9 + static_cast<int>((raw - 0.3f) / 0.25f * 4.0f);
-  } else if (raw < 0.75f) {
-    // Tactical (13-17): keeper_rush, sliding, pressure, team_pressure, switch
-    action_id = 13 + static_cast<int>((raw - 0.55f) / 0.2f * 5.0f);
-  } else {
-    // Sprint/dribble (18-19)
-    action_id = 18 + static_cast<int>((raw - 0.75f) / 0.25f * 2.0f);
+  int shared_action_id = map_to_action(raw);
+  constexpr int N_LEFT = 11;
+  for (int i = 0; i < N_LEFT; i++) {
+    g_rl_env->action(shared_action_id, true, i);
   }
-  if (action_id > 19) action_id = 19;
-  if (action_id < 0) action_id = 0;
+  if (shared_action_id >= 0 && shared_action_id < 20) g_action_counts[shared_action_id]++;
 
-  // Apply action to RL player (left team, player 0)
-  g_rl_env->action(action_id, true, 0);
-  // Advance engine by one env step (physics_steps_per_frame internal ticks)
+  // Advance engine by one env step
   g_rl_env->step();
 
-  // Extract next observation (with SetGame safety)
+  // Extract next observation
   SharedInfo info = safe_get_info();
   extract_info_to_state(info, next.step_count + 1, next);
   next.step_count = next.step_count + 1;
-
-  // Track action frequency
-  if (action_id >= 0 && action_id < 20) g_action_counts[action_id]++;
 
   // Compute immediate reward for this step
   float step_reward = 0.0f;
@@ -411,7 +406,7 @@ static void observe(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
   rl_tools::set(observation, 0, idx++, static_cast<float>(state.ball_owned_player));
   // steps_left (1)
   rl_tools::set(observation, 0, idx++, static_cast<float>(state.steps_left));
-  // Pad to 128
+  // Pad to OBS_DIM (128)
   while (idx < 128) rl_tools::set(observation, 0, idx++, 0.0f);
 }
 

@@ -56,7 +56,7 @@ struct ConfigFactory {
     static constexpr TI CRITIC_HIDDEN_DIM = 256;
     static constexpr TI ON_POLICY_RUNNER_STEPS_PER_ENV = 512;
     static constexpr TI N_ENVIRONMENTS = 1;  // GameEnv is a singleton
-    static constexpr TI TOTAL_STEP_LIMIT = 200000;  // ~11 min at 30 SPS
+    static constexpr TI TOTAL_STEP_LIMIT = 100000;  // ~55 min at 30 SPS
     static constexpr TI STEP_LIMIT = TOTAL_STEP_LIMIT / (ON_POLICY_RUNNER_STEPS_PER_ENV * N_ENVIRONMENTS) + 1;
     static constexpr TI EPISODE_STEP_LIMIT = 3000;
     using ACTOR_OPTIMIZER_PARAMETERS = rlt::nn::optimizers::adam::DEFAULT_PARAMETERS_PYTORCH<TYPE_POLICY>;
@@ -101,8 +101,8 @@ void init_game_env() {
   // Without left_team/right_team entries, GetTeamState crashes on
   // left_controllers.resize(0) then accessing index 0.
   auto& scenario = g_rl_env->scenario_config;
-  scenario.left_agents = 1;
-  scenario.right_agents = 0;
+  scenario.left_agents = 11;  // all left players are RL-controlled
+  scenario.right_agents = 0;  // right team uses built-in AI
   scenario.real_time = false;
   scenario.deterministic = true;
   scenario.end_episode_on_score = true;
@@ -141,7 +141,7 @@ void init_game_env() {
   g_rl_env->game_config.render = false;
 
   g_rl_env->reset(scenario, false);
-  std::println("GameEnv initialized (headless, 1v0)");
+  std::println("GameEnv initialized (headless, 11v11 shared policy)");
 }
 
 // ===== Training entry =====
