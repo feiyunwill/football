@@ -22,6 +22,7 @@
 #include "../data/teamdata.hpp"
 #include "teamAIcontroller.hpp"
 #include "humangamer.hpp"
+#include "ecs_components.hpp"
 
 class Match;
 
@@ -130,6 +131,9 @@ class Team {
     void ProcessState(EnvState* state);
 
     Player *GetGoalie();
+
+    /// 2026-08-28 P2-Phase3：将队伍战术状态写入 ECS 组件
+    void FillTacticsComponent(TacticsComponent& out) const;
 
   protected:
     const int id;

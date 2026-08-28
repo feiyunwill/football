@@ -669,3 +669,14 @@ void Team::ProcessState(EnvState *state) {
   state->process(lastTouchPlayer);
   state->process(mainSelectedPlayer);
 }
+
+// 2026-08-28 P2-Phase3：将队伍战术状态写入 ECS 组件
+void Team::FillTacticsComponent(TacticsComponent& out) const {
+  DO_VALIDATION;
+  out.hasPossession = hasPossession;
+  out.timeNeededToGetToBall_ms = timeNeededToGetToBall_ms;
+  out.teamPossessionAmount = teamPossessionAmount;
+  out.fadingTeamPossessionAmount = fadingTeamPossessionAmount;
+  out.side = side;
+  out.team_id = id;
+}

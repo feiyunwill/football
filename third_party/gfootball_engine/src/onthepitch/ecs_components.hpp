@@ -82,6 +82,17 @@ struct PlayerPhysicsComponent {
   e_Foot foot = e_Foot_Right;
 };
 
+/// 2026-08-28 P2-Phase3：队伍战术状态组件
+/// 从 Team 成员变量提取可序列化的纯数据，使 ECS 成为可观测的战术数据源。
+struct TacticsComponent {
+  bool hasPossession = false;
+  int timeNeededToGetToBall_ms = 0;
+  float teamPossessionAmount = 0.0f;
+  float fadingTeamPossessionAmount = 0.0f;
+  int side = -1;
+  int team_id = 0;
+};
+
 /// 裁判实体标记（状态仍在 Referee 类中，System 调用 Referee::Process）
 struct RefereeTag {};
 

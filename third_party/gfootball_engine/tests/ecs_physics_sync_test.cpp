@@ -189,6 +189,77 @@ TEST(PlayerPhysicsTest, ClearRemovesAll) {
   EXPECT_EQ(e, kNullEntity + 1);
 }
 
+// ===== TacticsComponent 模拟测试 =====
+
+struct TestTacticsComponent {
+  bool hasPossession = false;
+  int timeNeededToGetToBall_ms = 0;
+  float teamPossessionAmount = 0.0f;
+  float fadingTeamPossessionAmount = 0.0f;
+  int side = -1;
+  int team_id = 0;
+};
+
+TEST(TacticsComponentTest, DefaultValues) {
+  TestTacticsComponent comp;
+  EXPECT_FALSE(comp.hasPossession);
+  EXPECT_EQ(comp.timeNeededToGetToBall_ms, 0);
+  EXPECT_FLOAT_EQ(comp.teamPossessionAmount, 0.0f);
+  EXPECT_EQ(comp.side, -1);
+}
+
+TEST(TacticsComponentTest, AddGetComponent) {
+  World w;
+  Entity e = w.CreateEntity();
+  TestTacticsComponent comp;
+  comp.hasPossession = true;
+  comp.timeNeededToGetToBall_ms = 500;
+  comp.teamPossessionAmount = 0.7f;
+  comp.fadingTeamPossessionAmount = 0.65f;
+  comp.side = -1;
+  comp.team_id = 0;
+  w.AddComponent(e, comp);
+
+  TestTacticsComponent* got = w.GetComponent<TestTacticsComponent>(e);
+  ASSERT_NE(got, nullptr);
+  EXPECT_TRUE(got->hasPossession);
+  EXPECT_EQ(got->timeNeededToGetToBall_ms, 500);
+  EXPECT_FLOAT_EQ(got->teamPossessionAmount, 0.7f);
+  EXPECT_EQ(got->side, -1);
+  EXPECT_EQ(got->team_id, 0);
+}
+
+TEST(TacticsComponentTest, RoundTripOopToEcsToOop) {
+  TestTacticsComponent src;
+  src.hasPossession = true;
+  src.timeNeededToGetToBall_ms = 1200;
+  src.teamPossessionAmount = 0.85f;
+  src.fadingTeamPossessionAmount = 0.80f;
+  src.side = 1;
+  src.team_id = 1;
+
+  World w;
+  Entity e = w.CreateEntity();
+  w.AddComponent(e, src);
+
+  const TestTacticsComponent* comp = w.GetComponent<TestTacticsComponent>(e);
+  ASSERT_NE(comp, nullptr);
+
+  TestTacticsComponent dst;
+  dst.hasPossession = comp->hasPossession;
+  dst.timeNeededToGetToBall_ms = comp->timeNeededToGetToBall_ms;
+  dst.teamPossessionAmount = comp->teamPossessionAmount;
+  dst.fadingTeamPossessionAmount = comp->fadingTeamPossessionAmount;
+  dst.side = comp->side;
+  dst.team_id = comp->team_id;
+
+  EXPECT_TRUE(dst.hasPossession);
+  EXPECT_EQ(dst.timeNeededToGetToBall_ms, 1200);
+  EXPECT_FLOAT_EQ(dst.teamPossessionAmount, 0.85f);
+  EXPECT_EQ(dst.side, 1);
+  EXPECT_EQ(dst.team_id, 1);
+}
+
 // ===== BallComponent 模拟测试 =====
 
 struct TestBallComponent {
