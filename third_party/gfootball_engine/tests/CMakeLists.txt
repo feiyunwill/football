@@ -28,10 +28,10 @@ option(ENABLE_UBSAN "Enable UndefinedBehaviorSanitizer" OFF)
 option(ENABLE_TSAN "Enable ThreadSanitizer" OFF)
 
 if(ENABLE_ASAN)
-  # 需要 libasan 运行时：yum install gcc-toolset-15-libasan-devel 或使用系统 gcc
+  # 2026-08-28 已安装 gcc-toolset-15-libasan-devel
   add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
   add_link_options(-fsanitize=address)
-  message(STATUS "AddressSanitizer enabled (requires libasan runtime)")
+  message(STATUS "AddressSanitizer enabled")
 endif()
 if(ENABLE_UBSAN)
   add_compile_options(-fsanitize=undefined -fno-omit-frame-pointer)
