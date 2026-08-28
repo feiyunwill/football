@@ -18,6 +18,7 @@
 #include "../base/math/quaternion.hpp"
 #include "../gamedefines.hpp"
 #include "../defines.hpp"
+#include "../utils/animation.hpp"
 #include "../scene/scene3d/node.hpp"
 #include "player/controller/icontroller.hpp"
 #include "../data/playerdata.hpp"
@@ -63,6 +64,22 @@ struct PlayerRef {
 /// 球的可驱动节点是内层 Geometry(Object 分支)，与 Node 同级，故用公共基类 Spatial）
 struct SceneNodeRef {
   boost::intrusive_ptr<Spatial> node;
+};
+
+/// 2026-08-28 P2-Phase1：玩家物理状态组件
+/// 从 SpatialState 提取核心物理字段，使 ECS 成为可查询的权威数据源。
+/// 双向同步函数 SyncSpatialStateToPhysics / SyncPhysicsToSpatialState
+/// 负责 OOP ↔ ECS 一致性。
+struct PlayerPhysicsComponent {
+  Vector3 position;
+  radian angle = 0;
+  Vector3 directionVec;
+  e_Velocity enumVelocity = e_Velocity_Idle;
+  float floatVelocity = 0.0f;
+  Vector3 movement;
+  Vector3 bodyDirectionVec;
+  radian relBodyAngle = 0;
+  e_Foot foot = e_Foot_Right;
 };
 
 /// 裁判实体标记（状态仍在 Referee 类中，System 调用 Referee::Process）

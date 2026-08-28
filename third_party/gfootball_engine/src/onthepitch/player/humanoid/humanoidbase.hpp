@@ -261,6 +261,9 @@ class HumanoidBase {
     inline e_FunctionType GetPreviousFunctionType() const { return previousAnim_functionType; }
     inline Vector3 GetMovement() const { return spatialState.movement; }
 
+    // 2026-08-28 P2-Phase1：供 SyncSpatialStateToPhysics 读取完整物理状态
+    inline const SpatialState& GetSpatialState() const { return spatialState; }
+
     Vector3 GetGeomPosition() { DO_VALIDATION; return humanoidNode->GetPosition(); }
 
     int GetIdleMovementAnimID();

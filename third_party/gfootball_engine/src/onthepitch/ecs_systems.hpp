@@ -32,6 +32,16 @@ void HumanoidCollisionSystemProcess(Match* match);
 /// 包装 Match::CheckBallCollisions()，委托已有球碰撞逻辑
 void BallCollisionSystemProcess(Match* match);
 
+// 2026-08-28 P2-Phase1：PlayerPhysicsComponent 双向同步
+struct SpatialState;
+struct PlayerPhysicsComponent;
+/// 从 HumanoidBase::spatialState → PlayerPhysicsComponent（OOP → ECS）
+void SyncSpatialStateToPhysics(const SpatialState& src, PlayerPhysicsComponent& dst);
+/// 从 PlayerPhysicsComponent → SpatialState（ECS → OOP）
+void SyncPhysicsToSpatialState(const PlayerPhysicsComponent& src, SpatialState& dst);
+/// 遍历所有活跃球员实体，将 SpatialState 同步到 PlayerPhysicsComponent
+void SyncPlayerPhysicsSystem(Match* match);
+
 // 2026-08-28 ECS Phase 4：Team 战术系统 wrapper
 /// 包装 Team::Process()，执行队伍 AI 战术决策
 void TeamTacticsSystemProcess(Match* match, int team_id);

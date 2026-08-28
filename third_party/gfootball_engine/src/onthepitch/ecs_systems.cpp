@@ -108,3 +108,56 @@ void TeamPossessionStatsSystemProcess(Match* match, int team_id) {
   DO_VALIDATION;
   match->GetTeam(team_id)->UpdatePossessionStats();
 }
+
+// 2026-08-28 P2-Phase1：PlayerPhysicsComponent 双向同步
+// SpatialState 定义在 humanoidbase.hpp，PlayerPhysicsComponent 定义在 ecs_components.hpp。
+// 这里做纯数据拷贝，不涉及逻辑，保证 OOP ↔ ECS 一致性。
+
+#include "player/humanoid/humanoidbase.hpp"
+#include "player/player.hpp"
+
+void SyncSpatialStateToPhysics(const SpatialState& src, PlayerPhysicsComponent& dst) {
+  dst.position = src.position;
+  dst.angle = src.angle;
+  dst.directionVec = src.directionVec;
+  dst.enumVelocity = src.enumVelocity;
+  dst.floatVelocity = src.floatVelocity;
+  dst.movement = src.movement;
+  dst.bodyDirectionVec = src.bodyDirectionVec;
+  dst.relBodyAngle = src.relBodyAngle;
+  dst.foot = src.foot;
+}
+
+void SyncPhysicsToSpatialState(const PlayerPhysicsComponent& src, SpatialState& dst) {
+  dst.position = src.position;
+  dst.angle = src.angle;
+  dst.directionVec = src.directionVec;
+  dst.enumVelocity = src.enumVelocity;
+  dst.floatVelocity = src.floatVelocity;
+  dst.movement = src.movement;
+  dst.bodyDirectionVec = src.bodyDirectionVec;
+  dst.relBodyAngle = src.relBodyAngle;
+  dst.foot = src.foot;
+}
+
+void SyncPlayerPhysicsSystem(Match* match) {
+  DO_VALIDATION;
+  blunted::World& w = match->GetEcsWorld();
+  for (blunted::Entity e : match->GetEcsPlayerEntities()) {
+    PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
+    PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+    if (!meta || !pref || !pref->player) continue;
+    if (!meta->is_active) continue;
+    auto* humanoid = pref->player->CastHumanoid();
+    if (!humanoid) continue;
+    // 通过新增的 GetSpatialState() public accessor 读取完整物理状态
+    PlayerPhysicsComponent* comp = w.GetComponent<PlayerPhysicsComponent>(e);
+    if (!comp) {
+      PlayerPhysicsComponent fresh;
+      SyncSpatialStateToPhysics(humanoid->GetSpatialState(), fresh);
+      w.AddComponent(e, fresh);
+    } else {
+      SyncSpatialStateToPhysics(humanoid->GetSpatialState(), *comp);
+    }
+  }
+}
