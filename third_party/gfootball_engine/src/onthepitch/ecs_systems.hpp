@@ -15,6 +15,8 @@ class Match;
 
 /// 执行球逻辑（当前委托 Ball::Process）并同步状态到 ECS BallComponent/Transform
 void BallSystemProcess(Match* match);
+/// 2026-08-28 P2-Phase2：从 ECS BallComponent 恢复 Ball 状态（ECS → OOP 方向）
+void SyncBallEcsToOop(Match* match);
 
 /// 执行裁判逻辑（委托 Referee::Process）
 void RefereeSystemProcess(Match* match);

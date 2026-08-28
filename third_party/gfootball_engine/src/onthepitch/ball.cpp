@@ -641,3 +641,21 @@ void Ball::FillBallComponent(BallComponent& out) const {
   out.orientationBuffer = orientationBuffer;
   out.ballTouchesNet = ballTouchesNet;
 }
+
+// 2026-08-28 P2-Phase2：从 ECS 组件恢复球状态（ECS → OOP 方向）
+// 用于 set_state 反序列化后同步 ECS 数据回 Ball 实例。
+void Ball::LoadFromComponent(const BallComponent& src) {
+  DO_VALIDATION;
+  momentum = src.momentum;
+  rotation_ms = src.rotation_ms;
+  const unsigned int pred_count = sizeof(predictions) / sizeof(predictions[0]);
+  for (unsigned int x = 0; x < pred_count; x++) {
+    predictions[x] = src.predictions[x];
+  }
+  valid_predictions = src.valid_predictions;
+  orientPrediction = src.orientPrediction;
+  ballPosHistory = src.ballPosHistory;
+  positionBuffer = src.positionBuffer;
+  orientationBuffer = src.orientationBuffer;
+  ballTouchesNet = src.ballTouchesNet;
+}

@@ -40,6 +40,18 @@ void BallSystemProcess(Match* match) {
   w.AddComponent(e, tr);
 }
 
+void SyncBallEcsToOop(Match* match) {
+  DO_VALIDATION;
+  Ball* ball = match->GetBall();
+  blunted::Entity e = match->GetEcsBallEntity();
+  if (e == blunted::kNullEntity) return;
+  blunted::World& w = match->GetEcsWorld();
+  const BallComponent* comp = w.GetComponent<BallComponent>(e);
+  if (comp) {
+    ball->LoadFromComponent(*comp);
+  }
+}
+
 void RefereeSystemProcess(Match* match) {
   DO_VALIDATION;
   match->GetReferee()->Process();

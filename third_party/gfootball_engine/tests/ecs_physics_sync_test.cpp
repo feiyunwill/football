@@ -189,6 +189,107 @@ TEST(PlayerPhysicsTest, ClearRemovesAll) {
   EXPECT_EQ(e, kNullEntity + 1);
 }
 
+// ===== BallComponent 模拟测试 =====
+
+struct TestBallComponent {
+  float mx = 0.0f, my = 0.0f, mz = 0.0f;  // momentum
+  float qw = 1.0f, qx = 0.0f, qy = 0.0f, qz = 0.0f;  // rotation quaternion
+  float px = 0.0f, py = 0.0f, pz = 0.0f;  // positionBuffer
+  bool ballTouchesNet = false;
+  int valid_predictions = 0;
+};
+
+TEST(BallComponentTest, AddGetComponent) {
+  World w;
+  Entity e = w.CreateEntity();
+  TestBallComponent comp;
+  comp.mx = 5.0f;
+  comp.my = -3.0f;
+  comp.mz = 0.0f;
+  comp.px = 10.0f;
+  comp.py = 20.0f;
+  comp.ballTouchesNet = true;
+  comp.valid_predictions = 42;
+  w.AddComponent(e, comp);
+
+  TestBallComponent* got = w.GetComponent<TestBallComponent>(e);
+  ASSERT_NE(got, nullptr);
+  EXPECT_FLOAT_EQ(got->mx, 5.0f);
+  EXPECT_FLOAT_EQ(got->my, -3.0f);
+  EXPECT_TRUE(got->ballTouchesNet);
+  EXPECT_EQ(got->valid_predictions, 42);
+}
+
+TEST(BallComponentTest, RoundTripOopToEcsToOop) {
+  TestBallComponent src;
+  src.mx = 7.5f;
+  src.my = -2.1f;
+  src.mz = 0.3f;
+  src.px = 42.0f;
+  src.py = -15.0f;
+  src.pz = 0.0f;
+  src.ballTouchesNet = false;
+  src.valid_predictions = 100;
+
+  World w;
+  Entity e = w.CreateEntity();
+  w.AddComponent(e, src);
+
+  const TestBallComponent* comp = w.GetComponent<TestBallComponent>(e);
+  ASSERT_NE(comp, nullptr);
+
+  TestBallComponent dst;
+  dst.mx = comp->mx;
+  dst.my = comp->my;
+  dst.mz = comp->mz;
+  dst.px = comp->px;
+  dst.py = comp->py;
+  dst.pz = comp->pz;
+  dst.ballTouchesNet = comp->ballTouchesNet;
+  dst.valid_predictions = comp->valid_predictions;
+
+  EXPECT_FLOAT_EQ(dst.mx, 7.5f);
+  EXPECT_FLOAT_EQ(dst.my, -2.1f);
+  EXPECT_FLOAT_EQ(dst.mz, 0.3f);
+  EXPECT_FLOAT_EQ(dst.px, 42.0f);
+  EXPECT_FLOAT_EQ(dst.py, -15.0f);
+  EXPECT_FALSE(dst.ballTouchesNet);
+  EXPECT_EQ(dst.valid_predictions, 100);
+}
+
+TEST(BallComponentTest, OverwriteComponent) {
+  World w;
+  Entity e = w.CreateEntity();
+  w.AddComponent(e, TestBallComponent{1.0f, 2.0f, 3.0f});
+  w.AddComponent(e, TestBallComponent{10.0f, 20.0f, 30.0f});
+
+  TestBallComponent* got = w.GetComponent<TestBallComponent>(e);
+  ASSERT_NE(got, nullptr);
+  EXPECT_FLOAT_EQ(got->mx, 10.0f);
+  EXPECT_FLOAT_EQ(got->my, 20.0f);
+  EXPECT_FLOAT_EQ(got->mz, 30.0f);
+}
+
+TEST(BallComponentTest, ForEachDeterministicOrder) {
+  World w;
+  std::vector<Entity> entities;
+  for (int i = 0; i < 10; ++i) {
+    Entity e = w.CreateEntity();
+    w.AddComponent(e, TestBallComponent{float(i), 0, 0});
+    entities.push_back(e);
+  }
+
+  std::vector<Entity> traversal;
+  w.ForEach<TestBallComponent>([&](Entity e, TestBallComponent&) {
+    traversal.push_back(e);
+  });
+
+  ASSERT_EQ(traversal.size(), entities.size());
+  for (size_t i = 0; i < entities.size(); ++i) {
+    EXPECT_EQ(traversal[i], entities[i]);
+  }
+}
+
 // ===== 模拟双向同步模式 =====
 
 TEST(PlayerPhysicsTest, BidirectionalSyncPattern) {
