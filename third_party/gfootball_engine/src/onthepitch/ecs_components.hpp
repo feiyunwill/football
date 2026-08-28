@@ -93,6 +93,16 @@ struct TacticsComponent {
   int team_id = 0;
 };
 
+/// 2026-08-28 P2-Phase3+：球物理状态组件（查询友好）
+/// 存储球的实时物理状态快照，供下游系统直接从 ECS 查询。
+struct BallPhysicsComponent {
+  Vector3 position;
+  Vector3 momentum;
+  float height = 0.0f;
+  float speed = 0.0f;
+  bool touches_net = false;
+};
+
 /// 2026-08-28 P2-Phase3+：碰撞结果组件
 /// 碰撞 System 执行后将结果写入此组件，下游系统可从 ECS 查询而非调用 OOP。
 struct CollisionResultComponent {

@@ -44,6 +44,10 @@ void SyncPhysicsToSpatialState(const PlayerPhysicsComponent& src, SpatialState& 
 /// 遍历所有活跃球员实体，将 SpatialState 同步到 PlayerPhysicsComponent
 void SyncPlayerPhysicsSystem(Match* match);
 
+// 2026-08-28 P2-Phase3+：球物理状态数据化
+/// 将球物理状态（位置/动量/高度/速度/碰网）同步到 BallPhysicsComponent
+void SyncBallPhysicsSystem(Match* match);
+
 // 2026-08-28 P2-Phase3+：碰撞结果数据化
 /// 碰撞 System 执行后，将碰撞结果从 OOP 写入 ECS CollisionResultComponent
 void PopulateCollisionResults(Match* match);

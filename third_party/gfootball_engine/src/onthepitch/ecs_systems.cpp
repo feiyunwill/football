@@ -121,6 +121,29 @@ void TeamPossessionStatsSystemProcess(Match* match, int team_id) {
   match->GetTeam(team_id)->UpdatePossessionStats();
 }
 
+// 2026-08-28 P2-Phase3+：球物理状态数据化
+// Ball::Process() 执行后调用，将球物理快照写入 BallPhysicsComponent。
+// 下游系统可直接从 ECS 查询球位置/速度/高度，无需调用 Ball 方法。
+void SyncBallPhysicsSystem(Match* match) {
+  DO_VALIDATION;
+  Ball* ball = match->GetBall();
+  blunted::Entity e = match->GetEcsBallEntity();
+  if (e == blunted::kNullEntity) return;
+  blunted::World& w = match->GetEcsWorld();
+
+  BallPhysicsComponent* bpc = w.GetComponent<BallPhysicsComponent>(e);
+  if (!bpc) {
+    BallPhysicsComponent fresh;
+    w.AddComponent(e, fresh);
+    bpc = w.GetComponent<BallPhysicsComponent>(e);
+  }
+  bpc->position = ball->Predict(10);
+  bpc->momentum = ball->GetMovement();
+  bpc->height = bpc->position.coords[2];
+  bpc->speed = bpc->momentum.GetLength();
+  bpc->touches_net = ball->BallTouchesNet();
+}
+
 // 2026-08-28 P2-Phase3+：碰撞结果数据化
 // 碰撞 System 执行后调用，将碰撞结果从 OOP 写入 ECS 组件。
 // 下游系统（如 possession_decision）可从 ECS 查询而非直接调用 OOP。

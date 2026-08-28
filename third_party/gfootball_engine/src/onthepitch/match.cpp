@@ -1145,6 +1145,14 @@ void Match::InitSystemGraph() {
       },
       {"ball_collisions"});
 
+  // 2026-08-28 P2-Phase3+：球物理状态数据化
+  system_graph_.Register("sync_ball_physics",
+      [this](void* ctx) -> bool {
+        SyncBallPhysicsSystem(this);
+        return true;
+      },
+      {"ball"});
+
   system_graph_.Register("mental_images",
       [this](void* ctx) -> bool {
         auto* pc = static_cast<PipelineContext*>(ctx);
