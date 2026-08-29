@@ -241,10 +241,19 @@ inline FixedPoint FixedPoint::Sin(FixedPoint angle) {
   if (a > pi_raw) a -= two_pi_raw;
   if (a < -pi_raw) a += two_pi_raw;
 
+  // CORDIC 收敛范围约 ±π/2，超出部分用 sin(a) = sin(π - a)
+  bool negate = false;
+  const int32_t half_pi_raw = HalfPi().ToRaw();
+  if (a > half_pi_raw) {
+    a = pi_raw - a;  // sin(a) = sin(π - a)
+  } else if (a < -half_pi_raw) {
+    a = -pi_raw - a;  // sin(a) = sin(-π - a)，无需取反
+  }
+
   // CORDIC 旋转（初始值 K 使得输出无需后处理）
   int32_t x, y;
   CordicRotate(a, x, y);
-  return FromRaw(y);
+  return negate ? FromRaw(-y) : FromRaw(y);
 }
 
 inline FixedPoint FixedPoint::Cos(FixedPoint angle) {
