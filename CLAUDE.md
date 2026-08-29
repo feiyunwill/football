@@ -121,6 +121,49 @@ python3 .agent-coordination/coord.py complete-milestone ms-xxx <agent_id>
 source .agent-coordination/exit.sh
 ```
 
+### 项目管理自动化（新增）
+
+项目使用 `.project/` 目录管理 milestones、plans、tasks：
+
+```bash
+# 任务完成自动化
+bash .project/scripts/task_complete.sh <task_id> "commit message"
+
+# 计划完成自动化
+bash .project/scripts/plan_complete.sh <plan_id>
+
+# 里程碑完成自动化
+bash .project/scripts/milestone_complete.sh <milestone_id>
+
+# 查看进度
+bash .project/scripts/progress.sh
+
+# 自动认领 milestone
+bash .project/scripts/auto_claim.sh <agent_id>
+
+# 自动测试
+bash .project/scripts/auto_test.sh <target_id> [test_type]
+
+# 自动代码审查
+bash .project/scripts/auto_review.sh <target_id> [review_type]
+
+# 完整工作流
+bash .project/scripts/workflow.sh <action> <target_id> [options]
+```
+
+### 项目结构
+
+```
+.project/
+├── PROJECT.md              ← 项目总览
+├── phases/                 ← 阶段定义
+├── milestones/             ← 里程碑定义
+├── plans/                  ← 计划定义
+├── tasks/                  ← 任务定义
+├── templates/              ← 模板文件
+└── scripts/                ← 自动化脚本
+```
+
 ### 使用 .claude/agent_coordination/ 旧数据
 之前的 Claude 专属协调系统位于 `.claude/agent_coordination/`，可参考
 `.agent-coordination/README.md` 的迁移步骤。
