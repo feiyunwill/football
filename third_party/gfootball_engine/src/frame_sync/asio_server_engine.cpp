@@ -33,6 +33,7 @@
 #include <memory>
 #include <mutex>
 #include <set>
+#include <sstream>
 #include <thread>
 #include <vector>
 
@@ -228,15 +229,19 @@ struct ClientSessionUDP {
   std::unique_ptr<frame_sync::ReliableUDPChannel> channel;
   std::vector<uint16_t> assigned_slots;
   bool ready = false;
+  bool version_negotiated = false;
   std::vector<uint8_t> recv_buf;
   bool disconnected = false;
+  std::chrono::steady_clock::time_point last_heartbeat;
+  int missed_heartbeats = 0;
 };
 
 // ===== Engine-integrated frame sync server =====
 class EngineFrameSyncServer {
  public:
   EngineFrameSyncServer(asio::io_context& io, unsigned short port,
-                        uint16_t left_agents, uint16_t right_agents, uint32_t seed)
+                        uint16_t left_agents, uint16_t right_agents, uint32_t seed,
+                        int slots_per_client = 0)
       : io_(io),
         socket_(io, udp::endpoint(udp::v4(), port)),
         left_agents_(left_agents),
@@ -244,11 +249,14 @@ class EngineFrameSyncServer {
         num_slots_(left_agents + right_agents),
         seed_(seed),
         frame_id_(0),
-        retransmit_timer_(io) {
+        slots_per_client_(slots_per_client),
+        retransmit_timer_(io),
+        heartbeat_timer_(io) {
     for (size_t i = 0; i < num_slots_; ++i)
       current_inputs_.push_back(frame_sync::SlotInput::Default());
     do_receive();
     do_retransmit_timer();
+    do_heartbeat_timer();
   }
 
   bool all_ready() const {
@@ -358,23 +366,68 @@ class EngineFrameSyncServer {
     });
   }
 
+  void do_heartbeat_timer() {
+    heartbeat_timer_.expires_after(std::chrono::milliseconds(frame_sync::HEARTBEAT_INTERVAL_MS));
+    heartbeat_timer_.async_wait([this](boost::system::error_code ec) {
+      if (ec || !running_) return;
+      broadcast_heartbeat();
+      check_client_timeouts();
+      do_heartbeat_timer();
+    });
+  }
+
+  void broadcast_heartbeat() {
+    uint8_t buf[frame_sync::HEARTBEAT_PACKET_BYTES];
+    size_t n = frame_sync::PackHeartbeat(frame_id_, 
+        static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now().time_since_epoch()).count()),
+        buf, sizeof(buf));
+    std::lock_guard<std::mutex> lock(mu_);
+    for (auto& p : clients_) {
+      if (p.second->disconnected || !p.second->channel) continue;
+      p.second->channel->Send(buf, n);
+    }
+  }
+
+  void check_client_timeouts() {
+    auto now = std::chrono::steady_clock::now();
+    for (auto& p : clients_) {
+      if (p.second->disconnected) continue;
+      auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(
+          now - p.second->last_heartbeat).count();
+      if (elapsed > frame_sync::HEARTBEAT_MISS_LIMIT * frame_sync::HEARTBEAT_INTERVAL_MS / 1000) {
+        std::println("Client {}:{} timed out (no heartbeat for {}s)",
+                     p.first.address().to_string(), p.first.port(), elapsed);
+        p.second->disconnected = true;
+      }
+    }
+  }
+
   std::shared_ptr<ClientSessionUDP> get_or_create_client(const udp::endpoint& sender) {
     std::lock_guard<std::mutex> lock(mu_);
     auto it = clients_.find(sender);
-    if (it != clients_.end()) return it->second;
+    if (it != clients_.end()) {
+      it->second->last_heartbeat = std::chrono::steady_clock::now();
+      it->second->missed_heartbeats = 0;
+      return it->second;
+    }
     auto client = std::make_shared<ClientSessionUDP>();
     client->endpoint = sender;
+    client->last_heartbeat = std::chrono::steady_clock::now();
+    
+    // Multi-slot assignment: find available slots, respecting slots_per_client limit
     std::flat_set<uint16_t> used;
     for (const auto& p : clients_) {
       for (uint16_t s : p.second->assigned_slots) used.insert(s);
     }
-    for (uint16_t s = 0; s < num_slots_; ++s) {
+    int max_slots = (slots_per_client_ > 0) ? slots_per_client_ : num_slots_;
+    for (uint16_t s = 0; s < num_slots_ && static_cast<int>(client->assigned_slots.size()) < max_slots; ++s) {
       if (used.find(s) == used.end()) {
         client->assigned_slots.push_back(s);
-        break;
       }
     }
     if (client->assigned_slots.empty()) return nullptr;
+    
     std::weak_ptr<ClientSessionUDP> w = client;
     client->channel = std::make_unique<frame_sync::ReliableUDPChannel>(
         socket_, sender,
@@ -386,9 +439,14 @@ class EngineFrameSyncServer {
           while (process_one_message(c)) {}
         });
     clients_[sender] = client;
-    std::println("Client connected: {}:{} → slot {}",
+    std::ostringstream slots_ss;
+    for (size_t i = 0; i < client->assigned_slots.size(); ++i) {
+      if (i > 0) slots_ss << ",";
+      slots_ss << client->assigned_slots[i];
+    }
+    std::println("Client connected: {}:{} → slots [{}]",
                  sender.address().to_string(), sender.port(),
-                 client->assigned_slots[0]);
+                 slots_ss.str());
     send_session_start(client.get());
     send_slot_assignment(client.get());
     return client;
@@ -438,12 +496,49 @@ class EngineFrameSyncServer {
   bool process_one_message(std::shared_ptr<ClientSessionUDP> client) {
     if (client->recv_buf.empty()) return false;
     uint8_t type = client->recv_buf[0];
+    
+    // Handle VersionNegotiate
+    if (type == static_cast<uint8_t>(frame_sync::MessageType::VersionNegotiate)) {
+      if (client->recv_buf.size() < frame_sync::VERSION_NEGOTIATE_BYTES) return false;
+      frame_sync::version_negotiate_t ver;
+      size_t used = frame_sync::UnpackVersionNegotiate(
+          client->recv_buf.data(), client->recv_buf.size(), &ver);
+      if (used == 0) return false;
+      std::println("Client version: {} (min: {})", ver.version, ver.min_version);
+      client->version_negotiated = true;
+      client->recv_buf.erase(client->recv_buf.begin(),
+                             client->recv_buf.begin() + used);
+      return true;
+    }
+    
+    // Handle Heartbeat
+    if (type == static_cast<uint8_t>(frame_sync::MessageType::Heartbeat)) {
+      if (client->recv_buf.size() < frame_sync::HEARTBEAT_PACKET_BYTES) return false;
+      frame_sync::heartbeat_t hb;
+      size_t used = frame_sync::UnpackHeartbeat(
+          client->recv_buf.data(), client->recv_buf.size(), &hb);
+      if (used == 0) return false;
+      client->last_heartbeat = std::chrono::steady_clock::now();
+      client->missed_heartbeats = 0;
+      client->recv_buf.erase(client->recv_buf.begin(),
+                             client->recv_buf.begin() + used);
+      return true;
+    }
+    
+    // Handle Ready
     if (type == static_cast<uint8_t>(frame_sync::MessageType::Ready)) {
       client->ready = true;
-      std::println("Client slot {} ready", client->assigned_slots[0]);
+      std::ostringstream slots_ss;
+      for (size_t i = 0; i < client->assigned_slots.size(); ++i) {
+        if (i > 0) slots_ss << ",";
+        slots_ss << client->assigned_slots[i];
+      }
+      std::println("Client slots [{}] ready", slots_ss.str());
       client->recv_buf.erase(client->recv_buf.begin());
       return true;
     }
+    
+    // Handle FrameInput
     if (type == static_cast<uint8_t>(frame_sync::MessageType::FrameInput)) {
       if (client->recv_buf.size() < 7u) return false;
       uint16_t num_slots;
@@ -473,6 +568,7 @@ class EngineFrameSyncServer {
   asio::io_context& io_;
   udp::socket socket_;
   asio::steady_timer retransmit_timer_;
+  asio::steady_timer heartbeat_timer_;
   mutable std::mutex mu_;
   std::map<udp::endpoint, std::shared_ptr<ClientSessionUDP>> clients_;
   uint16_t left_agents_;
@@ -480,6 +576,7 @@ class EngineFrameSyncServer {
   size_t num_slots_;
   uint32_t seed_;
   frame_sync::frame_id_t frame_id_;
+  int slots_per_client_;
   std::vector<frame_sync::SlotInput> current_inputs_;
   std::set<ClientSessionUDP*> received_from_;
   std::atomic<bool> running_{true};
@@ -489,17 +586,20 @@ int main(int argc, char* argv[]) {
   unsigned short port = kDefaultPort;
   uint16_t left = 1, right = 1;
   uint32_t seed = 42;
+  int slots_per_client = 0;  // 0 = all available slots
   if (argc >= 2) port = static_cast<unsigned short>(std::stoi(argv[1]));
   if (argc >= 4) {
     left = static_cast<uint16_t>(std::stoi(argv[2]));
     right = static_cast<uint16_t>(std::stoi(argv[3]));
   }
   if (argc >= 5) seed = static_cast<uint32_t>(std::stoul(argv[4]));
+  if (argc >= 6) slots_per_client = std::stoi(argv[5]);
 
   try {
     // Initialize engine (headless, before server so IO context isn't blocking)
     {
-      std::println("Initializing GameEnv (headless, {}v{}, seed={})...", left, right, seed);
+      std::println("Initializing GameEnv (headless, {}v{}, seed={}, slots_per_client={})...",
+                   left, right, seed, slots_per_client);
       g_env = new GameEnv();
       g_env->game_config.render = false;
       g_env->game_config.physics_steps_per_frame = 10;
@@ -513,7 +613,7 @@ int main(int argc, char* argv[]) {
     }
 
     asio::io_context ioc;
-    EngineFrameSyncServer server(ioc, port, left, right, seed);
+    EngineFrameSyncServer server(ioc, port, left, right, seed, slots_per_client);
     std::thread io_thread([&ioc]() { ioc.run(); });
     std::println("Engine frame sync server (reliable UDP) on port {}", port);
     server.run_frame_loop();

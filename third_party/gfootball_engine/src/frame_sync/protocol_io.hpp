@@ -163,6 +163,55 @@ inline size_t UnpackStateHash(const void* buf, size_t size,
   return STATE_HASH_PACK_BYTES;
 }
 
+// ----- Heartbeat (bidirectional): msg_type(1) + frame_id(4) + timestamp_ms(4) -----
+struct heartbeat_t {
+  frame_id_t frame_id;
+  uint32_t timestamp_ms;
+};
+constexpr size_t HEARTBEAT_PACK_BYTES = 1 + sizeof(frame_id_t) + sizeof(uint32_t);
+inline size_t PackHeartbeat(frame_id_t frame_id, uint32_t timestamp_ms,
+                            void* buf, size_t size) {
+  if (size < HEARTBEAT_PACK_BYTES) return 0;
+  auto* p = static_cast<uint8_t*>(buf);
+  *p++ = static_cast<uint8_t>(MessageType::Heartbeat);
+  memcpy(p, &frame_id, 4); p += 4;
+  memcpy(p, &timestamp_ms, 4);
+  return HEARTBEAT_PACK_BYTES;
+}
+inline size_t UnpackHeartbeat(const void* buf, size_t size, heartbeat_t* out) {
+  if (size < HEARTBEAT_PACK_BYTES) return 0;
+  const auto* p = static_cast<const uint8_t*>(buf);
+  if (p[0] != static_cast<uint8_t>(MessageType::Heartbeat)) return 0;
+  memcpy(&out->frame_id, p + 1, 4);
+  memcpy(&out->timestamp_ms, p + 5, 4);
+  return HEARTBEAT_PACK_BYTES;
+}
+
+// ----- VersionNegotiate (client -> server): msg_type(1) + version(2) + min_version(2) -----
+struct version_negotiate_t {
+  uint16_t version;
+  uint16_t min_version;
+};
+constexpr size_t VERSION_NEGOTIATE_PACK_BYTES = 1 + sizeof(uint16_t) + sizeof(uint16_t);
+inline size_t PackVersionNegotiate(uint16_t version, uint16_t min_version,
+                                   void* buf, size_t size) {
+  if (size < VERSION_NEGOTIATE_PACK_BYTES) return 0;
+  auto* p = static_cast<uint8_t*>(buf);
+  *p++ = static_cast<uint8_t>(MessageType::VersionNegotiate);
+  memcpy(p, &version, 2); p += 2;
+  memcpy(p, &min_version, 2);
+  return VERSION_NEGOTIATE_PACK_BYTES;
+}
+inline size_t UnpackVersionNegotiate(const void* buf, size_t size,
+                                     version_negotiate_t* out) {
+  if (size < VERSION_NEGOTIATE_PACK_BYTES) return 0;
+  const auto* p = static_cast<const uint8_t*>(buf);
+  if (p[0] != static_cast<uint8_t>(MessageType::VersionNegotiate)) return 0;
+  memcpy(&out->version, p + 1, 2);
+  memcpy(&out->min_version, p + 3, 2);
+  return VERSION_NEGOTIATE_PACK_BYTES;
+}
+
 }  // namespace frame_sync
 
 #endif

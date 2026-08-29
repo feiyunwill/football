@@ -75,6 +75,56 @@ Python 测试均为 absltest 风格（`gfootball/env/*_test.py`）。C++ 侧无�
 
 **确定性是硬约束**：相同 seed + 相同输入序列必须产出一致 state hash。改比赛逻辑时注意浮点运算与容器遍历顺序的确定性（ECS 池按 id 排序即为此）。
 
+## 多 Agent 协作
+
+本工程通过 `.agent-coordination/` 实现多 agent 驱动（Claude / Codex / Cursor / opencode 等）。
+
+### 启动检查
+每次 agent 启动时运行以下命令检查是否有被中断的里程碑（agent 异常死亡后剩余为 ORPHANED 状态）：
+
+```bash
+source .agent-coordination/recover.sh
+```
+
+### 核心流程
+- 工作被拆分为 **milestone**（里程碑），是 agent 间交接的最小单位
+- 每个 agent 定期发送 **heartbeat**（默认 120s），超过 300s 无心跳则标记为 zombie
+- zombie 的 milestone 自动变为 **ORPHANED**，新 agent 可 detect & adopt 继续执行
+- 完成 milestone 后记录 **context snapshot**，方便下个 agent 快速恢复上下文
+
+### 常用命令（所有 agent 通用）
+
+```bash
+# 查看项目整体状态
+python3 .agent-coordination/coord.py status
+
+# 查看所有 milestone
+python3 .agent-coordination/coord.py list-milestones
+
+# 查看当前活跃 milestone
+python3 .agent-coordination/coord.py which-active
+
+# 认领并开始一个 milestone
+python3 .agent-coordination/coord.py claim-milestone ms-xxx <agent_id>
+python3 .agent-coordination/coord.py start-milestone ms-xxx <agent_id>
+
+# 记录进展
+python3 .agent-coordination/coord.py add-progress ms-xxx "完成了什么，遇到了什么"
+
+# 保存上下文快照（交接点）
+python3 .agent-coordination/coord.py snapshot ms-xxx <agent_id> --focus "..." --insights "..." --next-steps "..."
+
+# 完成后标记
+python3 .agent-coordination/coord.py complete-milestone ms-xxx <agent_id>
+
+# 退出（停心跳）
+source .agent-coordination/exit.sh
+```
+
+### 使用 .claude/agent_coordination/ 旧数据
+之前的 Claude 专属协调系统位于 `.claude/agent_coordination/`，可参考
+`.agent-coordination/README.md` 的迁移步骤。
+
 ## 编码规则（`.cursor/rules/` 全文适用）
 
 - **修改流程（最重要）**：注释掉原代码并注明**日期**与**原因**，再写入新代码；不做占位实现，实现须真实可用。

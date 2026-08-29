@@ -39,3 +39,7 @@ third_party/gfootball_engine/frame_sync_asio/build_fs_asio/
 # IDE
 .idea
 .vs*
+
+# Agent coordination runtime state
+.agent-coordination/*.tmp
+.agent-coordination/*.lock

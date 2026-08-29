@@ -1,0 +1,52 @@
+{
+  "milestones": [
+    {
+      "claimed_at": null,
+      "claimed_by": null,
+      "completed_at": null,
+      "created_at": "2026-08-29T09:22:46Z",
+      "dependencies": [],
+      "description": "Implement ComponentPool swap-and-pop removal for determinism",
+      "heartbeat_at": null,
+      "id": "ms-1d89949b",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "PENDING",
+      "tags": [
+        "ecs",
+        "determinism"
+      ],
+      "title": "Test ECS Integration"
+    },
+    {
+      "claimed_at": null,
+      "claimed_by": null,
+      "completed_at": null,
+      "created_at": "2026-08-29T09:29:20Z",
+      "dependencies": [],
+      "description": "实现完整的帧同步联机：C++服务器集成真实引擎、Python客户端对接、11v11多人支持、断线重连、端到端确定性验证",
+      "heartbeat_at": "2026-08-29T09:30:24Z",
+      "id": "ms-1290ef3a",
+      "priority": "high",
+      "progress_notes": [
+        "2026-08-29T09:30:24Z - 创建实施计划：5个阶段，15个任务",
+        "2026-08-29T09:30:24Z - Phase 1: C++引擎服务器完善 (任务1-3)",
+        "2026-08-29T09:30:24Z - Phase 2: Python客户端对接C++服务器 (任务4-6)",
+        "2026-08-29T09:30:24Z - Phase 3: 11v11多人支持 (任务7-9)",
+        "2026-08-29T09:30:24Z - Phase 4: 断线重连与鲁棒性 (任务10-12)",
+        "2026-08-29T09:30:24Z - Phase 5: 端到端确定性验证 (任务13-15)"
+      ],
+      "snapshot_count": 1,
+      "status": "PENDING",
+      "tags": [
+        "networking",
+        "framesync",
+        "cpp",
+        "python"
+      ],
+      "title": "帧同步联机端到端集成"
+    }
+  ],
+  "version": 1
+}
