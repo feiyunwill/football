@@ -115,4 +115,19 @@ struct CollisionResultComponent {
 /// 裁判实体标记（状态仍在 Referee 类中，System 调用 Referee::Process）
 struct RefereeTag {};
 
+/// 2026-08-29 P2-Phase4：球员控球状态组件
+/// 从 Player 成员变量提取控球相关属性，使 ECS 成为可查询的控球数据源。
+/// 双向同步函数 SyncPossessionToEcs / SyncPossessionFromEcs
+/// 负责 OOP ↔ ECS 一致性。
+struct PossessionComponent {
+  bool hasPossession = false;
+  bool hasBestPossession = false;
+  bool hasUniquePossession = false;
+  int possessionDuration_ms = 0;
+  unsigned int timeNeededToGetToBall_ms = 1000;
+  unsigned int timeNeededToGetToBall_optimistic_ms = 1000;
+  unsigned int timeNeededToGetToBall_previous_ms = 1000;
+  int desiredTimeToBall_ms = 0;
+};
+
 #endif

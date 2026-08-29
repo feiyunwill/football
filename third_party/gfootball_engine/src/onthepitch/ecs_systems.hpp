@@ -62,4 +62,14 @@ void TeamSwitchSystemProcess(Match* match, int team_id);
 /// 包装 Team::UpdatePossessionStats()，更新控球统计
 void TeamPossessionStatsSystemProcess(Match* match, int team_id);
 
+// 2026-08-29 P2-Phase4：PossessionComponent 双向同步
+struct PossessionComponent;
+class Player;
+/// 从 Player 成员变量 → PossessionComponent（OOP → ECS）
+void SyncPossessionToEcs(const Player& src, PossessionComponent& dst);
+/// 从 PossessionComponent → Player 成员变量（ECS → OOP）
+void SyncPossessionFromEcs(const PossessionComponent& src, Player& dst);
+/// 遍历所有活跃球员实体，将控球状态同步到 ECS
+void SyncPlayerPossessionSystem(Match* match);
+
 #endif

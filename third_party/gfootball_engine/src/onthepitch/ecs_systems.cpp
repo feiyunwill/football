@@ -243,3 +243,43 @@ void SyncPhysicsToSpatialSystem(Match* match) {
     }
   }
 }
+
+// 2026-08-29 P2-Phase4：PossessionComponent 双向同步
+// 从 Player 成员变量提取控球相关属性到 ECS 组件，使控球状态可查询。
+
+void SyncPossessionToEcs(const Player& src, PossessionComponent& dst) {
+  dst.hasPossession = src.HasPossession();
+  dst.hasBestPossession = src.HasBestPossession();
+  dst.hasUniquePossession = src.HasUniquePossession();
+  dst.possessionDuration_ms = src.GetPossessionDuration_ms();
+  dst.timeNeededToGetToBall_ms = src.GetTimeNeededToGetToBall_ms();
+  dst.timeNeededToGetToBall_optimistic_ms = src.GetTimeNeededToGetToBall_optimistic_ms();
+  dst.timeNeededToGetToBall_previous_ms = src.GetTimeNeededToGetToBall_previous_ms();
+  dst.desiredTimeToBall_ms = src.GetDesiredTimeToBall_ms();
+}
+
+void SyncPossessionFromEcs(const PossessionComponent& src, Player& dst) {
+  // 注意：hasPossession 等字段在 Player 中是 protected，需要通过 Team 设置
+  // 这里只同步可公开访问的字段
+  dst.SetDesiredTimeToBall_ms(src.desiredTimeToBall_ms);
+}
+
+void SyncPlayerPossessionSystem(Match* match) {
+  DO_VALIDATION;
+  blunted::World& w = match->GetEcsWorld();
+  for (blunted::Entity e : match->GetEcsPlayerEntities()) {
+    PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
+    PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+    if (!meta || !pref || !pref->player) continue;
+    if (!meta->is_active) continue;
+
+    PossessionComponent* comp = w.GetComponent<PossessionComponent>(e);
+    if (!comp) {
+      PossessionComponent fresh;
+      SyncPossessionToEcs(*pref->player, fresh);
+      w.AddComponent(e, fresh);
+    } else {
+      SyncPossessionToEcs(*pref->player, *comp);
+    }
+  }
+}
