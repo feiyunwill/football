@@ -206,6 +206,19 @@ add_executable(frame_sync_client_udp src/frame_sync/asio_client_udp.cpp)
 target_include_directories(frame_sync_client_udp PRIVATE ${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(frame_sync_client_udp PRIVATE Boost::system)
 
+# ----- 帧同步 C++ 服务端（接入真实 GameEnv，headless）-----
+add_executable(frame_sync_server_engine src/frame_sync/asio_server_engine.cpp)
+target_include_directories(frame_sync_server_engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(frame_sync_server_engine PRIVATE
+  -Wl,--no-as-needed
+  ${OUTPUT_LIB_NAME}
+  gamelib menulib datalib blunted2
+  ${SDL2_LIBS_ALL} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES}
+  ${Python_LIBRARIES}
+  Boost::system
+  pthread
+)
+
 # ----- RLtools PPO 训练（接入真实 GameEnv）-----
 option(BUILD_RL_TRAINING "Build RLtools PPO training with real engine" OFF)
 if(BUILD_RL_TRAINING)

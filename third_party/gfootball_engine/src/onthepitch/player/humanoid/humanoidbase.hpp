@@ -263,6 +263,8 @@ class HumanoidBase {
 
     // 2026-08-28 P2-Phase1：供 SyncSpatialStateToPhysics 读取完整物理状态
     inline const SpatialState& GetSpatialState() const { return spatialState; }
+    // 2026-08-29 P2-Phase3：供 SyncPhysicsToSpatialSystem 写回 ECS 物理结果
+    inline SpatialState& MutableSpatialState() { return spatialState; }
 
     Vector3 GetGeomPosition() { DO_VALIDATION; return humanoidNode->GetPosition(); }
 

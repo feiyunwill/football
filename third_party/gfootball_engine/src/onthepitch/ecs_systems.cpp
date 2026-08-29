@@ -224,3 +224,22 @@ void SyncPlayerPhysicsSystem(Match* match) {
     }
   }
 }
+
+/// 将 ECS PlayerPhysicsComponent 同步回 Humanoid SpatialState（ECS → OOP）
+/// 在 players 系统执行后调用，确保 Humanoid 内部状态与 ECS 权威数据一致
+void SyncPhysicsToSpatialSystem(Match* match) {
+  DO_VALIDATION;
+  blunted::World& w = match->GetEcsWorld();
+  for (blunted::Entity e : match->GetEcsPlayerEntities()) {
+    PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
+    PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+    if (!meta || !pref || !pref->player) continue;
+    if (!meta->is_active) continue;
+    auto* humanoid = pref->player->CastHumanoid();
+    if (!humanoid) continue;
+    PlayerPhysicsComponent* comp = w.GetComponent<PlayerPhysicsComponent>(e);
+    if (comp) {
+      SyncPhysicsToSpatialState(*comp, humanoid->MutableSpatialState());
+    }
+  }
+}

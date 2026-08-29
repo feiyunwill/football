@@ -41,8 +41,10 @@ struct PlayerPhysicsComponent;
 void SyncSpatialStateToPhysics(const SpatialState& src, PlayerPhysicsComponent& dst);
 /// 从 PlayerPhysicsComponent → SpatialState（ECS → OOP）
 void SyncPhysicsToSpatialState(const PlayerPhysicsComponent& src, SpatialState& dst);
-/// 遍历所有活跃球员实体，将 SpatialState 同步到 PlayerPhysicsComponent
+/// 遍历所有活跃球员实体，将 SpatialState 同步到 PlayerPhysicsComponent（OOP → ECS）
 void SyncPlayerPhysicsSystem(Match* match);
+/// 遍历所有活跃球员实体，将 PlayerPhysicsComponent 同步回 SpatialState（ECS → OOP）
+void SyncPhysicsToSpatialSystem(Match* match);
 
 // 2026-08-28 P2-Phase3+：球物理状态数据化
 /// 将球物理状态（位置/动量/高度/速度/碰网）同步到 BallPhysicsComponent

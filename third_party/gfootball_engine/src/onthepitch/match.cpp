@@ -1181,6 +1181,23 @@ void Match::InitSystemGraph() {
       },
       {"teams"});
 
+  // 2026-08-29 ECS Phase 2 Task 7：PlayerPhysicsComponent 双向同步
+  // sync_player_physics (OOP→ECS) 在 players 之前，确保 ECS 有最新物理状态供查询
+  system_graph_.Register("sync_player_physics",
+      [this](void* ctx) -> bool {
+        SyncPlayerPhysicsSystem(this);
+        return true;
+      },
+      {"teams"});
+
+  // sync_physics_to_spatial (ECS→OOP) 在 players 之后，将 ECS 修改同步回 Humanoid
+  system_graph_.Register("sync_physics_to_spatial",
+      [this](void* ctx) -> bool {
+        SyncPhysicsToSpatialSystem(this);
+        return true;
+      },
+      {"players"});
+
   system_graph_.Register("officials",
       [this](void* ctx) -> bool {
         auto* pc = static_cast<PipelineContext*>(ctx);
@@ -1192,7 +1209,7 @@ void Match::InitSystemGraph() {
         auto* pc = static_cast<PipelineContext*>(ctx);
         return StepPossessionStats(pc->reverse);
       },
-      {"players"});
+      {"sync_physics_to_spatial"});
 
   system_graph_.Register("possession_decision",
       [this](void* ctx) -> bool {
@@ -1206,7 +1223,7 @@ void Match::InitSystemGraph() {
         auto* pc = static_cast<PipelineContext*>(ctx);
         return StepHumanoidCollisions(pc->reverse);
       },
-      {"players"});
+      {"sync_physics_to_spatial"});
 
   // 2026-08-28 P2-Phase3+：碰撞结果数据化 — 碰撞 System 后将结果写入 ECS
   system_graph_.Register("populate_collision_results",
