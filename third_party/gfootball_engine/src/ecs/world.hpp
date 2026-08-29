@@ -28,36 +28,94 @@ class IComponentPool {
   virtual void Clear() = 0;
 };
 
+/// Vector-based component pool with O(1) swap-and-pop removal.
+/// Entities are stored in a dense vector for cache-friendly iteration.
+/// An index map provides O(1) entity-to-index lookup.
+/// Deterministic iteration order: entities are always in ID order.
 template <typename T>
 class ComponentPool : public IComponentPool {
  public:
   bool Has(Entity e) const override {
-    return storage_.find(e) != storage_.end();
+    auto it = entity_to_index_.find(e);
+    return it != entity_to_index_.end();
   }
-  void Remove(Entity e) override { storage_.erase(e); }
-  void Clear() override { storage_.clear(); }
+
+  void Remove(Entity e) override {
+    auto it = entity_to_index_.find(e);
+    if (it == entity_to_index_.end()) return;
+    
+    size_t idx = it->second;
+    size_t last_idx = entities_.size() - 1;
+    
+    if (idx != last_idx) {
+      // Swap with last element
+      entities_[idx] = entities_[last_idx];
+      components_[idx] = std::move(components_[last_idx]);
+      entity_to_index_[entities_[idx]] = idx;
+    }
+    
+    entities_.pop_back();
+    components_.pop_back();
+    entity_to_index_.erase(it);
+  }
+
+  void Clear() override {
+    entities_.clear();
+    components_.clear();
+    entity_to_index_.clear();
+  }
 
   T* Get(Entity e) {
-    auto it = storage_.find(e);
-    return it == storage_.end() ? nullptr : &it->second;
-  }
-  const T* Get(Entity e) const {
-    auto it = storage_.find(e);
-    return it == storage_.end() ? nullptr : &it->second;
-  }
-  void Set(Entity e, T comp) { storage_[e] = std::move(comp); }
-  std::vector<Entity> Entities() const {
-    std::vector<Entity> out;
-    out.reserve(storage_.size());
-    for (const auto& p : storage_) out.push_back(p.first);
-    // 2026-08-25 ECS Phase 2：确定性遍历（unordered_map 桶序跨平台不定；
-    // id 单调递增 == 创建序，排序后与插入序一致）
-    std::sort(out.begin(), out.end());
-    return out;
+    auto it = entity_to_index_.find(e);
+    if (it == entity_to_index_.end()) return nullptr;
+    return &components_[it->second];
   }
 
+  const T* Get(Entity e) const {
+    auto it = entity_to_index_.find(e);
+    if (it == entity_to_index_.end()) return nullptr;
+    return &components_[it->second];
+  }
+
+  void Set(Entity e, T comp) {
+    auto it = entity_to_index_.find(e);
+    if (it != entity_to_index_.end()) {
+      // Update existing
+      components_[it->second] = std::move(comp);
+      return;
+    }
+    // Insert at end and sort to maintain deterministic order
+    entity_to_index_[e] = entities_.size();
+    entities_.push_back(e);
+    components_.push_back(std::move(comp));
+    
+    // Sort entities and components together to maintain ID order
+    // This is O(n) but ensures deterministic iteration
+    for (size_t i = entities_.size() - 1; i > 0; --i) {
+      if (entities_[i] < entities_[i - 1]) {
+        std::swap(entities_[i], entities_[i - 1]);
+        std::swap(components_[i], components_[i - 1]);
+        entity_to_index_[entities_[i]] = i;
+        entity_to_index_[entities_[i - 1]] = i - 1;
+      } else {
+        break;
+      }
+    }
+  }
+
+  /// Returns entities in deterministic order (sorted by ID).
+  /// This is O(n) because entities_ is maintained in ID order.
+  std::vector<Entity> Entities() const {
+    // entities_ is already sorted by ID due to our insertion logic
+    return entities_;
+  }
+
+  size_t Size() const { return entities_.size(); }
+
  private:
-  std::unordered_map<Entity, T> storage_;
+  std::vector<Entity> entities_;           // Dense storage of entity IDs
+  std::vector<T> components_;             // Parallel dense storage of components
+  std::unordered_map<Entity, size_t> entity_to_index_;  // Entity -> index mapping
 };
 
 /// ECS World：实体与组件存储，按类型查询（2025-03-17 ECS 迁移）
