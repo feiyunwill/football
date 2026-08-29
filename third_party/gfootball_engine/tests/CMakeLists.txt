@@ -61,6 +61,13 @@ add_executable(ecs_test
 target_include_directories(ecs_test PRIVATE ${ENGINE_SRC})
 target_link_libraries(ecs_test PRIVATE gtest_main)
 
+# ===== FixedPoint 定点数测试 =====
+add_executable(fixed_point_test
+  fixed_point_test.cpp
+)
+target_include_directories(fixed_point_test PRIVATE ${ENGINE_SRC})
+target_link_libraries(fixed_point_test PRIVATE gtest_main)
+
 # ===== P2-Phase1: PlayerPhysicsComponent 测试 =====
 add_executable(ecs_physics_sync_test
   ecs_physics_sync_test.cpp
@@ -89,4 +96,5 @@ endif()
 # 自动发现测试
 gtest_discover_tests(frame_sync_test)
 gtest_discover_tests(ecs_test)
+gtest_discover_tests(fixed_point_test)
 gtest_discover_tests(ecs_physics_sync_test)
