@@ -286,3 +286,214 @@ TEST(MultiSlotTest, PackUnpackFrameInput) {
   EXPECT_EQ(out_entries[1].first, 2u);
   EXPECT_FLOAT_EQ(out_entries[1].second.dir_y, -1.0f);
 }
+
+// ===== Full Client-Server Loop Simulation =====
+// Simulates the complete frame sync loop in-process:
+//   Server: collect inputs → step → broadcast authoritative frame
+//   Client: predict → receive authoritative → rollback if needed
+// Verifies both engines stay in sync after N frames.
+
+TEST(FullLoopTest, ClientServerSyncWithoutRollback) {
+  // Two independent mock engines (server authoritative, client predicted)
+  MockGameEngine server_engine;
+  MockGameEngine client_engine;
+
+  // Wire callbacks
+  EngineCallbacks server_cb;
+  server_cb.save_state = [&]() { return server_engine.save(); };
+  server_cb.restore_state = [&](const StateBlob& b) { server_engine.restore(b); };
+  server_cb.step = [&](const SlotInput& i) { server_engine.step(i); };
+  server_cb.compute_hash = [&]() { return server_engine.compute_hash(); };
+
+  EngineCallbacks client_cb;
+  client_cb.save_state = [&]() { return client_engine.save(); };
+  client_cb.restore_state = [&](const StateBlob& b) { client_engine.restore(b); };
+  client_cb.step = [&](const SlotInput& i) { client_engine.step(i); };
+  client_cb.compute_hash = [&]() { return client_engine.compute_hash(); };
+
+  ClientState cs(MAX_PREDICT_AHEAD_FRAMES + 4);
+  frame_id_t server_frame = 0;
+  frame_id_t client_frame = 0;
+  frame_id_t last_confirmed = 0;
+
+  // Run 20 frames — server and client use same inputs (no divergence)
+  for (int i = 0; i < 20; ++i) {
+    SlotInput input{1.0f, 0.0f, 0};
+
+    // Server: step and pack authoritative frame
+    server_cb.step(input);
+    std::vector<SlotInput> auth_inputs = {input};
+    uint8_t buf[256];
+    size_t n = PackAuthoritativeFrame(server_frame, auth_inputs.data(),
+                                       static_cast<uint16_t>(auth_inputs.size()),
+                                       buf, sizeof(buf));
+    ++server_frame;
+
+    // Client: predict one frame
+    cs.save_snapshot(client_frame, input, client_cb.save_state);
+    client_cb.step(input);
+    ++client_frame;
+
+    // Client: unpack and apply authoritative frame
+    frame_id_t fid;
+    std::vector<SlotInput> unpacked;
+    size_t used = UnpackAuthoritativeFrame(buf, n, &fid, &unpacked);
+    ASSERT_EQ(used, n);
+    last_confirmed = fid;
+  }
+
+  // Both engines should have identical state
+  EXPECT_FLOAT_EQ(server_engine.position, client_engine.position);
+  EXPECT_EQ(server_engine.step_count, client_engine.step_count);
+  EXPECT_EQ(server_engine.state_hash_counter, client_engine.state_hash_counter);
+  EXPECT_EQ(server_engine.position, 20.0f);
+  EXPECT_EQ(server_engine.step_count, 20);
+}
+
+TEST(FullLoopTest, ClientServerSyncWithRollback) {
+  // Server and client run 10 frames. Server diverges at frame 2 (input=5.0
+  // instead of 1.0). Client predicts ahead, then rolls back when it receives
+  // the authoritative frame.
+  MockGameEngine server_engine;
+  MockGameEngine client_engine;
+
+  EngineCallbacks server_cb;
+  server_cb.save_state = [&]() { return server_engine.save(); };
+  server_cb.restore_state = [&](const StateBlob& b) { server_engine.restore(b); };
+  server_cb.step = [&](const SlotInput& i) { server_engine.step(i); };
+
+  EngineCallbacks client_cb;
+  client_cb.save_state = [&]() { return client_engine.save(); };
+  client_cb.restore_state = [&](const StateBlob& b) { client_engine.restore(b); };
+  client_cb.step = [&](const SlotInput& i) { client_engine.step(i); };
+
+  ClientState cs(MAX_PREDICT_AHEAD_FRAMES + 4);
+  frame_id_t server_frame = 0;
+  frame_id_t client_frame = 0;
+  frame_id_t last_confirmed = 0;
+  bool rollback_done = false;
+  std::unordered_map<frame_id_t, SlotInput> predicted_inputs;
+
+  const int kTotalFrames = 10;
+
+  for (int i = 0; i < kTotalFrames; ++i) {
+    // Server input: diverges at frame 2
+    SlotInput server_input = (server_frame == 2) ?
+        SlotInput{5.0f, 0.0f, 0} : SlotInput{1.0f, 0.0f, 0};
+    server_cb.step(server_input);
+
+    // Client predicts with input=1.0 (doesn't know about server divergence)
+    SlotInput client_input{1.0f, 0.0f, 0};
+    cs.save_snapshot(client_frame, client_input, client_cb.save_state);
+    client_cb.step(client_input);
+    predicted_inputs[client_frame] = client_input;
+    ++client_frame;
+
+    // Server broadcasts authoritative frame
+    std::vector<SlotInput> auth_inputs = {server_input};
+    uint8_t buf[256];
+    size_t n = PackAuthoritativeFrame(server_frame, auth_inputs.data(),
+                                       static_cast<uint16_t>(auth_inputs.size()),
+                                       buf, sizeof(buf));
+    ++server_frame;
+
+    // Client receives authoritative frame
+    frame_id_t fid;
+    std::vector<SlotInput> unpacked;
+    size_t used = UnpackAuthoritativeFrame(buf, n, &fid, &unpacked);
+    ASSERT_EQ(used, n);
+
+    // On frame 2: rollback + re-simulate
+    if (fid == 2 && !rollback_done && client_frame > 2) {
+      rollback_done = true;
+      bool ok = cs.rollback_to(2, unpacked[0],
+                               client_cb.restore_state, client_cb.step);
+      EXPECT_TRUE(ok);
+
+      // Re-simulate frames 3..client_frame-1 with predicted inputs
+      for (auto f = 3u; f < client_frame; ++f) {
+        auto it = predicted_inputs.find(f);
+        if (it != predicted_inputs.end()) {
+          client_cb.step(it->second);
+        }
+      }
+    }
+
+    last_confirmed = fid;
+  }
+
+  // Server: 1+1+5+1*7 = 14.0
+  // Client after rollback: restored to 2.0, +5.0=7.0, +1+1=9.0, +1*5=14.0
+  EXPECT_FLOAT_EQ(server_engine.position, client_engine.position);
+  EXPECT_EQ(server_engine.step_count, client_engine.step_count);
+  EXPECT_TRUE(rollback_done);
+}
+
+TEST(FullLoopTest, StateHashVerificationAcrossFrames) {
+  MockGameEngine server_engine;
+  MockGameEngine client_engine;
+
+  ClientState cs(8);
+
+  // Both engines process the same 15 frames
+  for (int i = 0; i < 15; ++i) {
+    SlotInput input{1.0f, 0.0f, 0};
+    server_engine.step(input);
+    client_engine.step(input);
+
+    // Every K frames, server sends state hash
+    if ((i + 1) % STATE_HASH_INTERVAL_K == 0) {
+      uint64_t server_hash = server_engine.compute_hash();
+      cs.record_server_hash(i + 1, server_hash);
+
+      // Client verifies with its own hash
+      uint64_t client_hash = client_engine.compute_hash();
+      EXPECT_EQ(cs.check_hash(i + 1, client_hash),
+                ClientState::HashCheck::kMatch);
+    }
+  }
+
+  // Both engines identical
+  EXPECT_EQ(server_engine.state_hash_counter, client_engine.state_hash_counter);
+}
+
+TEST(FullLoopTest, MultiSlotClientServerSync) {
+  // 2 slots: slot 0 (left), slot 1 (right)
+  MockGameEngine left_engine;
+  MockGameEngine right_engine;
+
+  ClientState cs(8);
+  frame_id_t frame = 0;
+
+  for (int i = 0; i < 10; ++i) {
+    // Server collects inputs for both slots
+    SlotInput left_input{1.0f, 0.0f, 0};
+    SlotInput right_input{-1.0f, 0.0f, 0};
+    std::vector<SlotInput> all_inputs = {left_input, right_input};
+
+    // Pack authoritative frame
+    uint8_t buf[256];
+    size_t n = PackAuthoritativeFrame(frame, all_inputs.data(),
+                                       static_cast<uint16_t>(all_inputs.size()),
+                                       buf, sizeof(buf));
+
+    // Both engines step
+    left_engine.step(left_input);
+    right_engine.step(right_input);
+
+    // Client unpacks
+    frame_id_t fid;
+    std::vector<SlotInput> unpacked;
+    size_t used = UnpackAuthoritativeFrame(buf, n, &fid, &unpacked);
+    ASSERT_EQ(used, n);
+    ASSERT_EQ(unpacked.size(), 2u);
+
+    ++frame;
+  }
+
+  // Left moved +10, right moved -10
+  EXPECT_FLOAT_EQ(left_engine.position, 10.0f);
+  EXPECT_FLOAT_EQ(right_engine.position, -10.0f);
+  EXPECT_EQ(left_engine.step_count, 10);
+  EXPECT_EQ(right_engine.step_count, 10);
+}

@@ -375,8 +375,13 @@ int main(int argc, char* argv[]) {
   while (true) {
     auto t0 = std::chrono::steady_clock::now();
 
-    // Send input for current frame
-    client.send_frame_input(client.current_frame_id(), nullptr, &my_input, 0);
+    // Send input for current frame with correct slot indices
+    if (!client.my_slots().empty()) {
+      client.send_frame_input(client.current_frame_id(),
+                              client.my_slots().data(),
+                              &my_input,
+                              static_cast<uint16_t>(client.my_slots().size()));
+    }
 
     // Run prediction tick
     auto result = client.tick(my_input);

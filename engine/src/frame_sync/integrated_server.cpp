@@ -127,20 +127,18 @@ class IntegratedFrameSyncServer {
                  config_.left_agents, config_.right_agents, config_.seed);
   }
 
+  // 2026-08-30 将所有 slot 的输入打包为连续缓冲区，调用 StepWithInput。
+  // 缓冲区布局：SlotInput[0] + SlotInput[1] + ... + SlotInput[num_slots-1]，
+  // 与 DecodeAndApplyFrameInput 期望的格式一致。
   void apply_inputs_to_engine() {
-    // Convert SlotInput to game actions
-    // This is a simplified version - in production, you'd use
-    // DecodeAndApplyFrameInput with the engine's controllers
-    std::lock_guard<std::mutex> lock(mu_);
-    for (size_t i = 0; i < num_slots_; ++i) {
-      const auto& input = current_inputs_[i];
-      // TODO: Apply input to game controller
-      // For now, just log the input
-      if (input.dir_x != 0 || input.dir_y != 0 || input.buttons != 0) {
-        // std::println("Slot {}: dir=({:.2f}, {:.2f}) buttons={:#06x}",
-        //              i, input.dir_x, input.dir_y, input.buttons);
-      }
+    std::vector<frame_sync::SlotInput> inputs;
+    {
+      std::lock_guard<std::mutex> lock(mu_);
+      inputs = current_inputs_;
     }
+    // Pack into contiguous buffer for StepWithInput
+    env_.StepWithInput(inputs.data(),
+                       inputs.size() * frame_sync::SLOT_INPUT_BYTES);
   }
 
   bool all_ready() const {
