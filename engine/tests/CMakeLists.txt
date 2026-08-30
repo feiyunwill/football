@@ -130,3 +130,11 @@ gtest_discover_tests(client_state_test)
 gtest_discover_tests(ecs_physics_sync_test)
 gtest_discover_tests(ecs_benchmark_test)
 gtest_discover_tests(engine_integration_test)
+
+# ===== Phase 5: 商业级优化测试 =====
+add_executable(phase5_test
+  phase5_test.cpp
+)
+target_include_directories(phase5_test PRIVATE ${ENGINE_SRC})
+target_link_libraries(phase5_test PRIVATE gtest_main)
+gtest_discover_tests(phase5_test)
