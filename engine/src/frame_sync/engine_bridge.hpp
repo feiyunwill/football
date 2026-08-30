@@ -14,16 +14,6 @@
 
 namespace frame_sync {
 
-// FNV-1a hash for state digest.
-inline uint64_t Fnv1aHash(const std::string& data) {
-  uint64_t hash = 14695981039346656037ULL;
-  for (unsigned char c : data) {
-    hash ^= c;
-    hash *= 1099511628211ULL;
-  }
-  return hash;
-}
-
 // Create EngineCallbacks that bridge to a GameEnv instance.
 // The GameEnv must already be initialized and in a valid state.
 inline EngineCallbacks MakeGameEnvCallbacks(GameEnv* env) {

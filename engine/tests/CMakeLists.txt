@@ -96,6 +96,13 @@ add_executable(ecs_benchmark_test
 target_include_directories(ecs_benchmark_test PRIVATE ${ENGINE_SRC})
 target_link_libraries(ecs_benchmark_test PRIVATE gtest_main)
 
+# ===== 引擎集成测试：EngineCallbacks + protocol e2e =====
+add_executable(engine_integration_test
+  engine_integration_test.cpp
+)
+target_include_directories(engine_integration_test PRIVATE ${ENGINE_SRC})
+target_link_libraries(engine_integration_test PRIVATE gtest_main)
+
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
 if(ENABLE_RLTOOLS)
@@ -122,3 +129,4 @@ gtest_discover_tests(fixed_point_determinism_test)
 gtest_discover_tests(client_state_test)
 gtest_discover_tests(ecs_physics_sync_test)
 gtest_discover_tests(ecs_benchmark_test)
+gtest_discover_tests(engine_integration_test)

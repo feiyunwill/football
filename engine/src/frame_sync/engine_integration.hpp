@@ -43,6 +43,16 @@ struct MultiplayerConfig {
   int frame_rate_hz = 10;
 };
 
+// FNV-1a hash for state digest.
+inline uint64_t Fnv1aHash(const std::string& data) {
+  uint64_t hash = 14695981039346656037ULL;
+  for (unsigned char c : data) {
+    hash ^= c;
+    hash *= 1099511628211ULL;
+  }
+  return hash;
+}
+
 }  // namespace frame_sync
 
 #endif
