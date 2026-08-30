@@ -89,6 +89,13 @@ add_executable(ecs_physics_sync_test
 target_include_directories(ecs_physics_sync_test PRIVATE ${ENGINE_SRC})
 target_link_libraries(ecs_physics_sync_test PRIVATE gtest_main)
 
+# ===== ms-2.5: ECS 性能基准测试 =====
+add_executable(ecs_benchmark_test
+  ecs_benchmark_test.cpp
+)
+target_include_directories(ecs_benchmark_test PRIVATE ${ENGINE_SRC})
+target_link_libraries(ecs_benchmark_test PRIVATE gtest_main)
+
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
 if(ENABLE_RLTOOLS)
@@ -114,3 +121,4 @@ gtest_discover_tests(fixed_point_test)
 gtest_discover_tests(fixed_point_determinism_test)
 gtest_discover_tests(client_state_test)
 gtest_discover_tests(ecs_physics_sync_test)
+gtest_discover_tests(ecs_benchmark_test)
