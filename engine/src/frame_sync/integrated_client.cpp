@@ -199,15 +199,18 @@ class IntegratedFrameSyncClient {
   int rollback_count() const { return client_state_.rollback_count(); }
 
  private:
+  // 2026-08-31 修复：必须在 start_game() 之前设置 game_config，
+  // 否则引擎会使用默认值（render=true）导致窗口创建问题。
   void init_game_env() {
-    // Create scenario config from session params
+    env_->game_config.render = config_.render;
+    env_->game_config.physics_steps_per_frame = 10;
+    env_->start_game();
+
     auto scenario = ScenarioConfig::make();
     scenario->left_agents = left_agents_;
     scenario->right_agents = right_agents_;
     scenario->game_engine_random_seed = seed_;
-
-    // Initialize the game environment
-    env_->start_game();
+    env_->state = GameState::game_running;
     env_->reset(*scenario, false);
 
     std::println("Game environment initialized: {}v{}, seed={}",
@@ -338,7 +341,7 @@ class IntegratedFrameSyncClient {
 
 int main(int argc, char* argv[]) {
   if (argc < 3) {
-    std::println(stderr, "Usage: {} <host> <port> [left_agents] [right_agents] [seed]",
+    std::println(stderr, "Usage: {} <host> <port> [left_agents] [right_agents] [seed] [--headless]",
                  argv[0]);
     return 1;
   }
@@ -350,6 +353,12 @@ int main(int argc, char* argv[]) {
   if (argc >= 5) config.right_agents = static_cast<uint16_t>(std::stoi(argv[4]));
   if (argc >= 6) config.seed = static_cast<uint32_t>(std::stoul(argv[5]));
   config.is_server = false;
+  // Check for --headless flag
+  for (int i = 1; i < argc; ++i) {
+    if (std::string(argv[i]) == "--headless") {
+      config.render = false;
+    }
+  }
 
   std::println("Connecting to {}:{} ({}v{}, seed={})",
                config.host, config.port,
@@ -397,8 +406,10 @@ int main(int argc, char* argv[]) {
         break;
     }
 
-    // Render
-    env.render();
+    // Render (only if config.render is true)
+    if (config.render) {
+      env.render();
+    }
 
     // Maintain frame rate
     auto elapsed = std::chrono::steady_clock::now() - t0;

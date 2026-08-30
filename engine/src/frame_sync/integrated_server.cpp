@@ -114,13 +114,20 @@ class IntegratedFrameSyncServer {
   void stop() { running_ = false; }
 
  private:
+  // 2026-08-31 修复：render=false 必须在 start_game() 之前设置，
+  // 否则会尝试创建窗口导致 crash。state 必须在 reset() 之前设置。
   void init_game_env() {
+    env_.game_config.render = false;
+    env_.game_config.physics_steps_per_frame = 10;
+    env_.game_config.render_resolution_x = 1280;
+    env_.game_config.render_resolution_y = 720;
+    env_.start_game();
+
     auto scenario = ScenarioConfig::make();
     scenario->left_agents = config_.left_agents;
     scenario->right_agents = config_.right_agents;
     scenario->game_engine_random_seed = config_.seed;
-
-    env_.start_game();
+    env_.state = GameState::game_running;
     env_.reset(*scenario, false);
 
     std::println("Server game environment initialized: {}v{}, seed={}",
@@ -339,6 +346,9 @@ int main(int argc, char* argv[]) {
   config.is_server = true;
   config.render = false;  // Headless server
 
+  // 2026-08-31 修复：禁用 stdout 缓冲，确保后台运行时输出可见
+  std::setvbuf(stdout, nullptr, _IONBF, 0);
+  std::setvbuf(stderr, nullptr, _IONBF, 0);
   std::println("Starting integrated frame sync server on port {}", port);
   std::println("Configuration: {}v{}, seed={}", left, right, seed);
 

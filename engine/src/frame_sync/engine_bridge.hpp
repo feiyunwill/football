@@ -11,6 +11,7 @@
 
 #include <string>
 #include <cstdint>
+#include <vector>
 
 namespace frame_sync {
 
@@ -29,8 +30,16 @@ inline EngineCallbacks MakeGameEnvCallbacks(GameEnv* env) {
     env->set_state(state);
   };
 
+  // 2026-08-31 修复：StepWithInput 期望 num_slots * SLOT_INPUT_BYTES 字节的缓冲区。
+  // 将单个 SlotInput 复制到所有槽位，打包为连续缓冲区。
   callbacks.step = [env](const SlotInput& input) {
-    env->StepWithInput(&input, sizeof(input));
+    int left = env->scenario_config.left_agents;
+    int right = env->scenario_config.right_agents;
+    int total = left + right;
+    if (total <= 0) return;
+    std::vector<SlotInput> all_slots(total, input);
+    env->StepWithInput(all_slots.data(),
+                       total * sizeof(SlotInput));
   };
 
   callbacks.compute_hash = [env]() -> uint64_t {
