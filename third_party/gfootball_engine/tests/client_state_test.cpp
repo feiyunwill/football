@@ -234,3 +234,71 @@ TEST_F(ClientStateTest, ClearResetsEverything) {
   EXPECT_EQ(cs_.get_snapshot(0), nullptr);
   EXPECT_EQ(cs_.check_hash(5, 12345), fs::ClientState::HashCheck::kUnknown);
 }
+
+// ===== Tests: Dynamic frame catching =====
+
+TEST_F(ClientStateTest, CatchupWhenBehind) {
+  // Server is at frame 5, client at frame 2 → should catch up 3 frames
+  int count = cs_.catchup_count(5, 2);
+  EXPECT_EQ(count, 3);  // min(5-2, kMaxCatchupFramesPerTick=3)
+}
+
+TEST_F(ClientStateTest, CatchupCappedAtMax) {
+  // Server is at frame 10, client at frame 0 → catch up capped at 3
+  int count = cs_.catchup_count(10, 0);
+  EXPECT_EQ(count, 3);  // kMaxCatchupFramesPerTick
+}
+
+TEST_F(ClientStateTest, NoCatchupWhenSynced) {
+  // Server and client at same frame → normal processing
+  int count = cs_.catchup_count(5, 5);
+  EXPECT_EQ(count, 1);  // normal
+}
+
+TEST_F(ClientStateTest, WaitWhenAhead) {
+  // Client is ahead of server → wait
+  int count = cs_.catchup_count(3, 5);
+  EXPECT_EQ(count, -1);  // wait
+}
+
+TEST_F(ClientStateTest, FramesBehindCalculation) {
+  EXPECT_EQ(cs_.frames_behind(10, 7), 3);
+  EXPECT_EQ(cs_.frames_behind(5, 5), 0);
+  EXPECT_EQ(cs_.frames_behind(3, 7), -4);
+}
+
+// ===== Tests: Jitter tracking =====
+
+TEST_F(ClientStateTest, JitterTracking) {
+  // Record arrivals at 100ms intervals (steady)
+  cs_.record_frame_arrival(1000.0);
+  cs_.record_frame_arrival(1100.0);
+  cs_.record_frame_arrival(1200.0);
+  cs_.record_frame_arrival(1300.0);
+
+  EXPECT_NEAR(cs_.avg_frame_interval_ms(), 100.0, 0.01);
+  EXPECT_NEAR(cs_.jitter_ms(), 0.0, 0.01);
+  EXPECT_FALSE(cs_.is_jitter_high());
+}
+
+TEST_F(ClientStateTest, JitterHigh) {
+  // Record arrivals with high jitter
+  cs_.record_frame_arrival(1000.0);
+  cs_.record_frame_arrival(1050.0);   // 50ms
+  cs_.record_frame_arrival(1200.0);   // 150ms
+  cs_.record_frame_arrival(1220.0);   // 20ms
+  cs_.record_frame_arrival(1400.0);   // 180ms
+
+  EXPECT_GT(cs_.jitter_ms(), fs::kJitterHighThresholdMs);
+  EXPECT_TRUE(cs_.is_jitter_high());
+}
+
+TEST_F(ClientStateTest, JitterResetsOnClear) {
+  cs_.record_frame_arrival(1000.0);
+  cs_.record_frame_arrival(1200.0);
+
+  cs_.clear();
+
+  EXPECT_EQ(cs_.avg_frame_interval_ms(), 0.0);
+  EXPECT_EQ(cs_.jitter_ms(), 0.0);
+}

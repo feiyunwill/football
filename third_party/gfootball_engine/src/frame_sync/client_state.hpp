@@ -15,6 +15,7 @@
 
 #include "frame_sync/protocol.hpp"
 
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -42,6 +43,13 @@ struct FrameSnapshot {
   StateBlob state;
   SlotInput predicted_input;  // what the client predicted for this frame
 };
+
+// Dynamic frame catching constants.
+constexpr int kCatchupThresholdFrames = 2;       // start catching up when behind by this many frames
+constexpr int kMaxCatchupFramesPerTick = 3;       // max frames to fast-forward in one tick
+constexpr int kAheadThresholdFrames = 1;          // slow down when ahead by this many frames
+constexpr double kJitterSmoothingWindowMs = 500.0; // jitter moving average window (ms)
+constexpr double kJitterHighThresholdMs = 30.0;    // jitter above this → warn
 
 // Ring buffer of recent frame snapshots, indexed by frame_id.
 // Old entries beyond the buffer window are evicted automatically.
@@ -96,6 +104,66 @@ class ClientState {
   frame_id_t last_server_hash_frame() const { return last_server_hash_frame_; }
   uint64_t last_server_hash() const { return last_server_hash_; }
 
+ // ----- Dynamic frame catching -----
+
+  // How many frames the client is behind the server.
+  // Positive = behind, negative = ahead.
+  int frames_behind(frame_id_t server_frame, frame_id_t local_frame) const {
+    return static_cast<int>(server_frame) - static_cast<int>(local_frame);
+  }
+
+  // Should we catch up this tick? Returns the number of frames to process.
+  // 0 = normal (process 1 frame), >0 = catch up N frames, <0 = wait.
+  int catchup_count(frame_id_t server_frame, frame_id_t local_frame) const {
+    int behind = frames_behind(server_frame, local_frame);
+    if (behind > kCatchupThresholdFrames) {
+      return std::min(behind, kMaxCatchupFramesPerTick);
+    }
+    if (behind < -kAheadThresholdFrames) {
+      return -1;  // wait for server
+    }
+    return 1;  // normal
+  }
+
+  // ----- Jitter tracking -----
+
+  // Record a frame arrival timestamp (monotonic clock, milliseconds).
+  void record_frame_arrival(double timestamp_ms) {
+    if (last_frame_arrival_ms_ > 0) {
+      double interval = timestamp_ms - last_frame_arrival_ms_;
+      frame_intervals_.push_back(interval);
+      if (frame_intervals_.size() > 100) frame_intervals_.pop_front();
+    }
+    last_frame_arrival_ms_ = timestamp_ms;
+  }
+
+  // Average frame interval in ms.
+  double avg_frame_interval_ms() const {
+    if (frame_intervals_.empty()) return 0.0;
+    double sum = 0.0;
+    for (double v : frame_intervals_) sum += v;
+    return sum / frame_intervals_.size();
+  }
+
+  // Current jitter: std dev of frame intervals.
+  double jitter_ms() const {
+    if (frame_intervals_.size() < 2) return 0.0;
+    double avg = avg_frame_interval_ms();
+    double sum_sq = 0.0;
+    for (double v : frame_intervals_) {
+      double diff = v - avg;
+      sum_sq += diff * diff;
+    }
+    return std::sqrt(sum_sq / frame_intervals_.size());
+  }
+
+  // Is jitter above the high threshold?
+  bool is_jitter_high() const { return jitter_ms() > kJitterHighThresholdMs; }
+
+  // ----- Statistics (extended) -----
+  int catchup_count_total() const { return catchup_count_total_; }
+  int wait_count_total() const { return wait_count_total_; }
+
  private:
   int max_buffered_;
   // Use a deque for O(1) push_back/evict and O(n) lookup by frame_id.
@@ -107,6 +175,14 @@ class ClientState {
   // Server state hashes for verification.
   frame_id_t last_server_hash_frame_ = 0;
   uint64_t last_server_hash_ = 0;
+
+  // Jitter tracking.
+  double last_frame_arrival_ms_ = 0.0;
+  std::deque<double> frame_intervals_;
+
+  // Catch-up statistics.
+  int catchup_count_total_ = 0;
+  int wait_count_total_ = 0;
 };
 
 // ----- Inline implementation (header-only for simplicity) -----
@@ -162,6 +238,10 @@ inline void ClientState::clear() {
   evict_count_ = 0;
   last_server_hash_frame_ = 0;
   last_server_hash_ = 0;
+  last_frame_arrival_ms_ = 0.0;
+  frame_intervals_.clear();
+  catchup_count_total_ = 0;
+  wait_count_total_ = 0;
 }
 
 inline void ClientState::record_server_hash(frame_id_t frame_id, uint64_t hash) {

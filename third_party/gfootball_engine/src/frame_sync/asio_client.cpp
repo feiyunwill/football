@@ -77,36 +77,55 @@ class FrameSyncClient {
     kNormal,           // normal prediction or authoritative apply
     kWaitForAuthority, // paused prediction, waiting for server
     kRollback,         // rollback occurred and re-simulated
+    kCatchup,          // fast-forwarded (processed multiple frames)
   };
 
   // Run one frame of the prediction loop.
   // Returns what happened so the caller can adjust timing.
-  StepResult tick(const frame_sync::SlotInput& my_input) {
-    // 1. Check if we should pause prediction.
+  // server_frame_id: latest frame confirmed by the server (from pop_authoritative_frame).
+  StepResult tick(const frame_sync::SlotInput& my_input,
+                  frame_id_t server_frame_id = 0) {
+    // 1. Dynamic frame catching: determine how many frames to process this tick.
+    int frames_to_process = client_state_.catchup_count(server_frame_id, current_frame_id_);
+    if (frames_to_process < 0) {
+      // Ahead of server — wait.
+      ++client_state_.wait_count_total_;
+      return StepResult::kWaitForAuthority;
+    }
+    if (frames_to_process == 0) frames_to_process = 1;
+
+    // 2. Check prediction cap.
     frame_id_t lag = current_frame_id_ - last_confirmed_frame_;
     if (lag >= static_cast<frame_id_t>(frame_sync::MAX_PREDICT_AHEAD_FRAMES)) {
-      // Too far ahead — wait for authority.
       return StepResult::kWaitForAuthority;
     }
     if (frames_without_packet_ >= frame_sync::MAX_FRAMES_WITHOUT_PACKET) {
       return StepResult::kWaitForAuthority;
     }
 
-    // 2. Save snapshot before stepping (for potential rollback).
-    if (engine_.save_state) {
-      client_state_.save_snapshot(current_frame_id_, my_input, engine_.save_state);
-    }
+    // 3. Process frames (possibly multiple for catch-up).
+    StepResult result = StepResult::kNormal;
+    for (int f = 0; f < frames_to_process; ++f) {
+      // Save snapshot before stepping (for potential rollback).
+      if (engine_.save_state) {
+        client_state_.save_snapshot(current_frame_id_, my_input, engine_.save_state);
+      }
 
-    // 3. Predict: step locally with our input.
-    if (engine_.step) {
-      engine_.step(my_input);
+      // Predict: step locally with our input.
+      if (engine_.step) {
+        engine_.step(my_input);
+      }
+      predicted_inputs_[current_frame_id_] = my_input;
+      ++current_frame_id_;
+      ++frames_without_packet_;
+
+      if (frames_to_process > 1) {
+        result = StepResult::kCatchup;
+        ++client_state_.catchup_count_total_;
+      }
     }
-    predicted_inputs_[current_frame_id_] = my_input;
-    ++current_frame_id_;
-    ++frames_without_packet_;
 
     // 4. Process any authoritative frames that arrived.
-    StepResult result = StepResult::kNormal;
     frame_sync::frame_id_t auth_fid;
     std::vector<frame_sync::SlotInput> auth_inputs;
     while (pop_authoritative_frame(&auth_fid, &auth_inputs)) {
@@ -157,7 +176,12 @@ class FrameSyncClient {
       }
     }
 
-    // 5. Evict old snapshots.
+    // 5. Record frame arrival for jitter tracking.
+    auto now = std::chrono::steady_clock::now();
+    double now_ms = std::chrono::duration<double, std::milli>(now.time_since_epoch()).count();
+    client_state_.record_frame_arrival(now_ms);
+
+    // 6. Evict old snapshots.
     client_state_.evict_old(current_frame_id_);
 
     return result;
@@ -198,6 +222,8 @@ class FrameSyncClient {
   frame_sync::frame_id_t last_confirmed_frame() const { return last_confirmed_frame_; }
   int rollback_count() const { return client_state_.rollback_count(); }
   int frames_without_packet() const { return frames_without_packet_; }
+  int catchup_count() const { return client_state_.catchup_count_total(); }
+  double jitter_ms() const { return client_state_.jitter_ms(); }
 
  private:
   bool receive_session_start() {
