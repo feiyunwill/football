@@ -680,3 +680,19 @@ void Team::FillTacticsComponent(TacticsComponent& out) const {
   out.side = side;
   out.team_id = id;
 }
+
+// 2026-08-30 P2-Phase2：将队伍身份与状态写入 ECS 组件
+void Team::FillTeamStateComponent(TeamStateComponent& out) const {
+  DO_VALIDATION;
+  out.team_id = id;
+  out.side = side;
+  out.static_side = id == 0 ? -1 : 1;
+  out.mirrored = mirrored;
+  out.ai_difficulty = aiDifficulty;
+  out.player_count = static_cast<int>(players.size());
+  out.human_gamer_count = static_cast<int>(humanGamers.size());
+  out.active_player_count = GetActivePlayersCount();
+  out.last_touch_player_id = lastTouchPlayer ? lastTouchPlayer->GetStableID() : -1;
+  out.designated_possession_player_id = designatedTeamPossessionPlayer
+      ? designatedTeamPossessionPlayer->GetStableID() : -1;
+}

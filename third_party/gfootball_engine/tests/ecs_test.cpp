@@ -254,3 +254,105 @@ TEST(WorldTest, MoveConstruction) {
   ASSERT_NE(got, nullptr);
   EXPECT_FLOAT_EQ(got->x, 1.f);
 }
+
+// ===== TeamStateComponent 测试 =====
+
+// 2026-08-30 P2-Phase2：TeamStateComponent 单元测试
+// 注意：TeamStateComponent 定义在 onthepitch/ecs_components.hpp，
+// 这里仅测试其作为纯数据结构的正确性（不依赖 Match/Team 运行时）。
+
+struct TeamStateComponent {
+  int team_id = 0;
+  int side = -1;
+  int static_side = -1;
+  bool mirrored = false;
+  float ai_difficulty = 0.0f;
+  int player_count = 0;
+  int human_gamer_count = 0;
+  int active_player_count = 0;
+  int last_touch_player_id = -1;
+  int designated_possession_player_id = -1;
+};
+
+TEST(TeamStateComponentTest, DefaultConstruction) {
+  TeamStateComponent tsc;
+  EXPECT_EQ(tsc.team_id, 0);
+  EXPECT_EQ(tsc.side, -1);
+  EXPECT_EQ(tsc.static_side, -1);
+  EXPECT_FALSE(tsc.mirrored);
+  EXPECT_FLOAT_EQ(tsc.ai_difficulty, 0.0f);
+  EXPECT_EQ(tsc.player_count, 0);
+  EXPECT_EQ(tsc.human_gamer_count, 0);
+  EXPECT_EQ(tsc.active_player_count, 0);
+  EXPECT_EQ(tsc.last_touch_player_id, -1);
+  EXPECT_EQ(tsc.designated_possession_player_id, -1);
+}
+
+TEST(TeamStateComponentTest, EcsIntegration) {
+  World w;
+  Entity e = w.CreateEntity();
+  TeamStateComponent tsc;
+  tsc.team_id = 1;
+  tsc.side = 1;
+  tsc.static_side = 1;
+  tsc.player_count = 11;
+  tsc.active_player_count = 11;
+  tsc.ai_difficulty = 0.75f;
+  w.AddComponent(e, tsc);
+
+  TeamStateComponent* got = w.GetComponent<TeamStateComponent>(e);
+  ASSERT_NE(got, nullptr);
+  EXPECT_EQ(got->team_id, 1);
+  EXPECT_EQ(got->side, 1);
+  EXPECT_EQ(got->player_count, 11);
+  EXPECT_FLOAT_EQ(got->ai_difficulty, 0.75f);
+}
+
+TEST(TeamStateComponentTest, MultipleTeams) {
+  World w;
+  Entity e0 = w.CreateEntity();
+  Entity e1 = w.CreateEntity();
+
+  TeamStateComponent left;
+  left.team_id = 0;
+  left.side = -1;
+  left.static_side = -1;
+  left.player_count = 11;
+
+  TeamStateComponent right;
+  right.team_id = 1;
+  right.side = 1;
+  right.static_side = 1;
+  right.player_count = 11;
+
+  w.AddComponent(e0, left);
+  w.AddComponent(e1, right);
+
+  // Verify both teams coexist
+  TeamStateComponent* t0 = w.GetComponent<TeamStateComponent>(e0);
+  TeamStateComponent* t1 = w.GetComponent<TeamStateComponent>(e1);
+  ASSERT_NE(t0, nullptr);
+  ASSERT_NE(t1, nullptr);
+  EXPECT_EQ(t0->team_id, 0);
+  EXPECT_EQ(t1->team_id, 1);
+  EXPECT_EQ(t0->side, -1);
+  EXPECT_EQ(t1->side, 1);
+}
+
+TEST(TeamStateComponentTest, ForEachTeamState) {
+  World w;
+  for (int i = 0; i < 2; ++i) {
+    Entity e = w.CreateEntity();
+    TeamStateComponent tsc;
+    tsc.team_id = i;
+    tsc.player_count = 11;
+    w.AddComponent(e, tsc);
+  }
+
+  int count = 0;
+  w.ForEach<TeamStateComponent>([&](Entity, TeamStateComponent& tsc) {
+    EXPECT_EQ(tsc.player_count, 11);
+    count++;
+  });
+  EXPECT_EQ(count, 2);
+}

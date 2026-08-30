@@ -135,6 +135,9 @@ class Team {
     /// 2026-08-28 P2-Phase3：将队伍战术状态写入 ECS 组件
     void FillTacticsComponent(TacticsComponent& out) const;
 
+    /// 2026-08-30 P2-Phase2：将队伍身份与状态写入 ECS 组件
+    void FillTeamStateComponent(TeamStateComponent& out) const;
+
   protected:
     const int id;
     Match *match;

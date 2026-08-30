@@ -112,6 +112,23 @@ struct CollisionResultComponent {
   Vector3 collision_normal;
 };
 
+/// 2026-08-30 P2-Phase2: 队伍身份与状态组件
+/// 从 Team 类提取核心状态，使 ECS 成为可查询的队伍数据源。
+/// 双向同步函数 SyncTeamToEcs / SyncTeamFromEcs
+/// 负责 OOP ↔ ECS 一致性。
+struct TeamStateComponent {
+  int team_id = 0;                    // 队伍 ID (0 或 1)
+  int side = -1;                      // 动态边 (-1=左, 1=右)
+  int static_side = -1;               // 静态边 (由 team_id 决定)
+  bool mirrored = false;              // 是否镜像
+  float ai_difficulty = 0.0f;         // AI 难度
+  int player_count = 0;               // 球员数量
+  int human_gamer_count = 0;          // 人类玩家数量
+  int active_player_count = 0;        // 活跃球员数量
+  int last_touch_player_id = -1;      // 最后触球球员 stable_id
+  int designated_possession_player_id = -1;  // 指定控球球员
+};
+
 /// 裁判实体标记（状态仍在 Referee 类中，System 调用 Referee::Process）
 struct RefereeTag {};
 
