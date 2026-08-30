@@ -7,11 +7,11 @@ recursive-include gfootball/examples *
 include Dockerfile Dockerfile_examples .dockerignore CHANGELOG CONTRIBUTING.md requirements.txt run_docker_test.sh
 
 recursive-include third_party/fonts *
-recursive-include third_party/gfootball_engine *
-recursive-exclude third_party/gfootball_engine *.a *.so cmake_install.cmake Makefile
+recursive-include engine *
+recursive-exclude engine *.a *.so cmake_install.cmake Makefile
 
-prune third_party/gfootball_engine/CMakeFiles
-prune third_party/gfootball_engine/cmake-build-*
-prune third_party/gfootball_engine/build*
-prune third_party/gfootball_engine/.vs*
-prune third_party/gfootball_engine/.idea
+prune engine/CMakeFiles
+prune engine/cmake-build-*
+prune engine/build*
+prune engine/.vs*
+prune engine/.idea

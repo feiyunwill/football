@@ -28,7 +28,7 @@ class CMakeExtension(Extension):
 
   def __init__(self, name):
     # don't invoke the original build_ext for this special extension
-    sources = ['third_party/gfootball_engine/src/misc/empty.cpp']
+    sources = ['engine/src/misc/empty.cpp']
     super().__init__(name, sources=sources, optional=True)
 
 
@@ -51,7 +51,7 @@ class CustomBuild(build_ext):
       dest_dir = "gfootball_engine"
       if not os.path.exists(dest_dir):
         try:
-          os.symlink(os.path.abspath('third_party/gfootball_engine'), dest_dir)
+          os.symlink(os.path.abspath('engine'), dest_dir)
         except:
           raise OSError("Google Research Football: Could not create symlink to %s"
                         "for the development install." % dest_dir)
@@ -64,7 +64,7 @@ class CustomBuild(build_ext):
 
     if use_prebuilt_lib:
       if os.system(
-            'cp third_party/gfootball_engine/lib/prebuilt_gameplayfootball.so ' +
+            'cp engine/lib/prebuilt_gameplayfootball.so ' +
             dest_dir + '/_gameplayfootball.so'):
         raise OSError(
             'Failed to copy pre-built library to a final destination %s.' %
@@ -75,7 +75,7 @@ class CustomBuild(build_ext):
         raise OSError('Google Research Football compilation failed')
       # There might be multiple compiled modules (e.g. for different python versions)
       # Copy them all
-      libs = glob.glob(f'third_party/gfootball_engine/_gameplayfootball*.so')
+      libs = glob.glob(f'engine/_gameplayfootball*.so')
       copy_compiled_libs(libs, dest_dir)
     copy_fonts(dest_dir)
 
@@ -93,15 +93,15 @@ class CustomBuild(build_ext):
       dest_dir = "gfootball_engine"
       if not os.path.exists(dest_dir):
         try:
-          os.symlink(os.path.abspath('third_party/gfootball_engine'), dest_dir, target_is_directory=True)
+          os.symlink(os.path.abspath('engine'), dest_dir, target_is_directory=True)
         except OSError:
           # Windows doesn't support symlinks for unprivileged users
           # Fall back to copying the files
           os.mkdir(dest_dir)
-          shutil.copy2('third_party/gfootball_engine/__init__.py', dest_dir)
+          shutil.copy2('engine/__init__.py', dest_dir)
           data_dir = os.path.join(dest_dir, 'data')
           if not os.path.exists(data_dir):
-            shutil.copytree('third_party/gfootball_engine/data', data_dir)
+            shutil.copytree('engine/data', data_dir)
 
     os.environ['GENERATOR_PLATFORM'] = 'x64' if sys.maxsize > 2 ** 32 else 'Win32'
     py_major, py_minor, _ = platform.python_version_tuple()
@@ -109,7 +109,7 @@ class CustomBuild(build_ext):
     if os.system('gfootball\\build_game_engine.bat'):
       raise OSError('Google Research Football compilation failed.\n' + guide_message)
     # Copy compiled library and its dependencies
-    lib_path = 'third_party/gfootball_engine/build_win/Release/'
+    lib_path = 'engine/build_win/Release/'
     libs = glob.glob(f'{lib_path}*.pyd') + glob.glob(f'{lib_path}*.dll')
     copy_compiled_libs(libs, dest_dir)
     copy_fonts(dest_dir)
@@ -143,7 +143,7 @@ def process_develop_setup():
   elif 'develop' not in sys.argv and os.path.exists('gfootball_engine'):
     # If `pip install .` is called after development mode,
     # remove the 'fonts' directory copied by a `develop` setup
-    copied_fonts = 'third_party/gfootball_engine/fonts'
+    copied_fonts = 'engine/fonts'
     if os.path.exists(copied_fonts):
       shutil.rmtree(copied_fonts)
     # Remove .so files (.pyd on Windows)
@@ -178,7 +178,7 @@ setup(
     url='https://github.com/google-research/football',
     license='Apache 2.0',
     packages=packages,
-    package_dir={'gfootball_engine': 'third_party/gfootball_engine'},
+    package_dir={'gfootball_engine': 'engine'},
     # 依赖与 requires-python 已迁至 pyproject.toml；此处保留以兼容旧 pip/setuptools，与 pyproject.toml 保持一致
     install_requires=[
         'pygame>=1.9.6',

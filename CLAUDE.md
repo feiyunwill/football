@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Google Research Football 的二次开发仓库：基于 GameplayFootball 引擎的强化学习足球环境。三部分组成：
 
 - **`gfootball/`** — Python 包：Gym 环境（`env/`）、场景（`scenarios/`）、PPO 训练示例（`examples/`）、`play_game.py`
-- **`third_party/gfootball_engine/`** — C++ 游戏引擎，编译为 Python 扩展模块 `_gameplayfootball.so`，供 Python 侧调用
+- **`engine/`** — C++ 游戏引擎，编译为 Python 扩展模块 `_gameplayfootball.so`，供 Python 侧调用
 - **帧同步联机（进行中）** — Python 侧 `gfootball/frame_sync/`（server/client/protocol/presentation）、引擎侧 `src/frame_sync/`、独立 C++ 网络实现 `frame_sync_asio/`
 
 ## 常用命令
@@ -22,10 +22,10 @@ gfootball/build_game_engine.sh      # 仅编译引擎：in-source cmake + make�
 GFOOTBALL_USE_PREBUILT_SO=1 python3 -m pip install .   # 使用预编译 so，不编译
 ```
 
-- 开发安装（`pip install -e .`）会在仓库根创建 `gfootball_engine` → `third_party/gfootball_engine` 的 symlink。
+- 开发安装（`pip install -e .`）会在仓库根创建 `gfootball_engine` → `engine` 的 symlink。
 - **编译一律单线程（2026-08-26 约定）**：`make -j 1`；`cmake --build` 显式加 `-j 1`，不要并行编译。
 - **新增引擎源文件必须登记到 `sources.cmake`**（由根 CMakeLists.txt include），否则不参与编译。
-- 独立帧同步 server/client（仅需 Boost.Asio，无引擎依赖）：在 `third_party/gfootball_engine` 下执行 `cmake -S frame_sync_asio -B build_fs_asio && cmake --build build_fs_asio`。
+- 独立帧同步 server/client（仅需 Boost.Asio，无引擎依赖）：在 `engine` 下执行 `cmake -S frame_sync_asio -B build_fs_asio && cmake --build build_fs_asio`。
 - 引擎构建已导出 `compile_commands.json` 供 clangd 使用；勿提交（.gitignore 已忽略）。
 - 依赖：SDL2(image/ttf/gfx)、Boost(thread/system/filesystem)、OpenGL/EGL、Python 开发头文件；Linux apt 安装列表见 README。
 
@@ -51,10 +51,10 @@ Python 测试均为 absltest 风格（`gfootball/env/*_test.py`）。C++ 侧无�
 ### Python ↔ C++ 边界
 
 - 调用链：`gfootball/env/football_env.py` → `football_env_core.py` → `import gfootball_engine as libgame`（pybind11 模块）。
-- **绑定定义在 `third_party/gfootball_engine/ai.cpp`**（`PYBIND11_MODULE(_gameplayfootball, m)`）；引擎侧环境封装是 `src/game_env.cpp` 的 `GameEnv`（`step` / `get_state` / `set_state` / `SetControllerSetup` 等）。
+- **绑定定义在 `engine/ai.cpp`**（`PYBIND11_MODULE(_gameplayfootball, m)`）；引擎侧环境封装是 `src/game_env.cpp` 的 `GameEnv`（`step` / `get_state` / `set_state` / `SetControllerSetup` 等）。
 - 观测与动作预处理都在 Python 侧（`env/observation_*.py`）；动作用 `SetDirection` / `SetButton` 写入控制器。
 
-### 引擎内部（`third_party/gfootball_engine/src`）
+### 引擎内部（`engine/src`）
 
 - `blunted.cpp/hpp` — SystemManager：系统链式注册（Directory / Graphics / Physics / Audio…），系统间经 SystemMessage 通信。
 - `onthepitch/` — 比赛逻辑：Match、Team、Player、Ball、Referee、HumanGamer、TeamAIController 等。

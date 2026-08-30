@@ -32,18 +32,18 @@ jobs:
             libgl-dev libegl-dev python3-dev cmake
 
       - name: Configure C++ tests
-        working-directory: third_party/gfootball_engine
+        working-directory: engine
         run: |
           cmake -S tests -B build_tests \
             -DCMAKE_CXX_COMPILER=g++-15 \
             -DCMAKE_BUILD_TYPE=Debug
 
       - name: Build C++ tests
-        working-directory: third_party/gfootball_engine
+        working-directory: engine
         run: cmake --build build_tests -j 2
 
       - name: Run C++ tests
-        working-directory: third_party/gfootball_engine
+        working-directory: engine
         run: |
           ./build_tests/frame_sync_test
           ./build_tests/ecs_test

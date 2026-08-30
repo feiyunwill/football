@@ -33,6 +33,6 @@ fi
 PARALLELISM=1
 
 # Delete pre-existing version of CMakeCache.txt to make 'python3 -m pip install' work.
-rm -f third_party/gfootball_engine/CMakeCache.txt
-pushd third_party/gfootball_engine && cmake . && make -j $PARALLELISM && popd
-pushd third_party/gfootball_engine && ln -sf libgame.$LIB_EXTENSION _gameplayfootball.so && popd
+rm -f engine/CMakeCache.txt
+pushd engine && cmake . && make -j $PARALLELISM && popd
+pushd engine && ln -sf libgame.$LIB_EXTENSION _gameplayfootball.so && popd
