@@ -356,53 +356,28 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
   extract_info_to_state(info, state.step_count + 1, next);
   next.step_count = state.step_count + 1;
 
-  // ---- Rich reward signal ----
+  // ---- Reward signal (focused, non-duplicated) ----
   float step_reward = 0.0f;
 
-  // 1. Goal reward (strongest signal)
+  // 1. Goal reward (strongest signal, 10x magnitude)
   if (next.score[0] > state.score[0]) step_reward += 10.0f;
   if (next.score[1] > state.score[1]) step_reward -= 10.0f;
 
-  // 2. Ball possession continuity
-  if (next.ball_owned_team == 0 && state.ball_owned_team == 0) {
-    step_reward += 0.03f;  // sustained possession
-  } else if (next.ball_owned_team == 0 && state.ball_owned_team != 0) {
-    step_reward += 0.08f;  // interception / regain possession
-  } else if (next.ball_owned_team != 0 && state.ball_owned_team == 0) {
-    step_reward -= 0.02f;  // lost possession
-  }
+  // 2. Ball possession (encourage keeping the ball)
+  if (next.ball_owned_team == 0) step_reward += 0.05f;
 
-  // 3. Ball approach (closer to ball = easier to control)
+  // 3. Ball approach (shaping: move toward ball)
   float ball_dist_delta = state.prev_ball_dist - next.prev_ball_dist;
-  step_reward += ball_dist_delta * 0.15f;
+  step_reward += ball_dist_delta * 0.3f;
 
-  // 4. Goal approach (progressive play toward opponent goal at x=+1)
+  // 4. Goal approach (shaping: move toward opponent goal at x=+1)
   float goal_dist_delta = state.prev_ball_to_goal_dist - next.prev_ball_to_goal_dist;
   step_reward += goal_dist_delta * 0.2f;
 
-  // 5. Ball velocity toward goal (ball moving in the right direction)
-  if (next.ball_owned_team == 0) {
-    // Ball direction x-component: positive = toward opponent goal
-    float ball_dx = next.ball_dir[0];
-    step_reward += ball_dx * 0.05f;
-  }
+  // 5. Shot proximity bonus (close to goal)
+  if (next.left_pos[0] > 0.7f) step_reward += 0.01f;
 
-  // 6. Shot proximity bonus (close to goal + has ball)
-  if (next.ball_owned_team == 0 && next.left_pos[0] > 0.7f) {
-    step_reward += 0.02f;
-  }
-
-  // 7. Team spread (encourage players to spread out, not cluster)
-  float spread_bonus = 0.0f;
-  for (int i = 1; i < 11; i++) {
-    float dx = next.left_pos[i * 2] - next.left_pos[0];
-    float dy = next.left_pos[i * 2 + 1] - next.left_pos[1];
-    float dist = std::sqrt(dx * dx + dy * dy);
-    if (dist > 0.05f && dist < 0.8f) spread_bonus += 0.002f;
-  }
-  step_reward += spread_bonus;
-
-  // 8. Small per-step penalty (encourage fast play)
+  // 6. Small per-step penalty (encourage fast play)
   step_reward -= 0.001f;
 
   // NEVER set done=true — the on-policy runner handles truncation via STEP_LIMIT
@@ -435,7 +410,7 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
   return 1.0f;
 }
 
-// ---- reward: shaped reward with ball approach + goal + possession ----
+// ---- reward: same as step() return value (kept for RLtools compatibility) ----
 template <typename DEVICE, typename SPEC, typename ACTION_SPEC, typename RNG>
 static float reward(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
                      typename SPEC::PARAMETERS&,
@@ -449,25 +424,21 @@ static float reward(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
   if (next.score[0] > state.score[0]) r += 10.0f;
   if (next.score[1] > state.score[1]) r -= 10.0f;
 
-  // 2. Ball possession reward (encourage keeping the ball)
+  // 2. Ball possession
   if (next.ball_owned_team == 0) r += 0.05f;
 
-  // 3. Ball approach reward (shaping: move toward ball)
+  // 3. Ball approach
   float ball_dist_delta = state.prev_ball_dist - next.prev_ball_dist;
   r += ball_dist_delta * 0.3f;
 
-  // 4. Goal approach reward (shaping: move toward opponent goal at x=+1)
+  // 4. Goal approach
   float goal_dist_delta = state.prev_ball_to_goal_dist - next.prev_ball_to_goal_dist;
   r += goal_dist_delta * 0.2f;
 
-  // 5. Shot proximity bonus (if close to goal, encourage shooting)
-  // The right goal is at x=+1.0 in env coords
-  float player_x = next.left_pos[0];  // player 0 x position
-  if (player_x > 0.7f) {
-    r += 0.01f;  // close to goal bonus
-  }
+  // 5. Shot proximity bonus
+  if (next.left_pos[0] > 0.7f) r += 0.01f;
 
-  // 6. Small per-step penalty (encourage fast play)
+  // 6. Small per-step penalty
   r -= 0.001f;
 
   return r;
