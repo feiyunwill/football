@@ -129,6 +129,29 @@ struct TeamStateComponent {
   int designated_possession_player_id = -1;  // 指定控球球员
 };
 
+/// 2026-08-30 P2-Phase2: 裁判状态组件
+/// 从 Referee 类提取核心状态，使 ECS 成为可查询的裁判数据源。
+/// 双向同步函数 SyncRefereeToEcs / SyncRefereeFromEcs
+/// 负责 OOP ↔ ECS 一致性。
+struct RefereeStateComponent {
+  // 裁判缓冲区状态
+  bool buffer_active = false;              // 是否有待执行的动作
+  int desired_set_piece = 0;               // e_GameMode 值
+  int buffer_team_id = 0;                  // 涉及的队伍 ID
+  unsigned long stop_time = 0;             // 停止时间
+  unsigned long prepare_time = 0;          // 准备时间
+  unsigned long start_time = 0;            // 开始时间
+  bool end_phase = false;                  // 是否结束当前阶段
+  // 裁判状态
+  int after_set_piece_relax_time_ms = 0;   // SetPiece 后冷却时间
+  int offside_player_count = 0;            // 越位球员数量
+  // 犯规状态
+  int foul_type = 0;                       // 0: 无, 1: 犯规, 2: 黄牌, 3: 红牌
+  bool foul_advantage = false;             // 是否 Advantage
+  unsigned long foul_time = 0;             // 犯规时间
+  bool foul_processed = false;             // 犯规是否已处理
+};
+
 /// 裁判实体标记（状态仍在 Referee 类中，System 调用 Referee::Process）
 struct RefereeTag {};
 

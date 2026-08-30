@@ -356,3 +356,79 @@ TEST(TeamStateComponentTest, ForEachTeamState) {
   });
   EXPECT_EQ(count, 2);
 }
+
+// ===== RefereeStateComponent 测试 =====
+
+// 2026-08-30 P2-Phase2：RefereeStateComponent 单元测试
+// 注意：RefereeStateComponent 定义在 onthepitch/ecs_components.hpp，
+// 这里仅测试其作为纯数据结构的正确性（不依赖 Match/Referee 运行时）。
+
+struct RefereeStateComponent {
+  bool buffer_active = false;
+  int desired_set_piece = 0;
+  int buffer_team_id = 0;
+  unsigned long stop_time = 0;
+  unsigned long prepare_time = 0;
+  unsigned long start_time = 0;
+  bool end_phase = false;
+  int after_set_piece_relax_time_ms = 0;
+  int offside_player_count = 0;
+  int foul_type = 0;
+  bool foul_advantage = false;
+  unsigned long foul_time = 0;
+  bool foul_processed = false;
+};
+
+TEST(RefereeStateComponentTest, DefaultConstruction) {
+  RefereeStateComponent rsc;
+  EXPECT_FALSE(rsc.buffer_active);
+  EXPECT_EQ(rsc.desired_set_piece, 0);
+  EXPECT_EQ(rsc.buffer_team_id, 0);
+  EXPECT_EQ(rsc.stop_time, 0UL);
+  EXPECT_EQ(rsc.prepare_time, 0UL);
+  EXPECT_EQ(rsc.start_time, 0UL);
+  EXPECT_FALSE(rsc.end_phase);
+  EXPECT_EQ(rsc.after_set_piece_relax_time_ms, 0);
+  EXPECT_EQ(rsc.offside_player_count, 0);
+  EXPECT_EQ(rsc.foul_type, 0);
+  EXPECT_FALSE(rsc.foul_advantage);
+  EXPECT_EQ(rsc.foul_time, 0UL);
+  EXPECT_FALSE(rsc.foul_processed);
+}
+
+TEST(RefereeStateComponentTest, EcsIntegration) {
+  World w;
+  Entity e = w.CreateEntity();
+  RefereeStateComponent rsc;
+  rsc.buffer_active = true;
+  rsc.desired_set_piece = 3;  // e_GameMode_KickOff
+  rsc.buffer_team_id = 0;
+  rsc.start_time = 2000;
+  rsc.end_phase = true;
+  w.AddComponent(e, rsc);
+
+  RefereeStateComponent* got = w.GetComponent<RefereeStateComponent>(e);
+  ASSERT_NE(got, nullptr);
+  EXPECT_TRUE(got->buffer_active);
+  EXPECT_EQ(got->desired_set_piece, 3);
+  EXPECT_EQ(got->start_time, 2000UL);
+  EXPECT_TRUE(got->end_phase);
+}
+
+TEST(RefereeStateComponentTest, FoulState) {
+  World w;
+  Entity e = w.CreateEntity();
+  RefereeStateComponent rsc;
+  rsc.foul_type = 2;  // yellow card
+  rsc.foul_advantage = true;
+  rsc.foul_time = 15000;
+  rsc.foul_processed = false;
+  w.AddComponent(e, rsc);
+
+  RefereeStateComponent* got = w.GetComponent<RefereeStateComponent>(e);
+  ASSERT_NE(got, nullptr);
+  EXPECT_EQ(got->foul_type, 2);
+  EXPECT_TRUE(got->foul_advantage);
+  EXPECT_EQ(got->foul_time, 15000UL);
+  EXPECT_FALSE(got->foul_processed);
+}

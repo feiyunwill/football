@@ -77,6 +77,9 @@ class Referee {
     int GetCurrentFoulType() { DO_VALIDATION; return foul.foulType; }
     void ProcessState(EnvState* state);
 
+    /// 2026-08-30 P2-Phase2：将裁判状态写入 ECS 组件
+    void FillRefereeStateComponent(RefereeStateComponent& out) const;
+
   protected:
     Match *match;
 

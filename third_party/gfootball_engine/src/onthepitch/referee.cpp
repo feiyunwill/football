@@ -557,3 +557,24 @@ bool Referee::CheckFoul() {
 
   return false;
 }
+
+// 2026-08-30 P2-Phase2：将裁判状态写入 ECS 组件
+void Referee::FillRefereeStateComponent(RefereeStateComponent& out) const {
+  DO_VALIDATION;
+  // 裁判缓冲区
+  out.buffer_active = buffer.active;
+  out.desired_set_piece = static_cast<int>(buffer.desiredSetPiece);
+  out.buffer_team_id = buffer.teamID;
+  out.stop_time = buffer.stopTime;
+  out.prepare_time = buffer.prepareTime;
+  out.start_time = buffer.startTime;
+  out.end_phase = buffer.endPhase;
+  // 裁判状态
+  out.after_set_piece_relax_time_ms = afterSetPieceRelaxTime_ms;
+  out.offside_player_count = static_cast<int>(offsidePlayers.size());
+  // 犯规状态
+  out.foul_type = foul.foulType;
+  out.foul_advantage = foul.advantage;
+  out.foul_time = foul.foulTime;
+  out.foul_processed = foul.hasBeenProcessed;
+}
