@@ -1,9 +1,6 @@
 // Copyright 2026 Google LLC & Contributors
 // Checkpoint: save/load PPO training state to/from TAR archive
 // Uses RLtools' TAR persistence backend (no HDF5 dependency)
-//
-// Save:  save_checkpoint(device, ts, "checkpoint_10000.tar")
-// Load:  load_checkpoint(device, ts, "checkpoint_10000.tar")
 
 #ifndef _HPP_CHECKPOINT
 #define _HPP_CHECKPOINT
@@ -39,7 +36,7 @@
 
 #include <fstream>
 #include <vector>
-#include <print>
+#include <cstdio>  // 2026-08-30: printf instead of std::println
 
 RL_TOOLS_NAMESPACE_WRAPPER_START
 namespace rl_tools::checkpoint {
@@ -62,8 +59,6 @@ bool save_checkpoint(DEVICE& device,
   root_group.success = true;
 
   // Save the full PPO loop state
-  // This recursively saves: actor, critic, optimizers, on_policy_runner,
-  // observation_normalizer, rng, step
   save(device, ts, root_group);
 
   // Finalize TAR
@@ -72,13 +67,13 @@ bool save_checkpoint(DEVICE& device,
   // Write buffer to file
   std::ofstream ofs(path, std::ios::binary);
   if (!ofs.is_open()) {
-    std::println(stderr, "checkpoint: failed to open {} for writing", path);
+    fprintf(stderr, "checkpoint: failed to open %s for writing\n", path);
     return false;
   }
   ofs.write(writer.buffer.data(), static_cast<std::streamsize>(writer.buffer.size()));
   ofs.close();
 
-  std::println("checkpoint: saved {} bytes to {}", writer.buffer.size(), path);
+  printf("checkpoint: saved %zu bytes to %s\n", writer.buffer.size(), path);
   return true;
 }
 
@@ -92,7 +87,7 @@ bool load_checkpoint(DEVICE& device,
   // Read entire TAR file into memory
   std::ifstream ifs(path, std::ios::binary | std::ios::ate);
   if (!ifs.is_open()) {
-    std::println(stderr, "checkpoint: failed to open {} for reading", path);
+    fprintf(stderr, "checkpoint: failed to open %s for reading\n", path);
     return false;
   }
   auto file_size = ifs.tellg();
@@ -100,7 +95,7 @@ bool load_checkpoint(DEVICE& device,
 
   std::vector<char> buffer(file_size);
   if (!ifs.read(buffer.data(), file_size)) {
-    std::println(stderr, "checkpoint: failed to read {}", path);
+    fprintf(stderr, "checkpoint: failed to read %s\n", path);
     return false;
   }
   ifs.close();
@@ -119,9 +114,9 @@ bool load_checkpoint(DEVICE& device,
   // Load the full PPO loop state
   bool success = load(device, ts, root_group);
   if (success) {
-    std::println("checkpoint: loaded from {} (step={})", path, ts.step);
+    printf("checkpoint: loaded from %s (step=%lu)\n", path, static_cast<unsigned long>(ts.step));
   } else {
-    std::println(stderr, "checkpoint: failed to load from {}", path);
+    fprintf(stderr, "checkpoint: failed to load from %s\n", path);
   }
   return success;
 }

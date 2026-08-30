@@ -219,10 +219,36 @@ target_link_libraries(frame_sync_server_engine PRIVATE
   pthread
 )
 
+# ----- 集成帧同步客户端（接入真实 GameEnv）-----
+add_executable(integrated_client src/frame_sync/integrated_client.cpp)
+target_include_directories(integrated_client PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(integrated_client PRIVATE
+  -Wl,--no-as-needed
+  ${OUTPUT_LIB_NAME}
+  gamelib menulib datalib blunted2
+  ${SDL2_LIBS_ALL} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES}
+  ${Python_LIBRARIES}
+  Boost::system
+  pthread
+)
+
+# ----- 集成帧同步服务端（接入真实 GameEnv，headless）-----
+add_executable(integrated_server src/frame_sync/integrated_server.cpp)
+target_include_directories(integrated_server PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(integrated_server PRIVATE
+  -Wl,--no-as-needed
+  ${OUTPUT_LIB_NAME}
+  gamelib menulib datalib blunted2
+  ${SDL2_LIBS_ALL} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES}
+  ${Python_LIBRARIES}
+  Boost::system
+  pthread
+)
+
 # ----- RLtools PPO 训练（接入真实 GameEnv）-----
 option(BUILD_RL_TRAINING "Build RLtools PPO training with real engine" OFF)
 if(BUILD_RL_TRAINING)
-  set(RLTOOLS_DIR "${PROJECT_SOURCE_DIR}/../rl-tools/include")
+  set(RLTOOLS_DIR "${PROJECT_SOURCE_DIR}/../third_party/rl-tools/include")
   add_executable(rl_football_training
     src/frame_sync/rl_training/training.cpp
   )
@@ -240,6 +266,7 @@ if(BUILD_RL_TRAINING)
     ${SDL2_LIBS_ALL} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES}
     ${Python_LIBRARIES}
     Boost::system
+    stdc++fs quadmath
   )
   target_compile_options(rl_football_training PRIVATE -O3 -ffast-math)
   message(STATUS "RLtools PPO training with real engine enabled")

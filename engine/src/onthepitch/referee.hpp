@@ -22,6 +22,7 @@
 
 #include "../defines.hpp"
 #include "../gamedefines.hpp"
+#include "ecs_components.hpp"
 
 #include "../scene/scene3d/scene3d.hpp"
 
