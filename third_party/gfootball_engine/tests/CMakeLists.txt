@@ -75,6 +75,13 @@ add_executable(fixed_point_determinism_test
 target_include_directories(fixed_point_determinism_test PRIVATE ${ENGINE_SRC})
 target_link_libraries(fixed_point_determinism_test PRIVATE gtest_main)
 
+# ===== ClientState 预测/回滚测试 =====
+add_executable(client_state_test
+  client_state_test.cpp
+)
+target_include_directories(client_state_test PRIVATE ${ENGINE_SRC})
+target_link_libraries(client_state_test PRIVATE gtest_main)
+
 # ===== P2-Phase1: PlayerPhysicsComponent 测试 =====
 add_executable(ecs_physics_sync_test
   ecs_physics_sync_test.cpp
@@ -105,4 +112,5 @@ gtest_discover_tests(frame_sync_test)
 gtest_discover_tests(ecs_test)
 gtest_discover_tests(fixed_point_test)
 gtest_discover_tests(fixed_point_determinism_test)
+gtest_discover_tests(client_state_test)
 gtest_discover_tests(ecs_physics_sync_test)

@@ -1,12 +1,15 @@
 // Copyright 2026 Google LLC & Contributors
 // 帧同步协议单元测试：验证 protocol.hpp / input_codec 的打包/解包正确性。
+// 2026-08-30 新增：客户端预测/回滚集成测试。
 
 #include "frame_sync/protocol.hpp"
 #include "frame_sync/input_codec.hpp"
+#include "frame_sync/client_state.hpp"
 
 #include <gtest/gtest.h>
 #include <cstring>
 #include <vector>
+#include <unordered_map>
 
 using namespace frame_sync;
 
@@ -140,4 +143,135 @@ TEST(TypesTest, FrameIdIsUint32) {
 TEST(TypesTest, StateHashIsUint64) {
   state_hash_t h = 0xFFFFFFFFFFFFFFFFULL;
   EXPECT_EQ(h, 18446744073709551615ULL);
+}
+
+// ===== 客户端预测/回滚集成测试 =====
+
+// Minimal fake engine for testing prediction/rollback.
+struct FakeGameEngine {
+  float position = 0.0f;  // simulated ball position
+  int step_count = 0;
+  std::vector<SlotInput> applied_inputs;
+
+  StateBlob save() {
+    StateBlob blob(sizeof(float) + sizeof(int));
+    std::memcpy(blob.data(), &position, sizeof(float));
+    std::memcpy(blob.data() + sizeof(float), &step_count, sizeof(int));
+    return blob;
+  }
+
+  void restore(const StateBlob& blob) {
+    ASSERT_EQ(blob.size(), sizeof(float) + sizeof(int));
+    std::memcpy(&position, blob.data(), sizeof(float));
+    std::memcpy(&step_count, blob.data() + sizeof(float), sizeof(int));
+  }
+
+  void step(const SlotInput& input) {
+    position += input.dir_x;  // simple: position += direction
+    ++step_count;
+    applied_inputs.push_back(input);
+  }
+
+  void reset() {
+    position = 0.0f;
+    step_count = 0;
+    applied_inputs.clear();
+  }
+};
+
+TEST(PredictionRollbackTest, PredictThenRollback) {
+  FakeGameEngine engine;
+  ClientState cs(8);
+  frame_id_t frame = 0;
+
+  // Predict frames 0-3 with direction=1.0
+  SlotInput predicted;
+  predicted.dir_x = 1.0f;
+
+  for (int i = 0; i < 4; ++i) {
+    cs.save_snapshot(frame, predicted, [&]() { return engine.save(); });
+    engine.step(predicted);
+    ++frame;
+  }
+  EXPECT_EQ(engine.position, 4.0f);  // 0 + 1*4
+  EXPECT_EQ(engine.step_count, 4);
+
+  // Server sends authoritative frame 2 with direction=10.0 (different)
+  SlotInput auth;
+  auth.dir_x = 10.0f;
+
+  bool ok = cs.rollback_to(2, auth,
+                           [&](const StateBlob& b) { engine.restore(b); },
+                           [&](const SlotInput& i) { engine.step(i); });
+
+  EXPECT_TRUE(ok);
+  // Restored to frame 2 state (position=2.0, step_count=2), then stepped once with auth
+  EXPECT_FLOAT_EQ(engine.position, 12.0f);  // 2.0 + 10.0
+  EXPECT_EQ(engine.step_count, 3);
+  EXPECT_EQ(cs.rollback_count(), 1);
+}
+
+TEST(PredictionRollbackTest, PredictWithNoRollback) {
+  FakeGameEngine engine;
+  ClientState cs(8);
+  frame_id_t frame = 0;
+
+  // Predict frames 0-2 with direction=1.0
+  SlotInput predicted;
+  predicted.dir_x = 1.0f;
+
+  for (int i = 0; i < 3; ++i) {
+    cs.save_snapshot(frame, predicted, [&]() { return engine.save(); });
+    engine.step(predicted);
+    ++frame;
+  }
+
+  // Server confirms frame 0 with same input — no rollback needed
+  SlotInput auth = predicted;
+  bool ok = cs.rollback_to(0, auth,
+                           [&](const StateBlob& b) { engine.restore(b); },
+                           [&](const SlotInput& i) { engine.step(i); });
+
+  EXPECT_TRUE(ok);
+  // Restored to frame 0 (position=0, step=0), stepped once
+  EXPECT_FLOAT_EQ(engine.position, 1.0f);
+  EXPECT_EQ(cs.rollback_count(), 1);  // still counts as rollback
+}
+
+TEST(PredictionRollbackTest, EvictionPreventsStaleRollback) {
+  FakeGameEngine engine;
+  ClientState cs(4);  // small buffer
+  frame_id_t frame = 0;
+
+  SlotInput input;
+  input.dir_x = 1.0f;
+
+  // Fill and overflow the buffer
+  for (int i = 0; i < 8; ++i) {
+    cs.save_snapshot(frame + i, input, [&]() { return engine.save(); });
+    engine.step(input);
+  }
+
+  // Buffer should only hold 4 entries
+  EXPECT_EQ(cs.buffer_size(), 4);
+
+  // Trying to rollback to frame 0 should fail (evicted)
+  bool ok = cs.rollback_to(0, input,
+                           [&](const StateBlob& b) { engine.restore(b); },
+                           [&](const SlotInput& i) { engine.step(i); });
+  EXPECT_FALSE(ok);
+}
+
+TEST(PredictionRollbackTest, StateHashVerification) {
+  ClientState cs(8);
+
+  // Server sends hash for frame 10
+  cs.record_server_hash(10, 0xABCDEF0123456789ULL);
+
+  EXPECT_EQ(cs.check_hash(10, 0xABCDEF0123456789ULL),
+            ClientState::HashCheck::kMatch);
+  EXPECT_EQ(cs.check_hash(10, 0x1111111111111111ULL),
+            ClientState::HashCheck::kMismatch);
+  EXPECT_EQ(cs.check_hash(5, 0xABCDEF0123456789ULL),
+            ClientState::HashCheck::kUnknown);
 }
