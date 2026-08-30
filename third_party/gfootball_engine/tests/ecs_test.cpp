@@ -432,3 +432,82 @@ TEST(RefereeStateComponentTest, FoulState) {
   EXPECT_EQ(got->foul_time, 15000UL);
   EXPECT_FALSE(got->foul_processed);
 }
+
+// ===== MatchStateComponent 测试 =====
+
+// 2026-08-30 P2-Phase2：MatchStateComponent 单元测试
+// 注意：MatchStateComponent 定义在 onthepitch/ecs_components.hpp，
+// 这里仅测试其作为纯数据结构的正确性（不依赖 Match 运行时）。
+
+struct MatchStateComponent {
+  unsigned long match_time_ms = 0;
+  unsigned long actual_time_ms = 0;
+  bool in_play = false;
+  bool in_set_piece = false;
+  bool goal_scored = false;
+  bool ball_is_in_goal = false;
+  int match_phase = 0;
+  int last_touch_team_id = -1;
+  int last_touch_team_ids[8] = {};
+  int best_possession_team_id = -1;
+  int designated_possession_player_id = -1;
+  int ball_retainer_player_id = -1;
+  int first_team = 0;
+  int second_team = 1;
+};
+
+TEST(MatchStateComponentTest, DefaultConstruction) {
+  MatchStateComponent msc;
+  EXPECT_EQ(msc.match_time_ms, 0UL);
+  EXPECT_EQ(msc.actual_time_ms, 0UL);
+  EXPECT_FALSE(msc.in_play);
+  EXPECT_FALSE(msc.in_set_piece);
+  EXPECT_FALSE(msc.goal_scored);
+  EXPECT_FALSE(msc.ball_is_in_goal);
+  EXPECT_EQ(msc.match_phase, 0);
+  EXPECT_EQ(msc.last_touch_team_id, -1);
+  for (int i = 0; i < 8; ++i) {
+    EXPECT_EQ(msc.last_touch_team_ids[i], 0);
+  }
+  EXPECT_EQ(msc.best_possession_team_id, -1);
+  EXPECT_EQ(msc.designated_possession_player_id, -1);
+  EXPECT_EQ(msc.ball_retainer_player_id, -1);
+  EXPECT_EQ(msc.first_team, 0);
+  EXPECT_EQ(msc.second_team, 1);
+}
+
+TEST(MatchStateComponentTest, EcsIntegration) {
+  World w;
+  Entity e = w.CreateEntity();
+  MatchStateComponent msc;
+  msc.match_time_ms = 45000;
+  msc.actual_time_ms = 50000;
+  msc.in_play = true;
+  msc.match_phase = 1;  // 2nd half
+  msc.first_team = 0;
+  msc.second_team = 1;
+  w.AddComponent(e, msc);
+
+  MatchStateComponent* got = w.GetComponent<MatchStateComponent>(e);
+  ASSERT_NE(got, nullptr);
+  EXPECT_EQ(got->match_time_ms, 45000UL);
+  EXPECT_EQ(got->actual_time_ms, 50000UL);
+  EXPECT_TRUE(got->in_play);
+  EXPECT_EQ(got->match_phase, 1);
+}
+
+TEST(MatchStateComponentTest, GoalState) {
+  World w;
+  Entity e = w.CreateEntity();
+  MatchStateComponent msc;
+  msc.goal_scored = true;
+  msc.ball_is_in_goal = true;
+  msc.best_possession_team_id = 0;
+  w.AddComponent(e, msc);
+
+  MatchStateComponent* got = w.GetComponent<MatchStateComponent>(e);
+  ASSERT_NE(got, nullptr);
+  EXPECT_TRUE(got->goal_scored);
+  EXPECT_TRUE(got->ball_is_in_goal);
+  EXPECT_EQ(got->best_possession_team_id, 0);
+}

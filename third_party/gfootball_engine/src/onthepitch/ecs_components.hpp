@@ -129,6 +129,32 @@ struct TeamStateComponent {
   int designated_possession_player_id = -1;  // 指定控球球员
 };
 
+/// 2026-08-30 P2-Phase2: 比赛状态组件
+/// 从 Match 类提取核心状态，使 ECS 成为可查询的比赛数据源。
+/// 双向同步函数 SyncMatchToEcs / SyncMatchFromEcs
+/// 负责 OOP ↔ ECS 一致性。
+struct MatchStateComponent {
+  // 时间
+  unsigned long match_time_ms = 0;          // 比赛时间
+  unsigned long actual_time_ms = 0;         // 实际时间（含暂停）
+  // 游戏模式
+  bool in_play = false;                     // 是否在比赛中
+  bool in_set_piece = false;                // 是否在定位球
+  bool goal_scored = false;                 // 是否进球
+  bool ball_is_in_goal = false;             // 球是否在球门内
+  int match_phase = 0;                      // e_MatchPhase 值
+  // 触球追踪
+  int last_touch_team_id = -1;              // 最后触球队伍
+  int last_touch_team_ids[8] = {};          // e_TouchType_SIZE 各类型触球
+  // 控球追踪
+  int best_possession_team_id = -1;         // 最佳控球队伍
+  int designated_possession_player_id = -1;  // 指定控球球员
+  int ball_retainer_player_id = -1;         // 持球球员
+  // 队伍配置
+  int first_team = 0;                       // 先攻队伍
+  int second_team = 1;                      // 后攻队伍
+};
+
 /// 2026-08-30 P2-Phase2: 裁判状态组件
 /// 从 Referee 类提取核心状态，使 ECS 成为可查询的裁判数据源。
 /// 双向同步函数 SyncRefereeToEcs / SyncRefereeFromEcs

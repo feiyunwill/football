@@ -817,6 +817,33 @@ void Match::ProcessState(EnvState* state) {
   if (state->Load()) SyncEcsFromOop();
 }
 
+// 2026-08-30 P2-Phase2：将比赛状态写入 ECS 组件
+void Match::FillMatchStateComponent(MatchStateComponent& out) const {
+  DO_VALIDATION;
+  // 时间
+  out.match_time_ms = matchTime_ms;
+  out.actual_time_ms = actualTime_ms;
+  // 游戏模式
+  out.in_play = inPlay;
+  out.in_set_piece = inSetPiece;
+  out.goal_scored = goalScored;
+  out.ball_is_in_goal = ballIsInGoal;
+  out.match_phase = static_cast<int>(matchPhase);
+  // 触球追踪
+  out.last_touch_team_id = lastTouchTeamID;
+  for (int i = 0; i < 8; ++i) {
+    out.last_touch_team_ids[i] = lastTouchTeamIDs[i];
+  }
+  // 控球追踪
+  out.best_possession_team_id = bestPossessionTeam ? bestPossessionTeam->GetID() : -1;
+  out.designated_possession_player_id = designatedPossessionPlayer
+      ? designatedPossessionPlayer->GetStableID() : -1;
+  out.ball_retainer_player_id = ballRetainer ? ballRetainer->GetStableID() : -1;
+  // 队伍配置
+  out.first_team = first_team;
+  out.second_team = second_team;
+}
+
 void Match::SyncEcsFromOop() {
   DO_VALIDATION;
   if (ecs_ball_entity_ == blunted::kNullEntity) return;
