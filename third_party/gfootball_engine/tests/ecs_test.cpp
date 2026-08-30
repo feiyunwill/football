@@ -511,3 +511,184 @@ TEST(MatchStateComponentTest, GoalState) {
   EXPECT_TRUE(got->ball_is_in_goal);
   EXPECT_EQ(got->best_possession_team_id, 0);
 }
+
+// ===== 序列化往返测试 =====
+// 2026-08-30 P2-Phase4：验证所有 ECS 组件可序列化/反序列化
+
+#include "ecs/serializer.hpp"
+
+TEST(SerializationTest, TeamStateRoundTrip) {
+  World w;
+  Entity e = w.CreateEntity();
+  TeamStateComponent src;
+  src.team_id = 1;
+  src.side = 1;
+  src.static_side = 1;
+  src.mirrored = true;
+  src.ai_difficulty = 0.85f;
+  src.player_count = 11;
+  src.human_gamer_count = 2;
+  src.active_player_count = 10;
+  src.last_touch_player_id = 7;
+  src.designated_possession_player_id = 9;
+  w.AddComponent(e, src);
+
+  SerializedWorld data = WorldSerializer::Serialize<TeamStateComponent>(w);
+
+  World w2;
+  WorldSerializer::Deserialize<TeamStateComponent>(w2, data);
+
+  TeamStateComponent* got = nullptr;
+  w2.ForEach<TeamStateComponent>([&](Entity, TeamStateComponent& c) { got = &c; });
+  ASSERT_NE(got, nullptr);
+  EXPECT_EQ(got->team_id, 1);
+  EXPECT_EQ(got->side, 1);
+  EXPECT_EQ(got->static_side, 1);
+  EXPECT_TRUE(got->mirrored);
+  EXPECT_FLOAT_EQ(got->ai_difficulty, 0.85f);
+  EXPECT_EQ(got->player_count, 11);
+  EXPECT_EQ(got->human_gamer_count, 2);
+  EXPECT_EQ(got->active_player_count, 10);
+  EXPECT_EQ(got->last_touch_player_id, 7);
+  EXPECT_EQ(got->designated_possession_player_id, 9);
+}
+
+TEST(SerializationTest, RefereeStateRoundTrip) {
+  World w;
+  Entity e = w.CreateEntity();
+  RefereeStateComponent src;
+  src.buffer_active = true;
+  src.desired_set_piece = 3;
+  src.buffer_team_id = 0;
+  src.stop_time = 1000;
+  src.prepare_time = 1200;
+  src.start_time = 1400;
+  src.end_phase = true;
+  src.after_set_piece_relax_time_ms = 400;
+  src.offside_player_count = 2;
+  src.foul_type = 2;
+  src.foul_advantage = true;
+  src.foul_time = 15000;
+  src.foul_processed = false;
+  w.AddComponent(e, src);
+
+  SerializedWorld data = WorldSerializer::Serialize<RefereeStateComponent>(w);
+
+  World w2;
+  WorldSerializer::Deserialize<RefereeStateComponent>(w2, data);
+
+  RefereeStateComponent* got = nullptr;
+  w2.ForEach<RefereeStateComponent>([&](Entity, RefereeStateComponent& c) { got = &c; });
+  ASSERT_NE(got, nullptr);
+  EXPECT_TRUE(got->buffer_active);
+  EXPECT_EQ(got->desired_set_piece, 3);
+  EXPECT_EQ(got->buffer_team_id, 0);
+  EXPECT_EQ(got->stop_time, 1000UL);
+  EXPECT_EQ(got->prepare_time, 1200UL);
+  EXPECT_EQ(got->start_time, 1400UL);
+  EXPECT_TRUE(got->end_phase);
+  EXPECT_EQ(got->after_set_piece_relax_time_ms, 400);
+  EXPECT_EQ(got->offside_player_count, 2);
+  EXPECT_EQ(got->foul_type, 2);
+  EXPECT_TRUE(got->foul_advantage);
+  EXPECT_EQ(got->foul_time, 15000UL);
+  EXPECT_FALSE(got->foul_processed);
+}
+
+TEST(SerializationTest, MatchStateRoundTrip) {
+  World w;
+  Entity e = w.CreateEntity();
+  MatchStateComponent src;
+  src.match_time_ms = 45000;
+  src.actual_time_ms = 50000;
+  src.in_play = true;
+  src.in_set_piece = false;
+  src.goal_scored = true;
+  src.ball_is_in_goal = true;
+  src.match_phase = 1;
+  src.last_touch_team_id = 0;
+  src.last_touch_team_ids[0] = 0;
+  src.last_touch_team_ids[1] = 1;
+  src.best_possession_team_id = 0;
+  src.designated_possession_player_id = 5;
+  src.ball_retainer_player_id = 5;
+  src.first_team = 0;
+  src.second_team = 1;
+  w.AddComponent(e, src);
+
+  SerializedWorld data = WorldSerializer::Serialize<MatchStateComponent>(w);
+
+  World w2;
+  WorldSerializer::Deserialize<MatchStateComponent>(w2, data);
+
+  MatchStateComponent* got = nullptr;
+  w2.ForEach<MatchStateComponent>([&](Entity, MatchStateComponent& c) { got = &c; });
+  ASSERT_NE(got, nullptr);
+  EXPECT_EQ(got->match_time_ms, 45000UL);
+  EXPECT_EQ(got->actual_time_ms, 50000UL);
+  EXPECT_TRUE(got->in_play);
+  EXPECT_FALSE(got->in_set_piece);
+  EXPECT_TRUE(got->goal_scored);
+  EXPECT_TRUE(got->ball_is_in_goal);
+  EXPECT_EQ(got->match_phase, 1);
+  EXPECT_EQ(got->last_touch_team_id, 0);
+  EXPECT_EQ(got->last_touch_team_ids[0], 0);
+  EXPECT_EQ(got->last_touch_team_ids[1], 1);
+  EXPECT_EQ(got->best_possession_team_id, 0);
+  EXPECT_EQ(got->designated_possession_player_id, 5);
+  EXPECT_EQ(got->ball_retainer_player_id, 5);
+  EXPECT_EQ(got->first_team, 0);
+  EXPECT_EQ(got->second_team, 1);
+}
+
+TEST(SerializationTest, AllComponentsRoundTrip) {
+  // 验证所有组件可同时序列化/反序列化
+  World w;
+  Entity e1 = w.CreateEntity();
+  Entity e2 = w.CreateEntity();
+  Entity e3 = w.CreateEntity();
+
+  TeamStateComponent tsc;
+  tsc.team_id = 0;
+  tsc.player_count = 11;
+  w.AddComponent(e1, tsc);
+
+  RefereeStateComponent rsc;
+  rsc.buffer_active = true;
+  rsc.foul_type = 1;
+  w.AddComponent(e2, rsc);
+
+  MatchStateComponent msc;
+  msc.in_play = true;
+  msc.match_time_ms = 30000;
+  w.AddComponent(e3, msc);
+
+  SerializedWorld data = WorldSerializer::Serialize<
+      TeamStateComponent, RefereeStateComponent, MatchStateComponent>(w);
+
+  World w2;
+  WorldSerializer::Deserialize<
+      TeamStateComponent, RefereeStateComponent, MatchStateComponent>(w2, data);
+
+  // 验证所有组件都恢复了
+  int team_count = 0, ref_count = 0, match_count = 0;
+  w2.ForEach<TeamStateComponent>([&](Entity, TeamStateComponent& c) {
+    EXPECT_EQ(c.team_id, 0);
+    EXPECT_EQ(c.player_count, 11);
+    team_count++;
+  });
+  w2.ForEach<RefereeStateComponent>([&](Entity, RefereeStateComponent& c) {
+    EXPECT_TRUE(c.buffer_active);
+    EXPECT_EQ(c.foul_type, 1);
+    ref_count++;
+  });
+  w2.ForEach<MatchStateComponent>([&](Entity, MatchStateComponent& c) {
+    EXPECT_TRUE(c.in_play);
+    EXPECT_EQ(c.match_time_ms, 30000UL);
+    match_count++;
+  });
+
+  EXPECT_EQ(team_count, 1);
+  EXPECT_EQ(ref_count, 1);
+  EXPECT_EQ(match_count, 1);
+}
