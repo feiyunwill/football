@@ -138,3 +138,11 @@ add_executable(phase5_test
 target_include_directories(phase5_test PRIVATE ${ENGINE_SRC})
 target_link_libraries(phase5_test PRIVATE gtest_main)
 gtest_discover_tests(phase5_test)
+
+# ===== 性能基准测试 =====
+add_executable(performance_benchmark_test
+  performance_benchmark_test.cpp
+)
+target_include_directories(performance_benchmark_test PRIVATE ${ENGINE_SRC})
+target_link_libraries(performance_benchmark_test PRIVATE gtest_main)
+gtest_discover_tests(performance_benchmark_test)
