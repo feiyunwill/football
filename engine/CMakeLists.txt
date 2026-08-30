@@ -245,6 +245,18 @@ target_link_libraries(integrated_server PRIVATE
   pthread
 )
 
+# ----- Headless match runner（AI vs AI 无头比赛）-----
+add_executable(headless_match src/frame_sync/headless_match.cpp)
+target_include_directories(headless_match PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(headless_match PRIVATE
+  -Wl,--no-as-needed
+  ${OUTPUT_LIB_NAME}
+  gamelib menulib datalib blunted2
+  ${SDL2_LIBS_ALL} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES}
+  ${Python_LIBRARIES}
+  pthread
+)
+
 # ----- RLtools PPO 训练（接入真实 GameEnv）-----
 option(BUILD_RL_TRAINING "Build RLtools PPO training with real engine" OFF)
 if(BUILD_RL_TRAINING)
