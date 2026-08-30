@@ -317,18 +317,10 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
   }
 
   // Map continuous [0,1] to discrete football action id (0-19)
+  // Simplified mapping: uniform distribution across 20 actions
   auto map_to_action = [](float raw) -> int {
     raw = raw < 0.0f ? 0.0f : (raw > 1.0f ? 1.0f : raw);
-    int action_id;
-    if (raw < 0.3f) {
-      action_id = 1 + static_cast<int>(raw / 0.3f * 8.0f);  // directions 1-8
-    } else if (raw < 0.55f) {
-      action_id = 9 + static_cast<int>((raw - 0.3f) / 0.25f * 4.0f);  // pass/shot 9-12
-    } else if (raw < 0.75f) {
-      action_id = 13 + static_cast<int>((raw - 0.55f) / 0.2f * 5.0f);  // tactical 13-17
-    } else {
-      action_id = 18 + static_cast<int>((raw - 0.75f) / 0.25f * 2.0f);  // sprint/dribble 18-19
-    }
+    int action_id = static_cast<int>(raw * 20.0f);
     return action_id < 0 ? 0 : (action_id > 19 ? 19 : action_id);
   };
 
@@ -392,17 +384,15 @@ static float step(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
   if (next.ball_owned_team == 0 && state.ball_owned_team != 0) g_current_episode_metrics.pass_count++;
   if (next.ball_owned_team != 0 && state.ball_owned_team == 0) g_current_episode_metrics.lost_possession_count++;
 
-  // Log running metrics every 500 steps (use modular counter)
+  // Log running metrics every 500 steps
   static int g_log_counter = 0;
   g_log_counter++;
   if (g_log_counter % 500 == 0) {
     auto& s = g_current_episode_metrics;
     if (s.total_frames > 0) {
-      std::println("[step {:5d}] goals: {}/{} | poss: {:.0f}% | pass: {:.0f}% | reward: {:.2f}",
+      std::println("[step {:5d}] goals: {}/{} | poss: {:.0f}% | reward: {:.2f}",
         g_log_counter, s.goals_for, s.goals_against,
         100.0f * s.possession_frames / s.total_frames,
-        (s.pass_count + s.lost_possession_count) > 0
-          ? 100.0f * s.pass_count / (s.pass_count + s.lost_possession_count) : 0.0f,
         g_current_episode_reward);
     }
   }
