@@ -13,7 +13,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstring>
-#include <print>
+#include <iostream>
 #include <vector>
 #include <numeric>
 
@@ -51,8 +51,8 @@ TEST(PerformanceBenchmark, AuthoritativeFrameEncodeDecode) {
   double ops_per_sec = kIterations * 1000000.0 / us;
   double us_per_op = static_cast<double>(us) / kIterations;
 
-  std::println("AuthoritativeFrame encode+decode ({} slots): {:.1f} ops/sec, {:.1f} us/op",
-               kSlots, ops_per_sec, us_per_op);
+  std::cout << "AuthoritativeFrame encode+decode (" << kSlots << " slots): " 
+            << ops_per_sec << " ops/sec, " << us_per_op << " us/op" << std::endl;
 
   // Should be fast enough for 10 fps with 22 slots
   EXPECT_GT(ops_per_sec, 1000.0);  // at least 1000 ops/sec
@@ -83,7 +83,7 @@ TEST(PerformanceBenchmark, ClientFrameInputEncodeDecode) {
   auto us = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
   double ops_per_sec = kIterations * 1000000.0 / us;
 
-  std::println("ClientFrameInput encode+decode: {:.1f} ops/sec", ops_per_sec);
+  std::cout << "ClientFrameInput encode+decode: " << ops_per_sec << " ops/sec" << std::endl;
   EXPECT_GT(ops_per_sec, 1000.0);
 }
 
@@ -127,8 +127,8 @@ TEST(PerformanceBenchmark, DeltaCompressionThroughput) {
   double ops_per_sec = kIterations * 1000000.0 / us;
   float compression_ratio = static_cast<float>(total_delta_bytes) / total_full_bytes;
 
-  std::println("Delta compression ({} slots): {:.1f} ops/sec, ratio={:.2f}",
-               kSlots, ops_per_sec, compression_ratio);
+  std::cout << "Delta compression (" << kSlots << " slots): " << ops_per_sec 
+            << " ops/sec, ratio=" << compression_ratio << std::endl;
 
   EXPECT_GT(ops_per_sec, 10000.0);  // should be very fast
   EXPECT_LT(compression_ratio, 1.0f);  // should compress
@@ -155,7 +155,7 @@ TEST(PerformanceBenchmark, ClientStateSnapshotThroughput) {
   auto us = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
   double ops_per_sec = kIterations * 1000000.0 / us;
 
-  std::println("ClientState snapshot ({}B): {:.1f} ops/sec", kStateSize, ops_per_sec);
+  std::cout << "ClientState snapshot (" << kStateSize << "B): " << ops_per_sec << " ops/sec" << std::endl;
   EXPECT_GT(ops_per_sec, 5000.0);
 }
 
@@ -185,7 +185,7 @@ TEST(PerformanceBenchmark, ClientStateRollbackPerformance) {
   auto us = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
   double ops_per_sec = kIterations * 1000000.0 / us;
 
-  std::println("ClientState rollback ({} frames): {:.1f} ops/sec", kPredictFrames, ops_per_sec);
+  std::cout << "ClientState rollback (" << kPredictFrames << " frames): " << ops_per_sec << " ops/sec" << std::endl;
   EXPECT_GT(ops_per_sec, 100.0);
 }
 
@@ -210,7 +210,8 @@ TEST(PerformanceBenchmark, Fnv1aHashThroughput) {
   double ops_per_sec = kIterations * 1000000.0 / us;
   double mb_per_sec = (kIterations * kDataSize) / (us * 1.0);
 
-  std::println("Fnv1aHash ({}B): {:.1f} ops/sec, {:.1f} MB/s", kDataSize, ops_per_sec, mb_per_sec);
+  std::cout << "Fnv1aHash (" << kDataSize << "B): " << ops_per_sec 
+            << " ops/sec, " << mb_per_sec << " MB/s" << std::endl;
   EXPECT_GT(ops_per_sec, 10000.0);
   EXPECT_NE(result, 0u);  // prevent dead code elimination
 }
@@ -232,7 +233,7 @@ TEST(PerformanceBenchmark, JitterStatsUpdateThroughput) {
   auto us = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
   double ops_per_sec = kIterations * 1000000.0 / us;
 
-  std::println("JitterStats update: {:.1f} ops/sec", ops_per_sec);
+  std::cout << "JitterStats update: " << ops_per_sec << " ops/sec" << std::endl;
   EXPECT_GT(ops_per_sec, 50000.0);
 }
 
@@ -261,8 +262,8 @@ TEST(PerformanceBenchmark, SlotInputMemcpyThroughput) {
   double ops_per_sec = kIterations * 1000000.0 / us;
   double mb_per_sec = (kIterations * kSlots * sizeof(SlotInput)) / (us * 1000.0);
 
-  std::println("SlotInput memcpy ({} slots): {:.1f} ops/sec, {:.1f} MB/s",
-               kSlots, ops_per_sec, mb_per_sec);
+  std::cout << "SlotInput memcpy (" << kSlots << " slots): " << ops_per_sec 
+            << " ops/sec, " << mb_per_sec << " MB/s" << std::endl;
   EXPECT_GT(ops_per_sec, 100000.0);
 }
 
@@ -289,6 +290,6 @@ TEST(PerformanceBenchmark, StateHashPackUnpackThroughput) {
   auto us = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();
   double ops_per_sec = kIterations * 1000000.0 / us;
 
-  std::println("StateHash pack+unpack: {:.1f} ops/sec", ops_per_sec);
+  std::cout << "StateHash pack+unpack: " << ops_per_sec << " ops/sec" << std::endl;
   EXPECT_GT(ops_per_sec, 50000.0);
 }
