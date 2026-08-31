@@ -242,15 +242,19 @@
       "title": "AI 战术系统"
     },
     {
-      "claimed_by": null,
-      "completed_at": null,
+      "claimed_by": "opencode",
+      "completed_at": "2026-08-31T18:30:00Z",
       "created_at": "2026-08-31T17:30:00Z",
       "dependencies": ["ms-4.1"],
       "description": "优化 AI 决策逻辑，使 AI 可打出完整比赛",
       "id": "ms-4.2",
       "priority": "high",
-      "progress_notes": [],
-      "status": "PENDING",
+      "progress_notes": [
+        "2026-08-31 增强决策系统：状态评估、优先级决策、时间比分感知",
+        "2026-08-31 实现团队协作：阵型保持、位置轮换、配合意识",
+        "2026-08-31 实现比赛意识：时间管理、体能分配、战术犯规"
+      ],
+      "status": "COMPLETED",
       "tags": ["ai", "decision"],
       "title": "AI 决策优化"
     }

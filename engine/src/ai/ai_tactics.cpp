@@ -1,5 +1,6 @@
 // Copyright 2026 Google LLC & Contributors
 // AI tactics system implementation.
+// Enhanced with ms-4.2: advanced decision making.
 
 #include "ai_tactics.hpp"
 #include <algorithm>
@@ -16,6 +17,7 @@ TacticsController::TacticsController(Match* match, Team* team, AIControlledKeybo
 
 void TacticsController::Update() {
   AnalyzeSituation();
+  UpdateMatchContext();
   DecideAction();
 }
 
@@ -35,11 +37,41 @@ void TacticsController::AnalyzeSituation() {
     
     current_state_.is_in_attack_zone = (player_x > pitch_center);
     current_state_.is_in_defense_zone = (player_x < pitch_center);
+    
+    // Update stamina (simplified)
+    current_state_.stamina = 1.0f;  // Would come from player data
+    
+    // Determine tactical role based on position
+    if (current_state_.is_in_defense_zone) {
+      current_state_.tactical_role = 0;  // Defender
+    } else if (current_state_.is_in_attack_zone) {
+      current_state_.tactical_role = 2;  // Attacker
+    } else {
+      current_state_.tactical_role = 1;  // Midfielder
+    }
   }
+}
+
+void TacticsController::UpdateMatchContext() {
+  // Update match context for decision making
+  match_context_.time_remaining = match_->GetTime() * 60.0f;  // Convert to seconds
+  match_context_.score_diff = match_->GetScoreLeft() - match_->GetScoreRight();
+  match_context_.is_second_half = match_->IsSecondHalf();
+  match_context_.possession_time = 0.5f;  // Would come from match stats
 }
 
 void TacticsController::DecideAction() {
   // Calculate decision weights based on situation
+  CalculateDecisionWeights();
+  
+  // Adjust weights based on match situation
+  AdjustForMatchSituation();
+  
+  // Execute the action with highest weight
+  ExecuteAction();
+}
+
+void TacticsController::CalculateDecisionWeights() {
   if (current_state_.has_ball) {
     // Player has the ball
     if (IsInShootingRange()) {
@@ -76,9 +108,45 @@ void TacticsController::DecideAction() {
     // Support player
     current_tactic_ = Tactic::kAttack;
   }
+}
+
+void TacticsController::AdjustForMatchSituation() {
+  // Adjust based on score and time
+  if (match_context_.score_diff > 0) {
+    // Winning - be more defensive
+    if (match_context_.time_remaining < 300) {  // Last 5 minutes
+      defend_weight_ += 0.3f;
+      pass_weight_ += 0.2f;
+      dribble_weight_ -= 0.3f;
+      shoot_weight_ -= 0.2f;
+    }
+  } else if (match_context_.score_diff < 0) {
+    // Losing - be more aggressive
+    shoot_weight_ += 0.3f;
+    pass_weight_ += 0.1f;
+    dribble_weight_ += 0.1f;
+    defend_weight_ -= 0.3f;
+  }
   
-  // Execute the action with highest weight
-  ExecuteAction();
+  // Adjust based on possession
+  if (match_context_.possession_time > 0.6f) {
+    // High possession - patient build-up
+    pass_weight_ += 0.2f;
+    dribble_weight_ -= 0.1f;
+  } else {
+    // Low possession - direct play
+    shoot_weight_ += 0.1f;
+    pass_weight_ -= 0.1f;
+  }
+  
+  // Normalize weights
+  float total = dribble_weight_ + pass_weight_ + shoot_weight_ + defend_weight_;
+  if (total > 0) {
+    dribble_weight_ /= total;
+    pass_weight_ /= total;
+    shoot_weight_ /= total;
+    defend_weight_ /= total;
+  }
 }
 
 void TacticsController::ExecuteAction() {
@@ -140,6 +208,13 @@ void TacticsController::ExecuteSupport() {
   hid_->SetDirection(move_direction);
 }
 
+void TacticsController::ExecuteTacticalFoul() {
+  // Tactical foul when losing and late in game
+  if (match_context_.score_diff < 0 && match_context_.time_remaining < 600) {
+    hid_->SetButton(e_ButtonFunction_Sliding, true);
+  }
+}
+
 PlayerBase* TacticsController::FindBestPassTarget() {
   PlayerBase* best_target = nullptr;
   float best_score = -1.0f;
@@ -182,6 +257,66 @@ float TacticsController::CalculateThreatLevel() {
   // Simplified threat calculation
   float ball_distance = (current_state_.ball_position - current_state_.own_goal_position).GetLength();
   return 1.0f - (ball_distance / 100.0f);  // Normalize to 0-1
+}
+
+// Advanced decision making methods (ms-4.2)
+
+void TacticsController::MaintainFormation() {
+  // Maintain team formation based on tactical role
+  Vector3 target_pos;
+  
+  switch (current_state_.tactical_role) {
+    case 0:  // Defender
+      target_pos = GetDefensivePosition();
+      break;
+    case 1:  // Midfielder
+      target_pos = (current_state_.own_goal_position + current_state_.opponent_goal_position) * 0.5f;
+      break;
+    case 2:  // Attacker
+      target_pos = current_state_.opponent_goal_position;
+      break;
+  }
+  
+  current_state_.target_position = target_pos;
+}
+
+void TacticsController::RotatePositions() {
+  // Simple position rotation based on game situation
+  if (match_context_.score_diff > 0) {
+    // Winning - rotate to maintain freshness
+    current_state_.tactical_role = (current_state_.tactical_role + 1) % 3;
+  }
+}
+
+void TacticsController::CoordinatePressure() {
+  // Coordinate pressure with teammates
+  if (current_state_.is_closest_to_ball) {
+    // Apply pressure
+    hid_->SetButton(e_ButtonFunction_Pressure, true);
+  } else {
+    // Support position
+    ExecuteSupport();
+  }
+}
+
+bool TacticsController::ShouldPressHigh() {
+  // Press high when winning and early in game
+  return match_context_.score_diff > 0 && match_context_.time_remaining > 1800;
+}
+
+bool TacticsController::ShouldDropDeep() {
+  // Drop deep when losing and late in game
+  return match_context_.score_diff < 0 && match_context_.time_remaining < 600;
+}
+
+bool TacticsController::ShouldTimeWaste() {
+  // Time waste when winning and very late in game
+  return match_context_.score_diff > 0 && match_context_.time_remaining < 300;
+}
+
+bool TacticsController::ShouldRiskAttack() {
+  // Risk attack when losing and late in game
+  return match_context_.score_diff < 0 && match_context_.time_remaining < 900;
 }
 
 }  // namespace ai
