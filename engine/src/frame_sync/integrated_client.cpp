@@ -1,6 +1,6 @@
 // Copyright 2019 Google LLC & Contributors
-// Integrated frame sync client: connects to server, runs GameEnv,
-// implements prediction & rollback with real game state.
+// Integrated frame sync client with rendering: connects to server, runs GameEnv
+// with SDL2/OpenGL rendering, forwards keyboard input, implements prediction & rollback.
 
 #include "frame_sync/protocol.hpp"
 #include "frame_sync/protocol_io.hpp"
@@ -9,27 +9,80 @@
 #include "frame_sync/engine_bridge.hpp"
 #include "game_env.hpp"
 #include "main.hpp"
+#include "gfootball_actions.h"
 
-// 2026-08-26 兼容修复（原因）：GCC 15 的 libstdc++ 不再向系统 Boost 1.75 的
-// awaitable.hpp 传递提供 <utility>（std::exchange 未声明），须先于 asio 显式包含。
+// 2026-08-26 GCC 15 compat: <utility> before Boost.Asio
 #include <utility>
 #include <boost/asio.hpp>
+#include <SDL.h>
 #include <chrono>
 #include <cstring>
 #include <deque>
 #include <iostream>
-#include <print>
 #include <memory>
 #include <mutex>
 #include <queue>
 #include <string>
 #include <thread>
 #include <vector>
+#include <cstdio>
 
 namespace asio = boost::asio;
 using tcp = asio::ip::tcp;
 
-// ===== FrameSyncClient (same as asio_client.cpp but with GameEnv integration) =====
+// ===== Keyboard → SlotInput mapping =====
+// WASD/Arrow keys for direction, Z/X/C/V/B/N for actions.
+struct KeyboardState {
+  float dir_x = 0.f;
+  float dir_y = 0.f;
+  // Button bitmask (e_ButtonFunction)
+  uint16_t buttons = 0;
+
+  void update(const Uint8* keys) {
+    // Direction from arrow keys and WASD
+    dir_x = 0.f;
+    dir_y = 0.f;
+    if (keys[SDL_SCANCODE_LEFT] || keys[SDL_SCANCODE_A]) dir_x -= 1.f;
+    if (keys[SDL_SCANCODE_RIGHT] || keys[SDL_SCANCODE_D]) dir_x += 1.f;
+    if (keys[SDL_SCANCODE_UP] || keys[SDL_SCANCODE_W]) dir_y += 1.f;
+    if (keys[SDL_SCANCODE_DOWN] || keys[SDL_SCANCODE_S]) dir_y -= 1.f;
+
+    // Normalize diagonal
+    float len = std::sqrt(dir_x * dir_x + dir_y * dir_y);
+    if (len > 1.f) {
+      dir_x /= len;
+      dir_y /= len;
+    }
+
+    // Buttons
+    buttons = 0;
+    if (keys[SDL_SCANCODE_Z]) buttons |= (1 << e_ButtonFunction_ShortPass);
+    if (keys[SDL_SCANCODE_X]) buttons |= (1 << e_ButtonFunction_HighPass);
+    if (keys[SDL_SCANCODE_C]) buttons |= (1 << e_ButtonFunction_LongPass);
+    if (keys[SDL_SCANCODE_V]) buttons |= (1 << e_ButtonFunction_Shot);
+    if (keys[SDL_SCANCODE_B]) buttons |= (1 << e_ButtonFunction_Sliding);
+    if (keys[SDL_SCANCODE_LSHIFT] || keys[SDL_SCANCODE_RSHIFT])
+      buttons |= (1 << e_ButtonFunction_Sprint);
+    if (keys[SDL_SCANCODE_SPACE])
+      buttons |= (1 << e_ButtonFunction_Pressure);
+    if (keys[SDL_SCANCODE_TAB])
+      buttons |= (1 << e_ButtonFunction_Switch);
+    if (keys[SDL_SCANCODE_N])
+      buttons |= (1 << e_ButtonFunction_TeamPressure);
+    if (keys[SDL_SCANCODE_M])
+      buttons |= (1 << e_ButtonFunction_Dribble);
+  }
+
+  frame_sync::SlotInput to_slot_input() const {
+    frame_sync::SlotInput s;
+    s.dir_x = dir_x;
+    s.dir_y = dir_y;
+    s.buttons = buttons;
+    return s;
+  }
+};
+
+// ===== IntegratedFrameSyncClient =====
 
 class IntegratedFrameSyncClient {
  public:
@@ -39,7 +92,6 @@ class IntegratedFrameSyncClient {
       : io_(io), socket_(io), host_(host), port_(port),
         env_(env), config_(config),
         client_state_(frame_sync::MAX_PREDICT_AHEAD_FRAMES + 4) {
-    // Wire up engine callbacks to GameEnv
     engine_ = frame_sync::MakeGameEnvCallbacks(env);
   }
 
@@ -48,21 +100,18 @@ class IntegratedFrameSyncClient {
     tcp::resolver resolver(io_);
     auto endpoints = resolver.resolve(host_, std::to_string(port_), ec);
     if (ec) {
-      std::println(stderr, "Resolve failed: {}", ec.message());
+      fprintf(stderr, "Resolve failed: %s\n", ec.message().c_str());
       return false;
     }
     asio::connect(socket_, endpoints, ec);
     if (ec) {
-      std::println(stderr, "Connect failed: {}", ec.message());
+      fprintf(stderr, "Connect failed: %s\n", ec.message().c_str());
       return false;
     }
     recv_buf_.clear();
     if (!receive_session_start()) return false;
     if (!receive_slot_assignment()) return false;
-
-    // Initialize game environment with session params
     init_game_env();
-
     send_ready();
     do_read();
     return true;
@@ -76,7 +125,6 @@ class IntegratedFrameSyncClient {
   };
 
   StepResult tick(const frame_sync::SlotInput& my_input) {
-    // 1. Dynamic frame catching
     int frames_to_process = client_state_.catchup_count(
         last_confirmed_frame_, current_frame_id_);
     if (frames_to_process < 0) {
@@ -84,7 +132,6 @@ class IntegratedFrameSyncClient {
     }
     if (frames_to_process == 0) frames_to_process = 1;
 
-    // 2. Check prediction cap
     auto lag = current_frame_id_ - last_confirmed_frame_;
     if (lag >= static_cast<frame_sync::frame_id_t>(
             frame_sync::MAX_PREDICT_AHEAD_FRAMES)) {
@@ -94,16 +141,12 @@ class IntegratedFrameSyncClient {
       return StepResult::kWaitForAuthority;
     }
 
-    // 3. Process frames
     StepResult result = StepResult::kNormal;
     for (int f = 0; f < frames_to_process; ++f) {
-      // Save snapshot
       if (engine_.save_state) {
         client_state_.save_snapshot(current_frame_id_, my_input,
                                    engine_.save_state);
       }
-
-      // Step with input
       if (engine_.step) {
         engine_.step(my_input);
       }
@@ -116,22 +159,17 @@ class IntegratedFrameSyncClient {
       }
     }
 
-    // 4. Process authoritative frames
     frame_sync::frame_id_t auth_fid;
     std::vector<frame_sync::SlotInput> auth_inputs;
     while (pop_authoritative_frame(&auth_fid, &auth_inputs)) {
-      if (auth_fid <= last_confirmed_frame_) {
-        continue;
-      }
+      if (auth_fid <= last_confirmed_frame_) continue;
 
       if (auth_fid < current_frame_id_) {
-        // Rollback needed
         if (engine_.restore_state && engine_.step) {
           bool ok = client_state_.rollback_to(
               auth_fid, auth_inputs[my_slot_index_],
               engine_.restore_state, engine_.step);
           if (ok) {
-            // Re-simulate from auth_fid+1 to current
             for (auto f = auth_fid + 1; f < current_frame_id_; ++f) {
               auto it = predicted_inputs_.find(f);
               if (it != predicted_inputs_.end() && engine_.step) {
@@ -142,7 +180,6 @@ class IntegratedFrameSyncClient {
           }
         }
       } else {
-        // Auth frame ahead — apply directly
         if (engine_.step) {
           for (size_t i = 0; i < auth_inputs.size(); ++i) {
             engine_.step(auth_inputs[i]);
@@ -155,13 +192,10 @@ class IntegratedFrameSyncClient {
       frames_without_packet_ = 0;
     }
 
-    // 5. Record frame arrival
     auto now = std::chrono::steady_clock::now();
     double now_ms = std::chrono::duration<double, std::milli>(
         now.time_since_epoch()).count();
     client_state_.record_frame_arrival(now_ms);
-
-    // 6. Evict old snapshots
     client_state_.evict_old(current_frame_id_);
 
     return result;
@@ -189,7 +223,6 @@ class IntegratedFrameSyncClient {
     return true;
   }
 
-  // Accessors
   const std::vector<uint16_t>& my_slots() const { return my_slots_; }
   uint32_t seed() const { return seed_; }
   uint16_t left_agents() const { return left_agents_; }
@@ -199,9 +232,17 @@ class IntegratedFrameSyncClient {
   int rollback_count() const { return client_state_.rollback_count(); }
 
  private:
-  // 2026-08-31 修复：必须在 start_game() 之前设置 game_config，
-  // 否则引擎会使用默认值（render=true）导致窗口创建问题。
   void init_game_env() {
+    // 2026-08-31: Ensure env vars are set before start_game() reads them.
+    // getenv() may return NULL if env was set in parent shell but not inherited.
+    if (!getenv("GFOOTBALL_DATA_DIR")) {
+      setenv("GFOOTBALL_DATA_DIR", "/home/zuchangqu/project/football/engine/data", 1);
+    }
+    if (!getenv("GFOOTBALL_FONT")) {
+      setenv("GFOOTBALL_FONT",
+             "/home/zuchangqu/project/football/engine/data/media/fonts/alegreya/AlegreyaSansSC-ExtraBold.ttf",
+             1);
+    }
     env_->game_config.render = config_.render;
     env_->game_config.physics_steps_per_frame = 10;
     env_->start_game();
@@ -213,8 +254,8 @@ class IntegratedFrameSyncClient {
     env_->state = GameState::game_running;
     env_->reset(*scenario, false);
 
-    std::println("Game environment initialized: {}v{}, seed={}",
-                 left_agents_, right_agents_, seed_);
+    fprintf(stderr, "GameEnv initialized: %uv%u, seed=%u\n",
+            left_agents_, right_agents_, seed_);
   }
 
   bool receive_session_start() {
@@ -322,27 +363,31 @@ class IntegratedFrameSyncClient {
   uint32_t seed_ = 0;
   uint16_t left_agents_ = 0, right_agents_ = 0;
 
-  // Game environment
   GameEnv* env_;
   frame_sync::MultiplayerConfig config_;
   frame_sync::EngineCallbacks engine_;
 
-  // Prediction state
   frame_sync::frame_id_t current_frame_id_ = 0;
   frame_sync::frame_id_t last_confirmed_frame_ = 0;
   int frames_without_packet_ = 0;
   std::unordered_map<frame_sync::frame_id_t, frame_sync::SlotInput> predicted_inputs_;
 
-  // Client state ring buffer
   frame_sync::ClientState client_state_;
 };
 
-// ===== Main =====
+// ===== Main with SDL2 rendering =====
 
 int main(int argc, char* argv[]) {
   if (argc < 3) {
-    std::println(stderr, "Usage: {} <host> <port> [left_agents] [right_agents] [seed] [--headless]",
-                 argv[0]);
+    fprintf(stderr,
+        "Usage: %s <host> <port> [left_agents] [right_agents] [seed] [--headless]\n"
+        "\nKeyboard controls (for your controlled slot):\n"
+        "  WASD / Arrow keys  - Move\n"
+        "  Z - Short pass     X - High pass     C - Long pass\n"
+        "  V - Shoot          B - Sliding        Space - Pressure\n"
+        "  Shift - Sprint     Tab - Switch       M - Dribble\n"
+        "  ESC - Quit\n",
+        argv[0]);
     return 1;
   }
 
@@ -353,16 +398,18 @@ int main(int argc, char* argv[]) {
   if (argc >= 5) config.right_agents = static_cast<uint16_t>(std::stoi(argv[4]));
   if (argc >= 6) config.seed = static_cast<uint32_t>(std::stoul(argv[5]));
   config.is_server = false;
-  // Check for --headless flag
+  config.render = true;
+
   for (int i = 1; i < argc; ++i) {
     if (std::string(argv[i]) == "--headless") {
       config.render = false;
     }
   }
 
-  std::println("Connecting to {}:{} ({}v{}, seed={})",
-               config.host, config.port,
-               config.left_agents, config.right_agents, config.seed);
+  fprintf(stderr, "Connecting to %s:%u (%uv%u, seed=%u, render=%s)\n",
+          config.host.c_str(), config.port,
+          config.left_agents, config.right_agents, config.seed,
+          config.render ? "on" : "off");
 
   // Initialize game environment
   GameEnv env;
@@ -371,18 +418,54 @@ int main(int argc, char* argv[]) {
   IntegratedFrameSyncClient client(io, config.host, config.port, &env, config);
 
   if (!client.connect()) {
-    std::println(stderr, "Failed to connect");
+    fprintf(stderr, "Failed to connect\n");
     return 1;
   }
 
-  std::println("Connected! My slots: {}, seed={}", client.my_slots().size(), client.seed());
+  fprintf(stderr, "Connected! My slots: %zu, seed=%u\n",
+          client.my_slots().size(), client.seed());
+
+  // Initialize SDL for event handling (already initialized by GameEnv when render=true)
+  if (config.render) {
+    // SDL is already initialized by OpenGLRenderer3D::CreateContextSdl()
+    // We just need to pump events
+  }
 
   // Main game loop
   auto period = std::chrono::milliseconds(1000 / config.frame_rate_hz);
+  KeyboardState kb_state;
   frame_sync::SlotInput my_input = frame_sync::SlotInput::Default();
+  bool running = true;
 
-  while (true) {
+  // FPS tracking
+  int frame_count = 0;
+  auto fps_timer = std::chrono::steady_clock::now();
+  double current_fps = 0.0;
+
+  while (running) {
     auto t0 = std::chrono::steady_clock::now();
+
+    // Process SDL events
+    if (config.render) {
+      SDL_Event event;
+      while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+          case SDL_QUIT:
+            running = false;
+            break;
+          case SDL_KEYDOWN:
+            if (event.key.keysym.sym == SDLK_ESCAPE) {
+              running = false;
+            }
+            break;
+        }
+      }
+
+      // Read keyboard state for movement/actions
+      const Uint8* keys = SDL_GetKeyboardState(nullptr);
+      kb_state.update(keys);
+      my_input = kb_state.to_slot_input();
+    }
 
     // Send input for current frame with correct slot indices
     if (!client.my_slots().empty()) {
@@ -397,8 +480,8 @@ int main(int argc, char* argv[]) {
 
     switch (result) {
       case IntegratedFrameSyncClient::StepResult::kRollback:
-        std::println("Rollback at frame {} (total: {})",
-                     client.current_frame_id(), client.rollback_count());
+        fprintf(stderr, "Rollback at frame %u (total: %d)\n",
+                client.current_frame_id(), client.rollback_count());
         break;
       case IntegratedFrameSyncClient::StepResult::kWaitForAuthority:
         break;
@@ -406,9 +489,30 @@ int main(int argc, char* argv[]) {
         break;
     }
 
-    // Render (only if config.render is true)
+    // Render
     if (config.render) {
       env.render();
+
+      // Update window title with FPS and match info
+      frame_count++;
+      auto fps_now = std::chrono::steady_clock::now();
+      auto fps_elapsed = std::chrono::duration<double>(fps_now - fps_timer).count();
+      if (fps_elapsed >= 1.0) {
+        current_fps = frame_count / fps_elapsed;
+        frame_count = 0;
+        fps_timer = fps_now;
+
+        char title[256];
+        snprintf(title, sizeof(title),
+                 "Football MP | FPS: %.0f | Frame: %u | Rollbacks: %d",
+                 current_fps, client.current_frame_id(), client.rollback_count());
+        SDL_Window* win = SDL_GL_GetCurrentWindow();
+        if (win) SDL_SetWindowTitle(win, title);
+      }
+
+      // Swap buffers
+      SDL_Window* win = SDL_GL_GetCurrentWindow();
+      if (win) SDL_GL_SwapWindow(win);
     }
 
     // Maintain frame rate
@@ -417,5 +521,6 @@ int main(int argc, char* argv[]) {
       std::this_thread::sleep_for(period - elapsed);
   }
 
+  fprintf(stderr, "Shutting down...\n");
   return 0;
 }

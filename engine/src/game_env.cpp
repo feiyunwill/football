@@ -105,12 +105,38 @@ void GameEnv::start_game() {
     DO_VALIDATION;
     GetGameConfig().data_dir = data_dir;
   }
+  // 2026-08-31: Auto-detect data_dir and font when env vars are not set.
+  // Search relative to executable location and common relative paths.
+  if (GetGameConfig().data_dir.empty()) {
+    // Try common relative paths from build directories
+    const char* candidates[] = {
+      "data",                          // build_integration/data
+      "../data",                        // build_integration/../data
+      "../../data",                     // deeper nested build dirs
+      "engine/data",                    // from repo root
+    };
+    for (auto candidate : candidates) {
+      namespace fs = std::filesystem;
+      if (fs::exists(fs::path(candidate) / "media")) {
+        GetGameConfig().data_dir = fs::absolute(candidate).string();
+        break;
+      }
+    }
+  }
   Properties* config = new Properties();
   config->Set("match_duration", 0.027);
   char* font_file = getenv("GFOOTBALL_FONT");
   if (font_file) {
     DO_VALIDATION;
     config->Set("font_filename", font_file);
+  } else {
+    // Try to find the font file relative to data_dir
+    namespace fs = std::filesystem;
+    std::string font_path = "media/fonts/alegreya/AlegreyaSansSC-ExtraBold.ttf";
+    std::string full_path = GetGameConfig().updatePath(font_path);
+    if (fs::exists(full_path)) {
+      config->Set("font_filename", full_path);
+    }
   }
   config->Set("game", 0);
   run_game(config, game_config.render);
