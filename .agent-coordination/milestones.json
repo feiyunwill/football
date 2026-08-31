@@ -223,6 +223,32 @@
       "status": "COMPLETED",
       "tags": ["framesync", "robustness"],
       "title": "帧同步鲁棒性增强"
+    },
+    {
+      "claimed_by": null,
+      "completed_at": null,
+      "created_at": "2026-08-31T17:30:00Z",
+      "dependencies": [],
+      "description": "实现 AI 基本战术能力：控球、传球、射门、防守",
+      "id": "ms-4.1",
+      "priority": "high",
+      "progress_notes": [],
+      "status": "PENDING",
+      "tags": ["ai", "tactics"],
+      "title": "AI 战术系统"
+    },
+    {
+      "claimed_by": null,
+      "completed_at": null,
+      "created_at": "2026-08-31T17:30:00Z",
+      "dependencies": ["ms-4.1"],
+      "description": "优化 AI 决策逻辑，使 AI 可打出完整比赛",
+      "id": "ms-4.2",
+      "priority": "high",
+      "progress_notes": [],
+      "status": "PENDING",
+      "tags": ["ai", "decision"],
+      "title": "AI 决策优化"
     }
   ],
   "version": 1
