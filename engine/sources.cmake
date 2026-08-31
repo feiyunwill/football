@@ -237,12 +237,14 @@ set(BLUNTED_CORE_SOURCES
 set(AI_HEADERS
   ai.cpp
   src/ai/ai_keyboard.hpp
+  src/ai/ai_tactics.hpp
   src/game_env.cpp
 )
 
 set(AI_SOURCES
   ai.hpp
   src/ai/ai_keyboard.cpp
+  src/ai/ai_tactics.cpp
   src/game_env.hpp
 )
 
