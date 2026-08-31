@@ -65,17 +65,17 @@ class ClientState {
   // Save a snapshot of the current engine state for the given frame.
   // Called BEFORE stepping the engine for this frame.
   void save_snapshot(frame_id_t frame_id, const SlotInput& predicted_input,
-                     SaveStateFn save_fn);
+                     const SaveStateFn& save_fn);
 
   // Restore the engine to the snapshot at frame_id, then step it with the
   // given input. Returns true if snapshot was found and restored.
   // Called when an authoritative frame arrives for an already-predicted frame.
   bool rollback_to(frame_id_t frame_id, const SlotInput& auth_input,
-                   RestoreStateFn restore_fn, StepFn step_fn);
+                   const RestoreStateFn& restore_fn, const StepFn& step_fn);
 
   // Restore the engine to the snapshot at frame_id (without stepping).
   // Used when we need to re-simulate a range of frames.
-  bool restore_snapshot(frame_id_t frame_id, RestoreStateFn restore_fn);
+  bool restore_snapshot(frame_id_t frame_id, const RestoreStateFn& restore_fn);
 
   // Get the snapshot for a frame_id, or nullptr if not found.
   const FrameSnapshot* get_snapshot(frame_id_t frame_id) const;
@@ -97,7 +97,7 @@ class ClientState {
 
   // Check if a server hash matches the local hash at that frame.
   // Returns: match, mismatch, or unknown (no local hash available).
-  enum class HashCheck { kMatch, kMismatch, kUnknown };
+  enum class HashCheck : std::uint8_t { kMatch, kMismatch, kUnknown };
   HashCheck check_hash(frame_id_t frame_id, uint64_t local_hash) const;
 
   // Get the most recently received server hash, or 0 if none.
@@ -189,7 +189,7 @@ class ClientState {
 
 inline void ClientState::save_snapshot(frame_id_t frame_id,
                                        const SlotInput& predicted_input,
-                                       SaveStateFn save_fn) {
+                                       const SaveStateFn& save_fn) {
   FrameSnapshot snap;
   snap.frame_id = frame_id;
   snap.predicted_input = predicted_input;
@@ -200,8 +200,8 @@ inline void ClientState::save_snapshot(frame_id_t frame_id,
 
 inline bool ClientState::rollback_to(frame_id_t frame_id,
                                      const SlotInput& auth_input,
-                                     RestoreStateFn restore_fn,
-                                     StepFn step_fn) {
+                                     const RestoreStateFn& restore_fn,
+                                     const StepFn& step_fn) {
   const FrameSnapshot* snap = get_snapshot(frame_id);
   if (!snap) return false;
   restore_fn(snap->state);
@@ -211,7 +211,7 @@ inline bool ClientState::rollback_to(frame_id_t frame_id,
 }
 
 inline bool ClientState::restore_snapshot(frame_id_t frame_id,
-                                         RestoreStateFn restore_fn) {
+                                         const RestoreStateFn& restore_fn) {
   const FrameSnapshot* snap = get_snapshot(frame_id);
   if (!snap) return false;
   restore_fn(snap->state);
@@ -225,7 +225,7 @@ inline const FrameSnapshot* ClientState::get_snapshot(frame_id_t frame_id) const
   return nullptr;
 }
 
-inline void ClientState::evict_old(frame_id_t latest_frame_id) {
+inline void ClientState::evict_old(frame_id_t /*latest_frame_id*/) {
   while (static_cast<int>(snapshots_.size()) > max_buffered_) {
     snapshots_.pop_front();
     ++evict_count_;

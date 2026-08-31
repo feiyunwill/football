@@ -13,6 +13,7 @@
 
 #include <boost/asio.hpp>
 #include <chrono>
+#include <cstdint>
 #include <cstring>
 #include <functional>
 #include <iostream>
@@ -29,7 +30,7 @@ using tcp = asio::ip::tcp;
 namespace frame_sync {
 
 // Reconnection state
-enum class ReconnectState {
+enum class ReconnectState : std::uint8_t {
   kConnected,
   kDisconnected,
   kReconnecting,
@@ -49,7 +50,7 @@ class ReconnectingClient {
   ReconnectingClient(asio::io_context& io, const std::string& host,
                      unsigned short port, const MultiplayerConfig& config,
                      Callbacks cb = {})
-      : io_(io), host_(host), port_(port), config_(config),
+      : io_(io), socket_(io), host_(host), port_(port), config_(config),
         callbacks_(std::move(cb)),
         client_state_(MAX_PREDICT_AHEAD_FRAMES + 4) {}
 

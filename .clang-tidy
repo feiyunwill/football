@@ -1,0 +1,42 @@
+---
+Checks: >
+  -*,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  -modernize-use-nodiscard,
+  performance-*,
+  readability-*,
+  -readability-magic-numbers,
+  -readability-named-parameter,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-narrowing-conversions,
+  cppcoreguidelines-*,
+  -cppcoreguidelines-avoid-magic-numbers,
+  -cppcoreguidelines-narrowing-conversions,
+  misc-*,
+  -misc-no-recursion
+
+WarningsAsErrors: ''
+
+HeaderFilterRegex: 'engine/src/.*\.hpp$'
+
+CheckOptions:
+  - key: modernize-use-auto.MinTypeNameLength
+    value: '5'
+  - key: modernize-use-override.ExpectOverride
+    value: true
+  - key: performance-unnecessary-value-param.AllowedTypes
+    value: 'exception_ptr'
+  - key: readability-braces-around-statements.ShortStatementLines
+    value: '1'
+  - key: readability-identifier-length.MinimumNameLength
+    value: '1'
+  - key: readability-implicit-bool-conversion.AllowedTypes
+    value: 'shared_ptr|weak_ptr|unique_ptr|FILE|DIR|errno'
+  - key: readability-redundant-member-init.IgnoreBaseClass
+    value: true
+  - key: readability-redundant-smartptr-get.IgnoreDifferingSmartTypes
+    value: true
+
+---

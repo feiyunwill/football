@@ -40,6 +40,11 @@ class MessageType:
   SlotAssignment = 7  # server -> client: which slot indices this client controls
   Heartbeat = 8       # 2026-08-28 双向心跳：保活包，载荷 frame_id(4B) + timestamp_ms(4B)
   VersionNegotiate = 9  # 2026-08-28 版本协商：客户端→服务器，载荷 protocol_version(2B) + min_version(2B)
+  # 2026-09-01 断线托管协议扩展
+  TakeoverNotify = 10    # server -> client: slot 被 AI 接管
+  HandbackNotify = 11    # server -> client: 控制权归还
+  ReconnectRequest = 12  # client -> server: 重连请求，携带 session_token
+  StateSnapshot = 13     # server -> client: 完整游戏状态
 
 
 def pack_slot_input(slot_input):
@@ -227,7 +232,7 @@ def compute_state_hash(state_str):
 
 
 # ----- 2026-08-28 协议版本 -----
-PROTOCOL_VERSION = 1
+PROTOCOL_VERSION = 2  # 升至 2 以支持托管扩展（向后兼容 v1）
 PROTOCOL_MIN_VERSION = 1
 VERSION_NEGOTIATE_FMT = '<BHH'  # msg_type(1) + version(2) + min_version(2)
 VERSION_NEGOTIATE_BYTES = struct.calcsize(VERSION_NEGOTIATE_FMT)
@@ -237,6 +242,19 @@ VERSION_NEGOTIATE_BYTES = struct.calcsize(VERSION_NEGOTIATE_FMT)
 # Layout: msg_type (1) + frame_id (4) + timestamp_ms (4)
 HEARTBEAT_FMT = '<BII'
 HEARTBEAT_BYTES = struct.calcsize(HEARTBEAT_FMT)
+
+
+# ----- 2026-09-01 断线托管协议扩展 -----
+# TakeoverNotify / HandbackNotify: msg_type(1) + slot_index(2) + frame_id(4) = 7
+TAKEOVER_NOTIFY_FMT = '<BIH'  # 注意：实际布局是 B(1) + H(2) + I(4)，用 struct 的自然对齐
+TAKEOVER_NOTIFY_BYTES = 1 + 2 + 4  # 7 bytes
+HANDBACK_NOTIFY_BYTES = TAKEOVER_NOTIFY_BYTES
+
+# ReconnectRequest: msg_type(1) + session_token(8) = 9
+RECONNECT_REQUEST_BYTES = 1 + 8
+
+# StateSnapshot: msg_type(1) + frame_id(4) + state_len(4) + state_bytes = 9 + state_len
+STATE_SNAPSHOT_HEADER_BYTES = 1 + 4 + 4  # 9 bytes
 
 
 def pack_version_negotiate(version=None, min_version=None):
@@ -273,3 +291,100 @@ def unpack_heartbeat(data):
   frame_id = struct.unpack_from('<I', data, 1)[0]
   timestamp_ms = struct.unpack_from('<I', data, 5)[0]
   return frame_id, timestamp_ms
+
+
+# ----- 2026-09-01 断线托管协议扩展 -----
+
+def make_session_token(slot_index, seed, session_id):
+  """生成 session token，用于断线重连时识别客户端身份。
+  token = FNV1a(slot_index | (seed << 16) | (session_id << 32))"""
+  raw = (slot_index & 0xFFFF) | ((seed & 0xFFFFFFFF) << 16) | ((session_id & 0xFFFFFFFF) << 32)
+  h = 14695981039346656037
+  for i in range(8):
+    h ^= (raw >> (i * 8)) & 0xFF
+    h = (h * 1099511628211) & 0xFFFFFFFFFFFFFFFF
+  return h
+
+
+def pack_takeover_notify(slot_index, frame_id):
+  """打包 TakeoverNotify: msg_type(1) + slot_index(2) + frame_id(4)"""
+  buf = bytearray()
+  buf.append(MessageType.TakeoverNotify)
+  buf.extend(struct.pack('<H', slot_index & 0xFFFF))
+  buf.extend(struct.pack('<I', frame_id & 0xFFFFFFFF))
+  return bytes(buf)
+
+
+def unpack_takeover_notify(data):
+  """解包 TakeoverNotify，返回 (slot_index, frame_id)。"""
+  if len(data) < TAKEOVER_NOTIFY_BYTES:
+    raise ValueError('TakeoverNotify too short')
+  if data[0] != MessageType.TakeoverNotify:
+    raise ValueError('Not TakeoverNotify')
+  slot_index = struct.unpack_from('<H', data, 1)[0]
+  frame_id = struct.unpack_from('<I', data, 3)[0]
+  return slot_index, frame_id
+
+
+def pack_handback_notify(slot_index, frame_id):
+  """打包 HandbackNotify: msg_type(1) + slot_index(2) + frame_id(4)"""
+  buf = bytearray()
+  buf.append(MessageType.HandbackNotify)
+  buf.extend(struct.pack('<H', slot_index & 0xFFFF))
+  buf.extend(struct.pack('<I', frame_id & 0xFFFFFFFF))
+  return bytes(buf)
+
+
+def unpack_handback_notify(data):
+  """解包 HandbackNotify，返回 (slot_index, frame_id)。"""
+  if len(data) < HANDBACK_NOTIFY_BYTES:
+    raise ValueError('HandbackNotify too short')
+  if data[0] != MessageType.HandbackNotify:
+    raise ValueError('Not HandbackNotify')
+  slot_index = struct.unpack_from('<H', data, 1)[0]
+  frame_id = struct.unpack_from('<I', data, 3)[0]
+  return slot_index, frame_id
+
+
+def pack_reconnect_request(session_token):
+  """打包 ReconnectRequest: msg_type(1) + session_token(8)"""
+  buf = bytearray()
+  buf.append(MessageType.ReconnectRequest)
+  buf.extend(struct.pack('<Q', session_token & 0xFFFFFFFFFFFFFFFF))
+  return bytes(buf)
+
+
+def unpack_reconnect_request(data):
+  """解包 ReconnectRequest，返回 session_token。"""
+  if len(data) < RECONNECT_REQUEST_BYTES:
+    raise ValueError('ReconnectRequest too short')
+  if data[0] != MessageType.ReconnectRequest:
+    raise ValueError('Not ReconnectRequest')
+  token = struct.unpack_from('<Q', data, 1)[0]
+  return token
+
+
+def pack_state_snapshot(frame_id, state_bytes):
+  """打包 StateSnapshot: msg_type(1) + frame_id(4) + state_len(4) + state_bytes"""
+  buf = bytearray()
+  buf.append(MessageType.StateSnapshot)
+  buf.extend(struct.pack('<I', frame_id & 0xFFFFFFFF))
+  state_len = len(state_bytes) if state_bytes else 0
+  buf.extend(struct.pack('<I', state_len))
+  if state_len > 0:
+    buf.extend(state_bytes)
+  return bytes(buf)
+
+
+def unpack_state_snapshot(data):
+  """解包 StateSnapshot，返回 (frame_id, state_bytes)。"""
+  if len(data) < STATE_SNAPSHOT_HEADER_BYTES:
+    raise ValueError('StateSnapshot too short')
+  if data[0] != MessageType.StateSnapshot:
+    raise ValueError('Not StateSnapshot')
+  frame_id = struct.unpack_from('<I', data, 1)[0]
+  state_len = struct.unpack_from('<I', data, 5)[0]
+  if len(data) < STATE_SNAPSHOT_HEADER_BYTES + state_len:
+    raise ValueError('StateSnapshot truncated')
+  state_bytes = data[STATE_SNAPSHOT_HEADER_BYTES:STATE_SNAPSHOT_HEADER_BYTES + state_len]
+  return frame_id, bytes(state_bytes)

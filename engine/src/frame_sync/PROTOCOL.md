@@ -24,6 +24,10 @@
 | SessionStart | Server -> Client | Scenario params, seed, left_agents, right_agents; client applies setConfig + reset. |
 | Ready | Client -> Server | Sent after client applied SessionStart; server starts frame 0 when all ready. |
 | Heartbeat | Bidirectional | 2026-08-28: 保活包，载荷 frame_id(4B) + timestamp_ms(4B)。服务器每 HEARTBEAT_INTERVAL_MS(1000ms) 广播一次；客户端收到后重置超时计数器。连续 HEARTBEAT_MISS_LIMIT(5) 个间隔无心跳则判定断连。 |
+| TakeoverNotify | Server -> Client | 2026-09-01: 通知客户端 slot 被 AI 接管。载荷 slot_index(2) + frame_id(4)。 |
+| HandbackNotify | Server -> Client | 2026-09-01: 通知客户端控制权已归还。载荷 slot_index(2) + frame_id(4)。 |
+| ReconnectRequest | Client -> Server | 2026-09-01: 重连请求，携带 session_token(8) 用于识别身份。 |
+| StateSnapshot | Server -> Client | 2026-09-01: 完整游戏状态快照。载荷 frame_id(4) + state_len(4) + state_bytes。 |
 
 ## Full action per slot
 
@@ -42,3 +46,17 @@
 - **SlotInput**: 2 × float (dir_x, dir_y) + 1 × uint16 (button bitmask). Total `SLOT_INPUT_BYTES`.
 - **AuthoritativeFrame**: MessageType (1) + frame_id (4) + num_slots (2) + num_slots × SlotInput.
 - **Client FrameInput**: MessageType (1) + frame_id (4) + num_my_slots (2) + for each: slot_index (2) + SlotInput.
+- **TakeoverNotify**: MessageType (1) + slot_index (2) + frame_id (4). Total 7 bytes.
+- **HandbackNotify**: MessageType (1) + slot_index (2) + frame_id (4). Total 7 bytes.
+- **ReconnectRequest**: MessageType (1) + session_token (8). Total 9 bytes.
+- **StateSnapshot**: MessageType (1) + frame_id (4) + state_len (4) + state_bytes (state_len). Total 9 + state_len bytes.
+
+## Session Token
+
+用于断线重连时识别客户端身份。
+
+- **生成**: `token = FNV1a(slot_index | (seed << 16) | (session_id << 32))`
+- **session_id**: 服务器在 Connect 时分配的唯一标识（`uint32_t`）
+- **C++ API**: `MakeSessionToken(slot_index, seed, session_id)`
+- **Python API**: `make_session_token(slot_index, seed, session_id)`
+- C++ 和 Python 生成的 token 保证一致

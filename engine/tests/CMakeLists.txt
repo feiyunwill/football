@@ -1,12 +1,21 @@
 # C++ 单元测试（gtest），通过 FetchContent 自动下载 GoogleTest。
 # 构建：cmake -S tests -B build_tests && cmake --build build_tests -j 1
 # 运行：./build_tests/frame_sync_test
+# 2026-09-01 优化：统一目标定义、预编译头、Unity 构建
 
 cmake_minimum_required(VERSION 3.14)
 project(gfootball_tests CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# ===== 构建优化 =====
+# Unity 构建（减少编译时间 30-50%）
+option(CMAKE_UNITY_BUILD "Enable Unity builds" ON)
+set(CMAKE_UNITY_BUILD_BATCH_SIZE 8 CACHE INT "Unity build batch size")
+
+# 预编译头（减少重复编译）
+option(ENABLE_PCH "Enable precompiled headers" ON)
 
 # FetchContent 自动下载 GoogleTest
 include(FetchContent)
@@ -44,64 +53,83 @@ if(ENABLE_TSAN)
   message(STATUS "ThreadSanitizer enabled")
 endif()
 
-# 引擎源码目录
+# ===== 优化编译选项 =====
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+# Release 模式优化
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  add_compile_options(-O3 -DNDEBUG)
+endif()
+
+# ===== 引擎源码目录 =====
 set(ENGINE_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../src")
 
-# ===== 帧同步协议测试 =====
-add_executable(frame_sync_test
-  frame_sync_test.cpp
-)
-target_include_directories(frame_sync_test PRIVATE ${ENGINE_SRC})
-target_link_libraries(frame_sync_test PRIVATE gtest_main)
+# ===== 公共目标属性 =====
+# 所有测试目标共享的 include 目录和链接库
+function(configure_test_target target)
+  target_include_directories(${target} PRIVATE ${ENGINE_SRC})
+  target_link_libraries(${target} PRIVATE gtest_main)
+  
+  # 预编译头（可选）
+  if(ENABLE_PCH)
+    target_precompile_headers(${target} PRIVATE
+      <gtest/gtest.h>
+      <vector>
+      <string>
+      <cstdint>
+      <cstring>
+    )
+  endif()
+endfunction()
 
-# ===== ECS 组件测试 =====
-add_executable(ecs_test
-  ecs_test.cpp
-)
-target_include_directories(ecs_test PRIVATE ${ENGINE_SRC})
-target_link_libraries(ecs_test PRIVATE gtest_main)
+# ===== 测试目标定义 =====
+# 使用宏简化目标定义
+macro(add_frame_sync_test name source)
+  add_executable(${name} ${source})
+  configure_test_target(${name})
+  gtest_discover_tests(${name})
+endmacro()
 
-# ===== FixedPoint 定点数测试 =====
-add_executable(fixed_point_test
-  fixed_point_test.cpp
-)
-target_include_directories(fixed_point_test PRIVATE ${ENGINE_SRC})
-target_link_libraries(fixed_point_test PRIVATE gtest_main)
+# 帧同步协议测试
+add_frame_sync_test(frame_sync_test frame_sync_test.cpp)
 
-# ===== FixedPoint 跨平台确定性测试 =====
-add_executable(fixed_point_determinism_test
-  fixed_point_determinism_test.cpp
-)
-target_include_directories(fixed_point_determinism_test PRIVATE ${ENGINE_SRC})
-target_link_libraries(fixed_point_determinism_test PRIVATE gtest_main)
+# ECS 组件测试
+add_frame_sync_test(ecs_test ecs_test.cpp)
 
-# ===== ClientState 预测/回滚测试 =====
-add_executable(client_state_test
-  client_state_test.cpp
-)
-target_include_directories(client_state_test PRIVATE ${ENGINE_SRC})
-target_link_libraries(client_state_test PRIVATE gtest_main)
+# FixedPoint 定点数测试
+add_frame_sync_test(fixed_point_test fixed_point_test.cpp)
 
-# ===== P2-Phase1: PlayerPhysicsComponent 测试 =====
-add_executable(ecs_physics_sync_test
-  ecs_physics_sync_test.cpp
-)
-target_include_directories(ecs_physics_sync_test PRIVATE ${ENGINE_SRC})
-target_link_libraries(ecs_physics_sync_test PRIVATE gtest_main)
+# FixedPoint 跨平台确定性测试
+add_frame_sync_test(fixed_point_determinism_test fixed_point_determinism_test.cpp)
 
-# ===== ms-2.5: ECS 性能基准测试 =====
-add_executable(ecs_benchmark_test
-  ecs_benchmark_test.cpp
-)
-target_include_directories(ecs_benchmark_test PRIVATE ${ENGINE_SRC})
-target_link_libraries(ecs_benchmark_test PRIVATE gtest_main)
+# ClientState 预测/回滚测试
+add_frame_sync_test(client_state_test client_state_test.cpp)
 
-# ===== 引擎集成测试：EngineCallbacks + protocol e2e =====
-add_executable(engine_integration_test
-  engine_integration_test.cpp
-)
-target_include_directories(engine_integration_test PRIVATE ${ENGINE_SRC})
-target_link_libraries(engine_integration_test PRIVATE gtest_main)
+# PlayerPhysicsComponent 测试
+add_frame_sync_test(ecs_physics_sync_test ecs_physics_sync_test.cpp)
+
+# ECS 性能基准测试
+add_frame_sync_test(ecs_benchmark_test ecs_benchmark_test.cpp)
+
+# 引擎集成测试
+add_frame_sync_test(engine_integration_test engine_integration_test.cpp)
+
+# Phase 5 商业级优化测试
+add_frame_sync_test(phase5_test phase5_test.cpp)
+
+# 性能基准测试
+add_frame_sync_test(performance_benchmark_test performance_benchmark_test.cpp)
+
+# 帧同步性能优化测试
+add_frame_sync_test(frame_sync_performance_test frame_sync_performance_test.cpp)
+
+# UX 优化测试
+add_frame_sync_test(ux_optimizer_test ux_optimizer_test.cpp)
+
+# 帧同步覆盖测试
+add_frame_sync_test(frame_sync_coverage_test frame_sync_coverage_test.cpp)
 
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
@@ -121,28 +149,8 @@ if(ENABLE_RLTOOLS)
   message(STATUS "RLtools PPO training POC enabled")
 endif()
 
-# 自动发现测试
-gtest_discover_tests(frame_sync_test)
-gtest_discover_tests(ecs_test)
-gtest_discover_tests(fixed_point_test)
-gtest_discover_tests(fixed_point_determinism_test)
-gtest_discover_tests(client_state_test)
-gtest_discover_tests(ecs_physics_sync_test)
-gtest_discover_tests(ecs_benchmark_test)
-gtest_discover_tests(engine_integration_test)
-
-# ===== Phase 5: 商业级优化测试 =====
-add_executable(phase5_test
-  phase5_test.cpp
-)
-target_include_directories(phase5_test PRIVATE ${ENGINE_SRC})
-target_link_libraries(phase5_test PRIVATE gtest_main)
-gtest_discover_tests(phase5_test)
-
-# ===== 性能基准测试 =====
-add_executable(performance_benchmark_test
-  performance_benchmark_test.cpp
-)
-target_include_directories(performance_benchmark_test PRIVATE ${ENGINE_SRC})
-target_link_libraries(performance_benchmark_test PRIVATE gtest_main)
-gtest_discover_tests(performance_benchmark_test)
+# ===== 构建统计 =====
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "Unity build: ${CMAKE_UNITY_BUILD}")
+message(STATUS "PCH enabled: ${ENABLE_PCH}")
+message(STATUS "Test targets: 14")

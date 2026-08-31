@@ -62,6 +62,7 @@ class TacticsController {
   void DecideAction();
   
   // Execute actions
+  void ExecuteAction();
   void ExecuteDribble();
   void ExecutePass();
   void ExecuteShoot();

@@ -605,7 +605,7 @@ void Ball::PutInterpolated(float t) {
   Vector3 interpPos = previousPositionBuffer * (1.0f - t) + positionBuffer * t;
   
   // Spherical linear interpolation for rotation
-  Quaternion interpRot = previousOrientationBuffer.Slerped(t, orientationBuffer);
+  Quaternion interpRot = previousOrientationBuffer.GetSlerped(t, orientationBuffer);
   
   ball->SetPosition(interpPos, false);
   ball->SetRotation(interpRot, false);

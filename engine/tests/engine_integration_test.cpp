@@ -342,6 +342,9 @@ TEST(FullLoopTest, ClientServerSyncWithoutRollback) {
     last_confirmed = fid;
   }
 
+  // Verify last_confirmed is valid
+  EXPECT_GE(last_confirmed, 0);
+
   // Both engines should have identical state
   EXPECT_FLOAT_EQ(server_engine.position, client_engine.position);
   EXPECT_EQ(server_engine.step_count, client_engine.step_count);
@@ -421,6 +424,9 @@ TEST(FullLoopTest, ClientServerSyncWithRollback) {
 
     last_confirmed = fid;
   }
+
+  // Verify last_confirmed is valid
+  EXPECT_GE(last_confirmed, 0);
 
   // Server: 1+1+5+1*7 = 14.0
   // Client after rollback: restored to 2.0, +5.0=7.0, +1+1=9.0, +1*5=14.0

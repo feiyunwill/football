@@ -80,11 +80,11 @@ TEST(PlayerPhysicsTest, ForEachFiltersCorrectly) {
   World w;
   Entity e1 = w.CreateEntity();
   Entity e2 = w.CreateEntity();
-  Entity e3 = w.CreateEntity();
+  Entity e3 = w.CreateEntity();  // e3 没有 TestPhysics
 
   w.AddComponent(e1, TestPhysics{1.0f, 0, 0, 0, 0, 0, 0, 0, 5.0f, 1});
   w.AddComponent(e2, TestPhysics{2.0f, 0, 0, 0, 0, 0, 0, 0, 8.0f, 1});
-  // e3 没有 TestPhysics
+  (void)e3;  // Suppress unused variable warning
 
   int count = 0;
   float totalV = 0.0f;
@@ -428,7 +428,7 @@ TEST(WorldSerializerTest, SerializeDeserializeRoundTrip) {
 
   // 验证实体数量
   int count = 0;
-  w2.ForEach<TestPhysics>([&](Entity, TestPhysics& c) {
+  w2.ForEach<TestPhysics>([&](Entity, TestPhysics&) {
     count++;
   });
   EXPECT_EQ(count, 2);

@@ -212,6 +212,94 @@ inline size_t UnpackVersionNegotiate(const void* buf, size_t size,
   return VERSION_NEGOTIATE_PACK_BYTES;
 }
 
+// ----- 2026-09-01 断线托管协议扩展 -----
+
+// ----- TakeoverNotify (server -> client): msg_type(1) + slot_index(2) + frame_id(4) -----
+inline size_t PackTakeoverNotify(uint16_t slot_index, frame_id_t frame_id,
+                                 void* buf, size_t size) {
+  if (size < TAKEOVER_NOTIFY_BYTES) return 0;
+  auto* p = static_cast<uint8_t*>(buf);
+  *p++ = static_cast<uint8_t>(MessageType::TakeoverNotify);
+  memcpy(p, &slot_index, 2); p += 2;
+  memcpy(p, &frame_id, 4);
+  return TAKEOVER_NOTIFY_BYTES;
+}
+inline size_t UnpackTakeoverNotify(const void* buf, size_t size,
+                                   uint16_t* slot_index, frame_id_t* frame_id) {
+  if (size < TAKEOVER_NOTIFY_BYTES) return 0;
+  const auto* p = static_cast<const uint8_t*>(buf);
+  if (p[0] != static_cast<uint8_t>(MessageType::TakeoverNotify)) return 0;
+  memcpy(slot_index, p + 1, 2);
+  memcpy(frame_id, p + 3, 4);
+  return TAKEOVER_NOTIFY_BYTES;
+}
+
+// ----- HandbackNotify (server -> client): msg_type(1) + slot_index(2) + frame_id(4) -----
+inline size_t PackHandbackNotify(uint16_t slot_index, frame_id_t frame_id,
+                                 void* buf, size_t size) {
+  if (size < HANDBACK_NOTIFY_BYTES) return 0;
+  auto* p = static_cast<uint8_t*>(buf);
+  *p++ = static_cast<uint8_t>(MessageType::HandbackNotify);
+  memcpy(p, &slot_index, 2); p += 2;
+  memcpy(p, &frame_id, 4);
+  return HANDBACK_NOTIFY_BYTES;
+}
+inline size_t UnpackHandbackNotify(const void* buf, size_t size,
+                                   uint16_t* slot_index, frame_id_t* frame_id) {
+  if (size < HANDBACK_NOTIFY_BYTES) return 0;
+  const auto* p = static_cast<const uint8_t*>(buf);
+  if (p[0] != static_cast<uint8_t>(MessageType::HandbackNotify)) return 0;
+  memcpy(slot_index, p + 1, 2);
+  memcpy(frame_id, p + 3, 4);
+  return HANDBACK_NOTIFY_BYTES;
+}
+
+// ----- ReconnectRequest (client -> server): msg_type(1) + session_token(8) -----
+inline size_t PackReconnectRequest(session_token_t token, void* buf, size_t size) {
+  if (size < RECONNECT_REQUEST_BYTES) return 0;
+  auto* p = static_cast<uint8_t*>(buf);
+  *p++ = static_cast<uint8_t>(MessageType::ReconnectRequest);
+  memcpy(p, &token, 8);
+  return RECONNECT_REQUEST_BYTES;
+}
+inline size_t UnpackReconnectRequest(const void* buf, size_t size,
+                                     session_token_t* token) {
+  if (size < RECONNECT_REQUEST_BYTES) return 0;
+  const auto* p = static_cast<const uint8_t*>(buf);
+  if (p[0] != static_cast<uint8_t>(MessageType::ReconnectRequest)) return 0;
+  memcpy(token, p + 1, 8);
+  return RECONNECT_REQUEST_BYTES;
+}
+
+// ----- StateSnapshot (server -> client): msg_type(1) + frame_id(4) + state_len(4) + state_bytes -----
+inline size_t PackStateSnapshot(frame_id_t frame_id, const void* state_data,
+                                uint32_t state_len, void* buf, size_t size) {
+  size_t need = STATE_SNAPSHOT_HEADER_BYTES + state_len;
+  if (size < need) return 0;
+  auto* p = static_cast<uint8_t*>(buf);
+  *p++ = static_cast<uint8_t>(MessageType::StateSnapshot);
+  memcpy(p, &frame_id, 4); p += 4;
+  memcpy(p, &state_len, 4); p += 4;
+  if (state_len > 0 && state_data) {
+    memcpy(p, state_data, state_len);
+  }
+  return need;
+}
+// UnpackStateSnapshot 返回 state 数据的偏移和长度，调用者自行拷贝
+inline size_t UnpackStateSnapshot(const void* buf, size_t size,
+                                  frame_id_t* frame_id,
+                                  const void** state_data, uint32_t* state_len) {
+  if (size < STATE_SNAPSHOT_HEADER_BYTES) return 0;
+  const auto* p = static_cast<const uint8_t*>(buf);
+  if (p[0] != static_cast<uint8_t>(MessageType::StateSnapshot)) return 0;
+  memcpy(frame_id, p + 1, 4);
+  memcpy(state_len, p + 5, 4);
+  size_t need = STATE_SNAPSHOT_HEADER_BYTES + *state_len;
+  if (size < need) return 0;
+  *state_data = p + STATE_SNAPSHOT_HEADER_BYTES;
+  return need;
+}
+
 }  // namespace frame_sync
 
 #endif

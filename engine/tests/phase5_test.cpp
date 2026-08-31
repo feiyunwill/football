@@ -128,7 +128,7 @@ TEST(DeltaSlotInputTest, PartialChange) {
   EXPECT_EQ(n, 5u);
 
   DeltaSlotInput decoded;
-  decoded.Unpack(buf, n);
+  [[maybe_unused]] size_t unpacked = decoded.Unpack(buf, n);
   SlotInput reconstructed = decoded.Apply(prev);
   EXPECT_FLOAT_EQ(reconstructed.dir_x, 1.0f);  // unchanged
   EXPECT_FLOAT_EQ(reconstructed.dir_y, 5.0f);  // changed
@@ -175,7 +175,7 @@ TEST(DeltaEncoderTest, MultiFrameCompression) {
     std::vector<SlotInput> current = {{1.0f, static_cast<float>(i * 0.1f), 0}};
     auto deltas = encoder.Encode(current);
     total_delta += deltas[0].packed_size();
-    encoder.Decode(deltas);  // advance state
+    [[maybe_unused]] auto decoded = encoder.Decode(deltas);  // advance state
   }
 
   size_t total_full = 20 * SLOT_INPUT_BYTES;

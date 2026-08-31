@@ -1,6 +1,20 @@
 // Copyright 2026 Google LLC & Contributors
 // Frame interpolation for logic-render separation (ms-1.6).
 // Provides temporal interpolation between logic frames for smooth rendering.
+//
+// This module provides interpolation utilities for smooth rendering when
+// the logic frame rate differs from the render frame rate. It includes:
+//   - Vec3: Simple 3D vector with arithmetic operations
+//   - Quat: Quaternion with spherical linear interpolation (slerp)
+//   - Interpolator: Manages interpolation between logic frames
+//
+// Usage:
+//   Interpolator interp;
+//   // After each logic frame:
+//   interp.SaveState(logic_timestamp);
+//   interp.SavePosition(entity_index, position);
+//   // During rendering:
+//   auto state = interp.GetInterpolatedState(entity_index, render_time, logic_dt);
 
 #ifndef GFOOTBALL_FRAME_SYNC_INTERPOLATOR_HPP
 #define GFOOTBALL_FRAME_SYNC_INTERPOLATOR_HPP
@@ -13,11 +27,11 @@
 
 namespace frame_sync {
 
-// Simple 3D vector for interpolation
+/// @brief Simple 3D vector for interpolation
 struct Vec3 {
-  float x = 0.f;
-  float y = 0.f;
-  float z = 0.f;
+  float x = 0.f;  ///< X component
+  float y = 0.f;  ///< Y component
+  float z = 0.f;  ///< Z component
 
   Vec3() = default;
   Vec3(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
@@ -26,28 +40,36 @@ struct Vec3 {
   Vec3 operator-(const Vec3& o) const { return {x - o.x, y - o.y, z - o.z}; }
   Vec3 operator*(float s) const { return {x * s, y * s, z * s}; }
 
-  float length_sq() const { return x * x + y * y + z * z; }
-  float length() const { return std::sqrt(length_sq()); }
+  /// @brief Calculate squared length (avoids square root)
+  [[nodiscard]] float length_sq() const { return x * x + y * y + z * z; }
+  
+  /// @brief Calculate vector length
+  [[nodiscard]] float length() const { return std::sqrt(length_sq()); }
 
-  Vec3 normalized() const {
+  /// @brief Get normalized vector (unit length)
+  [[nodiscard]] Vec3 normalized() const {
     float len = length();
     if (len < 1e-6f) return {0.f, 0.f, 0.f};
     return *this * (1.f / len);
   }
 };
 
-// Simple quaternion for rotation interpolation
+/// @brief Simple quaternion for rotation interpolation
 struct Quat {
-  float x = 0.f;
-  float y = 0.f;
-  float z = 0.f;
-  float w = 1.f;
+  float x = 0.f;  ///< X component
+  float y = 0.f;  ///< Y component
+  float z = 0.f;  ///< Z component
+  float w = 1.f;  ///< W component (real part)
 
   Quat() = default;
   Quat(float x_, float y_, float z_, float w_) : x(x_), y(y_), z(z_), w(w_) {}
 
-  // Spherical linear interpolation (slerp)
-  static Quat slerp(const Quat& a, const Quat& b, float t) {
+  /// @brief Spherical linear interpolation between two quaternions
+  /// @param a Start quaternion
+  /// @param b End quaternion
+  /// @param t Interpolation factor (0 = a, 1 = b)
+  /// @return Interpolated quaternion
+  [[nodiscard]] static Quat slerp(const Quat& a, const Quat& b, float t) {
     float dot = a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
     
     // If dot is negative, negate one quaternion to take the shorter path
@@ -83,7 +105,8 @@ struct Quat {
     );
   }
 
-  Quat normalized() const {
+  /// @brief Get normalized quaternion (unit length)
+  [[nodiscard]] Quat normalized() const {
     float len = std::sqrt(x * x + y * y + z * z + w * w);
     if (len < 1e-6f) return {0.f, 0.f, 0.f, 1.f};
     float inv = 1.f / len;
@@ -91,28 +114,28 @@ struct Quat {
   }
 };
 
-// Interpolated state for a single entity (ball, player, etc.)
+/// @brief Interpolated state for a single entity (ball, player, etc.)
 struct InterpolatedState {
-  Vec3 position;
-  Quat rotation;
-  float timestamp = 0.f;  // Time since logic frame (in seconds)
+  Vec3 position;           ///< Interpolated position
+  Quat rotation;           ///< Interpolated rotation
+  float timestamp = 0.f;   ///< Time since logic frame (in seconds)
 };
 
-//Interpolator: manages interpolation between logic frames
-// 
-// Usage:
-// 1. Call SaveState() after each logic frame to store the current state
-// 2. Call GetInterpolatedState() during rendering to get the interpolated state
-//    based on time elapsed since last logic frame
-//
-// The interpolator stores two frames (previous and current) and interpolates
-// between them based on the elapsed time.
+/// @brief Interpolator: manages interpolation between logic frames
+/// 
+/// Usage:
+/// 1. Call SaveState() after each logic frame to store the current state
+/// 2. Call GetInterpolatedState() during rendering to get the interpolated state
+///    based on time elapsed since last logic frame
+///
+/// The interpolator stores two frames (previous and current) and interpolates
+/// between them based on the elapsed time.
 class Interpolator {
  public:
   Interpolator() = default;
 
-  // Save a new logic frame state
-  // timestamp: time in seconds when this logic frame occurred
+  /// @brief Save a new logic frame state
+  /// @param timestamp Time in seconds when this logic frame occurred
   void SaveState(float timestamp) {
     // Shift current to previous
     previous_state_ = current_state_;
@@ -123,7 +146,9 @@ class Interpolator {
     states_saved_ = true;
   }
 
-  // Save position for a specific entity index
+  /// @brief Save position for a specific entity index
+  /// @param entity_index Index of the entity (0-based)
+  /// @param position Position to save
   void SavePosition(size_t entity_index, const Vec3& position) {
     if (entity_index >= current_state_.size()) {
       current_state_.resize(entity_index + 1);
@@ -131,7 +156,9 @@ class Interpolator {
     current_state_[entity_index].position = position;
   }
 
-  // Save rotation for a specific entity index
+  /// @brief Save rotation for a specific entity index
+  /// @param entity_index Index of the entity (0-based)
+  /// @param rotation Rotation to save
   void SaveRotation(size_t entity_index, const Quat& rotation) {
     if (entity_index >= current_state_.size()) {
       current_state_.resize(entity_index + 1);
@@ -139,10 +166,12 @@ class Interpolator {
     current_state_[entity_index].rotation = rotation;
   }
 
-  // Get interpolated state for an entity at a given render time
-  // render_time: time in seconds when rendering occurs
-  // logic_dt: time between logic frames (e.g., 0.1 seconds for 10 Hz)
-  InterpolatedState GetInterpolatedState(size_t entity_index, 
+  /// @brief Get interpolated state for an entity at a given render time
+  /// @param entity_index Index of the entity (0-based)
+  /// @param render_time Time in seconds when rendering occurs
+  /// @param logic_dt Time between logic frames (e.g., 0.1 seconds for 10 Hz)
+  /// @return Interpolated state for the entity
+  [[nodiscard]] InterpolatedState GetInterpolatedState(size_t entity_index, 
                                          float render_time,
                                          float logic_dt) const {
     InterpolatedState result;

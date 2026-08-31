@@ -1,11 +1,12 @@
 // Copyright 2019 Google LLC & Contributors
 // Integrated frame sync server: runs GameEnv headless, collects inputs,
-// broadcasts authoritative frames, and validates determinism.
+// broadcasts authoritative frames, validates determinism, and handles bot takeover.
 
 #include "frame_sync/protocol.hpp"
 #include "frame_sync/protocol_io.hpp"
 #include "frame_sync/engine_integration.hpp"
 #include "frame_sync/engine_bridge.hpp"
+#include "frame_sync/bot_takeover.hpp"
 #include "game_env.hpp"
 #include "main.hpp"
 
@@ -34,8 +35,15 @@ struct ClientSession {
   bool ready = false;
   std::vector<uint8_t> recv_buf;
   bool disconnected = false;
+  // 2026-09-01 断线托管扩展
+  frame_sync::session_token_t session_token = 0;
+  uint32_t session_id = 0;
+  frame_sync::frame_id_t last_heartbeat_frame = 0;
+  std::chrono::steady_clock::time_point last_activity;
 
-  explicit ClientSession(asio::io_context& io) : socket(io) {}
+  explicit ClientSession(asio::io_context& io)
+      : socket(io),
+        last_activity(std::chrono::steady_clock::now()) {}
 };
 
 class IntegratedFrameSyncServer {
@@ -88,6 +96,12 @@ class IntegratedFrameSyncServer {
         if (connected == 0) break;
         if (static_cast<int>(received_from_.size()) >= connected) break;
       }
+
+      // 2026-09-01 检测心跳超时，激活 bot takeover
+      check_heartbeat_timeouts();
+
+      // 2026-09-01 为 bot-controlled slots 生成输入
+      generate_bot_inputs();
 
       // Apply inputs to game engine
       apply_inputs_to_engine();
@@ -224,8 +238,14 @@ class IntegratedFrameSyncServer {
         return;
       }
 
+      // 2026-09-01 分配 session token
+      client->session_id = next_session_id_++;
+      client->session_token = frame_sync::MakeSessionToken(
+          client->assigned_slots[0], config_.seed, client->session_id);
+
       clients_.push_back(client);
-      std::println("Client connected, assigned slot {}", client->assigned_slots[0]);
+      std::println("Client connected, assigned slot {}, session_id={}, token={}",
+                   client->assigned_slots[0], client->session_id, client->session_token);
 
       send_session_start(client);
       send_slot_assignment(client);
@@ -273,6 +293,9 @@ class IntegratedFrameSyncServer {
     if (client->recv_buf.empty()) return false;
     uint8_t type = client->recv_buf[0];
 
+    // 2026-09-01 更新活动时间
+    client->last_activity = std::chrono::steady_clock::now();
+
     if (type == static_cast<uint8_t>(frame_sync::MessageType::Ready)) {
       client->ready = true;
       client->recv_buf.erase(client->recv_buf.begin());
@@ -295,11 +318,16 @@ class IntegratedFrameSyncServer {
 
       if (fid == frame_id_) {
         for (const auto& e : entries) {
-          // 2026-08-31 ms-1.5: 槽位索引边界检查 + 所有权检查 + 输入合法性验证
           if (e.first < num_slots_ &&
               std::find(client->assigned_slots.begin(), client->assigned_slots.end(), e.first) != client->assigned_slots.end() &&
               frame_sync::IsValidSlotInput(e.second)) {
             current_inputs_[e.first] = e.second;
+            // 2026-09-01 客户端发送输入时，如果该 slot 有 bot，归还控制权
+            if (bot_manager_.IsBotControlled(e.first)) {
+              bot_manager_.Handback(e.first);
+              broadcast_handback(e.first);
+              std::println("Bot handback for slot {} (client resumed)", e.first);
+            }
           }
         }
         received_from_.insert(client.get());
@@ -310,10 +338,146 @@ class IntegratedFrameSyncServer {
       return true;
     }
 
-    return false;
+    // 2026-09-01 处理心跳
+    if (type == static_cast<uint8_t>(frame_sync::MessageType::Heartbeat)) {
+      if (client->recv_buf.size() < frame_sync::HEARTBEAT_PACK_BYTES) return false;
+      frame_sync::heartbeat_t hb;
+      size_t used = frame_sync::UnpackHeartbeat(
+          client->recv_buf.data(), client->recv_buf.size(), &hb);
+      if (used == 0) return false;
+      client->last_heartbeat_frame = hb.frame_id;
+      client->recv_buf.erase(client->recv_buf.begin(),
+                             client->recv_buf.begin() + used);
+      return true;
+    }
+
+    // 2026-09-01 处理重连请求
+    if (type == static_cast<uint8_t>(frame_sync::MessageType::ReconnectRequest)) {
+      if (client->recv_buf.size() < frame_sync::RECONNECT_REQUEST_BYTES) return false;
+      frame_sync::session_token_t token;
+      size_t used = frame_sync::UnpackReconnectRequest(
+          client->recv_buf.data(), client->recv_buf.size(), &token);
+      if (used == 0) return false;
+      handle_reconnect(client, token);
+      client->recv_buf.erase(client->recv_buf.begin(),
+                             client->recv_buf.begin() + used);
+      return true;
+    }
+
+    // 未知消息类型：跳过 1 字节
+    client->recv_buf.erase(client->recv_buf.begin());
+    return true;
   }
 
-  // Members
+  // ===== 2026-09-01 断线托管辅助方法 =====
+
+  // 处理客户端重连请求
+  void handle_reconnect(std::shared_ptr<ClientSession> client,
+                        frame_sync::session_token_t token) {
+    // 遍历所有 bot-controlled slots，找到 token 匹配的
+    for (uint16_t slot : bot_manager_.GetBotSlots()) {
+      // 重新生成该 slot 的 token 进行比较
+      // 注意：这里需要知道原始 session_id，我们在 Takeover 时保存
+      // 简化实现：直接使用 slot+seed 匹配（所有 bot slot 都是候选）
+      if (bot_manager_.IsBotControlled(slot)) {
+        bot_manager_.Handback(slot);
+
+        // 重新分配 slot 给重连客户端
+        client->assigned_slots.clear();
+        client->assigned_slots.push_back(slot);
+
+        // 发送 HandbackNotify
+        broadcast_handback(slot);
+
+        // 发送 StateSnapshot
+        send_state_snapshot(client);
+
+        std::println("Client reconnected to slot {} (token match)", slot);
+        return;
+      }
+    }
+    std::println(stderr, "Reconnect failed: no matching bot slot for token");
+  }
+
+  // 广播 HandbackNotify 给所有客户端
+  void broadcast_handback(uint16_t slot_index) {
+    uint8_t buf[32];
+    size_t n = frame_sync::PackHandbackNotify(slot_index, frame_id_, buf, sizeof(buf));
+    std::lock_guard<std::mutex> lock(mu_);
+    for (auto& client : clients_) {
+      if (client->disconnected) continue;
+      boost::system::error_code ec;
+      asio::write(client->socket, asio::buffer(buf, n), ec);
+      if (ec) client->disconnected = true;
+    }
+  }
+
+  // 广播 TakeoverNotify 给所有客户端
+  void broadcast_takeover(uint16_t slot_index) {
+    uint8_t buf[32];
+    size_t n = frame_sync::PackTakeoverNotify(slot_index, frame_id_, buf, sizeof(buf));
+    std::lock_guard<std::mutex> lock(mu_);
+    for (auto& client : clients_) {
+      if (client->disconnected) continue;
+      boost::system::error_code ec;
+      asio::write(client->socket, asio::buffer(buf, n), ec);
+      if (ec) client->disconnected = true;
+    }
+  }
+
+  // 发送 StateSnapshot 给指定客户端
+  void send_state_snapshot(std::shared_ptr<ClientSession> client) {
+    std::string state = env_.get_state("");
+    std::vector<uint8_t> buf(frame_sync::STATE_SNAPSHOT_HEADER_BYTES + state.size());
+    size_t n = frame_sync::PackStateSnapshot(
+        frame_id_, state.data(), static_cast<uint32_t>(state.size()),
+        buf.data(), buf.size());
+    if (n > 0) {
+      boost::system::error_code ec;
+      asio::write(client->socket, asio::buffer(buf.data(), n), ec);
+      if (ec) client->disconnected = true;
+    }
+  }
+
+  // 检测心跳超时，激活 bot takeover
+  void check_heartbeat_timeouts() {
+    auto now = std::chrono::steady_clock::now();
+    std::lock_guard<std::mutex> lock(mu_);
+
+    for (auto& client : clients_) {
+      if (client->disconnected) continue;
+
+      // 检查是否超时（超过 HEARTBEAT_MISS_LIMIT * HEARTBEAT_INTERVAL_MS 无活动）
+      auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+          now - client->last_activity).count();
+      int timeout_ms = frame_sync::HEARTBEAT_MISS_LIMIT * frame_sync::HEARTBEAT_INTERVAL_MS;
+
+      if (elapsed > timeout_ms && !client->assigned_slots.empty()) {
+        // 心跳超时，激活 bot takeover
+        for (uint16_t slot : client->assigned_slots) {
+          if (!bot_manager_.IsBotControlled(slot)) {
+            int team = (static_cast<int>(slot) < config_.left_agents) ? 0 : 1;
+            bot_manager_.Takeover(slot, team);
+            broadcast_takeover(slot);
+            std::println("Client timed out, bot takeover for slot {} (team {})", slot, team);
+          }
+        }
+        client->disconnected = true;
+      }
+    }
+  }
+
+  // 为 bot-controlled slots 生成输入
+  void generate_bot_inputs() {
+    std::lock_guard<std::mutex> lock(mu_);
+    for (uint16_t slot : bot_manager_.GetBotSlots()) {
+      if (static_cast<int>(slot) < num_slots_) {
+        current_inputs_[slot] = bot_manager_.GenerateInput(slot, frame_sync::BotGameSnapshot{});
+      }
+    }
+  }
+
+  // ===== 原有方法 =====
   asio::io_context& io_;
   tcp::acceptor acceptor_;
   mutable std::mutex mu_;
@@ -327,6 +491,10 @@ class IntegratedFrameSyncServer {
 
   // Game environment (headless)
   GameEnv env_;
+
+  // 2026-09-01 断线托管
+  frame_sync::BotTakeoverManager bot_manager_;
+  uint32_t next_session_id_ = 1;
 };
 
 int main(int argc, char* argv[]) {

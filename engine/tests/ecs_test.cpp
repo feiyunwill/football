@@ -141,10 +141,10 @@ TEST(WorldTest, ForEachSingleComponent) {
   World w;
   Entity e1 = w.CreateEntity();
   Entity e2 = w.CreateEntity();
-  Entity e3 = w.CreateEntity();
+  Entity e3 = w.CreateEntity();  // e3 没有 Position
   w.AddComponent(e1, Position{1.f, 0.f});
   w.AddComponent(e2, Position{2.f, 0.f});
-  // e3 没有 Position
+  (void)e3;  // Suppress unused variable warning
 
   int count = 0;
   w.ForEach<Position>([&](Entity, Position&) { count++; });

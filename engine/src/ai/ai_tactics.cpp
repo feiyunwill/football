@@ -3,6 +3,7 @@
 // Enhanced with ms-4.2: advanced decision making.
 
 #include "ai_tactics.hpp"
+#include "../onthepitch/AIsupport/AIfunctions.hpp"
 #include <algorithm>
 #include <cmath>
 
@@ -23,16 +24,17 @@ void TacticsController::Update() {
 
 void TacticsController::AnalyzeSituation() {
   // Get ball position
-  current_state_.ball_position = match_->GetBall()->GetPosition();
+  current_state_.ball_position = match_->GetBall()->Predict(0);
   
   // Get player position
-  PlayerBase* player = team_->GetClosestPlayerToBall();
+  Player* player = AI_GetClosestPlayer(team_, current_state_.ball_position, false);
   if (player) {
-    current_state_.has_ball = (player->GetDistanceToBall() < 2.0f);
+    float dist_to_ball = (player->GetGeomPosition() - current_state_.ball_position).GetLength();
+    current_state_.has_ball = (dist_to_ball < 2.0f);
     current_state_.is_closest_to_ball = true;
     
     // Determine zone
-    float player_x = player->GetGeomPosition().x;
+    float player_x = player->GetGeomPosition().coords[0];
     float pitch_center = 50.0f;  // Assuming 100m pitch
     
     current_state_.is_in_attack_zone = (player_x > pitch_center);
@@ -54,9 +56,9 @@ void TacticsController::AnalyzeSituation() {
 
 void TacticsController::UpdateMatchContext() {
   // Update match context for decision making
-  match_context_.time_remaining = match_->GetTime() * 60.0f;  // Convert to seconds
-  match_context_.score_diff = match_->GetScoreLeft() - match_->GetScoreRight();
-  match_context_.is_second_half = match_->IsSecondHalf();
+  match_context_.time_remaining = match_->GetMatchTime_ms() / 1000.0f;
+  match_context_.score_diff = match_->GetScore(0) - match_->GetScore(1);
+  match_context_.is_second_half = match_->GetMatchPhase() >= 1;
   match_context_.possession_time = 0.5f;  // Would come from match stats
 }
 
@@ -173,7 +175,7 @@ void TacticsController::ExecuteAction() {
 void TacticsController::ExecuteDribble() {
   // Move towards opponent goal with ball
   Vector3 target = current_state_.opponent_goal_position;
-  Vector3 direction = (target - current_state_.ball_position).Normalize();
+  Vector3 direction = (target - current_state_.ball_position).GetNormalized();
   
   hid_->SetDirection(direction);
   // No special button needed for basic dribble
@@ -182,30 +184,38 @@ void TacticsController::ExecuteDribble() {
 void TacticsController::ExecutePass() {
   PlayerBase* target = FindBestPassTarget();
   if (target) {
-    Vector3 pass_direction = (target->GetGeomPosition() - current_state_.ball_position).Normalize();
+    Vector3 pass_direction = (target->GetGeomPosition() - current_state_.ball_position).GetNormalized();
     hid_->SetDirection(pass_direction);
     hid_->SetButton(e_ButtonFunction_ShortPass, true);
   }
 }
 
 void TacticsController::ExecuteShoot() {
-  Vector3 shoot_direction = (current_state_.opponent_goal_position - current_state_.ball_position).Normalize();
+  Vector3 shoot_direction = (current_state_.opponent_goal_position - current_state_.ball_position).GetNormalized();
   hid_->SetDirection(shoot_direction);
   hid_->SetButton(e_ButtonFunction_Shot, true);
 }
 
 void TacticsController::ExecuteDefend() {
   // Move towards ball to intercept
-  Vector3 ball_direction = (current_state_.ball_position - match_->GetPlayer()->GetGeomPosition()).Normalize();
-  hid_->SetDirection(ball_direction);
-  hid_->SetButton(e_ButtonFunction_Pressure, true);
+  const auto& players = team_->GetAllPlayers();
+  if (!players.empty()) {
+    PlayerBase* player = players[0];
+    Vector3 ball_direction = (current_state_.ball_position - player->GetGeomPosition()).GetNormalized();
+    hid_->SetDirection(ball_direction);
+    hid_->SetButton(e_ButtonFunction_Pressure, true);
+  }
 }
 
 void TacticsController::ExecuteSupport() {
   // Find open position and move there
   Vector3 open_pos = FindOpenPosition();
-  Vector3 move_direction = (open_pos - match_->GetPlayer()->GetGeomPosition()).Normalize();
-  hid_->SetDirection(move_direction);
+  const auto& players = team_->GetAllPlayers();
+  if (!players.empty()) {
+    PlayerBase* player = players[0];
+    Vector3 move_direction = (open_pos - player->GetGeomPosition()).GetNormalized();
+    hid_->SetDirection(move_direction);
+  }
 }
 
 void TacticsController::ExecuteTacticalFoul() {
@@ -219,8 +229,8 @@ PlayerBase* TacticsController::FindBestPassTarget() {
   PlayerBase* best_target = nullptr;
   float best_score = -1.0f;
   
-  for (int i = 0; i < team_->GetNumPlayers(); ++i) {
-    PlayerBase* player = team_->GetPlayer(i);
+  const auto& players = team_->GetAllPlayers();
+  for (PlayerBase* player : players) {
     if (!player || !player->IsActive()) continue;
     
     // Calculate pass score based on distance and openness

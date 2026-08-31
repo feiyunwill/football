@@ -105,7 +105,7 @@ TEST(PerformanceBenchmark, DeltaCompressionThroughput) {
   // Warmup
   for (int i = 0; i < 100; ++i) {
     auto deltas = encoder.Encode(current);
-    encoder.Decode(deltas);
+    [[maybe_unused]] auto decoded = encoder.Decode(deltas);
   }
 
   auto start = std::chrono::steady_clock::now();
@@ -119,7 +119,7 @@ TEST(PerformanceBenchmark, DeltaCompressionThroughput) {
       total_delta_bytes += d.packed_size();
     }
     total_full_bytes += kSlots * SLOT_INPUT_BYTES;
-    encoder.Decode(deltas);
+    [[maybe_unused]] auto decoded = encoder.Decode(deltas);
   }
 
   auto elapsed = std::chrono::steady_clock::now() - start;

@@ -196,7 +196,6 @@ TEST(FixedPointDeterminism, ConstexprConstruction) {
   constexpr FixedPoint a(5);
   constexpr FixedPoint b(3);
   constexpr FixedPoint sum = a + b;
-  constexpr FixedPoint prod = a * b;
   constexpr FixedPoint neg = -a;
 
   static_assert(sum.ToRaw() == (5 << 16) + (3 << 16), "constexpr addition");

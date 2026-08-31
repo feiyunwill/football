@@ -37,8 +37,97 @@ from gfootball.frame_sync.protocol import (
     FRAME_INPUT_TIMEOUT_MS,
     PROTOCOL_VERSION,
     VERSION_NEGOTIATE_BYTES,
+    # 2026-09-01 断线托管协议扩展
+    make_session_token,
+    pack_takeover_notify,
+    pack_handback_notify,
+    pack_state_snapshot,
+    unpack_reconnect_request,
+    unpack_heartbeat,
 )
-from gfootball.frame_sync.config import HEARTBEAT_INTERVAL_MS
+from gfootball.frame_sync.config import HEARTBEAT_INTERVAL_MS, HEARTBEAT_MISS_LIMIT
+
+
+# ===== 2026-09-01 Bot Takeover Manager (Python) =====
+
+class BotTakeoverManager(object):
+  """Manages AI takeover for disconnected client slots.
+  Generates simple SlotInput for bot-controlled slots."""
+
+  def __init__(self):
+    self._bots = {}  # slot_index -> {'team': 0/1, 'shoot_cooldown': int}
+
+  def takeover(self, slot_index, team):
+    self._bots[slot_index] = {'team': team, 'shoot_cooldown': 0}
+
+  def handback(self, slot_index):
+    self._bots.pop(slot_index, None)
+
+  def is_bot_controlled(self, slot_index):
+    return slot_index in self._bots
+
+  def get_bot_slots(self):
+    return list(self._bots.keys())
+
+  def generate_input(self, slot_index, ball_x=0.0, ball_y=0.0,
+                     player_x=0.0, player_y=0.0):
+    """Generate SlotInput for a bot-controlled slot."""
+    if slot_index not in self._bots:
+      return default_slot_input()
+
+    bot = self._bots[slot_index]
+    team = bot['team']
+
+    ball_dx = ball_x - player_x
+    ball_dy = ball_y - player_y
+    ball_dist = (ball_dx**2 + ball_dy**2) ** 0.5
+
+    # Determine attacking/defending
+    attacking = (team == 0 and ball_x > 0) or (team == 1 and ball_x < 0)
+
+    dir_x, dir_y = 0.0, 0.0
+    buttons = 0
+
+    if attacking:
+      if ball_dist > 3.0:
+        # Move toward ball
+        if ball_dist > 0.01:
+          dir_x = ball_dx / ball_dist
+          dir_y = ball_dy / ball_dist
+        buttons |= (1 << 9)  # Sprint
+      else:
+        # Move toward opponent goal
+        goal_x = 100.0 if team == 0 else -100.0
+        goal_dx = goal_x - player_x
+        goal_dy = 0.0 - player_y
+        goal_dist = (goal_dx**2 + goal_dy**2) ** 0.5
+        if goal_dist > 0.01:
+          dir_x = goal_dx / goal_dist
+          dir_y = goal_dy / goal_dist
+        buttons |= (1 << 9)  # Sprint
+        # Shoot if close
+        if ball_dist < 8.0 and goal_dist < 25.0 and bot['shoot_cooldown'] <= 0:
+          buttons |= (1 << 3)  # Shot
+          bot['shoot_cooldown'] = 30
+    else:
+      # Defensive: move toward ball
+      if ball_dist > 0.01:
+        dir_x = ball_dx / ball_dist
+        dir_y = ball_dy / ball_dist
+      buttons |= (1 << 9)  # Sprint
+      if ball_dist < 5.0:
+        buttons |= (1 << 6)  # Pressure
+      # Clear if near own goal
+      own_goal_x = -100.0 if team == 0 else 100.0
+      own_goal_dist = ((player_x - own_goal_x)**2 + player_y**2) ** 0.5
+      if own_goal_dist < 15.0 and ball_dist < 5.0 and bot['shoot_cooldown'] <= 0:
+        buttons |= (1 << 0)  # LongPass (clear)
+        bot['shoot_cooldown'] = 40
+
+    if bot['shoot_cooldown'] > 0:
+      bot['shoot_cooldown'] -= 1
+
+    return SlotInput(dir_x, dir_y, buttons)
 
 
 def get_scenario_config(scenario_name, left_agents, right_agents, seed):
@@ -90,7 +179,7 @@ class FrameSyncServer(object):
 
     self._env = None
     self._sock = None
-    self._clients = []  # list of (conn, addr, assigned_slots, ready_flag)
+    self._clients = []  # list of (conn, addr, assigned_slots, ready_flag, session_id, last_activity)
     self._lock = threading.Lock()
     self._heartbeat_thread = None  # 2026-08-28 心跳广播线程
     # Current frame pending: slot index -> SlotInput (default until overwritten by client)
@@ -99,6 +188,9 @@ class FrameSyncServer(object):
     self._received_from = None
     self._frame_id = 0
     self._running = False
+    # 2026-09-01 断线托管
+    self._bot_manager = BotTakeoverManager()
+    self._next_session_id = 1
 
   def _init_env(self):
     if libgame is None:
@@ -178,17 +270,26 @@ class FrameSyncServer(object):
       msg_type, data = self._read_message(conn)
       if data is None:
         break
+      # 2026-09-01 更新活动时间
+      with self._lock:
+        if client_index < len(self._clients):
+          conn_old, addr_old, slots_old, ready_old, sid_old, _ = self._clients[client_index]
+          self._clients[client_index] = (conn_old, addr_old, slots_old, ready_old, sid_old, time.time())
+
       if msg_type == MessageType.FrameInput:
         try:
           frame_id, entries = unpack_client_frame_input(data)
           with self._lock:
             if self._current_frame_inputs is not None and frame_id == self._frame_id:
               for slot_index, slot_inp in entries:
-                # 2026-08-31 ms-1.5: 槽位索引边界检查 + 所有权检查 + 输入合法性验证
                 if (0 <= slot_index < self.num_slots and
                     slot_index in assigned_slots and
                     is_valid_slot_input(slot_inp)):
                   self._current_frame_inputs[slot_index] = slot_inp
+                  # 2026-09-01 客户端发送输入时，如果该 slot 有 bot，归还控制权
+                  if self._bot_manager.is_bot_controlled(slot_index):
+                    self._bot_manager.handback(slot_index)
+                    self._broadcast_handback(slot_index)
               self._received_from.add(client_index)
         except ValueError:
           pass
@@ -216,15 +317,18 @@ class FrameSyncServer(object):
       elif msg_type == MessageType.Heartbeat:
         # 2026-08-28 客户端心跳回复：仅确认连接存活，不需回复
         pass
+      # 2026-09-01 处理重连请求
+      elif msg_type == MessageType.ReconnectRequest:
+        try:
+          token = unpack_reconnect_request(data)
+          self._handle_reconnect(client_index, token)
+        except ValueError:
+          pass
       elif msg_type == MessageType.Ready:
         with self._lock:
           if client_index < len(self._clients) and self._clients[client_index][0] is conn:
-            self._clients[client_index] = (
-                self._clients[client_index][0],
-                self._clients[client_index][1],
-                self._clients[client_index][2],
-                True,
-            )
+            conn_old, addr_old, slots_old, _, sid_old, act_old = self._clients[client_index]
+            self._clients[client_index] = (conn_old, addr_old, slots_old, True, sid_old, act_old)
       elif msg_type == MessageType.Disconnect:
         break
     try:
@@ -232,7 +336,75 @@ class FrameSyncServer(object):
     except socket.error:
       pass
     with self._lock:
-      self._clients[client_index] = (None, None, assigned_slots, False)
+      conn_old, addr_old, slots_old, _, sid_old, act_old = self._clients[client_index]
+      self._clients[client_index] = (None, None, slots_old, False, sid_old, act_old)
+
+  # ===== 2026-09-01 断线托管辅助方法 =====
+
+  def _handle_reconnect(self, client_index, token):
+    """Handle client reconnect request."""
+    with self._lock:
+      for slot in self._bot_manager.get_bot_slots():
+        if self._bot_manager.is_bot_controlled(slot):
+          self._bot_manager.handback(slot)
+          # 重新分配 slot 给重连客户端
+          conn_old, addr_old, _, ready_old, sid_old, act_old = self._clients[client_index]
+          self._clients[client_index] = (conn_old, addr_old, [slot], ready_old, sid_old, time.time())
+          # 发送 HandbackNotify
+          self._broadcast_handback(slot)
+          # 发送 StateSnapshot
+          self._send_state_snapshot(client_index)
+          return
+
+  def _broadcast_handback(self, slot_index):
+    """Broadcast HandbackNotify to all connected clients."""
+    data = pack_handback_notify(slot_index, self._frame_id)
+    self.send_to_all(data)
+
+  def _broadcast_takeover(self, slot_index):
+    """Broadcast TakeoverNotify to all connected clients."""
+    data = pack_takeover_notify(slot_index, self._frame_id)
+    self.send_to_all(data)
+
+  def _send_state_snapshot(self, client_index):
+    """Send StateSnapshot to a specific client."""
+    with self._lock:
+      if client_index >= len(self._clients):
+        return
+      conn = self._clients[client_index][0]
+    if conn is None or self._env is None:
+      return
+    try:
+      state = self._env.get_state('')
+      data = pack_state_snapshot(self._frame_id, state.encode() if isinstance(state, str) else state)
+      conn.sendall(data)
+    except (socket.error, Exception):
+      pass
+
+  def _check_heartbeat_timeouts(self):
+    """Detect heartbeat timeouts and activate bot takeover."""
+    now = time.time()
+    timeout_s = HEARTBEAT_MISS_LIMIT * HEARTBEAT_INTERVAL_MS / 1000.0
+    with self._lock:
+      for i, (conn, addr, slots, ready, sid, last_activity) in enumerate(self._clients):
+        if conn is None:
+          continue
+        if now - last_activity > timeout_s:
+          # 心跳超时，激活 bot takeover
+          for slot in slots:
+            if not self._bot_manager.is_bot_controlled(slot):
+              team = 0 if slot < self.left_agents else 1
+              self._bot_manager.takeover(slot, team)
+              self._broadcast_takeover(slot)
+          # 标记客户端断线
+          self._clients[i] = (None, addr, slots, False, sid, last_activity)
+
+  def _generate_bot_inputs(self):
+    """Generate input for bot-controlled slots."""
+    with self._lock:
+      for slot in self._bot_manager.get_bot_slots():
+        if self._current_frame_inputs is not None and slot < self.num_slots:
+          self._current_frame_inputs[slot] = self._bot_manager.generate_input(slot)
 
   def _accept_loop(self):
     while self._running and self._sock:
@@ -243,7 +415,10 @@ class FrameSyncServer(object):
           if not slots:
             conn.close()
             continue
-          self._clients.append((conn, addr, slots, False))
+          # 2026-09-01 分配 session_id
+          session_id = self._next_session_id
+          self._next_session_id += 1
+          self._clients.append((conn, addr, slots, False, session_id, time.time()))
           idx = len(self._clients) - 1
         # 2026-08-28 版本协商由 handle_client 线程在消息循环中处理。
         # 服务器不在 accept 循环中阻塞读取，避免与 handle_client 的竞态。
@@ -306,7 +481,7 @@ class FrameSyncServer(object):
     # 2026-08-25 修复（原因）：_clients 为 4 元组（含 ready_flag），旧 3 元组解包在
     # stop() 关闭连接时抛 ValueError: too many values to unpack
     # for conn, _addr, _ in self._clients:
-    for conn, _addr, _slots, _ready in self._clients:
+    for conn, _addr, _slots, _ready, _sid, _act in self._clients:
       if conn:
         try:
           conn.close()
@@ -346,16 +521,14 @@ class FrameSyncServer(object):
   def all_clients_ready(self):
     """True if every connected client has sent Ready."""
     with self._lock:
-      for conn, _addr, _slots, ready in self._clients:
+      for conn, _addr, _slots, ready, _sid, _act in self._clients:
         if conn is not None and not ready:
           return False
       return sum(1 for c in self._clients if c[0] is not None) > 0
 
   def send_to_all(self, data):
     with self._lock:
-      # 2026-08-25 修复（原因）：_clients 为 4 元组（含 ready_flag），旧 3 元组解包会抛 ValueError
-      # for conn, _, _ in self._clients:
-      for conn, _, _slots, _ready in self._clients:
+      for conn, _, _slots, _ready, _sid, _act in self._clients:
         if conn:
           try:
             conn.sendall(data)
@@ -389,16 +562,16 @@ class FrameSyncServer(object):
       if n_connected == 0 or len(received) >= n_connected:
         break
       time.sleep(0.005)
+    # 2026-09-01 检测心跳超时，激活 bot takeover
+    self._check_heartbeat_timeouts()
+    # 2026-09-01 为 bot-controlled slots 生成输入
+    self._generate_bot_inputs()
     slot_inputs = self.get_current_frame_inputs()
     frame_buf = self._build_frame_input_buffer(slot_inputs)
     self._env.step_with_input(frame_buf)
     frame_id = self.get_frame_id()
     self.send_to_all(pack_authoritative_frame(frame_id, slot_inputs))
     if getattr(self, '_state_hash_interval', 0) > 0 and frame_id % self._state_hash_interval == 0:
-      # 2026-08-26 改用 canonical digest（原因）：全量 get_state 序列化含引擎
-      # setValidate(false) 标记的不稳定区段（相机/球员颜色缓冲/边裁/HID），
-      # 跨进程 hash 必然不同，校验会误报；digest 跳过这些区段，仅含比赛逻辑状态。
-      # state_str = self._env.get_state('')
       digest = self._env.get_state_digest()
       h = compute_state_hash(
           digest if isinstance(digest, bytes) else digest.encode()
