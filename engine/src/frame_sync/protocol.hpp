@@ -16,6 +16,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include <cmath>
 
 namespace frame_sync {
 
@@ -82,6 +83,20 @@ struct SlotInput {
 #pragma pack(pop)
 
 constexpr size_t SLOT_INPUT_BYTES = sizeof(SlotInput);
+
+// ----- Input validation (2026-08-31 ms-1.5 外挂校验) -----
+// Validates SlotInput: direction range, NaN/Inf, button bitmask.
+// Returns true if valid; false if input should be rejected.
+inline bool IsValidSlotInput(const SlotInput& si) {
+  // 1. Direction range: normalized to [-1,1] or zero (with tolerance)
+  if (std::abs(si.dir_x) > 1.001f || std::abs(si.dir_y) > 1.001f) return false;
+  // 2. No NaN/Inf
+  if (!std::isfinite(si.dir_x) || !std::isfinite(si.dir_y)) return false;
+  // 3. Button bitmask: only valid bits (0..BUTTON_COUNT-1) set
+  constexpr uint16_t kValidButtonMask = (1u << BUTTON_COUNT) - 1;
+  if (si.buttons & ~kValidButtonMask) return false;
+  return true;
+}
 
 // ----- Type aliases (used by several packet layouts) -----
 using frame_id_t = uint32_t;

@@ -432,7 +432,9 @@ int main(int argc, char* argv[]) {
   }
 
   // Main game loop
-  auto period = std::chrono::milliseconds(1000 / config.frame_rate_hz);
+  // 2026-08-31 ms-1.7: 渲染平滑 — 解耦逻辑和渲染帧率
+  auto logic_period = std::chrono::milliseconds(1000 / config.frame_rate_hz);
+  auto render_period = std::chrono::milliseconds(1000 / config.render_rate_hz);
   KeyboardState kb_state;
   frame_sync::SlotInput my_input = frame_sync::SlotInput::Default();
   bool running = true;
@@ -442,10 +444,14 @@ int main(int argc, char* argv[]) {
   auto fps_timer = std::chrono::steady_clock::now();
   double current_fps = 0.0;
 
-  while (running) {
-    auto t0 = std::chrono::steady_clock::now();
+  // Timing for decoupled logic/render
+  auto last_logic_time = std::chrono::steady_clock::now();
+  auto last_render_time = std::chrono::steady_clock::now();
 
-    // Process SDL events
+  while (running) {
+    auto now = std::chrono::steady_clock::now();
+
+    // Process SDL events (always, for responsiveness)
     if (config.render) {
       SDL_Event event;
       while (SDL_PollEvent(&event)) {
@@ -467,30 +473,51 @@ int main(int argc, char* argv[]) {
       my_input = kb_state.to_slot_input();
     }
 
-    // Send input for current frame with correct slot indices
-    if (!client.my_slots().empty()) {
-      client.send_frame_input(client.current_frame_id(),
-                              client.my_slots().data(),
-                              &my_input,
-                              static_cast<uint16_t>(client.my_slots().size()));
+    // Logic tick (runs at frame_rate_hz, e.g., 10Hz)
+    auto logic_elapsed = now - last_logic_time;
+    if (logic_elapsed >= logic_period) {
+      last_logic_time = now;
+
+      // Send input for current frame with correct slot indices
+      if (!client.my_slots().empty()) {
+        client.send_frame_input(client.current_frame_id(),
+                                client.my_slots().data(),
+                                &my_input,
+                                static_cast<uint16_t>(client.my_slots().size()));
+      }
+
+      // Run prediction tick
+      auto result = client.tick(my_input);
+
+      switch (result) {
+        case IntegratedFrameSyncClient::StepResult::kRollback:
+          fprintf(stderr, "Rollback at frame %u (total: %d)\n",
+                  client.current_frame_id(), client.rollback_count());
+          break;
+        case IntegratedFrameSyncClient::StepResult::kWaitForAuthority:
+          break;
+        default:
+          break;
+      }
+
+      // Save interpolation state after logic tick
+      if (config.render) {
+        GetGameTask()->GetMatch()->SaveInterpolationState();
+      }
     }
 
-    // Run prediction tick
-    auto result = client.tick(my_input);
+    // Render (runs at render_rate_hz, e.g., 60Hz)
+    auto render_elapsed = now - last_render_time;
+    if (config.render && render_elapsed >= render_period) {
+      last_render_time = now;
 
-    switch (result) {
-      case IntegratedFrameSyncClient::StepResult::kRollback:
-        fprintf(stderr, "Rollback at frame %u (total: %d)\n",
-                client.current_frame_id(), client.rollback_count());
-        break;
-      case IntegratedFrameSyncClient::StepResult::kWaitForAuthority:
-        break;
-      default:
-        break;
-    }
+      // Calculate interpolation factor (0 = previous frame, 1 = current frame)
+      float t = static_cast<float>(std::chrono::duration<double>(render_elapsed).count()) /
+                static_cast<float>(std::chrono::duration<double>(logic_period).count());
+      t = std::clamp(t, 0.0f, 1.0f);
 
-    // Render
-    if (config.render) {
+      // Use interpolated rendering
+      GetGameTask()->GetMatch()->PutInterpolated(t);
       env.render();
 
       // Update window title with FPS and match info
@@ -515,10 +542,11 @@ int main(int argc, char* argv[]) {
       if (win) SDL_GL_SwapWindow(win);
     }
 
-    // Maintain frame rate
-    auto elapsed = std::chrono::steady_clock::now() - t0;
-    if (elapsed < period)
-      std::this_thread::sleep_for(period - elapsed);
+    // Maintain frame rate (use the faster of logic and render rates)
+    auto elapsed = std::chrono::steady_clock::now() - now;
+    auto min_period = std::min(logic_period, render_period);
+    if (elapsed < min_period)
+      std::this_thread::sleep_for(min_period - elapsed);
   }
 
   fprintf(stderr, "Shutting down...\n");

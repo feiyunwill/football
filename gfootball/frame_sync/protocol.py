@@ -58,6 +58,30 @@ def unpack_slot_input(data, offset=0):
   return SlotInput(t[0], t[1], t[2]), offset + SLOT_INPUT_BYTES
 
 
+# ----- Input validation (2026-08-31 ms-1.5 外挂校验) -----
+# Button count must match C++ BUTTON_COUNT
+BUTTON_COUNT = 12
+
+
+def is_valid_slot_input(si):
+  """Validate SlotInput: direction range, NaN/Inf, button bitmask.
+  Returns True if valid; False if input should be rejected."""
+  import math
+  # 1. Direction range: normalized to [-1,1] or zero (with tolerance)
+  if not (-1.001 <= si.dir_x <= 1.001) or not (-1.001 <= si.dir_y <= 1.001):
+    return False
+  # 2. No NaN/Inf
+  if math.isnan(si.dir_x) or math.isnan(si.dir_y):
+    return False
+  if math.isinf(si.dir_x) or math.isinf(si.dir_y):
+    return False
+  # 3. Button bitmask: only valid bits (0..BUTTON_COUNT-1) set
+  valid_mask = (1 << BUTTON_COUNT) - 1
+  if si.buttons & ~valid_mask:
+    return False
+  return True
+
+
 # AuthoritativeFrame: msg_type(1) + frame_id(4) + num_slots(2) + slot_inputs
 AUTH_FRAME_HEADER_FMT = '<BIH'
 AUTH_FRAME_HEADER_BYTES = struct.calcsize(AUTH_FRAME_HEADER_FMT)

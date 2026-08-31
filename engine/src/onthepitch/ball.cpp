@@ -589,6 +589,28 @@ void Ball::Put() {
   ball->SetRotation(orientationBuffer, false);
 }
 
+// 2026-08-31 ms-1.6: 逻辑渲染分离 — 插值渲染支持
+void Ball::SaveInterpolationState() {
+  DO_VALIDATION;
+  previousPositionBuffer = positionBuffer;
+  previousOrientationBuffer = orientationBuffer;
+}
+
+void Ball::PutInterpolated(float t) {
+  DO_VALIDATION;
+  // Clamp t to [0, 1]
+  t = std::clamp(t, 0.0f, 1.0f);
+  
+  // Linear interpolation for position
+  Vector3 interpPos = previousPositionBuffer * (1.0f - t) + positionBuffer * t;
+  
+  // Spherical linear interpolation for rotation
+  Quaternion interpRot = previousOrientationBuffer.Slerped(t, orientationBuffer);
+  
+  ball->SetPosition(interpPos, false);
+  ball->SetRotation(interpRot, false);
+}
+
 void Ball::ResetSituation(const Vector3 &focusPos) {
   DO_VALIDATION;
   momentum = Vector3(0);
@@ -602,6 +624,9 @@ void Ball::ResetSituation(const Vector3 &focusPos) {
   positionBuffer = Vector3(focusPos + Vector3(0, 0, 0.11));
   valid_predictions = 0;
   orientationBuffer = QUATERNION_IDENTITY;
+  // 2026-08-31 ms-1.6: 初始化插值缓冲区
+  previousPositionBuffer = positionBuffer;
+  previousOrientationBuffer = orientationBuffer;
   ballTouchesNet = false;
 }
 

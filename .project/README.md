@@ -25,6 +25,15 @@
 │   ├── milestone-template.md
 │   ├── plan-template.md
 │   └── task-template.md
+├── scripts/                ← 自动化脚本
+│   ├── task_complete.sh    ← 标记任务完成
+│   ├── auto_claim.sh       ← 自动认领 milestone
+│   ├── progress.sh         ← 显示项目进度
+│   ├── milestone_complete.sh ← 标记 milestone 完成
+│   ├── plan_complete.sh    ← 标记计划完成
+│   ├── auto_test.sh        ← 自动运行测试
+│   ├── auto_review.sh      ← 自动代码审查
+│   └── workflow.sh         ← 主工作流脚本
 └── reports/                ← 审查报告
     ├── review-ms-1.1.md
     └── ...
@@ -40,6 +49,34 @@
 里程碑完成 → 全局审查 → 集成测试 → 完成
     ↓
 阶段完成 → 性能测试 → 用户验收 → 进入下一阶段
+```
+
+## 常用命令
+
+```bash
+# 任务完成自动化
+bash .project/scripts/task_complete.sh <task_id> "commit message"
+
+# 计划完成自动化
+bash .project/scripts/plan_complete.sh <plan_id>
+
+# 里程碑完成自动化
+bash .project/scripts/milestone_complete.sh <milestone_id>
+
+# 查看进度
+bash .project/scripts/progress.sh
+
+# 自动认领 milestone
+bash .project/scripts/auto_claim.sh <agent_id>
+
+# 自动测试
+bash .project/scripts/auto_test.sh <target_id> [test_type]
+
+# 自动代码审查
+bash .project/scripts/auto_review.sh <target_id> [review_type]
+
+# 完整工作流
+bash .project/scripts/workflow.sh <action> <target_id> [options]
 ```
 
 ## 成功条件

@@ -40,7 +40,9 @@ struct MultiplayerConfig {
   uint32_t seed = 42;
   bool is_server = false;
   bool render = true;   // false for headless server
-  int frame_rate_hz = 10;
+  int frame_rate_hz = 10;  // Logic tick rate
+  // 2026-08-31 ms-1.7: 渲染平滑 — 独立渲染帧率
+  int render_rate_hz = 60;  // Render rate (should be >= 30 for smooth rendering)
 };
 
 // FNV-1a hash for state digest.

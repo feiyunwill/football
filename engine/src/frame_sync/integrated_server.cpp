@@ -295,7 +295,10 @@ class IntegratedFrameSyncServer {
 
       if (fid == frame_id_) {
         for (const auto& e : entries) {
-          if (e.first < num_slots_) {
+          // 2026-08-31 ms-1.5: 槽位索引边界检查 + 所有权检查 + 输入合法性验证
+          if (e.first < num_slots_ &&
+              std::find(client->assigned_slots.begin(), client->assigned_slots.end(), e.first) != client->assigned_slots.end() &&
+              frame_sync::IsValidSlotInput(e.second)) {
             current_inputs_[e.first] = e.second;
           }
         }

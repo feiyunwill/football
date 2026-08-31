@@ -28,6 +28,7 @@ from gfootball.frame_sync.protocol import (
     compute_state_hash,
     unpack_client_frame_input,
     pack_heartbeat,
+    is_valid_slot_input,
     SLOT_INPUT_BYTES,
     FRAME_INPUT_TIMEOUT_MS,
 )
@@ -128,9 +129,12 @@ class FrameSyncServerAsync(object):
             async with self._lock:
               if self._current_frame_inputs is not None and frame_id == self._frame_id:
                 for slot_index, slot_inp in entries:
-                  if 0 <= slot_index < self.num_slots and slot_index in assigned_slots:
+                  # 2026-08-31 ms-1.5: 槽位索引边界检查 + 所有权检查 + 输入合法性验证
+                  if (0 <= slot_index < self.num_slots and
+                      slot_index in assigned_slots and
+                      is_valid_slot_input(slot_inp)):
                     self._current_frame_inputs[slot_index] = slot_inp
-                  self._received_from.add(client_index)
+                self._received_from.add(client_index)
           except ValueError:
             pass
         elif msg_type == MessageType.Heartbeat:

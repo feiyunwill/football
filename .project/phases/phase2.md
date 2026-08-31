@@ -37,11 +37,11 @@
 
 | 里程碑 | 目标 | 成功条件 | 依赖 | 状态 |
 |--------|------|----------|------|------|
-| ms-2.1 | Team ECS 迁移 | Team 状态 100% 可查询 | - | 待开始 |
-| ms-2.2 | Referee ECS 迁移 | 裁判状态可序列化 | - | 待开始 |
-| ms-2.3 | Match ECS 协调 | Match::Step 通过 ECS 驱动 | ms-2.1, ms-2.2 | 待开始 |
-| ms-2.4 | 序列化完整性 | 所有组件可序列化/反序列化 | ms-2.3 | 待开始 |
-| ms-2.5 | 性能验证 | ECS 查询性能 ≥ OOP | ms-2.4 | 待开始 |
+| ms-2.1 | Team ECS 迁移 | Team 状态 100% 可查询 | - | ✅ COMPLETED |
+| ms-2.2 | Referee ECS 迁移 | 裁判状态可序列化 | - | ✅ COMPLETED |
+| ms-2.3 | Match ECS 协调 | Match::Step 通过 ECS 驱动 | ms-2.1, ms-2.2 | ✅ COMPLETED |
+| ms-2.4 | 序列化完整性 | 所有组件可序列化/反序列化 | ms-2.3 | ✅ COMPLETED |
+| ms-2.5 | 性能验证 | ECS 查询性能 ≥ OOP | ms-2.4 | ✅ COMPLETED |
 
 ## 实现策略
 

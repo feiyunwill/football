@@ -80,6 +80,13 @@ class Ball {
     void Process();
     void Put();
 
+    // 2026-08-31 ms-1.6: 逻辑渲染分离 — 插值渲染支持
+    // Save current state for interpolation (call after Process)
+    void SaveInterpolationState();
+    // Put with interpolation between previous and current state
+    // t: interpolation factor (0 = previous, 1 = current)
+    void PutInterpolated(float t);
+
     void ResetSituation(const Vector3 &focusPos);
     void ProcessState(EnvState *state);
 
@@ -103,6 +110,10 @@ class Ball {
 
     Vector3 positionBuffer;
     Quaternion orientationBuffer;
+
+    // 2026-08-31 ms-1.6: 逻辑渲染分离 — 前一帧状态用于插值
+    Vector3 previousPositionBuffer;
+    Quaternion previousOrientationBuffer;
 
     Match *match;
 

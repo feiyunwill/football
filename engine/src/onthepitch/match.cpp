@@ -1470,6 +1470,56 @@ void Match::Put() {
   UpdateGoalNetting(GetBall()->BallTouchesNet());
 }
 
+// 2026-08-31 ms-1.6: 逻辑渲染分离 — 插值渲染支持
+void Match::SaveInterpolationState() {
+  DO_VALIDATION;
+  ball->SaveInterpolationState();
+  // TODO: Add interpolation state saving for teams and officials
+  // teams[first_team]->SaveInterpolationState();
+  // teams[second_team]->SaveInterpolationState();
+  // officials->SaveInterpolationState();
+}
+
+void Match::PutInterpolated(float t) {
+  DO_VALIDATION;
+  bool reverse = GetScenarioConfig().reverse_team_processing;
+
+  // Use interpolated ball rendering
+  ball->PutInterpolated(t);
+  
+  // For now, use standard Put for teams and officials
+  // TODO: Add interpolation support for teams and officials
+  teams[first_team]->Put(reverse);
+  teams[second_team]->Put(!reverse);
+  officials->Put(reverse);
+
+  camera->SetPosition(Vector3(0, 0, 0), false);
+  camera->SetRotation(cameraOrientation, false);
+  cameraNode->SetPosition(cameraNodePosition, false);
+  cameraNode->SetRotation(cameraNodeOrientation, false);
+  camera->SetFOV(cameraFOV);
+  camera->SetCapping(cameraNearCap, cameraFarCap);
+
+  GetDynamicNode()->RecursiveUpdateSpatialData(e_SpatialDataType_Both);
+  DO_VALIDATION;
+  teams[first_team]->Put2D(reverse);
+  teams[second_team]->Put2D(!reverse);
+
+  int seconds = (int)(matchTime_ms / 1000.0) % 60;
+  int minutes = (int)(matchTime_ms / 60000.0);
+
+  std::string timeStr = "";
+  if (minutes < 10) timeStr += "0";
+  timeStr += int_to_str(minutes);
+  timeStr += ":";
+  if (seconds < 10) timeStr += "0";
+  timeStr += int_to_str(seconds);
+  scoreboard->SetTimeStr(timeStr);
+  if (messageCaptionRemoveTime_ms <= actualTime_ms) messageCaption->Hide();
+  radar->Put();
+  UpdateGoalNetting(GetBall()->BallTouchesNet());
+}
+
 boost::intrusive_ptr<Node> Match::GetDynamicNode() {
   DO_VALIDATION;
   return dynamicNode;
