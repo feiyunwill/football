@@ -152,6 +152,9 @@ add_frame_sync_test(replay_system_test replay_system_test.cpp)
 # 自适应抖动缓冲测试 (ms-16.8)
 add_frame_sync_test(adaptive_jitter_buffer_test adaptive_jitter_buffer_test.cpp)
 
+# Phase 16 集成测试 (ms-16.9)
+add_frame_sync_test(phase16_integration_test phase16_integration_test.cpp)
+
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
 if(ENABLE_RLTOOLS)
