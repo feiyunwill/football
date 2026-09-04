@@ -7,6 +7,10 @@
 #include "frame_sync/client_state.hpp"
 #include "frame_sync/engine_integration.hpp"
 #include "frame_sync/engine_bridge.hpp"
+#include "frame_sync/interpolator.hpp"
+#include "frame_sync/prediction_accuracy_tracker.hpp"
+#include "frame_sync/adaptive_prediction_cap.hpp"
+#include "frame_sync/adaptive_jitter_buffer.hpp"
 #include "game_env.hpp"
 #include "main.hpp"
 #include "gfootball_actions.h"
@@ -125,6 +129,9 @@ class IntegratedFrameSyncClient {
   };
 
   StepResult tick(const frame_sync::SlotInput& my_input) {
+    // Use adaptive prediction cap instead of fixed MAX_PREDICT_AHEAD_FRAMES
+    int max_predict = adaptive_cap_.GetMaxPredictAhead();
+    
     int frames_to_process = client_state_.catchup_count(
         last_confirmed_frame_, current_frame_id_);
     if (frames_to_process < 0) {
@@ -133,8 +140,7 @@ class IntegratedFrameSyncClient {
     if (frames_to_process == 0) frames_to_process = 1;
 
     auto lag = current_frame_id_ - last_confirmed_frame_;
-    if (lag >= static_cast<frame_sync::frame_id_t>(
-            frame_sync::MAX_PREDICT_AHEAD_FRAMES)) {
+    if (lag >= static_cast<frame_sync::frame_id_t>(max_predict)) {
       return StepResult::kWaitForAuthority;
     }
     if (frames_without_packet_ >= frame_sync::MAX_FRAMES_WITHOUT_PACKET) {
@@ -177,6 +183,7 @@ class IntegratedFrameSyncClient {
               }
             }
             result = StepResult::kRollback;
+            prediction_tracker_.IncrementRollbackCount();
           }
         }
       } else {
@@ -189,6 +196,7 @@ class IntegratedFrameSyncClient {
       }
 
       last_confirmed_frame_ = auth_fid;
+      server_frame_ = auth_fid;
       frames_without_packet_ = 0;
     }
 
@@ -197,6 +205,14 @@ class IntegratedFrameSyncClient {
         now.time_since_epoch()).count();
     client_state_.record_frame_arrival(now_ms);
     client_state_.evict_old(current_frame_id_);
+
+    // Update adaptive modules with network conditions
+    double rtt = client_state_.avg_frame_interval_ms() * 2.0;
+    double jitter = client_state_.jitter_ms();
+    adaptive_cap_.UpdateNetworkConditions(rtt, 0.0);
+    adaptive_cap_.UpdatePredictionAccuracy(prediction_tracker_.GetRecentAccuracy());
+    adaptive_cap_.UpdateFrameTime(16.67, jitter);
+    jitter_buffer_.Update(jitter, rtt);
 
     return result;
   }
@@ -230,6 +246,11 @@ class IntegratedFrameSyncClient {
   frame_sync::frame_id_t current_frame_id() const { return current_frame_id_; }
   frame_sync::frame_id_t last_confirmed_frame() const { return last_confirmed_frame_; }
   int rollback_count() const { return client_state_.rollback_count(); }
+  
+  // Phase 16 stats
+  double prediction_accuracy() const { return prediction_tracker_.GetRecentAccuracy(100); }
+  int adaptive_max_predict() const { return adaptive_cap_.GetMaxPredictAhead(); }
+  double jitter_ms() const { return client_state_.jitter_ms(); }
 
  private:
   void init_game_env() {
@@ -340,7 +361,14 @@ class IntegratedFrameSyncClient {
       size_t used = frame_sync::UnpackStateHash(
           recv_buf_.data(), recv_buf_.size(), &fid, &hash);
       if (used == 0) return false;
+      
+      // Record server hash and check prediction accuracy
       client_state_.record_server_hash(fid, hash);
+      
+      // Record prediction (we predict our state hash matches server's)
+      // The actual comparison happens when we receive the hash
+      prediction_tracker_.RecordPrediction(fid, hash);
+      
       recv_buf_.erase(recv_buf_.begin(), recv_buf_.begin() + used);
       return true;
     }
@@ -372,6 +400,13 @@ class IntegratedFrameSyncClient {
   std::unordered_map<frame_sync::frame_id_t, frame_sync::SlotInput> predicted_inputs_;
 
   frame_sync::ClientState client_state_;
+
+  // Phase 16 modules
+  frame_sync::Interpolator interpolator_;                      ///< Frame interpolation/extrapolation
+  frame_sync::PredictionAccuracyTracker prediction_tracker_;   ///< Prediction accuracy tracking
+  frame_sync::AdaptivePredictionCap adaptive_cap_;             ///< Adaptive prediction cap
+  frame_sync::AdaptiveJitterBuffer jitter_buffer_;             ///< Adaptive jitter buffer
+  frame_id_t server_frame_ = 0;                                ///< Latest server frame number
 };
 
 // ===== Main with SDL2 rendering =====
@@ -530,8 +565,9 @@ int main(int argc, char* argv[]) {
 
         char title[256];
         snprintf(title, sizeof(title),
-                 "Football MP | FPS: %.0f | Frame: %u | Rollbacks: %d",
-                 current_fps, client.current_frame_id(), client.rollback_count());
+                 "Football MP | FPS: %.0f | Frame: %u | Rollbacks: %d | Pred: %.0f%% | Jitter: %.1fms",
+                 current_fps, client.current_frame_id(), client.rollback_count(),
+                 client.prediction_accuracy() * 100.0, client.jitter_ms());
         SDL_Window* win = SDL_GL_GetCurrentWindow();
         if (win) SDL_SetWindowTitle(win, title);
       }
