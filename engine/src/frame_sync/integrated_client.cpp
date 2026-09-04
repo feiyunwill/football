@@ -12,6 +12,7 @@
 #include "frame_sync/adaptive_prediction_cap.hpp"
 #include "frame_sync/adaptive_jitter_buffer.hpp"
 #include "frame_sync/latency_compensator.hpp"
+#include "frame_sync/replay_system.hpp"
 #include "game_env.hpp"
 #include "main.hpp"
 #include "gfootball_actions.h"
@@ -119,6 +120,10 @@ class IntegratedFrameSyncClient {
     init_game_env();
     send_ready();
     do_read();
+
+    // Start recording replay (ms-17.4)
+    replay_recorder_.StartRecording(seed_, "unknown",
+                                     static_cast<uint32_t>(my_slots_.size()));
     return true;
   }
 
@@ -214,6 +219,17 @@ class IntegratedFrameSyncClient {
     adaptive_cap_.UpdatePredictionAccuracy(prediction_tracker_.GetRecentAccuracy());
     adaptive_cap_.UpdateFrameTime(16.67, jitter);
     jitter_buffer_.Update(jitter, rtt);
+
+    // Record replay frame (ms-17.4)
+    if (replay_recorder_.IsRecording()) {
+      std::vector<frame_sync::SlotInput> all_inputs(
+          left_agents_ + right_agents_, frame_sync::SlotInput::Default());
+      // Fill in our slot's input
+      if (!my_slots_.empty() && my_slot_index_ < all_inputs.size()) {
+        all_inputs[my_slot_index_] = my_input;
+      }
+      replay_recorder_.RecordFrame(current_frame_id_ - 1, 0, all_inputs);
+    }
 
     return result;
   }
@@ -429,6 +445,7 @@ class IntegratedFrameSyncClient {
   frame_sync::AdaptivePredictionCap adaptive_cap_;             ///< Adaptive prediction cap
   frame_sync::AdaptiveJitterBuffer jitter_buffer_;             ///< Adaptive jitter buffer
   frame_sync::LatencyCompensator latency_comp_;                ///< Latency compensation (ms-17.1)
+  frame_sync::ReplayRecorder replay_recorder_;                  ///< Replay recording (ms-17.4)
   frame_id_t server_frame_ = 0;                                ///< Latest server frame number
 };
 
@@ -608,5 +625,22 @@ int main(int argc, char* argv[]) {
   }
 
   fprintf(stderr, "Shutting down...\n");
+
+  // Auto-save replay (ms-17.4)
+  if (replay_recorder_.IsRecording()) {
+    replay_recorder_.StopRecording();
+    std::string replay_data = replay_recorder_.Serialize();
+    std::string path = "replay_" + std::to_string(seed_) + ".bin";
+    FILE* f = fopen(path.c_str(), "wb");
+    if (f) {
+      fwrite(replay_data.data(), 1, replay_data.size(), f);
+      fclose(f);
+      fprintf(stderr, "Replay saved: %s (%zu frames, %zu bytes)\n",
+              path.c_str(), replay_recorder_.GetFrameCount(), replay_data.size());
+    } else {
+      fprintf(stderr, "Failed to save replay to %s\n", path.c_str());
+    }
+  }
+
   return 0;
 }

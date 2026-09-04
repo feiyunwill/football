@@ -164,6 +164,9 @@ add_frame_sync_test(state_snapshot_codec_test state_snapshot_codec_test.cpp)
 # 观战模式测试 (ms-17.3)
 add_frame_sync_test(spectator_test spectator_test.cpp)
 
+# 回放系统集成测试 (ms-17.4)
+add_frame_sync_test(replay_integration_test replay_integration_test.cpp)
+
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
 if(ENABLE_RLTOOLS)
