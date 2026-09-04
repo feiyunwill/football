@@ -131,6 +131,27 @@ add_frame_sync_test(ux_optimizer_test ux_optimizer_test.cpp)
 # 帧同步覆盖测试
 add_frame_sync_test(frame_sync_coverage_test frame_sync_coverage_test.cpp)
 
+# 确定性 PRNG 测试 (ms-16.2)
+add_frame_sync_test(prng_test prng_test.cpp)
+
+# 插值/外推测试 (ms-16.3)
+add_frame_sync_test(interpolator_test interpolator_test.cpp)
+
+# 状态 Delta 压缩测试 (ms-16.4)
+add_frame_sync_test(state_delta_codec_test state_delta_codec_test.cpp)
+
+# 预测准确率追踪测试 (ms-16.5)
+add_frame_sync_test(prediction_accuracy_tracker_test prediction_accuracy_tracker_test.cpp)
+
+# 自适应预测上限测试 (ms-16.6)
+add_frame_sync_test(adaptive_prediction_cap_test adaptive_prediction_cap_test.cpp)
+
+# 回放系统测试 (ms-16.7)
+add_frame_sync_test(replay_system_test replay_system_test.cpp)
+
+# 自适应抖动缓冲测试 (ms-16.8)
+add_frame_sync_test(adaptive_jitter_buffer_test adaptive_jitter_buffer_test.cpp)
+
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
 if(ENABLE_RLTOOLS)

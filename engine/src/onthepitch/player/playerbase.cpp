@@ -122,6 +122,17 @@ void PlayerBase::Put(bool mirror) {
   humanoid->Put(mirror);
 }
 
+// 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
+void PlayerBase::SaveInterpolationState() {
+  DO_VALIDATION;
+  humanoid->SaveInterpolationState();
+}
+
+void PlayerBase::PutInterpolated(float t, bool mirror) {
+  DO_VALIDATION;
+  humanoid->PutInterpolated(t, mirror);
+}
+
 float PlayerBase::GetStat(PlayerStat name) const {
   return playerData->GetStat(name);
 }

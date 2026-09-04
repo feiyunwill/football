@@ -1502,24 +1502,20 @@ void Match::Put() {
 void Match::SaveInterpolationState() {
   DO_VALIDATION;
   ball->SaveInterpolationState();
-  // TODO: Add interpolation state saving for teams and officials
-  // teams[first_team]->SaveInterpolationState();
-  // teams[second_team]->SaveInterpolationState();
-  // officials->SaveInterpolationState();
+  teams[first_team]->SaveInterpolationState();
+  teams[second_team]->SaveInterpolationState();
+  officials->SaveInterpolationState();
 }
 
 void Match::PutInterpolated(float t) {
   DO_VALIDATION;
   bool reverse = GetScenarioConfig().reverse_team_processing;
 
-  // Use interpolated ball rendering
+  // Use interpolated rendering for all entities
   ball->PutInterpolated(t);
-  
-  // For now, use standard Put for teams and officials
-  // TODO: Add interpolation support for teams and officials
-  teams[first_team]->Put(reverse);
-  teams[second_team]->Put(!reverse);
-  officials->Put(reverse);
+  teams[first_team]->PutInterpolated(t, reverse);
+  teams[second_team]->PutInterpolated(t, !reverse);
+  officials->PutInterpolated(t, reverse);
 
   camera->SetPosition(Vector3(0, 0, 0), false);
   camera->SetRotation(cameraOrientation, false);

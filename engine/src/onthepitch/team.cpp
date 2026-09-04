@@ -543,6 +543,29 @@ void Team::Put(bool mirror) {
   }
 }
 
+// 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
+void Team::SaveInterpolationState() {
+  DO_VALIDATION;
+  for (unsigned int i = 0; i < players.size(); i++) {
+    DO_VALIDATION;
+    if (players[i]->IsActive()) {
+      DO_VALIDATION;
+      players[i]->SaveInterpolationState();
+    }
+  }
+}
+
+void Team::PutInterpolated(float t, bool mirror) {
+  DO_VALIDATION;
+  for (unsigned int i = 0; i < players.size(); i++) {
+    DO_VALIDATION;
+    if (players[i]->IsActive()) {
+      DO_VALIDATION;
+      players[i]->PutInterpolated(t, mirror);
+    }
+  }
+}
+
 void Team::Put2D(bool mirror) {
   DO_VALIDATION;
   for (unsigned int i = 0; i < players.size(); i++) {

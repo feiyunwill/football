@@ -83,6 +83,10 @@ class PlayerBase {
     virtual void FetchPutBuffers();
     void Put(bool mirror);
 
+    // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
+    void SaveInterpolationState();
+    void PutInterpolated(float t, bool mirror);
+
     void UpdateFullbodyModel() { DO_VALIDATION; humanoid->UpdateFullbodyModel(); }
 
     virtual float GetStat(PlayerStat name) const;

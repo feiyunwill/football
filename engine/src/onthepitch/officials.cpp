@@ -156,6 +156,46 @@ void Officials::Put(bool mirror) {
   }
 }
 
+// 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
+void Officials::SaveInterpolationState() {
+  DO_VALIDATION;
+  referee->SaveInterpolationState();
+  linesmen[0]->SaveInterpolationState();
+  linesmen[1]->SaveInterpolationState();
+}
+
+void Officials::PutInterpolated(float t, bool mirror) {
+  DO_VALIDATION;
+  referee->PutInterpolated(t, mirror);
+  linesmen[0]->PutInterpolated(t, mirror);
+  linesmen[1]->PutInterpolated(t, mirror);
+
+  // Keep card rendering logic from Put()
+  if (referee->GetCurrentFunctionType() == e_FunctionType_Special &&
+      (match->GetReferee()->GetCurrentFoulType() == 2 ||
+       match->GetReferee()->GetCurrentFoulType() == 3)) {
+    DO_VALIDATION;
+    if (mirror) {
+      referee->Mirror();
+    }
+    BodyPart bodyPartName = right_elbow;
+    if (referee->GetCurrentAnim()->anim->GetName().find("mirror") != std::string::npos) bodyPartName = left_elbow;
+
+    const NodeMap &nodeMap = referee->GetNodeMap();
+    auto bodyPart = nodeMap[bodyPartName];
+    yellowCard->SetPosition(bodyPart->GetDerivedPosition() + bodyPart->GetDerivedRotation() * Vector3(0.12f, 0, 0));
+    yellowCard->SetRotation(bodyPart->GetDerivedRotation());
+    redCard->SetPosition(Vector3(0, 0, -10));
+    if (mirror) {
+      referee->Mirror();
+    }
+  } else if (referee->GetPreviousFunctionType() == e_FunctionType_Special) {
+    DO_VALIDATION;
+    yellowCard->SetPosition(Vector3(0, 0, -10));
+    redCard->SetPosition(Vector3(0, 0, -10));
+  }
+}
+
 void Officials::ProcessState(EnvState *state) {
   DO_VALIDATION;
   referee->ProcessStateBase(state);

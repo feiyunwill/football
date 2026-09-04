@@ -770,6 +770,48 @@ void HumanoidBase::Put(bool mirror) {
   UpdateFullbodyNodes(mirror);
 }
 
+// 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
+void HumanoidBase::SaveInterpolationState() {
+  DO_VALIDATION;
+  previousSpatialState = spatialState;
+  interpolationStateSaved = true;
+}
+
+void HumanoidBase::PutInterpolated(float t, bool mirror) {
+  DO_VALIDATION;
+  // Clamp t to [0, 1]
+  t = std::clamp(t, 0.0f, 1.0f);
+  
+  // If no previous state saved, use standard Put
+  if (!interpolationStateSaved) {
+    Put(mirror);
+    return;
+  }
+  
+  // Interpolate position
+  Vector3 interpPos = previousSpatialState.position * (1.0f - t) + spatialState.position * t;
+  
+  // Interpolate direction vector
+  Vector3 interpDir = previousSpatialState.directionVec * (1.0f - t) + spatialState.directionVec * t;
+  float interpAngle = interpDir.GetAngle2D();
+  
+  // Update spatial state with interpolated values for rendering
+  SpatialState interpState = spatialState;
+  interpState.position = interpPos;
+  interpState.directionVec = interpDir;
+  interpState.angle = interpAngle;
+  
+  // Temporarily use interpolated state for rendering
+  SpatialState savedState = spatialState;
+  spatialState = interpState;
+  
+  // Use standard Put with the interpolated state
+  Put(mirror);
+  
+  // Restore current state
+  spatialState = savedState;
+}
+
 void HumanoidBase::CalculateGeomOffsets() { DO_VALIDATION; }
 
 void HumanoidBase::SetOffset(BodyPart body_part, float bias,

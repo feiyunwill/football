@@ -245,6 +245,13 @@ class HumanoidBase {
     void FetchPutBuffers();
     void Put(bool mirror);
 
+    // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
+    // Save current state for interpolation (call after Process)
+    void SaveInterpolationState();
+    // Put with interpolation between previous and current state
+    // t: interpolation factor (0 = previous, 1 = current)
+    void PutInterpolated(float t, bool mirror);
+
     virtual void CalculateGeomOffsets();
     void SetOffset(BodyPart body_part, float bias, const Quaternion &orientation, bool isRelative = false);
 
@@ -393,6 +400,10 @@ class HumanoidBase {
 
     // realtime info
     SpatialState spatialState;
+
+    // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
+    SpatialState previousSpatialState;  // 上一帧的逻辑状态，用于插值
+    bool interpolationStateSaved = false;
 
     Vector3 previousPosition2D;
 

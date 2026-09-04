@@ -7,6 +7,7 @@
 //   - Vec3: Simple 3D vector with arithmetic operations
 //   - Quat: Quaternion with spherical linear interpolation (slerp)
 //   - Interpolator: Manages interpolation between logic frames
+//   - Extrapolator: Predicts future positions based on velocity (ms-16.3)
 //
 // Usage:
 //   Interpolator interp;
@@ -15,10 +16,14 @@
 //   interp.SavePosition(entity_index, position);
 //   // During rendering:
 //   auto state = interp.GetInterpolatedState(entity_index, render_time, logic_dt);
+//
+//   // For extrapolation when behind:
+//   auto ext_state = interp.GetExtrapolatedState(entity_index, render_time, logic_dt);
 
 #ifndef GFOOTBALL_FRAME_SYNC_INTERPOLATOR_HPP
 #define GFOOTBALL_FRAME_SYNC_INTERPOLATOR_HPP
 
+#include <algorithm>
 #include <chrono>
 #include <cmath>
 #include <cstdint>
@@ -119,6 +124,14 @@ struct InterpolatedState {
   Vec3 position;           ///< Interpolated position
   Quat rotation;           ///< Interpolated rotation
   float timestamp = 0.f;   ///< Time since logic frame (in seconds)
+  bool is_extrapolated = false;  ///< True if this state was extrapolated
+};
+
+/// @brief Extrapolation bounds for safety
+struct ExtrapolationBounds {
+  float max_distance = 5.0f;      ///< Max distance to extrapolate (meters)
+  float max_speed = 15.0f;        ///< Max speed to use for extrapolation (m/s)
+  float max_extrapolation_time = 0.3f;  ///< Max time to extrapolate (seconds)
 };
 
 /// @brief Interpolator: manages interpolation between logic frames
@@ -181,8 +194,17 @@ class Interpolator {
     }
     
     // Calculate interpolation factor (0 = previous frame, 1 = current frame)
-    float elapsed = render_time - current_timestamp_;
-    float t = std::clamp(elapsed / logic_dt, 0.f, 1.f);
+    // render_time should be between previous_timestamp_ and current_timestamp_
+    float frame_duration = current_timestamp_ - previous_timestamp_;
+    if (frame_duration < 1e-6f) {
+      // Frames are at same time, just use current
+      result.position = current_state_[entity_index].position;
+      result.rotation = current_state_[entity_index].rotation;
+      result.timestamp = render_time;
+      return result;
+    }
+    
+    float t = std::clamp((render_time - previous_timestamp_) / frame_duration, 0.f, 1.f);
     
     // If we have a previous frame, interpolate
     if (entity_index < previous_state_.size()) {
@@ -200,11 +222,86 @@ class Interpolator {
     return result;
   }
 
+  /// @brief Get extrapolated state for an entity (ms-16.3)
+  /// 
+  /// When the client is behind and waiting for authoritative frames,
+  /// this method predicts where the entity will be based on its velocity.
+  /// 
+  /// @param entity_index Index of the entity (0-based)
+  /// @param render_time Time in seconds when rendering occurs (may be ahead of current_timestamp_)
+  /// @param logic_dt Time between logic frames (e.g., 0.1 seconds for 10 Hz)
+  /// @param bounds Extrapolation bounds for safety
+  /// @return Extrapolated state for the entity
+  [[nodiscard]] InterpolatedState GetExtrapolatedState(size_t entity_index,
+                                         float render_time,
+                                         float logic_dt,
+                                         const ExtrapolationBounds& bounds = {}) const {
+    InterpolatedState result;
+    
+    if (!states_saved_ || entity_index >= current_state_.size()) {
+      return result;
+    }
+    
+    // If render_time is at or before current frame, use interpolation
+    if (render_time <= current_timestamp_) {
+      return GetInterpolatedState(entity_index, render_time, logic_dt);
+    }
+    
+    // Calculate how far ahead we need to extrapolate
+    float extrapolation_time = render_time - current_timestamp_;
+    
+    // Clamp extrapolation time
+    extrapolation_time = std::min(extrapolation_time, bounds.max_extrapolation_time);
+    
+    // Calculate velocity from previous to current frame
+    Vec3 velocity{0.f, 0.f, 0.f};
+    if (entity_index < previous_state_.size()) {
+      float dt = current_timestamp_ - previous_timestamp_;
+      if (dt > 1e-6f) {
+        velocity = (current_state_[entity_index].position - 
+                   previous_state_[entity_index].position) * (1.f / dt);
+      }
+    }
+    
+    // Clamp speed
+    float speed = velocity.length();
+    if (speed > bounds.max_speed) {
+      velocity = velocity.normalized() * bounds.max_speed;
+    }
+    
+    // Extrapolate position
+    result.position = current_state_[entity_index].position + velocity * extrapolation_time;
+    
+    // Clamp distance from current position
+    Vec3 delta = result.position - current_state_[entity_index].position;
+    if (delta.length_sq() > bounds.max_distance * bounds.max_distance) {
+      result.position = current_state_[entity_index].position + 
+                       delta.normalized() * bounds.max_distance;
+    }
+    
+    // Use current rotation (rotation extrapolation is complex and usually not needed)
+    result.rotation = current_state_[entity_index].rotation;
+    result.timestamp = render_time;
+    result.is_extrapolated = true;
+    
+    return result;
+  }
+
+  /// @brief Check if extrapolation is needed (render time is ahead of current frame)
+  /// @param render_time Current render time
+  /// @return True if extrapolation should be used
+  [[nodiscard]] bool NeedsExtrapolation(float render_time) const {
+    return render_time > current_timestamp_;
+  }
+
   // Check if states have been saved
   bool HasStates() const { return states_saved_; }
 
   // Get number of entities
   size_t GetEntityCount() const { return current_state_.size(); }
+
+  // Get current timestamp
+  [[nodiscard]] float GetCurrentTimestamp() const { return current_timestamp_; }
 
  private:
   // Linear interpolation for vectors

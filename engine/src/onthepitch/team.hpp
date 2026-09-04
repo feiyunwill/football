@@ -126,6 +126,10 @@ class Team {
     void Put2D(bool mirror);
     void Hide2D();
 
+    // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
+    void SaveInterpolationState();
+    void PutInterpolated(float t, bool mirror);
+
     void UpdatePossessionStats();
     void UpdateSwitch();
     void ProcessState(EnvState* state);

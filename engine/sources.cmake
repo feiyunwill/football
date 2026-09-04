@@ -256,6 +256,16 @@ set(CLIENT_SOURCES
 set(FRAME_SYNC_HEADERS
    src/frame_sync/protocol.hpp
    src/frame_sync/input_codec.hpp
+   src/frame_sync/deterministic_prng.hpp
+   src/frame_sync/interpolator.hpp
+   src/frame_sync/state_compression.hpp
+   src/frame_sync/jitter_stats.hpp
+   src/frame_sync/ux_optimizer.hpp
+   src/frame_sync/state_delta_codec.hpp
+   src/frame_sync/prediction_accuracy_tracker.hpp
+   src/frame_sync/adaptive_prediction_cap.hpp
+   src/frame_sync/replay_system.hpp
+   src/frame_sync/adaptive_jitter_buffer.hpp
 )
 
 set(FRAME_SYNC_SOURCES

@@ -39,6 +39,10 @@ class Officials {
     void FetchPutBuffers();
     void Put(bool mirror);
 
+    // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
+    void SaveInterpolationState();
+    void PutInterpolated(float t, bool mirror);
+
     boost::intrusive_ptr<Geometry> GetYellowCardGeom() { DO_VALIDATION; return yellowCard; }
     boost::intrusive_ptr<Geometry> GetRedCardGeom() { DO_VALIDATION; return redCard; }
     void ProcessState(EnvState* state);
