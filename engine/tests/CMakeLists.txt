@@ -161,6 +161,9 @@ add_frame_sync_test(latency_compensator_test latency_compensator_test.cpp)
 # 状态快照压缩测试 (ms-17.2)
 add_frame_sync_test(state_snapshot_codec_test state_snapshot_codec_test.cpp)
 
+# 观战模式测试 (ms-17.3)
+add_frame_sync_test(spectator_test spectator_test.cpp)
+
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
 if(ENABLE_RLTOOLS)

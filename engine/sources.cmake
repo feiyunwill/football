@@ -268,6 +268,7 @@ set(FRAME_SYNC_HEADERS
    src/frame_sync/adaptive_jitter_buffer.hpp
    src/frame_sync/latency_compensator.hpp
    src/frame_sync/state_snapshot_codec.hpp
+   src/frame_sync/spectator.hpp
 )
 
 set(FRAME_SYNC_SOURCES

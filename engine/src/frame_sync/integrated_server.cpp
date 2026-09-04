@@ -35,6 +35,7 @@ struct ClientSession {
   bool ready = false;
   std::vector<uint8_t> recv_buf;
   bool disconnected = false;
+  bool is_spectator = false;  // 2026-09-04 观战者标志
   // 2026-09-01 断线托管扩展
   frame_sync::session_token_t session_token = 0;
   uint32_t session_id = 0;
@@ -87,12 +88,12 @@ class IntegratedFrameSyncServer {
           current_inputs_[i] = frame_sync::SlotInput::Default();
       }
 
-      // Wait for inputs (with timeout)
+      // Wait for inputs (with timeout) — only count non-spectator clients
       while (std::chrono::steady_clock::now() < deadline) {
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
         std::lock_guard<std::mutex> lock(mu_);
         auto connected = std::ranges::count_if(clients_,
-            [](const auto& c) { return !c->disconnected; });
+            [](const auto& c) { return !c->disconnected && !c->is_spectator; });
         if (connected == 0) break;
         if (static_cast<int>(received_from_.size()) >= connected) break;
       }
@@ -164,10 +165,10 @@ class IntegratedFrameSyncServer {
   bool all_ready() const {
     std::lock_guard<std::mutex> lock(mu_);
     auto connected = std::ranges::count_if(clients_,
-        [](const auto& c) { return !c->disconnected; });
+        [](const auto& c) { return !c->disconnected && !c->is_spectator; });
     if (connected == 0) return false;
     auto ready = std::ranges::count_if(clients_,
-        [](const auto& c) { return !c->disconnected && c->ready; });
+        [](const auto& c) { return !c->disconnected && !c->is_spectator && c->ready; });
     return ready == connected;
   }
 
@@ -217,40 +218,81 @@ class IntegratedFrameSyncServer {
     acceptor_.async_accept([this](boost::system::error_code ec, tcp::socket socket) {
       if (ec) return;
 
-      std::lock_guard<std::mutex> lock(mu_);
       auto client = std::make_shared<ClientSession>(io_);
       client->socket = std::move(socket);
 
-      // Assign first available slot
-      std::flat_set<uint16_t> used;
-      for (const auto& c : clients_) {
-        for (uint16_t s : c->assigned_slots) used.insert(s);
-      }
-      for (uint16_t s = 0; s < num_slots_; ++s) {
-        if (used.find(s) == used.end()) {
-          client->assigned_slots.push_back(s);
-          break;
-        }
-      }
-      if (client->assigned_slots.empty()) {
-        std::println(stderr, "No slots available for new client");
-        return;
-      }
-
-      // 2026-09-01 分配 session token
-      client->session_id = next_session_id_++;
-      client->session_token = frame_sync::MakeSessionToken(
-          client->assigned_slots[0], config_.seed, client->session_id);
-
-      clients_.push_back(client);
-      std::println("Client connected, assigned slot {}, session_id={}, token={}",
-                   client->assigned_slots[0], client->session_id, client->session_token);
-
+      // Send SessionStart first, then read first message to detect SpectatorJoin
       send_session_start(client);
-      send_slot_assignment(client);
-      do_read(client);
+      do_read_first_message(client);
       do_accept();
     });
+  }
+
+  // Read the first message from a newly connected client.
+  // If it's SpectatorJoin, mark as spectator; if Connect, assign slot.
+  void do_read_first_message(std::shared_ptr<ClientSession> client) {
+    auto buf = std::make_shared<std::vector<uint8_t>>(4096);
+    client->socket.async_read_some(
+        boost::asio::buffer(*buf),
+        [this, client, buf](boost::system::error_code ec, std::size_t length) {
+          if (ec) {
+            client->disconnected = true;
+            return;
+          }
+          std::lock_guard<std::mutex> lock(mu_);
+          client->recv_buf.insert(client->recv_buf.end(),
+                                  buf->begin(), buf->begin() + length);
+
+          // Peek at first message type
+          if (client->recv_buf.empty()) {
+            client->disconnected = true;
+            return;
+          }
+          uint8_t type = client->recv_buf[0];
+
+          if (type == static_cast<uint8_t>(frame_sync::MessageType::SpectatorJoin)) {
+            // Spectator: no slot assignment
+            client->is_spectator = true;
+            client->ready = true;  // Spectators are immediately ready
+            client->recv_buf.erase(client->recv_buf.begin());
+            std::println("Spectator connected");
+          } else {
+            // Player: assign first available slot
+            std::flat_set<uint16_t> used;
+            for (const auto& c : clients_) {
+              for (uint16_t s : c->assigned_slots) used.insert(s);
+            }
+            for (uint16_t s = 0; s < num_slots_; ++s) {
+              if (used.find(s) == used.end()) {
+                client->assigned_slots.push_back(s);
+                break;
+              }
+            }
+            if (client->assigned_slots.empty()) {
+              std::println(stderr, "No slots available for new client");
+              client->disconnected = true;
+              return;
+            }
+
+            // 2026-09-01 分配 session token
+            client->session_id = next_session_id_++;
+            client->session_token = frame_sync::MakeSessionToken(
+                client->assigned_slots[0], config_.seed, client->session_id);
+
+            std::println("Client connected, assigned slot {}, session_id={}, token={}",
+                         client->assigned_slots[0], client->session_id, client->session_token);
+
+            send_slot_assignment(client);
+
+            // Process remaining messages (may include Ready, Connect, etc.)
+            // Don't erase the first message yet — let process_one_message handle it
+          }
+
+          clients_.push_back(client);
+          // Process any remaining buffered messages
+          while (process_one_message(client)) {}
+          do_read(client);
+        });
   }
 
   void send_session_start(std::shared_ptr<ClientSession> client) {
@@ -363,6 +405,12 @@ class IntegratedFrameSyncServer {
       return true;
     }
 
+    // 2026-09-04 SpectatorJoin: spectators send this instead of Connect; skip it
+    if (type == static_cast<uint8_t>(frame_sync::MessageType::SpectatorJoin)) {
+      client->recv_buf.erase(client->recv_buf.begin());
+      return true;
+    }
+
     // 未知消息类型：跳过 1 字节
     client->recv_buf.erase(client->recv_buf.begin());
     return true;
@@ -438,13 +486,13 @@ class IntegratedFrameSyncServer {
     }
   }
 
-  // 检测心跳超时，激活 bot takeover
+  // 检测心跳超时，激活 bot takeover（跳过观战者）
   void check_heartbeat_timeouts() {
     auto now = std::chrono::steady_clock::now();
     std::lock_guard<std::mutex> lock(mu_);
 
     for (auto& client : clients_) {
-      if (client->disconnected) continue;
+      if (client->disconnected || client->is_spectator) continue;
 
       // 检查是否超时（超过 HEARTBEAT_MISS_LIMIT * HEARTBEAT_INTERVAL_MS 无活动）
       auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(

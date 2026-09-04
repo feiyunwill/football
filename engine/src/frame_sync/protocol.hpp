@@ -39,6 +39,7 @@ enum class MessageType : uint8_t {
   HandbackNotify = 11,   // server -> client: 控制权归还，载荷 slot_index(2) + frame_id(4)
   ReconnectRequest = 12, // client -> server: 重连请求，载荷 session_token(8)
   StateSnapshot = 13,    // server -> client: 完整游戏状态，载荷 frame_id(4) + state_len(4) + state_bytes
+  SpectatorJoin = 14,    // client -> server: 观战者加入（只读，不发送输入）
 };
 
 // C++23: using enum for scoped enum access (when needed)
