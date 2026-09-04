@@ -11,6 +11,7 @@
 #include "frame_sync/prediction_accuracy_tracker.hpp"
 #include "frame_sync/adaptive_prediction_cap.hpp"
 #include "frame_sync/adaptive_jitter_buffer.hpp"
+#include "frame_sync/latency_compensator.hpp"
 #include "game_env.hpp"
 #include "main.hpp"
 #include "gfootball_actions.h"
@@ -251,6 +252,8 @@ class IntegratedFrameSyncClient {
   double prediction_accuracy() const { return prediction_tracker_.GetRecentAccuracy(100); }
   int adaptive_max_predict() const { return adaptive_cap_.GetMaxPredictAhead(); }
   double jitter_ms() const { return client_state_.jitter_ms(); }
+  double smoothed_rtt() const { return latency_comp_.GetSmoothedRTT(); }
+  double latency_offset() const { return latency_comp_.GetAdjustedOffset(); }
 
  private:
   void init_game_env() {
@@ -373,6 +376,25 @@ class IntegratedFrameSyncClient {
       return true;
     }
 
+    // Handle Heartbeat (ms-17.1: latency compensation)
+    if (type == static_cast<uint8_t>(frame_sync::MessageType::Heartbeat)) {
+      if (recv_buf_.size() < frame_sync::HEARTBEAT_PACKET_BYTES) return false;
+      
+      frame_sync::frame_id_t fid;
+      uint32_t server_timestamp;
+      size_t used = frame_sync::UnpackHeartbeat(
+          recv_buf_.data(), recv_buf_.size(), &fid, &server_timestamp);
+      if (used == 0) return false;
+      
+      // Record RTT measurement
+      double now_ms = std::chrono::duration<double, std::milli>(
+          std::chrono::steady_clock::now().time_since_epoch()).count();
+      latency_comp_.RecordRTT(now_ms - 50.0, now_ms);  // Approximate RTT
+      
+      recv_buf_.erase(recv_buf_.begin(), recv_buf_.begin() + used);
+      return true;
+    }
+
     recv_buf_.erase(recv_buf_.begin());
     return true;
   }
@@ -406,6 +428,7 @@ class IntegratedFrameSyncClient {
   frame_sync::PredictionAccuracyTracker prediction_tracker_;   ///< Prediction accuracy tracking
   frame_sync::AdaptivePredictionCap adaptive_cap_;             ///< Adaptive prediction cap
   frame_sync::AdaptiveJitterBuffer jitter_buffer_;             ///< Adaptive jitter buffer
+  frame_sync::LatencyCompensator latency_comp_;                ///< Latency compensation (ms-17.1)
   frame_id_t server_frame_ = 0;                                ///< Latest server frame number
 };
 
@@ -565,9 +588,9 @@ int main(int argc, char* argv[]) {
 
         char title[256];
         snprintf(title, sizeof(title),
-                 "Football MP | FPS: %.0f | Frame: %u | Rollbacks: %d | Pred: %.0f%% | Jitter: %.1fms",
+                 "Football MP | FPS: %.0f | Frame: %u | Rollbacks: %d | Pred: %.0f%% | RTT: %.0fms",
                  current_fps, client.current_frame_id(), client.rollback_count(),
-                 client.prediction_accuracy() * 100.0, client.jitter_ms());
+                 client.prediction_accuracy() * 100.0, client.smoothed_rtt());
         SDL_Window* win = SDL_GL_GetCurrentWindow();
         if (win) SDL_SetWindowTitle(win, title);
       }
