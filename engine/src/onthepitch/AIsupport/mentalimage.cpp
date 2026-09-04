@@ -19,6 +19,7 @@
 
 #include "../../main.hpp"
 #include "../match.hpp"
+#include "../ecs_components.hpp"
 
 MentalImage::MentalImage(Match* match)
     : timeStamp_ms(match->GetActualTime_ms()), match(match) {
@@ -149,4 +150,39 @@ Vector3 MentalImage::GetBallPrediction(int time_ms) const {
   Vector3 result = mentalResult.EnforceMaximumDeviation(realResult, maxDistanceDeviation);
 
   return result;
+}
+
+// 2026-09-03 Phase 11: 将 MentalImage 状态填充到 ECS 组件
+void MentalImage::FillMentalImageComponent(MentalImageComponent& out) const {
+  DO_VALIDATION;
+  // 时间信息
+  out.time_stamp_ms = timeStamp_ms;
+  out.is_valid = true;
+  
+  // 球状态
+  if (match->GetBall()) {
+    out.ball_position = match->GetBall()->Predict(0);
+    out.ball_momentum = match->GetBall()->GetMovement();
+  }
+  
+  // 球员状态
+  out.player_states.clear();
+  out.player_states.reserve(players.size());
+  for (const auto& player : players) {
+    MentalImageComponent::PlayerState ps;
+    ps.position = player.position;
+    ps.direction_vec = player.directionVec;
+    ps.is_active = player.player ? player.player->IsActive() : false;
+    ps.team_id = player.player ? player.player->GetTeamID() : -1;
+    out.player_states.push_back(ps);
+  }
+  
+  // 队伍状态
+  out.last_touch_team_id = match->GetLastTouchTeamID();
+  Team* bestTeam = match->GetBestPossessionTeam();
+  out.best_possession_team_id = bestTeam ? bestTeam->GetID() : -1;
+  
+  // 偏差参数
+  out.max_distance_deviation = maxDistanceDeviation;
+  out.max_movement_deviation = maxMovementDeviation;
 }

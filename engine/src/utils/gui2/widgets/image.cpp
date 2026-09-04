@@ -31,16 +31,37 @@ namespace blunted {
 
 SDL_Surface *IMG_LoadBmp(const std::string &file) {
   DO_VALIDATION;
-  std::string name = GetGameConfig().updatePath(file);
+  // 2026-09-01: GetFiles 返回的路径已含 data_dir 前缀，
+  // updatePath 会再次拼接导致双重路径（engine/data/engine/data/...）。
+  // 先尝试原始路径，失败再走 updatePath 回退。
+  std::string name = file;
   name = name.substr(0, name.length() - 4) + ".bmp";
 #ifdef WIN32
   auto image = IMG_Load(name.c_str());
+  if (!image) {
+    std::string fallback = GetGameConfig().updatePath(file);
+    fallback = fallback.substr(0, fallback.length() - 4) + ".bmp";
+    image = IMG_Load(fallback.c_str());
+  }
 #else
   std::string file_data = GetFile(name);
-  SDL_RWops *rw = SDL_RWFromConstMem(file_data.data(), file_data.size());
-  auto image = SDL_LoadBMP_RW(rw, 1);
+  SDL_RWops *rw = nullptr;
+  if (!file_data.empty()) {
+    rw = SDL_RWFromConstMem(file_data.data(), file_data.size());
+  }
+  auto image = rw ? SDL_LoadBMP_RW(rw, 1) : nullptr;
+  if (!image) {
+    std::string fallback = GetGameConfig().updatePath(file);
+    fallback = fallback.substr(0, fallback.length() - 4) + ".bmp";
+    std::string fb_data = GetFile(fallback);
+    if (!fb_data.empty()) {
+      SDL_RWops *rw2 = SDL_RWFromConstMem(fb_data.data(), fb_data.size());
+      image = SDL_LoadBMP_RW(rw2, 1);
+    }
+  }
 #endif
 
+  if (!image) return nullptr;
   if (image->format->format == SDL_PIXELFORMAT_ARGB8888) {
     DO_VALIDATION;
     SDL_Surface *tmp =

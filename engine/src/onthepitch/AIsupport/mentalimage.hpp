@@ -28,6 +28,7 @@ using namespace blunted;
 
 class Match;
 class PlayerBase;
+struct MentalImageComponent;
 
 class MentalImage {
  public:
@@ -40,6 +41,9 @@ class MentalImage {
   Vector3 GetBallPrediction(int time_ms) const;
   int GetTimeStampNeg_ms() const;
   void ProcessState(EnvState* state, Match* match);
+
+  /// 2026-09-03 Phase 11: 将 MentalImage 状态填充到 ECS 组件
+  void FillMentalImageComponent(MentalImageComponent& out) const;
 
   std::vector<PlayerImage> players;
   std::vector<Vector3> ballPredictions;

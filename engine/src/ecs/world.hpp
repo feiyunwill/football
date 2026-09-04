@@ -84,22 +84,37 @@ class ComponentPool : public IComponentPool {
       components_[it->second] = std::move(comp);
       return;
     }
-    // Insert at end and sort to maintain deterministic order
+    // Insert at end - 排序在批量操作后统一进行
     entity_to_index_[e] = entities_.size();
     entities_.push_back(e);
     components_.push_back(std::move(comp));
+  }
+
+  /// 批量插入后统一排序，保持确定性顺序
+  void SortIfNeeded() {
+    if (entities_.size() <= 1) return;
     
-    // Sort entities and components together to maintain ID order
-    // This is O(n) but ensures deterministic iteration
-    for (size_t i = entities_.size() - 1; i > 0; --i) {
-      if (entities_[i] < entities_[i - 1]) {
-        std::swap(entities_[i], entities_[i - 1]);
-        std::swap(components_[i], components_[i - 1]);
-        entity_to_index_[entities_[i]] = i;
-        entity_to_index_[entities_[i - 1]] = i - 1;
-      } else {
-        break;
+    // 使用插入排序保持稳定性
+    for (size_t i = 1; i < entities_.size(); ++i) {
+      Entity key_entity = entities_[i];
+      T key_component = std::move(components_[i]);
+      size_t j = i;
+      
+      while (j > 0 && entities_[j - 1] > key_entity) {
+        entities_[j] = entities_[j - 1];
+        components_[j] = std::move(components_[j - 1]);
+        --j;
       }
+      
+      if (j != i) {
+        entities_[j] = key_entity;
+        components_[j] = std::move(key_component);
+      }
+    }
+    
+    // 更新索引映射
+    for (size_t i = 0; i < entities_.size(); ++i) {
+      entity_to_index_[entities_[i]] = i;
     }
   }
 
@@ -141,6 +156,12 @@ class World {
   template <typename T>
   void AddComponent(Entity e, T comp) {
     Pool<T>()->Set(e, std::move(comp));
+  }
+
+  /// 批量添加组件后统一排序，提高性能
+  template <typename T>
+  void FlushBatchAdds() {
+    Pool<T>()->SortIfNeeded();
   }
 
   template <typename T>
@@ -197,9 +218,41 @@ class World {
     }
   }
 
+  /// 优化版多组件查询：使用较小的池作为主遍历池
+  template <typename T1, typename T2, typename T3, typename Fn>
+  void ForEach(Fn&& fn) {
+    auto* p1 = Pool<T1>();
+    auto* p2 = Pool<T2>();
+    auto* p3 = Pool<T3>();
+    
+    // 选择最小的池作为主遍历池
+    const auto* smallest_pool = p1;
+    if (p2->Size() < smallest_pool->Size()) smallest_pool = p2;
+    if (p3->Size() < smallest_pool->Size()) smallest_pool = p3;
+    
+    for (const Entity e : smallest_pool->Entities()) {
+      if (!p1->Has(e) || !p2->Has(e) || !p3->Has(e)) continue;
+      T1* c1 = p1->Get(e);
+      T2* c2 = p2->Get(e);
+      T3* c3 = p3->Get(e);
+      if (c1 && c2 && c3) fn(e, *c1, *c2, *c3);
+    }
+  }
+
   void Clear() {
     pools_.clear();
     next_id_ = kNullEntity;
+  }
+
+  /// 获取组件池（供查询接口使用）
+  template <typename T>
+  ComponentPool<T>* GetPool() {
+    return Pool<T>();
+  }
+
+  template <typename T>
+  const ComponentPool<T>* GetPool() const {
+    return Pool<T>();
   }
 
  private:

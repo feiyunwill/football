@@ -10,53 +10,73 @@
       "priority": "high",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["networking", "framesync"],
+      "tags": [
+        "networking",
+        "framesync"
+      ],
       "title": "基础协议稳定性"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-30T11:14:53Z",
       "created_at": "2026-08-29T09:22:46Z",
-      "dependencies": ["ms-1.1"],
+      "dependencies": [
+        "ms-1.1"
+      ],
       "description": "实现全定点数 + 确定性 RNG，确保跨平台 hash 100% 一致",
       "id": "ms-1.2",
       "priority": "high",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["determinism", "math"],
+      "tags": [
+        "determinism",
+        "math"
+      ],
       "title": "确定性基础"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-30T11:14:53Z",
       "created_at": "2026-08-29T09:22:46Z",
-      "dependencies": ["ms-1.2"],
+      "dependencies": [
+        "ms-1.2"
+      ],
       "description": "实现客户端预测执行与权威帧回滚机制",
       "id": "ms-1.3",
       "priority": "high",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["framesync", "prediction"],
+      "tags": [
+        "framesync",
+        "prediction"
+      ],
       "title": "客户端预测与回滚"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-30T11:14:53Z",
       "created_at": "2026-08-29T09:22:46Z",
-      "dependencies": ["ms-1.3"],
+      "dependencies": [
+        "ms-1.3"
+      ],
       "description": "实现客户端的动态追帧机制和抖动平滑",
       "id": "ms-1.4",
       "priority": "high",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["framesync", "jitter"],
+      "tags": [
+        "framesync",
+        "jitter"
+      ],
       "title": "动态追帧与抖动平滑"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-31T15:30:00Z",
       "created_at": "2026-08-31T15:00:00Z",
-      "dependencies": ["ms-1.3"],
+      "dependencies": [
+        "ms-1.3"
+      ],
       "description": "实现服务器端输入合法性验证，拒绝非法输入",
       "id": "ms-1.5",
       "priority": "high",
@@ -66,14 +86,19 @@
         "2026-08-31 添加输入验证到所有 Python 服务器"
       ],
       "status": "COMPLETED",
-      "tags": ["framesync", "security"],
+      "tags": [
+        "framesync",
+        "security"
+      ],
       "title": "外挂校验"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-31T16:00:00Z",
       "created_at": "2026-08-31T15:30:00Z",
-      "dependencies": ["ms-1.3"],
+      "dependencies": [
+        "ms-1.3"
+      ],
       "description": "实现逻辑帧率固定，渲染可插值",
       "id": "ms-1.6",
       "priority": "high",
@@ -83,14 +108,19 @@
         "2026-08-31 修改 Match 类支持插值渲染"
       ],
       "status": "COMPLETED",
-      "tags": ["framesync", "rendering"],
+      "tags": [
+        "framesync",
+        "rendering"
+      ],
       "title": "逻辑渲染分离"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-31T16:30:00Z",
       "created_at": "2026-08-31T16:00:00Z",
-      "dependencies": ["ms-1.6"],
+      "dependencies": [
+        "ms-1.6"
+      ],
       "description": "实现插值/外推使画面流畅",
       "id": "ms-1.7",
       "priority": "high",
@@ -100,14 +130,22 @@
         "2026-08-31 新增 render_rate_hz 配置项"
       ],
       "status": "COMPLETED",
-      "tags": ["framesync", "rendering", "smoothing"],
+      "tags": [
+        "framesync",
+        "rendering",
+        "smoothing"
+      ],
       "title": "渲染平滑"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-31T17:00:00Z",
       "created_at": "2026-08-31T16:30:00Z",
-      "dependencies": ["ms-1.4", "ms-1.5", "ms-1.7"],
+      "dependencies": [
+        "ms-1.4",
+        "ms-1.5",
+        "ms-1.7"
+      ],
       "description": "实现 60fps，延迟 <30ms",
       "id": "ms-1.8",
       "priority": "high",
@@ -117,7 +155,10 @@
         "2026-08-31 性能测试：所有 9 个性能基准测试全部通过"
       ],
       "status": "COMPLETED",
-      "tags": ["framesync", "performance"],
+      "tags": [
+        "framesync",
+        "performance"
+      ],
       "title": "性能优化"
     },
     {
@@ -130,7 +171,10 @@
       "priority": "high",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["ecs", "team"],
+      "tags": [
+        "ecs",
+        "team"
+      ],
       "title": "Team ECS 迁移"
     },
     {
@@ -143,46 +187,65 @@
       "priority": "medium",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["ecs", "referee"],
+      "tags": [
+        "ecs",
+        "referee"
+      ],
       "title": "Referee ECS 迁移"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-30T11:07:56Z",
       "created_at": "2026-08-30T11:07:56Z",
-      "dependencies": ["ms-2.1", "ms-2.2"],
+      "dependencies": [
+        "ms-2.1",
+        "ms-2.2"
+      ],
       "description": "实现 MatchStateComponent，使 Match::Step 通过 ECS 驱动",
       "id": "ms-2.3",
       "priority": "low",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["ecs", "match"],
+      "tags": [
+        "ecs",
+        "match"
+      ],
       "title": "Match ECS 协调"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-30T11:11:50Z",
       "created_at": "2026-08-30T11:11:50Z",
-      "dependencies": ["ms-2.3"],
+      "dependencies": [
+        "ms-2.3"
+      ],
       "description": "实现所有 ECS 组件的序列化/反序列化 round-trip 测试",
       "id": "ms-2.4",
       "priority": "low",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["ecs", "serialization"],
+      "tags": [
+        "ecs",
+        "serialization"
+      ],
       "title": "序列化完整性"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-30T11:56:33Z",
       "created_at": "2026-08-30T11:56:33Z",
-      "dependencies": ["ms-2.4"],
+      "dependencies": [
+        "ms-2.4"
+      ],
       "description": "验证 ECS 查询性能不低于纯 OOP 实现",
       "id": "ms-2.5",
       "priority": "low",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["ecs", "performance"],
+      "tags": [
+        "ecs",
+        "performance"
+      ],
       "title": "性能验证"
     },
     {
@@ -195,20 +258,28 @@
       "priority": "high",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["rl", "training"],
+      "tags": [
+        "rl",
+        "training"
+      ],
       "title": "RL 基础训练框架"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-30T11:14:53Z",
       "created_at": "2026-08-30T11:14:53Z",
-      "dependencies": ["ms-3.1"],
+      "dependencies": [
+        "ms-3.1"
+      ],
       "description": "优化 RL 训练收敛性，简化奖励函数和动作空间，提高训练效率",
       "id": "ms-3.2",
       "priority": "high",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["rl", "optimization"],
+      "tags": [
+        "rl",
+        "optimization"
+      ],
       "title": "RL 训练优化"
     },
     {
@@ -221,7 +292,10 @@
       "priority": "medium",
       "progress_notes": [],
       "status": "COMPLETED",
-      "tags": ["framesync", "robustness"],
+      "tags": [
+        "framesync",
+        "robustness"
+      ],
       "title": "帧同步鲁棒性增强"
     },
     {
@@ -238,14 +312,19 @@
         "2026-08-31 注册到 sources.cmake"
       ],
       "status": "COMPLETED",
-      "tags": ["ai", "tactics"],
+      "tags": [
+        "ai",
+        "tactics"
+      ],
       "title": "AI 战术系统"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-08-31T18:30:00Z",
       "created_at": "2026-08-31T17:30:00Z",
-      "dependencies": ["ms-4.1"],
+      "dependencies": [
+        "ms-4.1"
+      ],
       "description": "优化 AI 决策逻辑，使 AI 可打出完整比赛",
       "id": "ms-4.2",
       "priority": "high",
@@ -255,7 +334,10 @@
         "2026-08-31 实现比赛意识：时间管理、体能分配、战术犯规"
       ],
       "status": "COMPLETED",
-      "tags": ["ai", "decision"],
+      "tags": [
+        "ai",
+        "decision"
+      ],
       "title": "AI 决策优化"
     },
     {
@@ -273,7 +355,10 @@
         "2026-08-31 批量操作优化：2 slots 208ns/iter、4 slots 293ns/iter、11 slots 632ns/iter"
       ],
       "status": "COMPLETED",
-      "tags": ["performance", "optimization"],
+      "tags": [
+        "performance",
+        "optimization"
+      ],
       "title": "性能优化"
     },
     {
@@ -291,7 +376,10 @@
         "2026-08-31 添加统计接口：GetSmoothedRTT()、GetBandwidthBPS()"
       ],
       "status": "COMPLETED",
-      "tags": ["network", "optimization"],
+      "tags": [
+        "network",
+        "optimization"
+      ],
       "title": "网络优化"
     },
     {
@@ -310,7 +398,10 @@
         "2026-08-31 添加 11 个单元测试全部通过"
       ],
       "status": "COMPLETED",
-      "tags": ["experience", "ux"],
+      "tags": [
+        "experience",
+        "ux"
+      ],
       "title": "体验优化"
     },
     {
@@ -332,7 +423,10 @@
         "2026-08-31 添加 run_static_analysis.sh 脚本"
       ],
       "status": "COMPLETED",
-      "tags": ["code-quality", "analysis"],
+      "tags": [
+        "code-quality",
+        "analysis"
+      ],
       "title": "代码质量"
     },
     {
@@ -351,7 +445,10 @@
         "2026-08-31 全部 138 个测试通过，零警告"
       ],
       "status": "COMPLETED",
-      "tags": ["cpp23", "modernization"],
+      "tags": [
+        "cpp23",
+        "modernization"
+      ],
       "title": "语言现代化"
     },
     {
@@ -372,7 +469,10 @@
         "2026-09-01 全部 172 个 C++ 测试通过"
       ],
       "status": "COMPLETED",
-      "tags": ["testing", "coverage"],
+      "tags": [
+        "testing",
+        "coverage"
+      ],
       "title": "测试覆盖"
     },
     {
@@ -393,14 +493,25 @@
         "2026-09-01 所有新增类型和函数均有 [[nodiscard]] 标注"
       ],
       "status": "COMPLETED",
-      "tags": ["documentation", "api"],
+      "tags": [
+        "documentation",
+        "api"
+      ],
       "title": "文档完善"
     },
     {
       "claimed_by": "opencode",
       "completed_at": "2026-09-01T03:00:00Z",
       "created_at": "2026-08-31T20:00:00Z",
-      "dependencies": ["ms-6.1", "ms-6.2", "ms-6.3", "ms-6.4", "ms-6.5", "ms-6.6", "ms-6.7"],
+      "dependencies": [
+        "ms-6.1",
+        "ms-6.2",
+        "ms-6.3",
+        "ms-6.4",
+        "ms-6.5",
+        "ms-6.6",
+        "ms-6.7"
+      ],
       "description": "优化构建系统，编译时间减少 30%",
       "id": "ms-6.8",
       "priority": "high",
@@ -414,8 +525,514 @@
         "2026-09-01 所有 172 个测试通过"
       ],
       "status": "COMPLETED",
-      "tags": ["build", "cmake"],
+      "tags": [
+        "build",
+        "cmake"
+      ],
       "title": "构建优化"
+    },
+    {
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-01T02:00:00Z",
+      "created_at": "2026-09-01T01:00:00Z",
+      "dependencies": [],
+      "description": "实现完整的多人游戏大厅，支持匹配、房间、玩家资料",
+      "id": "ms-7.1",
+      "priority": "high",
+      "progress_notes": [
+        "2026-09-01 实现 lobby.py: 房间管理、玩家注册、匹配队列",
+        "2026-09-01 实现 matchmaking.py: ELO 评分算法、匹配队列管理",
+        "2026-09-01 实现 player_profile.py: 玩家资料、统计、成就系统",
+        "2026-09-01 实现 chat.py: 房间聊天、私聊、消息过滤",
+        "2026-09-01 15 个单元测试全部通过"
+      ],
+      "status": "COMPLETED",
+      "tags": [
+        "lobby",
+        "multiplayer"
+      ],
+      "title": "大厅系统"
+    },
+    {
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-01T03:00:00Z",
+      "created_at": "2026-09-01T01:00:00Z",
+      "dependencies": [],
+      "description": "实现实时排行榜和玩家统计系统",
+      "id": "ms-7.2",
+      "priority": "high",
+      "progress_notes": [
+        "2026-09-01 实现 ranking.py: 排行榜管理、玩家排名、段位系统",
+        "2026-09-01 实现 season.py: 赛季管理、积分榜、奖励系统",
+        "2026-09-01 10 个单元测试全部通过"
+      ],
+      "status": "COMPLETED",
+      "tags": [
+        "ranking",
+        "statistics"
+      ],
+      "title": "排行榜系统"
+    },
+    {
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-01T04:00:00Z",
+      "created_at": "2026-09-01T01:00:00Z",
+      "dependencies": [],
+      "description": "实现沉浸式音效系统，包括背景音乐、音效、解说",
+      "id": "ms-7.3",
+      "priority": "high",
+      "progress_notes": [
+        "2026-09-01 实现 audio_manager.py: 音频资源管理、音乐播放、音效控制",
+        "2026-09-01 实现 commentary.py: 解说系统、事件触发、多语言支持",
+        "2026-09-01 14 个单元测试全部通过"
+      ],
+      "status": "COMPLETED",
+      "tags": [
+        "audio",
+        "sound"
+      ],
+      "title": "音效系统"
+    },
+    {
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-01T05:00:00Z",
+      "created_at": "2026-09-01T01:00:00Z",
+      "dependencies": [],
+      "description": "实现新手友好的教程系统，帮助玩家快速上手",
+      "id": "ms-7.4",
+      "priority": "high",
+      "progress_notes": [
+        "2026-09-01 实现 tutorial.py: 分步教程、训练模式",
+        "2026-09-01 实现 challenges.py: 技能挑战、奖励系统",
+        "2026-09-01 13 个单元测试全部通过"
+      ],
+      "status": "COMPLETED",
+      "tags": [
+        "tutorial",
+        "training"
+      ],
+      "title": "教程系统"
+    },
+    {
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-01T06:00:00Z",
+      "created_at": "2026-09-01T01:00:00Z",
+      "dependencies": [],
+      "description": "实现丰富的游戏内容，包括球队、球场、联赛",
+      "id": "ms-7.5",
+      "priority": "high",
+      "progress_notes": [
+        "2026-09-01 实现 content_manager.py: 球队/球场/联赛数据库",
+        "2026-09-01 11 个单元测试全部通过"
+      ],
+      "status": "COMPLETED",
+      "tags": [
+        "content",
+        "teams"
+      ],
+      "title": "内容系统"
+    },
+    {
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-01T07:00:00Z",
+      "created_at": "2026-09-01T01:00:00Z",
+      "dependencies": [],
+      "description": "实现完整的存档系统，支持游戏进度、设置、回放",
+      "id": "ms-7.6",
+      "priority": "high",
+      "progress_notes": [
+        "2026-09-01 实现 save_system.py: 存档管理、游戏进度",
+        "2026-09-01 实现 replay.py: 回放录制、精彩回放",
+        "2026-09-01 15 个单元测试全部通过"
+      ],
+      "status": "COMPLETED",
+      "tags": [
+        "save",
+        "replay"
+      ],
+      "title": "存档系统"
+    },
+    {
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-01T08:00:00Z",
+      "created_at": "2026-09-01T01:00:00Z",
+      "dependencies": [
+        "ms-7.1",
+        "ms-7.2",
+        "ms-7.3",
+        "ms-7.4",
+        "ms-7.5",
+        "ms-7.6"
+      ],
+      "description": "端到端功能验证，确保所有商业级功能正常工作",
+      "id": "ms-7.7",
+      "priority": "high",
+      "progress_notes": [
+        "2026-09-01 实现 phase7_integration_test.py: 全模块集成测试",
+        "2026-09-01 7 个集成测试全部通过"
+      ],
+      "status": "COMPLETED",
+      "tags": [
+        "testing",
+        "integration"
+      ],
+      "title": "集成测试"
+    },
+    {
+      "claimed_at": "2026-09-02T09:48:07Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T09:48:14Z",
+      "created_at": "2026-09-02T09:47:53Z",
+      "dependencies": [],
+      "description": "将裁判组迁移到ECS架构，实现OfficialsComponent组件",
+      "heartbeat_at": "2026-09-02T09:48:14Z",
+      "id": "ms-2aa3eabb",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase8"
+      ],
+      "title": "Officials ECS迁移"
+    },
+    {
+      "claimed_at": "2026-09-02T10:01:58Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T10:01:58Z",
+      "created_at": "2026-09-02T10:01:52Z",
+      "dependencies": [],
+      "description": "将Player核心状态迁移到ECS架构",
+      "heartbeat_at": "2026-09-02T10:01:58Z",
+      "id": "ms-5e66a83f",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase8"
+      ],
+      "title": "Player核心状态组件"
+    },
+    {
+      "claimed_at": "2026-09-02T11:28:12Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T11:28:12Z",
+      "created_at": "2026-09-02T11:28:06Z",
+      "dependencies": [],
+      "description": "将Humanoid动画状态迁移到ECS架构",
+      "heartbeat_at": "2026-09-02T11:28:12Z",
+      "id": "ms-a439b847",
+      "priority": "medium",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase8"
+      ],
+      "title": "Humanoid动画状态组件"
+    },
+    {
+      "claimed_at": "2026-09-02T11:44:17Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T11:44:18Z",
+      "created_at": "2026-09-02T11:44:12Z",
+      "dependencies": [],
+      "description": "将MentalImage心理图像迁移到ECS架构",
+      "heartbeat_at": "2026-09-02T11:44:18Z",
+      "id": "ms-976f14e8",
+      "priority": "medium",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase8"
+      ],
+      "title": "MentalImage ECS化"
+    },
+    {
+      "claimed_at": "2026-09-02T11:48:11Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T11:48:11Z",
+      "created_at": "2026-09-02T11:48:05Z",
+      "dependencies": [],
+      "description": "优化ECS系统的性能，包括实体遍历、组件访问和批量处理机制",
+      "heartbeat_at": "2026-09-02T11:48:11Z",
+      "id": "ms-70b1d0e3",
+      "priority": "medium",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase8",
+        "performance"
+      ],
+      "title": "ECS系统性能优化"
+    },
+    {
+      "claimed_at": "2026-09-02T12:19:41Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T12:19:41Z",
+      "created_at": "2026-09-02T12:19:35Z",
+      "dependencies": [],
+      "description": "移除不必要的OOP↔ECS双向同步，优化ECS数据流",
+      "heartbeat_at": "2026-09-02T12:19:41Z",
+      "id": "ms-dbdd3545",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase8",
+        "refactor"
+      ],
+      "title": "移除OOP双向同步"
+    },
+    {
+      "claimed_at": "2026-09-02T12:45:10Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T12:45:10Z",
+      "created_at": "2026-09-02T12:45:05Z",
+      "dependencies": [],
+      "description": "移除OOP包装层，使ECS直接驱动游戏逻辑",
+      "heartbeat_at": "2026-09-02T12:45:10Z",
+      "id": "ms-6bb0d001",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase9",
+        "refactor"
+      ],
+      "title": "移除OOP包装层"
+    },
+    {
+      "claimed_at": "2026-09-02T12:57:29Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T12:57:30Z",
+      "created_at": "2026-09-02T12:57:26Z",
+      "dependencies": [],
+      "description": "优化ECS查询接口，提供更高效、更易用的查询机制",
+      "heartbeat_at": "2026-09-02T12:57:30Z",
+      "id": "ms-02c59c2f",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase9",
+        "optimization"
+      ],
+      "title": "优化ECS查询接口"
+    },
+    {
+      "claimed_at": "2026-09-02T13:31:49Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T13:31:49Z",
+      "created_at": "2026-09-02T13:31:41Z",
+      "dependencies": [],
+      "description": "实现ECS系统批处理，将多个相关操作合并执行",
+      "heartbeat_at": "2026-09-02T13:31:49Z",
+      "id": "ms-e8bbd57b",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase9",
+        "batch"
+      ],
+      "title": "实现ECS系统批处理"
+    },
+    {
+      "claimed_at": "2026-09-02T13:43:28Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T13:43:28Z",
+      "created_at": "2026-09-02T13:43:02Z",
+      "dependencies": [],
+      "description": "验证ECS优化后的性能表现，确保没有性能退化",
+      "heartbeat_at": "2026-09-02T13:43:28Z",
+      "id": "ms-4dad7de1",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase9",
+        "performance"
+      ],
+      "title": "性能测试验证"
+    },
+    {
+      "claimed_at": "2026-09-02T13:53:27Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T13:53:27Z",
+      "created_at": "2026-09-02T13:53:19Z",
+      "dependencies": [],
+      "description": "验证ECS优化后的功能完整性，确保所有功能正常工作",
+      "heartbeat_at": "2026-09-02T13:53:27Z",
+      "id": "ms-d40fd466",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase9",
+        "verify"
+      ],
+      "title": "功能完整性验证"
+    },
+    {
+      "claimed_at": "2026-09-02T14:11:44Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T14:11:44Z",
+      "created_at": "2026-09-02T14:11:37Z",
+      "dependencies": [],
+      "description": "将Team系统迁移到ECS直接驱动",
+      "heartbeat_at": "2026-09-02T14:11:44Z",
+      "id": "ms-0d7738b4",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase10",
+        "team"
+      ],
+      "title": "Team系统ECS迁移"
+    },
+    {
+      "claimed_at": "2026-09-02T14:21:00Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T14:21:01Z",
+      "created_at": "2026-09-02T14:20:14Z",
+      "dependencies": [],
+      "description": "将Referee系统迁移到ECS直接驱动",
+      "heartbeat_at": "2026-09-02T14:21:01Z",
+      "id": "ms-6a8a9111",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase10",
+        "referee"
+      ],
+      "title": "Referee系统ECS迁移"
+    },
+    {
+      "claimed_at": "2026-09-02T14:24:46Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T14:24:46Z",
+      "created_at": "2026-09-02T14:24:42Z",
+      "dependencies": [],
+      "description": "将MentalImage系统迁移到ECS直接驱动",
+      "heartbeat_at": "2026-09-02T14:24:46Z",
+      "id": "ms-5ecca46a",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase10",
+        "mentalimage"
+      ],
+      "title": "MentalImage系统ECS迁移"
+    },
+    {
+      "claimed_at": "2026-09-02T14:29:50Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T14:29:50Z",
+      "created_at": "2026-09-02T14:29:44Z",
+      "dependencies": [],
+      "description": "优化系统批处理，将新增系统合并到批处理中",
+      "heartbeat_at": "2026-09-02T14:29:50Z",
+      "id": "ms-92fbe103",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase10",
+        "batch"
+      ],
+      "title": "系统批处理优化"
+    },
+    {
+      "claimed_at": "2026-09-02T14:34:12Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T14:34:12Z",
+      "created_at": "2026-09-02T14:34:08Z",
+      "dependencies": [],
+      "description": "验证Phase 10 ECS系统扩展后的功能完整性",
+      "heartbeat_at": "2026-09-02T14:34:12Z",
+      "id": "ms-61c55434",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase10",
+        "verify"
+      ],
+      "title": "功能完整性验证"
+    },
+    {
+      "claimed_at": "2026-09-02T15:09:46Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T15:09:46Z",
+      "created_at": "2026-09-02T15:08:42Z",
+      "dependencies": [],
+      "description": "分析当前代码库中剩余的OOP包装层",
+      "heartbeat_at": "2026-09-02T15:09:46Z",
+      "id": "ms-7382ce5c",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase11",
+        "analysis"
+      ],
+      "title": "分析剩余OOP包装层"
+    },
+    {
+      "claimed_at": "2026-09-02T15:27:07Z",
+      "claimed_by": "opencode",
+      "completed_at": "2026-09-02T15:27:07Z",
+      "created_at": "2026-09-02T15:25:05Z",
+      "dependencies": [],
+      "description": "设计完全移除OOP包装层的方案",
+      "heartbeat_at": "2026-09-02T15:27:07Z",
+      "id": "ms-1ab66979",
+      "priority": "high",
+      "progress_notes": [],
+      "snapshot_count": 0,
+      "status": "COMPLETED",
+      "tags": [
+        "ecs",
+        "phase11",
+        "design"
+      ],
+      "title": "设计完全移除方案"
     }
   ],
   "version": 1

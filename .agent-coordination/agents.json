@@ -1,12 +1,30 @@
 {
   "agents": {
+    "-373618": {
+      "capabilities": [],
+      "current_milestone": null,
+      "heartbeat_at": "2026-09-03T06:53:25Z",
+      "metadata": {},
+      "registered_at": "2026-09-03T06:53:25Z",
+      "status": "active",
+      "type": "opencode"
+    },
     "-610796": {
       "capabilities": [],
       "current_milestone": null,
       "heartbeat_at": "2026-08-29T11:33:14Z",
       "metadata": {},
       "registered_at": "2026-08-29T11:33:14Z",
-      "status": "active",
+      "status": "zombie",
+      "type": "opencode"
+    },
+    "-64378": {
+      "capabilities": [],
+      "current_milestone": null,
+      "heartbeat_at": "2026-09-02T15:46:55Z",
+      "metadata": {},
+      "registered_at": "2026-09-02T07:38:47Z",
+      "status": "zombie",
       "type": "opencode"
     }
   },

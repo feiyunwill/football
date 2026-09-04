@@ -23,6 +23,7 @@
 class PlayerBase;
 class PlayerOfficial;
 class PlayerData;
+struct OfficialsComponent;
 
 class Officials {
 
@@ -41,6 +42,9 @@ class Officials {
     boost::intrusive_ptr<Geometry> GetYellowCardGeom() { DO_VALIDATION; return yellowCard; }
     boost::intrusive_ptr<Geometry> GetRedCardGeom() { DO_VALIDATION; return redCard; }
     void ProcessState(EnvState* state);
+
+    /// 2026-09-03 Phase 11: 将裁判组状态填充到 ECS 组件
+    void FillOfficialsComponent(OfficialsComponent& out) const;
 
   protected:
     Match *match;

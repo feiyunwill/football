@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_tests/ecs_benchmark_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/engine/tests/build_tests/ecs_benchmark_test[1]_tests.cmake")
+else()
+  add_test(ecs_benchmark_test_NOT_BUILT ecs_benchmark_test_NOT_BUILT)
+endif()

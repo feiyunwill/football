@@ -173,6 +173,8 @@ class Match {
     blunted::World& GetEcsWorld() { return ecs_world_; }
     blunted::Entity GetEcsBallEntity() const { return ecs_ball_entity_; }
     const std::vector<blunted::Entity>& GetEcsPlayerEntities() const { return ecs_player_entities_; }
+    blunted::Entity GetEcsOfficialsEntity() const { return ecs_officials_entity_; }
+    blunted::Entity GetEcsRefereeEntity() const { return ecs_referee_entity_; }
 
     /// 2026-08-30 P2-Phase2：将比赛状态写入 ECS 组件
     void FillMatchStateComponent(MatchStateComponent& out) const;
@@ -224,6 +226,7 @@ class Match {
     blunted::Entity ecs_ball_entity_ = blunted::kNullEntity;
     std::vector<blunted::Entity> ecs_player_entities_;
     blunted::Entity ecs_referee_entity_ = blunted::kNullEntity;
+    blunted::Entity ecs_officials_entity_ = blunted::kNullEntity;
 
     MatchData *matchData;
     Team *teams[2];

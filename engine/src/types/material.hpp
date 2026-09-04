@@ -32,6 +32,11 @@ namespace blunted {
     float shininess_ = 0.0f;
     float specular_amount_ = 0.0f;
     Vector3 self_illumination_;
+    
+    // 2026-09-03 Phase 12: PBR 参数
+    float metallic_ = 0.0f;      // 金属度 (0.0 = 非金属, 1.0 = 金属)
+    float roughness_ = 0.5f;     // 粗糙度 (0.0 = 光滑, 1.0 = 粗糙)
+    float ao_ = 1.0f;            // 环境光遮蔽 (0.0 = 完全遮蔽, 1.0 = 无遮蔽)
   };
 
 }

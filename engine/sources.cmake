@@ -290,8 +290,11 @@ set(GAME_HEADERS
    src/ecs/entity.hpp
    src/ecs/transform.hpp
    src/ecs/world.hpp
+   src/ecs/query.hpp
+   src/ecs/system_batch.hpp
    src/onthepitch/ecs_components.hpp
    src/onthepitch/ecs_systems.hpp
+   src/onthepitch/ecs_direct_systems.hpp
    src/onthepitch/humangamer.hpp
    src/onthepitch/officials.hpp
    src/onthepitch/player/humanoid/humanoidbase.hpp
@@ -323,6 +326,8 @@ set(GAME_HEADERS
 
 set(GAME_SOURCES
    src/onthepitch/ecs_systems.cpp
+   src/onthepitch/ecs_direct_systems.cpp
+   src/ecs/system_batch.cpp
    src/onthepitch/officials.cpp
    src/onthepitch/player/humanoid/humanoid_utils.cpp
    src/onthepitch/player/humanoid/animcollection.cpp

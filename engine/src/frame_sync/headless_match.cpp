@@ -30,16 +30,14 @@ int main(int argc, char* argv[]) {
   env.game_config.render_resolution_x = 1280;
   env.game_config.render_resolution_y = 720;
 
+  auto scenario = ScenarioConfig::make();
+  scenario->left_agents = left;
+  scenario->right_agents = right;
+  scenario->game_engine_random_seed = seed;
+  scenario->real_time = false;
+
   try {
-    env.start_game();
-
-    auto scenario = ScenarioConfig::make();
-    scenario->left_agents = left;
-    scenario->right_agents = right;
-    scenario->game_engine_random_seed = seed;
-    scenario->real_time = false;
-
-    env.reset(*scenario, false);
+    env.start_game(*scenario);
     env.state = GameState::game_running;
 
     std::println("GameEnv initialized. Running match...");

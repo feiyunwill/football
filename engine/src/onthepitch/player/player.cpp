@@ -21,6 +21,7 @@
 
 #include "../match.hpp"
 #include "../team.hpp"
+#include "../ecs_components.hpp"
 
 #include "controller/elizacontroller.hpp"
 #include "controller/strategies/strategy.hpp"
@@ -527,4 +528,24 @@ void Player::_CalculateTacticalSituation() {
   tacticalSituation.forwardRating =
       std::pow(tacticalSituation.forwardRating,
                1.5f);  // more important when close to goal
+}
+
+void Player::FillPlayerStateComponent(PlayerStateComponent& out) const {
+  DO_VALIDATION;
+  // 调用基类实现
+  PlayerBase::FillPlayerStateComponent(out);
+  
+  // 设置队伍 ID
+  if (team) {
+    out.team_id = team->GetID();
+  }
+  
+  // 控球状态
+  out.has_possession = hasPossession;
+  out.has_best_possession = hasBestPossession;
+  out.has_unique_possession = hasUniquePossession;
+  out.possession_duration_ms = possessionDuration_ms;
+  
+  // 卡片状态
+  out.cards = cards;
 }

@@ -23,6 +23,7 @@
 
 #include "../playerbase.hpp"
 #include "../../match.hpp"
+#include "../../ecs_components.hpp"
 
 #include "../../../main.hpp"
 
@@ -2331,4 +2332,37 @@ void HumanoidBase::ProcessState(EnvState *state) {
     i.ProcessState(state);
   }
   state->process(mentalImageTime);
+}
+
+void HumanoidBase::FillHumanoidStateComponent(HumanoidStateComponent& out) const {
+  DO_VALIDATION;
+  // 动画信息
+  out.current_frame = currentAnim.frameNum;
+  out.frame_count = currentAnim.anim ? currentAnim.anim->GetFrameCount() : 0;
+  out.current_anim_id = currentAnim.id;
+  out.current_function_type = currentAnim.functionType;
+  out.previous_function_type = previousAnim_functionType;
+  
+  // 触球状态
+  out.touch_pending = false;  // 需要从 Humanoid 子类获取
+  out.touch_anim = false;     // 需要从 Humanoid 子类获取
+  out.touch_pos = Vector3(0, 0, 0);
+  out.touch_frame = 0;
+  
+  // 动画选择
+  out.is_retain_anim = false;  // 需要从 Humanoid 子类获取
+  out.is_trip_anim = false;
+  out.trip_vector = tripDirection;
+  out.trip_type = tripType;
+  
+  // 身体部位方向
+  out.body_angle = spatialState.bodyAngle;
+  out.look_at_angle = 0;
+  out.look_at_target = Vector3(0, 0, 0);
+  
+  // 空间状态
+  out.position = spatialState.position;
+  out.direction_vec = spatialState.directionVec;
+  out.body_direction_vec = spatialState.bodyDirectionVec;
+  out.rel_body_angle = spatialState.relBodyAngle;
 }

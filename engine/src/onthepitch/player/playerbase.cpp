@@ -18,6 +18,7 @@
 #include "player.hpp"
 
 #include "../match.hpp"
+#include "../ecs_components.hpp"
 
 #include "controller/elizacontroller.hpp"
 #include "controller/strategies/strategy.hpp"
@@ -164,4 +165,38 @@ void PlayerBase::ProcessStateBase(EnvState *state) {
   state->process(lastTouchType);
   state->process(fatigueFactorInv);
   state->process(positionHistoryPerSecond);
+}
+
+void PlayerBase::FillPlayerStateComponent(PlayerStateComponent& out) const {
+  DO_VALIDATION;
+  // 基本信息
+  out.stable_id = stable_id;
+  out.team_id = -1;  // 需要从外部设置
+  out.is_active = isActive;
+  
+  // 物理状态
+  out.position = GetPosition();
+  out.geom_position = GetGeomPosition();
+  out.direction_vec = GetDirectionVec();
+  out.body_direction_vec = GetBodyDirectionVec();
+  out.rel_body_angle = GetRelBodyAngle();
+  
+  // 动作状态
+  out.enum_velocity = GetEnumVelocity();
+  out.float_velocity = GetFloatVelocity();
+  out.movement = GetMovement();
+  
+  // 控球状态（需要从 Player 子类获取）
+  out.has_possession = false;
+  out.has_best_possession = false;
+  out.has_unique_possession = false;
+  out.possession_duration_ms = 0;
+  
+  // 时间戳
+  out.last_touch_time_ms = lastTouchTime_ms;
+  out.last_touch_type = static_cast<int>(lastTouchType);
+  
+  // 疲劳与状态
+  out.fatigue_factor_inv = fatigueFactorInv;
+  out.cards = 0;  // 需要从 Player 子类获取
 }

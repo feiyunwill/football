@@ -19,9 +19,8 @@
 
 #include "../base/utils.hpp"
 
-#include <stdio.h>
-
 #include <cmath>
+#include <fstream>
 
 #include "animationextensions/footballanimationextension.hpp"
 
@@ -320,6 +319,9 @@ void Animation::DirtyCache() {
 
     // only applies to anims starting out idle
     if (GetIncomingVelocity() >= 1.8) return;
+
+    // 2026-09-01: 防御 nodeAnimations 为空（headless 加载路径下模板动画未完整解析）
+    if (nodeAnimations.size() < 2) return;
 
     // rotate player pos
     KeyFrames &player = nodeAnimations.at(0)->animation;
@@ -881,7 +883,9 @@ void Animation::DirtyCache() {
   radian Animation::GetIncomingBodyAngle() const {
     if (cache_incomingBodyAngle_dirty) {
       DO_VALIDATION;
-      if (nodeAnimations.at(1)->animation.d.size() > 0) {
+      // 2026-09-01: 跳过 nodeAnimations 为空或元素不足的情况（headless 加载路径
+      // 下模板动画可能未完整解析 body part），返回 0 避免 vector 越界 crash。
+      if (nodeAnimations.size() > 1 && nodeAnimations.at(1)->animation.d.size() > 0) {
         DO_VALIDATION;
 
         // body rotation
@@ -1039,8 +1043,34 @@ void Animation::DirtyCache() {
     DO_VALIDATION;
     name = filename;
 
+    // 2026-09-01: 修复 double-path bug。
+    // GetFiles() 已经返回完整路径（如 engine/data/media/animations/...），
+    // 而 file_to_vector() 内部又调用 updatePath() 再拼一次 data_dir 前缀，
+    // 导致路径变成 engine/data/engine/data/...，文件打不开 → nodeAnimations 为空。
+    // 策略：先直接尝试打开文件，失败再用 updatePath 解析。
     std::vector<std::string> file;
-    file_to_vector(filename, file);
+    auto loadFileRaw = [&](const std::string& path) -> bool {
+      std::ifstream ifs(path.c_str(), std::ios::in);
+      if (!ifs.is_open()) return false;
+      std::string content((std::istreambuf_iterator<char>(ifs)),
+                          std::istreambuf_iterator<char>());
+      ifs.close();
+      std::string line;
+      for (char c : content) {
+        if (c == '\n') {
+          file.push_back(line);
+          line.clear();
+        } else {
+          line += c;
+        }
+      }
+      if (!line.empty()) file.push_back(line);
+      return true;
+    };
+    if (!loadFileRaw(filename)) {
+      file.clear();
+      file_to_vector(filename, file);
+    }
 
     std::vector < std::vector<std::string> > tokenizedFile;
     int lastLine = 0;

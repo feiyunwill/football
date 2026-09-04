@@ -114,8 +114,7 @@ struct CollisionResultComponent {
 
 /// 2026-08-30 P2-Phase2: 队伍身份与状态组件
 /// 从 Team 类提取核心状态，使 ECS 成为可查询的队伍数据源。
-/// 双向同步函数 SyncTeamToEcs / SyncTeamFromEcs
-/// 负责 OOP ↔ ECS 一致性。
+/// 同步函数 SyncTeamToEcs 负责 OOP → ECS 一致性。
 struct TeamStateComponent {
   int team_id = 0;                    // 队伍 ID (0 或 1)
   int side = -1;                      // 动态边 (-1=左, 1=右)
@@ -131,8 +130,7 @@ struct TeamStateComponent {
 
 /// 2026-08-30 P2-Phase2: 比赛状态组件
 /// 从 Match 类提取核心状态，使 ECS 成为可查询的比赛数据源。
-/// 双向同步函数 SyncMatchToEcs / SyncMatchFromEcs
-/// 负责 OOP ↔ ECS 一致性。
+/// 同步函数 SyncMatchToEcs 负责 OOP → ECS 一致性。
 struct MatchStateComponent {
   // 时间
   unsigned long match_time_ms = 0;          // 比赛时间
@@ -157,8 +155,7 @@ struct MatchStateComponent {
 
 /// 2026-08-30 P2-Phase2: 裁判状态组件
 /// 从 Referee 类提取核心状态，使 ECS 成为可查询的裁判数据源。
-/// 双向同步函数 SyncRefereeToEcs / SyncRefereeFromEcs
-/// 负责 OOP ↔ ECS 一致性。
+/// 同步函数 SyncRefereeToEcs 负责 OOP → ECS 一致性。
 struct RefereeStateComponent {
   // 裁判缓冲区状态
   bool buffer_active = false;              // 是否有待执行的动作
@@ -183,8 +180,7 @@ struct RefereeTag {};
 
 /// 2026-08-29 P2-Phase4：球员控球状态组件
 /// 从 Player 成员变量提取控球相关属性，使 ECS 成为可查询的控球数据源。
-/// 双向同步函数 SyncPossessionToEcs / SyncPossessionFromEcs
-/// 负责 OOP ↔ ECS 一致性。
+/// 同步函数 SyncPossessionToEcs 负责 OOP → ECS 一致性。
 struct PossessionComponent {
   bool hasPossession = false;
   bool hasBestPossession = false;
@@ -194,6 +190,130 @@ struct PossessionComponent {
   unsigned int timeNeededToGetToBall_optimistic_ms = 1000;
   unsigned int timeNeededToGetToBall_previous_ms = 1000;
   int desiredTimeToBall_ms = 0;
+};
+
+/// 2026-09-02 Phase 8: 裁判组状态组件
+/// 从 Officials 类提取核心状态，使 ECS 成为可查询的裁判组数据源。
+/// 同步函数 SyncOfficialsToEcs 负责 OOP → ECS 一致性。
+struct OfficialsComponent {
+  // 裁判实体ID
+  int referee_entity_id = -1;
+  int linesmen_entity_ids[2] = {-1, -1};
+  
+  // 裁判类型标记
+  bool is_referee_active = false;
+  bool are_linesmen_active = false;
+  
+  // 卡牌状态
+  bool has_yellow_card = false;
+  bool has_red_card = false;
+  Vector3 yellow_card_position;
+  Vector3 red_card_position;
+  
+  // 处理状态
+  bool is_processing = false;
+};
+
+/// 2026-09-02 Phase 8: 球员核心状态组件
+/// 从 Player/PlayerBase 成员变量提取核心状态，使 ECS 成为可查询的球员数据源。
+/// 同步函数 SyncPlayerToEcs 负责 OOP → ECS 一致性。
+struct PlayerStateComponent {
+  // 基本信息
+  int stable_id = -1;
+  int team_id = -1;
+  bool is_active = false;
+  
+  // 物理状态
+  Vector3 position;
+  Vector3 geom_position;
+  Vector3 direction_vec;
+  Vector3 body_direction_vec;
+  radian rel_body_angle = 0;
+  
+  // 动作状态
+  e_Velocity enum_velocity = e_Velocity_Idle;
+  float float_velocity = 0.0f;
+  Vector3 movement;
+  e_Foot foot = e_Foot_Right;
+  
+  // 控球状态（与 PossessionComponent 分离，此处为核心快照）
+  bool has_possession = false;
+  bool has_best_possession = false;
+  bool has_unique_possession = false;
+  int possession_duration_ms = 0;
+  
+  // 时间戳
+  unsigned long last_touch_time_ms = 0;
+  int last_touch_type = 0;  // e_TouchType 值
+  
+  // 疲劳与状态
+  float fatigue_factor_inv = 0.0f;
+  int cards = 0;
+};
+
+/// 2026-09-02 Phase 8: Humanoid动画状态组件
+/// 从 HumanoidBase 成员变量提取动画相关状态，使 ECS 成为可查询的动画数据源。
+/// 同步函数 SyncHumanoidToEcs 负责 OOP → ECS 一致性。
+struct HumanoidStateComponent {
+  // 动画信息
+  int current_frame = 0;
+  int frame_count = 0;
+  int current_anim_id = -1;
+  e_FunctionType current_function_type = e_FunctionType_None;
+  e_FunctionType previous_function_type = e_FunctionType_None;
+  
+  // 触球状态
+  bool touch_pending = false;
+  bool touch_anim = false;
+  Vector3 touch_pos;
+  int touch_frame = 0;
+  
+  // 动画选择
+  bool is_retain_anim = false;
+  bool is_trip_anim = false;
+  Vector3 trip_vector;
+  int trip_type = 0;
+  
+  // 身体部位方向
+  radian body_angle = 0;
+  radian look_at_angle = 0;
+  Vector3 look_at_target;
+  
+  // 空间状态（用于渲染）
+  Vector3 position;
+  Vector3 direction_vec;
+  Vector3 body_direction_vec;
+  radian rel_body_angle = 0;
+};
+
+/// 2026-09-02 Phase 8: MentalImage心理图像组件
+/// 从 MentalImage 成员变量提取 AI 心理图像状态，使 ECS 成为可查询的 AI 数据源。
+/// 同步函数 SyncMentalImageToEcs 负责 OOP → ECS 一致性。
+struct MentalImageComponent {
+  // 时间信息
+  unsigned int time_stamp_ms = 0;
+  bool is_valid = false;
+  
+  // 球状态
+  Vector3 ball_position;
+  Vector3 ball_momentum;
+  
+  // 球员状态（简化版，只存储关键信息）
+  struct PlayerState {
+    Vector3 position;
+    Vector3 direction_vec;
+    bool is_active = false;
+    int team_id = -1;
+  };
+  std::vector<PlayerState> player_states;
+  
+  // 队伍状态
+  int last_touch_team_id = -1;
+  int best_possession_team_id = -1;
+  
+  // 偏差参数
+  float max_distance_deviation = 2.5f;
+  float max_movement_deviation = 1.0f;
 };
 
 #endif

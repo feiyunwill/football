@@ -17,6 +17,8 @@
 
 #include "match.hpp"
 #include "ecs_systems.hpp"
+#include "ecs_direct_systems.hpp"
+#include "../ecs/system_batch.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -367,6 +369,22 @@ void Match::RegisterEcsEntities() {
   // 裁判实体（仅标记，状态仍在 Referee 类）
   ecs_referee_entity_ = ecs_world_.CreateEntity();
   ecs_world_.AddComponent(ecs_referee_entity_, RefereeTag{});
+
+  // 2026-09-02 Phase 8: Officials 实体
+  ecs_officials_entity_ = ecs_world_.CreateEntity();
+  OfficialsComponent officials_comp;
+  // 初始化 officials_comp（稍后在 OfficialsSystemProcess 中填充）
+  officials_comp.referee_entity_id = -1;
+  officials_comp.linesmen_entity_ids[0] = -1;
+  officials_comp.linesmen_entity_ids[1] = -1;
+  officials_comp.is_referee_active = false;
+  officials_comp.are_linesmen_active = false;
+  officials_comp.has_yellow_card = false;
+  officials_comp.has_red_card = false;
+  officials_comp.yellow_card_position = Vector3(0, 0, -10);
+  officials_comp.red_card_position = Vector3(0, 0, -10);
+  officials_comp.is_processing = false;
+  ecs_world_.AddComponent(ecs_officials_entity_, officials_comp);
 }
 
 void Match::SetRandomSunParams() {
@@ -887,12 +905,14 @@ void Match::GetTeamState(SharedInfo *state,
     auto controller = player->ExternalController();
     if (controller) {
       DO_VALIDATION;
-      if (team_id == 0) {
-        state->left_controllers[controller_mapping[controller->GetHIDevice()]]
-            .controlled_player = team.size();
-      } else {
-        state->right_controllers[controller_mapping[controller->GetHIDevice()]]
-            .controlled_player = team.size();
+      auto it = controller_mapping.find(controller->GetHIDevice());
+      if (it != controller_mapping.end()) {
+        int idx = it->second;
+        if (team_id == 0 && idx < static_cast<int>(state->left_controllers.size())) {
+          state->left_controllers[idx].controlled_player = team.size();
+        } else if (team_id == 1 && idx < static_cast<int>(state->right_controllers.size())) {
+          state->right_controllers[idx].controlled_player = team.size();
+        }
       }
     }
     if (player->CastHumanoid() != NULL) {
@@ -940,9 +960,9 @@ void Match::GetState(SharedInfo *state) {
   state->is_in_play = IsInPlay() || GetActualTime_ms() == 1900;
   state->game_mode = IsInSetPiece() ? referee->GetBuffer().desiredSetPiece : e_GameMode_Normal;
   state->left_controllers.clear();
-  state->left_controllers.resize(GetScenarioConfig().left_team.size());
+  state->left_controllers.resize(MAX_PLAYERS);
   state->right_controllers.clear();
-  state->right_controllers.resize(GetScenarioConfig().right_team.size());
+  state->right_controllers.resize(MAX_PLAYERS);
 
   std::map<AIControlledKeyboard*, int> controller_mapping;
   {
@@ -1023,6 +1043,8 @@ bool Match::StepMentalImages(bool reverse) {
       mentalImages.pop_back();
     }
   }
+  // 2026-09-02 Phase 8: 同步 MentalImage 到 ECS
+  SyncMentalImageSystem(this);
   return true;
 }
 
@@ -1049,24 +1071,30 @@ bool Match::StepPlayersProcess(bool reverse) {
   DO_VALIDATION;
   // 2025-03-17 ECS 迁移：由 RunPlayerSystems 统一执行球员 controller/humanoid Process
   RunPlayerSystems(this);
+  // 2026-09-02 Phase 9: 使用 ECS 系统批处理
+  blunted::PlayerSystemBatch player_batch;
+  player_batch.Execute(GetEcsWorld());
   return true;
 }
 
 bool Match::StepOfficialsProcess(bool reverse) {
   DO_VALIDATION;
   Mirror(reverse, !reverse, reverse);
-  officials->Process();
+  // 2026-09-02 Phase 9: 使用 ECS 系统批处理
+  blunted::OfficialsSystemBatch officials_batch;
+  officials_batch.Execute(GetEcsWorld(), this);
   Mirror(reverse, !reverse, reverse);
   return true;
 }
 
 bool Match::StepPossessionStats(bool reverse) {
   DO_VALIDATION;
-  // 2026-08-28 ECS Phase 4：委托 TeamPossessionStatsSystem
+  // 2026-09-02 Phase 9: 使用 ECS 系统批处理
+  blunted::PossessionStatsBatch possession_batch;
   Mirror(first_team == 1, first_team == 0, first_team == 1);
-  TeamPossessionStatsSystemProcess(this, first_team);
+  possession_batch.Execute(GetEcsWorld(), this, first_team, second_team);
   Mirror(true, true, true);
-  TeamPossessionStatsSystemProcess(this, second_team);
+  possession_batch.Execute(GetEcsWorld(), this, first_team, second_team);
   Mirror(first_team == 0, first_team == 1, first_team == 0);
   return true;
 }

@@ -135,14 +135,13 @@ class IntegratedFrameSyncServer {
     env_.game_config.physics_steps_per_frame = 10;
     env_.game_config.render_resolution_x = 1280;
     env_.game_config.render_resolution_y = 720;
-    env_.start_game();
 
     auto scenario = ScenarioConfig::make();
     scenario->left_agents = config_.left_agents;
     scenario->right_agents = config_.right_agents;
     scenario->game_engine_random_seed = config_.seed;
+    env_.start_game(*scenario);
     env_.state = GameState::game_running;
-    env_.reset(*scenario, false);
 
     std::println("Server game environment initialized: {}v{}, seed={}",
                  config_.left_agents, config_.right_agents, config_.seed);

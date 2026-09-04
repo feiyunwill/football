@@ -175,7 +175,7 @@ PYBIND11_MODULE(_gameplayfootball, m) {
       // 可直接调用，迁移后缺 .def(py::init<>()) 导致 Python 侧 libgame.GameEnv() 报
       // "_gameplayfootball.GameEnv: No constructor defined!"。补注册默认构造。
       .def(py::init<>())
-      .def("start_game", &GameEnv_Python::start_game)
+      .def("start_game", static_cast<void (GameEnv_Python::*)()>(&GameEnv_Python::start_game))
       .def("get_info", &GameEnv_Python::get_info)
       // 2026-08-25 修复（原因）：返回 py::bytes 的方法（get_frame/get_state/set_state）
       // 原挂 gil_scoped_release，bytes 的构造与引用计数发生在已释放 GIL 区间内，

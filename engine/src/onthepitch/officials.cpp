@@ -28,6 +28,7 @@
 #include "../data/playerdata.hpp"
 
 #include "../main.hpp"
+#include "ecs_components.hpp"
 
 Officials::Officials(Match *match,
                      boost::intrusive_ptr<Node> fullbodySourceNode,
@@ -162,4 +163,26 @@ void Officials::ProcessState(EnvState *state) {
   linesmen[0]->ProcessStateBase(state);
   linesmen[1]->ProcessStateBase(state);
   state->setValidate(true);
+}
+
+// 2026-09-03 Phase 11: 将裁判组状态填充到 ECS 组件
+void Officials::FillOfficialsComponent(OfficialsComponent& out) const {
+  DO_VALIDATION;
+  // 裁判实体ID
+  out.referee_entity_id = -1;  // 需要从外部设置
+  out.linesmen_entity_ids[0] = -1;
+  out.linesmen_entity_ids[1] = -1;
+  
+  // 裁判类型标记
+  out.is_referee_active = referee ? referee->IsActive() : false;
+  out.are_linesmen_active = true;  // 边裁总是活跃的
+  
+  // 卡牌状态
+  out.has_yellow_card = false;
+  out.has_red_card = false;
+  out.yellow_card_position = Vector3(0, 0, -10);
+  out.red_card_position = Vector3(0, 0, -10);
+  
+  // 处理状态
+  out.is_processing = false;
 }

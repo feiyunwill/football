@@ -52,6 +52,11 @@ namespace blunted {
     float shininess = 0.0f;
     float specular_amount = 0.0f;
     Vector3 self_illumination;
+    
+    // 2026-09-03 Phase 12: PBR 参数
+    float metallic = 0.0f;      // 金属度 (0.0 = 非金属, 1.0 = 金属)
+    float roughness = 0.5f;     // 粗糙度 (0.0 = 光滑, 1.0 = 粗糙)
+    float ao = 1.0f;            // 环境光遮蔽 (0.0 = 完全遮蔽, 1.0 = 无遮蔽)
   };
 
   struct VertexBufferIndex {
@@ -274,6 +279,13 @@ namespace blunted {
       virtual void RenderOverlay2D(const std::vector<Overlay2DQueueEntry> &overlay2DQueue) = 0;
       virtual void RenderOverlay2D() = 0;
       virtual void RenderLights(std::deque<LightQueueEntry> &lightQueue, const Matrix4 &projectionMatrix, const Matrix4 &viewMatrix) = 0;
+      
+      // 2026-09-03 Phase 12-15: PBR 渲染管线
+      virtual void RenderViewPBR(View &view, const Matrix4 &projectionMatrix, const Matrix4 &viewMatrix,
+                                 const Matrix4 &inverseProjectionViewMatrix, float depthParamNear, float depthParamFar,
+                                 std::deque<VertexBufferQueueEntry> &visibleGeometry,
+                                 std::deque<LightQueueEntry> &visibleLights,
+                                 std::deque<VertexBufferQueueEntry> &skyboxes) {}
 
 
       // --- new & improved

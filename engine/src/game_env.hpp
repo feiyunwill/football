@@ -29,13 +29,16 @@ class ContextHolder {
  public:
   ContextHolder(GameEnv* game) : game(game) {
      SetGame(game);
-     GetGraphicsSystem()->SetContext();
+     // 2026-09-01: headless 模式下 GraphicsSystem 为 nullptr，跳过 SetContext。
+     auto* gs = GetGraphicsSystem();
+     if (gs) gs->SetContext();
   }
   ~ContextHolder() {
     if (GetGame() != game) {
       Log(e_FatalError, "football", "main", "game state was corrupted");
     }
-    GetGraphicsSystem()->DisableContext();
+    auto* gs = GetGraphicsSystem();
+    if (gs) gs->DisableContext();
   }
  private:
   const GameEnv* game;
@@ -46,6 +49,9 @@ struct GameEnv {
   GameEnv() { DO_VALIDATION;}
   // Start the game (in separate process).
   void start_game();
+  // 2026-09-01: start_game with scenario config — avoids double reset() crash
+  // (start_game() internally calls reset(); caller must not call reset() again).
+  void start_game(ScenarioConfig& scenario_config);
 
   // Get the current state of the game (observation).
   SharedInfo get_info();

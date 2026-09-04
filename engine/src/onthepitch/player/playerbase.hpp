@@ -27,6 +27,7 @@
 
 class Match;
 class HumanController;
+struct PlayerStateComponent;
 
 class PlayerBase {
 
@@ -107,6 +108,9 @@ class PlayerBase {
     virtual void ResetSituation(const Vector3 &focusPos);
 
     void ProcessStateBase(EnvState* state);
+
+    /// 2026-09-03 Phase 11: 将球员状态填充到 ECS 组件
+    virtual void FillPlayerStateComponent(PlayerStateComponent& out) const;
 
   protected:
     Match *match;

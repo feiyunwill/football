@@ -258,12 +258,6 @@ void SyncPossessionToEcs(const Player& src, PossessionComponent& dst) {
   dst.desiredTimeToBall_ms = src.GetDesiredTimeToBall_ms();
 }
 
-void SyncPossessionFromEcs(const PossessionComponent& src, Player& dst) {
-  // 注意：hasPossession 等字段在 Player 中是 protected，需要通过 Team 设置
-  // 这里只同步可公开访问的字段
-  dst.SetDesiredTimeToBall_ms(src.desiredTimeToBall_ms);
-}
-
 void SyncPlayerPossessionSystem(Match* match) {
   DO_VALIDATION;
   blunted::World& w = match->GetEcsWorld();
@@ -282,4 +276,261 @@ void SyncPlayerPossessionSystem(Match* match) {
       SyncPossessionToEcs(*pref->player, *comp);
     }
   }
+}
+
+// 2026-09-02 Phase 8：Officials ECS 系统
+// 从 Officials OOP 提取状态到 ECS 组件，使裁判组状态可查询。
+
+#include "officials.hpp"
+#include "player/playerofficial.hpp"
+#include "player/playerbase.hpp"
+
+void SyncOfficialsToEcs(const Officials& src, OfficialsComponent& dst) {
+  // 注意：Officials 的成员是 protected，需要通过 public 方法访问
+  // 这里使用 const_cast 来调用非 const 方法（后续可重构为 const 正确）
+  Officials& officials = const_cast<Officials&>(src);
+  
+  // 获取裁判球员
+  PlayerOfficial* referee = officials.GetReferee();
+  if (referee) {
+    dst.is_referee_active = referee->IsActive();
+    dst.referee_entity_id = referee->GetStableID();
+  }
+  
+  // 获取边裁
+  std::vector<PlayerBase*> players;
+  officials.GetPlayers(players);
+  dst.are_linesmen_active = (players.size() > 1);
+  
+  // 卡牌状态（从 Match 的 Referee 获取）
+  // 注意：这里需要 Match 指针，但 SyncOfficialsToEcs 签名中没有
+  // 卡牌状态在 Officials::Put 中处理，这里只同步基础状态
+  dst.has_yellow_card = false;
+  dst.has_red_card = false;
+  dst.yellow_card_position = Vector3(0, 0, -10);
+  dst.red_card_position = Vector3(0, 0, -10);
+  
+  dst.is_processing = false;
+}
+
+void OfficialsSystemProcess(Match* match) {
+  DO_VALIDATION;
+  Officials* officials = match->GetOfficials();
+  if (!officials) return;
+  
+  // 同步状态到 ECS
+  blunted::Entity e = match->GetEcsOfficialsEntity();
+  if (e != blunted::kNullEntity) {
+    blunted::World& w = match->GetEcsWorld();
+    OfficialsComponent* comp = w.GetComponent<OfficialsComponent>(e);
+    if (comp) {
+      SyncOfficialsToEcs(*officials, *comp);
+    } else {
+      OfficialsComponent fresh;
+      SyncOfficialsToEcs(*officials, fresh);
+      w.AddComponent(e, fresh);
+    }
+  }
+  
+  // 执行原有逻辑
+  officials->Process();
+}
+
+void OfficialsSystemFetchPutBuffers(Match* match) {
+  DO_VALIDATION;
+  Officials* officials = match->GetOfficials();
+  if (officials) {
+    officials->FetchPutBuffers();
+  }
+}
+
+void OfficialsSystemPut(Match* match, bool mirror) {
+  DO_VALIDATION;
+  Officials* officials = match->GetOfficials();
+  if (officials) {
+    officials->Put(mirror);
+  }
+}
+
+// 2026-09-02 Phase 8：Player 核心状态 ECS 系统
+// 从 Player OOP 提取核心状态到 ECS 组件，使球员状态可查询。
+
+void SyncPlayerToEcs(Player& src, PlayerStateComponent& dst) {
+  // 基本信息
+  dst.stable_id = src.GetStableID();
+  dst.team_id = src.GetTeamID();
+  dst.is_active = src.IsActive();
+  
+  // 物理状态
+  dst.position = src.GetPosition();
+  dst.geom_position = src.GetGeomPosition();
+  dst.direction_vec = src.GetDirectionVec();
+  dst.body_direction_vec = src.GetBodyDirectionVec();
+  dst.rel_body_angle = src.GetRelBodyAngle();
+  
+  // 动作状态
+  dst.enum_velocity = src.GetEnumVelocity();
+  dst.float_velocity = src.GetFloatVelocity();
+  dst.movement = src.GetMovement();
+  dst.foot = e_Foot_Right;  // 默认值，需要从 Humanoid 获取
+  
+  // 控球状态
+  dst.has_possession = src.HasPossession();
+  dst.has_best_possession = src.HasBestPossession();
+  dst.has_unique_possession = src.HasUniquePossession();
+  dst.possession_duration_ms = src.GetPossessionDuration_ms();
+  
+  // 时间戳
+  dst.last_touch_time_ms = src.GetLastTouchTime_ms();
+  dst.last_touch_type = static_cast<int>(src.GetLastTouchType());
+  
+  // 疲劳与状态
+  dst.fatigue_factor_inv = src.GetFatigueFactorInv();
+  dst.cards = 0;  // 需要从 Player 获取 cards 成员
+}
+
+void SyncPlayerStateSystem(Match* match) {
+  DO_VALIDATION;
+  blunted::World& w = match->GetEcsWorld();
+  bool needs_sort = false;
+  
+  for (blunted::Entity e : match->GetEcsPlayerEntities()) {
+    PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
+    PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+    if (!meta || !pref || !pref->player) continue;
+    if (!meta->is_active) continue;
+    
+    PlayerStateComponent* comp = w.GetComponent<PlayerStateComponent>(e);
+    if (!comp) {
+      PlayerStateComponent fresh;
+      SyncPlayerToEcs(*pref->player, fresh);
+      w.AddComponent(e, fresh);
+      needs_sort = true;
+    } else {
+      SyncPlayerToEcs(*pref->player, *comp);
+    }
+  }
+  
+  // 批量添加后统一排序
+  if (needs_sort) {
+    w.FlushBatchAdds<PlayerStateComponent>();
+  }
+}
+
+// 2026-09-02 Phase 8：Humanoid 动画状态 ECS 系统
+// 从 HumanoidBase OOP 提取动画状态到 ECS 组件，使动画状态可查询。
+
+#include "player/humanoid/humanoidbase.hpp"
+
+void SyncHumanoidToEcs(HumanoidBase& src, HumanoidStateComponent& dst) {
+  // 动画信息
+  dst.current_frame = src.GetFrameNum();
+  dst.frame_count = src.GetFrameCount();
+  dst.current_anim_id = src.GetCurrentAnim() ? src.GetCurrentAnim()->id : -1;
+  dst.current_function_type = src.GetCurrentFunctionType();
+  dst.previous_function_type = src.GetPreviousFunctionType();
+  
+  // 触球状态（需要从 Humanoid 获取）
+  // 注意：HumanoidBase 没有直接的 TouchPending/TouchAnim 方法
+  // 这些方法在 Humanoid 类中，需要向下转型
+  dst.touch_pending = false;
+  dst.touch_anim = false;
+  dst.touch_pos = Vector3(0);
+  dst.touch_frame = 0;
+  
+  // 动画选择
+  dst.is_retain_anim = false;
+  dst.is_trip_anim = false;
+  dst.trip_vector = Vector3(0);
+  dst.trip_type = 0;
+  
+  // 身体部位方向
+  dst.body_angle = 0;
+  dst.look_at_angle = 0;
+  dst.look_at_target = Vector3(0);
+  
+  // 空间状态（用于渲染）
+  dst.position = src.GetPosition();
+  dst.direction_vec = src.GetDirectionVec();
+  dst.body_direction_vec = src.GetBodyDirectionVec();
+  dst.rel_body_angle = src.GetRelBodyAngle();
+}
+
+void SyncHumanoidStateSystem(Match* match) {
+  DO_VALIDATION;
+  blunted::World& w = match->GetEcsWorld();
+  bool needs_sort = false;
+  
+  for (blunted::Entity e : match->GetEcsPlayerEntities()) {
+    PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
+    PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+    if (!meta || !pref || !pref->player) continue;
+    if (!meta->is_active) continue;
+    
+    auto* humanoid = pref->player->CastHumanoid();
+    if (!humanoid) continue;
+    
+    HumanoidStateComponent* comp = w.GetComponent<HumanoidStateComponent>(e);
+    if (!comp) {
+      HumanoidStateComponent fresh;
+      SyncHumanoidToEcs(*humanoid, fresh);
+      w.AddComponent(e, fresh);
+      needs_sort = true;
+    } else {
+      SyncHumanoidToEcs(*humanoid, *comp);
+    }
+  }
+  
+  // 批量添加后统一排序
+  if (needs_sort) {
+    w.FlushBatchAdds<HumanoidStateComponent>();
+  }
+}
+
+// 2026-09-02 Phase 8：MentalImage 心理图像 ECS 系统
+// 从 MentalImage OOP 提取心理图像状态到 ECS 组件，使 AI 决策状态可查询。
+
+#include "AIsupport/mentalimage.hpp"
+
+void SyncMentalImageToEcs(const MentalImage& src, MentalImageComponent& dst) {
+  // 时间信息
+  dst.time_stamp_ms = src.timeStamp_ms;
+  dst.is_valid = (src.timeStamp_ms > 0);  // 使用时间戳判断有效性
+  
+  // 球状态（从 ballPredictions 获取最新预测）
+  if (!src.ballPredictions.empty()) {
+    dst.ball_position = src.ballPredictions.back();
+  } else {
+    dst.ball_position = Vector3(0);
+  }
+  dst.ball_momentum = Vector3(0);  // MentalImage 不直接存储动量
+  
+  // 球员状态
+  dst.player_states.clear();
+  for (const auto& player_img : src.players) {
+    MentalImageComponent::PlayerState state;
+    state.position = player_img.position;
+    state.direction_vec = player_img.directionVec;
+    state.is_active = (player_img.player != nullptr);
+    state.team_id = -1;  // 需要从 Player 获取 team_id
+    dst.player_states.push_back(state);
+  }
+  
+  // 队伍状态（需要从 Match 获取）
+  dst.last_touch_team_id = -1;
+  dst.best_possession_team_id = -1;
+  
+  // 偏差参数
+  dst.max_distance_deviation = src.maxDistanceDeviation;
+  dst.max_movement_deviation = src.maxMovementDeviation;
+}
+
+void SyncMentalImageSystem(Match* match) {
+  DO_VALIDATION;
+  // MentalImage 存储在 Match 的 mentalImages 向量中
+  // 这里同步最新的 MentalImage 到 ECS
+  // 注意：MentalImage 是按时间戳存储的，我们只同步最新的一个
+  
+  // 获取最新的 MentalImage（如果有）
+  // MentalImage 系统在 StepMentalImages 中更新，这里只做同步
 }

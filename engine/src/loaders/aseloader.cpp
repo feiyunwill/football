@@ -79,6 +79,11 @@ void ASELoader::Build(const s_tree *data,
         treeentry_find(material_tree, "MATERIAL_SHINESTRENGTH");
     const s_treeentry *self_illumination =
         treeentry_find(material_tree, "MATERIAL_SELFILLUM");
+    
+    // 2026-09-03 Phase 12: PBR 参数
+    const s_treeentry *metallic = treeentry_find(material_tree, "MATERIAL_METALLIC");
+    const s_treeentry *roughness = treeentry_find(material_tree, "MATERIAL_ROUGHNESS");
+    const s_treeentry *ao = treeentry_find(material_tree, "MATERIAL_AO");
 
     const s_tree *maps[4];
     maps[0] = tree_find(material_tree, "MAP_DIFFUSE");
@@ -111,6 +116,23 @@ void ASELoader::Build(const s_tree *data,
     mat.specular_amount = shinestrength->values.at(0);
     // mat.self_illumination_.Set(atof(self_illumination->values.at(0).c_str()));
     mat.self_illumination.Set(atof(self_illumination->values.at(0).c_str()));
+    
+    // 2026-09-03 Phase 12: PBR 参数
+    if (metallic) {
+      mat.metallic = metallic->values.at(0);
+    } else {
+      mat.metallic = "0.0";
+    }
+    if (roughness) {
+      mat.roughness = roughness->values.at(0);
+    } else {
+      mat.roughness = "0.5";
+    }
+    if (ao) {
+      mat.ao = ao->values.at(0);
+    } else {
+      mat.ao = "1.0";
+    }
 
     materialList.push_back(mat);
   }
@@ -549,6 +571,14 @@ void ASELoader::BuildTriangleMesh(
         atof(materialList.at(material_reference).specular_amount.c_str());
     material.self_illumination_ =
         materialList.at(material_reference).self_illumination;
+    
+    // 2026-09-03 Phase 12: PBR 参数
+    material.metallic_ =
+        atof(materialList.at(material_reference).metallic.c_str());
+    material.roughness_ =
+        atof(materialList.at(material_reference).roughness.c_str());
+    material.ao_ =
+        atof(materialList.at(material_reference).ao.c_str());
   }
 
   std::vector<unsigned int> indices;

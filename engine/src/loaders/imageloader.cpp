@@ -33,8 +33,11 @@ void ImageLoader::Load(std::string filename,
                        boost::intrusive_ptr<Resource<Surface> > resource) {
   DO_VALIDATION;
   SDL_Surface *surface = IMG_LoadBmp(filename.c_str());
-  if (!surface)
-    Log(e_FatalError, "ImageLoader", "Load", "Could not load " + filename);
+  if (!surface) {
+    // 2026-09-01: 将 FATAL 降为 Warning，避免双重路径等预加载问题导致整个进程退出。
+    Log(e_Warning, "ImageLoader", "Load", "Could not load " + filename);
+    return;
+  }
   resource->GetResource()->SetData(surface);
 }
 }

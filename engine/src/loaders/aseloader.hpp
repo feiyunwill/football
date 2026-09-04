@@ -31,6 +31,11 @@ namespace blunted {
     std::string shininess;
     std::string specular_amount;
     Vector3 self_illumination;
+    
+    // 2026-09-03 Phase 12: PBR 参数
+    std::string metallic;
+    std::string roughness;
+    std::string ao;
   };
 
   class ASELoader : public Loader<GeometryData> {

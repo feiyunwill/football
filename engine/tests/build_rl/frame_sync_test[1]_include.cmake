@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/third_party/gfootball_engine/tests/build_rl/frame_sync_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/third_party/gfootball_engine/tests/build_rl/frame_sync_test[1]_tests.cmake")
+else()
+  add_test(frame_sync_test_NOT_BUILT frame_sync_test_NOT_BUILT)
+endif()

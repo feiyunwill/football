@@ -239,8 +239,21 @@ void GraphicsCamera::SetPosition(const Vector3 &newPosition) {
       DO_VALIDATION;
       depthParamNear = buffer.cameraFarCap / (buffer.cameraFarCap - buffer.cameraNearCap);
     }
+    
+    Matrix4 inverseProjectionViewMatrix = (projectionMatrix * viewMatrix).GetInverse();
 
-    std::vector<e_TargetAttachment> targets;
+    // 2026-09-03 Phase 12-15: 使用 PBR 渲染管线
+    // 通过环境变量 GFOOTBALL_USE_PBR=1 启用 PBR 渲染管线
+    static bool usePBR = (getenv("GFOOTBALL_USE_PBR") != nullptr);
+    
+    if (usePBR) {
+      // 使用新的 PBR 渲染管线
+      renderer->RenderViewPBR(view, projectionMatrix, viewMatrix, inverseProjectionViewMatrix,
+                              depthParamNear, depthParamFar,
+                              buffer.visibleGeometry, buffer.visibleLights, buffer.skyboxes);
+    } else {
+      // 使用传统的渲染管线
+      std::vector<e_TargetAttachment> targets;
 
 
     // render skybox
@@ -478,6 +491,7 @@ void GraphicsCamera::SetPosition(const Vector3 &newPosition) {
     targets.clear();
 
     renderer->SetViewport(0, 0, width, height);
+    } // end if (usePBR)
 
     buffer.visibleGeometry.clear();
     buffer.visibleLights.clear();

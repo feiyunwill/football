@@ -251,10 +251,8 @@ class FrameSyncServer(object):
   def _assign_slots_for_new_client(self):
     """Assign slots to the new client (simple: one client = one slot in order)."""
     used = set()
-    # 2026-08-25 修复（原因）：_clients 元素为 4 元组 (conn, addr, slots, ready_flag)，
-    # 旧 3 元组解包在槽位分配路径会抛 ValueError
-    # for _conn, _addr, slots in self._clients:
-    for _conn, _addr, slots, _ready in self._clients:
+    # 2026-09-01 修复：_clients 元素为 6 元组 (conn, addr, slots, ready, session_id, last_activity)。
+    for _conn, _addr, slots, _ready, _sid, _act in self._clients:
       used.update(slots)
     for slot in range(self.num_slots):
       if slot not in used:

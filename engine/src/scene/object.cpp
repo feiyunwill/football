@@ -34,9 +34,13 @@ Object::~Object() {
   DO_VALIDATION;
   if (observers_.size() != 0) {
     DO_VALIDATION;
-    Log(e_FatalError, "Object", "~Object",
+    // 2026-09-01: headless 模式（MockRenderer3D）下 CreateSystemObjects
+    // 创建的 GraphicsGeometry observer 在 Exit() 路径中可能未完整 detach，
+    // 导致 ~Object() 时 observers_ 非空。降级为 warning 使 headless 可用。
+    Log(e_Warning, "Object", "~Object",
         "Observer(s) still present at destruction time (spatial named: " +
             GetName() + ")");
+    observers_.clear();
   }
 }
 

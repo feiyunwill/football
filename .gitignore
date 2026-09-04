@@ -8,6 +8,9 @@ dist/
 # virtual environment
 football-env*/
 
+# Compiled binaries
+bin/
+
 # CMake related directories and files
 engine/build*
 engine/_deps/
@@ -28,18 +31,10 @@ cmake_install.cmake
 # clangd：若将 build 内 compile_commands.json 复制/链接到引擎根，勿提交
 engine/compile_commands.json
 
-# 2026-08-29：ECS 测试二进制文件
-engine/build_rl/component_pool_test
-
-# 2026-08-26：开发安装 symlink 与 frame_sync_asio 可执行构建产物（勿提交；
-# 注意不可用 frame_sync_* 通配，会误伤源码目录 frame_sync_asio）
+# 开发安装 symlink
 /gfootball_engine
-engine/frame_sync_client*
-engine/frame_sync_server*
-# 2026-08-26：frame_sync_asio 独立构建目录（cmake -B build_fs_asio）
+# frame_sync_asio 独立构建目录（cmake -B build_fs_asio）
 engine/frame_sync_asio/build_fs_asio/
-# 2026-08-29：RL 训练构建目录
-engine/tests/build_rl/
 
 # IDE
 .idea
@@ -48,3 +43,9 @@ engine/tests/build_rl/
 # Agent coordination runtime state
 .agent-coordination/*.tmp
 .agent-coordination/*.lock
+
+# Test build directories
+engine/tests/build_rl/
+engine/tests/build_tests/
+engine/tests/build_rl/_deps/
+engine/tests/build_tests/_deps/

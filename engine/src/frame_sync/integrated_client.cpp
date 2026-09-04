@@ -245,14 +245,13 @@ class IntegratedFrameSyncClient {
     }
     env_->game_config.render = config_.render;
     env_->game_config.physics_steps_per_frame = 10;
-    env_->start_game();
 
     auto scenario = ScenarioConfig::make();
     scenario->left_agents = left_agents_;
     scenario->right_agents = right_agents_;
     scenario->game_engine_random_seed = seed_;
+    env_->start_game(*scenario);
     env_->state = GameState::game_running;
-    env_->reset(*scenario, false);
 
     fprintf(stderr, "GameEnv initialized: %uv%u, seed=%u\n",
             left_agents_, right_agents_, seed_);

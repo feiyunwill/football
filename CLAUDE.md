@@ -60,7 +60,7 @@ Python 测试均为 absltest 风格（`gfootball/env/*_test.py`）。C++ 侧无�
 - `onthepitch/` — 比赛逻辑：Match、Team、Player、Ball、Referee、HumanGamer、TeamAIController 等。
 - `scene/` + `systems/graphics` — 场景图与渲染。`render=false` 时用 `MockRenderer3D` 无头运行（见 `src/frame_sync/HEADLESS.md`），服务器进程因此不依赖 GPU/窗口。
 - `base/math` 与 `base/geometry` — 高频调用的数学库，性能最敏感（见下方规则）。
-- `ecs/` — 自研最小 ECS（World / Entity / ComponentPool），正在分阶段替换 onthepitch 的传统对象图（阶段1 已接入）；组件池按 Entity id 排序遍历以保证跨平台确定性。
+- `ecs/` — 自研最小 ECS（World / Entity / ComponentPool），正在分阶段替换 onthepitch 的传统对象图（阶段1 已接入）；组件池按 Entity id 排序遍历以保证跨平台确定性。Phase 9 已完成：移除 OOP 包装层，ECS 直接驱动游戏逻辑；优化查询接口（Query/QueryBuilder）；系统批处理（SystemBatch）。
 
 ### 帧同步联机
 

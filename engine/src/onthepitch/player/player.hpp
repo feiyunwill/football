@@ -122,6 +122,9 @@ class Player : public PlayerBase {
     virtual void ResetSituation(const Vector3 &focusPos);
 
     void ProcessState(EnvState* state);
+
+    /// 2026-09-03 Phase 11: 将球员状态填充到 ECS 组件（重写以添加控球和卡片信息）
+    void FillPlayerStateComponent(PlayerStateComponent& out) const override;
   protected:
     void _CalculateTacticalSituation();
 

@@ -34,6 +34,7 @@ using namespace blunted;
 
 class PlayerBase;
 class Match;
+struct HumanoidStateComponent;
 
 struct HJoint {
   boost::intrusive_ptr<Node> node;
@@ -289,6 +290,9 @@ class HumanoidBase {
 
     virtual void ResetSituation(const Vector3 &focusPos);
     void ProcessState(EnvState* state);
+
+    /// 2026-09-03 Phase 11: 将 Humanoid 状态填充到 ECS 组件
+    void FillHumanoidStateComponent(HumanoidStateComponent& out) const;
 
   protected:
     bool _HighOrBouncyBall() const;

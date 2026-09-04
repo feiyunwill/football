@@ -193,7 +193,16 @@ void GraphicsLight::SetPosition(const Vector3 &newPosition) {
         renderer3D->SetRenderTargets(targets);
         targets.clear();
 
-        if (!renderer3D->CheckFrameBufferStatus()) Log(e_FatalError, "Renderer3DMessage_CreateFrameBuffer", "Execute", "Could not create framebuffer");
+        if (!renderer3D->CheckFrameBufferStatus()) {
+          // 2026-09-01: 深度-only FBO + GL_NONE draw buffers 在部分驱动上不支持
+          // （如 WSL mesa），降级为 Warning 并禁用该光源阴影。
+          Log(e_Warning, "Renderer3DMessage_CreateFrameBuffer", "Execute",
+              "Could not create shadow map framebuffer, shadows disabled for this light");
+          renderer3D->DeleteFrameBuffer(map.frameBufferID);
+          renderer3D->BindFrameBuffer(0);
+          caller_->SetShadow(false);
+          return;
+        }
         renderer3D->BindFrameBuffer(0);
         targets.push_back(e_TargetAttachment_Back);
         renderer3D->SetRenderTargets(targets);

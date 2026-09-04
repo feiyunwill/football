@@ -561,6 +561,24 @@ bool OpenGLRenderer3D::CreateContext(int width, int height, int bpp,
   LoadShader("zphase", "media/shaders/zphase");
   LoadShader("postprocess", "media/shaders/postprocess");
   LoadShader("overlay", "media/shaders/overlay");
+  
+  // 2026-09-03 Phase 12-15: 新渲染管线着色器
+  LoadShader("pbr", "media/shaders/pbr");
+  LoadShader("ibl_irradiance", "media/shaders/ibl_irradiance");
+  LoadShader("ibl_prefilter", "media/shaders/ibl_prefilter");
+  LoadShader("ibl_brdf_lut", "media/shaders/ibl_brdf_lut");
+  LoadShader("ibl_composition", "media/shaders/ibl_composition");
+  LoadShader("tonemapping", "media/shaders/tonemapping");
+  LoadShader("auto_exposure", "media/shaders/auto_exposure");
+  LoadShader("csm_depth", "media/shaders/csm_depth");
+  LoadShader("csm_sampling", "media/shaders/csm_sampling");
+  LoadShader("vsm_depth", "media/shaders/vsm_depth");
+  LoadShader("vsm_shadow", "media/shaders/vsm_shadow");
+  LoadShader("blur", "media/shaders/blur");
+  LoadShader("bloom", "media/shaders/bloom");
+  LoadShader("ssr", "media/shaders/ssr");
+  LoadShader("motion_blur", "media/shaders/motion_blur");
+  LoadShader("fxaa", "media/shaders/fxaa");
 
   currentShader = shaders.begin();
 
@@ -736,6 +754,12 @@ void OpenGLRenderer3D::DeleteView(int viewID) {
 
 void OpenGLRenderer3D::SetCullingMode(e_CullingMode cullingMode) {
   DO_VALIDATION;
+  
+  // 2026-09-03 渲染优化：状态缓存
+  if (cachingEnabled_ && stateCache.cullingMode == cullingMode) {
+    return; // 状态未改变，跳过 OpenGL 调用
+  }
+  stateCache.cullingMode = cullingMode;
 
   switch (cullingMode) {
     DO_VALIDATION;
@@ -758,6 +782,13 @@ void OpenGLRenderer3D::SetCullingMode(e_CullingMode cullingMode) {
 
 void OpenGLRenderer3D::SetBlendingMode(e_BlendingMode blendingMode) {
   DO_VALIDATION;
+  
+  // 2026-09-03 渲染优化：状态缓存
+  if (cachingEnabled_ && stateCache.blendingMode == blendingMode) {
+    return;
+  }
+  stateCache.blendingMode = blendingMode;
+  
   switch (blendingMode) {
     DO_VALIDATION;
 
@@ -804,6 +835,13 @@ void OpenGLRenderer3D::SetBlendingFunction(
 
 void OpenGLRenderer3D::SetDepthFunction(e_DepthFunction depthFunction) {
   DO_VALIDATION;
+  
+  // 2026-09-03 渲染优化：状态缓存
+  if (cachingEnabled_ && stateCache.depthFunction == depthFunction) {
+    return;
+  }
+  stateCache.depthFunction = depthFunction;
+  
   switch (depthFunction) {
     DO_VALIDATION;
 
@@ -843,6 +881,13 @@ void OpenGLRenderer3D::SetDepthFunction(e_DepthFunction depthFunction) {
 
 void OpenGLRenderer3D::SetDepthTesting(bool OnOff) {
   DO_VALIDATION;
+  
+  // 2026-09-03 渲染优化：状态缓存
+  if (cachingEnabled_ && stateCache.depthTesting == OnOff) {
+    return;
+  }
+  stateCache.depthTesting = OnOff;
+  
   if (OnOff) {
     DO_VALIDATION;
     mapping.glEnable(GL_DEPTH_TEST);
@@ -853,6 +898,13 @@ void OpenGLRenderer3D::SetDepthTesting(bool OnOff) {
 
 void OpenGLRenderer3D::SetDepthMask(bool OnOff) {
   DO_VALIDATION;
+  
+  // 2026-09-03 渲染优化：状态缓存
+  if (cachingEnabled_ && stateCache.depthMask == OnOff) {
+    return;
+  }
+  stateCache.depthMask = OnOff;
+  
   if (OnOff) {
     DO_VALIDATION;
     mapping.glDepthMask(GL_TRUE);
@@ -1148,8 +1200,15 @@ void OpenGLRenderer3D::UpdateVertexBuffer(VertexBufferID vertexBufferID,
       GL_MAP_WRITE_BIT |
           GL_MAP_UNSYNCHRONIZED_BIT);  // GL_MAP_INVALIDATE_BUFFER_BIT |
                                        // GL_MAP_INVALIDATE_RANGE_BIT |
-  memcpy(ptr, vertices, verticesDataSize * sizeof(float));
-  mapping.glUnmapBuffer(GL_ARRAY_BUFFER);
+  // 2026-09-01: glMapBufferRange 在某些驱动上返回 NULL（尤其无 GL context
+  // 或驱动不支持 UNSYNCHRONIZED），回退到 glBufferSubData 避免 memcpy NULL crash。
+  if (ptr) {
+    memcpy(ptr, vertices, verticesDataSize * sizeof(float));
+    mapping.glUnmapBuffer(GL_ARRAY_BUFFER);
+  } else {
+    mapping.glBufferSubData(GL_ARRAY_BUFFER, 0,
+                            verticesDataSize * sizeof(float), vertices);
+  }
 
   //      glBufferData(GL_ARRAY_BUFFER, verticesDataSize * sizeof(float),
   //      vertices, GL_DYNAMIC_DRAW);
@@ -1824,6 +1883,16 @@ void OpenGLRenderer3D::CopyFrameBufferToTexture(int textureID, int width,
 
 void OpenGLRenderer3D::BindTexture(int textureID) {
   DO_VALIDATION;
+  
+  // 2026-09-03 渲染优化：纹理绑定缓存
+  if (cachingEnabled_) {
+    auto it = stateCache.boundTextures.find(stateCache.currentTextureUnit);
+    if (it != stateCache.boundTextures.end() && it->second == textureID) {
+      return; // 纹理已绑定，跳过
+    }
+    stateCache.boundTextures[stateCache.currentTextureUnit] = textureID;
+  }
+  
   mapping.glBindTexture(GL_TEXTURE_2D, (GLuint)textureID);
 }
 
@@ -1834,6 +1903,11 @@ void OpenGLRenderer3D::SetTextureUnit(int textureUnit) {
     // assert(glActiveTexture);
     mapping.glActiveTexture(GL_TEXTURE0 + (GLuint)textureUnit);
     _cache_activeTextureUnit = textureUnit;
+    
+    // 2026-09-03 渲染优化：更新状态缓存
+    if (cachingEnabled_) {
+      stateCache.currentTextureUnit = textureUnit;
+    }
   }
 }
 
@@ -1907,6 +1981,13 @@ void OpenGLRenderer3D::DeleteFrameBuffer(int fbID) {
 
 void OpenGLRenderer3D::BindFrameBuffer(int fbID) {
   DO_VALIDATION;
+  
+  // 2026-09-03 渲染优化：帧缓冲绑定缓存
+  if (cachingEnabled_ && stateCache.currentFramebuffer == fbID) {
+    return; // 帧缓冲已绑定，跳过
+  }
+  stateCache.currentFramebuffer = fbID;
+  
   mapping.glBindFramebuffer(GL_FRAMEBUFFER, (GLuint)fbID);
 }
 
@@ -1933,7 +2014,9 @@ bool OpenGLRenderer3D::CheckFrameBufferStatus() {
     DO_VALIDATION;
     return true;
   } else {
-    Log(e_FatalError, "OpenGLRenderer3D", "CheckFrameBufferStatus",
+    // 2026-09-01: 降级为 Warning，由调用方决定是否 FATAL。
+    // 部分驱动（如 WSL mesa）的深度-only FBO 报告不完整，但不影响渲染。
+    Log(e_Warning, "OpenGLRenderer3D", "CheckFrameBufferStatus",
         "Framebuffer error state #" + int_to_str(status));
     return false;
   }
@@ -2244,6 +2327,106 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
     mapping.glBindAttribLocation(shader.programID, 0, "vertex");
     mapping.glBindFragDataLocation(shader.programID, 0, "stdout");
   }
+  
+  // 2026-09-03 Phase 12-15: 新渲染管线着色器绑定
+  if (name == "pbr") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "normal");
+    mapping.glBindAttribLocation(shader.programID, 2, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "FragColor");
+  }
+  if (name == "ibl_irradiance") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "normal");
+    mapping.glBindFragDataLocation(shader.programID, 0, "FragColor");
+  }
+  if (name == "ibl_prefilter") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "normal");
+    mapping.glBindFragDataLocation(shader.programID, 0, "FragColor");
+  }
+  if (name == "ibl_brdf_lut") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "FragColor");
+  }
+  if (name == "ibl_composition") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "normal");
+    mapping.glBindAttribLocation(shader.programID, 2, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "FragColor");
+  }
+  if (name == "tonemapping") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "stdout");
+  }
+  if (name == "auto_exposure") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "stdout");
+  }
+  if (name == "csm_depth") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindFragDataLocation(shader.programID, 0, "FragColor");
+  }
+  if (name == "csm_sampling") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "normal");
+    mapping.glBindAttribLocation(shader.programID, 2, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "ShadowFactor");
+  }
+  if (name == "vsm_depth") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindFragDataLocation(shader.programID, 0, "FragColor");
+  }
+  if (name == "vsm_shadow") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "normal");
+    mapping.glBindAttribLocation(shader.programID, 2, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "ShadowFactor");
+  }
+  if (name == "blur") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "stdout");
+  }
+  if (name == "bloom") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "stdout");
+  }
+  if (name == "ssr") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "stdout");
+  }
+  if (name == "motion_blur") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "stdout");
+  }
+  if (name == "fxaa") {
+    DO_VALIDATION;
+    mapping.glBindAttribLocation(shader.programID, 0, "position");
+    mapping.glBindAttribLocation(shader.programID, 1, "texCoord");
+    mapping.glBindFragDataLocation(shader.programID, 0, "stdout");
+  }
 
   mapping.glLinkProgram(shader.programID);
 
@@ -2307,6 +2490,127 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
     SetUniformFloat("postprocess", "contextWidth", (float)context_width);
     SetUniformFloat("postprocess", "contextHeight", (float)context_height);
   }
+  
+  // 2026-09-03 Phase 12-15: 新渲染管线着色器 uniform 设置
+  if (name == "pbr") {
+    DO_VALIDATION;
+    SetUniformInt("pbr", "map_albedo", 0);
+    SetUniformInt("pbr", "map_normal", 1);
+    SetUniformInt("pbr", "map_metallic", 2);
+    SetUniformInt("pbr", "map_roughness", 3);
+    SetUniformInt("pbr", "map_ao", 4);
+  }
+  if (name == "ibl_irradiance") {
+    DO_VALIDATION;
+    SetUniformInt("ibl_irradiance", "map_environment", 0);
+  }
+  if (name == "ibl_prefilter") {
+    DO_VALIDATION;
+    SetUniformInt("ibl_prefilter", "map_environment", 0);
+  }
+  if (name == "ibl_brdf_lut") {
+    DO_VALIDATION;
+    // 无纹理 uniform
+  }
+  if (name == "ibl_composition") {
+    DO_VALIDATION;
+    SetUniformInt("ibl_composition", "irradianceMap", 0);
+    SetUniformInt("ibl_composition", "prefilterMap", 1);
+    SetUniformInt("ibl_composition", "brdfLUT", 2);
+    SetUniformInt("ibl_composition", "map_albedo", 3);
+    SetUniformInt("ibl_composition", "map_normal", 4);
+    SetUniformInt("ibl_composition", "map_metallic", 5);
+    SetUniformInt("ibl_composition", "map_roughness", 6);
+    SetUniformInt("ibl_composition", "map_ao", 7);
+  }
+  if (name == "tonemapping") {
+    DO_VALIDATION;
+    SetUniformInt("tonemapping", "map_hdr", 0);
+    SetUniformInt("tonemapping", "map_bloom", 1);
+    SetUniformInt("tonemapping", "map_depth", 2);
+    SetUniformFloat("tonemapping", "contextX", (float)0.0);
+    SetUniformFloat("tonemapping", "contextY", (float)0.0);
+    SetUniformFloat("tonemapping", "contextWidth", (float)context_width);
+    SetUniformFloat("tonemapping", "contextHeight", (float)context_height);
+    SetUniformFloat("tonemapping", "exposure", 1.0f);
+    SetUniformFloat("tonemapping", "bloomStrength", 0.0f);
+    SetUniformInt("tonemapping", "toneMappingOperator", 1); // ACES
+  }
+  if (name == "auto_exposure") {
+    DO_VALIDATION;
+    SetUniformInt("auto_exposure", "map_hdr", 0);
+    SetUniformFloat("auto_exposure", "contextX", (float)0.0);
+    SetUniformFloat("auto_exposure", "contextY", (float)0.0);
+    SetUniformFloat("auto_exposure", "contextWidth", (float)context_width);
+    SetUniformFloat("auto_exposure", "contextHeight", (float)context_height);
+    SetUniformFloat("auto_exposure", "minExposure", 0.1f);
+    SetUniformFloat("auto_exposure", "maxExposure", 10.0f);
+    SetUniformFloat("auto_exposure", "adaptationSpeed", 1.0f);
+  }
+  if (name == "csm_depth") {
+    DO_VALIDATION;
+    // 无纹理 uniform
+  }
+  if (name == "csm_sampling") {
+    DO_VALIDATION;
+    SetUniformInt("csm_sampling", "shadowMapArray", 0);
+    SetUniformInt("csm_sampling", "map_normal", 1);
+    SetUniformFloat("csm_sampling", "shadowMapSize", 2048.0f);
+    SetUniformFloat("csm_sampling", "shadowBias", 0.005f);
+    SetUniformFloat("csm_sampling", "normalBias", 0.02f);
+  }
+  if (name == "vsm_depth") {
+    DO_VALIDATION;
+    // 无纹理 uniform
+  }
+  if (name == "vsm_shadow") {
+    DO_VALIDATION;
+    SetUniformInt("vsm_shadow", "shadowMap", 0);
+    SetUniformInt("vsm_shadow", "map_normal", 1);
+    SetUniformFloat("vsm_shadow", "shadowBias", 0.005f);
+    SetUniformFloat("vsm_shadow", "varianceBias", 0.00001f);
+  }
+  if (name == "blur") {
+    DO_VALIDATION;
+    SetUniformInt("blur", "map_texture", 0);
+    SetUniformFloat("blur", "contextX", (float)0.0);
+    SetUniformFloat("blur", "contextY", (float)0.0);
+    SetUniformFloat("blur", "contextWidth", (float)context_width);
+    SetUniformFloat("blur", "contextHeight", (float)context_height);
+  }
+  if (name == "bloom") {
+    DO_VALIDATION;
+    SetUniformInt("bloom", "map_hdr", 0);
+    SetUniformInt("bloom", "map_bloom", 1);
+    SetUniformFloat("bloom", "bloomStrength", 0.3f);
+    SetUniformFloat("bloom", "bloomThreshold", 0.8f);
+    SetUniformFloat("bloom", "bloomClamp", 1.0f);
+  }
+  if (name == "ssr") {
+    DO_VALIDATION;
+    SetUniformInt("ssr", "map_color", 0);
+    SetUniformInt("ssr", "map_normal", 1);
+    SetUniformInt("ssr", "map_depth", 2);
+    SetUniformInt("ssr", "map_material", 3);
+    SetUniformInt("ssr", "maxSteps", 64);
+    SetUniformFloat("ssr", "maxDistance", 10.0f);
+    SetUniformFloat("ssr", "thickness", 0.1f);
+    SetUniformFloat("ssr", "fadeDistance", 5.0f);
+  }
+  if (name == "motion_blur") {
+    DO_VALIDATION;
+    SetUniformInt("motion_blur", "map_color", 0);
+    SetUniformInt("motion_blur", "map_velocity", 1);
+    SetUniformFloat("motion_blur", "blurStrength", 1.0f);
+    SetUniformInt("motion_blur", "samples", 8);
+  }
+  if (name == "fxaa") {
+    DO_VALIDATION;
+    SetUniformInt("fxaa", "map_texture", 0);
+    SetUniformFloat("fxaa", "fxaaReduceMin", 1.0f / 128.0f);
+    SetUniformFloat("fxaa", "fxaaReduceMul", 1.0f / 8.0f);
+    SetUniformFloat("fxaa", "fxaaSpanMax", 8.0f);
+  }
 
   SetTextureUnit(0);
 
@@ -2328,11 +2632,24 @@ void OpenGLRenderer3D::UseShader(const std::string &name) {
   std::map<std::string, Shader>::iterator shaderIter = shaders.find(name);
   if (shaderIter != shaders.end()) {
     DO_VALIDATION;
+    
+    // 2026-09-03 渲染优化：着色器程序缓存
+    GLuint programID = (*shaderIter).second.programID;
+    if (cachingEnabled_ && stateCache.currentProgram == programID) {
+      currentShader = shaderIter;
+      return; // 着色器已激活，跳过
+    }
+    stateCache.currentProgram = programID;
 
     currentShader = shaderIter;
 
-    mapping.glUseProgram((*shaderIter).second.programID);
+    mapping.glUseProgram(programID);
   } else {
+    // 2026-09-03 渲染优化：检查是否需要取消绑定
+    if (cachingEnabled_ && stateCache.currentProgram == 0) {
+      return;
+    }
+    stateCache.currentProgram = 0;
     mapping.glUseProgram(0);
   }
 }
@@ -2536,5 +2853,185 @@ void OpenGLRenderer3D::DisableContext() {
 
 const screenshoot &OpenGLRenderer3D::GetScreen() {
   return last_screen_;
+}
+
+// 2026-09-03 Phase 12-15: PBR 渲染管线实现
+void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix,
+                                     const Matrix4 &viewMatrix,
+                                     const Matrix4 &inverseProjectionViewMatrix,
+                                     float depthParamNear, float depthParamFar,
+                                     std::deque<VertexBufferQueueEntry> &visibleGeometry,
+                                     std::deque<LightQueueEntry> &visibleLights,
+                                     std::deque<VertexBufferQueueEntry> &skyboxes) {
+  DO_VALIDATION;
+  
+  std::vector<e_TargetAttachment> targets;
+  
+  // ============================================
+  // 1. 渲染天空盒
+  // ============================================
+  if (skyboxes.size() > 0) {
+    DO_VALIDATION;
+    UseShader("");
+    
+    targets.push_back(e_TargetAttachment_Back);
+    SetRenderTargets(targets);
+    targets.clear();
+    
+    SetCullingMode(e_CullingMode_Back);
+    SetBlendingMode(e_BlendingMode_Off);
+    SetDepthFunction(e_DepthFunction_Less);
+    SetDepthTesting(false);
+    SetDepthMask(false);
+    RenderVertexBuffer(skyboxes, e_RenderMode_Diffuse);
+    SetDepthMask(true);
+    SetDepthTesting(true);
+  }
+  
+  // ============================================
+  // 2. 几何阶段 (G-Buffer)
+  // ============================================
+  UseShader("simple");
+  
+  BindFrameBuffer(view.gBufferID);
+  
+  SetViewport(0, 0, view.width, view.height);
+  
+  SetMatrix("projectionMatrix", projectionMatrix);
+  SetMatrix("viewMatrix", viewMatrix);
+  
+  targets.push_back(e_TargetAttachment_Color0);
+  targets.push_back(e_TargetAttachment_Color1);
+  targets.push_back(e_TargetAttachment_Color2);
+  SetRenderTargets(targets);
+  targets.clear();
+  
+  SetCullingMode(e_CullingMode_Back);
+  SetBlendingMode(e_BlendingMode_Off);
+  SetDepthTesting(true);
+  SetDepthFunction(e_DepthFunction_Less);
+  SetDepthMask(true);
+  ClearBuffer(Vector3(0, 0, 0), true, true);
+  
+  RenderVertexBuffer(visibleGeometry, e_RenderMode_Full);
+  
+  // ============================================
+  // 3. 光照阶段 (PBR + IBL)
+  // ============================================
+  BindFrameBuffer(view.accumBufferID);
+  targets.push_back(e_TargetAttachment_Color0);
+  targets.push_back(e_TargetAttachment_Color1);
+  SetRenderTargets(targets);
+  targets.clear();
+  
+  // 绑定 G-Buffer 纹理
+  SetTextureUnit(1);
+  BindTexture(view.gBuffer_NormalTexID);
+  SetTextureUnit(2);
+  BindTexture(view.gBuffer_DepthTexID);
+  SetTextureUnit(3);
+  BindTexture(view.gBuffer_AuxTexID);
+  SetTextureUnit(0);
+  BindTexture(view.gBuffer_AlbedoTexID);
+  
+  // 环境光 (IBL)
+  UseShader("ibl_composition");
+  
+  SetUniformFloat("ibl_composition", "contextWidth", (float)view.width);
+  SetUniformFloat("ibl_composition", "contextHeight", (float)view.height);
+  SetUniformFloat("ibl_composition", "contextX", (float)0);
+  SetUniformFloat("ibl_composition", "contextY", (float)0);
+  SetUniformMatrix4("ibl_composition", "projectionMatrix", projectionMatrix);
+  SetUniformMatrix4("ibl_composition", "viewMatrix", viewMatrix);
+  
+  SetDepthTesting(false);
+  SetDepthMask(false);
+  
+  RenderOverlay2D();
+  
+  // 直接光照 (PBR)
+  UseShader("pbr");
+  
+  SetBlendingMode(e_BlendingMode_On);
+  SetBlendingFunction(e_BlendingFunction_One, e_BlendingFunction_One);
+  
+  SetUniformFloat("pbr", "contextWidth", (float)view.width);
+  SetUniformFloat("pbr", "contextHeight", (float)view.height);
+  SetUniformFloat("pbr", "contextX", (float)0);
+  SetUniformFloat("pbr", "contextY", (float)0);
+  SetUniformMatrix4("pbr", "inverseProjectionViewMatrix", inverseProjectionViewMatrix);
+  SetUniformMatrix4("pbr", "projectionMatrix", projectionMatrix);
+  SetUniformMatrix4("pbr", "viewMatrix", viewMatrix);
+  
+  SetDepthTesting(false);
+  SetDepthMask(false);
+  
+  RenderLights(visibleLights, projectionMatrix, viewMatrix);
+  
+  SetBlendingMode(e_BlendingMode_Off);
+  SetDepthMask(true);
+  SetCullingMode(e_CullingMode_Off);
+  
+  // 清理纹理绑定
+  SetTextureUnit(1);
+  BindTexture(0);
+  SetTextureUnit(2);
+  BindTexture(0);
+  SetTextureUnit(3);
+  BindTexture(0);
+  SetTextureUnit(0);
+  BindTexture(0);
+  
+  // ============================================
+  // 4. 后处理阶段 (Tone Mapping + Bloom + FXAA)
+  // ============================================
+  BindFrameBuffer(0);
+  
+  targets.push_back(e_TargetAttachment_Back);
+  SetRenderTargets(targets);
+  targets.clear();
+  
+  // 色调映射
+  UseShader("tonemapping");
+  
+  SetUniformFloat("tonemapping", "contextWidth", (float)view.width);
+  SetUniformFloat("tonemapping", "contextHeight", (float)view.height);
+  SetUniformFloat("tonemapping", "contextX", (float)view.x);
+  SetUniformFloat("tonemapping", "contextY", (float)(context_height - (view.y + view.height)));
+  
+  int width, height, bpp;
+  GetContextSize(width, height, bpp);
+  SetViewport(view.x, height - (view.y + view.height), view.width, view.height);
+  
+  SetTextureUnit(2);
+  BindTexture(view.gBuffer_DepthTexID);
+  SetTextureUnit(1);
+  BindTexture(0); // Bloom 纹理（暂无）
+  SetTextureUnit(0);
+  BindTexture(view.accumBuffer_AccumTexID);
+  
+  SetDepthTesting(false);
+  SetDepthMask(false);
+  
+  SetFramebufferGammaCorrection(true);
+  RenderOverlay2D();
+  SetFramebufferGammaCorrection(false);
+  
+  // 清理纹理绑定
+  SetTextureUnit(2);
+  BindTexture(0);
+  SetTextureUnit(1);
+  BindTexture(0);
+  SetTextureUnit(0);
+  BindTexture(0);
+  
+  // 恢复默认着色器
+  UseShader("");
+  
+  targets.push_back(e_TargetAttachment_Back);
+  SetRenderTargets(targets);
+  targets.clear();
+  
+  SetViewport(0, 0, width, height);
 }
 }

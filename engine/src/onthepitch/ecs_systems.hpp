@@ -67,9 +67,42 @@ struct PossessionComponent;
 class Player;
 /// 从 Player 成员变量 → PossessionComponent（OOP → ECS）
 void SyncPossessionToEcs(const Player& src, PossessionComponent& dst);
-/// 从 PossessionComponent → Player 成员变量（ECS → OOP）
-void SyncPossessionFromEcs(const PossessionComponent& src, Player& dst);
 /// 遍历所有活跃球员实体，将控球状态同步到 ECS
 void SyncPlayerPossessionSystem(Match* match);
+
+// 2026-09-02 Phase 8：Officials ECS 系统
+struct OfficialsComponent;
+class Officials;
+/// 从 Officials OOP → OfficialsComponent（OOP → ECS）
+void SyncOfficialsToEcs(const Officials& src, OfficialsComponent& dst);
+/// 包装 Officials::Process()，执行裁判组逻辑
+void OfficialsSystemProcess(Match* match);
+/// 包装 Officials::FetchPutBuffers()，获取渲染缓冲区
+void OfficialsSystemFetchPutBuffers(Match* match);
+/// 包装 Officials::Put()，执行渲染
+void OfficialsSystemPut(Match* match, bool mirror);
+
+// 2026-09-02 Phase 8：Player 核心状态 ECS 系统
+struct PlayerStateComponent;
+/// 从 Player OOP → PlayerStateComponent（OOP → ECS）
+void SyncPlayerToEcs(Player& src, PlayerStateComponent& dst);
+/// 遍历所有活跃球员实体，将核心状态同步到 ECS
+void SyncPlayerStateSystem(Match* match);
+
+// 2026-09-02 Phase 8：Humanoid 动画状态 ECS 系统
+struct HumanoidStateComponent;
+class HumanoidBase;
+/// 从 HumanoidBase OOP → HumanoidStateComponent（OOP → ECS）
+void SyncHumanoidToEcs(HumanoidBase& src, HumanoidStateComponent& dst);
+/// 遍历所有活跃球员实体，将 Humanoid 动画状态同步到 ECS
+void SyncHumanoidStateSystem(Match* match);
+
+// 2026-09-02 Phase 8：MentalImage 心理图像 ECS 系统
+struct MentalImageComponent;
+class MentalImage;
+/// 从 MentalImage OOP → MentalImageComponent（OOP → ECS）
+void SyncMentalImageToEcs(const MentalImage& src, MentalImageComponent& dst);
+/// 同步所有 MentalImage 到 ECS
+void SyncMentalImageSystem(Match* match);
 
 #endif

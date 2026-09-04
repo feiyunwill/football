@@ -31,6 +31,7 @@ class Match;
 
 // 2026-04-02 修复：全局 BallComponent（ecs_components.hpp），勿在 class Ball 内再写 struct BallComponent 以免变成嵌套类型
 struct BallComponent;
+struct BallPhysicsComponent;
 
 struct BallSpatialInfo {
   BallSpatialInfo(const Vector3 &momentum, const Quaternion &rotation_ms) { DO_VALIDATION;
@@ -95,6 +96,9 @@ class Ball {
 
     /// 2026-08-28 P2-Phase2：从 ECS 组件恢复球状态（ECS → OOP 方向）
     void LoadFromComponent(const BallComponent& src);
+
+    /// 2026-09-03 Phase 11: 将球物理状态填充到 ECS 组件
+    void FillBallPhysicsComponent(BallPhysicsComponent& out) const;
 
   private:
     boost::intrusive_ptr<Node> ballNode;

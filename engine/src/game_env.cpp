@@ -145,6 +145,55 @@ void GameEnv::start_game() {
   DO_VALIDATION;
 }
 
+void GameEnv::start_game(ScenarioConfig& scenario_config) {
+  assert(context == nullptr);
+  install_stacktrace();
+  std::cout.precision(17);
+  context = new GameContext();
+  ContextHolder c(this);
+  std::cout << std::unitbuf;
+
+  char* data_dir = getenv("GFOOTBALL_DATA_DIR");
+  if (data_dir) {
+    DO_VALIDATION;
+    GetGameConfig().data_dir = data_dir;
+  }
+  if (GetGameConfig().data_dir.empty()) {
+    const char* candidates[] = {
+      "data",
+      "../data",
+      "../../data",
+      "engine/data",
+    };
+    for (auto candidate : candidates) {
+      namespace fs = std::filesystem;
+      if (fs::exists(fs::path(candidate) / "media")) {
+        GetGameConfig().data_dir = fs::absolute(candidate).string();
+        break;
+      }
+    }
+  }
+  Properties* config = new Properties();
+  config->Set("match_duration", 0.027);
+  char* font_file = getenv("GFOOTBALL_FONT");
+  if (font_file) {
+    DO_VALIDATION;
+    config->Set("font_filename", font_file);
+  } else {
+    namespace fs = std::filesystem;
+    std::string font_path = "media/fonts/alegreya/AlegreyaSansSC-ExtraBold.ttf";
+    std::string full_path = GetGameConfig().updatePath(font_path);
+    if (fs::exists(full_path)) {
+      config->Set("font_filename", full_path);
+    }
+  }
+  config->Set("game", 0);
+  run_game(config, game_config.render);
+  // Use the caller's scenario_config directly — single reset(), no double-reset crash.
+  reset(scenario_config, false);
+  DO_VALIDATION;
+}
+
 SharedInfo GameEnv::get_info() {
   GetTracker()->setDisabled(true);
   SharedInfo info;

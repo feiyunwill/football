@@ -684,3 +684,13 @@ void Ball::LoadFromComponent(const BallComponent& src) {
   orientationBuffer = src.orientationBuffer;
   ballTouchesNet = src.ballTouchesNet;
 }
+
+// 2026-09-03 Phase 11: 将球物理状态填充到 ECS 组件
+void Ball::FillBallPhysicsComponent(BallPhysicsComponent& out) const {
+  DO_VALIDATION;
+  out.position = Predict(10);
+  out.momentum = momentum;
+  out.height = out.position.coords[2];
+  out.speed = out.momentum.GetLength();
+  out.touches_net = ballTouchesNet;
+}

@@ -124,6 +124,13 @@ namespace blunted {
       void SetUniformFloat3(const std::string &shaderName, const std::string &varName, float value1, float value2, float value3) override;
       void SetUniformFloat3Array(const std::string &shaderName, const std::string &varName, int count, float *values) override;
       void SetUniformMatrix4(const std::string &shaderName, const std::string &varName, const Matrix4 &mat) override;
+      
+      // 2026-09-03 Phase 12-15: PBR 渲染管线
+      void RenderViewPBR(View &view, const Matrix4 &projectionMatrix, const Matrix4 &viewMatrix,
+                         const Matrix4 &inverseProjectionViewMatrix, float depthParamNear, float depthParamFar,
+                         std::deque<VertexBufferQueueEntry> &visibleGeometry,
+                         std::deque<LightQueueEntry> &visibleLights,
+                         std::deque<VertexBufferQueueEntry> &skyboxes);
 
     protected:
       SDL_GLContext context = 0;
@@ -155,6 +162,25 @@ namespace blunted {
 
       signed int _cache_activeTextureUnit = 0;
       screenshoot last_screen_;
+      
+      // 2026-09-03 渲染优化：OpenGL 状态缓存
+      struct GLStateCache {
+        e_CullingMode cullingMode = e_CullingMode_Off;
+        e_BlendingMode blendingMode = e_BlendingMode_Off;
+        e_DepthFunction depthFunction = e_DepthFunction_Less;
+        bool depthTesting = true;
+        bool depthMask = true;
+        e_BlendingFunction blendFunc1 = e_BlendingFunction_Zero;
+        e_BlendingFunction blendFunc2 = e_BlendingFunction_Zero;
+        int currentTextureUnit = 0;
+        std::map<int, int> boundTextures; // textureUnit -> textureID
+        unsigned int currentProgram = 0;
+        int currentFramebuffer = 0;
+      } stateCache;
+      
+      // 状态变更优化函数
+      void SetCachingEnabled(bool enabled) { cachingEnabled_ = enabled; }
+      bool cachingEnabled_ = false;
       // members and functions for rendering overlay with shaders instead of deprecated methods
       VertexBufferID overlayBuffer;  // buffer for drawing textures such as player's names and game score
       VertexBufferID quadBuffer;     // buffer for drawing simple quads

@@ -166,6 +166,11 @@ void GraphicsGeometry::SetPosition(const Vector3 &newPosition) {
     r3dMaterial.shininess = material->shininess_;
     r3dMaterial.specular_amount = material->specular_amount_;
     r3dMaterial.self_illumination = material->self_illumination_;
+    
+    // 2026-09-03 Phase 12: PBR 参数
+    r3dMaterial.metallic = material->metallic_;
+    r3dMaterial.roughness = material->roughness_;
+    r3dMaterial.ao = material->ao_;
   }
 
   void GraphicsGeometry_GeometryInterpreter::OnLoad(

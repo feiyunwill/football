@@ -188,28 +188,12 @@ if(WIN32)
   set_target_properties(${OUTPUT_LIB_NAME} PROPERTIES SUFFIX ".pyd")
 endif()
 
-# ----- Frame sync C++ server/client (Boost.Asio, no engine) -----
-add_executable(frame_sync_server src/frame_sync/asio_server.cpp)
-target_include_directories(frame_sync_server PRIVATE ${PROJECT_SOURCE_DIR}/src)
-target_link_libraries(frame_sync_server PRIVATE Boost::system)
+# ----- 帧同步联机（UDP + 真实 GameEnv）-----
+set(BIN_DIR ${PROJECT_SOURCE_DIR}/../bin)
 
-add_executable(frame_sync_client src/frame_sync/asio_client.cpp)
-target_include_directories(frame_sync_client PRIVATE ${PROJECT_SOURCE_DIR}/src)
-target_link_libraries(frame_sync_client PRIVATE Boost::system)
-
-# ----- Frame sync over reliable UDP -----
-add_executable(frame_sync_server_udp src/frame_sync/asio_server_udp.cpp)
-target_include_directories(frame_sync_server_udp PRIVATE ${PROJECT_SOURCE_DIR}/src)
-target_link_libraries(frame_sync_server_udp PRIVATE Boost::system)
-
-add_executable(frame_sync_client_udp src/frame_sync/asio_client_udp.cpp)
-target_include_directories(frame_sync_client_udp PRIVATE ${PROJECT_SOURCE_DIR}/src)
-target_link_libraries(frame_sync_client_udp PRIVATE Boost::system)
-
-# ----- 帧同步 C++ 服务端（接入真实 GameEnv，headless）-----
-add_executable(frame_sync_server_engine src/frame_sync/asio_server_engine.cpp)
-target_include_directories(frame_sync_server_engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
-target_link_libraries(frame_sync_server_engine PRIVATE
+add_executable(football_server src/frame_sync/asio_server_engine.cpp)
+target_include_directories(football_server PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(football_server PRIVATE
   -Wl,--no-as-needed
   ${OUTPUT_LIB_NAME}
   gamelib menulib datalib blunted2
@@ -218,11 +202,11 @@ target_link_libraries(frame_sync_server_engine PRIVATE
   Boost::system
   pthread
 )
+set_target_properties(football_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
-# ----- 集成帧同步客户端（接入真实 GameEnv）-----
-add_executable(integrated_client src/frame_sync/integrated_client.cpp)
-target_include_directories(integrated_client PRIVATE ${PROJECT_SOURCE_DIR}/src)
-target_link_libraries(integrated_client PRIVATE
+add_executable(football_client src/frame_sync/integrated_client_udp.cpp)
+target_include_directories(football_client PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(football_client PRIVATE
   -Wl,--no-as-needed
   ${OUTPUT_LIB_NAME}
   gamelib menulib datalib blunted2
@@ -231,19 +215,7 @@ target_link_libraries(integrated_client PRIVATE
   Boost::system
   pthread
 )
-
-# ----- 集成帧同步服务端（接入真实 GameEnv，headless）-----
-add_executable(integrated_server src/frame_sync/integrated_server.cpp)
-target_include_directories(integrated_server PRIVATE ${PROJECT_SOURCE_DIR}/src)
-target_link_libraries(integrated_server PRIVATE
-  -Wl,--no-as-needed
-  ${OUTPUT_LIB_NAME}
-  gamelib menulib datalib blunted2
-  ${SDL2_LIBS_ALL} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES}
-  ${Python_LIBRARIES}
-  Boost::system
-  pthread
-)
+set_target_properties(football_client PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
 # ----- Headless match runner（AI vs AI 无头比赛）-----
 add_executable(headless_match src/frame_sync/headless_match.cpp)
@@ -256,6 +228,20 @@ target_link_libraries(headless_match PRIVATE
   ${Python_LIBRARIES}
   pthread
 )
+set_target_properties(headless_match PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+
+# ----- Standalone single-player game（键盘 vs AI，无需网络）-----
+add_executable(standalone_game src/frame_sync/standalone_game.cpp)
+target_include_directories(standalone_game PRIVATE ${PROJECT_SOURCE_DIR}/src)
+target_link_libraries(standalone_game PRIVATE
+  -Wl,--no-as-needed
+  ${OUTPUT_LIB_NAME}
+  gamelib menulib datalib blunted2
+  ${SDL2_LIBS_ALL} ${EGL_LIBRARIES} ${OPENGL_LIBRARIES}
+  ${Python_LIBRARIES}
+  pthread
+)
+set_target_properties(standalone_game PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
 # ----- RLtools PPO 训练（接入真实 GameEnv）-----
 option(BUILD_RL_TRAINING "Build RLtools PPO training with real engine" OFF)

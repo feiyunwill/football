@@ -608,10 +608,9 @@ int main(int argc, char* argv[]) {
       g_env->game_config.physics_steps_per_frame = 10;
       g_env->game_config.render_resolution_x = 1280;
       g_env->game_config.render_resolution_y = 720;
-      g_env->start_game();
       auto sc = make_scenario_config(left, right, seed, "");
+      g_env->start_game(*sc);
       g_env->state = GameState::game_running;
-      g_env->reset(*sc, false);
       std::println("GameEnv ready.");
     }
 
