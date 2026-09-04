@@ -167,6 +167,9 @@ add_frame_sync_test(spectator_test spectator_test.cpp)
 # 回放系统集成测试 (ms-17.4)
 add_frame_sync_test(replay_integration_test replay_integration_test.cpp)
 
+# 网络诊断工具测试 (ms-17.5)
+add_frame_sync_test(network_diagnostics_test network_diagnostics_test.cpp)
+
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
 if(ENABLE_RLTOOLS)

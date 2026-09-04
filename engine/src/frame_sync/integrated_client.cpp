@@ -13,6 +13,7 @@
 #include "frame_sync/adaptive_jitter_buffer.hpp"
 #include "frame_sync/latency_compensator.hpp"
 #include "frame_sync/replay_system.hpp"
+#include "frame_sync/network_diagnostics.hpp"
 #include "game_env.hpp"
 #include "main.hpp"
 #include "gfootball_actions.h"
@@ -446,6 +447,7 @@ class IntegratedFrameSyncClient {
   frame_sync::AdaptiveJitterBuffer jitter_buffer_;             ///< Adaptive jitter buffer
   frame_sync::LatencyCompensator latency_comp_;                ///< Latency compensation (ms-17.1)
   frame_sync::ReplayRecorder replay_recorder_;                  ///< Replay recording (ms-17.4)
+  frame_sync::NetworkDiagnostics net_diag_;                     ///< Network diagnostics (ms-17.5)
   frame_id_t server_frame_ = 0;                                ///< Latest server frame number
 };
 
@@ -603,11 +605,17 @@ int main(int argc, char* argv[]) {
         frame_count = 0;
         fps_timer = fps_now;
 
+        // Update network diagnostics (ms-17.5)
+        net_diag_.Update(client.smoothed_rtt(), client.jitter_ms(),
+                         client.prediction_accuracy(),
+                         0, client.rollback_count(),
+                         static_cast<int>(client.current_frame_id()));
+
         char title[256];
         snprintf(title, sizeof(title),
-                 "Football MP | FPS: %.0f | Frame: %u | Rollbacks: %d | Pred: %.0f%% | RTT: %.0fms",
-                 current_fps, client.current_frame_id(), client.rollback_count(),
-                 client.prediction_accuracy() * 100.0, client.smoothed_rtt());
+                 "Football MP | FPS: %.0f | Frame: %u | %s",
+                 current_fps, client.current_frame_id(),
+                 net_diag_.FormatOverlay().c_str());
         SDL_Window* win = SDL_GL_GetCurrentWindow();
         if (win) SDL_SetWindowTitle(win, title);
       }
