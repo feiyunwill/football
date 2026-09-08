@@ -1,5 +1,0 @@
-if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_snapshot/state_snapshot_codec_test[1]_tests.cmake")
-  include("/home/zuchangqu/project/football/engine/tests/build_snapshot/state_snapshot_codec_test[1]_tests.cmake")
-else()
-  add_test(state_snapshot_codec_test_NOT_BUILT state_snapshot_codec_test_NOT_BUILT)
-endif()

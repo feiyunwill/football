@@ -1,5 +1,0 @@
-if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_latency/ux_optimizer_test[1]_tests.cmake")
-  include("/home/zuchangqu/project/football/engine/tests/build_latency/ux_optimizer_test[1]_tests.cmake")
-else()
-  add_test(ux_optimizer_test_NOT_BUILT ux_optimizer_test_NOT_BUILT)
-endif()

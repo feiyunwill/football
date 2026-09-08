@@ -1,5 +1,0 @@
-if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_interp/interpolator_test[1]_tests.cmake")
-  include("/home/zuchangqu/project/football/engine/tests/build_interp/interpolator_test[1]_tests.cmake")
-else()
-  add_test(interpolator_test_NOT_BUILT interpolator_test_NOT_BUILT)
-endif()

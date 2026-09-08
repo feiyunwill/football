@@ -1,5 +1,0 @@
-if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_modern/ecs_benchmark_test[1]_tests.cmake")
-  include("/home/zuchangqu/project/football/engine/tests/build_modern/ecs_benchmark_test[1]_tests.cmake")
-else()
-  add_test(ecs_benchmark_test_NOT_BUILT ecs_benchmark_test_NOT_BUILT)
-endif()

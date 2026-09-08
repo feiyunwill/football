@@ -1,5 +1,0 @@
-if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_interp/performance_benchmark_test[1]_tests.cmake")
-  include("/home/zuchangqu/project/football/engine/tests/build_interp/performance_benchmark_test[1]_tests.cmake")
-else()
-  add_test(performance_benchmark_test_NOT_BUILT performance_benchmark_test_NOT_BUILT)
-endif()

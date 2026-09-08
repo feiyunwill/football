@@ -1,5 +1,0 @@
-if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_batch2/lobby_protocol_test[1]_tests.cmake")
-  include("/home/zuchangqu/project/football/engine/tests/build_batch2/lobby_protocol_test[1]_tests.cmake")
-else()
-  add_test(lobby_protocol_test_NOT_BUILT lobby_protocol_test_NOT_BUILT)
-endif()

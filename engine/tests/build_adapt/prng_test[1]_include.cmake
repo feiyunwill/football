@@ -1,5 +1,0 @@
-if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_adapt/prng_test[1]_tests.cmake")
-  include("/home/zuchangqu/project/football/engine/tests/build_adapt/prng_test[1]_tests.cmake")
-else()
-  add_test(prng_test_NOT_BUILT prng_test_NOT_BUILT)
-endif()

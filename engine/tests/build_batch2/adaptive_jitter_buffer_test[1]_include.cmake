@@ -1,5 +1,0 @@
-if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_batch2/adaptive_jitter_buffer_test[1]_tests.cmake")
-  include("/home/zuchangqu/project/football/engine/tests/build_batch2/adaptive_jitter_buffer_test[1]_tests.cmake")
-else()
-  add_test(adaptive_jitter_buffer_test_NOT_BUILT adaptive_jitter_buffer_test_NOT_BUILT)
-endif()

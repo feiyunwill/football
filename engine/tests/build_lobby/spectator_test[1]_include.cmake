@@ -1,5 +1,0 @@
-if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_lobby/spectator_test[1]_tests.cmake")
-  include("/home/zuchangqu/project/football/engine/tests/build_lobby/spectator_test[1]_tests.cmake")
-else()
-  add_test(spectator_test_NOT_BUILT spectator_test_NOT_BUILT)
-endif()

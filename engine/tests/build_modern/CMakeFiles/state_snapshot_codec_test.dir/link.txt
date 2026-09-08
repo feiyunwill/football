@@ -1,1 +1,0 @@
-/opt/rh/gcc-toolset-15/root/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/state_snapshot_codec_test.dir/link.d CMakeFiles/state_snapshot_codec_test.dir/Unity/unity_0_cxx.cxx.o -o state_snapshot_codec_test  lib/libgtest_main.a lib/libgtest.a

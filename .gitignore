@@ -3,8 +3,10 @@
 # Python related files
 build/
 *.egg-info/
-__pycache__
+__pycache__/
 dist/
+.eggs/
+
 # virtual environment
 football-env*/
 
@@ -12,11 +14,6 @@ football-env*/
 bin/
 
 # CMake related directories and files
-engine/build*
-engine/_deps/
-engine/CMakeFiles/
-engine/Testing/
-engine/.cmake/
 cmake-build-*/
 vcpkg_installed/
 C[M,m]akeCache.txt
@@ -28,28 +25,34 @@ cmake_install.cmake
 *.pyd
 *.cbp
 
-# clangd：若将 build 内 compile_commands.json 复制/链接到引擎根，勿提交
+# Engine build directories (cmake -B build)
+engine/build*/
+engine/_deps/
+engine/CMakeFiles/
+engine/Testing/
+engine/.cmake/
 engine/compile_commands.json
+engine/CMakeCache.txt
+engine/Makefile
+engine/cmake_install.cmake
 
-# 开发安装 symlink
-/gfootball_engine
+# Test build directories (cmake -B build_xxx)
+engine/tests/build*/
+
 # frame_sync_asio 独立构建目录（cmake -B build_fs_asio）
 engine/frame_sync_asio/build_fs_asio/
 
+# 开发安装 symlink
+/gfootball_engine
+
 # IDE
-.idea
-.vs*
+.idea/
+.vscode/
+.vs*/
 
 # Agent coordination runtime state
 .agent-coordination/*.tmp
 .agent-coordination/*.lock
 
-# Test build directories
-engine/tests/build_rl/
-engine/tests/build_tests/
-engine/tests/build_rl/_deps/
-engine/tests/build_tests/_deps/
-
-# Test build directories
-engine/tests/build_rl/
-engine/tests/build_tests/
+# pytest
+.pytest_cache/

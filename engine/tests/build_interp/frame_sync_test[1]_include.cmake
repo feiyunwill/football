@@ -1,5 +1,0 @@
-if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_interp/frame_sync_test[1]_tests.cmake")
-  include("/home/zuchangqu/project/football/engine/tests/build_interp/frame_sync_test[1]_tests.cmake")
-else()
-  add_test(frame_sync_test_NOT_BUILT frame_sync_test_NOT_BUILT)
-endif()
