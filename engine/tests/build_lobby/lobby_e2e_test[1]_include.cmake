@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_lobby/lobby_e2e_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/engine/tests/build_lobby/lobby_e2e_test[1]_tests.cmake")
+else()
+  add_test(lobby_e2e_test_NOT_BUILT lobby_e2e_test_NOT_BUILT)
+endif()

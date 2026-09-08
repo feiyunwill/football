@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_snapshot/adaptive_prediction_cap_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/engine/tests/build_snapshot/adaptive_prediction_cap_test[1]_tests.cmake")
+else()
+  add_test(adaptive_prediction_cap_test_NOT_BUILT adaptive_prediction_cap_test_NOT_BUILT)
+endif()

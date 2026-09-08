@@ -28,6 +28,9 @@ using namespace blunted;
 enum e_PageID {
   e_PageID_Game,
   e_PageID_LoadingMatch,
+  e_PageID_MainMenu,
+  e_PageID_Settings,
+  e_PageID_PauseMenu,
 };
 constexpr std::strong_ordering operator<=>(e_PageID a, e_PageID b) {
   return std::to_underlying(a) <=> std::to_underlying(b);

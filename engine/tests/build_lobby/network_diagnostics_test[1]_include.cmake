@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_lobby/network_diagnostics_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/engine/tests/build_lobby/network_diagnostics_test[1]_tests.cmake")
+else()
+  add_test(network_diagnostics_test_NOT_BUILT network_diagnostics_test_NOT_BUILT)
+endif()

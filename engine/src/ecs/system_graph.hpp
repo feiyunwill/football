@@ -15,7 +15,7 @@
 namespace blunted {
 
 /// 系统执行函数签名：接受上下文指针，返回 bool（false = 中断管线）
-using SystemFn = std::function<bool(void*)>;
+using SystemFn = std::move_only_function<bool(void*)>;
 
 /// 系统依赖图：注册系统 → 声明依赖 → 拓扑排序 → 按序执行
 class SystemGraph {

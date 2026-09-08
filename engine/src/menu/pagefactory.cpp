@@ -19,6 +19,9 @@
 
 #include "startmatch/loadingmatch.hpp"
 #include "ingame/gamepage.hpp"
+#include "mainmenu.hpp"
+#include "settings.hpp"
+#include "pausemenu.hpp"
 #include "../main.hpp"
 
 Gui2Page *PageFactory::GetMostRecentlyCreatedPage() {
@@ -41,6 +44,18 @@ Gui2Page *PageFactory::CreatePage(const Gui2PageData &pageData) {
 
     case e_PageID_LoadingMatch:
       page = new LoadingMatchPage(windowManager, pageData);
+      break;
+
+    case e_PageID_MainMenu:
+      page = new MainMenuPage(windowManager, pageData);
+      break;
+
+    case e_PageID_Settings:
+      page = new SettingsPage(windowManager, pageData);
+      break;
+
+    case e_PageID_PauseMenu:
+      page = new PauseMenuPage(windowManager, pageData);
       break;
 
     default:

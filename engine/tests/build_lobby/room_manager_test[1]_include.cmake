@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_lobby/room_manager_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/engine/tests/build_lobby/room_manager_test[1]_tests.cmake")
+else()
+  add_test(room_manager_test_NOT_BUILT room_manager_test_NOT_BUILT)
+endif()

@@ -1,0 +1,1 @@
+/opt/rh/gcc-toolset-15/root/usr/bin/c++ -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/ecs_test.dir/link.d CMakeFiles/ecs_test.dir/Unity/unity_0_cxx.cxx.o -o ecs_test  lib/libgtest_main.a lib/libgtest.a

@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_replay/ecs_physics_sync_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/engine/tests/build_replay/ecs_physics_sync_test[1]_tests.cmake")
+else()
+  add_test(ecs_physics_sync_test_NOT_BUILT ecs_physics_sync_test_NOT_BUILT)
+endif()

@@ -12,12 +12,12 @@
 #include <chrono>
 #include <cstring>
 #include <algorithm>
+#include <flat_map>
 #include <flat_set>
 #include <iostream>
 #include <print>
 #include <memory>
 #include <mutex>
-#include <set>
 #include <thread>
 #include <vector>
 
@@ -175,14 +175,36 @@ class FrameSyncServerUDP {
 
   void broadcast_authoritative_frame() {
     std::vector<frame_sync::SlotInput> inputs;
+    std::vector<frame_sync::SlotInput> prev_inputs;
     {
       std::lock_guard<std::mutex> lock(mu_);
       inputs = current_inputs_;
+      prev_inputs = previous_inputs_;
     }
+    
+    // 2026-09-05 优化: 使用增量广播
     std::vector<uint8_t> buf(1024);
-    size_t n = frame_sync::PackAuthoritativeFrame(
-        frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
-        buf.data(), buf.size());
+    size_t n;
+    
+    // 如果是第一帧或者没有上一帧数据，使用全量广播
+    if (prev_inputs.empty() || frame_id_ == 0) {
+      n = frame_sync::PackAuthoritativeFrame(
+          frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
+          buf.data(), buf.size());
+    } else {
+      // 计算增量
+      n = frame_sync::PackDeltaAuthoritativeFrame(
+          frame_id_, inputs.data(), prev_inputs.data(),
+          static_cast<uint16_t>(inputs.size()),
+          buf.data(), buf.size());
+    }
+    
+    // 保存当前帧作为下一帧的上一帧
+    {
+      std::lock_guard<std::mutex> lock(mu_);
+      previous_inputs_ = inputs;
+    }
+    
     std::lock_guard<std::mutex> lock(mu_);
     for (auto& p : clients_) {
       if (p.second->disconnected || !p.second->channel) continue;
@@ -203,12 +225,12 @@ class FrameSyncServerUDP {
   bool process_one_message(std::shared_ptr<ClientSessionUDP> client) {
     if (client->recv_buf.empty()) return false;
     uint8_t type = client->recv_buf[0];
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::Ready)) {
+    if (type == std::to_underlying(frame_sync::MessageType::Ready)) {
       client->ready = true;
       client->recv_buf.erase(client->recv_buf.begin());
       return true;
     }
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::FrameInput)) {
+    if (type == std::to_underlying(frame_sync::MessageType::FrameInput)) {
       if (client->recv_buf.size() < 7u) return false;
       uint16_t num_slots;
       memcpy(&num_slots, client->recv_buf.data() + 5, 2);
@@ -240,14 +262,15 @@ class FrameSyncServerUDP {
   udp::socket socket_;
   asio::steady_timer retransmit_timer_;
   mutable std::mutex mu_;
-  std::map<udp::endpoint, std::shared_ptr<ClientSessionUDP>> clients_;
+  std::flat_map<udp::endpoint, std::shared_ptr<ClientSessionUDP>> clients_;
   uint16_t left_agents_;
   uint16_t right_agents_;
   size_t num_slots_;
   uint32_t seed_;
   frame_sync::frame_id_t frame_id_;
   std::vector<frame_sync::SlotInput> current_inputs_;
-  std::set<ClientSessionUDP*> received_from_;
+  std::vector<frame_sync::SlotInput> previous_inputs_;  // 2026-09-05 优化: 上一帧输入用于增量广播
+  std::flat_set<ClientSessionUDP*> received_from_;
   std::atomic<bool> running_{true};
 };
 

@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <cmath>
 #include <chrono>
+#include <utility>
 
 namespace frame_sync {
 
@@ -116,15 +117,16 @@ class NetworkDiagnostics {
   [[nodiscard]] double GetPredictionAccuracy() const { return prediction_accuracy_; }
 
   /// @brief Convert quality enum to string
-  static const char* QualityToString(NetworkQuality q) {
+  static constexpr const char* QualityToString(NetworkQuality q) {
     switch (q) {
-      case NetworkQuality::kExcellent: return "Excellent";
-      case NetworkQuality::kGood: return "Good";
-      case NetworkQuality::kFair: return "Fair";
-      case NetworkQuality::kPoor: return "Poor";
-      case NetworkQuality::kCritical: return "Critical";
+      using enum NetworkQuality;
+      case kExcellent: return "Excellent";
+      case kGood: return "Good";
+      case kFair: return "Fair";
+      case kPoor: return "Poor";
+      case kCritical: return "Critical";
     }
-    return "Unknown";
+    std::unreachable();
   }
 
  private:
@@ -142,7 +144,7 @@ class NetworkDiagnostics {
     return NetworkQuality::kExcellent;
   }
 
-  double SmoothedValue(const std::deque<double>& samples) const {
+  constexpr double SmoothedValue(const std::deque<double>& samples) const {
     if (samples.empty()) return 0.0;
     double sum = 0.0;
     for (double v : samples) sum += v;

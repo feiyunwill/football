@@ -310,7 +310,7 @@ class IntegratedFrameSyncClient {
     uint8_t buf[64];
     size_t n = read_exact(buf, 1 + 2);
     if (n < 3) return false;
-    if (buf[0] != static_cast<uint8_t>(frame_sync::MessageType::SlotAssignment))
+    if (buf[0] != std::to_underlying(frame_sync::MessageType::SlotAssignment))
       return false;
     uint16_t num;
     memcpy(&num, buf + 1, 2);
@@ -358,7 +358,7 @@ class IntegratedFrameSyncClient {
     if (recv_buf_.empty()) return false;
     uint8_t type = recv_buf_[0];
 
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::AuthoritativeFrame)) {
+    if (type == std::to_underlying(frame_sync::MessageType::AuthoritativeFrame)) {
       if (recv_buf_.size() < 7u) return false;
       uint16_t num_slots;
       memcpy(&num_slots, recv_buf_.data() + 5, 2);
@@ -374,7 +374,7 @@ class IntegratedFrameSyncClient {
       return true;
     }
 
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::StateHash)) {
+    if (type == std::to_underlying(frame_sync::MessageType::StateHash)) {
       if (recv_buf_.size() < frame_sync::STATE_HASH_PACK_BYTES) return false;
       frame_sync::frame_id_t fid;
       uint64_t hash;
@@ -394,7 +394,7 @@ class IntegratedFrameSyncClient {
     }
 
     // Handle Heartbeat (ms-17.1: latency compensation)
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::Heartbeat)) {
+    if (type == std::to_underlying(frame_sync::MessageType::Heartbeat)) {
       if (recv_buf_.size() < frame_sync::HEARTBEAT_PACKET_BYTES) return false;
       
       frame_sync::frame_id_t fid;
@@ -564,13 +564,14 @@ int main(int argc, char* argv[]) {
 
       // Run prediction tick
       auto result = client.tick(my_input);
+      using enum IntegratedFrameSyncClient::StepResult;
 
       switch (result) {
-        case IntegratedFrameSyncClient::StepResult::kRollback:
+        case kRollback:
           fprintf(stderr, "Rollback at frame %u (total: %d)\n",
                   client.current_frame_id(), client.rollback_count());
           break;
-        case IntegratedFrameSyncClient::StepResult::kWaitForAuthority:
+        case kWaitForAuthority:
           break;
         default:
           break;

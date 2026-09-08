@@ -1,12 +1,39 @@
 {
   "agents": {
+    "-1103": {
+      "capabilities": [],
+      "current_milestone": null,
+      "heartbeat_at": "2026-09-08T16:46:05Z",
+      "metadata": {},
+      "registered_at": "2026-09-08T16:46:05Z",
+      "status": "active",
+      "type": "opencode"
+    },
+    "-179719": {
+      "capabilities": [],
+      "current_milestone": null,
+      "heartbeat_at": "2026-09-05T07:34:51Z",
+      "metadata": {},
+      "registered_at": "2026-09-05T07:34:50Z",
+      "status": "zombie",
+      "type": "opencode"
+    },
     "-373618": {
       "capabilities": [],
       "current_milestone": null,
       "heartbeat_at": "2026-09-03T06:53:25Z",
       "metadata": {},
       "registered_at": "2026-09-03T06:53:25Z",
-      "status": "active",
+      "status": "zombie",
+      "type": "opencode"
+    },
+    "-417776": {
+      "capabilities": [],
+      "current_milestone": null,
+      "heartbeat_at": "2026-09-05T09:52:11Z",
+      "metadata": {},
+      "registered_at": "2026-09-05T09:52:11Z",
+      "status": "zombie",
       "type": "opencode"
     },
     "-610796": {

@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_spectator/fixed_point_determinism_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/engine/tests/build_spectator/fixed_point_determinism_test[1]_tests.cmake")
+else()
+  add_test(fixed_point_determinism_test_NOT_BUILT fixed_point_determinism_test_NOT_BUILT)
+endif()

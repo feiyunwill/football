@@ -11,6 +11,7 @@
 #include "frame_sync/client_state.hpp"
 #include "frame_sync/engine_integration.hpp"
 
+#include <utility>
 #include <boost/asio.hpp>
 #include <chrono>
 #include <cstdint>
@@ -41,10 +42,10 @@ class ReconnectingClient {
  public:
   // Callbacks for reconnection events
   struct Callbacks {
-    std::function<void()> on_disconnect;
-    std::function<void(int attempt)> on_reconnect_attempt;
-    std::function<void()> on_reconnect_success;
-    std::function<void()> on_reconnect_failed;
+    std::move_only_function<void()> on_disconnect;
+    std::move_only_function<void(int attempt)> on_reconnect_attempt;
+    std::move_only_function<void()> on_reconnect_success;
+    std::move_only_function<void()> on_reconnect_failed;
   };
 
   ReconnectingClient(asio::io_context& io, const std::string& host,
@@ -190,7 +191,7 @@ class ReconnectingClient {
     uint8_t buf[64];
     size_t n = read_exact(buf, 1 + 2);
     if (n < 3) return false;
-    if (buf[0] != static_cast<uint8_t>(MessageType::SlotAssignment))
+    if (buf[0] != std::to_underlying(MessageType::SlotAssignment))
       return false;
     uint16_t num;
     memcpy(&num, buf + 1, 2);
@@ -242,7 +243,7 @@ class ReconnectingClient {
     if (recv_buf_.empty()) return false;
     uint8_t type = recv_buf_[0];
 
-    if (type == static_cast<uint8_t>(MessageType::AuthoritativeFrame)) {
+    if (type == std::to_underlying(MessageType::AuthoritativeFrame)) {
       if (recv_buf_.size() < 7u) return false;
       uint16_t num_slots;
       memcpy(&num_slots, recv_buf_.data() + 5, 2);
@@ -258,7 +259,7 @@ class ReconnectingClient {
       return true;
     }
 
-    if (type == static_cast<uint8_t>(MessageType::StateHash)) {
+    if (type == std::to_underlying(MessageType::StateHash)) {
       if (recv_buf_.size() < STATE_HASH_PACK_BYTES) return false;
       frame_id_t fid;
       uint64_t hash;

@@ -33,7 +33,7 @@ namespace blunted {
 template <typename... Components>
 class SystemBatch {
  public:
-  using SystemFn = std::function<void(World&, Entity, Components&...)>;
+  using SystemFn = std::move_only_function<void(World&, Entity, Components&...)>;
 
   SystemBatch() = default;
 

@@ -270,6 +270,8 @@ set(FRAME_SYNC_HEADERS
    src/frame_sync/state_snapshot_codec.hpp
    src/frame_sync/spectator.hpp
    src/frame_sync/network_diagnostics.hpp
+   src/frame_sync/lobby_protocol.hpp
+   src/frame_sync/room_manager.hpp
 )
 
 set(FRAME_SYNC_SOURCES
@@ -378,6 +380,9 @@ set(MENU_HEADERS
    src/menu/ingame/gamepage.hpp
    src/menu/ingame/scoreboard.hpp
    src/menu/ingame/radar.hpp
+   src/menu/mainmenu.hpp
+   src/menu/settings.hpp
+   src/menu/pausemenu.hpp
 )
 
 set(MENU_SOURCES
@@ -387,6 +392,9 @@ set(MENU_SOURCES
    src/menu/ingame/radar.cpp
    src/menu/ingame/gamepage.cpp
    src/menu/ingame/scoreboard.cpp
+   src/menu/mainmenu.cpp
+   src/menu/settings.cpp
+   src/menu/pausemenu.cpp
 )
 
 set(DATA_HEADERS

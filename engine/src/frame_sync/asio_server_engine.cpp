@@ -27,12 +27,12 @@
 #include <chrono>
 #include <cstring>
 #include <algorithm>
+#include <flat_map>
 #include <flat_set>
 #include <iostream>
 #include <print>
 #include <memory>
 #include <mutex>
-#include <set>
 #include <sstream>
 #include <thread>
 #include <vector>
@@ -498,7 +498,7 @@ class EngineFrameSyncServer {
     uint8_t type = client->recv_buf[0];
     
     // Handle VersionNegotiate
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::VersionNegotiate)) {
+    if (type == std::to_underlying(frame_sync::MessageType::VersionNegotiate)) {
       if (client->recv_buf.size() < frame_sync::VERSION_NEGOTIATE_BYTES) return false;
       frame_sync::version_negotiate_t ver;
       size_t used = frame_sync::UnpackVersionNegotiate(
@@ -512,7 +512,7 @@ class EngineFrameSyncServer {
     }
     
     // Handle Heartbeat
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::Heartbeat)) {
+    if (type == std::to_underlying(frame_sync::MessageType::Heartbeat)) {
       if (client->recv_buf.size() < frame_sync::HEARTBEAT_PACKET_BYTES) return false;
       frame_sync::heartbeat_t hb;
       size_t used = frame_sync::UnpackHeartbeat(
@@ -526,7 +526,7 @@ class EngineFrameSyncServer {
     }
     
     // Handle Ready
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::Ready)) {
+    if (type == std::to_underlying(frame_sync::MessageType::Ready)) {
       client->ready = true;
       std::ostringstream slots_ss;
       for (size_t i = 0; i < client->assigned_slots.size(); ++i) {
@@ -539,7 +539,7 @@ class EngineFrameSyncServer {
     }
     
     // Handle FrameInput
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::FrameInput)) {
+    if (type == std::to_underlying(frame_sync::MessageType::FrameInput)) {
       if (client->recv_buf.size() < 7u) return false;
       uint16_t num_slots;
       memcpy(&num_slots, client->recv_buf.data() + 5, 2);
@@ -573,7 +573,7 @@ class EngineFrameSyncServer {
   asio::steady_timer retransmit_timer_;
   asio::steady_timer heartbeat_timer_;
   mutable std::mutex mu_;
-  std::map<udp::endpoint, std::shared_ptr<ClientSessionUDP>> clients_;
+  std::flat_map<udp::endpoint, std::shared_ptr<ClientSessionUDP>> clients_;
   uint16_t left_agents_;
   uint16_t right_agents_;
   size_t num_slots_;
@@ -581,7 +581,7 @@ class EngineFrameSyncServer {
   frame_sync::frame_id_t frame_id_;
   int slots_per_client_;
   std::vector<frame_sync::SlotInput> current_inputs_;
-  std::set<ClientSessionUDP*> received_from_;
+  std::flat_set<ClientSessionUDP*> received_from_;
   std::atomic<bool> running_{true};
 };
 

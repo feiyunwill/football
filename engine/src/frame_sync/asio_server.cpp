@@ -16,8 +16,8 @@
 #include <iostream>
 #include <print>
 #include <memory>
+#include <condition_variable>
 #include <mutex>
-#include <set>
 #include <thread>
 #include <vector>
 
@@ -74,16 +74,20 @@ class FrameSyncServer {
       {
         std::lock_guard<std::mutex> lock(mu_);
         received_from_.clear();
+        inputs_ready_.store(false);
         for (size_t i = 0; i < num_slots_; ++i)
           current_inputs_[i] = frame_sync::SlotInput::Default();
       }
-      while (std::chrono::steady_clock::now() < deadline) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
-        std::lock_guard<std::mutex> lock(mu_);
-        auto connected = std::ranges::count_if(clients_,
-            [](const auto& c) { return !c->disconnected; });
-        if (connected == 0) break;
-        if (static_cast<int>(received_from_.size()) >= connected) break;
+      // 2026-09-05 优化: 使用条件变量等待输入，而不是 sleep 轮询
+      {
+        std::unique_lock<std::mutex> lock(mu_);
+        input_cv_.wait_until(lock, deadline, [this] {
+          if (inputs_ready_.load()) return true;
+          auto connected = std::ranges::count_if(clients_,
+              [](const auto& c) { return !c->disconnected; });
+          if (connected == 0) return true;
+          return static_cast<int>(received_from_.size()) >= connected;
+        });
       }
       broadcast_authoritative_frame();
       ++frame_id_;
@@ -138,14 +142,36 @@ class FrameSyncServer {
 
   void broadcast_authoritative_frame() {
     std::vector<frame_sync::SlotInput> inputs;
+    std::vector<frame_sync::SlotInput> prev_inputs;
     {
       std::lock_guard<std::mutex> lock(mu_);
       inputs = current_inputs_;
+      prev_inputs = previous_inputs_;
     }
+    
+    // 2026-09-05 优化: 使用增量广播
     std::vector<uint8_t> buf(1024);
-    size_t n = frame_sync::PackAuthoritativeFrame(
-        frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
-        buf.data(), buf.size());
+    size_t n;
+    
+    // 如果是第一帧或者没有上一帧数据，使用全量广播
+    if (prev_inputs.empty() || frame_id_ == 0) {
+      n = frame_sync::PackAuthoritativeFrame(
+          frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
+          buf.data(), buf.size());
+    } else {
+      // 计算增量
+      n = frame_sync::PackDeltaAuthoritativeFrame(
+          frame_id_, inputs.data(), prev_inputs.data(),
+          static_cast<uint16_t>(inputs.size()),
+          buf.data(), buf.size());
+    }
+    
+    // 保存当前帧作为下一帧的上一帧
+    {
+      std::lock_guard<std::mutex> lock(mu_);
+      previous_inputs_ = inputs;
+    }
+    
     std::lock_guard<std::mutex> lock(mu_);
     for (auto& client : clients_) {
       if (client->disconnected) continue;
@@ -174,12 +200,12 @@ class FrameSyncServer {
   bool process_one_message(std::shared_ptr<ClientSession> client) {
     if (client->recv_buf.empty()) return false;
     uint8_t type = client->recv_buf[0];
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::Ready)) {
+    if (type == std::to_underlying(frame_sync::MessageType::Ready)) {
       client->ready = true;
       client->recv_buf.erase(client->recv_buf.begin());
       return true;
     }
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::FrameInput)) {
+    if (type == std::to_underlying(frame_sync::MessageType::FrameInput)) {
       if (client->recv_buf.size() < 7u) return false;
       uint16_t num_slots;
       memcpy(&num_slots, client->recv_buf.data() + 5, 2);
@@ -200,6 +226,13 @@ class FrameSyncServer {
           }
         }
         received_from_.insert(client.get());
+        // 2026-09-05 优化: 通知条件变量所有输入已收集
+        auto connected = std::ranges::count_if(clients_,
+            [](const auto& c) { return !c->disconnected; });
+        if (static_cast<int>(received_from_.size()) >= connected) {
+          inputs_ready_.store(true);
+          input_cv_.notify_one();
+        }
       }
       client->recv_buf.erase(client->recv_buf.begin(), client->recv_buf.begin() + used);
       return true;
@@ -217,8 +250,12 @@ class FrameSyncServer {
   uint32_t seed_;
   frame_sync::frame_id_t frame_id_;
   std::vector<frame_sync::SlotInput> current_inputs_;
-  std::set<ClientSession*> received_from_;
+  std::vector<frame_sync::SlotInput> previous_inputs_;  // 2026-09-05 优化: 上一帧输入用于增量广播
+  std::flat_set<ClientSession*> received_from_;
   std::atomic<bool> running_{true};
+  // 2026-09-05 优化: 条件变量用于输入收集
+  std::condition_variable input_cv_;
+  std::atomic<bool> inputs_ready_{false};
 };
 
 int main(int argc, char* argv[]) {

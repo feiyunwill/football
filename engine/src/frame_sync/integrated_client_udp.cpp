@@ -109,7 +109,7 @@ class IntegratedFrameSyncClientUDP {
     if (ec) { fprintf(stderr, "Bind failed: %s\n", ec.message().c_str()); return false; }
 
     // Send Connect so server creates our session
-    uint8_t connect_byte = static_cast<uint8_t>(frame_sync::MessageType::Connect);
+    uint8_t connect_byte = std::to_underlying(frame_sync::MessageType::Connect);
     socket_.send_to(asio::buffer(&connect_byte, 1), server_endpoint_, 0, ec);
     if (ec) { fprintf(stderr, "Connect send failed: %s\n", ec.message().c_str()); return false; }
 
@@ -122,14 +122,14 @@ class IntegratedFrameSyncClientUDP {
       io_.run_one();
       std::lock_guard<std::mutex> lock(mu_);
       while (recv_buf_.size() >= 1u + frame_sync::SESSION_START_PARAMS_BYTES &&
-             recv_buf_[0] == static_cast<uint8_t>(frame_sync::MessageType::SessionStart)) {
+             recv_buf_[0] == std::to_underlying(frame_sync::MessageType::SessionStart)) {
         frame_sync::UnpackSessionStart(recv_buf_.data(), recv_buf_.size(),
                                        &seed_, &left_agents_, &right_agents_);
         recv_buf_.erase(recv_buf_.begin(), recv_buf_.begin() +
                         static_cast<std::ptrdiff_t>(1 + frame_sync::SESSION_START_PARAMS_BYTES));
       }
       if (recv_buf_.size() >= 3u &&
-          recv_buf_[0] == static_cast<uint8_t>(frame_sync::MessageType::SlotAssignment)) {
+          recv_buf_[0] == std::to_underlying(frame_sync::MessageType::SlotAssignment)) {
         uint16_t num;
         memcpy(&num, recv_buf_.data() + 1, 2);
         size_t need = 3 + num * 2;
@@ -330,13 +330,13 @@ class IntegratedFrameSyncClientUDP {
     uint8_t type = recv_buf_[0];
 
     // 2026-09-01: 连接阶段的消息由 connect() 直接解析，此处跳过避免吞掉。
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::SessionStart) ||
-        type == static_cast<uint8_t>(frame_sync::MessageType::SlotAssignment) ||
-        type == static_cast<uint8_t>(frame_sync::MessageType::Connect)) {
+    if (type == std::to_underlying(frame_sync::MessageType::SessionStart) ||
+        type == std::to_underlying(frame_sync::MessageType::SlotAssignment) ||
+        type == std::to_underlying(frame_sync::MessageType::Connect)) {
       return false;  // 让 connect() 处理
     }
 
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::AuthoritativeFrame)) {
+    if (type == std::to_underlying(frame_sync::MessageType::AuthoritativeFrame)) {
       if (recv_buf_.size() < 7u) return false;
       uint16_t num_slots;
       memcpy(&num_slots, recv_buf_.data() + 5, 2);
@@ -352,7 +352,7 @@ class IntegratedFrameSyncClientUDP {
       return true;
     }
 
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::StateHash)) {
+    if (type == std::to_underlying(frame_sync::MessageType::StateHash)) {
       if (recv_buf_.size() < frame_sync::STATE_HASH_PACK_BYTES) return false;
       frame_sync::frame_id_t fid;
       uint64_t hash;
@@ -502,9 +502,10 @@ int main(int argc, char* argv[]) {
       }
 
       auto result = client.tick(my_input);
+      using enum IntegratedFrameSyncClientUDP::StepResult;
 
       switch (result) {
-        case IntegratedFrameSyncClientUDP::StepResult::kRollback:
+        case kRollback:
           fprintf(stderr, "Rollback at frame %u (total: %d)\n",
                   client.current_frame_id(), client.rollback_count());
           break;

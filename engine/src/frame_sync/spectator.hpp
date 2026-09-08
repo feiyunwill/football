@@ -15,6 +15,7 @@
 #include "frame_sync/protocol.hpp"
 #include "frame_sync/protocol_io.hpp"
 
+#include <utility>
 #include <boost/asio.hpp>
 #include <deque>
 #include <functional>
@@ -26,7 +27,7 @@ namespace frame_sync {
 /// @brief Lightweight spectator client — receives authoritative frames, sends nothing
 class SpectatorClient {
  public:
-  using FrameCallback = std::function<void(frame_id_t, const std::vector<SlotInput>&)>;
+  using FrameCallback = std::move_only_function<void(frame_id_t, const std::vector<SlotInput>&)>;
 
   struct ReceivedFrame {
     frame_id_t frame_id;
@@ -48,7 +49,7 @@ class SpectatorClient {
     connected_ = true;
 
     // Send SpectatorJoin message (just the type byte, no payload needed)
-    uint8_t msg = static_cast<uint8_t>(MessageType::SpectatorJoin);
+    uint8_t msg = std::to_underlying(MessageType::SpectatorJoin);
     boost::system::error_code ec;
     boost::asio::write(socket_, boost::asio::buffer(&msg, 1), ec);
     if (ec) {
@@ -131,7 +132,7 @@ class SpectatorClient {
     if (recv_buf_.empty()) return false;
     uint8_t type = recv_buf_[0];
 
-    if (type == static_cast<uint8_t>(MessageType::AuthoritativeFrame)) {
+    if (type == std::to_underlying(MessageType::AuthoritativeFrame)) {
       if (recv_buf_.size() < AUTHORITATIVE_FRAME_HEADER_BYTES) return false;
       frame_id_t fid;
       uint16_t num_slots;
@@ -158,7 +159,7 @@ class SpectatorClient {
       return true;
     }
 
-    if (type == static_cast<uint8_t>(MessageType::StateHash)) {
+    if (type == std::to_underlying(MessageType::StateHash)) {
       if (recv_buf_.size() < STATE_HASH_PACK_BYTES) return false;
       ++state_hashes_received_;
       recv_buf_.erase(recv_buf_.begin(),
@@ -166,7 +167,7 @@ class SpectatorClient {
       return true;
     }
 
-    if (type == static_cast<uint8_t>(MessageType::SessionStart)) {
+    if (type == std::to_underlying(MessageType::SessionStart)) {
       if (recv_buf_.size() < 1 + SESSION_START_PARAMS_BYTES) return false;
       session_start_received_ = true;
       recv_buf_.erase(recv_buf_.begin(),
@@ -174,7 +175,7 @@ class SpectatorClient {
       return true;
     }
 
-    if (type == static_cast<uint8_t>(MessageType::SlotAssignment)) {
+    if (type == std::to_underlying(MessageType::SlotAssignment)) {
       // Spectators get no slots; skip this message
       if (recv_buf_.size() < 3) return false;
       uint16_t count;
@@ -185,7 +186,7 @@ class SpectatorClient {
       return true;
     }
 
-    if (type == static_cast<uint8_t>(MessageType::Heartbeat)) {
+    if (type == std::to_underlying(MessageType::Heartbeat)) {
       if (recv_buf_.size() < HEARTBEAT_PACKET_BYTES) return false;
       recv_buf_.erase(recv_buf_.begin(),
                       recv_buf_.begin() + HEARTBEAT_PACKET_BYTES);

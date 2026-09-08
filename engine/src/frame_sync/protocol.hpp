@@ -40,6 +40,8 @@ enum class MessageType : uint8_t {
   ReconnectRequest = 12, // client -> server: 重连请求，载荷 session_token(8)
   StateSnapshot = 13,    // server -> client: 完整游戏状态，载荷 frame_id(4) + state_len(4) + state_bytes
   SpectatorJoin = 14,    // client -> server: 观战者加入（只读，不发送输入）
+  // 2026-09-05 优化: 增量广播消息类型
+  DeltaAuthoritativeFrame = 15,  // server -> client: 增量帧输入（只传变化的槽位）
 };
 
 // C++23: using enum for scoped enum access (when needed)
@@ -52,8 +54,9 @@ inline constexpr size_t VERSION_NEGOTIATE_BYTES = 1 + sizeof(uint16_t) + sizeof(
 
 // 2026-08-28 心跳间隔（毫秒）：服务器/客户端周期性发送 Heartbeat；
 // 连续 HEARTBEAT_MISS_LIMIT 个间隔无包则判定断连。
-inline constexpr int HEARTBEAT_INTERVAL_MS = 1000;
-inline constexpr int HEARTBEAT_MISS_LIMIT = 5;  // 5s 无心跳判定断连
+// 2026-09-05 优化: 缩短心跳间隔以更快检测断线
+inline constexpr int HEARTBEAT_INTERVAL_MS = 200;  // 从 1000ms 降至 200ms
+inline constexpr int HEARTBEAT_MISS_LIMIT = 15;    // 3s 无心跳判定断连（15 * 200ms = 3s）
 
 // ----- Frame semantics -----
 // One network frame = one env step = physics_steps_per_frame (default 10) ProcessPhase() ticks.
@@ -197,7 +200,7 @@ inline session_token_t MakeSessionToken(uint16_t slot_index, uint32_t seed,
 template <>
 struct std::hash<frame_sync::MessageType> {
   [[nodiscard]] size_t operator()(frame_sync::MessageType mt) const noexcept {
-    return std::hash<uint8_t>{}(static_cast<uint8_t>(mt));
+    return std::hash<uint8_t>{}(std::to_underlying(mt));
   }
 };
 

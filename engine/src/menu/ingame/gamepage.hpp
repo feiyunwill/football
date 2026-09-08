@@ -22,6 +22,9 @@
 
 #include "../../utils/gui2/page.hpp"
 
+#include "radar.hpp"
+#include "scoreboard.hpp"
+
 class Match;
 
 using namespace blunted;
@@ -31,6 +34,11 @@ class GamePage : public Gui2Page {
   public:
     GamePage(Gui2WindowManager *windowManager_, const Gui2PageData &pageData_);
     virtual ~GamePage();
+
+  private:
+    Gui2ScoreBoard *scoreBoard;
+    Gui2Radar *radar;
+    Match *match;
 };
 
 #endif

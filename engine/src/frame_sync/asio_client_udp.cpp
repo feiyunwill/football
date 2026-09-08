@@ -44,7 +44,7 @@ class FrameSyncClientUDP {
     if (ec) { std::println(stderr, "Bind failed: {}", ec.message()); return false; }
 
     // Send Connect so server creates our session
-    uint8_t connect_byte = static_cast<uint8_t>(frame_sync::MessageType::Connect);
+    uint8_t connect_byte = std::to_underlying(frame_sync::MessageType::Connect);
     socket_.send_to(asio::buffer(&connect_byte, 1), server_endpoint_, 0, ec);
     if (ec) { std::println(stderr, "Connect send failed: {}", ec.message()); return false; }
 
@@ -57,12 +57,12 @@ class FrameSyncClientUDP {
       io_.run_one();
       std::lock_guard<std::mutex> lock(mu_);
       while (recv_buf_.size() >= 1u + frame_sync::SESSION_START_PARAMS_BYTES &&
-             recv_buf_[0] == static_cast<uint8_t>(frame_sync::MessageType::SessionStart)) {
+             recv_buf_[0] == std::to_underlying(frame_sync::MessageType::SessionStart)) {
         frame_sync::UnpackSessionStart(recv_buf_.data(), recv_buf_.size(),
                                        &seed_, &left_agents_, &right_agents_);
         recv_buf_.erase(recv_buf_.begin(), recv_buf_.begin() + static_cast<std::ptrdiff_t>(1 + frame_sync::SESSION_START_PARAMS_BYTES));
       }
-      if (recv_buf_.size() >= 3u && recv_buf_[0] == static_cast<uint8_t>(frame_sync::MessageType::SlotAssignment)) {
+      if (recv_buf_.size() >= 3u && recv_buf_[0] == std::to_underlying(frame_sync::MessageType::SlotAssignment)) {
         uint16_t num;
         memcpy(&num, recv_buf_.data() + 1, 2);
         size_t need = 3 + num * 2;
@@ -148,7 +148,7 @@ class FrameSyncClientUDP {
   bool parse_one_message() {
     if (recv_buf_.empty()) return false;
     uint8_t type = recv_buf_[0];
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::AuthoritativeFrame)) {
+    if (type == std::to_underlying(frame_sync::MessageType::AuthoritativeFrame)) {
       if (recv_buf_.size() < 7u) return false;
       uint16_t num_slots;
       memcpy(&num_slots, recv_buf_.data() + 5, 2);

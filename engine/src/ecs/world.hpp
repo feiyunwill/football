@@ -13,6 +13,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <span>  // 2026-09-05 优化: 添加 span 支持
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
@@ -65,16 +66,16 @@ class ComponentPool : public IComponentPool {
     entity_to_index_.clear();
   }
 
-  T* Get(Entity e) {
-    auto it = entity_to_index_.find(e);
-    if (it == entity_to_index_.end()) return nullptr;
-    return &components_[it->second];
+  auto Get(this ComponentPool& self, Entity e) -> T* {
+    auto it = self.entity_to_index_.find(e);
+    if (it == self.entity_to_index_.end()) return nullptr;
+    return &self.components_[it->second];
   }
 
-  const T* Get(Entity e) const {
-    auto it = entity_to_index_.find(e);
-    if (it == entity_to_index_.end()) return nullptr;
-    return &components_[it->second];
+  auto Get(this const ComponentPool& self, Entity e) -> const T* {
+    auto it = self.entity_to_index_.find(e);
+    if (it == self.entity_to_index_.end()) return nullptr;
+    return &self.components_[it->second];
   }
 
   void Set(Entity e, T comp) {
@@ -125,6 +126,11 @@ class ComponentPool : public IComponentPool {
     return entities_;
   }
 
+  // 2026-09-05 优化: 零拷贝版本，返回 span
+  std::span<const Entity> EntitiesSpan() const {
+    return std::span<const Entity>(entities_);
+  }
+
   size_t Size() const { return entities_.size(); }
 
  private:
@@ -165,13 +171,13 @@ class World {
   }
 
   template <typename T>
-  T* GetComponent(Entity e) {
-    return Pool<T>()->Get(e);
+  auto GetComponent(this World& self, Entity e) -> T* {
+    return self.Pool<T>()->Get(e);
   }
 
   template <typename T>
-  const T* GetComponent(Entity e) const {
-    return Pool<T>()->Get(e);
+  auto GetComponent(this const World& self, Entity e) -> const T* {
+    return self.Pool<T>()->Get(e);
   }
 
   template <typename T>
@@ -187,8 +193,9 @@ class World {
 
   /// 对拥有组件 T 的每个实体调用 fn(entity, component_ref)
   template <typename T, typename Fn>
-  void ForEach(Fn&& fn) {
-    auto* pool = Pool<T>();
+  auto ForEach(this World& self, Fn&& fn) {
+    auto* pool = self.Pool<T>();
+    if (!pool) return;
     for (const Entity e : pool->Entities()) {
       T* comp = pool->Get(e);
       if (comp) fn(e, *comp);
@@ -196,8 +203,8 @@ class World {
   }
 
   template <typename T, typename Fn>
-  void ForEach(Fn&& fn) const {
-    const auto* pool = Pool<T>();
+  auto ForEach(this const World& self, Fn&& fn) {
+    const auto* pool = self.Pool<T>();
     if (!pool) return;
     for (const Entity e : pool->Entities()) {
       const T* comp = pool->Get(e);
@@ -246,13 +253,13 @@ class World {
 
   /// 获取组件池（供查询接口使用）
   template <typename T>
-  ComponentPool<T>* GetPool() {
-    return Pool<T>();
+  auto GetPool(this World& self) -> ComponentPool<T>* {
+    return self.Pool<T>();
   }
 
   template <typename T>
-  const ComponentPool<T>* GetPool() const {
-    return Pool<T>();
+  auto GetPool(this const World& self) -> const ComponentPool<T>* {
+    return self.Pool<T>();
   }
 
  private:

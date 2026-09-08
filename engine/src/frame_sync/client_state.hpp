@@ -53,6 +53,7 @@ constexpr double kJitterHighThresholdMs = 30.0;    // jitter above this → warn
 
 // Ring buffer of recent frame snapshots, indexed by frame_id.
 // Old entries beyond the buffer window are evicted automatically.
+// 2026-09-05 优化: 使用 unordered_map 实现 O(1) 查找
 class ClientState {
  public:
   // max_buffered: how many frames to keep in the ring buffer.
@@ -82,6 +83,9 @@ class ClientState {
 
   // Evict snapshots older than (latest_frame_id - max_buffered_).
   void evict_old(frame_id_t latest_frame_id);
+
+  // Rebuild the frame_to_index_ mapping after deque modifications.
+  void RebuildIndex();
 
   // Clear all snapshots.
   void clear();
@@ -138,7 +142,7 @@ class ClientState {
   }
 
   // Average frame interval in ms.
-  double avg_frame_interval_ms() const {
+  constexpr double avg_frame_interval_ms() const {
     if (frame_intervals_.empty()) return 0.0;
     double sum = 0.0;
     for (double v : frame_intervals_) sum += v;
@@ -166,9 +170,10 @@ class ClientState {
 
  private:
   int max_buffered_;
-  // Use a deque for O(1) push_back/evict and O(n) lookup by frame_id.
-  // The buffer is small (8 entries), so linear scan is fine.
+  // Use a deque for O(1) push_back/evict.
+  // 2026-09-05 优化: 添加 unordered_map 索引实现 O(1) 查找
   std::deque<FrameSnapshot> snapshots_;
+  std::unordered_map<frame_id_t, size_t> frame_to_index_;  // frame_id -> snapshots_ 下标
   int rollback_count_ = 0;
   int evict_count_ = 0;
 
@@ -195,6 +200,8 @@ inline void ClientState::save_snapshot(frame_id_t frame_id,
   snap.predicted_input = predicted_input;
   snap.state = save_fn();
   snapshots_.push_back(std::move(snap));
+  // 2026-09-05 优化: 更新索引
+  frame_to_index_[frame_id] = snapshots_.size() - 1;
   evict_old(frame_id);
 }
 
@@ -219,21 +226,33 @@ inline bool ClientState::restore_snapshot(frame_id_t frame_id,
 }
 
 inline const FrameSnapshot* ClientState::get_snapshot(frame_id_t frame_id) const {
-  for (const auto& snap : snapshots_) {
-    if (snap.frame_id == frame_id) return &snap;
-  }
-  return nullptr;
+  // 2026-09-05 优化: O(1) 查找
+  auto it = frame_to_index_.find(frame_id);
+  if (it == frame_to_index_.end()) return nullptr;
+  return &snapshots_[it->second];
 }
 
 inline void ClientState::evict_old(frame_id_t /*latest_frame_id*/) {
   while (static_cast<int>(snapshots_.size()) > max_buffered_) {
+    // 2026-09-05 优化: 移除索引
+    frame_to_index_.erase(snapshots_.front().frame_id);
     snapshots_.pop_front();
     ++evict_count_;
+  }
+  // 2026-09-05 优化: 重建索引（因为 deque 的下标会变化）
+  RebuildIndex();
+}
+
+inline void ClientState::RebuildIndex() {
+  frame_to_index_.clear();
+  for (size_t i = 0; i < snapshots_.size(); ++i) {
+    frame_to_index_[snapshots_[i].frame_id] = i;
   }
 }
 
 inline void ClientState::clear() {
   snapshots_.clear();
+  frame_to_index_.clear();  // 2026-09-05 优化: 清空索引
   rollback_count_ = 0;
   evict_count_ = 0;
   last_server_hash_frame_ = 0;

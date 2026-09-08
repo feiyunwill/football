@@ -22,7 +22,6 @@
 #include <print>
 #include <memory>
 #include <mutex>
-#include <set>
 #include <thread>
 #include <vector>
 
@@ -174,15 +173,35 @@ class IntegratedFrameSyncServer {
 
   void broadcast_authoritative_frame() {
     std::vector<frame_sync::SlotInput> inputs;
+    std::vector<frame_sync::SlotInput> prev_inputs;
     {
       std::lock_guard<std::mutex> lock(mu_);
       inputs = current_inputs_;
+      prev_inputs = previous_inputs_;
     }
 
+    // 2026-09-05 优化: 使用增量广播
     std::vector<uint8_t> buf(1024);
-    size_t n = frame_sync::PackAuthoritativeFrame(
-        frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
-        buf.data(), buf.size());
+    size_t n;
+    
+    // 如果是第一帧或者没有上一帧数据，使用全量广播
+    if (prev_inputs.empty() || frame_id_ == 0) {
+      n = frame_sync::PackAuthoritativeFrame(
+          frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
+          buf.data(), buf.size());
+    } else {
+      // 计算增量
+      n = frame_sync::PackDeltaAuthoritativeFrame(
+          frame_id_, inputs.data(), prev_inputs.data(),
+          static_cast<uint16_t>(inputs.size()),
+          buf.data(), buf.size());
+    }
+    
+    // 保存当前帧作为下一帧的上一帧
+    {
+      std::lock_guard<std::mutex> lock(mu_);
+      previous_inputs_ = inputs;
+    }
 
     std::lock_guard<std::mutex> lock(mu_);
     for (auto& client : clients_) {
@@ -250,7 +269,7 @@ class IntegratedFrameSyncServer {
           }
           uint8_t type = client->recv_buf[0];
 
-          if (type == static_cast<uint8_t>(frame_sync::MessageType::SpectatorJoin)) {
+          if (type == std::to_underlying(frame_sync::MessageType::SpectatorJoin)) {
             // Spectator: no slot assignment
             client->is_spectator = true;
             client->ready = true;  // Spectators are immediately ready
@@ -337,14 +356,14 @@ class IntegratedFrameSyncServer {
     // 2026-09-01 更新活动时间
     client->last_activity = std::chrono::steady_clock::now();
 
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::Ready)) {
+    if (type == std::to_underlying(frame_sync::MessageType::Ready)) {
       client->ready = true;
       client->recv_buf.erase(client->recv_buf.begin());
       std::println("Client marked as ready");
       return true;
     }
 
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::FrameInput)) {
+    if (type == std::to_underlying(frame_sync::MessageType::FrameInput)) {
       if (client->recv_buf.size() < 7u) return false;
       uint16_t num_slots;
       memcpy(&num_slots, client->recv_buf.data() + 5, 2);
@@ -380,7 +399,7 @@ class IntegratedFrameSyncServer {
     }
 
     // 2026-09-01 处理心跳
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::Heartbeat)) {
+    if (type == std::to_underlying(frame_sync::MessageType::Heartbeat)) {
       if (client->recv_buf.size() < frame_sync::HEARTBEAT_PACK_BYTES) return false;
       frame_sync::heartbeat_t hb;
       size_t used = frame_sync::UnpackHeartbeat(
@@ -393,7 +412,7 @@ class IntegratedFrameSyncServer {
     }
 
     // 2026-09-01 处理重连请求
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::ReconnectRequest)) {
+    if (type == std::to_underlying(frame_sync::MessageType::ReconnectRequest)) {
       if (client->recv_buf.size() < frame_sync::RECONNECT_REQUEST_BYTES) return false;
       frame_sync::session_token_t token;
       size_t used = frame_sync::UnpackReconnectRequest(
@@ -406,7 +425,7 @@ class IntegratedFrameSyncServer {
     }
 
     // 2026-09-04 SpectatorJoin: spectators send this instead of Connect; skip it
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::SpectatorJoin)) {
+    if (type == std::to_underlying(frame_sync::MessageType::SpectatorJoin)) {
       client->recv_buf.erase(client->recv_buf.begin());
       return true;
     }
@@ -533,7 +552,8 @@ class IntegratedFrameSyncServer {
   size_t num_slots_;
   frame_sync::frame_id_t frame_id_;
   std::vector<frame_sync::SlotInput> current_inputs_;
-  std::set<ClientSession*> received_from_;
+  std::vector<frame_sync::SlotInput> previous_inputs_;  // 2026-09-05 优化: 上一帧输入用于增量广播
+  std::flat_set<ClientSession*> received_from_;
   std::atomic<bool> running_{true};
 
   // Game environment (headless)

@@ -46,12 +46,9 @@ class WorldSerializer {
   }
 
   /// 序列化多个组件类型
-  template <typename T, typename... Rest>
+  template <typename... Ts>
   static void SerializePools(const World& world, SerializedWorld& result) {
-    SerializePool<T>(world, result);
-    if constexpr (sizeof...(Rest) > 0) {
-      SerializePools<Rest...>(world, result);
-    }
+    (SerializePool<Ts>(world, result), ...);
   }
 
   /// 从 World 读取实体数量并填充
@@ -62,12 +59,9 @@ class WorldSerializer {
     result.entity_count = std::max(result.entity_count, count);
   }
 
-  template <typename T, typename... Rest>
+  template <typename... Ts>
   static void CountAllEntities(const World& world, SerializedWorld& result) {
-    CountEntities<T>(world, result);
-    if constexpr (sizeof...(Rest) > 0) {
-      CountAllEntities<Rest...>(world, result);
-    }
+    (CountEntities<Ts>(world, result), ...);
   }
 
   /// 完整序列化
@@ -95,13 +89,10 @@ class WorldSerializer {
     }
   }
 
-  template <typename T, typename... Rest>
+  template <typename... Ts>
   static void DeserializePools(World& world, const SerializedWorld& data,
                                 const std::unordered_map<Entity, Entity>& id_map) {
-    DeserializePool<T>(world, data, id_map);
-    if constexpr (sizeof...(Rest) > 0) {
-      DeserializePools<Rest...>(world, data, id_map);
-    }
+    (DeserializePool<Ts>(world, data, id_map), ...);
   }
 
   /// 完整反序列化：清空 World，重建实体和组件

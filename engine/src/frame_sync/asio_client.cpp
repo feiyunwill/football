@@ -224,7 +224,7 @@ class FrameSyncClient {
     uint8_t buf[64];
     size_t n = read_exact(buf, 1 + 2);
     if (n < 3) return false;
-    if (buf[0] != static_cast<uint8_t>(frame_sync::MessageType::SlotAssignment))
+    if (buf[0] != std::to_underlying(frame_sync::MessageType::SlotAssignment))
       return false;
     uint16_t num;
     memcpy(&num, buf + 1, 2);
@@ -273,7 +273,7 @@ class FrameSyncClient {
     uint8_t type = recv_buf_[0];
 
     // AuthoritativeFrame
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::AuthoritativeFrame)) {
+    if (type == std::to_underlying(frame_sync::MessageType::AuthoritativeFrame)) {
       if (recv_buf_.size() < 7u) return false;
       uint16_t num_slots;
       memcpy(&num_slots, recv_buf_.data() + 5, 2);
@@ -290,7 +290,7 @@ class FrameSyncClient {
     }
 
     // StateHash
-    if (type == static_cast<uint8_t>(frame_sync::MessageType::StateHash)) {
+    if (type == std::to_underlying(frame_sync::MessageType::StateHash)) {
       if (recv_buf_.size() < frame_sync::STATE_HASH_PACK_BYTES) return false;
       frame_sync::frame_id_t fid;
       uint64_t hash;
@@ -367,13 +367,14 @@ int main(int argc, char* argv[]) {
 
     // Run prediction tick.
     auto result = client.tick(my_input);
+    using enum FrameSyncClient::StepResult;
 
     switch (result) {
-      case FrameSyncClient::StepResult::kRollback:
+      case kRollback:
         std::println("Rollback at frame {} (total: {})",
                      client.current_frame_id(), client.rollback_count());
         break;
-      case FrameSyncClient::StepResult::kWaitForAuthority:
+      case kWaitForAuthority:
         // Just wait — don't sleep extra, the next tick will check again.
         break;
       default:

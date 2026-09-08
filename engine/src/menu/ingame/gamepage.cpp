@@ -27,8 +27,27 @@ using namespace blunted;
 
 GamePage::GamePage(Gui2WindowManager *windowManager_,
                    const Gui2PageData &pageData_)
-    : Gui2Page(windowManager_, pageData_) {
+    : Gui2Page(windowManager_, pageData_), match(nullptr), scoreBoard(nullptr), radar(nullptr) {
   DO_VALIDATION;
+
+  // Get match from game task
+  match = GetGameTask()->GetMatch();
+  if (match) {
+    // Create scoreboard
+    scoreBoard = new Gui2ScoreBoard(windowManager, match);
+    this->AddView(scoreBoard);
+    scoreBoard->Show();
+
+    // Create radar
+    Vector3 team1Color1(0, 100, 220);  // Blue team
+    Vector3 team1Color2(0, 150, 255);
+    Vector3 team2Color1(220, 50, 0);   // Red team
+    Vector3 team2Color2(255, 100, 50);
+    radar = new Gui2Radar(windowManager, "radar", 75, 70, 20, 25, match, team1Color1, team1Color2, team2Color1, team2Color2);
+    this->AddView(radar);
+    radar->Show();
+  }
+
   this->Show();
   this->SetFocus();
 }

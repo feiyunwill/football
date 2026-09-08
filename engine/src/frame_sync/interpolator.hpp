@@ -46,13 +46,13 @@ struct Vec3 {
   Vec3 operator*(float s) const { return {x * s, y * s, z * s}; }
 
   /// @brief Calculate squared length (avoids square root)
-  [[nodiscard]] float length_sq() const { return x * x + y * y + z * z; }
+  [[nodiscard]] constexpr float length_sq() const { return x * x + y * y + z * z; }
   
   /// @brief Calculate vector length
-  [[nodiscard]] float length() const { return std::sqrt(length_sq()); }
+  [[nodiscard]] constexpr float length() const { return std::sqrt(length_sq()); }
 
   /// @brief Get normalized vector (unit length)
-  [[nodiscard]] Vec3 normalized() const {
+  [[nodiscard]] constexpr Vec3 normalized() const {
     float len = length();
     if (len < 1e-6f) return {0.f, 0.f, 0.f};
     return *this * (1.f / len);
@@ -74,7 +74,7 @@ struct Quat {
   /// @param b End quaternion
   /// @param t Interpolation factor (0 = a, 1 = b)
   /// @return Interpolated quaternion
-  [[nodiscard]] static Quat slerp(const Quat& a, const Quat& b, float t) {
+  [[nodiscard]] static constexpr Quat slerp(const Quat& a, const Quat& b, float t) {
     float dot = a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
     
     // If dot is negative, negate one quaternion to take the shorter path
@@ -111,7 +111,7 @@ struct Quat {
   }
 
   /// @brief Get normalized quaternion (unit length)
-  [[nodiscard]] Quat normalized() const {
+  [[nodiscard]] constexpr Quat normalized() const {
     float len = std::sqrt(x * x + y * y + z * z + w * w);
     if (len < 1e-6f) return {0.f, 0.f, 0.f, 1.f};
     float inv = 1.f / len;

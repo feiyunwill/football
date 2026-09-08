@@ -170,6 +170,15 @@ add_frame_sync_test(replay_integration_test replay_integration_test.cpp)
 # 网络诊断工具测试 (ms-17.5)
 add_frame_sync_test(network_diagnostics_test network_diagnostics_test.cpp)
 
+# 大厅协议测试 (ms-18.1)
+add_frame_sync_test(lobby_protocol_test lobby_protocol_test.cpp)
+
+# 房间管理器测试 (ms-18.2)
+add_frame_sync_test(room_manager_test room_manager_test.cpp)
+
+# 大厅端到端测试 (ms-18.5)
+add_frame_sync_test(lobby_e2e_test lobby_e2e_test.cpp)
+
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
 if(ENABLE_RLTOOLS)

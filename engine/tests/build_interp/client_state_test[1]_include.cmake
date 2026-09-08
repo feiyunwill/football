@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_interp/client_state_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/engine/tests/build_interp/client_state_test[1]_tests.cmake")
+else()
+  add_test(client_state_test_NOT_BUILT client_state_test_NOT_BUILT)
+endif()

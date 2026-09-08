@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_snapshot/engine_integration_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/engine/tests/build_snapshot/engine_integration_test[1]_tests.cmake")
+else()
+  add_test(engine_integration_test_NOT_BUILT engine_integration_test_NOT_BUILT)
+endif()

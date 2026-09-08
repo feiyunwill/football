@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_latency/latency_compensator_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/engine/tests/build_latency/latency_compensator_test[1]_tests.cmake")
+else()
+  add_test(latency_compensator_test_NOT_BUILT latency_compensator_test_NOT_BUILT)
+endif()

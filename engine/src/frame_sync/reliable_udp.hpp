@@ -14,6 +14,7 @@
 #include <cstdint>
 #include <cstring>
 #include <functional>
+#include <flat_map>
 #include <vector>
 #include <deque>
 
@@ -114,7 +115,7 @@ class BandwidthEstimator {
 
 class ReliableUDPChannel {
  public:
-  using OnDataFn = std::function<void(const uint8_t* data, size_t len)>;
+  using OnDataFn = std::move_only_function<void(const uint8_t* data, size_t len)>;
 
   ReliableUDPChannel(udp::socket& socket, const udp::endpoint& remote, OnDataFn on_data)
       : socket_(socket), remote_(remote), on_data_(std::move(on_data)) {}
@@ -274,7 +275,7 @@ class ReliableUDPChannel {
     std::chrono::steady_clock::time_point sent_at;
     int retries = 0;
   };
-  std::map<uint32_t, Pending> pending_;
+  std::flat_map<uint32_t, Pending> pending_;
 };
 
 }  // namespace frame_sync

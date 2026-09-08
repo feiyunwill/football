@@ -1,0 +1,5 @@
+if(EXISTS "/home/zuchangqu/project/football/engine/tests/build_lobby/phase16_integration_test[1]_tests.cmake")
+  include("/home/zuchangqu/project/football/engine/tests/build_lobby/phase16_integration_test[1]_tests.cmake")
+else()
+  add_test(phase16_integration_test_NOT_BUILT phase16_integration_test_NOT_BUILT)
+endif()

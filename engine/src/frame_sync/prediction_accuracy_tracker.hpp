@@ -76,7 +76,7 @@ class PredictionAccuracyTracker {
 
   /// @brief Get current prediction accuracy
   /// @return Accuracy ratio (0.0 - 1.0)
-  [[nodiscard]] double GetAccuracy() const {
+  [[nodiscard]] constexpr double GetAccuracy() const {
     if (total_frames_ == 0) return 1.0;
     return static_cast<double>(correct_frames_) / total_frames_;
   }
@@ -101,7 +101,7 @@ class PredictionAccuracyTracker {
   }
 
   /// @brief Get accuracy trend (improving, stable, degrading)
-  [[nodiscard]] Trend GetAccuracyTrend() const {
+  [[nodiscard]] constexpr Trend GetAccuracyTrend() const {
     if (results_.size() < 20) return Trend::kStable;
     
     size_t half = results_.size() / 2;
