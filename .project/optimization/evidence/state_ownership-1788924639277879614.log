@@ -1,0 +1,31 @@
+Running: cmake -S engine -B /tmp/football-optimization-native
+Using Python: 3.14
+Using pybind11 for Python bindings
+CMake Warning (policy) at CMakeLists.txt:162 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: cmake --build /tmp/football-optimization-native -j 1 --target engine_state_contract
+[  3%] Built target datalib
+[ 10%] Built target gui2lib
+[ 21%] Built target baselib
+[ 30%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 35%] Built target typeslib
+[ 46%] Built target scenelib
+[ 52%] Built target utilslib
+[ 53%] Built target blunted2
+[ 79%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Linking CXX executable bin/engine_state_contract
+[100%] Built target engine_state_contract
+Running: /tmp/football-optimization-native/bin/engine_state_contract 42
+Running: /tmp/football-optimization-native/bin/engine_state_contract 43
+{"passed": true, "assertions": 8190, "skipped": 0, "results": [{"seed": 42, "passed": true, "assertions": 4095, "skipped": 0}, {"seed": 43, "passed": true, "assertions": 4095, "skipped": 0}]}

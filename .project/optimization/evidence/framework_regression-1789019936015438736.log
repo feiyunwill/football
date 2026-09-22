@@ -1,0 +1,3635 @@
+Running: cmake -S engine -B /tmp/football-optimization-native-debug-config -DCMAKE_BUILD_TYPE=Debug -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native-debug-config/bin
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-optimization-native-debug-config
+Running: cmake -S engine/tests -B /tmp/football-review-20260909-tests -DCMAKE_BUILD_TYPE=Debug -DENABLE_PCH=OFF
+-- Build type: Debug
+-- Unity build: ON
+-- PCH enabled: OFF
+-- Build targets: 39
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-review-20260909-tests
+Running: cmake --build /tmp/football-review-20260909-tests -j 1
+[  2%] Built target gtest
+[  4%] Built target gtest_main
+[  5%] Building CXX object CMakeFiles/frame_sync_test.dir/Unity/unity_0_cxx.cxx.o
+[  6%] Linking CXX executable frame_sync_test
+[  6%] Built target frame_sync_test
+[  9%] Built target ecs_test
+[ 11%] Built target ecs_query_contract_test
+[ 13%] Built target fixed_point_test
+[ 16%] Built target fixed_point_determinism_test
+[ 17%] Building CXX object CMakeFiles/client_state_test.dir/Unity/unity_0_cxx.cxx.o
+[ 18%] Linking CXX executable client_state_test
+[ 18%] Built target client_state_test
+[ 20%] Built target ecs_physics_sync_test
+[ 23%] Built target ecs_benchmark_test
+[ 24%] Building CXX object CMakeFiles/engine_integration_test.dir/Unity/unity_0_cxx.cxx.o
+[ 25%] Linking CXX executable engine_integration_test
+[ 25%] Built target engine_integration_test
+[ 26%] Building CXX object CMakeFiles/phase5_test.dir/Unity/unity_0_cxx.cxx.o
+[ 27%] Linking CXX executable phase5_test
+[ 27%] Built target phase5_test
+[ 29%] Building CXX object CMakeFiles/performance_benchmark_test.dir/Unity/unity_0_cxx.cxx.o
+[ 30%] Linking CXX executable performance_benchmark_test
+[ 30%] Built target performance_benchmark_test
+[ 32%] Built target frame_sync_performance_test
+[ 34%] Built target ux_optimizer_test
+[ 37%] Built target frame_sync_coverage_test
+[ 39%] Built target prng_test
+[ 41%] Built target interpolator_test
+[ 44%] Built target state_delta_codec_test
+[ 46%] Built target prediction_accuracy_tracker_test
+[ 48%] Built target adaptive_prediction_cap_test
+[ 50%] Building CXX object CMakeFiles/replay_system_test.dir/Unity/unity_0_cxx.cxx.o
+[ 51%] Linking CXX executable replay_system_test
+[ 51%] Built target replay_system_test
+[ 53%] Built target adaptive_jitter_buffer_test
+[ 54%] Building CXX object CMakeFiles/phase16_integration_test.dir/Unity/unity_0_cxx.cxx.o
+In file included from /root/work_space/football/engine/tests/phase16_integration_test.cpp:14,
+                 from /tmp/football-review-20260909-tests/CMakeFiles/phase16_integration_test.dir/Unity/unity_0_cxx.cxx:4:
+/root/work_space/football/engine/tests/../src/frame_sync/deterministic_prng.hpp: In member function ‘void frame_sync::DeterministicPRNG::skip(uint64_t)’:
+/root/work_space/football/engine/tests/../src/frame_sync/deterministic_prng.hpp:112:11: warning: ignoring return value of ‘uint64_t frame_sync::DeterministicPRNG::next()’, declared with attribute ‘nodiscard’ [-Wunused-result]
+  112 |       next();
+      |       ~~~~^~
+/root/work_space/football/engine/tests/../src/frame_sync/deterministic_prng.hpp:55:26: note: declared here
+   55 |   [[nodiscard]] uint64_t next() {
+      |                          ^~~~
+/root/work_space/football/engine/tests/phase16_integration_test.cpp: In member function ‘virtual void frame_sync::{anonymous}::PredictionAccuracyIntegration_AccuracyTracking_Test::TestBody()’:
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:181:32: warning: ignoring return value of ‘std::optional<bool> frame_sync::PredictionAccuracyTracker::RecordAuthoritative(uint32_t, uint64_t)’, declared with attribute ‘nodiscard’ [-Wunused-result]
+  181 |     tracker.RecordAuthoritative(i, 0xBBBB);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+In file included from /root/work_space/football/engine/tests/phase16_integration_test.cpp:16:
+/root/work_space/football/engine/tests/../src/frame_sync/prediction_accuracy_tracker.hpp:49:37: note: declared here
+   49 |   [[nodiscard]] std::optional<bool> RecordAuthoritative(uint32_t frame,
+      |                                     ^~~~~~~~~~~~~~~~~~~
+/root/work_space/football/engine/tests/phase16_integration_test.cpp: In member function ‘virtual void frame_sync::{anonymous}::PredictionAccuracyIntegration_TrendDetection_Test::TestBody()’:
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:195:32: warning: ignoring return value of ‘std::optional<bool> frame_sync::PredictionAccuracyTracker::RecordAuthoritative(uint32_t, uint64_t)’, declared with attribute ‘nodiscard’ [-Wunused-result]
+  195 |     tracker.RecordAuthoritative(i, 0xAAAA);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+/root/work_space/football/engine/tests/../src/frame_sync/prediction_accuracy_tracker.hpp:49:37: note: declared here
+   49 |   [[nodiscard]] std::optional<bool> RecordAuthoritative(uint32_t frame,
+      |                                     ^~~~~~~~~~~~~~~~~~~
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:201:32: warning: ignoring return value of ‘std::optional<bool> frame_sync::PredictionAccuracyTracker::RecordAuthoritative(uint32_t, uint64_t)’, declared with attribute ‘nodiscard’ [-Wunused-result]
+  201 |     tracker.RecordAuthoritative(i, 0xCCCC);
+      |     ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~
+/root/work_space/football/engine/tests/../src/frame_sync/prediction_accuracy_tracker.hpp:49:37: note: declared here
+   49 |   [[nodiscard]] std::optional<bool> RecordAuthoritative(uint32_t frame,
+      |                                     ^~~~~~~~~~~~~~~~~~~
+[ 55%] Linking CXX executable phase16_integration_test
+[ 55%] Built target phase16_integration_test
+[ 58%] Built target latency_compensator_test
+[ 60%] Built target state_snapshot_codec_test
+[ 62%] Built target spectator_test
+[ 63%] Building CXX object CMakeFiles/replay_integration_test.dir/Unity/unity_0_cxx.cxx.o
+[ 65%] Linking CXX executable replay_integration_test
+[ 65%] Built target replay_integration_test
+[ 67%] Built target network_diagnostics_test
+[ 68%] Building CXX object CMakeFiles/lobby_protocol_test.dir/Unity/unity_0_cxx.cxx.o
+[ 69%] Linking CXX executable lobby_protocol_test
+[ 69%] Built target lobby_protocol_test
+[ 70%] Building CXX object CMakeFiles/room_manager_test.dir/Unity/unity_0_cxx.cxx.o
+[ 72%] Linking CXX executable room_manager_test
+[ 72%] Built target room_manager_test
+[ 73%] Building CXX object CMakeFiles/lobby_e2e_test.dir/Unity/unity_0_cxx.cxx.o
+[ 74%] Linking CXX executable lobby_e2e_test
+[ 74%] Built target lobby_e2e_test
+[ 76%] Built target milestone_regression_test
+[ 77%] Building CXX object CMakeFiles/frame_simulation_test.dir/Unity/unity_0_cxx.cxx.o
+[ 79%] Linking CXX executable frame_simulation_test
+[ 79%] Built target frame_simulation_test
+[ 80%] Building CXX object CMakeFiles/memory_budget_test.dir/Unity/unity_0_cxx.cxx.o
+[ 81%] Linking CXX executable memory_budget_test
+[ 81%] Built target memory_budget_test
+[ 82%] Building CXX object CMakeFiles/reliable_udp_budget_test.dir/Unity/unity_0_cxx.cxx.o
+[ 83%] Linking CXX executable reliable_udp_budget_test
+[ 83%] Built target reliable_udp_budget_test
+[ 84%] Building CXX object CMakeFiles/bounded_tcp_writer_test.dir/Unity/unity_0_cxx.cxx.o
+[ 86%] Linking CXX executable bounded_tcp_writer_test
+[ 86%] Built target bounded_tcp_writer_test
+[ 87%] Building CXX object CMakeFiles/lobby_capacity_test.dir/Unity/unity_0_cxx.cxx.o
+[ 88%] Linking CXX executable lobby_capacity_test
+[ 88%] Built target lobby_capacity_test
+[ 89%] Building CXX object CMakeFiles/lobby_client_capacity_test.dir/Unity/unity_0_cxx.cxx.o
+[ 90%] Linking CXX executable lobby_client_capacity_test
+[ 90%] Built target lobby_client_capacity_test
+[ 91%] Building CXX object CMakeFiles/tcp_frame_server_test.dir/Unity/unity_0_cxx.cxx.o
+[ 93%] Linking CXX executable tcp_frame_server_test
+[ 93%] Built target tcp_frame_server_test
+[ 94%] Building CXX object CMakeFiles/tcp_client_capacity_test.dir/Unity/unity_0_cxx.cxx.o
+[ 95%] Linking CXX executable tcp_client_capacity_test
+[ 95%] Built target tcp_client_capacity_test
+[ 97%] Built target gmock
+[100%] Built target gmock_main
+Running: ctest --test-dir /tmp/football-review-20260909-tests --output-on-failure --output-junit /root/work_space/football/.project/optimization/evidence/framework-ctest.xml
+Test project /tmp/football-review-20260909-tests
+        Start   1: SlotInputTest.DefaultConstruction
+  1/528 Test   #1: SlotInputTest.DefaultConstruction ........................................................   Passed    0.00 sec
+        Start   2: SlotInputTest.Equality
+  2/528 Test   #2: SlotInputTest.Equality ...................................................................   Passed    0.00 sec
+        Start   3: SlotInputTest.BinaryLayoutSize
+  3/528 Test   #3: SlotInputTest.BinaryLayoutSize ...........................................................   Passed    0.00 sec
+        Start   4: SlotInputTest.MemcpyRoundTrip
+  4/528 Test   #4: SlotInputTest.MemcpyRoundTrip ............................................................   Passed    0.00 sec
+        Start   5: MessageTypeTest.UniqueValues
+  5/528 Test   #5: MessageTypeTest.UniqueValues .............................................................   Passed    0.00 sec
+        Start   6: ProtocolConstantsTest.HeartbeatPacketSize
+  6/528 Test   #6: ProtocolConstantsTest.HeartbeatPacketSize ................................................   Passed    0.00 sec
+        Start   7: ProtocolConstantsTest.TimeoutConstants
+  7/528 Test   #7: ProtocolConstantsTest.TimeoutConstants ...................................................   Passed    0.00 sec
+        Start   8: AuthoritativeFrameTest.HeaderSize
+  8/528 Test   #8: AuthoritativeFrameTest.HeaderSize ........................................................   Passed    0.00 sec
+        Start   9: ClientFrameInputTest.HeaderSize
+  9/528 Test   #9: ClientFrameInputTest.HeaderSize ..........................................................   Passed    0.00 sec
+        Start  10: ClientFrameInputTest.SlotEntrySize
+ 10/528 Test  #10: ClientFrameInputTest.SlotEntrySize .......................................................   Passed    0.00 sec
+        Start  11: SessionStartTest.ParamsSize
+ 11/528 Test  #11: SessionStartTest.ParamsSize ..............................................................   Passed    0.00 sec
+        Start  12: LayoutTest.SlotInputNoPadding
+ 12/528 Test  #12: LayoutTest.SlotInputNoPadding ............................................................   Passed    0.00 sec
+        Start  13: TypesTest.FrameIdIsUint32
+ 13/528 Test  #13: TypesTest.FrameIdIsUint32 ................................................................   Passed    0.00 sec
+        Start  14: TypesTest.StateHashIsUint64
+ 14/528 Test  #14: TypesTest.StateHashIsUint64 ..............................................................   Passed    0.00 sec
+        Start  15: PredictionRollbackTest.PredictThenRollback
+ 15/528 Test  #15: PredictionRollbackTest.PredictThenRollback ...............................................***Failed    0.00 sec
+Running main() from /tmp/football-review-20260909-tests/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = PredictionRollbackTest.PredictThenRollback
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from PredictionRollbackTest
+[ RUN      ] PredictionRollbackTest.PredictThenRollback
+unknown file: Failure
+C++ exception with description "Rollback needs valid input and callbacks" thrown in the test body.
+
+[  FAILED  ] PredictionRollbackTest.PredictThenRollback (0 ms)
+[----------] 1 test from PredictionRollbackTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] PredictionRollbackTest.PredictThenRollback
+
+ 1 FAILED TEST
+
+        Start  16: PredictionRollbackTest.PredictWithNoRollback
+ 16/528 Test  #16: PredictionRollbackTest.PredictWithNoRollback .............................................   Passed    0.00 sec
+        Start  17: PredictionRollbackTest.EvictionPreventsStaleRollback
+ 17/528 Test  #17: PredictionRollbackTest.EvictionPreventsStaleRollback .....................................   Passed    0.00 sec
+        Start  18: PredictionRollbackTest.StateHashVerification
+ 18/528 Test  #18: PredictionRollbackTest.StateHashVerification .............................................   Passed    0.00 sec
+        Start  19: EntityTest.NullEntityIsZero
+ 19/528 Test  #19: EntityTest.NullEntityIsZero ..............................................................   Passed    0.00 sec
+        Start  20: EntityTest.EntityTypeIsUint64
+ 20/528 Test  #20: EntityTest.EntityTypeIsUint64 ............................................................   Passed    0.00 sec
+        Start  21: WorldTest.CreateEntity
+ 21/528 Test  #21: WorldTest.CreateEntity ...................................................................   Passed    0.00 sec
+        Start  22: WorldTest.CreateMultipleEntities
+ 22/528 Test  #22: WorldTest.CreateMultipleEntities .........................................................   Passed    0.00 sec
+        Start  23: WorldTest.EntityIdsAreMonotonic
+ 23/528 Test  #23: WorldTest.EntityIdsAreMonotonic ..........................................................   Passed    0.00 sec
+        Start  24: WorldTest.AddAndGetComponent
+ 24/528 Test  #24: WorldTest.AddAndGetComponent .............................................................   Passed    0.00 sec
+        Start  25: WorldTest.GetComponentReturnsNullForMissing
+ 25/528 Test  #25: WorldTest.GetComponentReturnsNullForMissing ..............................................   Passed    0.00 sec
+        Start  26: WorldTest.HasComponent
+ 26/528 Test  #26: WorldTest.HasComponent ...................................................................   Passed    0.00 sec
+        Start  27: WorldTest.RemoveComponent
+ 27/528 Test  #27: WorldTest.RemoveComponent ................................................................   Passed    0.00 sec
+        Start  28: WorldTest.OverwriteComponent
+ 28/528 Test  #28: WorldTest.OverwriteComponent .............................................................   Passed    0.00 sec
+        Start  29: WorldTest.MultipleComponentsOnSameEntity
+ 29/528 Test  #29: WorldTest.MultipleComponentsOnSameEntity .................................................   Passed    0.00 sec
+        Start  30: WorldTest.ForEachSingleComponent
+ 30/528 Test  #30: WorldTest.ForEachSingleComponent .........................................................   Passed    0.00 sec
+        Start  31: WorldTest.ForEachTwoComponents
+ 31/528 Test  #31: WorldTest.ForEachTwoComponents ...........................................................   Passed    0.00 sec
+        Start  32: WorldTest.ForEachModifiesData
+ 32/528 Test  #32: WorldTest.ForEachModifiesData ............................................................   Passed    0.00 sec
+        Start  33: WorldTest.DestroyEntityRemovesAllComponents
+ 33/528 Test  #33: WorldTest.DestroyEntityRemovesAllComponents ..............................................   Passed    0.00 sec
+        Start  34: WorldTest.ClearRemovesAll
+ 34/528 Test  #34: WorldTest.ClearRemovesAll ................................................................   Passed    0.00 sec
+        Start  35: WorldTest.ForEachDeterministicOrder
+ 35/528 Test  #35: WorldTest.ForEachDeterministicOrder ......................................................   Passed    0.00 sec
+        Start  36: WorldTest.MoveConstruction
+ 36/528 Test  #36: WorldTest.MoveConstruction ...............................................................   Passed    0.00 sec
+        Start  37: TeamStateComponentTest.DefaultConstruction
+ 37/528 Test  #37: TeamStateComponentTest.DefaultConstruction ...............................................   Passed    0.00 sec
+        Start  38: TeamStateComponentTest.EcsIntegration
+ 38/528 Test  #38: TeamStateComponentTest.EcsIntegration ....................................................   Passed    0.00 sec
+        Start  39: TeamStateComponentTest.MultipleTeams
+ 39/528 Test  #39: TeamStateComponentTest.MultipleTeams .....................................................   Passed    0.00 sec
+        Start  40: TeamStateComponentTest.ForEachTeamState
+ 40/528 Test  #40: TeamStateComponentTest.ForEachTeamState ..................................................   Passed    0.00 sec
+        Start  41: RefereeStateComponentTest.DefaultConstruction
+ 41/528 Test  #41: RefereeStateComponentTest.DefaultConstruction ............................................   Passed    0.00 sec
+        Start  42: RefereeStateComponentTest.EcsIntegration
+ 42/528 Test  #42: RefereeStateComponentTest.EcsIntegration .................................................   Passed    0.00 sec
+        Start  43: RefereeStateComponentTest.FoulState
+ 43/528 Test  #43: RefereeStateComponentTest.FoulState ......................................................   Passed    0.00 sec
+        Start  44: MatchStateComponentTest.DefaultConstruction
+ 44/528 Test  #44: MatchStateComponentTest.DefaultConstruction ..............................................   Passed    0.00 sec
+        Start  45: MatchStateComponentTest.EcsIntegration
+ 45/528 Test  #45: MatchStateComponentTest.EcsIntegration ...................................................   Passed    0.00 sec
+        Start  46: MatchStateComponentTest.GoalState
+ 46/528 Test  #46: MatchStateComponentTest.GoalState ........................................................   Passed    0.00 sec
+        Start  47: SerializationTest.TeamStateRoundTrip
+ 47/528 Test  #47: SerializationTest.TeamStateRoundTrip .....................................................   Passed    0.00 sec
+        Start  48: SerializationTest.RefereeStateRoundTrip
+ 48/528 Test  #48: SerializationTest.RefereeStateRoundTrip ..................................................   Passed    0.00 sec
+        Start  49: SerializationTest.MatchStateRoundTrip
+ 49/528 Test  #49: SerializationTest.MatchStateRoundTrip ....................................................   Passed    0.00 sec
+        Start  50: SerializationTest.AllComponentsRoundTrip
+ 50/528 Test  #50: SerializationTest.AllComponentsRoundTrip .................................................   Passed    0.00 sec
+        Start  51: QueryContract.ConstEmptyWorldReturnsNull
+ 51/528 Test  #51: QueryContract.ConstEmptyWorldReturnsNull .................................................   Passed    0.00 sec
+        Start  52: QueryContract.ThreeDistinctComponentsUseStableEntityOrder
+ 52/528 Test  #52: QueryContract.ThreeDistinctComponentsUseStableEntityOrder ................................   Passed    0.00 sec
+        Start  53: QueryContract.ResultCanBeReusedAfterPoolDestructionAndRecreation
+ 53/528 Test  #53: QueryContract.ResultCanBeReusedAfterPoolDestructionAndRecreation .........................   Passed    0.00 sec
+        Start  54: QueryContract.SnapshotQuerySkipsDeletedFutureMatchesAndIgnoresNewMatches
+ 54/528 Test  #54: QueryContract.SnapshotQuerySkipsDeletedFutureMatchesAndIgnoresNewMatches .................   Passed    0.00 sec
+        Start  55: QueryContract.MutableWorldTraversalPreservesFirstPoolCandidateSnapshot
+ 55/528 Test  #55: QueryContract.MutableWorldTraversalPreservesFirstPoolCandidateSnapshot ...................   Passed    0.00 sec
+        Start  56: QueryContract.SmallestPoolCanHaveAnyComponentPosition
+ 56/528 Test  #56: QueryContract.SmallestPoolCanHaveAnyComponentPosition ....................................   Passed    0.00 sec
+        Start  57: QueryContract.MissingTypesDoNotAllocatePoolsDuringResultConstruction
+ 57/528 Test  #57: QueryContract.MissingTypesDoNotAllocatePoolsDuringResultConstruction .....................   Passed    0.00 sec
+        Start  58: QueryContract.ThreeComponentTraversalSurvivesRemovalAndPoolGrowth
+ 58/528 Test  #58: QueryContract.ThreeComponentTraversalSurvivesRemovalAndPoolGrowth ........................   Passed    0.00 sec
+        Start  59: FixedPointTest.DefaultConstruction
+ 59/528 Test  #59: FixedPointTest.DefaultConstruction .......................................................   Passed    0.00 sec
+        Start  60: FixedPointTest.IntConstruction
+ 60/528 Test  #60: FixedPointTest.IntConstruction ...........................................................   Passed    0.00 sec
+        Start  61: FixedPointTest.FloatConstruction
+ 61/528 Test  #61: FixedPointTest.FloatConstruction .........................................................   Passed    0.00 sec
+        Start  62: FixedPointTest.FromRaw
+ 62/528 Test  #62: FixedPointTest.FromRaw ...................................................................   Passed    0.00 sec
+        Start  63: FixedPointTest.Constants
+ 63/528 Test  #63: FixedPointTest.Constants .................................................................   Passed    0.00 sec
+        Start  64: FixedPointTest.ToRaw
+ 64/528 Test  #64: FixedPointTest.ToRaw .....................................................................   Passed    0.00 sec
+        Start  65: FixedPointTest.Addition
+ 65/528 Test  #65: FixedPointTest.Addition ..................................................................   Passed    0.00 sec
+        Start  66: FixedPointTest.Subtraction
+ 66/528 Test  #66: FixedPointTest.Subtraction ...............................................................   Passed    0.00 sec
+        Start  67: FixedPointTest.Multiplication
+ 67/528 Test  #67: FixedPointTest.Multiplication ............................................................   Passed    0.00 sec
+        Start  68: FixedPointTest.Division
+ 68/528 Test  #68: FixedPointTest.Division ..................................................................   Passed    0.00 sec
+        Start  69: FixedPointTest.CompoundAssignment
+ 69/528 Test  #69: FixedPointTest.CompoundAssignment ........................................................   Passed    0.00 sec
+        Start  70: FixedPointTest.FractionalArithmetic
+ 70/528 Test  #70: FixedPointTest.FractionalArithmetic ......................................................   Passed    0.00 sec
+        Start  71: FixedPointTest.DivisionPrecision
+ 71/528 Test  #71: FixedPointTest.DivisionPrecision .........................................................   Passed    0.00 sec
+        Start  72: FixedPointTest.Comparison
+ 72/528 Test  #72: FixedPointTest.Comparison ................................................................   Passed    0.00 sec
+        Start  73: FixedPointTest.Negation
+ 73/528 Test  #73: FixedPointTest.Negation ..................................................................   Passed    0.00 sec
+        Start  74: FixedPointTest.Abs
+ 74/528 Test  #74: FixedPointTest.Abs .......................................................................   Passed    0.00 sec
+        Start  75: FixedPointTest.SinZero
+ 75/528 Test  #75: FixedPointTest.SinZero ...................................................................   Passed    0.00 sec
+        Start  76: FixedPointTest.SinHalfPi
+ 76/528 Test  #76: FixedPointTest.SinHalfPi .................................................................   Passed    0.00 sec
+        Start  77: FixedPointTest.CosZero
+ 77/528 Test  #77: FixedPointTest.CosZero ...................................................................   Passed    0.00 sec
+        Start  78: FixedPointTest.CosPi
+ 78/528 Test  #78: FixedPointTest.CosPi .....................................................................   Passed    0.00 sec
+        Start  79: FixedPointTest.SinPiOver4
+ 79/528 Test  #79: FixedPointTest.SinPiOver4 ................................................................   Passed    0.00 sec
+        Start  80: FixedPointTest.Sqrt4
+ 80/528 Test  #80: FixedPointTest.Sqrt4 .....................................................................   Passed    0.00 sec
+        Start  81: FixedPointTest.Sqrt9
+ 81/528 Test  #81: FixedPointTest.Sqrt9 .....................................................................   Passed    0.00 sec
+        Start  82: FixedPointTest.Sqrt2
+ 82/528 Test  #82: FixedPointTest.Sqrt2 .....................................................................   Passed    0.00 sec
+        Start  83: FixedPointTest.SqrtZero
+ 83/528 Test  #83: FixedPointTest.SqrtZero ..................................................................   Passed    0.00 sec
+        Start  84: FixedPointTest.SqrtNegative
+ 84/528 Test  #84: FixedPointTest.SqrtNegative ..............................................................   Passed    0.00 sec
+        Start  85: FixedPointTest.AdditionDeterminism
+ 85/528 Test  #85: FixedPointTest.AdditionDeterminism .......................................................   Passed    0.00 sec
+        Start  86: FixedPointTest.MultiplicationDeterminism
+ 86/528 Test  #86: FixedPointTest.MultiplicationDeterminism .................................................   Passed    0.00 sec
+        Start  87: FixedPointTest.DivisionDeterminism
+ 87/528 Test  #87: FixedPointTest.DivisionDeterminism .......................................................   Passed    0.00 sec
+        Start  88: FixedPointTest.SinDeterminism
+ 88/528 Test  #88: FixedPointTest.SinDeterminism ............................................................   Passed    0.00 sec
+        Start  89: FixedPointTest.IntegerFraction
+ 89/528 Test  #89: FixedPointTest.IntegerFraction ...........................................................   Passed    0.00 sec
+        Start  90: FixedPointDeterminism.AdditionBitExact
+ 90/528 Test  #90: FixedPointDeterminism.AdditionBitExact ...................................................   Passed    0.00 sec
+        Start  91: FixedPointDeterminism.MultiplicationBitExact
+ 91/528 Test  #91: FixedPointDeterminism.MultiplicationBitExact .............................................   Passed    0.00 sec
+        Start  92: FixedPointDeterminism.DivisionBitExact
+ 92/528 Test  #92: FixedPointDeterminism.DivisionBitExact ...................................................   Passed    0.00 sec
+        Start  93: FixedPointDeterminism.TrigBitExact
+ 93/528 Test  #93: FixedPointDeterminism.TrigBitExact .......................................................   Passed    0.00 sec
+        Start  94: FixedPointDeterminism.SqrtBitExact
+ 94/528 Test  #94: FixedPointDeterminism.SqrtBitExact .......................................................   Passed    0.00 sec
+        Start  95: FixedPointDeterminism.Atan2BitExact
+ 95/528 Test  #95: FixedPointDeterminism.Atan2BitExact ......................................................   Passed    0.00 sec
+        Start  96: FixedPointDeterminism.PythagoreanIdentity
+ 96/528 Test  #96: FixedPointDeterminism.PythagoreanIdentity ................................................   Passed    0.00 sec
+        Start  97: FixedPointDeterminism.SinCosPeriodicity
+ 97/528 Test  #97: FixedPointDeterminism.SinCosPeriodicity ..................................................   Passed    0.00 sec
+        Start  98: FixedPointDeterminism.SinOddFunction
+ 98/528 Test  #98: FixedPointDeterminism.SinOddFunction .....................................................   Passed    0.00 sec
+        Start  99: FixedPointDeterminism.CosEvenFunction
+ 99/528 Test  #99: FixedPointDeterminism.CosEvenFunction ....................................................   Passed    0.00 sec
+        Start 100: FixedPointDeterminism.SqrtMultiplicative
+100/528 Test #100: FixedPointDeterminism.SqrtMultiplicative .................................................   Passed    0.00 sec
+        Start 101: FixedPointDeterminism.ConstexprConstruction
+101/528 Test #101: FixedPointDeterminism.ConstexprConstruction ..............................................   Passed    0.00 sec
+        Start 102: FixedPointDeterminism.ConstexprTrig
+102/528 Test #102: FixedPointDeterminism.ConstexprTrig ......................................................   Passed    0.00 sec
+        Start 103: ClientStateTest.SaveAndRetrieve
+103/528 Test #103: ClientStateTest.SaveAndRetrieve ..........................................................   Passed    0.00 sec
+        Start 104: ClientStateTest.MultipleSnapshots
+104/528 Test #104: ClientStateTest.MultipleSnapshots ........................................................   Passed    0.00 sec
+        Start 105: ClientStateTest.GetSnapshotNotFound
+105/528 Test #105: ClientStateTest.GetSnapshotNotFound ......................................................   Passed    0.00 sec
+        Start 106: ClientStateTest.Eviction
+106/528 Test #106: ClientStateTest.Eviction .................................................................   Passed    0.00 sec
+        Start 107: ClientStateTest.RollbackRestoresState
+107/528 Test #107: ClientStateTest.RollbackRestoresState ....................................................   Passed    0.00 sec
+        Start 108: ClientStateTest.RollbackNotFound
+108/528 Test #108: ClientStateTest.RollbackNotFound .........................................................   Passed    0.00 sec
+        Start 109: ClientStateTest.RestoreSnapshotWithoutStep
+109/528 Test #109: ClientStateTest.RestoreSnapshotWithoutStep ...............................................   Passed    0.00 sec
+        Start 110: ClientStateTest.StateHashMatch
+110/528 Test #110: ClientStateTest.StateHashMatch ...........................................................   Passed    0.00 sec
+        Start 111: ClientStateTest.StateHashMismatch
+111/528 Test #111: ClientStateTest.StateHashMismatch ........................................................   Passed    0.00 sec
+        Start 112: ClientStateTest.StateHashUnknown
+112/528 Test #112: ClientStateTest.StateHashUnknown .........................................................   Passed    0.00 sec
+        Start 113: ClientStateTest.FullPredictionRollbackCycle
+113/528 Test #113: ClientStateTest.FullPredictionRollbackCycle ..............................................   Passed    0.00 sec
+        Start 114: ClientStateTest.ClearResetsEverything
+114/528 Test #114: ClientStateTest.ClearResetsEverything ....................................................   Passed    0.00 sec
+        Start 115: ClientStateTest.CatchupWhenBehind
+115/528 Test #115: ClientStateTest.CatchupWhenBehind ........................................................   Passed    0.00 sec
+        Start 116: ClientStateTest.CatchupCappedAtMax
+116/528 Test #116: ClientStateTest.CatchupCappedAtMax .......................................................   Passed    0.00 sec
+        Start 117: ClientStateTest.NoCatchupWhenSynced
+117/528 Test #117: ClientStateTest.NoCatchupWhenSynced ......................................................   Passed    0.00 sec
+        Start 118: ClientStateTest.WaitWhenAhead
+118/528 Test #118: ClientStateTest.WaitWhenAhead ............................................................   Passed    0.00 sec
+        Start 119: ClientStateTest.FramesBehindCalculation
+119/528 Test #119: ClientStateTest.FramesBehindCalculation ..................................................   Passed    0.00 sec
+        Start 120: ClientStateTest.JitterTracking
+120/528 Test #120: ClientStateTest.JitterTracking ...........................................................   Passed    0.00 sec
+        Start 121: ClientStateTest.JitterHigh
+121/528 Test #121: ClientStateTest.JitterHigh ...............................................................   Passed    0.00 sec
+        Start 122: ClientStateTest.JitterResetsOnClear
+122/528 Test #122: ClientStateTest.JitterResetsOnClear ......................................................   Passed    0.00 sec
+        Start 123: PlayerPhysicsTest.DefaultValues
+123/528 Test #123: PlayerPhysicsTest.DefaultValues ..........................................................   Passed    0.00 sec
+        Start 124: PlayerPhysicsTest.AddGetComponent
+124/528 Test #124: PlayerPhysicsTest.AddGetComponent ........................................................   Passed    0.00 sec
+        Start 125: PlayerPhysicsTest.OverwriteComponent
+125/528 Test #125: PlayerPhysicsTest.OverwriteComponent .....................................................   Passed    0.00 sec
+        Start 126: PlayerPhysicsTest.ForEachFiltersCorrectly
+126/528 Test #126: PlayerPhysicsTest.ForEachFiltersCorrectly ................................................   Passed    0.00 sec
+        Start 127: PlayerPhysicsTest.ForEachDeterministicOrder
+127/528 Test #127: PlayerPhysicsTest.ForEachDeterministicOrder ..............................................   Passed    0.00 sec
+        Start 128: PlayerPhysicsTest.MultipleComponentsOnSameEntity
+128/528 Test #128: PlayerPhysicsTest.MultipleComponentsOnSameEntity .........................................   Passed    0.00 sec
+        Start 129: PlayerPhysicsTest.ForEachTwoComponents
+129/528 Test #129: PlayerPhysicsTest.ForEachTwoComponents ...................................................   Passed    0.00 sec
+        Start 130: PlayerPhysicsTest.RemoveComponent
+130/528 Test #130: PlayerPhysicsTest.RemoveComponent ........................................................   Passed    0.00 sec
+        Start 131: PlayerPhysicsTest.DestroyEntityRemovesAll
+131/528 Test #131: PlayerPhysicsTest.DestroyEntityRemovesAll ................................................   Passed    0.00 sec
+        Start 132: PlayerPhysicsTest.ClearRemovesAll
+132/528 Test #132: PlayerPhysicsTest.ClearRemovesAll ........................................................   Passed    0.00 sec
+        Start 133: PlayerPhysicsTest.BidirectionalSyncPattern
+133/528 Test #133: PlayerPhysicsTest.BidirectionalSyncPattern ...............................................   Passed    0.00 sec
+        Start 134: TacticsComponentTest.DefaultValues
+134/528 Test #134: TacticsComponentTest.DefaultValues .......................................................   Passed    0.00 sec
+        Start 135: TacticsComponentTest.AddGetComponent
+135/528 Test #135: TacticsComponentTest.AddGetComponent .....................................................   Passed    0.00 sec
+        Start 136: TacticsComponentTest.RoundTripOopToEcsToOop
+136/528 Test #136: TacticsComponentTest.RoundTripOopToEcsToOop ..............................................   Passed    0.00 sec
+        Start 137: BallComponentTest.AddGetComponent
+137/528 Test #137: BallComponentTest.AddGetComponent ........................................................   Passed    0.00 sec
+        Start 138: BallComponentTest.RoundTripOopToEcsToOop
+138/528 Test #138: BallComponentTest.RoundTripOopToEcsToOop .................................................   Passed    0.00 sec
+        Start 139: BallComponentTest.OverwriteComponent
+139/528 Test #139: BallComponentTest.OverwriteComponent .....................................................   Passed    0.00 sec
+        Start 140: BallComponentTest.ForEachDeterministicOrder
+140/528 Test #140: BallComponentTest.ForEachDeterministicOrder ..............................................   Passed    0.00 sec
+        Start 141: WorldSerializerTest.SerializeEmptyWorld
+141/528 Test #141: WorldSerializerTest.SerializeEmptyWorld ..................................................   Passed    0.00 sec
+        Start 142: WorldSerializerTest.SerializeDeserializeRoundTrip
+142/528 Test #142: WorldSerializerTest.SerializeDeserializeRoundTrip ........................................   Passed    0.00 sec
+        Start 143: WorldSerializerTest.PreserveComponentData
+143/528 Test #143: WorldSerializerTest.PreserveComponentData ................................................   Passed    0.00 sec
+        Start 144: WorldSerializerTest.MultipleComponentTypes
+144/528 Test #144: WorldSerializerTest.MultipleComponentTypes ...............................................   Passed    0.00 sec
+        Start 145: WorldSerializerTest.DeterministicEntityOrder
+145/528 Test #145: WorldSerializerTest.DeterministicEntityOrder .............................................   Passed    0.00 sec
+        Start 146: SystemGraphTest.EmptyGraph
+146/528 Test #146: SystemGraphTest.EmptyGraph ...............................................................   Passed    0.00 sec
+        Start 147: SystemGraphTest.SingleSystem
+147/528 Test #147: SystemGraphTest.SingleSystem .............................................................   Passed    0.00 sec
+        Start 148: SystemGraphTest.LinearDependency
+148/528 Test #148: SystemGraphTest.LinearDependency .........................................................   Passed    0.00 sec
+        Start 149: SystemGraphTest.DiamondDependency
+149/528 Test #149: SystemGraphTest.DiamondDependency ........................................................   Passed    0.00 sec
+        Start 150: SystemGraphTest.CycleDetection
+150/528 Test #150: SystemGraphTest.CycleDetection ...........................................................   Passed    0.00 sec
+        Start 151: SystemGraphTest.EarlyAbort
+151/528 Test #151: SystemGraphTest.EarlyAbort ...............................................................   Passed    0.00 sec
+        Start 152: SystemGraphTest.ContextPassing
+152/528 Test #152: SystemGraphTest.ContextPassing ...........................................................   Passed    0.00 sec
+        Start 153: SystemGraphTest.ClearResetsState
+153/528 Test #153: SystemGraphTest.ClearResetsState .........................................................   Passed    0.00 sec
+        Start 154: SystemGraphTest.IndependentSystems
+154/528 Test #154: SystemGraphTest.IndependentSystems .......................................................   Passed    0.00 sec
+        Start 155: ECSBenchmarkTest.PositionUpdate
+155/528 Test #155: ECSBenchmarkTest.PositionUpdate ..........................................................   Passed    0.02 sec
+        Start 156: ECSBenchmarkTest.ConditionalQuery
+156/528 Test #156: ECSBenchmarkTest.ConditionalQuery ........................................................   Passed    0.01 sec
+        Start 157: ECSBenchmarkTest.DualComponentQuery
+157/528 Test #157: ECSBenchmarkTest.DualComponentQuery ......................................................   Passed    0.01 sec
+        Start 158: ECSBenchmarkTest.RandomAccess
+158/528 Test #158: ECSBenchmarkTest.RandomAccess ............................................................   Passed    0.01 sec
+        Start 159: ECSBenchmarkTest.DeterministicTraversalOrder
+159/528 Test #159: ECSBenchmarkTest.DeterministicTraversalOrder .............................................   Passed    0.01 sec
+        Start 160: ECSBenchmarkTest.MemoryLocality
+160/528 Test #160: ECSBenchmarkTest.MemoryLocality ..........................................................   Passed    0.01 sec
+        Start 161: EngineCallbacksTest.DefaultCallbacksAreEmpty
+161/528 Test #161: EngineCallbacksTest.DefaultCallbacksAreEmpty .............................................   Passed    0.00 sec
+        Start 162: EngineCallbacksTest.WiringToMockEngine
+162/528 Test #162: EngineCallbacksTest.WiringToMockEngine ...................................................   Passed    0.00 sec
+        Start 163: Fnv1aHashTest.Deterministic
+163/528 Test #163: Fnv1aHashTest.Deterministic ..............................................................   Passed    0.00 sec
+        Start 164: Fnv1aHashTest.DifferentInputsDifferentHashes
+164/528 Test #164: Fnv1aHashTest.DifferentInputsDifferentHashes .............................................   Passed    0.00 sec
+        Start 165: Fnv1aHashTest.EmptyString
+165/528 Test #165: Fnv1aHashTest.EmptyString ................................................................   Passed    0.00 sec
+        Start 166: MultiplayerConfigTest.DefaultValues
+166/528 Test #166: MultiplayerConfigTest.DefaultValues ......................................................   Passed    0.00 sec
+        Start 167: ClientStateEngineIntegrationTest.PredictAndRollback
+167/528 Test #167: ClientStateEngineIntegrationTest.PredictAndRollback ......................................***Failed    0.00 sec
+Running main() from /tmp/football-review-20260909-tests/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = ClientStateEngineIntegrationTest.PredictAndRollback
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ClientStateEngineIntegrationTest
+[ RUN      ] ClientStateEngineIntegrationTest.PredictAndRollback
+unknown file: Failure
+C++ exception with description "Rollback needs valid input and callbacks" thrown in the test body.
+
+[  FAILED  ] ClientStateEngineIntegrationTest.PredictAndRollback (0 ms)
+[----------] 1 test from ClientStateEngineIntegrationTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] ClientStateEngineIntegrationTest.PredictAndRollback
+
+ 1 FAILED TEST
+
+        Start 168: ClientStateEngineIntegrationTest.HashVerification
+168/528 Test #168: ClientStateEngineIntegrationTest.HashVerification ........................................   Passed    0.00 sec
+        Start 169: EndToEndTest.AuthoritativeFrameRoundTrip
+169/528 Test #169: EndToEndTest.AuthoritativeFrameRoundTrip .................................................***Failed    0.00 sec
+Running main() from /tmp/football-review-20260909-tests/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = EndToEndTest.AuthoritativeFrameRoundTrip
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from EndToEndTest
+[ RUN      ] EndToEndTest.AuthoritativeFrameRoundTrip
+unknown file: Failure
+C++ exception with description "Rollback needs valid input and callbacks" thrown in the test body.
+
+[  FAILED  ] EndToEndTest.AuthoritativeFrameRoundTrip (0 ms)
+[----------] 1 test from EndToEndTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] EndToEndTest.AuthoritativeFrameRoundTrip
+
+ 1 FAILED TEST
+
+        Start 170: StateHashTest.PackUnpackRoundTrip
+170/528 Test #170: StateHashTest.PackUnpackRoundTrip ........................................................   Passed    0.00 sec
+        Start 171: MultiSlotTest.PackUnpackFrameInput
+171/528 Test #171: MultiSlotTest.PackUnpackFrameInput .......................................................   Passed    0.00 sec
+        Start 172: FullLoopTest.ClientServerSyncWithoutRollback
+172/528 Test #172: FullLoopTest.ClientServerSyncWithoutRollback .............................................   Passed    0.00 sec
+        Start 173: FullLoopTest.ClientServerSyncWithRollback
+173/528 Test #173: FullLoopTest.ClientServerSyncWithRollback ................................................***Failed    0.00 sec
+Running main() from /tmp/football-review-20260909-tests/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = FullLoopTest.ClientServerSyncWithRollback
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from FullLoopTest
+[ RUN      ] FullLoopTest.ClientServerSyncWithRollback
+unknown file: Failure
+C++ exception with description "Rollback needs valid input and callbacks" thrown in the test body.
+
+[  FAILED  ] FullLoopTest.ClientServerSyncWithRollback (0 ms)
+[----------] 1 test from FullLoopTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] FullLoopTest.ClientServerSyncWithRollback
+
+ 1 FAILED TEST
+
+        Start 174: FullLoopTest.StateHashVerificationAcrossFrames
+174/528 Test #174: FullLoopTest.StateHashVerificationAcrossFrames ...........................................   Passed    0.00 sec
+        Start 175: FullLoopTest.MultiSlotClientServerSync
+175/528 Test #175: FullLoopTest.MultiSlotClientServerSync ...................................................   Passed    0.00 sec
+        Start 176: JitterStatsTest.InitialState
+176/528 Test #176: JitterStatsTest.InitialState .............................................................   Passed    0.00 sec
+        Start 177: JitterStatsTest.RecordArrival
+177/528 Test #177: JitterStatsTest.RecordArrival ............................................................   Passed    0.00 sec
+        Start 178: JitterStatsTest.LossRate
+178/528 Test #178: JitterStatsTest.LossRate .................................................................   Passed    0.00 sec
+        Start 179: JitterStatsTest.RTTTracking
+179/528 Test #179: JitterStatsTest.RTTTracking ..............................................................   Passed    0.00 sec
+        Start 180: JitterStatsTest.RecommendedBufferSize
+180/528 Test #180: JitterStatsTest.RecommendedBufferSize ....................................................   Passed    0.00 sec
+        Start 181: DeltaSlotInputTest.NoChange
+181/528 Test #181: DeltaSlotInputTest.NoChange ..............................................................   Passed    0.00 sec
+        Start 182: DeltaSlotInputTest.AllFieldsChanged
+182/528 Test #182: DeltaSlotInputTest.AllFieldsChanged ......................................................   Passed    0.00 sec
+        Start 183: DeltaSlotInputTest.PartialChange
+183/528 Test #183: DeltaSlotInputTest.PartialChange .........................................................   Passed    0.00 sec
+        Start 184: DeltaSlotInputTest.CompressionRatio
+184/528 Test #184: DeltaSlotInputTest.CompressionRatio ......................................................   Passed    0.00 sec
+        Start 185: DeltaEncoderTest.EncodeDecode
+185/528 Test #185: DeltaEncoderTest.EncodeDecode ............................................................   Passed    0.00 sec
+        Start 186: DeltaEncoderTest.MultiFrameCompression
+186/528 Test #186: DeltaEncoderTest.MultiFrameCompression ...................................................   Passed    0.00 sec
+        Start 187: PerformanceBenchmark.AuthoritativeFrameEncodeDecode
+187/528 Test #187: PerformanceBenchmark.AuthoritativeFrameEncodeDecode ......................................   Passed    0.00 sec
+        Start 188: PerformanceBenchmark.ClientFrameInputEncodeDecode
+188/528 Test #188: PerformanceBenchmark.ClientFrameInputEncodeDecode ........................................   Passed    0.00 sec
+        Start 189: PerformanceBenchmark.DeltaCompressionThroughput
+189/528 Test #189: PerformanceBenchmark.DeltaCompressionThroughput ..........................................   Passed    0.05 sec
+        Start 190: PerformanceBenchmark.ClientStateSnapshotThroughput
+190/528 Test #190: PerformanceBenchmark.ClientStateSnapshotThroughput .......................................   Passed    0.03 sec
+        Start 191: PerformanceBenchmark.ClientStateRollbackPerformance
+191/528 Test #191: PerformanceBenchmark.ClientStateRollbackPerformance ......................................   Passed    0.01 sec
+        Start 192: PerformanceBenchmark.Fnv1aHashThroughput
+192/528 Test #192: PerformanceBenchmark.Fnv1aHashThroughput .................................................   Passed    0.87 sec
+        Start 193: PerformanceBenchmark.JitterStatsUpdateThroughput
+193/528 Test #193: PerformanceBenchmark.JitterStatsUpdateThroughput .........................................   Passed    0.08 sec
+        Start 194: PerformanceBenchmark.SlotInputMemcpyThroughput
+194/528 Test #194: PerformanceBenchmark.SlotInputMemcpyThroughput ...........................................   Passed    0.01 sec
+        Start 195: PerformanceBenchmark.StateHashPackUnpackThroughput
+195/528 Test #195: PerformanceBenchmark.StateHashPackUnpackThroughput .......................................   Passed    0.00 sec
+        Start 196: UXOptimizerTest.InitialState
+196/528 Test #196: UXOptimizerTest.InitialState .............................................................   Passed    0.00 sec
+        Start 197: UXOptimizerTest.RecordInputLatency
+197/528 Test #197: UXOptimizerTest.RecordInputLatency .......................................................   Passed    0.00 sec
+        Start 198: UXOptimizerTest.RecordFrameTime
+198/528 Test #198: UXOptimizerTest.RecordFrameTime ..........................................................   Passed    0.00 sec
+        Start 199: UXOptimizerTest.NetworkQuality
+199/528 Test #199: UXOptimizerTest.NetworkQuality ...........................................................   Passed    0.00 sec
+        Start 200: UXOptimizerTest.PredictionAccuracy
+200/528 Test #200: UXOptimizerTest.PredictionAccuracy .......................................................   Passed    0.00 sec
+        Start 201: UXOptimizerTest.RollbackCount
+201/528 Test #201: UXOptimizerTest.RollbackCount ............................................................   Passed    0.00 sec
+        Start 202: UXOptimizerTest.Reset
+202/528 Test #202: UXOptimizerTest.Reset ....................................................................   Passed    0.00 sec
+        Start 203: UXOptimizerTest.QualityRecommendation
+203/528 Test #203: UXOptimizerTest.QualityRecommendation ....................................................   Passed    0.00 sec
+        Start 204: InputLatencyTrackerTest.BasicTracking
+204/528 Test #204: InputLatencyTrackerTest.BasicTracking ....................................................   Passed    0.00 sec
+        Start 205: InputLatencyTrackerTest.P95Latency
+205/528 Test #205: InputLatencyTrackerTest.P95Latency .......................................................   Passed    0.00 sec
+        Start 206: InputLatencyTrackerTest.Cleanup
+206/528 Test #206: InputLatencyTrackerTest.Cleanup ..........................................................   Passed    0.00 sec
+        Start 207: Vec3Test.DefaultConstruction
+207/528 Test #207: Vec3Test.DefaultConstruction .............................................................   Passed    0.00 sec
+        Start 208: Vec3Test.ParameterizedConstruction
+208/528 Test #208: Vec3Test.ParameterizedConstruction .......................................................   Passed    0.00 sec
+        Start 209: Vec3Test.Addition
+209/528 Test #209: Vec3Test.Addition ........................................................................   Passed    0.00 sec
+        Start 210: Vec3Test.Subtraction
+210/528 Test #210: Vec3Test.Subtraction .....................................................................   Passed    0.00 sec
+        Start 211: Vec3Test.ScalarMultiply
+211/528 Test #211: Vec3Test.ScalarMultiply ..................................................................   Passed    0.00 sec
+        Start 212: Vec3Test.Length
+212/528 Test #212: Vec3Test.Length ..........................................................................   Passed    0.00 sec
+        Start 213: Vec3Test.LengthSquared
+213/528 Test #213: Vec3Test.LengthSquared ...................................................................   Passed    0.00 sec
+        Start 214: Vec3Test.Normalized
+214/528 Test #214: Vec3Test.Normalized ......................................................................   Passed    0.00 sec
+        Start 215: Vec3Test.NormalizedZeroVector
+215/528 Test #215: Vec3Test.NormalizedZeroVector ............................................................   Passed    0.00 sec
+        Start 216: QuatTest.DefaultConstruction
+216/528 Test #216: QuatTest.DefaultConstruction .............................................................   Passed    0.00 sec
+        Start 217: QuatTest.ParameterizedConstruction
+217/528 Test #217: QuatTest.ParameterizedConstruction .......................................................   Passed    0.00 sec
+        Start 218: QuatTest.Normalized
+218/528 Test #218: QuatTest.Normalized ......................................................................   Passed    0.00 sec
+        Start 219: QuatTest.SlerpIdentity
+219/528 Test #219: QuatTest.SlerpIdentity ...................................................................   Passed    0.00 sec
+        Start 220: QuatTest.SlerpHalfway
+220/528 Test #220: QuatTest.SlerpHalfway ....................................................................   Passed    0.00 sec
+        Start 221: QuatTest.SlerpShortestPath
+221/528 Test #221: QuatTest.SlerpShortestPath ...............................................................   Passed    0.00 sec
+        Start 222: InterpolatorTest.InitialState
+222/528 Test #222: InterpolatorTest.InitialState ............................................................   Passed    0.00 sec
+        Start 223: InterpolatorTest.SaveState
+223/528 Test #223: InterpolatorTest.SaveState ...............................................................   Passed    0.00 sec
+        Start 224: InterpolatorTest.InterpolateSingleFrame
+224/528 Test #224: InterpolatorTest.InterpolateSingleFrame ..................................................   Passed    0.00 sec
+        Start 225: InterpolatorTest.InterpolateBetweenFrames
+225/528 Test #225: InterpolatorTest.InterpolateBetweenFrames ................................................   Passed    0.00 sec
+        Start 226: InterpolatorTest.InterpolateAtFrameBoundary
+226/528 Test #226: InterpolatorTest.InterpolateAtFrameBoundary ..............................................   Passed    0.00 sec
+        Start 227: InterpolatorTest.InterpolateBeforeFrame
+227/528 Test #227: InterpolatorTest.InterpolateBeforeFrame ..................................................   Passed    0.00 sec
+        Start 228: InterpolatorTest.MultipleEntities
+228/528 Test #228: InterpolatorTest.MultipleEntities ........................................................   Passed    0.00 sec
+        Start 229: InterpolatorTest.EntityNotFound
+229/528 Test #229: InterpolatorTest.EntityNotFound ..........................................................   Passed    0.00 sec
+        Start 230: ProtocolIOTest.PackUnpackSessionStart
+230/528 Test #230: ProtocolIOTest.PackUnpackSessionStart ....................................................   Passed    0.00 sec
+        Start 231: ProtocolIOTest.PackUnpackSlotAssignment
+231/528 Test #231: ProtocolIOTest.PackUnpackSlotAssignment ..................................................   Passed    0.00 sec
+        Start 232: ProtocolIOTest.PackUnpackAuthoritativeFrame
+232/528 Test #232: ProtocolIOTest.PackUnpackAuthoritativeFrame ..............................................   Passed    0.00 sec
+        Start 233: ProtocolIOTest.PackUnpackClientFrameInput
+233/528 Test #233: ProtocolIOTest.PackUnpackClientFrameInput ................................................   Passed    0.00 sec
+        Start 234: ProtocolIOTest.PackReady
+234/528 Test #234: ProtocolIOTest.PackReady .................................................................   Passed    0.00 sec
+        Start 235: ProtocolIOTest.PackUnpackStateHash
+235/528 Test #235: ProtocolIOTest.PackUnpackStateHash .......................................................   Passed    0.00 sec
+        Start 236: ProtocolIOTest.PackUnpackHeartbeat
+236/528 Test #236: ProtocolIOTest.PackUnpackHeartbeat .......................................................   Passed    0.00 sec
+        Start 237: ProtocolIOTest.PackUnpackVersionNegotiate
+237/528 Test #237: ProtocolIOTest.PackUnpackVersionNegotiate ................................................   Passed    0.00 sec
+        Start 238: DeltaSlotInputTest.ConstexprCompute
+238/528 Test #238: DeltaSlotInputTest.ConstexprCompute ......................................................   Passed    0.00 sec
+        Start 239: DeltaSlotInputTest.PackedSizeTable
+239/528 Test #239: DeltaSlotInputTest.PackedSizeTable .......................................................   Passed    0.00 sec
+        Start 240: DeltaSlotInputTest.BytesSaved
+240/528 Test #240: DeltaSlotInputTest.BytesSaved ............................................................   Passed    0.00 sec
+        Start 241: DeterministicPRNGTest.BasicGeneration
+241/528 Test #241: DeterministicPRNGTest.BasicGeneration ....................................................   Passed    0.00 sec
+        Start 242: DeterministicPRNGTest.Determinism
+242/528 Test #242: DeterministicPRNGTest.Determinism ........................................................   Passed    0.00 sec
+        Start 243: DeterministicPRNGTest.DifferentSeeds
+243/528 Test #243: DeterministicPRNGTest.DifferentSeeds .....................................................   Passed    0.00 sec
+        Start 244: DeterministicPRNGTest.Uint32Generation
+244/528 Test #244: DeterministicPRNGTest.Uint32Generation ...................................................   Passed    0.00 sec
+        Start 245: DeterministicPRNGTest.FloatRange
+245/528 Test #245: DeterministicPRNGTest.FloatRange .........................................................   Passed    0.00 sec
+        Start 246: DeterministicPRNGTest.DoubleRange
+246/528 Test #246: DeterministicPRNGTest.DoubleRange ........................................................   Passed    0.00 sec
+        Start 247: DeterministicPRNGTest.RangeInt
+247/528 Test #247: DeterministicPRNGTest.RangeInt ...........................................................   Passed    0.00 sec
+        Start 248: DeterministicPRNGTest.RangeSame
+248/528 Test #248: DeterministicPRNGTest.RangeSame ..........................................................   Passed    0.00 sec
+        Start 249: DeterministicPRNGTest.RangeFloat
+249/528 Test #249: DeterministicPRNGTest.RangeFloat .........................................................   Passed    0.00 sec
+        Start 250: DeterministicPRNGTest.Skip
+250/528 Test #250: DeterministicPRNGTest.Skip ...............................................................   Passed    0.00 sec
+        Start 251: DeterministicPRNGTest.StateSerialization
+251/528 Test #251: DeterministicPRNGTest.StateSerialization .................................................   Passed    0.00 sec
+        Start 252: DeterministicPRNGTest.Distribution
+252/528 Test #252: DeterministicPRNGTest.Distribution .......................................................   Passed    0.00 sec
+        Start 253: DeterministicPRNGTest.ZeroSeed
+253/528 Test #253: DeterministicPRNGTest.ZeroSeed ...........................................................   Passed    0.00 sec
+        Start 254: DeterministicPRNGTest.LargeSeed
+254/528 Test #254: DeterministicPRNGTest.LargeSeed ..........................................................   Passed    0.00 sec
+        Start 255: DeterministicPRNGTest.CrossPlatformDeterminism
+255/528 Test #255: DeterministicPRNGTest.CrossPlatformDeterminism ...........................................   Passed    0.00 sec
+        Start 256: PRNGRegression.FullIntegerRangeKeepsSequenceAndBounds
+256/528 Test #256: PRNGRegression.FullIntegerRangeKeepsSequenceAndBounds ....................................   Passed    0.00 sec
+        Start 257: InterpolatorTest.BasicInterpolation
+257/528 Test #257: InterpolatorTest.BasicInterpolation ......................................................   Passed    0.00 sec
+        Start 258: InterpolatorTest.BasicExtrapolation
+258/528 Test #258: InterpolatorTest.BasicExtrapolation ......................................................   Passed    0.00 sec
+        Start 259: InterpolatorTest.ExtrapolationBoundsMaxDistance
+259/528 Test #259: InterpolatorTest.ExtrapolationBoundsMaxDistance ..........................................   Passed    0.00 sec
+        Start 260: InterpolatorTest.ExtrapolationBoundsMaxSpeed
+260/528 Test #260: InterpolatorTest.ExtrapolationBoundsMaxSpeed .............................................   Passed    0.00 sec
+        Start 261: InterpolatorTest.ExtrapolationBoundsMaxTime
+261/528 Test #261: InterpolatorTest.ExtrapolationBoundsMaxTime ..............................................   Passed    0.00 sec
+        Start 262: InterpolatorTest.ExtrapolationNotNeeded
+262/528 Test #262: InterpolatorTest.ExtrapolationNotNeeded ..................................................   Passed    0.00 sec
+        Start 263: InterpolatorTest.NeedsExtrapolation
+263/528 Test #263: InterpolatorTest.NeedsExtrapolation ......................................................   Passed    0.00 sec
+        Start 264: InterpolatorTest.ExtrapolationZeroVelocity
+264/528 Test #264: InterpolatorTest.ExtrapolationZeroVelocity ...............................................   Passed    0.00 sec
+        Start 265: InterpolatorTest.ExtrapolationMultipleEntities
+265/528 Test #265: InterpolatorTest.ExtrapolationMultipleEntities ...........................................   Passed    0.00 sec
+        Start 266: InterpolatorTest.ExtrapolationSingleFrame
+266/528 Test #266: InterpolatorTest.ExtrapolationSingleFrame ................................................   Passed    0.00 sec
+        Start 267: InterpolatorTest.ExtrapolationTimestamp
+267/528 Test #267: InterpolatorTest.ExtrapolationTimestamp ..................................................   Passed    0.00 sec
+        Start 268: StateDeltaCodecTest.BasicRoundtrip
+268/528 Test #268: StateDeltaCodecTest.BasicRoundtrip .......................................................   Passed    0.00 sec
+        Start 269: StateDeltaCodecTest.IdenticalFrames
+269/528 Test #269: StateDeltaCodecTest.IdenticalFrames ......................................................   Passed    0.00 sec
+        Start 270: StateDeltaCodecTest.ManyChanges
+270/528 Test #270: StateDeltaCodecTest.ManyChanges ..........................................................   Passed    0.00 sec
+        Start 271: StateDeltaCodecTest.NoBaseline
+271/528 Test #271: StateDeltaCodecTest.NoBaseline ...........................................................   Passed    0.00 sec
+        Start 272: StateDeltaCodecTest.DecodeWithNewCodec
+272/528 Test #272: StateDeltaCodecTest.DecodeWithNewCodec ...................................................   Passed    0.00 sec
+        Start 273: StateDeltaCodecTest.MultipleFrames
+273/528 Test #273: StateDeltaCodecTest.MultipleFrames .......................................................   Passed    0.00 sec
+        Start 274: StateDeltaCodecTest.CompressionRatioSparse
+274/528 Test #274: StateDeltaCodecTest.CompressionRatioSparse ...............................................   Passed    0.00 sec
+        Start 275: StateDeltaCodecTest.CompressionRatioDense
+275/528 Test #275: StateDeltaCodecTest.CompressionRatioDense ................................................   Passed    0.00 sec
+        Start 276: StateDeltaCodecTest.Reset
+276/528 Test #276: StateDeltaCodecTest.Reset ................................................................   Passed    0.00 sec
+        Start 277: StateDeltaCodecTest.RawBytesInterface
+277/528 Test #277: StateDeltaCodecTest.RawBytesInterface ....................................................   Passed    0.00 sec
+        Start 278: StateDeltaCodecTest.EmptyState
+278/528 Test #278: StateDeltaCodecTest.EmptyState ...........................................................   Passed    0.00 sec
+        Start 279: StateDeltaCodecTest.RLECompression
+279/528 Test #279: StateDeltaCodecTest.RLECompression .......................................................   Passed    0.00 sec
+        Start 280: StateDeltaCodecTest.RLEMixedPattern
+280/528 Test #280: StateDeltaCodecTest.RLEMixedPattern ......................................................   Passed    0.00 sec
+        Start 281: StateDeltaCodecTest.SizeMismatch
+281/528 Test #281: StateDeltaCodecTest.SizeMismatch .........................................................   Passed    0.00 sec
+        Start 282: PredictionAccuracyTrackerTest.BasicTracking
+282/528 Test #282: PredictionAccuracyTrackerTest.BasicTracking ..............................................   Passed    0.00 sec
+        Start 283: PredictionAccuracyTrackerTest.NoPrediction
+283/528 Test #283: PredictionAccuracyTrackerTest.NoPrediction ...............................................   Passed    0.00 sec
+        Start 284: PredictionAccuracyTrackerTest.RecentAccuracy
+284/528 Test #284: PredictionAccuracyTrackerTest.RecentAccuracy .............................................   Passed    0.00 sec
+        Start 285: PredictionAccuracyTrackerTest.AccuracyTrend
+285/528 Test #285: PredictionAccuracyTrackerTest.AccuracyTrend ..............................................   Passed    0.00 sec
+        Start 286: PredictionAccuracyTrackerTest.DegradingTrend
+286/528 Test #286: PredictionAccuracyTrackerTest.DegradingTrend .............................................   Passed    0.00 sec
+        Start 287: PredictionAccuracyTrackerTest.PendingPredictions
+287/528 Test #287: PredictionAccuracyTrackerTest.PendingPredictions .........................................   Passed    0.00 sec
+        Start 288: PredictionAccuracyTrackerTest.RecentMismatches
+288/528 Test #288: PredictionAccuracyTrackerTest.RecentMismatches ...........................................   Passed    0.00 sec
+        Start 289: PredictionAccuracyTrackerTest.Cleanup
+289/528 Test #289: PredictionAccuracyTrackerTest.Cleanup ....................................................   Passed    0.00 sec
+        Start 290: PredictionAccuracyTrackerTest.Reset
+290/528 Test #290: PredictionAccuracyTrackerTest.Reset ......................................................   Passed    0.00 sec
+        Start 291: PredictionAccuracyTrackerTest.PerfectAccuracy
+291/528 Test #291: PredictionAccuracyTrackerTest.PerfectAccuracy ............................................   Passed    0.00 sec
+        Start 292: PredictionAccuracyTrackerTest.ZeroAccuracy
+292/528 Test #292: PredictionAccuracyTrackerTest.ZeroAccuracy ...............................................   Passed    0.00 sec
+        Start 293: AdaptivePredictionCapTest.DefaultValues
+293/528 Test #293: AdaptivePredictionCapTest.DefaultValues ..................................................   Passed    0.00 sec
+        Start 294: AdaptivePredictionCapTest.RTTScaling
+294/528 Test #294: AdaptivePredictionCapTest.RTTScaling .....................................................   Passed    0.00 sec
+        Start 295: AdaptivePredictionCapTest.PacketLossAdjustment
+295/528 Test #295: AdaptivePredictionCapTest.PacketLossAdjustment ...........................................   Passed    0.00 sec
+        Start 296: AdaptivePredictionCapTest.AccuracyAdjustment
+296/528 Test #296: AdaptivePredictionCapTest.AccuracyAdjustment .............................................   Passed    0.00 sec
+        Start 297: AdaptivePredictionCapTest.FrameStabilityAdjustment
+297/528 Test #297: AdaptivePredictionCapTest.FrameStabilityAdjustment .......................................   Passed    0.00 sec
+        Start 298: AdaptivePredictionCapTest.Clamping
+298/528 Test #298: AdaptivePredictionCapTest.Clamping .......................................................   Passed    0.00 sec
+        Start 299: AdaptivePredictionCapTest.CapSummary
+299/528 Test #299: AdaptivePredictionCapTest.CapSummary .....................................................   Passed    0.00 sec
+        Start 300: AdaptivePredictionCapTest.RecommendedBounds
+300/528 Test #300: AdaptivePredictionCapTest.RecommendedBounds ..............................................   Passed    0.00 sec
+        Start 301: AdaptivePredictionCapTest.Reset
+301/528 Test #301: AdaptivePredictionCapTest.Reset ..........................................................   Passed    0.00 sec
+        Start 302: AdaptivePredictionCapTest.CombinedConditions
+302/528 Test #302: AdaptivePredictionCapTest.CombinedConditions .............................................   Passed    0.00 sec
+        Start 303: ReplaySystemTest.BasicRecording
+303/528 Test #303: ReplaySystemTest.BasicRecording ..........................................................   Passed    0.00 sec
+        Start 304: ReplaySystemTest.SerializationRoundtrip
+304/528 Test #304: ReplaySystemTest.SerializationRoundtrip ..................................................   Passed    0.00 sec
+        Start 305: ReplaySystemTest.Playback
+305/528 Test #305: ReplaySystemTest.Playback ................................................................   Passed    0.00 sec
+        Start 306: ReplaySystemTest.Seeking
+306/528 Test #306: ReplaySystemTest.Seeking .................................................................   Passed    0.00 sec
+        Start 307: ReplaySystemTest.FrameAtIndex
+307/528 Test #307: ReplaySystemTest.FrameAtIndex ............................................................   Passed    0.00 sec
+        Start 308: ReplaySystemTest.PauseResume
+308/528 Test #308: ReplaySystemTest.PauseResume .............................................................   Passed    0.00 sec
+        Start 309: ReplaySystemTest.Reset
+309/528 Test #309: ReplaySystemTest.Reset ...................................................................   Passed    0.00 sec
+        Start 310: ReplaySystemTest.EmptyReplay
+310/528 Test #310: ReplaySystemTest.EmptyReplay .............................................................   Passed    0.00 sec
+        Start 311: ReplaySystemTest.Metadata
+311/528 Test #311: ReplaySystemTest.Metadata ................................................................   Passed    0.00 sec
+        Start 312: AdaptiveJitterBufferTest.DefaultValues
+312/528 Test #312: AdaptiveJitterBufferTest.DefaultValues ...................................................   Passed    0.00 sec
+        Start 313: AdaptiveJitterBufferTest.JitterScaling
+313/528 Test #313: AdaptiveJitterBufferTest.JitterScaling ...................................................   Passed    0.00 sec
+        Start 314: AdaptiveJitterBufferTest.RTTAdjustment
+314/528 Test #314: AdaptiveJitterBufferTest.RTTAdjustment ...................................................   Passed    0.00 sec
+        Start 315: AdaptiveJitterBufferTest.FrameArrival
+315/528 Test #315: AdaptiveJitterBufferTest.FrameArrival ....................................................   Passed    0.00 sec
+        Start 316: AdaptiveJitterBufferTest.GapDetection
+316/528 Test #316: AdaptiveJitterBufferTest.GapDetection ....................................................   Passed    0.00 sec
+        Start 317: AdaptiveJitterBufferTest.FrameDrop
+317/528 Test #317: AdaptiveJitterBufferTest.FrameDrop .......................................................   Passed    0.00 sec
+        Start 318: AdaptiveJitterBufferTest.BufferStatus
+318/528 Test #318: AdaptiveJitterBufferTest.BufferStatus ....................................................   Passed    0.00 sec
+        Start 319: AdaptiveJitterBufferTest.Reset
+319/528 Test #319: AdaptiveJitterBufferTest.Reset ...........................................................   Passed    0.00 sec
+        Start 320: AdaptiveJitterBufferTest.Smoothing
+320/528 Test #320: AdaptiveJitterBufferTest.Smoothing .......................................................   Passed    0.00 sec
+        Start 321: AdaptiveJitterBufferTest.Clamping
+321/528 Test #321: AdaptiveJitterBufferTest.Clamping ........................................................   Passed    0.00 sec
+        Start 322: InterpolationExtrapolationTest.InterpolationWorks
+322/528 Test #322: InterpolationExtrapolationTest.InterpolationWorks ........................................   Passed    0.00 sec
+        Start 323: InterpolationExtrapolationTest.ExtrapolationWorks
+323/528 Test #323: InterpolationExtrapolationTest.ExtrapolationWorks ........................................   Passed    0.00 sec
+        Start 324: InterpolationExtrapolationTest.MultipleEntities
+324/528 Test #324: InterpolationExtrapolationTest.MultipleEntities ..........................................   Passed    0.00 sec
+        Start 325: InterpolationExtrapolationTest.BoundsRespected
+325/528 Test #325: InterpolationExtrapolationTest.BoundsRespected ...........................................   Passed    0.00 sec
+        Start 326: DeterministicPRNGIntegration.CrossPlatformConsistency
+326/528 Test #326: DeterministicPRNGIntegration.CrossPlatformConsistency ....................................   Passed    0.00 sec
+        Start 327: DeterministicPRNGIntegration.DifferentSeedsDifferentOutput
+327/528 Test #327: DeterministicPRNGIntegration.DifferentSeedsDifferentOutput ...............................   Passed    0.00 sec
+        Start 328: DeterministicPRNGIntegration.DeterministicFromSeed
+328/528 Test #328: DeterministicPRNGIntegration.DeterministicFromSeed .......................................   Passed    0.00 sec
+        Start 329: StateDeltaCodecIntegration.MultiFrameRoundtrip
+329/528 Test #329: StateDeltaCodecIntegration.MultiFrameRoundtrip ...........................................   Passed    0.00 sec
+        Start 330: StateDeltaCodecIntegration.CompressionEfficiency
+330/528 Test #330: StateDeltaCodecIntegration.CompressionEfficiency .........................................   Passed    0.00 sec
+        Start 331: PredictionAccuracyIntegration.AccuracyTracking
+331/528 Test #331: PredictionAccuracyIntegration.AccuracyTracking ...........................................   Passed    0.00 sec
+        Start 332: PredictionAccuracyIntegration.TrendDetection
+332/528 Test #332: PredictionAccuracyIntegration.TrendDetection .............................................   Passed    0.00 sec
+        Start 333: AdaptivePredictionCapIntegration.RTTBasedScaling
+333/528 Test #333: AdaptivePredictionCapIntegration.RTTBasedScaling .........................................   Passed    0.00 sec
+        Start 334: AdaptivePredictionCapIntegration.PacketLossReducesPrediction
+334/528 Test #334: AdaptivePredictionCapIntegration.PacketLossReducesPrediction .............................   Passed    0.00 sec
+        Start 335: AdaptivePredictionCapIntegration.AccuracyReducesPrediction
+335/528 Test #335: AdaptivePredictionCapIntegration.AccuracyReducesPrediction ...............................   Passed    0.00 sec
+        Start 336: ReplaySystemIntegration.FullReplayCycle
+336/528 Test #336: ReplaySystemIntegration.FullReplayCycle ..................................................***Failed    0.00 sec
+Running main() from /tmp/football-review-20260909-tests/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = ReplaySystemIntegration.FullReplayCycle
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ReplaySystemIntegration
+[ RUN      ] ReplaySystemIntegration.FullReplayCycle
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 4
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 400
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 0.40000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 5
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 500
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 0.5
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 6
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 600
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 0.60000002
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 7
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 700
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 0.69999999
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 8
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 800
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 0.80000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 9
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 900
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 0.90000004
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 10
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 1000
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 1
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 11
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 1100
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 1.1
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 12
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 1200
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 1.2
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 13
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 1300
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 1.3000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 14
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 1400
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 1.4
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 15
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 1500
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 1.5
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 16
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 1600
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 1.6
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 17
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 1700
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 1.7
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 18
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 1800
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 1.8000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 19
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 1900
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 1.9
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 20
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 2000
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 2
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 21
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 2100
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 2.1000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 22
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 2200
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 2.2
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 23
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 2300
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 2.3
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 24
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 2400
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 2.4000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 25
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 2500
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 2.5
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 26
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 2600
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 2.6000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 27
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 2700
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 2.7
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 28
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 2800
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 2.8
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 29
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 2900
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 2.9000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 30
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 3000
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 3
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 31
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 3100
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 3.1000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 32
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 3200
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 3.2
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 33
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 3300
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 3.3
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 34
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 3400
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 3.4000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 35
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 3500
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 3.5
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 36
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 3600
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 3.6000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 37
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 3700
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 3.7
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 38
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 3800
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 3.8
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 39
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 3900
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 3.9000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 40
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 4000
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 4
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 41
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 4100
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 4.0999999
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 42
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 4200
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 4.2000003
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 43
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 4300
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 4.3000002
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 44
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 4400
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 4.4000001
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 45
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 4500
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 4.5
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 46
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 4600
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 4.5999999
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 47
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 4700
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 4.7000003
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 48
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 4800
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 4.8000002
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:286: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:281: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 3
+  i
+    Which is: 49
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:282: Failure
+Expected equality of these values:
+  frame->state_hash
+    Which is: 300
+  i * 100
+    Which is: 4900
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:283: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0.30000001
+  static_cast<float>(i) * 0.1f
+    Which is: 4.9000001
+
+[  FAILED  ] ReplaySystemIntegration.FullReplayCycle (3 ms)
+[----------] 1 test from ReplaySystemIntegration (3 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (3 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] ReplaySystemIntegration.FullReplayCycle
+
+ 1 FAILED TEST
+
+        Start 337: ReplaySystemIntegration.SeekWorks
+337/528 Test #337: ReplaySystemIntegration.SeekWorks ........................................................***Failed    0.00 sec
+Running main() from /tmp/football-review-20260909-tests/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = ReplaySystemIntegration.SeekWorks
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from ReplaySystemIntegration
+[ RUN      ] ReplaySystemIntegration.SeekWorks
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:309: Failure
+Value of: player.SeekToFrame(50)
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:312: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 0
+  50u
+    Which is: 50
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:313: Failure
+Expected equality of these values:
+  frame->inputs[0].dir_x
+    Which is: 0
+  50.0f
+    Which is: 50
+
+[  FAILED  ] ReplaySystemIntegration.SeekWorks (0 ms)
+[----------] 1 test from ReplaySystemIntegration (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (0 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] ReplaySystemIntegration.SeekWorks
+
+ 1 FAILED TEST
+
+        Start 338: AdaptiveJitterBufferIntegration.JitterIncreasesBuffer
+338/528 Test #338: AdaptiveJitterBufferIntegration.JitterIncreasesBuffer ....................................   Passed    0.00 sec
+        Start 339: AdaptiveJitterBufferIntegration.RTTIncreasesBuffer
+339/528 Test #339: AdaptiveJitterBufferIntegration.RTTIncreasesBuffer .......................................   Passed    0.00 sec
+        Start 340: AdaptiveJitterBufferIntegration.FrameDropDecision
+340/528 Test #340: AdaptiveJitterBufferIntegration.FrameDropDecision ........................................   Passed    0.00 sec
+        Start 341: CombinedIntegration.FullPipeline
+341/528 Test #341: CombinedIntegration.FullPipeline .........................................................***Failed    0.00 sec
+Running main() from /tmp/football-review-20260909-tests/_deps/googletest-src/googletest/src/gtest_main.cc
+Note: Google Test filter = CombinedIntegration.FullPipeline
+[==========] Running 1 test from 1 test suite.
+[----------] Global test environment set-up.
+[----------] 1 test from CombinedIntegration
+[ RUN      ] CombinedIntegration.FullPipeline
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 11
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 12
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 13
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 14
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 15
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 16
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 17
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 18
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 19
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 20
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 21
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 22
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 23
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 24
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 25
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 26
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 27
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 28
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 29
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 30
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 31
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 32
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 33
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 34
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 35
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 36
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 37
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 38
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 39
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 40
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 41
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 42
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 43
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 44
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 45
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 46
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 47
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 48
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 49
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 50
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 51
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 52
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 53
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 54
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 55
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 56
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 57
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 58
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 59
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 60
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 61
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 62
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 63
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 64
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 65
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 66
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 67
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 68
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 69
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 70
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 71
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 72
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 73
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 74
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 75
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 76
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 77
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 78
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 79
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 80
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 81
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 82
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 83
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 84
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 85
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 86
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 87
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 88
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 89
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 90
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 91
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 92
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 93
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 94
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 95
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 96
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 97
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 98
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:435: Failure
+Value of: player.Advance()
+  Actual: false
+Expected: true
+
+/root/work_space/football/engine/tests/phase16_integration_test.cpp:434: Failure
+Expected equality of these values:
+  frame->frame_number
+    Which is: 10
+  i
+    Which is: 99
+
+[  FAILED  ] CombinedIntegration.FullPipeline (2 ms)
+[----------] 1 test from CombinedIntegration (2 ms total)
+
+[----------] Global test environment tear-down
+[==========] 1 test from 1 test suite ran. (2 ms total)
+[  PASSED  ] 0 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] CombinedIntegration.FullPipeline
+
+ 1 FAILED TEST
+
+        Start 342: LatencyCompensatorTest.BasicRTT
+342/528 Test #342: LatencyCompensatorTest.BasicRTT ..........................................................   Passed    0.00 sec
+        Start 343: LatencyCompensatorTest.MultipleSamples
+343/528 Test #343: LatencyCompensatorTest.MultipleSamples ...................................................   Passed    0.00 sec
+        Start 344: LatencyCompensatorTest.JitterCalculation
+344/528 Test #344: LatencyCompensatorTest.JitterCalculation .................................................   Passed    0.00 sec
+        Start 345: LatencyCompensatorTest.AdjustedOffset
+345/528 Test #345: LatencyCompensatorTest.AdjustedOffset ....................................................   Passed    0.00 sec
+        Start 346: LatencyCompensatorTest.MinMaxRTT
+346/528 Test #346: LatencyCompensatorTest.MinMaxRTT .........................................................   Passed    0.00 sec
+        Start 347: LatencyCompensatorTest.ActiveStatus
+347/528 Test #347: LatencyCompensatorTest.ActiveStatus ......................................................   Passed    0.00 sec
+        Start 348: LatencyCompensatorTest.Reset
+348/528 Test #348: LatencyCompensatorTest.Reset .............................................................   Passed    0.00 sec
+        Start 349: LatencyCompensatorTest.CompensationStatus
+349/528 Test #349: LatencyCompensatorTest.CompensationStatus ................................................   Passed    0.00 sec
+        Start 350: LatencyCompensatorTest.ServerTimestamp
+350/528 Test #350: LatencyCompensatorTest.ServerTimestamp ...................................................   Passed    0.00 sec
+        Start 351: LatencyCompensatorTest.NegativeRTT
+351/528 Test #351: LatencyCompensatorTest.NegativeRTT .......................................................   Passed    0.00 sec
+        Start 352: LatencyCompensatorTest.WeightedAverage
+352/528 Test #352: LatencyCompensatorTest.WeightedAverage ...................................................   Passed    0.00 sec
+        Start 353: StateSnapshotCodecTest.BasicRoundtrip
+353/528 Test #353: StateSnapshotCodecTest.BasicRoundtrip ....................................................   Passed    0.00 sec
+        Start 354: StateSnapshotCodecTest.ForcedFullSnapshot
+354/528 Test #354: StateSnapshotCodecTest.ForcedFullSnapshot ................................................   Passed    0.00 sec
+        Start 355: StateSnapshotCodecTest.DeltaCompression
+355/528 Test #355: StateSnapshotCodecTest.DeltaCompression ..................................................   Passed    0.00 sec
+        Start 356: StateSnapshotCodecTest.MultiFrame
+356/528 Test #356: StateSnapshotCodecTest.MultiFrame ........................................................   Passed    0.00 sec
+        Start 357: StateSnapshotCodecTest.CompressionEfficiency
+357/528 Test #357: StateSnapshotCodecTest.CompressionEfficiency .............................................   Passed    0.00 sec
+        Start 358: StateSnapshotCodecTest.Reset
+358/528 Test #358: StateSnapshotCodecTest.Reset .............................................................   Passed    0.00 sec
+        Start 359: StateSnapshotCodecTest.EmptyState
+359/528 Test #359: StateSnapshotCodecTest.EmptyState ........................................................   Passed    0.00 sec
+        Start 360: StateSnapshotCodecTest.RawBytesInterface
+360/528 Test #360: StateSnapshotCodecTest.RawBytesInterface .................................................   Passed    0.00 sec
+        Start 361: StateSnapshotCodecTest.UnknownMarker
+361/528 Test #361: StateSnapshotCodecTest.UnknownMarker .....................................................   Passed    0.00 sec
+        Start 362: StateSnapshotCodecTest.SizeMismatch
+362/528 Test #362: StateSnapshotCodecTest.SizeMismatch ......................................................   Passed    0.00 sec
+        Start 363: SpectatorTest.Construction
+363/528 Test #363: SpectatorTest.Construction ...............................................................   Passed    0.00 sec
+        Start 364: SpectatorTest.ReceivesFrames
+364/528 Test #364: SpectatorTest.ReceivesFrames .............................................................   Passed    0.21 sec
+        Start 365: SpectatorTest.NoInputSent
+365/528 Test #365: SpectatorTest.NoInputSent ................................................................   Passed    0.41 sec
+        Start 366: SpectatorTest.MultipleSpectators
+366/528 Test #366: SpectatorTest.MultipleSpectators .........................................................   Passed    0.00 sec
+        Start 367: SpectatorTest.FrameCallback
+367/528 Test #367: SpectatorTest.FrameCallback ..............................................................   Passed    0.21 sec
+        Start 368: SpectatorTest.StateHashCounted
+368/528 Test #368: SpectatorTest.StateHashCounted ...........................................................   Passed    0.21 sec
+        Start 369: ReplayIntegrationTest.RecordSerializeLoadRoundtrip
+369/528 Test #369: ReplayIntegrationTest.RecordSerializeLoadRoundtrip .......................................   Passed    0.00 sec
+        Start 370: ReplayIntegrationTest.PlaybackControls
+370/528 Test #370: ReplayIntegrationTest.PlaybackControls ...................................................   Passed    0.00 sec
+        Start 371: ReplayIntegrationTest.FileSaveLoad
+371/528 Test #371: ReplayIntegrationTest.FileSaveLoad .......................................................   Passed    0.00 sec
+        Start 372: ReplayIntegrationTest.EmptyReplay
+372/528 Test #372: ReplayIntegrationTest.EmptyReplay ........................................................   Passed    0.00 sec
+        Start 373: NetworkDiagnosticsTest.InitialState
+373/528 Test #373: NetworkDiagnosticsTest.InitialState ......................................................   Passed    0.00 sec
+        Start 374: NetworkDiagnosticsTest.ExcellentQuality
+374/528 Test #374: NetworkDiagnosticsTest.ExcellentQuality ..................................................   Passed    0.00 sec
+        Start 375: NetworkDiagnosticsTest.GoodQuality
+375/528 Test #375: NetworkDiagnosticsTest.GoodQuality .......................................................   Passed    0.00 sec
+        Start 376: NetworkDiagnosticsTest.FairQuality
+376/528 Test #376: NetworkDiagnosticsTest.FairQuality .......................................................   Passed    0.00 sec
+        Start 377: NetworkDiagnosticsTest.PoorQuality
+377/528 Test #377: NetworkDiagnosticsTest.PoorQuality .......................................................   Passed    0.00 sec
+        Start 378: NetworkDiagnosticsTest.CriticalQuality
+378/528 Test #378: NetworkDiagnosticsTest.CriticalQuality ...................................................   Passed    0.00 sec
+        Start 379: NetworkDiagnosticsTest.CriticalByPacketLoss
+379/528 Test #379: NetworkDiagnosticsTest.CriticalByPacketLoss ..............................................   Passed    0.00 sec
+        Start 380: NetworkDiagnosticsTest.SmoothedRTT
+380/528 Test #380: NetworkDiagnosticsTest.SmoothedRTT .......................................................   Passed    0.00 sec
+        Start 381: NetworkDiagnosticsTest.FormatOverlay
+381/528 Test #381: NetworkDiagnosticsTest.FormatOverlay .....................................................   Passed    0.00 sec
+        Start 382: NetworkDiagnosticsTest.QualityString
+382/528 Test #382: NetworkDiagnosticsTest.QualityString .....................................................   Passed    0.00 sec
+        Start 383: NetworkDiagnosticsTest.PacketLossEstimate
+383/528 Test #383: NetworkDiagnosticsTest.PacketLossEstimate ................................................   Passed    0.00 sec
+        Start 384: LobbyProtocolTest.PackUnpackUint32
+384/528 Test #384: LobbyProtocolTest.PackUnpackUint32 .......................................................   Passed    0.00 sec
+        Start 385: LobbyProtocolTest.PackUnpackUint16
+385/528 Test #385: LobbyProtocolTest.PackUnpackUint16 .......................................................   Passed    0.00 sec
+        Start 386: LobbyProtocolTest.PackUnpackString
+386/528 Test #386: LobbyProtocolTest.PackUnpackString .......................................................   Passed    0.00 sec
+        Start 387: LobbyProtocolTest.PackUnpackEmptyString
+387/528 Test #387: LobbyProtocolTest.PackUnpackEmptyString ..................................................   Passed    0.00 sec
+        Start 388: LobbyProtocolTest.PackUnpackRoomMetadata
+388/528 Test #388: LobbyProtocolTest.PackUnpackRoomMetadata .................................................   Passed    0.00 sec
+        Start 389: LobbyProtocolTest.PackUnpackRoomConfig
+389/528 Test #389: LobbyProtocolTest.PackUnpackRoomConfig ...................................................   Passed    0.00 sec
+        Start 390: LobbyProtocolTest.PackRoomMetadata_BufferTooSmall
+390/528 Test #390: LobbyProtocolTest.PackRoomMetadata_BufferTooSmall ........................................   Passed    0.00 sec
+        Start 391: LobbyProtocolTest.UnpackRoomMetadata_BufferTooSmall
+391/528 Test #391: LobbyProtocolTest.UnpackRoomMetadata_BufferTooSmall ......................................   Passed    0.00 sec
+        Start 392: LobbyProtocolTest.PackString_BufferTooSmall
+392/528 Test #392: LobbyProtocolTest.PackString_BufferTooSmall ..............................................   Passed    0.00 sec
+        Start 393: LobbyProtocolTest.RoomStatusValues
+393/528 Test #393: LobbyProtocolTest.RoomStatusValues .......................................................   Passed    0.00 sec
+        Start 394: LobbyProtocolTest.LobbyMessageTypeValues
+394/528 Test #394: LobbyProtocolTest.LobbyMessageTypeValues .................................................   Passed    0.00 sec
+        Start 395: LobbyProtocolTest.InvalidConfigRepresentationAndStringsPreserveOutput
+395/528 Test #395: LobbyProtocolTest.InvalidConfigRepresentationAndStringsPreserveOutput ....................   Passed    0.00 sec
+        Start 396: LobbyProtocolTest.InvalidMetadataFieldsPreserveOutput
+396/528 Test #396: LobbyProtocolTest.InvalidMetadataFieldsPreserveOutput ....................................   Passed    0.00 sec
+        Start 397: RoomManagerTest.CreateRoom
+397/528 Test #397: RoomManagerTest.CreateRoom ...............................................................   Passed    0.00 sec
+        Start 398: RoomManagerTest.JoinRoom
+398/528 Test #398: RoomManagerTest.JoinRoom .................................................................   Passed    0.00 sec
+        Start 399: RoomManagerTest.JoinRoom_Full
+399/528 Test #399: RoomManagerTest.JoinRoom_Full ............................................................   Passed    0.00 sec
+        Start 400: RoomManagerTest.JoinRoom_AlreadyIn
+400/528 Test #400: RoomManagerTest.JoinRoom_AlreadyIn .......................................................   Passed    0.00 sec
+        Start 401: RoomManagerTest.JoinRoom_NotFound
+401/528 Test #401: RoomManagerTest.JoinRoom_NotFound ........................................................   Passed    0.00 sec
+        Start 402: RoomManagerTest.LeaveRoom
+402/528 Test #402: RoomManagerTest.LeaveRoom ................................................................   Passed    0.00 sec
+        Start 403: RoomManagerTest.LeaveRoom_HostLeaves
+403/528 Test #403: RoomManagerTest.LeaveRoom_HostLeaves .....................................................   Passed    0.00 sec
+        Start 404: RoomManagerTest.LeaveRoom_LastPlayerLeaves
+404/528 Test #404: RoomManagerTest.LeaveRoom_LastPlayerLeaves ...............................................   Passed    0.00 sec
+        Start 405: RoomManagerTest.SetReady
+405/528 Test #405: RoomManagerTest.SetReady .................................................................   Passed    0.00 sec
+        Start 406: RoomManagerTest.StartGame_AllReady
+406/528 Test #406: RoomManagerTest.StartGame_AllReady .......................................................   Passed    0.00 sec
+        Start 407: RoomManagerTest.StartGame_NotHost
+407/528 Test #407: RoomManagerTest.StartGame_NotHost ........................................................   Passed    0.00 sec
+        Start 408: RoomManagerTest.StartGame_NotAllReady
+408/528 Test #408: RoomManagerTest.StartGame_NotAllReady ....................................................   Passed    0.00 sec
+        Start 409: RoomManagerTest.StartGame_NeedTwoPlayers
+409/528 Test #409: RoomManagerTest.StartGame_NeedTwoPlayers .................................................   Passed    0.00 sec
+        Start 410: RoomManagerTest.ListRooms
+410/528 Test #410: RoomManagerTest.ListRooms ................................................................   Passed    0.00 sec
+        Start 411: RoomManagerTest.FindRoomByPlayer
+411/528 Test #411: RoomManagerTest.FindRoomByPlayer .........................................................   Passed    0.00 sec
+        Start 412: RoomManagerTest.JoinStartedRoom
+412/528 Test #412: RoomManagerTest.JoinStartedRoom ..........................................................   Passed    0.00 sec
+        Start 413: RoomManagerTest.Cleanup
+413/528 Test #413: RoomManagerTest.Cleanup ..................................................................   Passed    0.00 sec
+        Start 414: RoomManagerRegression.ValidatesCapacityAndStartAddress
+414/528 Test #414: RoomManagerRegression.ValidatesCapacityAndStartAddress ...................................   Passed    0.00 sec
+        Start 415: LobbyE2ETest.CreateJoinChatAndStartProductionRoom
+415/528 Test #415: LobbyE2ETest.CreateJoinChatAndStartProductionRoom ........................................   Passed    0.06 sec
+        Start 416: LobbyE2ETest.RejectsDuplicateNamesAndForeignChat
+416/528 Test #416: LobbyE2ETest.RejectsDuplicateNamesAndForeignChat .........................................   Passed    0.03 sec
+        Start 417: LobbyE2ETest.FragmentedChatAndEofAtClient
+417/528 Test #417: LobbyE2ETest.FragmentedChatAndEofAtClient ................................................   Passed    0.03 sec
+        Start 418: MilestoneEcs.MutationHistoryDoesNotChangeIterationOrder
+418/528 Test #418: MilestoneEcs.MutationHistoryDoesNotChangeIterationOrder ..................................   Passed    0.00 sec
+        Start 419: MilestoneEcs.QueriesStayOrderedAfterDestruction
+419/528 Test #419: MilestoneEcs.QueriesStayOrderedAfterDestruction ..........................................   Passed    0.00 sec
+        Start 420: MilestoneEcs.SystemOrderIsStableAndDependenciesExecuteFirst
+420/528 Test #420: MilestoneEcs.SystemOrderIsStableAndDependenciesExecuteFirst ..............................   Passed    0.00 sec
+        Start 421: MilestoneEcs.MissingDependencyDoesNotRunPartialPipeline
+421/528 Test #421: MilestoneEcs.MissingDependencyDoesNotRunPartialPipeline ..................................   Passed    0.00 sec
+        Start 422: MilestoneCodec.EveryByteIncludingRleMarkerRoundtrips
+422/528 Test #422: MilestoneCodec.EveryByteIncludingRleMarkerRoundtrips .....................................   Passed    0.00 sec
+        Start 423: MilestoneCodec.RejectsMalformedRunsAndTrailingBytes
+423/528 Test #423: MilestoneCodec.RejectsMalformedRunsAndTrailingBytes ......................................   Passed    0.00 sec
+        Start 424: MilestoneCodec.ResizedSnapshotsAndStatsRoundtrip
+424/528 Test #424: MilestoneCodec.ResizedSnapshotsAndStatsRoundtrip .........................................   Passed    0.00 sec
+        Start 425: MilestoneCodec.RejectedSnapshotDoesNotChangeBaseline
+425/528 Test #425: MilestoneCodec.RejectedSnapshotDoesNotChangeBaseline .....................................   Passed    0.00 sec
+        Start 426: FrameSimulationTest.WholeFramePreservesIndependentInputsAndFrameZero
+426/528 Test #426: FrameSimulationTest.WholeFramePreservesIndependentInputsAndFrameZero .....................   Passed    0.00 sec
+        Start 427: FrameSimulationTest.AuthorityUnblocksPredictionAtCap
+427/528 Test #427: FrameSimulationTest.AuthorityUnblocksPredictionAtCap .....................................   Passed    0.00 sec
+        Start 428: FrameSimulationTest.SuccessiveCorrectionsRefreshLaterSnapshots
+428/528 Test #428: FrameSimulationTest.SuccessiveCorrectionsRefreshLaterSnapshots ...........................   Passed    0.00 sec
+        Start 429: FrameSimulationTest.OutOfOrderDuplicatesAndThousandFrameRun
+429/528 Test #429: FrameSimulationTest.OutOfOrderDuplicatesAndThousandFrameRun ..............................   Passed    0.00 sec
+        Start 430: FrameSimulationTest.HashMatchesPythonSha256LittleEndianPrefix
+430/528 Test #430: FrameSimulationTest.HashMatchesPythonSha256LittleEndianPrefix ............................   Passed    0.00 sec
+        Start 431: FrameSimulationTest.MissingAuthorityStopsEvenWithExpandedPredictionWindow
+431/528 Test #431: FrameSimulationTest.MissingAuthorityStopsEvenWithExpandedPredictionWindow ................   Passed    0.00 sec
+        Start 432: SnapshotBudgetTest.RejectsBadCountsAndBudgetsBeforeAllocation
+432/528 Test #432: SnapshotBudgetTest.RejectsBadCountsAndBudgetsBeforeAllocation ............................   Passed    0.00 sec
+        Start 433: SnapshotBudgetTest.RejectsCapacityAndFailedCallbacksWithoutChangingHistory
+433/528 Test #433: SnapshotBudgetTest.RejectsCapacityAndFailedCallbacksWithoutChangingHistory ...............   Passed    0.00 sec
+        Start 434: SnapshotBudgetTest.EnforcesBothCountAndBytesAndReleasesOnClear
+434/528 Test #434: SnapshotBudgetTest.EnforcesBothCountAndBytesAndReleasesOnClear ...........................   Passed    0.00 sec
+        Start 435: SnapshotBudgetTest.DuplicateReplacementKeepsItsIndexWhenOtherFramesAreEvicted
+435/528 Test #435: SnapshotBudgetTest.DuplicateReplacementKeepsItsIndexWhenOtherFramesAreEvicted ............   Passed    0.00 sec
+        Start 436: SnapshotBudgetTest.CopiesAreIndependentAndMovedFromHistoriesRemainUsable
+436/528 Test #436: SnapshotBudgetTest.CopiesAreIndependentAndMovedFromHistoriesRemainUsable .................   Passed    0.00 sec
+        Start 437: SnapshotBudgetTest.InvalidCorrectionCannotRestoreOrStep
+437/528 Test #437: SnapshotBudgetTest.InvalidCorrectionCannotRestoreOrStep ..................................   Passed    0.00 sec
+        Start 438: FrameMemoryBudgetTest.RejectsOversizedCapacityBeforeSteppingAndCanResume
+438/528 Test #438: FrameMemoryBudgetTest.RejectsOversizedCapacityBeforeSteppingAndCanResume .................   Passed    0.00 sec
+        Start 439: FrameMemoryBudgetTest.AggregateBudgetFillsThenAuthorityFreesPredictionSpace
+439/528 Test #439: FrameMemoryBudgetTest.AggregateBudgetFillsThenAuthorityFreesPredictionSpace ..............   Passed    0.00 sec
+        Start 440: FrameMemoryBudgetTest.RollbackGrowthRecoversTheCorrectedAuthorityAndDropsSpeculation
+440/528 Test #440: FrameMemoryBudgetTest.RollbackGrowthRecoversTheCorrectedAuthorityAndDropsSpeculation .....   Passed    0.00 sec
+        Start 441: FrameMemoryBudgetTest.FailedSaveDuringResimulationLeavesRetryableAuthority
+441/528 Test #441: FrameMemoryBudgetTest.FailedSaveDuringResimulationLeavesRetryableAuthority ...............   Passed    0.00 sec
+        Start 442: FrameMemoryBudgetTest.FailedPredictionDoesNotCommitAFrameOrHistoryNode
+442/528 Test #442: FrameMemoryBudgetTest.FailedPredictionDoesNotCommitAFrameOrHistoryNode ...................   Passed    0.00 sec
+        Start 443: FrameMemoryBudgetTest.AuthorityOwnsOnlyItsBoundedPayloadAndRecoversAfterDrain
+443/528 Test #443: FrameMemoryBudgetTest.AuthorityOwnsOnlyItsBoundedPayloadAndRecoversAfterDrain ............   Passed    0.00 sec
+        Start 444: ReplayMemoryBudgetTest.FrameCapPreservesSerializablePrefixAndRestartResetsMetadata
+444/528 Test #444: ReplayMemoryBudgetTest.FrameCapPreservesSerializablePrefixAndRestartResetsMetadata .......   Passed    0.00 sec
+        Start 445: ReplayMemoryBudgetTest.ByteCapRejectsWithoutLosingTheLastAcceptedFrame
+445/528 Test #445: ReplayMemoryBudgetTest.ByteCapRejectsWithoutLosingTheLastAcceptedFrame ...................   Passed    0.00 sec
+        Start 446: ReplayMemoryBudgetTest.LiveSerializationIsConsistentAndUsesExplicitLittleEndian
+446/528 Test #446: ReplayMemoryBudgetTest.LiveSerializationIsConsistentAndUsesExplicitLittleEndian ..........   Passed    0.00 sec
+        Start 447: ReplayMemoryBudgetTest.MalformedLoadsPreservePreviousPositionAndPlayback
+447/528 Test #447: ReplayMemoryBudgetTest.MalformedLoadsPreservePreviousPositionAndPlayback .................   Passed    0.00 sec
+        Start 448: ReplayMemoryBudgetTest.BadInputsStopRecordingWithoutAppending
+448/528 Test #448: ReplayMemoryBudgetTest.BadInputsStopRecordingWithoutAppending ............................   Passed    0.00 sec
+        Start 449: ReplayMemoryBudgetTest.CopiesMovesAndCapacityRecoveryPreserveIndependentData
+449/528 Test #449: ReplayMemoryBudgetTest.CopiesMovesAndCapacityRecoveryPreserveIndependentData .............   Passed    0.00 sec
+        Start 450: ReplayMemoryBudgetTest.FullDefaultBudgetSupportsAFullMatchAndThenStops
+450/528 Test #450: ReplayMemoryBudgetTest.FullDefaultBudgetSupportsAFullMatchAndThenStops ...................   Passed    0.78 sec
+        Start 451: ReceiveMemoryBudget.FillRejectPreservesBytesThenConsumeAndRecover
+451/528 Test #451: ReceiveMemoryBudget.FillRejectPreservesBytesThenConsumeAndRecover ........................   Passed    0.00 sec
+        Start 452: ReceiveMemoryBudget.BadLengthsAndExcessCallerCapacityAreRejected
+452/528 Test #452: ReceiveMemoryBudget.BadLengthsAndExcessCallerCapacityAreRejected .........................   Passed    0.00 sec
+        Start 453: DatagramTest.ConstructorValidatesBudgetBeforeUse
+453/528 Test #453: DatagramTest.ConstructorValidatesBudgetBeforeUse .........................................   Passed    0.04 sec
+        Start 454: DatagramTest.PacketCapRejectsBeforeSequenceAndRecoversAfterAck
+454/528 Test #454: DatagramTest.PacketCapRejectsBeforeSequenceAndRecoversAfterAck ...........................   Passed    0.07 sec
+        Start 455: DatagramTest.ByteCapIsIndependentOfPacketCountAndSurvivesRepeatedDrain
+455/528 Test #455: DatagramTest.ByteCapIsIndependentOfPacketCountAndSurvivesRepeatedDrain ...................   Passed    0.66 sec
+        Start 456: DatagramTest.InvalidLengthsNeverAllocateOrConsumeSequence
+456/528 Test #456: DatagramTest.InvalidLengthsNeverAllocateOrConsumeSequence ................................   Passed    0.05 sec
+        Start 457: DatagramTest.RetryExhaustionIsTerminalAndReleasesAllPackets
+457/528 Test #457: DatagramTest.RetryExhaustionIsTerminalAndReleasesAllPackets ..............................   Passed    0.10 sec
+        Start 458: DatagramTest.AckAfterRetransmitDoesNotDistortRttAndFreesCapacity
+458/528 Test #458: DatagramTest.AckAfterRetransmitDoesNotDistortRttAndFreesCapacity .........................   Passed    0.04 sec
+        Start 459: DatagramTest.SendAndRetransmitSocketFailuresReleasePendingStorage
+459/528 Test #459: DatagramTest.SendAndRetransmitSocketFailuresReleasePendingStorage ........................   Passed    0.08 sec
+        Start 460: DatagramTest.MalformedDataAndUnknownAcksDoNotChangePendingOrDeliver
+460/528 Test #460: DatagramTest.MalformedDataAndUnknownAcksDoNotChangePendingOrDeliver ......................   Passed    0.05 sec
+        Start 461: DatagramTest.RealReceiverAcknowledgesAndCallbackCanSendAndClose
+461/528 Test #461: DatagramTest.RealReceiverAcknowledgesAndCallbackCanSendAndClose ..........................   Passed    0.05 sec
+        Start 462: DatagramTest.AckSendFailureDoesNotDeliverAndClosePreservesSharedSocket
+462/528 Test #462: DatagramTest.AckSendFailureDoesNotDeliverAndClosePreservesSharedSocket ...................   Passed    0.04 sec
+        Start 463: DatagramTest.ConcurrentSendsCannotExceedBudget
+463/528 Test #463: DatagramTest.ConcurrentSendsCannotExceedBudget ...........................................   Passed    0.08 sec
+        Start 464: RTTBudget.ExtremeDurationsAndDeviationRemainBoundedInMilliseconds
+464/528 Test #464: RTTBudget.ExtremeDurationsAndDeviationRemainBoundedInMilliseconds ........................   Passed    0.00 sec
+        Start 465: BoundedTCP.ValidatesBudgetsAndInvalidMessagesBeforeCopy
+465/528 Test #465: BoundedTCP.ValidatesBudgetsAndInvalidMessagesBeforeCopy ..................................   Passed    0.01 sec
+        Start 466: BoundedTCP.CountLimitCopiesCallerBytesThenDrainsInOrderAndRecovers
+466/528 Test #466: BoundedTCP.CountLimitCopiesCallerBytesThenDrainsInOrderAndRecovers .......................   Passed    0.02 sec
+        Start 467: BoundedTCP.ByteLimitAppliesBeforeExecutorRunsAndAfterRepeatedDrain
+467/528 Test #467: BoundedTCP.ByteLimitAppliesBeforeExecutorRunsAndAfterRepeatedDrain .......................   Passed    0.08 sec
+        Start 468: BoundedTCP.CloseBeforeDispatchDropsQueuedDataWithoutSending
+468/528 Test #468: BoundedTCP.CloseBeforeDispatchDropsQueuedDataWithoutSending ..............................   Passed    0.01 sec
+        Start 469: BoundedTCP.CancelKeepsInFlightStorageUntilItsCallbackCompletes
+469/528 Test #469: BoundedTCP.CancelKeepsInFlightStorageUntilItsCallbackCompletes ...........................   Passed    0.06 sec
+        Start 470: BoundedTCP.SlowReaderCannotBlockAnotherConnectionAndHasWriteDeadline
+470/528 Test #470: BoundedTCP.SlowReaderCannotBlockAnotherConnectionAndHasWriteDeadline .....................   Passed    0.26 sec
+        Start 471: BoundedTCP.PeerResetReleasesAcceptedMessages
+471/528 Test #471: BoundedTCP.PeerResetReleasesAcceptedMessages .............................................   Passed    0.01 sec
+        Start 472: BoundedTCP.ReadIsBoundedAndCallbackCanSendWithoutReenteringMutex
+472/528 Test #472: BoundedTCP.ReadIsBoundedAndCallbackCanSendWithoutReenteringMutex .........................   Passed    0.01 sec
+        Start 473: BoundedTCP.DestructionCancelsWriteAndReleasesOwnedSocketAfterCompletion
+473/528 Test #473: BoundedTCP.DestructionCancelsWriteAndReleasesOwnedSocketAfterCompletion ..................   Passed    0.04 sec
+        Start 474: BoundedTCP.ConcurrentProducersCannotQueueUnboundedExecutorWork
+474/528 Test #474: BoundedTCP.ConcurrentProducersCannotQueueUnboundedExecutorWork ...........................   Passed    0.01 sec
+        Start 475: LobbyCapacity.ConstructorRejectsBadLimits
+475/528 Test #475: LobbyCapacity.ConstructorRejectsBadLimits ................................................   Passed    0.02 sec
+        Start 476: LobbyCapacity.RejectsExcessConnectionThenAcceptsAfterActualDisconnect
+476/528 Test #476: LobbyCapacity.RejectsExcessConnectionThenAcceptsAfterActualDisconnect ....................   Passed    0.03 sec
+        Start 477: LobbyCapacity.UnidentifiedReservationExpiresButNamedConnectionSurvives
+477/528 Test #477: LobbyCapacity.UnidentifiedReservationExpiresButNamedConnectionSurvives ...................   Passed    0.21 sec
+        Start 478: LobbyCapacity.OversizedLengthHeadersAreRejectedWithoutTheirPayloads
+478/528 Test #478: LobbyCapacity.OversizedLengthHeadersAreRejectedWithoutTheirPayloads ......................   Passed    0.01 sec
+        Start 479: LobbyCapacity.InvalidConfigBoolAndUnterminatedStringAreRejectedBeforeRoomCreation
+479/528 Test #479: LobbyCapacity.InvalidConfigBoolAndUnterminatedStringAreRejectedBeforeRoomCreation ........   Passed    0.02 sec
+        Start 480: LobbyCapacity.OutboundMessageCapDisconnectsFlooderAndHealthyPeerStillWorks
+480/528 Test #480: LobbyCapacity.OutboundMessageCapDisconnectsFlooderAndHealthyPeerStillWorks ...............   Passed    0.02 sec
+        Start 481: LobbyCapacity.OutboundByteCapIsIndependentOfMessageCapAndRecovers
+481/528 Test #481: LobbyCapacity.OutboundByteCapIsIndependentOfMessageCapAndRecovers ........................   Passed    0.02 sec
+        Start 482: LobbyCapacity.LargestChatWithFragmentationAndFollowingMessageRemainsValid
+482/528 Test #482: LobbyCapacity.LargestChatWithFragmentationAndFollowingMessageRemainsValid ................   Passed    0.02 sec
+        Start 483: LobbyCapacity.DestroyServerWithActiveReadsAndQueuedOutputDrainsCallbacks
+483/528 Test #483: LobbyCapacity.DestroyServerWithActiveReadsAndQueuedOutputDrainsCallbacks .................   Passed    0.02 sec
+        Start 484: LobbyCapacity.StoppedIoCanDestroyServerAndPendingHandlersWithoutResurrection
+484/528 Test #484: LobbyCapacity.StoppedIoCanDestroyServerAndPendingHandlersWithoutResurrection .............   Passed    0.01 sec
+        Start 485: LobbyClientCapacity.CountLimitIsReservedBeforeIoAndOverflowDisconnectsExplicitly
+485/528 Test #485: LobbyClientCapacity.CountLimitIsReservedBeforeIoAndOverflowDisconnectsExplicitly .........   Passed    0.02 sec
+        Start 486: LobbyClientCapacity.ByteLimitIsIndependentOfMessageCount
+486/528 Test #486: LobbyClientCapacity.ByteLimitIsIndependentOfMessageCount .................................   Passed    0.02 sec
+        Start 487: LobbyClientCapacity.FullQueueDrainsInOrderAndCanBeReusedOneHundredTimes
+487/528 Test #487: LobbyClientCapacity.FullQueueDrainsInOrderAndCanBeReusedOneHundredTimes ..................   Passed    0.13 sec
+        Start 488: LobbyClientCapacity.OversizedHeadersAndUnknownTypesFailBeforePayloadArrival
+488/528 Test #488: LobbyClientCapacity.OversizedHeadersAndUnknownTypesFailBeforePayloadArrival ..............   Passed    0.11 sec
+        Start 489: LobbyClientCapacity.MaximumRoomListFragmentedThenCoalescedMessageIsPreserved
+489/528 Test #489: LobbyClientCapacity.MaximumRoomListFragmentedThenCoalescedMessageIsPreserved .............   Passed    0.02 sec
+        Start 490: LobbyClientCapacity.ByteBoundedChatHistoryAccountsMixedStringCapacitiesAndRecovers
+490/528 Test #490: LobbyClientCapacity.ByteBoundedChatHistoryAccountsMixedStringCapacitiesAndRecovers .......   Passed    0.79 sec
+        Start 491: LobbyClientCapacity.ChatCountLimitRetainsLatestMessagesBelowByteLimit
+491/528 Test #491: LobbyClientCapacity.ChatCountLimitRetainsLatestMessagesBelowByteLimit ....................   Passed    1.35 sec
+        Start 492: LobbyClientCapacity.CallbackCanDisconnectReplaceItselfAndKeepPacketAlive
+492/528 Test #492: LobbyClientCapacity.CallbackCanDisconnectReplaceItselfAndKeepPacketAlive .................   Passed    0.01 sec
+        Start 493: LobbyClientCapacity.InvalidRoomMetadataDoesNotReplacePreviouslyValidList
+493/528 Test #493: LobbyClientCapacity.InvalidRoomMetadataDoesNotReplacePreviouslyValidList .................   Passed    0.02 sec
+        Start 494: LobbyClientCapacity.DestructionDiscardsNeverDispatchedReadsAndWritesSafely
+494/528 Test #494: LobbyClientCapacity.DestructionDiscardsNeverDispatchedReadsAndWritesSafely ...............   Passed    0.02 sec
+        Start 495: TCPFrameServer.InvalidSlotsAndMutatedBudgetsFailBeforeClientAllocation
+495/528 Test #495: TCPFrameServer.InvalidSlotsAndMutatedBudgetsFailBeforeClientAllocation ...................   Passed    0.08 sec
+        Start 496: TCPFrameServer.FullConnectionsRejectAndRecoverBeforeMatchStarts
+496/528 Test #496: TCPFrameServer.FullConnectionsRejectAndRecoverBeforeMatchStarts ..........................   Passed    0.03 sec
+        Start 497: TCPFrameServer.UnreadyConnectionsExpireAndReleaseReservation
+497/528 Test #497: TCPFrameServer.UnreadyConnectionsExpireAndReleaseReservation .............................   Passed    0.14 sec
+        Start 498: TCPFrameServer.InvalidHeadersAndForeignSlotDisconnectWithoutGrowingBuffer
+498/528 Test #498: TCPFrameServer.InvalidHeadersAndForeignSlotDisconnectWithoutGrowingBuffer ................   Passed    0.08 sec
+        Start 499: TCPFrameServer.FragmentedInputAndHeartbeatPreserveFrameAndSlotOrder
+499/528 Test #499: TCPFrameServer.FragmentedInputAndHeartbeatPreserveFrameAndSlotOrder ......................   Passed    0.11 sec
+        Start 500: TCPFrameServer.SlowReaderIsClosedWhileHealthyPeerReceivesConsecutiveFullFrames
+500/528 Test #500: TCPFrameServer.SlowReaderIsClosedWhileHealthyPeerReceivesConsecutiveFullFrames ...........   Passed    0.46 sec
+        Start 501: TCPFrameServer.StopWakesWaitingFrameLoopAndDrainsPendingSocketCallbacks
+501/528 Test #501: TCPFrameServer.StopWakesWaitingFrameLoopAndDrainsPendingSocketCallbacks ..................   Passed    0.01 sec
+        Start 502: TCPFrameServer.WrapperDestructionWithLiveIoKeepsCallbacksSafe
+502/528 Test #502: TCPFrameServer.WrapperDestructionWithLiveIoKeepsCallbacksSafe ............................   Passed    0.01 sec
+        Start 503: TCPClientCapacity.InvalidConfigurationIsRejectedBeforeConnecting
+503/528 Test #503: TCPClientCapacity.InvalidConfigurationIsRejectedBeforeConnecting .........................   Passed    0.00 sec
+        Start 504: TCPClientCapacity.PartialHandshakeHasAnAbsoluteDeadline
+504/528 Test #504: TCPClientCapacity.PartialHandshakeHasAnAbsoluteDeadline ..................................   Passed    0.06 sec
+        Start 505: TCPClientCapacity.InvalidSessionAndSlotHeadersFailEarly
+505/528 Test #505: TCPClientCapacity.InvalidSessionAndSlotHeadersFailEarly ..................................   Passed    0.11 sec
+        Start 506: TCPClientCapacity.AuthorityCapacityReleasesOnPopAndPreservesWholeFrames
+506/528 Test #506: TCPClientCapacity.AuthorityCapacityReleasesOnPopAndPreservesWholeFrames ..................   Passed    0.07 sec
+        Start 507: TCPClientCapacity.AuthorityAndHashOverflowStopAndReleasePayloads
+507/528 Test #507: TCPClientCapacity.AuthorityAndHashOverflowStopAndReleasePayloads .........................   Passed    0.03 sec
+        Start 508: TCPClientCapacity.MalformedInputsAndConflictingHashesAreTerminal
+508/528 Test #508: TCPClientCapacity.MalformedInputsAndConflictingHashesAreTerminal .........................   Passed    0.09 sec
+        Start 509: TCPClientCapacity.ControlsConsumeEntirePacketsAndLeaveAuthorityAligned
+509/528 Test #509: TCPClientCapacity.ControlsConsumeEntirePacketsAndLeaveAuthorityAligned ...................   Passed    0.06 sec
+        Start 510: TCPClientCapacity.OutgoingLimitIncludesUndispatchedPacketsAndCloseDrains
+510/528 Test #510: TCPClientCapacity.OutgoingLimitIncludesUndispatchedPacketsAndCloseDrains .................   Passed    0.01 sec
+        Start 511: TCPClientCapacity.IdlePeerTerminatesAndForeignSlotsCannotBeSent
+511/528 Test #511: TCPClientCapacity.IdlePeerTerminatesAndForeignSlotsCannotBeSent ..........................   Passed    0.08 sec
+        Start 512: TCPClientCapacity.ResumeRestoresOneBoundedSnapshotAndKeepsCoalescedFrames
+512/528 Test #512: TCPClientCapacity.ResumeRestoresOneBoundedSnapshotAndKeepsCoalescedFrames ................   Passed    0.02 sec
+        Start 513: TCPClientCapacity.MaximumAssignmentAndInputUseAllTwentyTwoSlots
+513/528 Test #513: TCPClientCapacity.MaximumAssignmentAndInputUseAllTwentyTwoSlots ..........................   Passed    0.06 sec
+        Start 514: TCPClientCapacity.OversizedSnapshotFailsAndASecondAttemptRetainsSessionIdentity
+514/528 Test #514: TCPClientCapacity.OversizedSnapshotFailsAndASecondAttemptRetainsSessionIdentity ..........   Passed    0.10 sec
+        Start 515: TCPClientCapacity.DestructionDiscardsPendingReadAndUndispatchedWrites
+515/528 Test #515: TCPClientCapacity.DestructionDiscardsPendingReadAndUndispatchedWrites ....................   Passed    0.40 sec
+        Start 516: TCPFrameClient.FrameZeroAndIndependentInputsUnblockPredictionAtItsCap
+516/528 Test #516: TCPFrameClient.FrameZeroAndIndependentInputsUnblockPredictionAtItsCap ....................   Passed    0.02 sec
+        Start 517: TCPFrameClient.HashMismatchStopsAllFurtherEngineSteps
+517/528 Test #517: TCPFrameClient.HashMismatchStopsAllFurtherEngineSteps ....................................   Passed    0.02 sec
+        Start 518: TCPFrameClient.ResumeUsesSnapshotFrameOriginWithoutReinitializingEngine
+518/528 Test #518: TCPFrameClient.ResumeUsesSnapshotFrameOriginWithoutReinitializingEngine ..................   Passed    0.06 sec
+        Start 519: ReconnectingClient.RetryConfigurationAndMissingCredentialFailBeforeIO
+519/528 Test #519: ReconnectingClient.RetryConfigurationAndMissingCredentialFailBeforeIO ....................   Passed    0.00 sec
+        Start 520: ReconnectingClient.ConnectionRefusalSaturatesDelayAndExhaustsFiniteRetryBudget
+520/528 Test #520: ReconnectingClient.ConnectionRefusalSaturatesDelayAndExhaustsFiniteRetryBudget ...........   Passed    0.02 sec
+        Start 521: ReconnectingClient.EOFTriggersAutomaticSnapshotResumeAndConfirmedHashProgress
+521/528 Test #521: ReconnectingClient.EOFTriggersAutomaticSnapshotResumeAndConfirmedHashProgress ............   Passed    0.06 sec
+        Start 522: ReconnectingClient.ProtocolAndHashFailuresDoNotRetryOrKeepStepping
+522/528 Test #522: ReconnectingClient.ProtocolAndHashFailuresDoNotRetryOrKeepStepping .......................   Passed    0.03 sec
+        Start 523: ReconnectingClient.CloseInsideDisconnectCallbackCancelsAutomaticRecovery
+523/528 Test #523: ReconnectingClient.CloseInsideDisconnectCallbackCancelsAutomaticRecovery .................   Passed    0.02 sec
+        Start 524: ReconnectingClient.CloseOrThrowInsideRetryCallbackCannotStartANewConnection
+524/528 Test #524: ReconnectingClient.CloseOrThrowInsideRetryCallbackCannotStartANewConnection ..............   Passed    0.05 sec
+        Start 525: ReconnectingClient.CloseDuringEnginePreparationCannotReportConnectionSuccess
+525/528 Test #525: ReconnectingClient.CloseDuringEnginePreparationCannotReportConnectionSuccess .............   Passed    0.01 sec
+        Start 526: ReconnectingClient.FailedInitialEnginePreparationIsTerminal
+526/528 Test #526: ReconnectingClient.FailedInitialEnginePreparationIsTerminal ..............................   Passed    0.02 sec
+        Start 527: ReconnectingClient.PartialResumeTimeoutRetriesTheSameSessionAndRestoresOnSecondAttempt
+527/528 Test #527: ReconnectingClient.PartialResumeTimeoutRetriesTheSameSessionAndRestoresOnSecondAttempt ...   Passed    0.16 sec
+        Start 528: ReconnectingClient.InvalidEngineSnapshotDoesNotSendReadyOrRetry
+528/528 Test #528: ReconnectingClient.InvalidEngineSnapshotDoesNotSendReadyOrRetry ..........................   Passed    0.06 sec
+
+99% tests passed, 7 tests failed out of 528
+
+Total Test time (real) =  11.01 sec
+
+The following tests FAILED:
+	 15 - PredictionRollbackTest.PredictThenRollback (Failed)
+	167 - ClientStateEngineIntegrationTest.PredictAndRollback (Failed)
+	169 - EndToEndTest.AuthoritativeFrameRoundTrip (Failed)
+	173 - FullLoopTest.ClientServerSyncWithRollback (Failed)
+	336 - ReplaySystemIntegration.FullReplayCycle (Failed)
+	337 - ReplaySystemIntegration.SeekWorks (Failed)
+	341 - CombinedIntegration.FullPipeline (Failed)
+Errors while running CTest
+Traceback (most recent call last):
+  File "/root/work_space/football/.project/checks/framework_regression.py", line 79, in <module>
+    main()
+    ~~~~^^
+  File "/root/work_space/football/.project/checks/framework_regression.py", line 44, in main
+    run(["ctest", "--test-dir", tests, "--output-on-failure", "--output-junit", cpp_report])
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/native_boundary.py", line 23, in run
+    return subprocess.run(list(map(str, argv)), cwd=cwd, env=env, check=True, text=True,
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          stdout=subprocess.PIPE if capture else None,
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          stderr=subprocess.STDOUT if capture else None).stdout
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['ctest', '--test-dir', '/tmp/football-review-20260909-tests', '--output-on-failure', '--output-junit', '/root/work_space/football/.project/optimization/evidence/framework-ctest.xml']' returned non-zero exit status 8.

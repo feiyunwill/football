@@ -33,3 +33,8 @@ target_link_libraries(frame_sync_server_udp PRIVATE Boost::system)
 add_executable(frame_sync_client_udp ${ENGINE_SRC}/frame_sync/asio_client_udp.cpp)
 target_include_directories(frame_sync_client_udp PRIVATE ${ENGINE_SRC})
 target_link_libraries(frame_sync_client_udp PRIVATE Boost::system)
+
+# 2026-09-09: the lobby is usable without building the game/graphics engine.
+add_executable(football_lobby ${ENGINE_SRC}/frame_sync/lobby_server.cpp)
+target_include_directories(football_lobby PRIVATE ${ENGINE_SRC})
+target_link_libraries(football_lobby PRIVATE Boost::system)

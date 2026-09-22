@@ -1,0 +1,15 @@
+{
+  "check": "ecs_performance",
+  "fingerprint": "12581593c7b1d6b59ba46970078f0f45f375961ae37389cbf66294c54b73e714",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1789270463.9300692,
+  "duration_seconds": 876.01,
+  "argv": [
+    "python3",
+    ".project/checks/ecs_performance.py"
+  ],
+  "log": "ecs_performance-1789270463930089979.log",
+  "log_sha256": "bac35107aeffa47ee2520c5c09730c4bfa36ee956b408f5f1a62ac4d7b3b3362"
+}

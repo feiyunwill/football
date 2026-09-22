@@ -1,0 +1,149 @@
+Running: cmake -S engine -B /tmp/football-optimization-sanitized -DCMAKE_BUILD_TYPE=Debug -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_ENABLE_SANITIZERS=ON -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-sanitized/bin
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-optimization-sanitized
+Running: cmake --build /tmp/football-optimization-sanitized -j 1 --target engine_architecture_contract engine_lifetime_contract engine_simulation_contract standalone_game engine_animation_query_contract
+[  2%] Built target datalib
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 52%] Built target blunted2
+[ 76%] Built target gamelib
+[ 85%] Built target menulib
+[ 97%] Built target football_engine
+[ 98%] Linking CXX executable bin/engine_architecture_contract
+[100%] Built target engine_architecture_contract
+[  2%] Built target datalib
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 35%] Built target typeslib
+[ 45%] Built target scenelib
+[ 50%] Built target utilslib
+[ 53%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Linking CXX executable bin/engine_lifetime_contract
+[100%] Built target engine_lifetime_contract
+[  2%] Built target datalib
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 52%] Built target blunted2
+[ 76%] Built target gamelib
+[ 85%] Built target menulib
+[ 97%] Built target football_engine
+[ 98%] Linking CXX executable bin/engine_simulation_contract
+[100%] Built target engine_simulation_contract
+[  2%] Built target datalib
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 35%] Built target typeslib
+[ 45%] Built target scenelib
+[ 50%] Built target utilslib
+[ 53%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Linking CXX executable bin/standalone_game
+[100%] Built target standalone_game
+[  2%] Built target datalib
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 35%] Built target typeslib
+[ 45%] Built target scenelib
+[ 50%] Built target utilslib
+[ 53%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Linking CXX executable bin/engine_animation_query_contract
+[100%] Built target engine_animation_query_contract
+Running: readelf -d /tmp/football-optimization-sanitized/libfootball_engine.so
+Running: nm -D /tmp/football-optimization-sanitized/libfootball_engine.so
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_animation_query_contract
+vectorfromstring warning, no value
+{"passed":true,"assertions":30079,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract headless 42
+{"passed":true,"assertions":296,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract render 42
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":51,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42
+{"passed":true,"assertions":844,"skipped":0,"snapshot_bytes":87132,"seed":42,"reverse":false}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42 --reverse
+{"passed":true,"assertions":852,"skipped":0,"snapshot_bytes":89124,"seed":42,"reverse":true}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42 --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":92,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract headless 43
+{"passed":true,"assertions":296,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract render 43
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":51,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43
+{"passed":true,"assertions":840,"skipped":0,"snapshot_bytes":86124,"seed":43,"reverse":false}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43 --reverse
+{"passed":true,"assertions":848,"skipped":0,"snapshot_bytes":88116,"seed":43,"reverse":true}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43 --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":92,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_lifetime_contract
+{"passed":true,"assertions":167,"skipped":0,"warm_rss_bytes":340156416,"final_rss_bytes":339304448}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_lifetime_contract --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+No DISPLAY defined, doing off-screen rendering
+{"passed":true,"assertions":19,"skipped":0,"renderer":"llvmpipe (LLVM 22.1.8, 256 bits)"}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract sdl
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":20,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract sdl-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract font-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract font-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+{"passed": true, "assertions": 34562, "skipped": 0, "results": {"animation_metadata": {"passed": true, "assertions": 30079, "skipped": 0}, "lifecycle_42": {"passed": true, "assertions": 296, "skipped": 0}, "egl_lifecycle_42": {"passed": true, "assertions": 51, "skipped": 0}, "snapshot_42_normal": {"passed": true, "assertions": 844, "skipped": 0, "snapshot_bytes": 87132, "seed": 42, "reverse": false}, "snapshot_42_reverse": {"passed": true, "assertions": 852, "skipped": 0, "snapshot_bytes": 89124, "seed": 42, "reverse": true}, "snapshot_42_render": {"passed": true, "assertions": 92, "skipped": 0}, "lifecycle_43": {"passed": true, "assertions": 296, "skipped": 0}, "egl_lifecycle_43": {"passed": true, "assertions": 51, "skipped": 0}, "snapshot_43_normal": {"passed": true, "assertions": 840, "skipped": 0, "snapshot_bytes": 86124, "seed": 43, "reverse": false}, "snapshot_43_reverse": {"passed": true, "assertions": 848, "skipped": 0, "snapshot_bytes": 88116, "seed": 43, "reverse": true}, "snapshot_43_render": {"passed": true, "assertions": 92, "skipped": 0}, "repeated_and_concurrent_instances": {"passed": true, "assertions": 167, "skipped": 0, "warm_rss_bytes": 340156416, "final_rss_bytes": 339304448}, "two_egl_contexts": {"passed": true, "assertions": 19, "skipped": 0, "renderer": "llvmpipe (LLVM 22.1.8, 256 bits)"}, "sdl_events": {"passed": true, "assertions": 20, "skipped": 0}, "sdl_context_failure": {"passed": true, "assertions": 5, "skipped": 0}, "invalid_font_failure": {"passed": true, "assertions": 5, "skipped": 0}, "missing_font_failure": {"passed": true, "assertions": 5, "skipped": 0}}, "instrumented_translation_units": 134, "instrumentation": "complete engine ASan/UBSan, leak detection enabled, no suppressions", "asan_runtime_in_engine": true, "sdl_driver": "offscreen (real SDL GL window and event queue)"}

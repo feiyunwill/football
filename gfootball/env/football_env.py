@@ -28,7 +28,10 @@ from gfootball.env import constants
 from gfootball.env import football_action_set
 from gfootball.env import football_env_core
 from gfootball.env import observation_rotation
-import gym
+from gfootball.env import replay_support
+# 2026-09-10: retain the four-result protocol without an obsolete Gym dependency.
+# import gym
+from gfootball.env import legacy_api as gym
 import numpy as np
 
 
@@ -44,10 +47,26 @@ class FootballEnv(gym.Env):
     self._agent_index = -1
     self._agent_left_position = -1
     self._agent_right_position = -1
-    self._players = self._construct_players(config['players'], player_config)
-    self._env = football_env_core.FootballEnvCore(self._config)
-    self._num_actions = len(football_action_set.get_action_set(self._config))
+    # 2026-09-09: own replay sources per environment and clean partial setup.
+    # self._players = self._construct_players(config['players'], player_config)
+    # self._env = football_env_core.FootballEnvCore(self._config)
+    # self._num_actions = len(football_action_set.get_action_set(self._config))
+    # self._cached_observation = None
+    self._players = []
+    self._env = None
     self._cached_observation = None
+    self._replay_sources = replay_support.make_pool(config)
+    try:
+      self._players = self._construct_players(config['players'], player_config)
+      self._env = football_env_core.FootballEnvCore(self._config)
+      self._num_actions = len(football_action_set.get_action_set(self._config))
+    except BaseException as error:
+      try:
+        self.close(finalize=False)
+      except BaseException:
+        if hasattr(error, 'add_note'):
+          error.add_note('Partially constructed football environment cleanup failed.')
+      raise
 
   @property
   def action_space(self):
@@ -56,38 +75,109 @@ class FootballEnv(gym.Env):
           [self._num_actions] * self._config.number_of_players_agent_controls())
     return gym.spaces.Discrete(self._num_actions)
 
+  # 2026-09-09: bound actor construction, provide team-relative replay offsets
+  # and close already created players if a later factory fails.
+  # def _construct_players(self, definitions, config):
+  #   result = []
+  #   left_position = 0
+  #   right_position = 0
+  #   for definition in definitions:
+  #     (name, d) = cfg.parse_player_definition(definition)
+  #     config_name = 'player_{}'.format(name)
+  #     if config_name in config:
+  #       config[config_name] += 1
+  #     else:
+  #       config[config_name] = 0
+  #     try:
+  #       player_factory = importlib.import_module(
+  #           'gfootball.env.players.{}'.format(name))
+  #     except ImportError as e:
+  #       logging.error('Failed loading player "%s"', name)
+  #       logging.error(e)
+  #       exit(1)
+  #     player_config = copy.deepcopy(config)
+  #     player_config.update(d)
+  #     player = player_factory.Player(player_config, self._config)
+  #     if name == 'agent':
+  #       assert not self._agent, 'Only one \'agent\' player allowed'
+  #       self._agent = player
+  #       self._agent_index = len(result)
+  #       self._agent_left_position = left_position
+  #       self._agent_right_position = right_position
+  #     result.append(player)
+  #     left_position += player.num_controlled_left_players()
+  #     right_position += player.num_controlled_right_players()
+  #     config['index'] += 1
+  #   return result
+  def _close_players(self, players):
+    first = None
+    for player in players:
+      close = getattr(player, 'close', None)
+      if callable(close):
+        try:
+          close()
+        except BaseException as error:
+          first = first or error
+    if first is not None:
+      raise first
+
   def _construct_players(self, definitions, config):
+    if type(definitions) not in (list, tuple) or len(definitions) > 22:
+      raise ValueError('At most 22 player definitions are supported')
     result = []
-    left_position = 0
-    right_position = 0
-    for definition in definitions:
-      (name, d) = cfg.parse_player_definition(definition)
-      config_name = 'player_{}'.format(name)
-      if config_name in config:
-        config[config_name] += 1
-      else:
-        config[config_name] = 0
+    left_position = right_position = 0
+    try:
+      for definition in definitions:
+        (name, d) = cfg.parse_player_definition(definition)
+        config_name = 'player_{}'.format(name)
+        if config_name in config:
+          config[config_name] += 1
+        else:
+          config[config_name] = 0
+        try:
+          player_factory = importlib.import_module(
+              'gfootball.env.players.{}'.format(name))
+        except ImportError as e:
+          logging.error('Failed loading player "%s"', name)
+          logging.error(e)
+          raise ImportError('Failed loading player: ' + name) from e
+        player_config = copy.deepcopy(config)
+        player_config.update(d)
+        left_count = cfg.count_left_players(definition)
+        right_count = cfg.count_right_players(definition)
+        if (not 0 <= left_count <= 11 or not 0 <= right_count <= 11
+            or left_position + left_count > 11 or right_position + right_count > 11):
+          raise ValueError('Controlled player counts must fit within eleven per team')
+        # 2026-09-09: keep shared reader ownership private to replay actors;
+        # other player factories may copy or serialize their configuration.
+        # player_config['_replay_sources'] = self._replay_sources
+        # player_config['_left_action_offset'] = left_position
+        # player_config['_right_action_offset'] = right_position
+        if name == 'replay':
+          player_config['_replay_sources'] = self._replay_sources
+          player_config['_left_action_offset'] = left_position
+          player_config['_right_action_offset'] = right_position
+        if name == 'agent' and self._agent is not None:
+          raise ValueError('Only one agent player allowed')
+        player = player_factory.Player(player_config, self._config)
+        if name == 'agent':
+          assert not self._agent, 'Only one \'agent\' player allowed'
+          self._agent = player
+          self._agent_index = len(result)
+          self._agent_left_position = left_position
+          self._agent_right_position = right_position
+        result.append(player)
+        left_position += player.num_controlled_left_players()
+        right_position += player.num_controlled_right_players()
+        config['index'] += 1
+      return result
+    except BaseException as error:
       try:
-        player_factory = importlib.import_module(
-            'gfootball.env.players.{}'.format(name))
-      except ImportError as e:
-        logging.error('Failed loading player "%s"', name)
-        logging.error(e)
-        exit(1)
-      player_config = copy.deepcopy(config)
-      player_config.update(d)
-      player = player_factory.Player(player_config, self._config)
-      if name == 'agent':
-        assert not self._agent, 'Only one \'agent\' player allowed'
-        self._agent = player
-        self._agent_index = len(result)
-        self._agent_left_position = left_position
-        self._agent_right_position = right_position
-      result.append(player)
-      left_position += player.num_controlled_left_players()
-      right_position += player.num_controlled_right_players()
-      config['index'] += 1
-    return result
+        self._close_players(result)
+      except BaseException:
+        if hasattr(error, 'add_note'):
+          error.add_note('Partial player construction cleanup failed.')
+      raise
 
   def _convert_observations(self, original, player,
                             left_player_position, right_player_position):
@@ -201,8 +291,37 @@ class FootballEnv(gym.Env):
   def write_dump(self, name):
     return self._env.write_dump(name)
 
-  def close(self):
-    self._env.close()
+  # 2026-09-09: release all player/readers before temporary replay deletion;
+  # close the core even when another owner raises, and abort on failed playback.
+  # def close(self):
+  #   self._env.close()
+  def close(self, finalize=True):
+    first = None
+    players, self._players = self._players, []
+    try:
+      self._close_players(players)
+    except BaseException as error:
+      first = error
+    try:
+      self._replay_sources.close()
+    except BaseException as error:
+      first = first or error
+    try:
+      if self._env is not None:
+        self._env.close(finalize=finalize)
+    except BaseException as error:
+      first = first or error
+    self._agent = None
+    self._cached_observation = None
+    if first is not None:
+      raise first
+
+  def __del__(self):
+    if hasattr(self, '_replay_sources'):
+      try:
+        self.close(finalize=False)
+      except BaseException:
+        pass
 
   def get_state(self, to_pickle={}):
     return self._env.get_state(to_pickle)

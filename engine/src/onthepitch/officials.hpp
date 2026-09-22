@@ -40,7 +40,9 @@ class Officials {
     void Put(bool mirror);
 
     // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
-    void SaveInterpolationState();
+    // 2026-09-10: include officials in display pose capture.
+    // void SaveInterpolationState();
+    void SaveInterpolationState(bool mirror = false, bool from_display = false);
     void PutInterpolated(float t, bool mirror);
 
     boost::intrusive_ptr<Geometry> GetYellowCardGeom() { DO_VALIDATION; return yellowCard; }
@@ -49,6 +51,19 @@ class Officials {
 
     /// 2026-09-03 Phase 11: 将裁判组状态填充到 ECS 组件
     void FillOfficialsComponent(OfficialsComponent& out) const;
+
+  private:
+    // 2026-09-10: discrete appearance follows the same endpoint as the display pose.
+    // These display-only fields are deliberately excluded from ProcessState.
+    struct CardPresentation {
+      int type = 0;
+      BodyPart hand = right_elbow;
+    };
+    CardPresentation CurrentCard() const;
+    void PutCard(const CardPresentation& card);
+    CardPresentation displayedCard;
+    CardPresentation previousCard;
+    bool cardInterpolationSaved = false;
 
   protected:
     Match *match;

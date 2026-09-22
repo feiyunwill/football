@@ -203,9 +203,11 @@ TEST(InterpolatorTest, InterpolateAtFrameBoundary) {
   interp.SaveState(0.1f);
   interp.SavePosition(0, Vec3(10.f, 0.f, 0.f));
   
-  // At render_time = current_timestamp_, elapsed=0, t=0, returns previous frame
+  // 2026-09-09: absolute render timestamps interpolate between saved timestamps.
+  // At the current timestamp the result is the current frame, not the previous one.
   auto state = interp.GetInterpolatedState(0, 0.1f, logic_dt);
-  EXPECT_NEAR(state.position.x, 0.f, 0.01f);
+  // EXPECT_NEAR(state.position.x, 0.f, 0.01f);
+  EXPECT_NEAR(state.position.x, 10.f, 0.01f);
 }
 
 TEST(InterpolatorTest, InterpolateBeforeFrame) {

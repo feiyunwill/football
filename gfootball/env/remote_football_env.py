@@ -26,7 +26,9 @@ from gfootball.eval_server.proto import game_server_pb2_grpc
 from gfootball.eval_server.proto import master_pb2
 from gfootball.eval_server.proto import master_pb2_grpc
 import grpc
-import gym
+# 2026-09-10: retain the four-result protocol without an obsolete Gym dependency.
+# import gym
+from gfootball.env import legacy_api as gym
 import numpy as np
 
 

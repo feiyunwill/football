@@ -29,6 +29,8 @@
 #include "base/utils.hpp"
 #include "file.h"
 #include "main.hpp"
+#include <sstream>
+#include <locale>
 #include "scene/objectfactory.hpp"
 #include "scene/scene2d/scene2d.hpp"
 #include "scene/scene3d/scene3d.hpp"
@@ -50,7 +52,9 @@ Tracker tracker;
 
 void DoValidation(int line, const char* file) {
   auto game = GetGame();
-  if (game) {
+  // 2026-09-09: construction/cleanup may have no active context.
+  // if (game) {
+  if (game && game->context) {
     tracker.verify(line, file);
   }
 }
@@ -73,7 +77,9 @@ std::shared_ptr<Scene3D> GetScene3D() {
 }
 
 GraphicsSystem* GetGraphicsSystem() {
-  return &game->context->graphicsSystem;
+  // 2026-09-09: context guards must be able to restore an empty selection.
+  // return &game->context->graphicsSystem;
+  return game && game->context ? &game->context->graphicsSystem : nullptr;
 }
 
 std::shared_ptr<GameTask> GetGameTask() {
@@ -102,8 +108,9 @@ const std::vector<AIControlledKeyboard*>& GetControllers() {
 
 void randomize(unsigned int seed) {
   DO_VALIDATION;
-  srand(seed);
-  rand(); // mingw32? buggy compiler? first value seems bogus
+  // 2026-09-09: engine startup must not reseed the host process C RNG.
+  // srand(seed);
+  // rand(); // mingw32? buggy compiler? first value seems bogus
   randomseed(seed); // for the boost random
 }
 
@@ -146,15 +153,21 @@ void run_game(Properties* input_config, bool render) {
   game->context->defaultFont =
       TTF_OpenFontIndexRW(SDL_RWFromConstMem(game->context->font.data(),
                                              game->context->font.size()),
-                          0, 32, 0);
+                          // 2026-09-09: TTF owns and closes each allocated RWops.
+                          // 0, 32, 0);
+                          1, 32, 0);
   game->context->defaultOutlineFont =
       TTF_OpenFontIndexRW(SDL_RWFromConstMem(game->context->font.data(),
                                              game->context->font.size()),
-                          0, 32, 0);
+                          // 2026-09-09: TTF owns and closes each allocated RWops.
+                          // 0, 32, 0);
+                          1, 32, 0);
 #endif
-  if (!game->context->defaultFont)
-    Log(e_FatalError, "football", "main",
-        "Could not load font " + fontfilename);
+  // 2026-09-09: either font may fail; return control to startup cleanup.
+  // if (!game->context->defaultFont)
+  //   Log(e_FatalError, "football", "main", "Could not load font " + fontfilename);
+  if (!game->context->defaultFont || !game->context->defaultOutlineFont)
+    throw std::runtime_error("Could not load font " + fontfilename + ": " + TTF_GetError());
   TTF_SetFontOutline(game->context->defaultOutlineFont, 2);
   game->context->menuTask = std::shared_ptr<MenuTask>(
       new MenuTask(5.0f / 4.0f, 0, game->context->defaultFont,
@@ -162,27 +175,51 @@ void run_game(Properties* input_config, bool render) {
 }
   // fire!
 
+// 2026-09-09: release scene references before their renderer and platform services.
+// void quit_game() {
+//   DO_VALIDATION;
+//   game->context->gameTask.reset();
+//   game->context->menuTask.reset();
+//
+//   game->context->scene2D.reset();
+//   game->context->scene3D.reset();
+//
+//   for (unsigned int i = 0; i < game->context->controllers.size(); i++) {
+//     DO_VALIDATION;
+//     delete game->context->controllers[i];
+//   }
+//   game->context->controllers.clear();
+//
+//   TTF_CloseFont(game->context->defaultFont);
+//   TTF_CloseFont(
+//       game->context->defaultOutlineFont);
+//
+//   delete game->context->config;
+//
+//   Exit();
+// }
 void quit_game() {
   DO_VALIDATION;
-  game->context->gameTask.reset();
-  game->context->menuTask.reset();
-
-  game->context->scene2D.reset();
-  game->context->scene3D.reset();
-
-  for (unsigned int i = 0; i < game->context->controllers.size(); i++) {
-    DO_VALIDATION;
-    delete game->context->controllers[i];
+  auto& context = *GetGame()->context;
+  context.gameTask.reset();
+  context.menuTask.reset();
+  for (auto* controller : context.controllers) delete controller;
+  context.controllers.clear();
+  for (auto* node : {&context.fullbodyNode, &context.goalsNode,
+                     &context.stadiumRender, &context.stadiumNoRender}) {
+    if (*node) (*node)->Exit();
+    node->reset();
   }
-  game->context->controllers.clear();
-
-  TTF_CloseFont(game->context->defaultFont);
-  TTF_CloseFont(
-      game->context->defaultOutlineFont);
-
-  delete game->context->config;
-
+  context.animPositionCache.clear();
+  context.anims.reset();
+  context.colorCoords.clear();
+  if (context.defaultFont) TTF_CloseFont(context.defaultFont);
+  if (context.defaultOutlineFont) TTF_CloseFont(context.defaultOutlineFont);
+  context.defaultFont = nullptr;
+  context.defaultOutlineFont = nullptr;
   Exit();
+  delete context.config;
+  context.config = nullptr;
 }
 
 void Tracker::verify_snapshot(long pos, int line, const char* file,
@@ -196,9 +233,13 @@ void Tracker::verify_snapshot(long pos, int line, const char* file,
   if (!failure) {
     if (!game->context->gameTask->GetMatch()) return;
     EnvState reader1(game, "");
-    game->ProcessState(&reader1);
+    // 2026-09-14: tracker rendezvous owns the paused state; avoid reacquiring its worker mutex.
+    // game->ProcessState(&reader1);
+    game->ProcessStateInternal(&reader1);
     EnvState reader2(waiting_game, "", reader1.GetState());
-    waiting_game->ProcessState(&reader2);
+    // 2026-09-14: tracker rendezvous owns the paused state; avoid reacquiring its worker mutex.
+    // waiting_game->ProcessState(&reader2);
+    waiting_game->ProcessStateInternal(&reader2);
     failure = reader2.isFailure();
   }
   if (failure) {
@@ -214,16 +255,43 @@ void Tracker::verify_snapshot(long pos, int line, const char* file,
 }
 
 void GameContext::ProcessState(EnvState* state) {
-  for (int x = 0; x < sizeof(rng); x++) {
-    state->process(((char*) &rng)[x]);
+  // 2026-09-09: v2 stores normalized MT19937 words, not private object bytes.
+  // for (int x = 0; x < sizeof(rng); x++) state->process(((char*) &rng)[x]);
+  std::ostringstream encoded;
+  encoded.imbue(std::locale::classic());
+  if (!state->Load()) encoded << rng.engine();
+  std::istringstream source(encoded.str());
+  source.imbue(std::locale::classic());
+  std::ostringstream restored_words;
+  restored_words.imbue(std::locale::classic());
+  bool nonzero = false;
+  for (size_t word = 0; word < BaseGenerator::state_size; ++word) {
+    uint32_t value = 0;
+    if (!state->Load()) {
+      source >> value;
+      state->require(!source.fail(), "Cannot encode random generator");
+    }
+    state->process(value);
+    nonzero |= value != 0;
+    if (state->Load()) restored_words << value << ' ';
+  }
+  if (state->Load()) {
+    state->require(nonzero, "Invalid all-zero random generator");
+    BaseGenerator restored;
+    std::istringstream values(restored_words.str());
+    values.imbue(std::locale::classic());
+    values >> restored;
+    state->require(!values.fail(), "Invalid random generator state");
+    rng = Generator(restored, Distribution());
   }
   if (state->Load()) {
     EnvState reader(game, "");
     game->scenario_config.ProcessStateConstant(&reader);
     if (reader.GetState() != state->GetState().substr(state->getpos(),
         reader.GetState().length())) {
-      Log(e_FatalError, "football", "set_state",
-          "Current environment scenario != scenario in the state.");
+      // 2026-09-09: scenario mismatch participates in the snapshot transaction.
+      // Log(e_FatalError, "football", "set_state", "Current environment scenario != scenario in the state.");
+      state->require(false, "Snapshot scenario does not match current environment");
     }
   }
   game->scenario_config.ProcessStateConstant(state);

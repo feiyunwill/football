@@ -6,6 +6,9 @@ set -euo pipefail
 
 MS_ID="${1:-}"
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# 2026-09-09: never rewrite a planned milestone to COMPLETED without evidence.
+source "$PROJECT_ROOT/scripts/quality_route.sh"
+quality_route complete "$MS_ID"
 COORD_PY="$PROJECT_ROOT/../.agent-coordination/coord.py"
 
 if [[ -z "$MS_ID" ]]; then

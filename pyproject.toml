@@ -1,7 +1,10 @@
 # Google Research Football - PEP 517/518
+# 2026-09-10: CustomBuild now invokes isolated CMake directly and requires a real extension.
 # 构建仍由 setup.py 中的 CustomBuild 驱动（C++ 引擎通过 build_game_engine.sh 编译）
 [build-system]
-requires = ["setuptools>=61", "wheel"]
+# 2026-09-10: isolated builds supply bindings compatible with current Python.
+# requires = ["setuptools>=61", "wheel"]
+requires = ["setuptools>=77", "wheel", "pybind11>=3,<4"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -19,21 +22,39 @@ classifiers = [
   "Development Status :: 4 - Beta",
   "License :: OSI Approved :: Apache Software License",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
+  # 2026-09-10: maintained Gymnasium and pygame-ce require Python 3.10+.
+  # "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
-requires-python = ">=3.9"
+# 2026-09-10: match the maintained runtime dependency floor.
+# requires-python = ">=3.9"
+requires-python = ">=3.10"
+# 2026-09-10: install maintained runtime dependencies, including direct six use.
+# dependencies = [
+#   "pygame>=1.9.6",
+#   "opencv-python",
+#   "psutil",
+#   "numpy",
+#   "gym<=0.21.0",
+#   "absl-py",
+#   "wheel",
+# ]
 dependencies = [
-  "pygame>=1.9.6",
-  "opencv-python",
-  "psutil",
-  "numpy",
-  "gym<=0.21.0",
-  "absl-py",
-  "wheel",
+  "pygame-ce>=2.5.8,<3",
+  "opencv-python>=4.8,<6",
+  "psutil>=5.9",
+  "numpy>=1.24,<3",
+  "gymnasium>=1.3,<2",
+  "absl-py>=2,<3",
+  "six>=1.16",
 ]
 
 # 包列表、package_dir、ext_modules、cmdclass 仍由 setup.py 定义，此处仅做元数据与依赖
+
+# 2026-09-10: Gym discovery owns optional environment registration.
+# 2026-09-10: Gymnasium uses explicit gfootball.gymnasium module discovery.
+# [project.entry-points."gym.envs"]
+# gfootball = "gfootball:register_gym_envs"

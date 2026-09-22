@@ -590,16 +590,28 @@ void Ball::Put() {
 }
 
 // 2026-08-31 ms-1.6: 逻辑渲染分离 — 插值渲染支持
-void Ball::SaveInterpolationState() {
+// 2026-09-10: interpolate display pose buffers; keep simulation state untouched.
+// void Ball::SaveInterpolationState() {
+//   DO_VALIDATION;
+//   previousPositionBuffer = positionBuffer;
+//   previousOrientationBuffer = orientationBuffer;
+// }
+void Ball::SaveInterpolationState(bool from_display) {
   DO_VALIDATION;
-  previousPositionBuffer = positionBuffer;
-  previousOrientationBuffer = orientationBuffer;
+  previousPositionBuffer = from_display ? ball->GetPosition() : positionBuffer;
+  previousOrientationBuffer = from_display ? ball->GetRotation() : orientationBuffer;
 }
 
 void Ball::PutInterpolated(float t) {
   DO_VALIDATION;
   // Clamp t to [0, 1]
   t = std::clamp(t, 0.0f, 1.0f);
+  // 2026-09-10: preserve the exact visible endpoint without quaternion rounding.
+  if (t == 0.0f) {
+    ball->SetPosition(previousPositionBuffer, false);
+    ball->SetRotation(previousOrientationBuffer, false);
+    return;
+  }
   
   // Linear interpolation for position
   Vector3 interpPos = previousPositionBuffer * (1.0f - t) + positionBuffer * t;
@@ -638,9 +650,12 @@ void Ball::ProcessState(EnvState *state) {
     state->process(predictions[x]);
   }
   state->process(valid_predictions);
+  state->require(valid_predictions >= 0 && valid_predictions <= cachedPredictions, "Invalid ball prediction cursor");
   state->process(orientPrediction);
   int size = ballPosHistory.size();
-  state->process(size);
+  // 2026-09-09: bound collection size before allocation/reference use.
+  // state->process(size);
+  state->processCount(size, 1000);
   ballPosHistory.resize(size);
   for (auto &i : ballPosHistory) {
     DO_VALIDATION;

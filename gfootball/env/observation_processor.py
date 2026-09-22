@@ -199,61 +199,228 @@ def softmax(x):
   return np.exp(x) / np.sum(np.exp(x), axis=0)
 
 
+# 2026-09-09: bound output files and encoder lifetime; publish exclusively
+# after explicit success and abort incomplete output on errors/destruction.
+# class ActiveDump(object):
+#
+#   def __init__(self,
+#                name,
+#                finish_step,
+#                config):
+#     self._name = name
+#     self._finish_step = finish_step
+#     self._config = config
+#     self._video_fd = None
+#     self._video_tmp = None
+#     self._video_writer = None
+#     self._frame_dim = None
+#     self._step_cnt = 0
+#     self._dump_file = None
+#     if config['write_video']:
+#       video_format = config['video_format']
+#       assert video_format in ['avi', 'webm']
+#       self._video_suffix = '.%s' % video_format
+#       self._video_fd, self._video_tmp = tempfile.mkstemp(
+#           suffix=self._video_suffix)
+#       self._frame_dim = (
+#           config['render_resolution_x'], config['render_resolution_y'])
+#       if config['video_quality_level'] not in [1, 2]:
+#         # Reduce resolution to (800, 450).
+#         self._frame_dim = min(self._frame_dim, (800, 450))
+#       if video_format == 'avi':
+#         if config['video_quality_level'] == 2:
+#           fcc = cv2.VideoWriter_fourcc('p', 'n', 'g', ' ')
+#         elif config['video_quality_level'] == 1:
+#           fcc = cv2.VideoWriter_fourcc(*'MJPG')
+#         else:
+#           fcc = cv2.VideoWriter_fourcc(*'XVID')
+#       else:
+#         fcc = cv2.VideoWriter_fourcc(*'vp80')
+#
+#       self._video_writer = cv2.VideoWriter(
+#           self._video_tmp, fcc,
+#           const.PHYSICS_STEPS_PER_SECOND / config['physics_steps_per_frame'],
+#           self._frame_dim)
+#     if WRITE_FILES:
+#       self._dump_file = open(name + '.dump', 'wb')
+#
+#   def __del__(self):
+#     self.finalize()
+#
+#   def add_frame(self, frame):
+#     if self._video_writer:
+#       frame = frame[..., ::-1]
+#       frame = cv2.resize(frame, self._frame_dim, interpolation=cv2.INTER_AREA)
+#       self._video_writer.write(frame)
+#
+#   def add_step(self, o):
+#     # Write video if requested.
+#     if self._video_writer:
+#       frame = get_frame(o)
+#       frame = frame[..., ::-1]
+#       frame = cv2.resize(frame, self._frame_dim, interpolation=cv2.INTER_AREA)
+#       writer = TextWriter(frame, self._frame_dim[0] - 300)
+#       if self._config['custom_display_stats']:
+#         for line in self._config['custom_display_stats']:
+#           writer.write(line)
+#       if self._config['display_game_stats']:
+#         writer.write('SCORE: %d - %d' % (o['score'][0], o['score'][1]))
+#         if o['ball_owned_team'] == 0:
+#           player = 'G' if o['left_team_roles'][
+#               o['ball_owned_player']] == e_PlayerRole_GK else o[
+#                   'ball_owned_player']
+#           writer.write('BALL OWNED: %s' % player, color=(47, 68, 238))
+#         elif o['ball_owned_team'] == 1:
+#           player = 'G' if o['right_team_roles'][
+#               o['ball_owned_player']] == e_PlayerRole_GK else o[
+#                   'ball_owned_player']
+#           writer.write('BALL OWNED: %s' % player, color=(190, 172, 99))
+#         else:
+#           writer.write('BALL OWNED: ---')
+#         writer = TextWriter(frame, 0)
+#         writer.write('STEP: %d' % self._step_cnt)
+#         sticky_actions = football_action_set.get_sticky_actions(self._config)
+#
+#         players_info = {}
+#         for team in ['left', 'right']:
+#           player_info = {}
+#           sticky_actions_field = '%s_agent_sticky_actions' % team
+#           for player in range(len(o[sticky_actions_field])):
+#             assert len(sticky_actions) == len(o[sticky_actions_field][player])
+#             player_idx = o['%s_agent_controlled_player' % team][player]
+#             player_info = {}
+#             player_info['color'] = (
+#                 47, 68, 238) if team == 'left' else (190, 172, 99)
+#             player_info['id'] = 'G' if o[
+#                 '%s_team_roles' %
+#                 team][player_idx] == e_PlayerRole_GK else str(player_idx)
+#             active_direction = None
+#             for i in range(len(sticky_actions)):
+#               if sticky_actions[i]._directional:
+#                 if o[sticky_actions_field][player][i]:
+#                   active_direction = sticky_actions[i]
+#               else:
+#                 player_info[sticky_actions[i]._name] = \
+#                     o[sticky_actions_field][player][i]
+#
+#             # Info about direction
+#             player_info['DIRECTION'] = \
+#                 'O' if active_direction is None else active_direction._name
+#             if 'action' in o._trace['debug']:
+#               # Info about action
+#               player_info['ACTION'] = \
+#                   o['action'][len(players_info)]._name
+#             players_info[(team, player_idx)] = player_info
+#
+#         write_players_state(writer, players_info)
+#
+#         if 'baseline' in o._trace['debug']:
+#           writer.write('BASELINE: %.5f' % o._trace['debug']['baseline'])
+#         if 'logits' in o._trace['debug']:
+#           probs = softmax(o._trace['debug']['logits'])
+#           action_set = football_action_set.get_action_set(self._config)
+#           for action, prob in zip(action_set, probs):
+#             writer.write('%s: %.5f' % (action.name, prob), scale_factor=0.5)
+#         for d in o._debugs:
+#           writer.write(d)
+#       self._video_writer.write(frame)
+#     # 2026-09-09: build a separate record; never remove the source frame or
+#     # inject config into shared trace data, including serialization failure.
+#     # # Write the dump.
+#     # temp_frame = None
+#     # if 'frame' in o._trace['observation']:
+#     #   temp_frame = o._trace['observation']['frame']
+#     #   del o._trace['observation']['frame']
+#     #
+#     # # Add config to the first frame for our replay tools to use.
+#     # if self._step_cnt == 0:
+#     #   o['debug']['config'] = self._config.get_dictionary()
+#     #
+#     # six.moves.cPickle.dump(o._trace, self._dump_file)
+#     # if temp_frame is not None:
+#     #   o._trace['observation']['frame'] = temp_frame
+#     # self._step_cnt += 1
+#     if self._dump_file is not None:
+#       record = o.to_record(
+#           include_frame=False,
+#           first_config=self._config.get_dictionary() if self._step_cnt == 0 else None)
+#       six.moves.cPickle.dump(record, self._dump_file)
+#     self._step_cnt += 1
+#
+#   def finalize(self):
+#     dump_info = {}
+#     if self._video_writer:
+#       self._video_writer.release()
+#       self._video_writer = None
+#       os.close(self._video_fd)
+#       try:
+#         # For some reason sometimes the file is missing, so the code fails.
+#         if WRITE_FILES:
+#           shutil.move(self._video_tmp, self._name + self._video_suffix)
+#         dump_info['video'] = '%s%s' % (self._name, self._video_suffix)
+#         logging.info('Video written to %s%s', self._name, self._video_suffix)
+#       except:
+#         logging.error(traceback.format_exc())
+#     if self._dump_file:
+#       self._dump_file.close()
+#       self._dump_file = None
+#       if self._step_cnt == 0:
+#         logging.warning('No data to write to the dump.')
+#       else:
+#         dump_info['dump'] = '%s.dump' % self._name
+#         logging.info('Dump written to %s.dump', self._name)
+#     return dump_info
 class ActiveDump(object):
-
-  def __init__(self,
-               name,
-               finish_step,
-               config):
-    self._name = name
-    self._finish_step = finish_step
-    self._config = config
-    self._video_fd = None
-    self._video_tmp = None
-    self._video_writer = None
-    self._frame_dim = None
+  def __init__(self, name, finish_step, config, budget=None):
+    self._name, self._finish_step, self._config = name, finish_step, config
     self._step_cnt = 0
-    self._dump_file = None
+    self._finalized = False
+    self._limits = RecordingLimits(**config['recording_limits']) if 'recording_limits' in config else RecordingLimits()
+    if budget is None:
+      options = config['recording_output_limits'] if 'recording_output_limits' in config else {}
+      budget = OutputBudget(os.path.dirname(name), OutputLimits(**options))
+    video = None
     if config['write_video']:
-      video_format = config['video_format']
-      assert video_format in ['avi', 'webm']
-      self._video_suffix = '.%s' % video_format
-      self._video_fd, self._video_tmp = tempfile.mkstemp(
-          suffix=self._video_suffix)
-      self._frame_dim = (
-          config['render_resolution_x'], config['render_resolution_y'])
-      if config['video_quality_level'] not in [1, 2]:
-        # Reduce resolution to (800, 450).
-        self._frame_dim = min(self._frame_dim, (800, 450))
-      if video_format == 'avi':
-        if config['video_quality_level'] == 2:
-          fcc = cv2.VideoWriter_fourcc('p', 'n', 'g', ' ')
-        elif config['video_quality_level'] == 1:
-          fcc = cv2.VideoWriter_fourcc(*'MJPG')
-        else:
-          fcc = cv2.VideoWriter_fourcc(*'XVID')
-      else:
-        fcc = cv2.VideoWriter_fourcc(*'vp80')
-
-      self._video_writer = cv2.VideoWriter(
-          self._video_tmp, fcc,
-          const.PHYSICS_STEPS_PER_SECOND / config['physics_steps_per_frame'],
-          self._frame_dim)
-    if WRITE_FILES:
-      self._dump_file = open(name + '.dump', 'wb')
+      physics_steps = config['physics_steps_per_frame']
+      if type(physics_steps) is not int or physics_steps <= 0:
+        raise ValueError('physics_steps_per_frame must be a positive integer')
+      video = VideoSettings(config['render_resolution_x'], config['render_resolution_y'],
+                            const.PHYSICS_STEPS_PER_SECOND / physics_steps,
+                            config['video_format'], config['video_quality_level'])
+    self._output = RecordingOutput(os.path.basename(name), budget, video, enabled=WRITE_FILES)
+    self._video_enabled = video is not None and WRITE_FILES
+    self._frame_dim = video.dimensions if video is not None else None
 
   def __del__(self):
-    self.finalize()
+    if hasattr(self, '_output'):
+      try:
+        self.abort()
+      except BaseException:
+        pass
+
+  def abort(self):
+    self._output.abort()
 
   def add_frame(self, frame):
-    if self._video_writer:
-      frame = frame[..., ::-1]
-      frame = cv2.resize(frame, self._frame_dim, interpolation=cv2.INTER_AREA)
-      self._video_writer.write(frame)
+    try:
+      if self._video_enabled:
+        validate_frame(frame, self._limits)
+        frame = cv2.resize(frame[..., ::-1], self._frame_dim, interpolation=cv2.INTER_AREA)
+        self._output.write_frame(frame)
+    except BaseException:
+      self.abort()
+      raise
 
   def add_step(self, o):
+    try:
+      self._add_step(o)
+    except BaseException:
+      self.abort()
+      raise
+
+  def _add_step(self, o):
     # Write video if requested.
-    if self._video_writer:
+    if self._video_enabled:
       frame = get_frame(o)
       frame = frame[..., ::-1]
       frame = cv2.resize(frame, self._frame_dim, interpolation=cv2.INTER_AREA)
@@ -321,83 +488,84 @@ class ActiveDump(object):
             writer.write('%s: %.5f' % (action.name, prob), scale_factor=0.5)
         for d in o._debugs:
           writer.write(d)
-      self._video_writer.write(frame)
-    # Write the dump.
-    temp_frame = None
-    if 'frame' in o._trace['observation']:
-      temp_frame = o._trace['observation']['frame']
-      del o._trace['observation']['frame']
-
-    # Add config to the first frame for our replay tools to use.
-    if self._step_cnt == 0:
-      o['debug']['config'] = self._config.get_dictionary()
-
-    six.moves.cPickle.dump(o._trace, self._dump_file)
-    if temp_frame is not None:
-      o._trace['observation']['frame'] = temp_frame
+      self._output.write_frame(frame)
+    # 2026-09-09: disabled output has no serialization/config-copy work.
+    # record = o.to_record(
+    #     include_frame=False,
+    #     first_config=self._config.get_dictionary() if self._step_cnt == 0 else None)
+    record = None
+    if self._output.enabled:
+      record = o.to_record(
+          include_frame=False,
+          first_config=self._config.get_dictionary() if self._step_cnt == 0 else None)
+    self._output.write_step(record)
     self._step_cnt += 1
 
   def finalize(self):
-    dump_info = {}
-    if self._video_writer:
-      self._video_writer.release()
-      self._video_writer = None
-      os.close(self._video_fd)
-      try:
-        # For some reason sometimes the file is missing, so the code fails.
-        if WRITE_FILES:
-          shutil.move(self._video_tmp, self._name + self._video_suffix)
-        dump_info['video'] = '%s%s' % (self._name, self._video_suffix)
-        logging.info('Video written to %s%s', self._name, self._video_suffix)
-      except:
-        logging.error(traceback.format_exc())
-    if self._dump_file:
-      self._dump_file.close()
-      self._dump_file = None
-      if self._step_cnt == 0:
-        logging.warning('No data to write to the dump.')
-      else:
-        dump_info['dump'] = '%s.dump' % self._name
-        logging.info('Dump written to %s.dump', self._name)
-    return dump_info
+    result = self._output.finalize()
+    if not self._finalized:
+      for kind, path in result.items():
+        logging.info('%s written to %s', kind, path)
+      self._finalized = True
+    return result
 
 
-class ObservationState(object):
+# 2026-09-09: own immutable, byte/count-bounded observation data rather than
+# retaining caller dictionaries, NumPy bases and unbounded frame/debug lists.
+# class ObservationState(object):
+#
+#   def __init__(self, trace):
+#     # Observations
+#     self._trace = trace
+#     self._additional_frames = []
+#     self._debugs = []
+#
+#   def __getitem__(self, key):
+#     if key in self._trace:
+#       return self._trace[key]
+#     if key in self._trace['observation']:
+#       return self._trace['observation'][key]
+#     return self._trace['debug'][key]
+#
+#   def __contains__(self, key):
+#     if key in self._trace:
+#       return True
+#     if key in self._trace['observation']:
+#       return True
+#     return key in self._trace['debug']
+#
+#   def _distance(self, o1, o2):
+#     # We add 'z' dimension if not present, as ball has 3 dimensions, while
+#     # players have only 2.
+#     if len(o1) == 2:
+#       o1 = np.array([o1[0], o1[1], 0])
+#     if len(o2) == 2:
+#       o2 = np.array([o2[0], o2[1], 0])
+#     return np.linalg.norm(o1 - o2)
+#
+#   def add_debug(self, text):
+#     self._debugs.append(text)
+#
+#   def add_frame(self, frame):
+#     self._additional_frames.append(frame)
+from gfootball.recording_buffers import (
+    ActionAdapter, ObservationHistory, ObservationState as _BoundedObservationState,
+    RecordingCapacityError, RecordingLimits, validate_dump_name, validate_frame,
+)
 
-  def __init__(self, trace):
-    # Observations
-    self._trace = trace
-    self._additional_frames = []
-    self._debugs = []
+from gfootball.recording_output import OutputBudget, OutputLimits, RecordingOutput, VideoSettings
 
-  def __getitem__(self, key):
-    if key in self._trace:
-      return self._trace[key]
-    if key in self._trace['observation']:
-      return self._trace['observation'][key]
-    return self._trace['debug'][key]
 
-  def __contains__(self, key):
-    if key in self._trace:
-      return True
-    if key in self._trace['observation']:
-      return True
-    return key in self._trace['debug']
+_ACTION_ADAPTER = ActionAdapter(
+    football_action_set.CoreAction,
+    lambda value: football_action_set.CoreAction(
+        type(football_action_set.action_idle._backend_action)(value.backend),
+        value.name, value.sticky, value.directional))
 
-  def _distance(self, o1, o2):
-    # We add 'z' dimension if not present, as ball has 3 dimensions, while
-    # players have only 2.
-    if len(o1) == 2:
-      o1 = np.array([o1[0], o1[1], 0])
-    if len(o2) == 2:
-      o2 = np.array([o2[0], o2[1], 0])
-    return np.linalg.norm(o1 - o2)
 
-  def add_debug(self, text):
-    self._debugs.append(text)
-
-  def add_frame(self, frame):
-    self._additional_frames.append(frame)
+class ObservationState(_BoundedObservationState):
+  def __init__(self, trace, **options):
+    super().__init__(trace, action_adapter=_ACTION_ADAPTER, **options)
 
 
 class ObservationProcessor(object):
@@ -425,16 +593,67 @@ class ObservationProcessor(object):
         max_count=(100000 if config['dump_full_episodes'] else 0))
     self._dump_config['shutdown'] = DumpConfig(steps_before=PAST_STEPS_TRACE_SIZE)
     self._dump_directory = None
+    # 2026-09-09: validate recording budgets before creating the rolling trace.
+    # self._config = config
+    # self.clear_state()
     self._config = config
+    options = config['recording_limits'] if 'recording_limits' in config else {}
+    if type(options) is not dict:
+      raise ValueError('recording_limits must be a dictionary')
+    self._limits = RecordingLimits(**options)
+    output_options = config['recording_output_limits'] if 'recording_output_limits' in config else {}
+    if type(output_options) is not dict:
+      raise ValueError('recording_output_limits must be a dictionary')
+    self._output_budget = OutputBudget(config['tracesdir'], OutputLimits(**output_options))
     self.clear_state()
 
   def clear_state(self):
+    # 2026-09-09: explicitly finish prior output before dropping its observation
+    # ownership. Previously reset only replaced the trace and left active dumps.
+    if hasattr(self, '_trace'):
+      self.close()
+    self._closed = False
     self._frame = 0
     self._state = None
-    self._trace = collections.deque([], PAST_STEPS_TRACE_SIZE)
+    # 2026-09-09: both row count and actual owned payload bytes are bounded.
+    # self._trace = collections.deque([], PAST_STEPS_TRACE_SIZE)
+    self._trace = ObservationHistory(self._limits, _ACTION_ADAPTER)
 
   def reset(self):
     self.clear_state()
+
+  def close(self, finalize=True):
+    if self._closed:
+      return []
+    try:
+      if finalize:
+        return self.process_pending_dumps(episode_done=True)
+      first = None
+      for config in self._dump_config.values():
+        dump, config._active_dump = config._active_dump, None
+        if dump is not None:
+          try:
+            dump.abort()
+          except BaseException as error:
+            first = first or error
+      if first is not None:
+        raise first
+      return []
+    finally:
+      self._trace.clear()
+      self._state = None
+      self._closed = True
+
+  def __del__(self):
+    if hasattr(self, '_trace'):
+      try:
+        self.close(finalize=False)
+      except BaseException:
+        pass
+
+  def _require_open(self):
+    if self._closed:
+      raise RuntimeError('Observation processor is closed')
 
   def len(self):
     return len(self._trace)
@@ -443,34 +662,78 @@ class ObservationProcessor(object):
     return self._trace[key]
 
   def add_frame(self, frame):
+    self._require_open()
     if len(self._trace) > 0 and self._config['write_video']:
       self._trace[-1].add_frame(frame)
-      for dump in self.pending_dumps():
-        dump.add_frame(frame)
+      # 2026-09-09: one failed writer must not leave other active files open.
+      # for dump in self.pending_dumps():
+      #   dump.add_frame(frame)
+      try:
+        for dump in self.pending_dumps():
+          dump.add_frame(frame)
+      except BaseException as error:
+        self._abort_after_error(error)
+        raise
 
+  # 2026-09-09: freeze a separate trace before changing processor state.
+  # def update(self, trace):
+  #   self._frame += 1
+  #   frame = trace.get('frame', None)
+  #   if not self._config['write_video'] and 'frame' in trace['observation']:
+  #     # Don't record frame in the trace if we don't write video to save memory.
+  #     no_video_trace = trace
+  #     no_video_trace['observation'] = trace['observation'].copy()
+  #     del no_video_trace['observation']['frame']
+  #     self._state = ObservationState(no_video_trace)
+  #     frame = None
+  #   else:
+  #     self._state = ObservationState(trace)
+  #   self._trace.append(self._state)
+  #   for dump in self.pending_dumps():
+  #     dump.add_step(self._state)
   def update(self, trace):
+    self._require_open()
+    state = self._trace.append(trace, keep_frame=self._config['write_video'])
     self._frame += 1
-    frame = trace.get('frame', None)
-    if not self._config['write_video'] and 'frame' in trace['observation']:
-      # Don't record frame in the trace if we don't write video to save memory.
-      no_video_trace = trace
-      no_video_trace['observation'] = trace['observation'].copy()
-      del no_video_trace['observation']['frame']
-      self._state = ObservationState(no_video_trace)
-      frame = None
-    else:
-      self._state = ObservationState(trace)
-    self._trace.append(self._state)
-    for dump in self.pending_dumps():
-      dump.add_step(self._state)
+    self._state = state
+    # 2026-09-09: close the recorder as a unit after a stream/overlay failure.
+    # for dump in self.pending_dumps():
+    #   dump.add_step(state)
+    try:
+      for dump in self.pending_dumps():
+        dump.add_step(state)
+    except BaseException as error:
+      self._abort_after_error(error)
+      raise
+
+  def _abort_after_error(self, original):
+    try:
+      self.close(finalize=False)
+    except BaseException:
+      if hasattr(original, 'add_note'):
+        original.add_note('Observation recorder cleanup also failed.')
+
+  def recording_stats(self):
+    result = self._trace.stats()
+    result['dump_names'] = len(self._dump_config)
+    result.update(self._output_budget.stats())
+    return result
 
   def get_last_frame(self):
     if not self._state:
       return []
     return get_frame(self._state)
 
+  # 2026-09-09: reject traversal/oversized names and cap dynamic dump schemas.
+  # def write_dump(self, name):
+  #   if not name in self._dump_config:
+  #     self._dump_config[name] = DumpConfig()
   def write_dump(self, name):
-    if not name in self._dump_config:
+    self._require_open()
+    validate_dump_name(name)
+    if name not in self._dump_config:
+      if len(self._dump_config) >= self._limits.dump_names:
+        raise RecordingCapacityError('Dump-name count budget exceeded')
       self._dump_config[name] = DumpConfig()
     config = self._dump_config[name]
     if config._active_dump:
@@ -482,8 +745,9 @@ class ObservationProcessor(object):
     if config._last_dump_time > timeit.default_timer() - config._min_frequency:
       logging.debug('Dump "%s": too frequent', name)
       return
-    config._max_count -= 1
-    config._last_dump_time = timeit.default_timer()
+    # 2026-09-09: consume attempts only after successful construction/prefill.
+    # config._max_count -= 1
+    # config._last_dump_time = timeit.default_timer()
     if self._dump_directory is None:
       self._dump_directory = self._config['tracesdir']
       if WRITE_FILES:
@@ -492,16 +756,36 @@ class ObservationProcessor(object):
     dump_name = '{2}{3}{0}_{1}'.format(name,
         datetime.datetime.now().strftime('%Y%m%d-%H%M%S%f'),
         self._dump_directory, os.sep)
-    config._active_dump = ActiveDump(dump_name,
-        self._frame + config._steps_after, self._config)
-    for step in list(self._trace)[-config._steps_before:]:
-      config._active_dump.add_step(step)
-      for frame in step._additional_frames:
-        config._active_dump.add_frame(frame)
-    if config._steps_after == 0:
-      # Synchronously finalize dump, so that crash dump is recorded.
-      config._active_dump.finalize()
-      config._active_dump = None
+    # 2026-09-09: share directory reservations and avoid storing a failed dump.
+    # config._active_dump = ActiveDump(dump_name,
+    #     self._frame + config._steps_after, self._config)
+    active = ActiveDump(dump_name, self._frame + config._steps_after,
+                        self._config, self._output_budget)
+    # 2026-09-09: [-0:] means the entire trace, not zero preceding steps.
+    # for step in list(self._trace)[-config._steps_before:]:
+    preceding = list(self._trace)[-config._steps_before:] if config._steps_before else ()
+    # 2026-09-09: prefill failure aborts every owned file and preserves retry quota.
+    # for step in preceding:
+    #   config._active_dump.add_step(step)
+    #   for frame in step._additional_frames:
+    #     config._active_dump.add_frame(frame)
+    # if config._steps_after == 0:
+    #   config._active_dump.finalize()
+    #   config._active_dump = None
+    try:
+      for step in preceding:
+        active.add_step(step)
+        for frame in step._additional_frames:
+          active.add_frame(frame)
+      if config._steps_after == 0:
+        active.finalize()
+      else:
+        config._active_dump = active
+    except BaseException:
+      active.abort()
+      raise
+    config._max_count -= 1
+    config._last_dump_time = timeit.default_timer()
     return dump_name
 
   def pending_dumps(self):
@@ -513,12 +797,24 @@ class ObservationProcessor(object):
 
   def process_pending_dumps(self, episode_done=False):
     dumps = []
+    first = None
     for name in self._dump_config:
       config = self._dump_config[name]
       if config._active_dump and (
           episode_done or config._active_dump._finish_step <= self._frame):
-        dump_info = config._active_dump.finalize()
-        dump_info['name'] = name
-        dumps.append(dump_info)
-        config._active_dump = None
+        # 2026-09-09: detach before close, continue closing other outputs on error.
+        # dump_info = config._active_dump.finalize()
+        # dump_info['name'] = name
+        # dumps.append(dump_info)
+        # config._active_dump = None
+        active, config._active_dump = config._active_dump, None
+        try:
+          dump_info = active.finalize()
+          if dump_info:
+            dump_info['name'] = name
+            dumps.append(dump_info)
+        except BaseException as error:
+          first = first or error
+    if first is not None:
+      raise first
     return dumps

@@ -1,0 +1,48 @@
+Running: cmake -S engine -B /tmp/football-optimization-native
+Using Python: 3.14
+Using pybind11 for Python bindings
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: cmake --build /tmp/football-optimization-native -j 1 --target engine_simulation_contract
+[  4%] Built target datalib
+[ 12%] Built target gui2lib
+[ 22%] Built target baselib
+[ 30%] Built target systemsgraphicslib
+[ 32%] Built target loaderslib
+[ 36%] Built target typeslib
+[ 46%] Built target scenelib
+[ 52%] Built target utilslib
+[ 53%] Built target blunted2
+[ 78%] Built target gamelib
+[ 86%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target engine_simulation_contract
+Running: /tmp/football-optimization-native/bin/engine_simulation_contract 42
+{"passed":true,"assertions":946,"skipped":0,"snapshot_bytes":87132,"collision_workspace":true,"seed":42,"reverse":false}
+
+Running: /tmp/football-optimization-native/bin/engine_simulation_contract 42 --reverse
+{"passed":true,"assertions":954,"skipped":0,"snapshot_bytes":89124,"collision_workspace":true,"seed":42,"reverse":true}
+
+Running: /tmp/football-optimization-native/bin/engine_simulation_contract 42 --render
+No DISPLAY defined, doing off-screen rendering
+{"passed":true,"assertions":92,"skipped":0}
+
+Running: /tmp/football-optimization-native/bin/engine_simulation_contract 43
+{"passed":true,"assertions":942,"skipped":0,"snapshot_bytes":86124,"collision_workspace":true,"seed":43,"reverse":false}
+
+Running: /tmp/football-optimization-native/bin/engine_simulation_contract 43 --reverse
+{"passed":true,"assertions":950,"skipped":0,"snapshot_bytes":88116,"collision_workspace":true,"seed":43,"reverse":true}
+
+Running: /tmp/football-optimization-native/bin/engine_simulation_contract 43 --render
+No DISPLAY defined, doing off-screen rendering
+{"passed":true,"assertions":92,"skipped":0}
+
+{"passed": true, "assertions": 3976, "skipped": 0, "results": [{"seed": 42, "variant": [], "passed": true, "assertions": 946, "skipped": 0, "snapshot_bytes": 87132, "collision_workspace": true, "reverse": false}, {"seed": 42, "variant": ["--reverse"], "passed": true, "assertions": 954, "skipped": 0, "snapshot_bytes": 89124, "collision_workspace": true, "reverse": true}, {"seed": 42, "variant": ["--render"], "passed": true, "assertions": 92, "skipped": 0}, {"seed": 43, "variant": [], "passed": true, "assertions": 942, "skipped": 0, "snapshot_bytes": 86124, "collision_workspace": true, "reverse": false}, {"seed": 43, "variant": ["--reverse"], "passed": true, "assertions": 950, "skipped": 0, "snapshot_bytes": 88116, "collision_workspace": true, "reverse": true}, {"seed": 43, "variant": ["--render"], "passed": true, "assertions": 92, "skipped": 0}]}

@@ -1,3 +1,5 @@
+> 2026-09-13：原生产品入口已使用独立的 [FNAT1／50Hz 比赛协议](NATIVE_MATCH_PROTOCOL.md)。下文保留旧接口说明；旧原生协议与 Python FMATCH7 不等同于 FNAT1。
+
 # Frame Sync Protocol
 
 ## Frame semantics

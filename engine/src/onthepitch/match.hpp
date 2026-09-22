@@ -69,6 +69,8 @@ class Match {
     void RandomizeAdboards(boost::intrusive_ptr<Node> stadiumNode);
     void UpdateControllerSetup();
     void SpamMessage(const std::string &msg, int time_ms = 3000);
+    // 2026-09-10: independent of timed gameplay messages and ProcessState.
+    void SetControlStatus(const std::string& text);
     int GetScore(int teamID) { DO_VALIDATION; return matchData->GetGoalCount(teamID); }
     Ball *GetBall() { DO_VALIDATION; return ball; }
     Team *GetTeam(int teamID) { DO_VALIDATION; return teams[teamID]; }
@@ -143,7 +145,9 @@ class Match {
 
     // 2026-08-31 ms-1.6: 逻辑渲染分离 — 插值渲染支持
     // Save current state for interpolation (call after Process)
-    void SaveInterpolationState();
+    // 2026-09-10: capture either the logical endpoint or last displayed pose.
+    // void SaveInterpolationState();
+    void SaveInterpolationState(bool from_display = false);
     // Put with interpolation between previous and current state
     // t: interpolation factor (0 = previous, 1 = current)
     void PutInterpolated(float t);
@@ -218,6 +222,13 @@ class Match {
     /// 单次 Process 内的临时量（不序列化，勿加入 ProcessState）
     Vector3 process_previous_ball_pos_;
 
+    // 2026-09-13: per-Match collision workspace retains vector capacity across
+    // ticks. These buffers carry no authoritative state and are rebuilt before
+    // every use, including the first tick after ProcessState/ResetSituation.
+    // Player pointers are borrowed only; clearing never accesses the players.
+    std::vector<Player*> collision_players_;
+    std::vector<std::vector<PlayerBounce>> collision_bounces_;
+
     blunted::SystemGraph system_graph_;
     bool system_graph_initialized_ = false;
     void InitSystemGraph();
@@ -253,6 +264,9 @@ class Match {
     Gui2ScoreBoard *scoreboard;
     Gui2Radar *radar;
     Gui2Caption *messageCaption;
+    // 2026-09-10: one lazily allocated HUD caption; no event/text history.
+    Gui2Caption *controlCaption = nullptr;
+    std::string controlStatus;
     unsigned long messageCaptionRemoveTime_ms = 0;
     unsigned long matchTime_ms = 0;
     unsigned long actualTime_ms = 0;
@@ -280,6 +294,11 @@ class Match {
     Quaternion cameraNodeOrientation;
     Vector3 cameraNodePosition;
     float cameraFOV = 0.0f;
+    // Display-only history is deliberately excluded from ProcessState.
+    Quaternion previousCameraOrientation, previousCameraNodeOrientation;
+    Vector3 previousCameraNodePosition;
+    float previousCameraFOV = 0.0f, previousCameraNearCap = 0.0f, previousCameraFarCap = 0.0f;
+    bool interpolationStateSaved = false;
     float cameraNearCap = 0.0f;
     float cameraFarCap = 0.0f;
 

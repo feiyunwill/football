@@ -19,6 +19,8 @@
 #define _HPP_HUMANOIDBASE
 
 #include <compare>
+#include <array>
+#include <stdexcept>
 
 #include "../../../base/math/vector3.hpp"
 #include "../../../scene/scene3d/node.hpp"
@@ -68,6 +70,11 @@ enum e_InterruptAnim {
   e_InterruptAnim_Cancel,
   e_InterruptAnim_ReQueue
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_InterruptAnim, int64_t value) {
+  return value >= e_InterruptAnim_None && value <= e_InterruptAnim_ReQueue;
+}
+
 constexpr std::strong_ordering operator<=>(e_InterruptAnim a, e_InterruptAnim b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }
@@ -114,6 +121,8 @@ struct Anim {
     state->process(anim);
     state->process(id);
     state->process(frameNum);
+    state->require(anim != nullptr && frameNum >= 0 && frameNum <= anim->GetFrameCount(),
+                   "Invalid animation cursor");
     state->process(functionType);
     state->process(originatingInterrupt);
     state->process(actionSmuggle);
@@ -231,6 +240,9 @@ struct SpatialState {
 
 class HumanoidBase {
 
+    // 2026-09-10: actual-render acceptance controls animation metadata and missing-joint fixtures.
+    friend struct RenderPoseContractAccess;
+
   public:
     HumanoidBase(PlayerBase *player, Match *match, boost::intrusive_ptr<Node> humanoidSourceNode, boost::intrusive_ptr<Node> fullbodySourceNode, std::map<Vector3, Vector3> &colorCoords, std::shared_ptr<AnimCollection> animCollection, boost::intrusive_ptr<Node> fullbodyTargetNode, boost::intrusive_ptr < Resource<Surface> > kit);
     virtual ~HumanoidBase();
@@ -247,10 +259,18 @@ class HumanoidBase {
 
     // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
     // Save current state for interpolation (call after Process)
-    void SaveInterpolationState();
+    // 2026-09-10: capture rendered skeleton poses, with inactive-player invalidation.
+    // void SaveInterpolationState();
+    void SaveInterpolationState(bool mirror = false, bool from_display = false, bool active = true);
     // Put with interpolation between previous and current state
     // t: interpolation factor (0 = previous, 1 = current)
     void PutInterpolated(float t, bool mirror);
+
+    // 2026-09-10: world attachment pose from the joints used by the last Put.
+    // localOffset uses the reference skeleton's units and follows player scaling.
+    // Missing joints return false without changing the output arguments.
+    bool GetRenderAttachmentPose(BodyPart part, const Vector3& localOffset,
+                                 Vector3& position, Quaternion& orientation) const;
 
     virtual void CalculateGeomOffsets();
     void SetOffset(BodyPart body_part, float bias, const Quaternion &orientation, bool isRelative = false);
@@ -402,7 +422,12 @@ class HumanoidBase {
     SpatialState spatialState;
 
     // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
-    SpatialState previousSpatialState;  // 上一帧的逻辑状态，用于插值
+    // 2026-09-10: Put reads skeleton nodes, not spatialState; retain bounded display-only poses.
+    // SpatialState previousSpatialState;  // 上一帧的逻辑状态，用于插值
+    struct RenderJointPose { Vector3 position; Quaternion orientation; };
+    std::array<RenderJointPose, 64> previousRenderJoints;
+    size_t previousRenderJointCount = 0;
+    Vector3 previousFullbodyOffset;
     bool interpolationStateSaved = false;
 
     Vector3 previousPosition2D;

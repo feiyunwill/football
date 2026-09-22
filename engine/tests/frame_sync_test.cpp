@@ -196,9 +196,13 @@ TEST(PredictionRollbackTest, PredictThenRollback) {
   EXPECT_EQ(engine.position, 4.0f);  // 0 + 1*4
   EXPECT_EQ(engine.step_count, 4);
 
-  // Server sends authoritative frame 2 with direction=10.0 (different)
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // // Server sends authoritative frame 2 with direction=10.0 (different)
+  // Server corrects frame 2 with the opposite direction.
   SlotInput auth;
-  auth.dir_x = 10.0f;
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // auth.dir_x = 10.0f;
+  auth.dir_x = -1.0f;
 
   bool ok = cs.rollback_to(2, auth,
                            [&](const StateBlob& b) { engine.restore(b); },
@@ -206,7 +210,9 @@ TEST(PredictionRollbackTest, PredictThenRollback) {
 
   EXPECT_TRUE(ok);
   // Restored to frame 2 state (position=2.0, step_count=2), then stepped once with auth
-  EXPECT_FLOAT_EQ(engine.position, 12.0f);  // 2.0 + 10.0
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // EXPECT_FLOAT_EQ(engine.position, 12.0f);  // 2.0 + 10.0
+  EXPECT_FLOAT_EQ(engine.position, 1.0f);  // 2.0 - 1.0
   EXPECT_EQ(engine.step_count, 3);
   EXPECT_EQ(cs.rollback_count(), 1);
 }

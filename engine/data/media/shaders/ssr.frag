@@ -118,8 +118,13 @@ void main() {
         }
         
         // 采样深度
-        float currentDepth = SampleDepth(currentPos);
-        float sampleDepth = SampleDepth(currentTexCoord);
+        // 2026-09-09: compare ray/scene depth in view-space units; a vec3
+        // position is not a screen UV and nonlinear depth is not a distance.
+        // float currentDepth = SampleDepth(currentPos);
+        // float sampleDepth = SampleDepth(currentTexCoord);
+        float currentDepth = -currentPos.z;
+        float sampleDepth = -ReconstructPosition(
+            currentTexCoord, SampleDepth(currentTexCoord)).z;
         
         // 深度比较
         float depthDiff = currentDepth - sampleDepth;

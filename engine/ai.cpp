@@ -17,8 +17,13 @@
 #undef NDEBUG
 
 #include "src/game_env.hpp"
+#include "src/frame_sync/python_window_input.hpp"
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+// 2026-09-10: scenario teams must expose mutable native storage; STL list copies
+// silently discarded every Scenario.AddPlayer append and prevented all matches.
+#include <pybind11/stl_bind.h>
+PYBIND11_MAKE_OPAQUE(std::vector<FormationEntry>);
 #include <pybind11/functional.h>
 
 // 2026-08-26 移除 Boost：shared_ptr 全面改用 std，pybind11 holder 本就是 std::shared_ptr。
@@ -32,7 +37,30 @@ using std::string;
 PYBIND11_DECLARE_HOLDER_TYPE(T, std::shared_ptr<T>);
 
 class GameEnv_Python : public GameEnv {
+  frame_sync::PythonWindowInput window_input_;
  public:
+  // 2026-09-10: SDL events and controller handles belong to this render copy.
+  py::dict poll_input_python() {
+    ContextHolder guard(this);
+    if (!game_config.render) throw std::runtime_error("Input requires a rendering environment");
+    auto sample = window_input_.poll(SDL_GL_GetCurrentWindow());
+    py::dict result;
+    result["keys"] = sample.keys;
+    result["pressed_keys"] = sample.pressed_keys;
+    result["axes"] = sample.axes;
+    result["buttons"] = sample.buttons;
+    result["pressed_buttons"] = sample.pressed_buttons;
+    result["focused"] = sample.focused;
+    result["connected"] = sample.connected;
+    result["quit"] = sample.quit;
+    return result;
+  }
+
+  void close_python() noexcept {
+    window_input_.close();
+    GameEnv::close();
+  }
+
   py::bytes get_frame_python() {
     ContextHolder c(this);
     screenshoot screen = get_frame();
@@ -81,11 +109,14 @@ class GameEnv_Python : public GameEnv {
   }
 
   void reset_python(ScenarioConfig& game_config, bool init_animation) {
-    ContextHolder c(this);
-    context->step = -1;
-    GetTracker()->setDisabled(true);
+    // 2026-09-10: the native reset validates before selecting new state.
+    // The adapter must not mutate step or tracker depth on rejected parameters.
+    // ContextHolder c(this);
+    // context->step = -1;
+    // GetTracker()->setDisabled(true);
+    // reset(game_config, init_animation);
+    // GetTracker()->setDisabled(false);
     reset(game_config, init_animation);
-    GetTracker()->setDisabled(false);
   }
 };
 
@@ -168,6 +199,7 @@ PYBIND11_MODULE(_gameplayfootball, m) {
       .value("game_initiated", GameState::game_initiated)
       .value("game_running", GameState::game_running)
       .value("game_done", GameState::game_done)
+      .value("game_paused", GameState::game_paused)
       .export_values();
 
   py::class_<GameEnv_Python>(m, "GameEnv")
@@ -175,7 +207,20 @@ PYBIND11_MODULE(_gameplayfootball, m) {
       // 可直接调用，迁移后缺 .def(py::init<>()) 导致 Python 侧 libgame.GameEnv() 报
       // "_gameplayfootball.GameEnv: No constructor defined!"。补注册默认构造。
       .def(py::init<>())
-      .def("start_game", static_cast<void (GameEnv_Python::*)()>(&GameEnv_Python::start_game))
+      // 2026-09-10: native renderer startup must not starve TCP heartbeat threads.
+      // .def("start_game", static_cast<void (GameEnv_Python::*)()>(&GameEnv_Python::start_game))
+      .def("start_game", static_cast<void (GameEnv_Python::*)()>(&GameEnv_Python::start_game),
+           py::call_guard<py::gil_scoped_release>())
+      // 2026-09-09: explicit release complements RAII and Python engine pooling.
+      // 2026-09-10: release controller handles before destroying the SDL renderer.
+      // .def("close", &GameEnv_Python::close, py::call_guard<py::gil_scoped_release>())
+      .def("close", &GameEnv_Python::close_python, py::call_guard<py::gil_scoped_release>())
+      .def("poll_input", &GameEnv_Python::poll_input_python)
+      // 2026-09-10: the rendering owner alone updates the in-game control HUD.
+      .def("set_match_status", &GameEnv_Python::set_match_status, py::call_guard<py::gil_scoped_release>())
+      .def("pause", &GameEnv_Python::pause, py::call_guard<py::gil_scoped_release>())
+      .def("resume", &GameEnv_Python::resume, py::call_guard<py::gil_scoped_release>())
+      .def("finish", &GameEnv_Python::finish, py::call_guard<py::gil_scoped_release>())
       .def("get_info", &GameEnv_Python::get_info)
       // 2026-08-25 修复（原因）：返回 py::bytes 的方法（get_frame/get_state/set_state）
       // 原挂 gil_scoped_release，bytes 的构造与引用计数发生在已释放 GIL 区间内，
@@ -198,6 +243,10 @@ PYBIND11_MODULE(_gameplayfootball, m) {
            py::call_guard<py::gil_scoped_release>())
       .def("render", &GameEnv_Python::render,
            py::call_guard<py::gil_scoped_release>(), py::arg("swap_buffer") = true)
+      .def("save_render_state", &GameEnv_Python::save_render_state,
+           py::call_guard<py::gil_scoped_release>(), py::arg("from_display") = false)
+      .def("render_interpolated", &GameEnv_Python::render_interpolated,
+           py::call_guard<py::gil_scoped_release>(), py::arg("alpha"), py::arg("swap_buffer") = true)
       .def_property(
           "config",
           [](GameEnv_Python& self) -> ScenarioConfig& { return self.scenario_config; },
@@ -230,8 +279,23 @@ PYBIND11_MODULE(_gameplayfootball, m) {
   py::class_<ScenarioConfig, std::shared_ptr<ScenarioConfig>>(m, "ScenarioConfig")
       .def_static("make", &ScenarioConfig::make)
       .def_readwrite("ball_position", &ScenarioConfig::ball_position)
-      .def_readwrite("left_team", &ScenarioConfig::left_team)
-      .def_readwrite("right_team", &ScenarioConfig::right_team)
+      // 2026-09-10: retain sequence assignment while getters expose native teams.
+      // .def_readwrite("left_team", &ScenarioConfig::left_team)
+      // .def_readwrite("right_team", &ScenarioConfig::right_team)
+      .def_property("left_team",
+          [](ScenarioConfig& self) -> std::vector<FormationEntry>& { return self.left_team; },
+          [](ScenarioConfig& self, py::iterable entries) {
+            std::vector<FormationEntry> staged;
+            for (auto entry : entries) staged.push_back(py::cast<FormationEntry>(entry));
+            self.left_team = std::move(staged);
+          }, py::return_value_policy::reference_internal)
+      .def_property("right_team",
+          [](ScenarioConfig& self) -> std::vector<FormationEntry>& { return self.right_team; },
+          [](ScenarioConfig& self, py::iterable entries) {
+            std::vector<FormationEntry> staged;
+            for (auto entry : entries) staged.push_back(py::cast<FormationEntry>(entry));
+            self.right_team = std::move(staged);
+          }, py::return_value_policy::reference_internal)
       .def_readwrite("left_agents", &ScenarioConfig::left_agents)
       .def_readwrite("right_agents", &ScenarioConfig::right_agents)
       .def_readwrite("use_magnet", &ScenarioConfig::use_magnet)
@@ -285,13 +349,15 @@ PYBIND11_MODULE(_gameplayfootball, m) {
       .def_readwrite("lazy", &FormationEntry::lazy)
       .def_readwrite("controllable", &FormationEntry::controllable);
 
-  py::class_<std::vector<FormationEntry>>(m, "FormationEntryVec")
-      .def(py::init<>())
-      .def("__len__", [](const std::vector<FormationEntry>& v) { return v.size(); })
-      .def("__getitem__", [](const std::vector<FormationEntry>& v, size_t i) {
-        if (i >= v.size()) throw py::index_error();
-        return v[i];
-      });
+// 2026-09-10: provide append/index/iteration with reference-preserving opaque storage.
+//   py::class_<std::vector<FormationEntry>>(m, "FormationEntryVec")
+//       .def(py::init<>())
+//       .def("__len__", [](const std::vector<FormationEntry>& v) { return v.size(); })
+//       .def("__getitem__", [](const std::vector<FormationEntry>& v, size_t i) {
+//         if (i >= v.size()) throw py::index_error();
+//         return v[i];
+//       });
+  py::bind_vector<std::vector<FormationEntry>>(m, "FormationEntryVec");
 
   py::class_<StringVector>(m, "StringVector")
       .def(py::init<>())

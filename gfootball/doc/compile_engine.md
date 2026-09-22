@@ -1,3 +1,22 @@
+<!-- 2026-09-10: current package build contract; platform instructions remain below. -->
+## Current package build
+
+Use Python 3.10+ and a C++23 compiler. `python -m pip install .` uses PEP 517
+build isolation to install setuptools, wheel and pybind11, then configures a
+separate CMake build and builds the actual Python adapter and shared engine with
+one compiler job. CMake, SDL2/image/ttf/gfx, OpenGL and EGL development packages
+are system prerequisites on Linux. Windows continues to require VCPKG_ROOT.
+The build does not delete an existing editable installation, create an empty
+placeholder extension, or silently accept a failed native compilation.
+
+`python -m build --sdist` and `python -m pip wheel path/to/gfootball.tar.gz`
+exercise source distribution packaging. A locally built Linux wheel still
+requires the matching system shared libraries; it is not a manylinux artifact
+unless separately repaired and validated for that platform.
+
+The maintained environment entry point and rendering API are documented in
+[gymnasium.md](gymnasium.md).
+
 # Compiling Google Research Football Engine #
 
 This guide is intended to contain detailed information on building the environment

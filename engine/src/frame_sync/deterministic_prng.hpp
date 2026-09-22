@@ -90,8 +90,11 @@ class DeterministicPRNG {
   /// @return Random integer uniformly distributed in [min, max]
   [[nodiscard]] int range(int min, int max) {
     if (min >= max) return min;
-    uint32_t range = static_cast<uint32_t>(max - min + 1);
-    return min + static_cast<int>(next_uint32() % range);
+    // 2026-09-09: widen before subtraction; full int range must not overflow or divide by zero.
+    // uint32_t range = static_cast<uint32_t>(max - min + 1);
+    // return min + static_cast<int>(next_uint32() % range);
+    const uint64_t width = static_cast<uint64_t>(static_cast<int64_t>(max) - min) + 1;
+    return static_cast<int>(static_cast<int64_t>(min) + static_cast<int64_t>(next_uint32() % width));
   }
 
   /// @brief Generate random float in range [min, max)

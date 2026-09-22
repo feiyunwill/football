@@ -1,0 +1,17 @@
+{
+  "check": "tactical_integration",
+  "fingerprint": "0abe1e078f230a8f998fb6f6e74a94dc9dab12e4ebf6ca2e805af459052d4398",
+  "passed": false,
+  "reason": "Command exited with 1",
+  "returncode": 1,
+  "started": 1789453797.4397545,
+  "duration_seconds": 303.822,
+  "argv": [
+    "python3",
+    ".project/checks/ai_tactics_contract.py",
+    "--suite",
+    "integration"
+  ],
+  "log": "tactical_integration-1789453797439950832.log",
+  "log_sha256": "96fa659e1939b14f5487aa6d525500fd660e1c07642d487167055b677ef92793"
+}

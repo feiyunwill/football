@@ -46,7 +46,10 @@ class StateSnapshotCodec {
   /// @param force_full Force full snapshot (for keyframes)
   /// @return Compressed state data
   [[nodiscard]] std::string Compress(const std::string& state, bool force_full = false) {
-    if (force_full || !has_baseline_) {
+    // 2026-09-09: resized states need a full snapshot, not an unframed delta.
+    // if (force_full || !has_baseline_) {
+    if (state.size() > StateDeltaCodec::kMaxStateBytes) return {};
+    if (force_full || !has_baseline_ || codec_.GetBaselineSize() != state.size()) {
       // Send full state with marker
       std::string result;
       result.reserve(1 + state.size());
@@ -54,6 +57,7 @@ class StateSnapshotCodec {
       result.append(state);
       codec_.SetBaseline(state);
       has_baseline_ = true;
+      UpdateStats(state.size(), result.size());
       return result;
     }
     
@@ -65,6 +69,7 @@ class StateSnapshotCodec {
     result.reserve(1 + delta.size());
     result.push_back(static_cast<char>(0x00));  // Delta marker
     result.append(delta);
+    UpdateStats(state.size(), result.size());
     return result;
   }
 
@@ -88,6 +93,7 @@ class StateSnapshotCodec {
     std::string payload = compressed.substr(1);
     
     if (marker == 0x01) {
+      if (payload.size() > StateDeltaCodec::kMaxStateBytes) return {};
       // Full state
       if (expected_size > 0 && payload.size() != expected_size) {
         return {};
@@ -99,7 +105,10 @@ class StateSnapshotCodec {
     
     if (marker == 0x00) {
       // Delta
-      std::string state = codec_.DecodeDelta(payload);
+      // 2026-09-09: size rejection must not poison the decoder baseline.
+      // std::string state = codec_.DecodeDelta(payload);
+      if (!has_baseline_) return {};
+      std::string state = codec_.DecodeDelta(payload, expected_size);
       if (state.empty()) return {};
       if (expected_size > 0 && state.size() != expected_size) {
         return {};
@@ -117,6 +126,7 @@ class StateSnapshotCodec {
   void Reset() {
     codec_.Reset();
     has_baseline_ = false;
+    stats_ = {};
   }
 
   /// @brief Get compression statistics
@@ -133,6 +143,10 @@ class StateSnapshotCodec {
   }
 
  private:
+  void UpdateStats(size_t original, size_t compressed) {
+    stats_ = {codec_.GetBaselineSize(), compressed, original,
+              StateDeltaCodec::CompressionRatio(compressed, original)};
+  }
   StateDeltaCodec codec_;
   bool has_baseline_ = false;
   CompressionStats stats_ = {};

@@ -39,13 +39,17 @@ void MatchData::ProcessState(EnvState* state, int first_team) {
   DO_VALIDATION;
   state->process(goalCount[first_team]);
   state->process(goalCount[1 - first_team]);
-  if (first_team == 1) {
-    DO_VALIDATION;
-    possession60seconds = -possession60seconds;
-  }
-  state->process(possession60seconds);
-  if (first_team == 1) {
-    DO_VALIDATION;
-    possession60seconds = -possession60seconds;
-  }
+// 2026-09-09: failed reads do not leave possession orientation inverted.
+//   if (first_team == 1) {
+//     DO_VALIDATION;
+//     possession60seconds = -possession60seconds;
+//   }
+//   state->process(possession60seconds);
+//   if (first_team == 1) {
+//     DO_VALIDATION;
+//     possession60seconds = -possession60seconds;
+//   }
+  float restored = first_team == 1 ? -possession60seconds : possession60seconds;
+  state->process(restored);
+  possession60seconds = first_team == 1 ? -restored : restored;
 }

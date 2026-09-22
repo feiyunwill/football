@@ -14,6 +14,9 @@
 #include "protocol_io.hpp"
 #include "reliable_udp.hpp"
 #include "input_codec.hpp"
+#include "frame_sync/server_input_window.hpp"
+// 2026-09-14: share tactical takeover with the TCP authority.
+#include "frame_sync/engine_bot_observer.hpp"
 
 // Engine headers
 #include "../game_env.hpp"
@@ -28,12 +31,18 @@
 #include <cstring>
 #include <algorithm>
 #include <flat_map>
+// 2026-09-13: native product setup has explicit cadence and scenario identity.
+// #include "frame_sync/default_scenario.hpp"
+#include "frame_sync/native_match_scenario.hpp"
+#include <charconv>
+#include <csignal>
 #include <flat_set>
 #include <iostream>
 #include <print>
 #include <memory>
 #include <mutex>
 #include <sstream>
+#include <span>
 #include <thread>
 #include <vector>
 
@@ -167,51 +176,52 @@ static const int kFrameRateHz = 10;
 static const int kStateHashIntervalK = frame_sync::STATE_HASH_INTERVAL_K;
 
 // ===== ScenarioConfig builder (mirrors Python get_scenario_config) =====
-static std::shared_ptr<ScenarioConfig> make_scenario_config(uint16_t left_agents,
-                                           uint16_t right_agents,
-                                           uint32_t seed,
-                                           const std::string& /*scenario_name*/) {
-  auto sc = ScenarioConfig::make();
-  sc->left_agents = left_agents;
-  sc->right_agents = right_agents;
-  sc->game_engine_random_seed = seed;
-  sc->real_time = false;
-  sc->deterministic = true;
-  sc->end_episode_on_score = false;
-  sc->game_duration = 3000;
-  sc->reverse_team_processing = bool(seed % 2);
-
-  // Default 4-4-2 formation
-  sc->left_team = {
-    FormationEntry(0.0f,   0.0f,  e_PlayerRole_GK, false, true),
-    FormationEntry(-0.4f, -0.3f,  e_PlayerRole_LB, false, false),
-    FormationEntry(-0.15f,-0.3f,  e_PlayerRole_CB, false, false),
-    FormationEntry(0.15f, -0.3f,  e_PlayerRole_CB, false, false),
-    FormationEntry(0.4f,  -0.3f,  e_PlayerRole_RB, false, false),
-    FormationEntry(-0.4f, 0.0f,  e_PlayerRole_LM, false, false),
-    FormationEntry(-0.15f,0.0f,  e_PlayerRole_CM, false, false),
-    FormationEntry(0.15f, 0.0f,  e_PlayerRole_CM, false, false),
-    FormationEntry(0.4f,  0.0f,  e_PlayerRole_RM, false, false),
-    FormationEntry(-0.15f,0.3f,  e_PlayerRole_CF, false, false),
-    FormationEntry(0.15f, 0.3f,  e_PlayerRole_CF, false, false),
-  };
-  sc->right_team = {
-    FormationEntry(0.0f,   0.0f,  e_PlayerRole_GK, false, false),
-    FormationEntry(-0.4f, -0.3f,  e_PlayerRole_LB, false, false),
-    FormationEntry(-0.15f,-0.3f,  e_PlayerRole_CB, false, false),
-    FormationEntry(0.15f, -0.3f,  e_PlayerRole_CB, false, false),
-    FormationEntry(0.4f,  -0.3f,  e_PlayerRole_RB, false, false),
-    FormationEntry(-0.4f, 0.0f,  e_PlayerRole_LM, false, false),
-    FormationEntry(-0.15f,0.0f,  e_PlayerRole_CM, false, false),
-    FormationEntry(0.15f, 0.0f,  e_PlayerRole_CM, false, false),
-    FormationEntry(0.4f,  0.0f,  e_PlayerRole_RM, false, false),
-    FormationEntry(-0.15f,0.3f,  e_PlayerRole_CF, false, false),
-    FormationEntry(0.15f, 0.3f,  e_PlayerRole_CF, false, false),
-  };
-
-  return sc;
-}
-
+// 2026-09-09: moved to default_scenario.hpp; clients previously created empty teams.
+// static std::shared_ptr<ScenarioConfig> make_scenario_config(uint16_t left_agents,
+//                                            uint16_t right_agents,
+//                                            uint32_t seed,
+//                                            const std::string& /*scenario_name*/) {
+//   auto sc = ScenarioConfig::make();
+//   sc->left_agents = left_agents;
+//   sc->right_agents = right_agents;
+//   sc->game_engine_random_seed = seed;
+//   sc->real_time = false;
+//   sc->deterministic = true;
+//   sc->end_episode_on_score = false;
+//   sc->game_duration = 3000;
+//   sc->reverse_team_processing = bool(seed % 2);
+//
+//   // Default 4-4-2 formation
+//   sc->left_team = {
+//     FormationEntry(0.0f,   0.0f,  e_PlayerRole_GK, false, true),
+//     FormationEntry(-0.4f, -0.3f,  e_PlayerRole_LB, false, false),
+//     FormationEntry(-0.15f,-0.3f,  e_PlayerRole_CB, false, false),
+//     FormationEntry(0.15f, -0.3f,  e_PlayerRole_CB, false, false),
+//     FormationEntry(0.4f,  -0.3f,  e_PlayerRole_RB, false, false),
+//     FormationEntry(-0.4f, 0.0f,  e_PlayerRole_LM, false, false),
+//     FormationEntry(-0.15f,0.0f,  e_PlayerRole_CM, false, false),
+//     FormationEntry(0.15f, 0.0f,  e_PlayerRole_CM, false, false),
+//     FormationEntry(0.4f,  0.0f,  e_PlayerRole_RM, false, false),
+//     FormationEntry(-0.15f,0.3f,  e_PlayerRole_CF, false, false),
+//     FormationEntry(0.15f, 0.3f,  e_PlayerRole_CF, false, false),
+//   };
+//   sc->right_team = {
+//     FormationEntry(0.0f,   0.0f,  e_PlayerRole_GK, false, false),
+//     FormationEntry(-0.4f, -0.3f,  e_PlayerRole_LB, false, false),
+//     FormationEntry(-0.15f,-0.3f,  e_PlayerRole_CB, false, false),
+//     FormationEntry(0.15f, -0.3f,  e_PlayerRole_CB, false, false),
+//     FormationEntry(0.4f,  -0.3f,  e_PlayerRole_RB, false, false),
+//     FormationEntry(-0.4f, 0.0f,  e_PlayerRole_LM, false, false),
+//     FormationEntry(-0.15f,0.0f,  e_PlayerRole_CM, false, false),
+//     FormationEntry(0.15f, 0.0f,  e_PlayerRole_CM, false, false),
+//     FormationEntry(0.4f,  0.0f,  e_PlayerRole_RM, false, false),
+//     FormationEntry(-0.15f,0.3f,  e_PlayerRole_CF, false, false),
+//     FormationEntry(0.15f, 0.3f,  e_PlayerRole_CF, false, false),
+//   };
+//
+//   return sc;
+// }
+//
 // ===== Build StepWithInput buffer from collected SlotInputs =====
 static std::vector<uint8_t> build_frame_input_buffer(
     const std::vector<frame_sync::SlotInput>& slot_inputs) {
@@ -237,11 +247,15 @@ struct ClientSessionUDP {
 };
 
 // ===== Engine-integrated frame sync server =====
+// 2026-09-09: std::flat_map iterators return proxy pairs; loops use auto&&.
+// Previous loop spelling: for (auto& p : clients_)
 class EngineFrameSyncServer {
  public:
   EngineFrameSyncServer(asio::io_context& io, unsigned short port,
                         uint16_t left_agents, uint16_t right_agents, uint32_t seed,
-                        int slots_per_client = 0)
+// 2026-09-13: keep the legacy API while product main requests the new contract.
+//                         int slots_per_client = 0)
+                        int slots_per_client = 0, bool native_product = false)
       : io_(io),
         socket_(io, udp::endpoint(udp::v4(), port)),
         left_agents_(left_agents),
@@ -251,7 +265,24 @@ class EngineFrameSyncServer {
         frame_id_(0),
         slots_per_client_(slots_per_client),
         retransmit_timer_(io),
-        heartbeat_timer_(io) {
+// 2026-09-13: initialize fixed future input admission.
+//         heartbeat_timer_(io) {
+        heartbeat_timer_(io),
+// 2026-09-13: retain selected protocol for the lifetime of this authority.
+//         pending_inputs_(left_agents + right_agents) {
+        // 2026-09-14: preserve the selected simulation cadence for disconnected slots.
+//         pending_inputs_(left_agents + right_agents), native_product_(native_product) {
+        pending_inputs_(left_agents + right_agents), native_product_(native_product),
+        bots_(native_product ? frame_sync::NativeMatchContract::kHz : kFrameRateHz) {
+    // 2026-09-09: each retained peer owns at least one of these bounded slots.
+    // Validate before allocating inputs or scheduling network callbacks.
+    if (left_agents_ > 11 || right_agents_ > 11)
+      throw std::invalid_argument("Each UDP team supports at most 11 controlled slots");
+// 2026-09-13: reject invalid reservations before scheduling callbacks.
+//     frame_sync::CheckedControlledSlots(num_slots_);
+    frame_sync::CheckedControlledSlots(num_slots_);
+    if (slots_per_client < 0 || slots_per_client > 22)
+      throw std::invalid_argument("Invalid UDP slots per client");
     for (size_t i = 0; i < num_slots_; ++i)
       current_inputs_.push_back(frame_sync::SlotInput::Default());
     do_receive();
@@ -259,13 +290,18 @@ class EngineFrameSyncServer {
     do_heartbeat_timer();
   }
 
-  bool all_ready() const {
+// 2026-09-13: freeze product admissions under the same lock as readiness.
+//   bool all_ready() const {
+  bool all_ready() {
     std::lock_guard<std::mutex> lock(mu_);
     auto connected = std::ranges::count_if(clients_,
         [](const auto& p) { return !p.second->disconnected; });
     if (connected == 0) return false;
     auto ready = std::ranges::count_if(clients_,
         [](const auto& p) { return !p.second->disconnected && p.second->ready; });
+// 2026-09-13: prevent a late join between the ready barrier and frame zero.
+//     return ready == connected;
+    if (ready==connected && native_product_) match_started_=true;
     return ready == connected;
   }
 
@@ -276,33 +312,69 @@ class EngineFrameSyncServer {
     }
     if (!running_) return;
 
-    std::println("All clients ready, starting frame loop at {} Hz", kFrameRateHz);
+// 2026-09-13: report the actual selected authority cadence.
+//     std::println("All clients ready, starting frame loop at {} Hz", kFrameRateHz);
+    std::println("All clients ready, starting frame loop at {} Hz",
+                 native_product_ ? frame_sync::NativeMatchContract::kHz : kFrameRateHz);
 
+// 2026-09-13: anchor collection to absolute deadlines.
+//     auto wall_start = std::chrono::steady_clock::now();
     auto wall_start = std::chrono::steady_clock::now();
+    frame_sync::NativeFrameDeadline product_deadline(wall_start);
     while (running_) {
       auto deadline = std::chrono::steady_clock::now() +
           std::chrono::milliseconds(kFrameTimeoutMs);
-      {
-        std::lock_guard<std::mutex> lock(mu_);
-        received_from_.clear();
-        for (size_t i = 0; i < num_slots_; ++i)
-          current_inputs_[i] = frame_sync::SlotInput::Default();
-      }
-      // Wait for inputs (with timeout)
-      while (std::chrono::steady_clock::now() < deadline) {
+// 2026-09-13: future inputs remain retained until the matching authority frame is sealed.
+//       {
+//         std::lock_guard<std::mutex> lock(mu_);
+//         received_from_.clear();
+//         for (size_t i = 0; i < num_slots_; ++i)
+//           current_inputs_[i] = frame_sync::SlotInput::Default();
+//       }
+
+// 2026-09-13: remove readiness-dependent cadence and the extra post-step delay.
+//       // Wait for inputs (with timeout)
+//       while (std::chrono::steady_clock::now() < deadline) {
+      // Product collection always remains open until its fixed cutoff.
+      if (native_product_) std::this_thread::sleep_until(product_deadline.deadline());
+      while (!native_product_ && std::chrono::steady_clock::now() < deadline) {
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
         std::lock_guard<std::mutex> lock(mu_);
-        auto connected = std::ranges::count_if(clients_,
-            [](const auto& p) { return !p.second->disconnected; });
-        if (connected == 0) break;
-        if (static_cast<int>(received_from_.size()) >= connected) break;
+// 2026-09-13: readiness requires each active owned slot in the current frame, including queued early inputs.
+//         auto connected = std::ranges::count_if(clients_,
+//             [](const auto& p) { return !p.second->disconnected; });
+//         if (connected == 0) break;
+//         if (static_cast<int>(received_from_.size()) >= connected) break;
+        const bool ready = std::ranges::all_of(clients_, [this](const auto& p) {
+          if (p.second->disconnected || !p.second->ready) return true;
+          return std::ranges::all_of(p.second->assigned_slots,
+              [this](uint16_t slot) { return pending_inputs_.Has(slot); });
+        });
+        if (ready) break;
       }
 
+// 2026-09-13: a stop during collection cannot execute another simulation step.
+//       // ===== Engine integration: apply inputs and step =====
+      if (!running_) break;
       // ===== Engine integration: apply inputs and step =====
       std::vector<frame_sync::SlotInput> inputs;
       {
         std::lock_guard<std::mutex> lock(mu_);
+// 2026-09-13: freeze once before stepping; later packets cannot rewrite this authority frame.
+//         inputs = current_inputs_;
+// 2026-09-14: only the frame owner changes AI state; IO callbacks mark peer state.
+//         pending_inputs_.Consume(current_inputs_);
+//         inputs = current_inputs_;
+        reconcile_bots_locked();
+        pending_inputs_.Consume(current_inputs_);
         inputs = current_inputs_;
+      }
+      const auto bot_slots = bots_.GetBotSlots();
+      if (!bot_slots.empty()) {
+        if (!g_env) throw std::logic_error("UDP takeover requires its engine");
+        const auto snapshot = frame_sync::MakeGameEnvBotObserver(
+            g_env, left_agents_, right_agents_)();
+        for (auto slot : bot_slots) inputs.at(slot) = bots_.GenerateInput(slot, snapshot);
       }
       if (g_env) {
         auto frame_buf = build_frame_input_buffer(inputs);
@@ -310,7 +382,9 @@ class EngineFrameSyncServer {
       }
 
       // Broadcast authoritative frame
-      broadcast_authoritative_frame();
+// 2026-09-14: broadcast exactly the frozen input passed to StepWithInput.
+//       broadcast_authoritative_frame();
+      broadcast_authoritative_frame(inputs);
 
       // State hash every K frames
       if (kStateHashIntervalK > 0 && frame_id_ % kStateHashIntervalK == 0 && g_env) {
@@ -321,7 +395,12 @@ class EngineFrameSyncServer {
         broadcast_state_hash(frame_id_, hash);
       }
 
-      ++frame_id_;
+// 2026-09-13: synchronize frame publication with heartbeat reads.
+//       ++frame_id_;
+      {
+        std::lock_guard<std::mutex> lock(mu_);
+        ++frame_id_;
+      }
 
       // Diagnostics every 100 frames
       if (frame_id_ % 100 == 0) {
@@ -331,14 +410,57 @@ class EngineFrameSyncServer {
         std::println("[frame {:6d}] SPS: {:.1f}", frame_id_, sps);
       }
 
-      std::this_thread::sleep_for(
-          std::chrono::milliseconds(1000 / kFrameRateHz));
+// 2026-09-13: advance the fixed grid after engine work without a second collection delay.
+//       std::this_thread::sleep_for(
+//           std::chrono::milliseconds(1000 / kFrameRateHz));
+      if (native_product_) product_deadline.Advance(std::chrono::steady_clock::now());
+      else std::this_thread::sleep_for(std::chrono::milliseconds(1000 / kFrameRateHz));
     }
   }
 
   void stop() { running_ = false; }
 
  private:
+  // 2026-09-14: reserved disconnected slots are eligible; never assigned slots stay neutral.
+  // Called only by the simulation owner, with mu_ held.
+  void reconcile_bots_locked() {
+    std::array<bool, frame_sync::kMaxControlledSlots> reserved{};
+    for (const auto& peer : clients_) {
+      if (!peer.second->disconnected) continue;
+      for (auto slot : peer.second->assigned_slots) reserved.at(slot) = true;
+    }
+    for (uint16_t slot = 0; slot < num_slots_; ++slot) {
+      if (!reserved[slot] || bots_.IsBotControlled(slot)) continue;
+      bots_.Takeover(slot, slot < left_agents_ ? 0 : 1);
+      std::array<uint8_t, frame_sync::TAKEOVER_NOTIFY_BYTES> bytes;
+      const auto length = frame_sync::PackTakeoverNotify(
+          slot, frame_id_, bytes.data(), bytes.size());
+      for (const auto& peer : clients_)
+        if (peer.second->ready && !peer.second->disconnected)
+          send_locked(peer.second.get(), bytes.data(), length);
+    }
+  }
+
+  // mu_ is held by the caller; channel callbacks run outside its own mutex.
+  void disconnect_locked(ClientSessionUDP* client) {
+    if (client->disconnected) return;
+    client->disconnected = true;
+// 2026-09-13: disconnect purges all queued inputs for the departing owner.
+//     client->ready = false;
+    client->ready = false;
+    for (auto slot : client->assigned_slots) pending_inputs_.RemoveSlot(slot);
+    if (client->channel) client->channel->Close();
+    std::vector<uint8_t>().swap(client->recv_buf);
+    // Assigned slots remain reserved for this match; reconnect is a new session.
+  }
+  void send_locked(ClientSessionUDP* client, const void* data, size_t length) {
+    if (client->disconnected || !client->channel) return;
+    if (!length || !client->channel->Send(data, length)) {
+      std::println(stderr, "UDP peer {}:{} disconnected: reliable send failed",
+                   client->endpoint.address().to_string(), client->endpoint.port());
+      disconnect_locked(client);
+    }
+  }
   void do_receive() {
     if (!running_) return;
     auto buf = std::make_shared<std::vector<uint8_t>>(4096);
@@ -347,9 +469,33 @@ class EngineFrameSyncServer {
         asio::buffer(*buf), *sender,
         [this, buf, sender](boost::system::error_code ec, std::size_t length) {
           if (ec) { do_receive(); return; }
-          std::shared_ptr<ClientSessionUDP> client = get_or_create_client(*sender);
-          if (client && client->channel)
-            client->channel->HandleReceived(buf->data(), length);
+// 2026-09-13: admit an endpoint only after an exact native family/cadence hello.
+//           std::shared_ptr<ClientSessionUDP> client = get_or_create_client(*sender);
+          std::shared_ptr<ClientSessionUDP> client;
+          if (native_product_) {
+            const bool hello = frame_sync::NativeMatchContract::IsHello({buf->data(),length});
+            {
+              std::lock_guard<std::mutex> lock(mu_);
+              auto found=clients_.find(*sender);
+              if (found!=clients_.end()) client=found->second;
+            }
+            // Unknown datagrams never reserve slots; bootstrap is outside reliability framing.
+            if (hello) {
+// 2026-09-13: a failed pregame peer may restart bootstrap after its slot is reclaimed.
+//               if (!client) client=get_or_create_client(*sender);
+              client=get_or_create_client(*sender);
+              do_receive(); return;
+            }
+            if (!client) { do_receive(); return; }
+          } else client=get_or_create_client(*sender);
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // if (client && client->channel)
+  // client->channel->HandleReceived(buf->data(), length);
+          if (client && client->channel &&
+              !client->channel->HandleReceived(buf->data(), length)) {
+            std::lock_guard<std::mutex> lock(mu_);
+            disconnect_locked(client.get());
+          }
           do_receive();
         });
   }
@@ -359,9 +505,12 @@ class EngineFrameSyncServer {
     retransmit_timer_.async_wait([this](boost::system::error_code ec) {
       if (ec || !running_) return;
       std::lock_guard<std::mutex> lock(mu_);
-      for (auto& p : clients_)
-        if (p.second->channel)
-          p.second->channel->TickRetransmit();
+      for (auto&& p : clients_)
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // if (p.second->channel)
+  // p.second->channel->TickRetransmit();
+        if (!p.second->disconnected && p.second->channel &&
+            !p.second->channel->TickRetransmit()) disconnect_locked(p.second.get());
       do_retransmit_timer();
     });
   }
@@ -378,39 +527,72 @@ class EngineFrameSyncServer {
 
   void broadcast_heartbeat() {
     uint8_t buf[frame_sync::HEARTBEAT_PACKET_BYTES];
+// 2026-09-13: read the logical heartbeat frame under the same mutex as advancement.
+//     size_t n = frame_sync::PackHeartbeat(frame_id_, 
+//         static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
+//             std::chrono::steady_clock::now().time_since_epoch()).count()),
+//         buf, sizeof(buf));
+//     std::lock_guard<std::mutex> lock(mu_);
+    std::lock_guard<std::mutex> lock(mu_);
     size_t n = frame_sync::PackHeartbeat(frame_id_, 
         static_cast<uint32_t>(std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::steady_clock::now().time_since_epoch()).count()),
         buf, sizeof(buf));
-    std::lock_guard<std::mutex> lock(mu_);
-    for (auto& p : clients_) {
-      if (p.second->disconnected || !p.second->channel) continue;
-      p.second->channel->Send(buf, n);
+    for (auto&& p : clients_) {
+      // 2026-09-09: unready clients are loading and cannot ACK gameplay heartbeats.
+      // if (p.second->disconnected || !p.second->channel) continue;
+      if (p.second->disconnected || !p.second->ready || !p.second->channel) continue;
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // p.second->channel->Send(buf, n);
+      send_locked(p.second.get(), buf, n);
     }
   }
 
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // void check_client_timeouts() {
+  // auto now = std::chrono::steady_clock::now();
   void check_client_timeouts() {
+    std::lock_guard<std::mutex> lock(mu_);
     auto now = std::chrono::steady_clock::now();
-    for (auto& p : clients_) {
+    for (auto&& p : clients_) {
       if (p.second->disconnected) continue;
       auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(
           now - p.second->last_heartbeat).count();
-      if (elapsed > frame_sync::HEARTBEAT_MISS_LIMIT * frame_sync::HEARTBEAT_INTERVAL_MS / 1000) {
+      // 2026-09-09: bounded load reservation; active matches retain the normal heartbeat deadline.
+      // if (elapsed > frame_sync::HEARTBEAT_MISS_LIMIT * frame_sync::HEARTBEAT_INTERVAL_MS / 1000) {
+      const auto deadline_seconds = p.second->ready ?
+          frame_sync::HEARTBEAT_MISS_LIMIT * frame_sync::HEARTBEAT_INTERVAL_MS / 1000 : 30;
+      if (elapsed > deadline_seconds) {
         std::println("Client {}:{} timed out (no heartbeat for {}s)",
                      p.first.address().to_string(), p.first.port(), elapsed);
-        p.second->disconnected = true;
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // p.second->disconnected = true;
+        disconnect_locked(p.second.get());
       }
     }
   }
 
+// 2026-09-13: failed pregame reservations must not deny subsequent valid players.
+//   std::shared_ptr<ClientSessionUDP> get_or_create_client(const udp::endpoint& sender) {
+//     std::lock_guard<std::mutex> lock(mu_);
   std::shared_ptr<ClientSessionUDP> get_or_create_client(const udp::endpoint& sender) {
     std::lock_guard<std::mutex> lock(mu_);
+    if (native_product_ && !match_started_)
+      std::erase_if(clients_,[](const auto& peer) { return peer.second->disconnected; });
     auto it = clients_.find(sender);
     if (it != clients_.end()) {
-      it->second->last_heartbeat = std::chrono::steady_clock::now();
-      it->second->missed_heartbeats = 0;
+// 2026-09-13: repeated raw native hello is not an authenticated active heartbeat.
+//       it->second->last_heartbeat = std::chrono::steady_clock::now();
+//       it->second->missed_heartbeats = 0;
+      if (!native_product_) {
+        it->second->last_heartbeat = std::chrono::steady_clock::now();
+        it->second->missed_heartbeats = 0;
+      }
       return it->second;
     }
+// 2026-09-13: an authority without snapshot bootstrap cannot admit late native joiners.
+//     auto client = std::make_shared<ClientSessionUDP>();
+    if (native_product_ && match_started_) return nullptr;
     auto client = std::make_shared<ClientSessionUDP>();
     client->endpoint = sender;
     client->last_heartbeat = std::chrono::steady_clock::now();
@@ -433,9 +615,18 @@ class EngineFrameSyncServer {
         socket_, sender,
         [this, w](const uint8_t* d, size_t n) {
           auto c = w.lock();
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // if (!c) return;
+  // std::lock_guard<std::mutex> lock(mu_);
           if (!c) return;
           std::lock_guard<std::mutex> lock(mu_);
-          c->recv_buf.insert(c->recv_buf.end(), d, d + n);
+          if (c->disconnected) return;
+  // 2026-09-09: validate before allocation and stop on invalid/overloaded input.
+  // c->recv_buf.insert(c->recv_buf.end(), d, d + n);
+          if (!frame_sync::AppendBoundedBytes(c->recv_buf, d, n, 4096)) {
+            disconnect_locked(c.get());
+            return;
+          }
           while (process_one_message(c)) {}
         });
     clients_[sender] = client;
@@ -452,10 +643,18 @@ class EngineFrameSyncServer {
     return client;
   }
 
+// 2026-09-13: send the complete simulation identity before slot assignment.
+//   void send_session_start(ClientSessionUDP* client) {
   void send_session_start(ClientSessionUDP* client) {
+    if (native_product_) {
+      const auto packet=frame_sync::NativeMatchContract(seed_,left_agents_,right_agents_).Packet();
+      send_locked(client,packet.data(),packet.size()); return;
+    }
     uint8_t buf[32];
     size_t n = frame_sync::PackSessionStart(seed_, left_agents_, right_agents_, buf, sizeof(buf));
-    client->channel->Send(buf, n);
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // client->channel->Send(buf, n);
+    send_locked(client, buf, n);
   }
 
   void send_slot_assignment(ClientSessionUDP* client) {
@@ -463,23 +662,29 @@ class EngineFrameSyncServer {
     size_t n = frame_sync::PackSlotAssignment(
         client->assigned_slots.data(),
         static_cast<uint16_t>(client->assigned_slots.size()), buf, sizeof(buf));
-    client->channel->Send(buf, n);
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // client->channel->Send(buf, n);
+    send_locked(client, buf, n);
   }
 
-  void broadcast_authoritative_frame() {
-    std::vector<frame_sync::SlotInput> inputs;
-    {
-      std::lock_guard<std::mutex> lock(mu_);
-      inputs = current_inputs_;
-    }
+// 2026-09-14: callers provide the immutable input used by this simulation step.
+//   void broadcast_authoritative_frame() {
+//     std::vector<frame_sync::SlotInput> inputs;
+//     {
+//       std::lock_guard<std::mutex> lock(mu_);
+//       inputs = current_inputs_;
+//     }
+  void broadcast_authoritative_frame(std::span<const frame_sync::SlotInput> inputs) {
     std::vector<uint8_t> buf(1024);
     size_t n = frame_sync::PackAuthoritativeFrame(
         frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
         buf.data(), buf.size());
     std::lock_guard<std::mutex> lock(mu_);
-    for (auto& p : clients_) {
+    for (auto&& p : clients_) {
       if (p.second->disconnected || !p.second->channel) continue;
-      p.second->channel->Send(buf.data(), n);
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // p.second->channel->Send(buf.data(), n);
+      send_locked(p.second.get(), buf.data(), n);
     }
   }
 
@@ -487,15 +692,39 @@ class EngineFrameSyncServer {
     uint8_t buf[frame_sync::STATE_HASH_PACK_BYTES];
     size_t n = frame_sync::PackStateHash(fid, hash, buf, sizeof(buf));
     std::lock_guard<std::mutex> lock(mu_);
-    for (auto& p : clients_) {
+    for (auto&& p : clients_) {
       if (p.second->disconnected || !p.second->channel) continue;
-      p.second->channel->Send(buf, n);
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // p.second->channel->Send(buf, n);
+      send_locked(p.second.get(), buf, n);
     }
   }
 
   bool process_one_message(std::shared_ptr<ClientSessionUDP> client) {
     if (client->recv_buf.empty()) return false;
+// 2026-09-13: readiness echoes the initialized contract; legacy negotiation cannot downgrade it.
+//     uint8_t type = client->recv_buf[0];
     uint8_t type = client->recv_buf[0];
+    if (native_product_) {
+      using Contract=frame_sync::NativeMatchContract;
+      if (type==Contract::kReady) {
+        if (client->ready) { disconnect_locked(client.get()); return false; }
+        if (client->recv_buf.size()<Contract::kSessionBytes) return false;
+        Contract received;
+        if (!Contract::Decode({client->recv_buf.data(),Contract::kSessionBytes},Contract::kReady,received) ||
+            received!=Contract(seed_,left_agents_,right_agents_)) {
+          disconnect_locked(client.get()); return false;
+        }
+        client->ready=true;
+        client->last_heartbeat=std::chrono::steady_clock::now();
+        client->recv_buf.erase(client->recv_buf.begin(),client->recv_buf.begin()+Contract::kSessionBytes);
+        return true;
+      }
+      if (type==std::to_underlying(frame_sync::MessageType::Ready) ||
+          type==std::to_underlying(frame_sync::MessageType::VersionNegotiate)) {
+        disconnect_locked(client.get()); return false;
+      }
+    }
     
     // Handle VersionNegotiate
     if (type == std::to_underlying(frame_sync::MessageType::VersionNegotiate)) {
@@ -503,7 +732,9 @@ class EngineFrameSyncServer {
       frame_sync::version_negotiate_t ver;
       size_t used = frame_sync::UnpackVersionNegotiate(
           client->recv_buf.data(), client->recv_buf.size(), &ver);
-      if (used == 0) return false;
+  // 2026-09-09: validate before allocation and stop on invalid/overloaded input.
+  // if (used == 0) return false;
+      if (used == 0) { disconnect_locked(client.get()); return false; }
       std::println("Client version: {} (min: {})", ver.version, ver.min_version);
       client->version_negotiated = true;
       client->recv_buf.erase(client->recv_buf.begin(),
@@ -517,7 +748,9 @@ class EngineFrameSyncServer {
       frame_sync::heartbeat_t hb;
       size_t used = frame_sync::UnpackHeartbeat(
           client->recv_buf.data(), client->recv_buf.size(), &hb);
-      if (used == 0) return false;
+  // 2026-09-09: validate before allocation and stop on invalid/overloaded input.
+  // if (used == 0) return false;
+      if (used == 0) { disconnect_locked(client.get()); return false; }
       client->last_heartbeat = std::chrono::steady_clock::now();
       client->missed_heartbeats = 0;
       client->recv_buf.erase(client->recv_buf.begin(),
@@ -543,28 +776,54 @@ class EngineFrameSyncServer {
       if (client->recv_buf.size() < 7u) return false;
       uint16_t num_slots;
       memcpy(&num_slots, client->recv_buf.data() + 5, 2);
+  // 2026-09-09: validate before allocation and stop on invalid/overloaded input.
+  // size_t need = 7 + num_slots * (2 + frame_sync::SLOT_INPUT_BYTES);
+      if (num_slots == 0 || num_slots > frame_sync::kMaxControlledSlots ||
+          num_slots > client->assigned_slots.size()) {
+        disconnect_locked(client.get());
+        return false;
+      }
       size_t need = 7 + num_slots * (2 + frame_sync::SLOT_INPUT_BYTES);
       if (client->recv_buf.size() < need) return false;
       frame_sync::frame_id_t fid;
       std::vector<std::pair<uint16_t, frame_sync::SlotInput>> entries;
       size_t used = frame_sync::UnpackClientFrameInput(
           client->recv_buf.data(), client->recv_buf.size(), &fid, &entries);
-      if (used == 0) return false;
-      if (fid == frame_id_) {
-        for (const auto& e : entries) {
-          // 2026-08-31 ms-1.5: 槽位索引边界检查 + 所有权检查 + 输入合法性验证
-          if (e.first < num_slots_ &&
-              std::find(client->assigned_slots.begin(), client->assigned_slots.end(), e.first) != client->assigned_slots.end() &&
-              frame_sync::IsValidSlotInput(e.second)) {
-            current_inputs_[e.first] = e.second;
-          }
-        }
-        received_from_.insert(client.get());
+  // 2026-09-09: validate before allocation and stop on invalid/overloaded input.
+  // if (used == 0) return false;
+      if (used == 0) { disconnect_locked(client.get()); return false; }
+// 2026-09-13: validate ownership atomically and retain valid future inputs instead of discarding them.
+//       if (fid == frame_id_) {
+//         for (const auto& e : entries) {
+//           // 2026-08-31 ms-1.5: 槽位索引边界检查 + 所有权检查 + 输入合法性验证
+//           if (e.first < num_slots_ &&
+//               std::find(client->assigned_slots.begin(), client->assigned_slots.end(), e.first) != client->assigned_slots.end() &&
+//               frame_sync::IsValidSlotInput(e.second)) {
+//             current_inputs_[e.first] = e.second;
+//           }
+//         }
+//         received_from_.insert(client.get());
+//       }
+      if (!client->ready || std::ranges::any_of(entries, [&](const auto& entry) {
+            return std::ranges::find(client->assigned_slots, entry.first) == client->assigned_slots.end();
+          })) {
+        disconnect_locked(client.get()); return false;
+      }
+      const auto admission = pending_inputs_.Receive(fid, entries);
+      if (admission == frame_sync::InputAdmission::Invalid ||
+          admission == frame_sync::InputAdmission::Conflict) {
+        disconnect_locked(client.get()); return false;
       }
       client->recv_buf.erase(client->recv_buf.begin(),
                              client->recv_buf.begin() + used);
       return true;
     }
+// 2026-09-13: fail an unknown native message instead of retaining an undecodable stream.
+//     return false;
+//   }
+// 
+//   asio::io_context& io_;
+    if (native_product_) disconnect_locked(client.get());
     return false;
   }
 
@@ -581,57 +840,114 @@ class EngineFrameSyncServer {
   frame_sync::frame_id_t frame_id_;
   int slots_per_client_;
   std::vector<frame_sync::SlotInput> current_inputs_;
-  std::flat_set<ClientSessionUDP*> received_from_;
+// 2026-09-13: bounded per-frame slot readiness survives arrival before the collection interval.
+//   std::flat_set<ClientSessionUDP*> received_from_;
+  frame_sync::ServerInputWindow pending_inputs_;
+// 2026-09-13: the roster state is protected by mu_; protocol selection is immutable.
+//   std::atomic<bool> running_{true};
   std::atomic<bool> running_{true};
+  const bool native_product_;
+  bool match_started_ = false;
+  // 2026-09-14: owned and mutated exclusively by run_frame_loop.
+  frame_sync::BotTakeoverManager bots_;
 };
 
+// 2026-09-13: own the engine and network lifetime; native UDP exits cleanly on signals or exceptions.
+// int main(int argc, char* argv[]) {
+//   unsigned short port = kDefaultPort;
+//   uint16_t left = 1, right = 1;
+//   uint32_t seed = 42;
+//   int slots_per_client = 0;  // 0 = all available slots
+//   if (argc >= 2) port = static_cast<unsigned short>(std::stoi(argv[1]));
+//   if (argc >= 4) {
+//     left = static_cast<uint16_t>(std::stoi(argv[2]));
+//     right = static_cast<uint16_t>(std::stoi(argv[3]));
+//   }
+//   if (argc >= 5) seed = static_cast<uint32_t>(std::stoul(argv[4]));
+//   if (argc >= 6) slots_per_client = std::stoi(argv[5]);
+// 
+//   try {
+//     // Initialize engine (headless, before server so IO context isn't blocking)
+//     {
+//       std::println("Initializing GameEnv (headless, {}v{}, seed={}, slots_per_client={})...",
+//                    left, right, seed, slots_per_client);
+//       g_env = new GameEnv();
+//       g_env->game_config.render = false;
+//       g_env->game_config.physics_steps_per_frame = 10;
+//       g_env->game_config.render_resolution_x = 1280;
+//       g_env->game_config.render_resolution_y = 720;
+//       auto sc = frame_sync::MakeDefaultScenario(left, right, seed);
+//       g_env->start_game(*sc);
+//       g_env->state = GameState::game_running;
+//       std::println("GameEnv ready.");
+//     }
+// 
+//     asio::io_context ioc;
+//     EngineFrameSyncServer server(ioc, port, left, right, seed, slots_per_client);
+//     std::thread io_thread([&ioc]() { ioc.run(); });
+//     std::println("Engine frame sync server (reliable UDP) on port {}", port);
+//     server.run_frame_loop();
+//     server.stop();
+//     ioc.stop();
+//     if (io_thread.joinable()) io_thread.join();
+// 
+//     // Cleanup
+//     if (g_env) {
+//       delete g_env;
+//       g_env = nullptr;
+//     }
+//     return 0;
+//   } catch (const std::exception& e) {
+//     std::cerr << "Error: " << e.what() << std::endl;
+//     if (g_env) { delete g_env; g_env = nullptr; }
+//     return 1;
+//   }
+// }
 int main(int argc, char* argv[]) {
-  unsigned short port = kDefaultPort;
-  uint16_t left = 1, right = 1;
-  uint32_t seed = 42;
-  int slots_per_client = 0;  // 0 = all available slots
-  if (argc >= 2) port = static_cast<unsigned short>(std::stoi(argv[1]));
-  if (argc >= 4) {
-    left = static_cast<uint16_t>(std::stoi(argv[2]));
-    right = static_cast<uint16_t>(std::stoi(argv[3]));
-  }
-  if (argc >= 5) seed = static_cast<uint32_t>(std::stoul(argv[4]));
-  if (argc >= 6) slots_per_client = std::stoi(argv[5]);
-
   try {
-    // Initialize engine (headless, before server so IO context isn't blocking)
-    {
-      std::println("Initializing GameEnv (headless, {}v{}, seed={}, slots_per_client={})...",
-                   left, right, seed, slots_per_client);
-      g_env = new GameEnv();
-      g_env->game_config.render = false;
-      g_env->game_config.physics_steps_per_frame = 10;
-      g_env->game_config.render_resolution_x = 1280;
-      g_env->game_config.render_resolution_y = 720;
-      auto sc = make_scenario_config(left, right, seed, "");
-      g_env->start_game(*sc);
-      g_env->state = GameState::game_running;
-      std::println("GameEnv ready.");
-    }
-
+    auto number=[](const char* raw,uint64_t maximum) {
+      const std::string_view text(raw); uint64_t value=0;
+      const auto result=std::from_chars(text.data(),text.data()+text.size(),value);
+      if (result.ec!=std::errc{} || result.ptr!=text.data()+text.size() || value>maximum)
+        throw std::invalid_argument("Invalid numeric argument");
+      return value;
+    };
+    if (argc!=1 && argc!=2 && argc!=4 && argc!=5 && argc!=6)
+      throw std::invalid_argument("usage: football_server [port [left right [seed [slots_per_client]]]]");
+    const auto port=static_cast<unsigned short>(argc>=2?number(argv[1],65535):kDefaultPort);
+    const auto left=static_cast<uint16_t>(argc>=4?number(argv[2],11):1);
+    const auto right=static_cast<uint16_t>(argc>=4?number(argv[3],11):1);
+    const auto seed=static_cast<uint32_t>(argc>=5?number(argv[4],UINT32_MAX):42);
+    const auto slots_per_client=static_cast<int>(argc>=6?number(argv[5],22):0);
+    if (!port) throw std::invalid_argument("Port must be positive");
+    const frame_sync::NativeMatchContract contract(seed,left,right);
+    std::setvbuf(stdout,nullptr,_IONBF,0);std::setvbuf(stderr,nullptr,_IONBF,0);
+    auto owned_env=std::make_unique<GameEnv>();
+    g_env=owned_env.get();
+    g_env->game_config.render=false;
+    g_env->game_config.physics_steps_per_frame=frame_sync::NativeMatchContract::kPhysicsSteps;
+    g_env->game_config.render_resolution_x=1280;g_env->game_config.render_resolution_y=720;
+    auto scenario=frame_sync::MakeNativeMatchScenario(contract);
+    g_env->start_game(*scenario);g_env->state=GameState::game_running;
     asio::io_context ioc;
-    EngineFrameSyncServer server(ioc, port, left, right, seed, slots_per_client);
-    std::thread io_thread([&ioc]() { ioc.run(); });
-    std::println("Engine frame sync server (reliable UDP) on port {}", port);
-    server.run_frame_loop();
-    server.stop();
-    ioc.stop();
-    if (io_thread.joinable()) io_thread.join();
-
-    // Cleanup
-    if (g_env) {
-      delete g_env;
-      g_env = nullptr;
-    }
+    EngineFrameSyncServer server(ioc,port,left,right,seed,slots_per_client,true);
+    asio::signal_set signals(ioc,SIGINT,SIGTERM);
+    signals.async_wait([&](boost::system::error_code ec,int) { if (!ec) server.stop(); });
+    std::exception_ptr network_error;
+    std::jthread network([&] {
+      try { ioc.run(); }
+      catch (...) { network_error=std::current_exception();server.stop(); }
+    });
+    std::println("Engine frame sync server (native reliable UDP, 50 Hz) on port {}",port);
+    try { server.run_frame_loop(); }
+    catch (...) { server.stop();ioc.stop();network.join();throw; }
+    server.stop();ioc.stop();network.join();
+    g_env=nullptr;
+    if (network_error) std::rethrow_exception(network_error);
     return 0;
-  } catch (const std::exception& e) {
-    std::cerr << "Error: " << e.what() << std::endl;
-    if (g_env) { delete g_env; g_env = nullptr; }
+  } catch (const std::exception& error) {
+    g_env=nullptr;
+    std::println(stderr,"Native UDP server failed: {}",error.what());
     return 1;
   }
 }

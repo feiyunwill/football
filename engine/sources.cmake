@@ -56,7 +56,10 @@ set(SYSTEMS_COMMON_HEADERS
    src/systems/isystemobject.hpp
 )
 
+# 2026-09-13: sample UI input at bounded render work opportunities.
+# set(SYSTEMS_GRAPHICS_HEADERS
 set(SYSTEMS_GRAPHICS_HEADERS
+   src/systems/graphics/render_service.hpp
    src/systems/graphics/graphics_task.hpp
    src/systems/graphics/graphics_scene.hpp
    src/systems/graphics/graphics_object.hpp
@@ -80,7 +83,10 @@ set(SYSTEMS_GRAPHICS_RENDERING_HEADERS
    src/systems/graphics/rendering/opengl_renderer3d.hpp
 )
 
+# 2026-09-13: sample UI input at bounded render work opportunities.
+# set(SYSTEMS_GRAPHICS_SOURCES
 set(SYSTEMS_GRAPHICS_SOURCES
+   src/systems/graphics/render_service.cpp
    src/systems/graphics/graphics_object.cpp
    src/systems/graphics/graphics_task.cpp
    src/systems/graphics/objects/graphics_geometry.cpp
@@ -234,18 +240,34 @@ set(BLUNTED_CORE_SOURCES
 
 ###### SEPARATION
 
+# 2026-09-09: separate the Python adapter and correct swapped header/source lists.
+# set(AI_HEADERS
+#   ai.cpp
+#   src/ai/ai_keyboard.hpp
+#   src/ai/ai_tactics.hpp
+#   src/game_env.cpp
+# )
+#
+# set(AI_SOURCES
+#   ai.hpp
+#   src/ai/ai_keyboard.cpp
+#   src/ai/ai_tactics.cpp
+#   src/game_env.hpp
+# )
+#
+set(PYTHON_BINDING_SOURCES ai.cpp)
+# 2026-09-09: native acceptance links the same engine as shipping executables.
+set(ENGINE_STATE_CONTRACT_SOURCES tests/engine_state_contract.cpp)
+set(ENGINE_LIFETIME_CONTRACT_SOURCES tests/engine_lifetime_contract.cpp)
 set(AI_HEADERS
-  ai.cpp
   src/ai/ai_keyboard.hpp
   src/ai/ai_tactics.hpp
-  src/game_env.cpp
+  src/game_env.hpp
 )
-
 set(AI_SOURCES
-  ai.hpp
   src/ai/ai_keyboard.cpp
   src/ai/ai_tactics.cpp
-  src/game_env.hpp
+  src/game_env.cpp
 )
 
 set(CLIENT_SOURCES
@@ -254,6 +276,11 @@ set(CLIENT_SOURCES
 )
 
 set(FRAME_SYNC_HEADERS
+   # 2026-09-09: shared reconciliation, hashing, and production lobby.
+   src/frame_sync/default_scenario.hpp
+   src/frame_sync/frame_simulation.hpp
+   src/frame_sync/state_hash.hpp
+   src/frame_sync/lobby_server.hpp
    src/frame_sync/protocol.hpp
    src/frame_sync/input_codec.hpp
    src/frame_sync/deterministic_prng.hpp
@@ -408,3 +435,134 @@ set(DATA_SOURCES
    src/data/playerdata.cpp
    src/data/teamdata.cpp
 )
+
+# 2026-09-09: snapshot version/integrity boundary.
+set(SNAPSHOT_CONTRACT_HEADERS src/base/snapshot_envelope.hpp)
+set(ENGINE_SIMULATION_CONTRACT_SOURCES tests/engine_simulation_contract.cpp)
+list(APPEND CORE_HEADERS ${SNAPSHOT_CONTRACT_HEADERS})
+
+# 2026-09-09: architecture acceptance and the production SDL event handler.
+set(ENGINE_ARCHITECTURE_CONTRACT_SOURCES tests/engine_architecture_contract.cpp)
+list(APPEND CORE_HEADERS src/frame_sync/standalone_controls.hpp)
+
+# 2026-09-09: repeatable real-engine performance measurements.
+set(ENGINE_MATCH_BENCHMARK_SOURCES tests/engine_match_benchmark.cpp)
+# 2026-09-13: fixed long-match sampling; preserve the immutable short fixture.
+set(ENGINE_SOAK_BENCHMARK_SOURCES tests/engine_soak_benchmark.cpp)
+set(ENGINE_HOTSPOT_PROFILE_SOURCES tests/engine_hotspot_profile.cpp)
+set(ENGINE_ANIMATION_QUERY_CONTRACT_SOURCES tests/engine_animation_query_contract.cpp)
+
+# 2026-09-13: frozen pre-optimization oracle is included by the native test.
+set(ENGINE_AI_REACHABILITY_CONTRACT_SOURCES tests/engine_ai_reachability_contract.cpp)
+set(ECS_QUERY_CONTRACT_TEST_SOURCES tests/ecs_query_contract_test.cpp)
+list(APPEND CORE_HEADERS src/frame_sync/memory_budget.hpp)
+set(MEMORY_BUDGET_TEST_SOURCES tests/memory_budget_test.cpp)
+set(RELIABLE_UDP_BUDGET_TEST_SOURCES tests/reliable_udp_budget_test.cpp)
+set(ENGINE_MEMORY_CONTRACT_SOURCES tests/engine_memory_contract.cpp)
+list(APPEND CORE_HEADERS src/frame_sync/bounded_tcp_writer.hpp
+  src/frame_sync/tcp_frame_server.hpp)
+set(BOUNDED_TCP_WRITER_TEST_SOURCES tests/bounded_tcp_writer_test.cpp)
+set(LOBBY_CAPACITY_TEST_SOURCES tests/lobby_capacity_test.cpp)
+set(LOBBY_CLIENT_CAPACITY_TEST_SOURCES tests/lobby_client_capacity_test.cpp)
+set(TCP_FRAME_SERVER_TEST_SOURCES tests/tcp_frame_server_test.cpp)
+
+# 2026-09-09: bounded integrated TCP server and real GameEnv bot observation bridge.
+list(APPEND CORE_HEADERS src/frame_sync/engine_tcp_server.hpp src/frame_sync/engine_tcp_bridge.hpp)
+set(ENGINE_TCP_CONTRACT_SOURCES tests/engine_tcp_contract.cpp)
+
+# 2026-09-09: actual bounded queue/render/log contracts.
+set(ENGINE_RUNTIME_CONTRACT_SOURCES tests/engine_runtime_contract.cpp)
+
+# 2026-09-09: shared bounded native TCP transport and whole-frame client.
+list(APPEND CORE_HEADERS src/frame_sync/tcp_client_transport.hpp src/frame_sync/tcp_frame_client.hpp)
+set(TCP_CLIENT_CAPACITY_TEST_SOURCES tests/tcp_client_capacity_test.cpp)
+set(ENGINE_TCP_CLIENT_CONTRACT_SOURCES tests/engine_tcp_client_contract.cpp)
+list(APPEND CORE_HEADERS src/frame_sync/reconnecting_client.hpp)
+
+# 2026-09-10: actual skeleton/card interpolation, appearance and snapshot isolation.
+set(ENGINE_RENDER_POSE_CONTRACT_SOURCES tests/engine_render_pose_contract.cpp)
+# 2026-09-13: actual RGB capture on/off, packing and state isolation.
+set(ENGINE_FRAME_CAPTURE_CONTRACT_SOURCES tests/engine_frame_capture_contract.cpp)
+
+# 2026-09-10: bounded native replay streaming and checked filesystem publication.
+list(APPEND CORE_HEADERS src/frame_sync/replay_file.hpp)
+set(REPLAY_FILE_TEST_SOURCES tests/replay_file_test.cpp)
+
+# 2026-09-13: shared native replay directory admission and crash recovery.
+list(APPEND CORE_HEADERS src/frame_sync/replay_directory.hpp)
+set(REPLAY_DIRECTORY_TEST_SOURCES tests/replay_directory_test.cpp)
+
+# 2026-09-13: permanent shared input, scheduling, presentation and authority regressions.
+set(ENGINE_NATIVE_INPUT_BUFFER_CONTRACT_SOURCES tests/engine_native_input_buffer_contract.cpp)
+set(ENGINE_NATIVE_INPUT_GAMEENV_CONTRACT_SOURCES tests/engine_native_input_gameenv_contract.cpp)
+set(ENGINE_NATIVE_INPUT_ADMISSION_CONTRACT_SOURCES tests/engine_native_input_admission_contract.cpp)
+set(ENGINE_NATIVE_PRESENTATION_CONTRACT_SOURCES tests/engine_native_presentation_contract.cpp)
+set(ENGINE_SERVER_INPUT_WINDOW_CONTRACT_SOURCES tests/engine_server_input_window_contract.cpp)
+set(ENGINE_NATIVE_CLOCK_REPLAY_CONTRACT_SOURCES tests/engine_native_clock_replay_contract.cpp)
+set(ENGINE_NATIVE_SDL_INPUT_CONTRACT_SOURCES tests/engine_native_sdl_input_contract.cpp)
+set(ENGINE_NATIVE_WINDOW_TRACE_SOURCES tests/engine_native_window_trace.cpp)
+
+# 2026-09-13: native product simulation and replay contract.
+set(ENGINE_NATIVE_MATCH_CONTRACT_SOURCES tests/engine_native_match_contract.cpp)
+list(APPEND CORE_HEADERS src/frame_sync/native_match_contract.hpp src/frame_sync/native_match_scenario.hpp src/frame_sync/native_match_replay.hpp)
+
+# 2026-09-13: publication before native engine work.
+list(APPEND CORE_HEADERS src/frame_sync/native_input_publication.hpp)
+
+# 2026-09-13: native transport ownership and concurrent sampled input contract.
+set(ENGINE_NATIVE_TRANSPORT_PUMP_CONTRACT_SOURCES tests/engine_native_transport_pump_contract.cpp)
+list(APPEND CORE_HEADERS src/frame_sync/native_shared_input.hpp src/frame_sync/native_transport_pump.hpp)
+
+# 2026-09-13: validate cooperative render service ownership and timing.
+set(ENGINE_RENDER_SERVICE_CONTRACT_SOURCES tests/engine_render_service_contract.cpp)
+
+# 2026-09-13: deterministic local input timeline and fixed-deadline contract.
+set(ENGINE_NATIVE_INPUT_TIMELINE_CONTRACT_SOURCES tests/engine_native_input_timeline_contract.cpp)
+list(APPEND CORE_HEADERS src/frame_sync/native_input_timeline.hpp)
+
+# 2026-09-13: main-thread UI service and synchronized local observation ownership.
+set(ENGINE_NATIVE_UI_OWNER_CONTRACT_SOURCES tests/engine_native_ui_owner_contract.cpp)
+list(APPEND CORE_HEADERS src/frame_sync/native_ui_owner.hpp src/frame_sync/native_shared_timeline.hpp)
+
+# 2026-09-13: independent native input cadence and its permanent contract.
+set(ENGINE_NATIVE_PUBLICATION_CLOCK_CONTRACT_SOURCES tests/engine_native_publication_clock_contract.cpp)
+list(APPEND CORE_HEADERS src/frame_sync/native_publication_clock.hpp)
+
+# 2026-09-13: real native AI takeover survives temporary player deselection.
+set(ENGINE_NATIVE_BOT_SELECTION_CONTRACT_SOURCES tests/engine_native_bot_selection_contract.cpp)
+
+# 2026-09-14: register the real GameEnv touch-decision regression.
+set(ENGINE_AI_TOUCH_CONTRACT_SOURCES tests/engine_ai_touch_contract.cpp)
+
+# 2026-09-14: shared tactical state, role decisions and real takeover replay.
+set(ENGINE_AI_TACTICS_CONTRACT_SOURCES tests/engine_ai_tactics_contract.cpp)
+set(ENGINE_AI_TACTICS_ROLES_CONTRACT_SOURCES tests/engine_ai_tactics_roles_contract.cpp)
+set(ENGINE_AI_TACTICAL_STATE_CONTRACT_SOURCES tests/engine_ai_tactical_state_contract.cpp)
+set(ENGINE_NATIVE_TACTICS_REPLAY_CONTRACT_SOURCES tests/engine_native_tactics_replay_contract.cpp)
+
+# 2026-09-14: native recovery credentials, explicit wire framing and bounded snapshot transfer.
+list(APPEND CORE_HEADERS
+  src/frame_sync/native_recovery_credentials.hpp
+  src/frame_sync/native_recovery_wire.hpp
+  src/frame_sync/native_recovery_transfer.hpp)
+set(ENGINE_NATIVE_RECOVERY_TCP_CONTRACT_SOURCES tests/engine_native_recovery_tcp_contract.cpp)
+set(FOOTBALL_NATIVE_RECOVERY_SOURCES src/frame_sync/native_recovery_digest.cpp)
+
+# 2026-09-15: register the owned resource-loading callback in the shared engine.
+list(APPEND CORE_SOURCES src/game_load.cpp)
+list(APPEND CORE_HEADERS src/game_load.hpp
+  src/frame_sync/native_recovery_replay.hpp
+  src/frame_sync/native_sdl_thread_state.hpp)
+set(ENGINE_LOADING_CONTRACT_TARGETS
+  engine_prepared_lifecycle_contract
+  engine_tracker_owner_contract
+  engine_loading_cancellation_contract
+  engine_loading_seat_contract
+  engine_loading_tcp_contract
+  engine_loading_client_drain_contract)
+
+# 2026-09-22: native asset parser bounds and ownership regression.
+set(ENGINE_ASE_PARSER_CONTRACT_SOURCES tests/engine_ase_parser_contract.cpp)
+
+# 2026-09-22: bounded resource reads preserve legacy file semantics.
+set(ENGINE_FILE_READ_CONTRACT_SOURCES tests/engine_file_read_contract.cpp)

@@ -69,37 +69,39 @@ void PauseMenuPage::UpdateSelection() {
   }
 }
 
-void PauseMenuPage::HandleInput() {
-  DO_VALIDATION;
-
-  // Check for keyboard input
-  if (windowManager->GetButtonPressed(0, 0)) {  // Up
-    selectedItem--;
-    if (selectedItem < 0) selectedItem = menuItems.size() - 1;
-    UpdateSelection();
-  }
-
-  if (windowManager->GetButtonPressed(0, 1)) {  // Down
-    selectedItem++;
-    if (selectedItem >= static_cast<int>(menuItems.size())) selectedItem = 0;
-    UpdateSelection();
-  }
-
-  if (windowManager->GetButtonPressed(0, 2)) {  // Confirm (Enter/A)
-    switch (selectedItem) {
-      case 0:  // Resume
-        // TODO: Resume game
-        break;
-      case 1:  // Settings
-        // TODO: Open settings
-        break;
-      case 2:  // Exit Match
-        // TODO: Exit match and go to main menu
-        break;
-    }
-  }
-
-  if (windowManager->GetButtonPressed(0, 3)) {  // Back (Escape/B)
-    // TODO: Resume game
-  }
-}
+// 2026-09-09: archive unused handler calling a nonexistent GUI API.
+// These pages still require a real event/navigation implementation.
+// void PauseMenuPage::HandleInput() {
+//   DO_VALIDATION;
+//
+//   // Check for keyboard input
+//   if (windowManager->GetButtonPressed(0, 0)) {  // Up
+//     selectedItem--;
+//     if (selectedItem < 0) selectedItem = menuItems.size() - 1;
+//     UpdateSelection();
+//   }
+//
+//   if (windowManager->GetButtonPressed(0, 1)) {  // Down
+//     selectedItem++;
+//     if (selectedItem >= static_cast<int>(menuItems.size())) selectedItem = 0;
+//     UpdateSelection();
+//   }
+//
+//   if (windowManager->GetButtonPressed(0, 2)) {  // Confirm (Enter/A)
+//     switch (selectedItem) {
+//       case 0:  // Resume
+//         // TODO: Resume game
+//         break;
+//       case 1:  // Settings
+//         // TODO: Open settings
+//         break;
+//       case 2:  // Exit Match
+//         // TODO: Exit match and go to main menu
+//         break;
+//     }
+//   }
+//
+//   if (windowManager->GetButtonPressed(0, 3)) {  // Back (Escape/B)
+//     // TODO: Resume game
+//   }
+// }

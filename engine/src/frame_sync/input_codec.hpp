@@ -34,8 +34,12 @@ size_t EncodeFrameInput(const std::vector<AIControlledKeyboard*>& controllers,
                         size_t buffer_size);
 
 // Decodes one frame's input from the protocol buffer and applies to the engine controllers.
+// 2026-09-09: exactly one frame, validated before any controller mutation.
 // Same slot order as EncodeFrameInput. Buffer must contain at least
 // num_slots * SLOT_INPUT_BYTES. Caller should call ResetNotSticky() on controllers after step.
+// Buffer must contain exactly num_slots * SLOT_INPUT_BYTES. Invalid layout,
+// null buffers, nonfinite/out-of-range directions and unknown button bits throw
+// invalid_argument. A rejected frame changes no controller state.
 void DecodeAndApplyFrameInput(const void* buffer,
                               size_t buffer_size,
                               std::vector<AIControlledKeyboard*>& controllers,

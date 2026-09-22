@@ -1,0 +1,1626 @@
+[
+  {
+    "document": ".project/milestones/ms-1.1-protocol.md",
+    "title": "# ms-1.1: 基础协议稳定性",
+    "files": [],
+    "criteria": [
+      "- [x] UDP 通信稳定",
+      "- [x] 心跳机制正常",
+      "- [x] 断线检测有效",
+      "- [x] 100 场 e2e 测试无失败"
+    ],
+    "id": "1.1",
+    "status": "部分验证",
+    "finding": "协议、心跳有测试；历史“100 场 E2E”缺少本次可复现证据。",
+    "next_action": "补多客户端真实引擎与丢包测试。"
+  },
+  {
+    "document": ".project/milestones/ms-1.2-determinism.md",
+    "title": "# ms-1.2: 确定性基础",
+    "files": [],
+    "criteria": [
+      "- [x] 确定性 RNG（Boost 已集成）",
+      "- [x] FixedPoint 类完整实现（Q16.16 格式）",
+      "- [x] 基础运算单元测试通过（31 tests）",
+      "- [x] 三角函数 CORDIC 实现（纯整数，16 次迭代）",
+      "- [x] 整数 Newton 法 sqrt",
+      "- [x] 跨平台确定性测试通过（13 tests）",
+      "- [x] 三角恒等式验证（Pythagorean、周期性、奇偶性）"
+    ],
+    "id": "1.2",
+    "status": "模块验证",
+    "finding": "FixedPoint/CORDIC 与 PRNG 可测；单平台通过不代表跨平台确定性。",
+    "next_action": "在 GCC/Clang、x86/ARM 重放相同输入，逐帧比较 hash。"
+  },
+  {
+    "document": ".project/milestones/ms-1.3-prediction-rollback.md",
+    "title": "# ms-1.3: 客户端预测与回滚",
+    "files": [
+      "src/frame_sync/client_state.hpp",
+      "src/frame_sync/asio_client.hpp",
+      "src/frame_sync/asio_client.cpp",
+      "tests/frame_sync_test.cpp"
+    ],
+    "criteria": [
+      "- [x] StateSnapshot 接口：保存/恢复完整游戏状态（含位置、速度、比分等）",
+      "- [x] 客户端预测：在等待权威帧时本地模拟推进（最多 MAX_PREDICT_AHEAD_FRAMES 帧）",
+      "- [x] 回滚机制：收到权威帧后，回滚到该帧的快照，用权威输入重新模拟",
+      "- [x] 无包等待：连续 MAX_FRAMES_WITHOUT_PACKET 帧无包则停止预测",
+      "- [x] 状态哈希校验：每 STATE_HASH_INTERVAL_K 帧对比服务器哈希",
+      "- [x] 单元测试覆盖预测/回滚逻辑（12 + 4 = 16 tests）",
+      "- [x] 与 Python 客户端行为对齐（相同协议常量、相同回滚逻辑）"
+    ],
+    "id": "1.3",
+    "status": "已修复核心缺陷",
+    "finding": "TCP/UDP 共用整帧模拟，修复槽位覆盖、帧 0、预测阻塞和连续回滚的旧快照。",
+    "next_action": "继续对照旧 Asio/Python 客户端及真实网络回滚。"
+  },
+  {
+    "document": ".project/milestones/ms-1.4-dynamic-catchup.md",
+    "title": "# ms-1.4: 动态追帧与抖动平滑",
+    "files": [
+      "src/frame_sync/client_state.hpp",
+      "src/frame_sync/asio_client.cpp",
+      "tests/client_state_test.cpp"
+    ],
+    "criteria": [
+      "- [x] 追帧逻辑：检测落后帧数，动态增加每 tick 处理的帧数",
+      "- [x] 抖动平滑：监控帧到达间隔，统计 jitter，平滑渲染输出",
+      "- [x] 自适应帧率：根据网络延迟动态调整客户端帧率",
+      "- [x] 超前保护：当客户端超前时自动减速等待",
+      "- [x] 单元测试覆盖追帧/平滑逻辑（8 tests）",
+      "- [x] 与 Python 客户端行为对齐"
+    ],
+    "id": "1.4",
+    "status": "部分优化",
+    "finding": "先消费权威帧再限制预测，每 tick 最多追 3 帧，接收队列有界。",
+    "next_action": "把实际抖动统计接入播放时序并验证延迟。"
+  },
+  {
+    "document": ".project/milestones/ms-1.5-cheat-validation.md",
+    "title": "# ms-1.5: 外挂校验",
+    "files": [
+      "engine/src/frame_sync/protocol.hpp",
+      "engine/src/frame_sync/asio_server.cpp",
+      "engine/src/frame_sync/asio_server_udp.cpp",
+      "engine/src/frame_sync/asio_server_engine.cpp",
+      "engine/src/frame_sync/integrated_server.cpp",
+      "gfootball/frame_sync/protocol.py",
+      "gfootball/frame_sync/server.py",
+      "gfootball/frame_sync/server_async.py"
+    ],
+    "criteria": [
+      "- [x] 服务器验证输入合法性",
+      "- [x] 拒绝非法输入",
+      "- [x] 防止作弊行为"
+    ],
+    "id": "1.5",
+    "status": "部分验证",
+    "finding": "输入合法性校验存在；新模拟检查槽位数量与 SlotInput。",
+    "next_action": "补生产服务器跨槽位注入、超前帧及速率限制测试。"
+  },
+  {
+    "document": ".project/milestones/ms-1.6-logic-render-separation.md",
+    "title": "# ms-1.6: 逻辑渲染分离",
+    "files": [
+      "engine/src/frame_sync/interpolator.hpp",
+      "engine/src/onthepitch/ball.hpp",
+      "engine/src/onthepitch/ball.cpp",
+      "engine/src/onthepitch/match.hpp",
+      "engine/src/onthepitch/match.cpp"
+    ],
+    "criteria": [
+      "- [x] 逻辑帧率固定",
+      "- [x] 渲染可插值",
+      "- [x] 逻辑与渲染解耦"
+    ],
+    "id": "1.6",
+    "status": "已修复核心缺陷",
+    "finding": "TCP 服务端 StepWithInput 后又 step 导致双步；已删除重复推进。",
+    "next_action": "验证渲染不会修改确定性逻辑状态。"
+  },
+  {
+    "document": ".project/milestones/ms-1.7-render-smoothing.md",
+    "title": "# ms-1.7: 渲染平滑",
+    "files": [
+      "engine/src/frame_sync/integrated_client.cpp",
+      "engine/src/frame_sync/engine_integration.hpp"
+    ],
+    "criteria": [
+      "- [x] 插值平滑",
+      "- [x] 外推平滑",
+      "- [x] 画面流畅"
+    ],
+    "id": "1.7",
+    "status": "部分修复",
+    "finding": "插值 alpha 改为距最近逻辑步的时间，原实现使用渲染间隔。",
+    "next_action": "在 GPU 上验证球员、裁判、旋转及高速运动。"
+  },
+  {
+    "document": ".project/milestones/ms-1.8-performance-optimization.md",
+    "title": "# ms-1.8: 性能优化",
+    "files": [
+      "engine/tests/performance_benchmark_test.cpp"
+    ],
+    "criteria": [
+      "- [x] 60fps 流畅体验",
+      "- [x] 延迟 <30ms",
+      "- [x] 性能稳定"
+    ],
+    "id": "1.8",
+    "status": "验收不足",
+    "finding": "Debug 时间阈值与正确性测试混用；已分离默认性能门槛。",
+    "next_action": "固定 Release 环境测 p50/p95/p99，不能由微基准宣称 60fps。"
+  },
+  {
+    "document": ".project/milestones/ms-2.1-team-ecs.md",
+    "title": "# ms-2.1: Team ECS 迁移",
+    "files": [],
+    "criteria": [
+      "- [x] TeamStateComponent 组件定义完成",
+      "- [x] Team 状态 100% 可查询",
+      "- [x] 双向同步（OOP → ECS / ECS → OOP）正常工作",
+      "- [x] Phase 2 实施计划制定完成"
+    ],
+    "id": "2.1",
+    "status": "部分迁移",
+    "finding": "TeamStateComponent 存在；Team 对象仍参与实际比赛。",
+    "next_action": "按字段定义唯一权威来源并做迁移差分测试。"
+  },
+  {
+    "document": ".project/milestones/ms-2.2-referee-ecs.md",
+    "title": "# ms-2.2: Referee ECS 迁移",
+    "files": [],
+    "criteria": [
+      "- [x] RefereeStateComponent 组件定义完成",
+      "- [x] 裁判状态可序列化",
+      "- [x] 双向同步正常工作"
+    ],
+    "id": "2.2",
+    "status": "部分迁移",
+    "finding": "RefereeStateComponent 与旧 Referee 并存。",
+    "next_action": "对犯规、越位、定位球进行规则对照。"
+  },
+  {
+    "document": ".project/milestones/ms-2.3-match-ecs.md",
+    "title": "# ms-2.3: Match ECS 协调",
+    "files": [],
+    "criteria": [
+      "- [x] MatchStateComponent 组件定义完成",
+      "- [x] Match::Step 通过 ECS 驱动",
+      "- [x] 双向同步正常工作"
+    ],
+    "id": "2.3",
+    "status": "已修复核心缺陷",
+    "finding": "SystemGraph 使用稳定注册顺序，缺失依赖提前拒绝；players 显式依赖 physics 同步。",
+    "next_action": "保留真实比赛 hash 基线，验证调度变更。"
+  },
+  {
+    "document": ".project/milestones/ms-2.4-serialization.md",
+    "title": "# ms-2.4: 序列化完整性",
+    "files": [],
+    "criteria": [
+      "- [x] 所有组件可序列化/反序列化",
+      "- [x] Round-trip 测试通过",
+      "- [x] 序列化格式兼容性验证"
+    ],
+    "id": "2.4",
+    "status": "已修复越界",
+    "finding": "触球源数组只有 4 项却读 8 项；按实际长度复制并初始化余项。",
+    "next_action": "序列化仍从 OOP 同步，补全部 ECS/RNG 恢复验收。"
+  },
+  {
+    "document": ".project/milestones/ms-2.5-performance.md",
+    "title": "# ms-2.5: 性能验证",
+    "files": [],
+    "criteria": [
+      "- [x] ECS 查询性能 ≥ OOP",
+      "- [x] 内存局部性提升",
+      "- [x] 性能基准测试通过"
+    ],
+    "id": "2.5",
+    "status": "已优化基础设施",
+    "finding": "组件池缓存有序实体 ID，避免为了顺序搬动组件。",
+    "next_action": "在真实比赛规模测查询、复制与总帧成本。"
+  },
+  {
+    "document": ".project/milestones/ms-3.1-rl-framework.md",
+    "title": "# ms-3.1: RL 基础训练框架",
+    "files": [],
+    "criteria": [
+      "- [x] Checkpoint 持久化（TAR 后端）",
+      "- [x] 11v11 共享策略训练",
+      "- [x] 扩展奖励函数设计",
+      "- [x] 评估管道与比赛指标",
+      "- [x] 收敛修复（最近球员控制 + Pendulum 风格永不终止）",
+      "- [x] 训练策略评估模式"
+    ],
+    "id": "3.1",
+    "status": "训练 POC",
+    "finding": "PPO 训练流程存在；checkpoint 写入结果和 tellg 缺少完整校验。",
+    "next_action": "补坏文件、磁盘错误、往返测试及固定预算奖励曲线。"
+  },
+  {
+    "document": ".project/milestones/ms-3.2-rl-optimization.md",
+    "title": "# ms-3.2: RL 训练优化",
+    "files": [],
+    "criteria": [
+      "- [x] 简化奖励函数以提高 PPO 收敛性",
+      "- [x] 简化动作空间以提高训练效率",
+      "- [x] 改进训练指标追踪"
+    ],
+    "id": "3.2",
+    "status": "部分实现",
+    "finding": "真实包装 N_ENVIRONMENTS=1，不能宣称多环境训练优化完成。",
+    "next_action": "统一 RLtools 路径，隔离实例后测吞吐与收敛。"
+  },
+  {
+    "document": ".project/milestones/ms-4.1-ai-tactics.md",
+    "title": "# ms-4.1: AI 战术系统",
+    "files": [
+      "engine/src/ai/ai_tactics.hpp",
+      "engine/src/ai/ai_tactics.cpp",
+      "engine/sources.cmake"
+    ],
+    "criteria": [
+      "- [x] AI 可控球并移动",
+      "- [x] AI 可传球给队友",
+      "- [x] AI 可射门得分",
+      "- [x] AI 可防守对手"
+    ],
+    "id": "4.1",
+    "status": "未接通且有逻辑缺陷",
+    "finding": "未发现 TacticsController 比赛调用点；中心 50、球门 0/100 与实际坐标约定不符。",
+    "next_action": "构造真实球员、攻防方向和比赛上下文，再接入控制器。"
+  },
+  {
+    "document": ".project/milestones/ms-4.2-ai-decision.md",
+    "title": "# ms-4.2: AI 决策优化",
+    "files": [
+      "engine/src/ai/ai_tactics.hpp",
+      "engine/src/ai/ai_tactics.cpp"
+    ],
+    "criteria": [
+      "- [x] AI 决策合理",
+      "- [x] AI 可完成整场比赛",
+      "- [x] AI 行为自然",
+      "- [x] AI 性能可接受"
+    ],
+    "id": "4.2",
+    "status": "未验收",
+    "finding": "权重跨帧残留；体力/控球写死；剩余时间实际为已过时间；传球目标可能选自身。",
+    "next_action": "抽取纯决策函数，覆盖换边、末段领先、无球和按钮释放。"
+  },
+  {
+    "document": ".project/milestones/ms-5.1-framesync-robustness.md",
+    "title": "# ms-5.1: 帧同步鲁棒性增强",
+    "files": [],
+    "criteria": [
+      "- [x] 断线重连机制",
+      "- [x] 抖动统计与监控",
+      "- [x] 增量压缩（delta compression）",
+      "- [x] 渲染客户端（SDL2）+ 键盘输入",
+      "- [x] 字体路径自动检测"
+    ],
+    "id": "5.1",
+    "status": "部分修复",
+    "finding": "统一 SHA256 前 8 字节小端 hash，修复回滚、初始场景和输入广播一致性。",
+    "next_action": "故障注入验证重连、快照重同步与机器人接管。"
+  },
+  {
+    "document": ".project/milestones/ms-6.1-performance.md",
+    "title": "# ms-6.1: 性能优化",
+    "files": [
+      "engine/src/frame_sync/protocol.hpp",
+      "engine/src/frame_sync/state_compression.hpp",
+      "engine/src/frame_sync/interpolator.hpp"
+    ],
+    "criteria": [
+      "- [x] 热点路径优化",
+      "- [x] 内存分配优化",
+      "- [x] 缓存友好优化",
+      "- [x] SIMD 优化"
+    ],
+    "id": "6.1",
+    "status": "部分优化",
+    "finding": "修复编码与查询确定性缺陷，分离计时门槛。",
+    "next_action": "根据 CPU profile 确定热点。"
+  },
+  {
+    "document": ".project/milestones/ms-6.1-ui-system.md",
+    "title": "# ms-6.1: UI 系统",
+    "files": [],
+    "criteria": [
+      "- [ ] 主菜单完整",
+      "- [ ] 比赛 HUD 完整",
+      "- [ ] 设置界面完整",
+      "- [ ] 暂停菜单完整"
+    ],
+    "id": "6.1",
+    "status": "未完成",
+    "finding": "菜单含未调用且使用不存在 API 的 HandleInput，已归档死代码以恢复构建。",
+    "next_action": "实现事件派发、跳转和设置持久化；未宣称菜单可交互。"
+  },
+  {
+    "document": ".project/milestones/ms-6.2-audio-system.md",
+    "title": "# ms-6.2: 音效系统",
+    "files": [],
+    "criteria": [
+      "- [ ] 踢球音效",
+      "- [ ] 观众音效",
+      "- [ ] 背景音乐",
+      "- [ ] 音量控制"
+    ],
+    "id": "6.2",
+    "status": "未验收",
+    "finding": "音效模型与实际音频播放不同。",
+    "next_action": "按 ms-7.3 接后端与资源验收。"
+  },
+  {
+    "document": ".project/milestones/ms-6.2-network.md",
+    "title": "# ms-6.2: 网络优化",
+    "files": [
+      "engine/src/frame_sync/reliable_udp.hpp",
+      "engine/src/frame_sync/state_compression.hpp",
+      "engine/src/frame_sync/protocol_io.hpp"
+    ],
+    "criteria": [
+      "- [x] 延迟优化",
+      "- [x] 带宽优化",
+      "- [x] 丢包恢复优化",
+      "- [x] 拥塞控制优化"
+    ],
+    "id": "6.2",
+    "status": "部分优化",
+    "finding": "统一整帧模拟、修正压缩边界；TCP 回退到客户端支持的全量权威消息。",
+    "next_action": "可靠 UDP 和未来帧输入队列仍需生产故障测试。"
+  },
+  {
+    "document": ".project/milestones/ms-6.3-content-system.md",
+    "title": "# ms-6.3: 内容系统",
+    "files": [],
+    "criteria": [
+      "- [ ] 球队数据完整",
+      "- [ ] 球员数据完整",
+      "- [ ] 球场数据完整",
+      "- [ ] 球衣系统完整"
+    ],
+    "id": "6.3",
+    "status": "内容未达标",
+    "finding": "球队、球场样例数量有限。",
+    "next_action": "按 ms-7.5 建资源验收清单。"
+  },
+  {
+    "document": ".project/milestones/ms-6.3-experience.md",
+    "title": "# ms-6.3: 体验优化",
+    "files": [
+      "engine/src/frame_sync/integrated_server.cpp",
+      "engine/src/frame_sync/bot_takeover.hpp",
+      "engine/src/frame_sync/ux_optimizer.hpp",
+      "gfootball/frame_sync/local_play.py",
+      "gfootball/frame_sync/main_menu.py"
+    ],
+    "criteria": [
+      "- [x] 输入响应优化",
+      "- [x] 视觉反馈优化",
+      "- [x] 音效同步优化",
+      "- [x] 加载时间优化"
+    ],
+    "id": "6.3",
+    "status": "部分实现",
+    "finding": "离线入口、接管和 UX 模块存在，菜单路径未完全接通。",
+    "next_action": "验证断线/重连输入所有权切换。"
+  },
+  {
+    "document": ".project/milestones/ms-6.4-code-quality.md",
+    "title": "# ms-6.4: 代码质量",
+    "files": [
+      "engine/src/frame_sync/*.hpp",
+      "engine/src/frame_sync/reconnecting_client.hpp",
+      "run_static_analysis.sh"
+    ],
+    "criteria": [
+      "- [x] 编译器警告修复",
+      "- [x] 静态分析通过",
+      "- [x] 代码风格统一",
+      "- [x] 内存安全检查"
+    ],
+    "id": "6.4",
+    "status": "已改进",
+    "finding": "无 PCH 构建发现隐藏 include 依赖，已补齐；修复 flat_map 代理引用迭代。",
+    "next_action": "维持无 PCH CI，继续审查线程间所有权。"
+  },
+  {
+    "document": ".project/milestones/ms-6.4-tutorial-system.md",
+    "title": "# ms-6.4: 教程系统",
+    "files": [],
+    "criteria": [
+      "- [ ] 基本操作教程",
+      "- [ ] 战术教程",
+      "- [ ] 联机教程"
+    ],
+    "id": "6.4",
+    "status": "模型实现",
+    "finding": "教程与挑战有进度模型。",
+    "next_action": "按 ms-7.4 绑定比赛事件。"
+  },
+  {
+    "document": ".project/milestones/ms-6.5-language-modern.md",
+    "title": "# ms-6.5: 语言现代化",
+    "files": [],
+    "criteria": [
+      "- [ ] C++23 特性采用",
+      "- [ ] Boost 迁移到 std",
+      "- [ ] 现代语法使用",
+      "- [ ] 编译器优化利用"
+    ],
+    "id": "6.5",
+    "status": "部分验证",
+    "finding": "主工程强制 C++23，GCC16 编译暴露旧未构建目标的错误。",
+    "next_action": "用 GCC15 最低工具链持续验证。"
+  },
+  {
+    "document": ".project/milestones/ms-6.5-stats-system.md",
+    "title": "# ms-6.5: 统计系统",
+    "files": [],
+    "criteria": [
+      "- [ ] 比赛数据记录",
+      "- [ ] 球员数据展示",
+      "- [ ] 历史记录"
+    ],
+    "id": "6.5",
+    "status": "模型实现",
+    "finding": "统计和赛季有 Python 测试。",
+    "next_action": "验收比赛事件采集、归档和重算。"
+  },
+  {
+    "document": ".project/milestones/ms-6.6-i18n.md",
+    "title": "# ms-6.6: 多语言支持",
+    "files": [],
+    "criteria": [
+      "- [ ] 中文界面",
+      "- [ ] 英文界面",
+      "- [ ] 语言切换"
+    ],
+    "id": "6.6",
+    "status": "未充分验收",
+    "finding": "业务模块测试不能证明界面多语言完整。",
+    "next_action": "验证资源覆盖、字体、编码与切换。"
+  },
+  {
+    "document": ".project/milestones/ms-6.6-test-coverage.md",
+    "title": "# ms-6.6: 测试覆盖",
+    "files": [],
+    "criteria": [
+      "- [ ] 单元测试完善",
+      "- [ ] 集成测试完善",
+      "- [ ] 性能测试完善",
+      "- [ ] 测试覆盖率报告"
+    ],
+    "id": "6.6",
+    "status": "已修复验收缺陷",
+    "finding": "enable_testing 修复 CTest 0 项；CI 全量测试；Python 返回 False 不再假通过。",
+    "next_action": "分开记录单测、服务依赖、性能和真实比赛测试。"
+  },
+  {
+    "document": ".project/milestones/ms-6.7-documentation.md",
+    "title": "# ms-6.7: 文档完善",
+    "files": [],
+    "criteria": [
+      "- [ ] API 文档完整",
+      "- [ ] 架构文档完整",
+      "- [ ] 使用文档完整",
+      "- [ ] 贡献指南完整"
+    ],
+    "id": "6.7",
+    "status": "已整理",
+    "finding": "95 条实现复核，Phase6 重复 ID 按来源保留。",
+    "next_action": "让历史状态与代码事实对齐。"
+  },
+  {
+    "document": ".project/milestones/ms-6.7-platform.md",
+    "title": "# ms-6.7: 平台适配",
+    "files": [],
+    "criteria": [
+      "- [ ] Windows 编译",
+      "- [ ] Linux 编译",
+      "- [ ] Mac 编译"
+    ],
+    "id": "6.7",
+    "status": "未跨平台验收",
+    "finding": "本轮为 Arch Linux/WSL、GCC16，不等于 Windows/macOS/ARM 已通过。",
+    "next_action": "建立平台矩阵及字节序测试。"
+  },
+  {
+    "document": ".project/milestones/ms-6.8-build-optimization.md",
+    "title": "# ms-6.8: 构建优化",
+    "files": [],
+    "criteria": [
+      "- [ ] 编译时间优化",
+      "- [ ] 增量编译优化",
+      "- [ ] 并行编译优化",
+      "- [ ] 依赖管理优化"
+    ],
+    "id": "6.8",
+    "status": "已改进",
+    "finding": "修复 CMake 最低版本、缓存类型、CTest 注册；新增 TCP/大厅目标，单线程编译。",
+    "next_action": "先保证所有生产目标可构建，再比较 PCH/Unity 收益。"
+  },
+  {
+    "document": ".project/milestones/ms-6.8-release-prep.md",
+    "title": "# ms-6.8: 发布准备",
+    "files": [],
+    "criteria": [
+      "- [ ] 打包脚本完整",
+      "- [ ] 安装程序完整",
+      "- [ ] 更新系统完整",
+      "- [ ] 文档完整"
+    ],
+    "id": "6.8",
+    "status": "未达到发布验收",
+    "finding": "仍有主流程未接通及网络/GPU 验收缺口。",
+    "next_action": "按本清单关闭阻塞项并保留干净构建产物。"
+  },
+  {
+    "document": ".project/milestones/ms-7.1-lobby.md",
+    "title": "# ms-7.1: 大厅系统",
+    "files": [
+      "gfootball/frame_sync/lobby.py",
+      "gfootball/frame_sync/matchmaking.py",
+      "gfootball/frame_sync/player_profile.py",
+      "gfootball/frame_sync/chat.py"
+    ],
+    "criteria": [
+      "- [ ] 匹配系统：自动匹配水平相近的玩家",
+      "- [ ] 房间系统：创建/加入/退出房间",
+      "- [ ] 玩家资料：头像、昵称、战绩",
+      "- [ ] 聊天系统：房间内聊天",
+      "- [ ] 好友系统：添加/删除好友"
+    ],
+    "id": "7.1",
+    "status": "部分修复",
+    "finding": "匹配曾忽略分差窗口；改为评分排序，在扩大中的窗口内比较相邻候选。",
+    "next_action": "接通实际网络房间和持久化玩家档案。"
+  },
+  {
+    "document": ".project/milestones/ms-7.2-ranking.md",
+    "title": "# ms-7.2: 排行榜系统",
+    "files": [
+      "gfootball/frame_sync/ranking.py",
+      "gfootball/frame_sync/elo.py",
+      "gfootball/frame_sync/season.py",
+      "gfootball/frame_sync/statistics.py"
+    ],
+    "criteria": [
+      "- [ ] ELO 评分系统",
+      "- [ ] 全球/地区/好友排行榜",
+      "- [ ] 赛季系统",
+      "- [ ] 详细统计：进球、助攻、胜率等"
+    ],
+    "id": "7.2",
+    "status": "模块验证",
+    "finding": "ranking/season 有测试；计划 elo.py 路径不存在，评分功能部分合并。",
+    "next_action": "验收跨赛季结算、并列排名与持久化。"
+  },
+  {
+    "document": ".project/milestones/ms-7.3-audio.md",
+    "title": "# ms-7.3: 音效系统",
+    "files": [
+      "gfootball/frame_sync/audio_manager.py",
+      "gfootball/frame_sync/commentary.py"
+    ],
+    "criteria": [
+      "- [ ] 背景音乐：菜单、比赛、胜利/失败",
+      "- [ ] 音效：踢球、欢呼、裁判哨声",
+      "- [ ] 解说：进球、犯规、精彩时刻",
+      "- [ ] 3D 音效：空间定位",
+      "- [ ] 音量控制：主音量、音乐、音效分别控制"
+    ],
+    "id": "7.3",
+    "status": "模型实现",
+    "finding": "audio_manager/commentary 管理状态，不证明实际音频播放与混音。",
+    "next_action": "接资源和音频后端，验证音量、静音、优先级与释放。"
+  },
+  {
+    "document": ".project/milestones/ms-7.4-tutorial.md",
+    "title": "# ms-7.4: 教程系统",
+    "files": [
+      "gfootball/frame_sync/tutorial.py",
+      "gfootball/frame_sync/training.py",
+      "gfootball/frame_sync/challenges.py"
+    ],
+    "criteria": [
+      "- [ ] 新手引导：基础操作教学",
+      "- [ ] 训练模式：自由练习",
+      "- [ ] 挑战模式：技能挑战",
+      "- [ ] 提示系统：实时操作提示"
+    ],
+    "id": "7.4",
+    "status": "模型实现",
+    "finding": "tutorial/training/challenges 有课程与进度逻辑。",
+    "next_action": "绑定真实动作和比赛事件，验证推进与重试。"
+  },
+  {
+    "document": ".project/milestones/ms-7.5-content.md",
+    "title": "# ms-7.5: 内容系统",
+    "files": [
+      "gfootball/frame_sync/content_manager.py",
+      "gfootball/frame_sync/teams.py",
+      "gfootball/frame_sync/stadiums.py",
+      "gfootball/frame_sync/leagues.py"
+    ],
+    "criteria": [
+      "- [ ] 球队系统：50+ 球队，真实球员数据",
+      "- [ ] 球场系统：20+ 球场，不同环境",
+      "- [ ] 联赛系统：多种联赛模式",
+      "- [ ] 杯赛系统：世界杯、欧冠等"
+    ],
+    "id": "7.5",
+    "status": "内容未达标",
+    "finding": "内置约 5 支球队、3 个球场，与文档 50+/20+ 不符。",
+    "next_action": "建立资源、许可、数量与加载验收清单。"
+  },
+  {
+    "document": ".project/milestones/ms-7.6-save-system.md",
+    "title": "# ms-7.6: 存档系统",
+    "files": [
+      "gfootball/frame_sync/save_system.py",
+      "gfootball/frame_sync/replay.py",
+      "gfootball/frame_sync/cloud_sync.py"
+    ],
+    "criteria": [
+      "- [ ] 进度存档：职业生涯、解锁内容",
+      "- [ ] 设置存档：画面、音效、控制设置",
+      "- [ ] 回放系统：比赛录像、精彩时刻",
+      "- [ ] 云存档：跨设备同步"
+    ],
+    "id": "7.6",
+    "status": "已修复数据缺陷",
+    "finding": "存档/读取/进度浅拷贝导致嵌套串改；已深拷贝并在导入前验证。",
+    "next_action": "仍为内存槽位加 JSON 导入导出；磁盘落盘与云同步未实现。"
+  },
+  {
+    "document": ".project/milestones/ms-7.7-integration-test.md",
+    "title": "# ms-7.7: 集成测试",
+    "files": [
+      "engine/tests/phase7_*.cpp",
+      "gfootball/frame_sync/*_test.py"
+    ],
+    "criteria": [
+      "- [ ] 大厅系统测试：匹配、房间、聊天",
+      "- [ ] 排行榜测试：评分、排行、赛季",
+      "- [ ] 音效系统测试：音乐、音效、解说",
+      "- [ ] 教程系统测试：引导、训练、挑战",
+      "- [ ] 内容系统测试：球队、球场、联赛",
+      "- [ ] 存档系统测试：存档、回放、云同步"
+    ],
+    "id": "7.7",
+    "status": "部分验证",
+    "finding": "测试可独立于原生引擎收集；网络返回 False 现在通过显式断言判定。",
+    "next_action": "10 项外部服务测试默认明确跳过；用 --run-network-integration 启用。"
+  },
+  {
+    "document": ".project/milestones/ms-8.1-officials-ecs.md",
+    "title": "# ms-8.1: Officials ECS 迁移",
+    "files": [
+      "engine/src/onthepitch/ecs_components.hpp",
+      "engine/src/onthepitch/ecs_systems.hpp",
+      "engine/src/onthepitch/ecs_systems.cpp",
+      "engine/src/onthepitch/match.hpp",
+      "engine/src/onthepitch/match.cpp"
+    ],
+    "criteria": [
+      "- [x] OfficialsComponent 组件定义完成",
+      "- [x] 双向同步函数（OOP ↔ ECS）正常工作",
+      "- [x] OfficialsSystem 包装现有 Process/FetchPutBuffers/Put 逻辑",
+      "- [x] Match 集成 OfficialsSystem",
+      "- [x] 语法检查通过"
+    ],
+    "id": "8.1",
+    "status": "部分迁移",
+    "finding": "Officials 组件存在，比赛仍使用旧裁判对象。",
+    "next_action": "对事件、动画和生命周期做差分验证。"
+  },
+  {
+    "document": ".project/milestones/ms-8.2-player-state-ecs.md",
+    "title": "# ms-8.2: Player核心状态组件",
+    "files": [
+      "engine/src/onthepitch/ecs_components.hpp",
+      "engine/src/onthepitch/ecs_systems.hpp",
+      "engine/src/onthepitch/ecs_systems.cpp",
+      "engine/src/onthepitch/match.cpp"
+    ],
+    "criteria": [
+      "- [x] PlayerStateComponent 组件定义完成",
+      "- [x] 双向同步函数（OOP ↔ ECS）正常工作",
+      "- [x] SyncPlayerStateSystem 同步球员状态",
+      "- [x] Match 集成 PlayerStateSystem",
+      "- [x] 语法检查通过"
+    ],
+    "id": "8.2",
+    "status": "部分迁移",
+    "finding": "Player 核心状态映射 ECS，但保留 Player/Humanoid 引用。",
+    "next_action": "逐字段验证换人、红牌和状态恢复。"
+  },
+  {
+    "document": ".project/milestones/ms-8.3-humanoid-state-ecs.md",
+    "title": "# ms-8.3: Humanoid动画状态组件",
+    "files": [
+      "engine/src/onthepitch/ecs_components.hpp",
+      "engine/src/onthepitch/ecs_systems.hpp",
+      "engine/src/onthepitch/ecs_systems.cpp",
+      "engine/src/onthepitch/match.cpp"
+    ],
+    "criteria": [
+      "- [x] HumanoidStateComponent 组件定义完成",
+      "- [x] 双向同步函数（OOP ↔ ECS）正常工作",
+      "- [x] SyncHumanoidStateSystem 同步动画状态",
+      "- [x] Match 集成 HumanoidStateSystem",
+      "- [x] 语法检查通过"
+    ],
+    "id": "8.3",
+    "status": "部分迁移",
+    "finding": "Humanoid 动画组件存在，旧动画对象仍驱动运行。",
+    "next_action": "覆盖动作切换、触球帧和回滚重放。"
+  },
+  {
+    "document": ".project/milestones/ms-8.4-mentalimage-ecs.md",
+    "title": "# ms-8.4: MentalImage ECS化",
+    "files": [
+      "engine/src/onthepitch/ecs_components.hpp",
+      "engine/src/onthepitch/ecs_systems.hpp",
+      "engine/src/onthepitch/ecs_systems.cpp",
+      "engine/src/onthepitch/match.cpp"
+    ],
+    "criteria": [
+      "- [x] MentalImageComponent 组件定义完成",
+      "- [x] 双向同步函数（OOP ↔ ECS）正常工作",
+      "- [x] SyncMentalImageSystem 同步心理图像状态",
+      "- [x] Match 集成 MentalImageSystem",
+      "- [x] 语法检查通过"
+    ],
+    "id": "8.4",
+    "status": "部分迁移",
+    "finding": "MentalImage 组件与缓存同步存在，依赖比赛对象。",
+    "next_action": "验证玩家增删的缓存失效和观察顺序。"
+  },
+  {
+    "document": ".project/milestones/ms-8.5-ecs-performance.md",
+    "title": "# ms-8.5: ECS系统性能优化",
+    "files": [
+      "engine/src/ecs/world.hpp",
+      "engine/src/onthepitch/ecs_systems.cpp"
+    ],
+    "criteria": [
+      "- [x] 分析当前 ECS 系统性能瓶颈",
+      "- [x] 优化实体遍历和组件访问",
+      "- [x] 实现批量处理机制",
+      "- [x] 性能测试验证",
+      "- [x] 语法检查通过"
+    ],
+    "id": "8.5",
+    "status": "已优化并回归",
+    "finding": "有序 ID 视图保留稠密存储，修复排序移动导致字符串组件丢失。",
+    "next_action": "测相同负载下的分配、查询与缓存成本。"
+  },
+  {
+    "document": ".project/milestones/ms-8.6-remove-bidirectional-sync.md",
+    "title": "# ms-8.6: 移除OOP双向同步",
+    "files": [
+      "engine/src/onthepitch/ecs_systems.hpp",
+      "engine/src/onthepitch/ecs_systems.cpp",
+      "engine/src/onthepitch/ecs_components.hpp"
+    ],
+    "criteria": [
+      "- [x] 分析当前双向同步的使用情况",
+      "- [x] 移除不必要的同步函数",
+      "- [x] 优化 ECS 数据流",
+      "- [x] 保持功能完整性",
+      "- [x] 语法检查通过"
+    ],
+    "id": "8.6",
+    "status": "未完成声明目标",
+    "finding": "Match 加载状态后仍调用 SyncEcsFromOop，双向同步没有完全移除。",
+    "next_action": "完成 ECS 序列化并证明恢复等价后再删旧同步。"
+  },
+  {
+    "document": ".project/milestones/ms-9.1-remove-oop-wrapper.md",
+    "title": "# ms-9.1: 移除OOP包装层",
+    "files": [
+      "engine/src/onthepitch/ecs_direct_systems.hpp",
+      "engine/src/onthepitch/ecs_direct_systems.cpp",
+      "engine/src/onthepitch/match.cpp",
+      "engine/sources.cmake"
+    ],
+    "criteria": [
+      "- [x] 分析当前 OOP 包装层的使用情况",
+      "- [x] 设计 ECS 直接驱动方案",
+      "- [x] 实现 ECS 直接驱动",
+      "- [x] 保持功能完整性",
+      "- [x] 语法检查通过"
+    ],
+    "id": "9.1",
+    "status": "未完成声明目标",
+    "finding": "ecs_direct_systems 存在；Match 仍创建 Team/Referee 等对象。",
+    "next_action": "按实际调用链分模块验收，不以命名判断迁移。"
+  },
+  {
+    "document": ".project/milestones/ms-9.2-optimize-ecs-query.md",
+    "title": "# ms-9.2: 优化ECS查询接口",
+    "files": [
+      "engine/src/ecs/query.hpp",
+      "engine/src/ecs/world.hpp",
+      "engine/src/onthepitch/ecs_direct_systems.cpp",
+      "engine/sources.cmake"
+    ],
+    "criteria": [
+      "- [x] 分析当前 ECS 查询模式",
+      "- [x] 设计优化查询接口",
+      "- [x] 实现查询优化",
+      "- [x] 保持功能完整性",
+      "- [x] 语法检查通过"
+    ],
+    "id": "9.2",
+    "status": "已优化并回归",
+    "finding": "Query 使用缓存实体视图，Contains 改二分，增加销毁后顺序回归。",
+    "next_action": "评估最小组件池驱动交集查询的收益。"
+  },
+  {
+    "document": ".project/milestones/ms-9.3-ecs-system-batch.md",
+    "title": "# ms-9.3: 实现ECS系统批处理",
+    "files": [
+      "engine/src/ecs/system_batch.hpp",
+      "engine/src/ecs/system_batch.cpp",
+      "engine/src/onthepitch/match.cpp",
+      "engine/sources.cmake"
+    ],
+    "criteria": [
+      "- [x] 分析当前系统执行模式",
+      "- [x] 设计批处理机制",
+      "- [x] 实现批处理优化",
+      "- [x] 保持功能完整性",
+      "- [x] 语法检查通过"
+    ],
+    "id": "9.3",
+    "status": "部分实现",
+    "finding": "SystemBatch 包含 OOP 引用与调度包装，并非完全独立 ECS 批处理。",
+    "next_action": "测批次局部性并计入同步成本。"
+  },
+  {
+    "document": ".project/milestones/ms-9.4-performance-test.md",
+    "title": "# ms-9.4: 性能测试验证",
+    "files": [
+      "engine/perf_test.sh",
+      "engine/perf_report.md"
+    ],
+    "criteria": [
+      "- [x] 分析当前性能基线",
+      "- [x] 设计性能测试方案",
+      "- [x] 实现性能测试",
+      "- [x] 运行测试并验证结果",
+      "- [x] 生成性能报告"
+    ],
+    "id": "9.4",
+    "status": "验收失真",
+    "finding": "perf_test.sh 主要计时语法检查，不能证明运行性能。",
+    "next_action": "替换为固定输入 Release 基准和可比较基线。"
+  },
+  {
+    "document": ".project/milestones/ms-9.5-functional-verify.md",
+    "title": "# ms-9.5: 功能完整性验证",
+    "files": [
+      "engine/verify_test.sh",
+      "engine/verify_report.md"
+    ],
+    "criteria": [
+      "- [x] 分析当前功能完整性",
+      "- [x] 设计验证测试方案",
+      "- [x] 实现验证测试",
+      "- [x] 运行测试并验证结果",
+      "- [x] 生成验证报告"
+    ],
+    "id": "9.5",
+    "status": "验收失真",
+    "finding": "verify_test.sh 的符号存在检查不是功能测试。",
+    "next_action": "改为 CTest 行为断言与真实比赛恢复。"
+  },
+  {
+    "document": ".project/milestones/ms-10.1-team-ecs-migration.md",
+    "title": "# ms-10.1: Team系统ECS迁移",
+    "files": [
+      "engine/src/onthepitch/ecs_direct_systems.hpp",
+      "engine/src/onthepitch/ecs_direct_systems.cpp"
+    ],
+    "criteria": [
+      "- [x] 分析当前 Team 系统实现",
+      "- [x] 设计 Team ECS 迁移方案",
+      "- [x] 实现 Team ECS 迁移",
+      "- [x] 保持功能完整性",
+      "- [x] 语法检查通过"
+    ],
+    "id": "10.1",
+    "status": "部分实现",
+    "finding": "TeamProcessSystemDirect 与旧 Team 并存，语法检查不能证明迁移完成。",
+    "next_action": "对战术、控球和成员生命周期做差分测试。"
+  },
+  {
+    "document": ".project/milestones/ms-10.2-referee-ecs-migration.md",
+    "title": "# ms-10.2: Referee系统ECS迁移",
+    "files": [
+      "engine/src/onthepitch/ecs_direct_systems.hpp",
+      "engine/src/onthepitch/ecs_direct_systems.cpp",
+      "engine/src/onthepitch/match.hpp"
+    ],
+    "criteria": [
+      "- [x] 分析当前 Referee 系统实现",
+      "- [x] 设计 Referee ECS 迁移方案",
+      "- [x] 实现 Referee ECS 迁移",
+      "- [x] 保持功能完整性",
+      "- [x] 语法检查通过"
+    ],
+    "id": "10.2",
+    "status": "部分实现",
+    "finding": "RefereeProcessSystemDirect 仍需旧 Referee 上下文。",
+    "next_action": "以实际定位球、犯规、优势规则与结束状态验收。"
+  },
+  {
+    "document": ".project/milestones/ms-10.3-mentalimage-ecs-migration.md",
+    "title": "# ms-10.3: MentalImage系统ECS迁移",
+    "files": [
+      "engine/src/onthepitch/ecs_direct_systems.hpp",
+      "engine/src/onthepitch/ecs_direct_systems.cpp"
+    ],
+    "criteria": [
+      "- [x] 分析当前 MentalImage 系统实现",
+      "- [x] 设计 MentalImage ECS 迁移方案",
+      "- [x] 实现 MentalImage ECS 迁移",
+      "- [x] 保持功能完整性",
+      "- [x] 语法检查通过"
+    ],
+    "id": "10.3",
+    "status": "部分实现",
+    "finding": "MentalImageSyncSystemDirect 是同步入口，不代表独立数据计算。",
+    "next_action": "明确更新时机并检查回滚后的缓存。"
+  },
+  {
+    "document": ".project/milestones/ms-10.4-batch-optimize.md",
+    "title": "# ms-10.4: 系统批处理优化",
+    "files": [
+      "engine/src/ecs/system_batch.hpp",
+      "engine/src/ecs/system_batch.cpp"
+    ],
+    "criteria": [
+      "- [x] 分析当前批处理实现",
+      "- [x] 设计批处理优化方案",
+      "- [x] 实现批处理优化",
+      "- [x] 保持功能完整性",
+      "- [x] 语法检查通过"
+    ],
+    "id": "10.4",
+    "status": "部分优化",
+    "finding": "保留批处理模块，本轮修复其底层实体遍历与调度依赖。",
+    "next_action": "根据实际 CPU profile 决定批次优化。"
+  },
+  {
+    "document": ".project/milestones/ms-10.5-functional-verify.md",
+    "title": "# ms-10.5: 功能完整性验证",
+    "files": [
+      "engine/verify_phase10.sh",
+      "engine/verify_phase10_report.md"
+    ],
+    "criteria": [
+      "- [x] 分析当前功能完整性",
+      "- [x] 设计验证测试方案",
+      "- [x] 实现验证测试",
+      "- [x] 运行测试并验证结果",
+      "- [x] 生成验证报告"
+    ],
+    "id": "10.5",
+    "status": "验收失真",
+    "finding": "verify_phase10.sh 用 -fsyntax-only 和 grep 判定完整性。",
+    "next_action": "用实际行为测试替代“符号存在即通过”。"
+  },
+  {
+    "document": ".project/milestones/ms-11.1-analyze-oop-wrapper.md",
+    "title": "# ms-11.1: 分析剩余OOP包装层",
+    "files": [
+      "engine/oop_analysis_report.md"
+    ],
+    "criteria": [
+      "- [x] 分析当前 OOP 包装层使用情况",
+      "- [x] 识别可移除的 OOP 包装",
+      "- [x] 生成分析报告"
+    ],
+    "id": "11.1",
+    "status": "文档需校正",
+    "finding": "OOP 分析报告存在，源码仍保留旧对象创建与使用。",
+    "next_action": "更新所有权、调用者和迁移阻塞依赖。"
+  },
+  {
+    "document": ".project/milestones/ms-11.2-design-removal-plan.md",
+    "title": "# ms-11.2: 设计完全移除方案",
+    "files": [
+      "engine/oop_removal_plan.md"
+    ],
+    "criteria": [
+      "- [x] 设计完全移除方案",
+      "- [x] 生成设计方案文档"
+    ],
+    "id": "11.2",
+    "status": "方案未闭环",
+    "finding": "移除方案存在，序列化和动画生命周期仍依赖旧对象。",
+    "next_action": "拆为可运行差分测试的小步迁移。"
+  },
+  {
+    "document": ".project/milestones/ms-11.3-remove-oop-wrapper.md",
+    "title": "# ms-11.3: 实现完全移除 OOP 包装层",
+    "files": [
+      "engine/src/onthepitch/player/playerbase.hpp",
+      "engine/src/onthepitch/player/playerbase.cpp",
+      "engine/src/onthepitch/player/player.hpp",
+      "engine/src/onthepitch/player/player.cpp",
+      "engine/src/onthepitch/player/humanoid/humanoidbase.hpp",
+      "engine/src/onthepitch/player/humanoid/humanoidbase.cpp",
+      "engine/src/onthepitch/ball.hpp",
+      "engine/src/onthepitch/ball.cpp",
+      "engine/src/onthepitch/AIsupport/mentalimage.hpp",
+      "engine/src/onthepitch/AIsupport/mentalimage.cpp",
+      "engine/src/onthepitch/officials.hpp",
+      "engine/src/onthepitch/officials.cpp",
+      "engine/src/onthepitch/ecs_direct_systems.cpp"
+    ],
+    "criteria": [
+      "- [x] Player 系统重构完成",
+      "- [x] Humanoid 系统重构完成",
+      "- [x] Ball 系统重构完成",
+      "- [x] Team 系统重构完成",
+      "- [x] Referee 系统重构完成",
+      "- [x] MentalImage 系统重构完成",
+      "- [x] Officials 系统重构完成",
+      "- [x] 编译通过",
+      "- [x] 功能测试通过"
+    ],
+    "id": "11.3",
+    "status": "未完成声明目标",
+    "finding": "“完全移除”与 Match/Team/Referee/Player 当前实现不符。",
+    "next_action": "先补完整迁移验收，再删除兼容层。"
+  },
+  {
+    "document": ".project/milestones/ms-11.4-performance-test.md",
+    "title": "# ms-11.4: 性能测试验证",
+    "files": [],
+    "criteria": [
+      "- [x] 编译通过",
+      "- [x] e2e 测试通过",
+      "- [x] 功能完整性验证通过"
+    ],
+    "id": "11.4",
+    "status": "证据不足",
+    "finding": "历史勾选缺少可复现性能基线，本轮测试不替代历史性能结论。",
+    "next_action": "固定机器、工具链、种子、输入和测量窗口。"
+  },
+  {
+    "document": ".project/milestones/ms-11.5-functional-verify.md",
+    "title": "# ms-11.5: 功能完整性验证",
+    "files": [],
+    "criteria": [
+      "- [x] 编译通过",
+      "- [x] e2e 测试通过",
+      "- [x] 帧同步确定性测试通过"
+    ],
+    "id": "11.5",
+    "status": "部分验证",
+    "finding": "本轮补真实引擎快照重放；完整多进程联网链仍需验收。",
+    "next_action": "将模块、引擎重放和网络确定性分开记录。"
+  },
+  {
+    "document": ".project/milestones/ms-12.1-pbr-shader.md",
+    "title": "# ms-12.1: PBR 着色器实现",
+    "files": [],
+    "criteria": [
+      "- [x] 实现 Cook-Torrance BRDF 着色器",
+      "- [x] 添加法线分布函数（GGX）",
+      "- [x] 添加菲涅尔方程（Schlick）",
+      "- [x] 添加几何函数（Smith）",
+      "- [x] 编译通过"
+    ],
+    "id": "12.1",
+    "status": "部分接入",
+    "finding": "PBR shader 被加载；GraphicsCamera 可通过环境变量进入 RenderViewPBR。",
+    "next_action": "验证光源、材质通道和实际 GPU 输出。"
+  },
+  {
+    "document": ".project/milestones/ms-12.2-material-upgrade.md",
+    "title": "# ms-12.2: 材质系统升级",
+    "files": [
+      "engine/src/types/material.hpp",
+      "engine/src/systems/graphics/rendering/interface_renderer3d.hpp",
+      "engine/src/loaders/aseloader.hpp",
+      "engine/src/loaders/aseloader.cpp",
+      "engine/src/systems/graphics/objects/graphics_geometry.cpp"
+    ],
+    "criteria": [
+      "- [x] 添加 metallic 参数到材质",
+      "- [x] 添加 roughness 参数到材质",
+      "- [x] 添加 ao 参数到材质",
+      "- [x] 更新材质加载逻辑",
+      "- [x] 编译通过"
+    ],
+    "id": "12.2",
+    "status": "部分实现",
+    "finding": "材质与加载路径有 metallic/roughness/ao。",
+    "next_action": "以材质球验证参数进入 G-buffer 并改变画面。"
+  },
+  {
+    "document": ".project/milestones/ms-12.3-ibl.md",
+    "title": "# ms-12.3: IBL 环境光",
+    "files": [],
+    "criteria": [
+      "- [x] 实现环境贴图采样",
+      "- [x] 添加漫反射辐照度贴图",
+      "- [x] 添加镜面反射预滤波贴图",
+      "- [x] 创建 BRDF 查找表",
+      "- [x] 编译通过"
+    ],
+    "id": "12.3",
+    "status": "未完成集成",
+    "finding": "IBL shader 存在，辐照/预滤波 cubemap 和 LUT 生成绑定没有闭环。",
+    "next_action": "接入纹理生命周期，验证粗糙度与环境旋转。"
+  },
+  {
+    "document": ".project/milestones/ms-12.4-integration-test.md",
+    "title": "# ms-12.4: 集成测试",
+    "files": [],
+    "criteria": [
+      "- [x] 编译通过",
+      "- [x] e2e 测试通过",
+      "- [x] 帧同步确定性验证通过"
+    ],
+    "id": "12.4",
+    "status": "未验收渲染",
+    "finding": "C++ 编译不执行 GLSL，也不验证画面。",
+    "next_action": "补 GL shader link、FBO 完整性及参考截图。"
+  },
+  {
+    "document": ".project/milestones/ms-13.1-hdr-pipeline.md",
+    "title": "# ms-13.1: HDR 渲染管线",
+    "files": [],
+    "criteria": [
+      "- [x] 创建 HDR 渲染着色器",
+      "- [x] 编译通过",
+      "- [x] e2e 测试通过"
+    ],
+    "id": "13.1",
+    "status": "部分实现",
+    "finding": "PBR 复用 accumBuffer，HDR 纹理格式与颜色空间仍需验证。",
+    "next_action": "记录线性工作空间、FBO 格式和显示转换。"
+  },
+  {
+    "document": ".project/milestones/ms-13.2-tone-mapping.md",
+    "title": "# ms-13.2: 色调映射",
+    "files": [],
+    "criteria": [
+      "- [x] 实现 Reinhard 色调映射",
+      "- [x] 实现 ACES 色调映射",
+      "- [x] 实现 Uncharted 2 色调映射",
+      "- [x] 实现 Filmic 色调映射",
+      "- [x] 编译通过"
+    ],
+    "id": "13.2",
+    "status": "部分接入",
+    "finding": "tonemapping shader 有多算子，PBR pass 调用了色调映射。",
+    "next_action": "验证 gamma/sRGB 无重复转换及 HDR 梯度。"
+  },
+  {
+    "document": ".project/milestones/ms-13.3-auto-exposure.md",
+    "title": "# ms-13.3: 自动曝光",
+    "files": [],
+    "criteria": [
+      "- [x] 实现场景亮度计算",
+      "- [x] 实现曝光值计算",
+      "- [x] 编译通过"
+    ],
+    "id": "13.3",
+    "status": "未完成集成",
+    "finding": "auto_exposure 加载并设默认值，但没有亮度归约与跨帧曝光更新链。",
+    "next_action": "实现亮度统计、适应过程及明暗切换测试。"
+  },
+  {
+    "document": ".project/milestones/ms-14.1-csm.md",
+    "title": "# ms-14.1: 级联阴影贴图",
+    "files": [],
+    "criteria": [
+      "- [x] 创建 CSM 深度着色器",
+      "- [x] 创建 CSM 采样着色器",
+      "- [x] 编译通过",
+      "- [x] e2e 测试通过"
+    ],
+    "id": "14.1",
+    "status": "未完成集成",
+    "finding": "CSM shader 存在，级联矩阵、深度数组绘制缺少实际链路验收。",
+    "next_action": "实现分割、混合并验证移动镜头稳定性。"
+  },
+  {
+    "document": ".project/milestones/ms-14.2-soft-shadow.md",
+    "title": "# ms-14.2: 软阴影",
+    "files": [],
+    "criteria": [
+      "- [x] 实现 PCF 软阴影",
+      "- [x] 实现方差阴影映射（VSM）",
+      "- [x] 编译通过",
+      "- [x] e2e 测试通过"
+    ],
+    "id": "14.2",
+    "status": "未验收",
+    "finding": "PCF/VSM shader 不证明阴影资源与采样已生效。",
+    "next_action": "分别测软化、漏光和精度，保存对照截图。"
+  },
+  {
+    "document": ".project/milestones/ms-15.1-bloom.md",
+    "title": "# ms-15.1: Bloom 效果",
+    "files": [],
+    "criteria": [
+      "- [x] 创建模糊着色器",
+      "- [x] 创建 Bloom 合成着色器",
+      "- [x] 编译通过",
+      "- [x] e2e 测试通过"
+    ],
+    "id": "15.1",
+    "status": "未完成集成",
+    "finding": "PBR 中 Bloom 明确 BindTexture(0)，默认强度为 0。",
+    "next_action": "接亮部提取、双向模糊和合成纹理。"
+  },
+  {
+    "document": ".project/milestones/ms-15.2-ssr.md",
+    "title": "# ms-15.2: SSR 屏幕空间反射",
+    "files": [],
+    "criteria": [
+      "- [x] 创建 SSR 着色器",
+      "- [x] 编译通过",
+      "- [x] e2e 测试通过"
+    ],
+    "id": "15.2",
+    "status": "未完成集成",
+    "finding": "SSR shader 被加载，PBR pass 未执行 SSR。",
+    "next_action": "实现深度/法线输入、步进与边缘淡出。"
+  },
+  {
+    "document": ".project/milestones/ms-15.3-motion-blur.md",
+    "title": "# ms-15.3: 运动模糊",
+    "files": [],
+    "criteria": [
+      "- [x] 创建运动模糊着色器",
+      "- [x] 编译通过",
+      "- [x] e2e 测试通过"
+    ],
+    "id": "15.3",
+    "status": "未完成集成",
+    "finding": "运动模糊 shader 存在，速度纹理和后处理 pass 未闭环。",
+    "next_action": "建立前后帧变换，覆盖回滚时的拖影。"
+  },
+  {
+    "document": ".project/milestones/ms-15.4-fxaa.md",
+    "title": "# ms-15.4: 抗锯齿",
+    "files": [],
+    "criteria": [
+      "- [x] 创建 FXAA 着色器",
+      "- [x] 编译通过",
+      "- [x] e2e 测试通过"
+    ],
+    "id": "15.4",
+    "status": "未完成集成",
+    "finding": "FXAA 被加载，当前 PBR 输出路径未调用该 pass。",
+    "next_action": "在色调映射后接入，并比较边缘和文字。"
+  },
+  {
+    "document": ".project/milestones/ms-15.5-integration-test.md",
+    "title": "# ms-15.5: 集成测试",
+    "files": [],
+    "criteria": [
+      "- [x] 编译通过",
+      "- [x] e2e 测试通过",
+      "- [x] 帧同步确定性验证通过"
+    ],
+    "id": "15.5",
+    "status": "未验收",
+    "finding": "没有完整后处理链 GPU 截图或运行测试证据。",
+    "next_action": "分别验收单效果、组合和不同分辨率。"
+  },
+  {
+    "document": ".project/milestones/ms-16.1-interpolation.md",
+    "title": "# ms-16.1: 队伍/裁判插值",
+    "files": [
+      "ball.cpp",
+      "match.cpp",
+      "interpolator.hpp",
+      "engine/src/onthepitch/match.hpp",
+      "engine/src/onthepitch/match.cpp",
+      "engine/src/onthepitch/player/player.hpp",
+      "engine/src/onthepitch/player/player.cpp",
+      "engine/src/frame_sync/interpolator.hpp"
+    ],
+    "criteria": [
+      "- [ ] `Match::SaveInterpolationState()` 保存所有实体插值状态",
+      "- [ ] `Match::PutInterpolated()` 对所有实体应用插值",
+      "- [ ] 球员位置/旋转使用 lerp/slerp 插值",
+      "- [ ] 队伍整体位置插值",
+      "- [ ] 裁判位置插值",
+      "- [ ] 编译通过",
+      "- [ ] e2e 测试通过"
+    ],
+    "id": "16.1",
+    "status": "部分修复",
+    "finding": "插值实现存在；修复客户端 alpha 与边界测试旧预期。",
+    "next_action": "验证球员/裁判实际接入且不改写物理状态。"
+  },
+  {
+    "document": ".project/milestones/ms-16.2-prng.md",
+    "title": "# ms-16.2: 确定性 PRNG 模块",
+    "files": [
+      "fixed_point_determinism_test.cpp",
+      "engine/src/frame_sync/deterministic_prng.hpp",
+      "engine/src/frame_sync/deterministic_prng.cpp",
+      "engine/tests/prng_test.cpp",
+      "engine/sources.cmake"
+    ],
+    "criteria": [
+      "- [ ] 实现 `DeterministicPRNG` 类（xorshift128+）",
+      "- [ ] 支持 seed 设置、next、range 等接口",
+      "- [ ] 跨平台位精确一致（已有 `fixed_point_determinism_test` 作为参考）",
+      "- [ ] 替换引擎中关键路径的 RNG 调用",
+      "- [ ] 单元测试覆盖",
+      "- [ ] 编译通过"
+    ],
+    "id": "16.2",
+    "status": "部分修复",
+    "finding": "PRNG 全 int 范围发生溢出/除零，已修复并补回归；引擎仍用 Boost RNG。",
+    "next_action": "冻结既有序列，补跨编译器 golden vectors。"
+  },
+  {
+    "document": ".project/milestones/ms-16.3-extrapolation.md",
+    "title": "# ms-16.3: 视觉外推",
+    "files": [
+      "engine/src/frame_sync/interpolator.hpp",
+      "engine/src/frame_sync/client_state.hpp",
+      "engine/src/frame_sync/integrated_client.cpp"
+    ],
+    "criteria": [
+      "- [ ] 基于速度/加速度的外推算法",
+      "- [ ] 外推结果在权威帧到达后平滑修正",
+      "- [ ] 外推不超过合理边界（球场范围、最大速度）",
+      "- [ ] 编译通过",
+      "- [ ] e2e 测试通过"
+    ],
+    "id": "16.3",
+    "status": "模块验证",
+    "finding": "Interpolator 覆盖外推，真实球场边界与视觉纠正仍需联调。",
+    "next_action": "测速度上限、位置钳制和远端跳变。"
+  },
+  {
+    "document": ".project/milestones/ms-16.4-state-delta.md",
+    "title": "# ms-16.4: 状态 Delta 压缩",
+    "files": [
+      "engine/src/frame_sync/state_delta_codec.hpp",
+      "engine/src/frame_sync/state_delta_codec.cpp",
+      "engine/tests/state_delta_test.cpp",
+      "engine/sources.cmake"
+    ],
+    "criteria": [
+      "- [ ] 实现 `StateDeltaEncoder` 类",
+      "- [ ] 对比前后两帧状态，只传输差异部分",
+      "- [ ] 压缩率 >50%（典型场景）",
+      "- [ ] 解压无损还原完整状态",
+      "- [ ] 编译通过",
+      "- [ ] 单元测试通过"
+    ],
+    "id": "16.4",
+    "status": "已修复编码缺陷",
+    "finding": "修复 0xFF 转义、全量 fallback、变长状态与截断/溢出拒绝。",
+    "next_action": "测真实快照压缩率，编码调用方需同步升级。"
+  },
+  {
+    "document": ".project/milestones/ms-16.5-prediction-accuracy.md",
+    "title": "# ms-16.5: 预测准确率追踪",
+    "files": [
+      "engine/src/frame_sync/integrated_client.cpp",
+      "engine/src/frame_sync/ux_optimizer.hpp",
+      "engine/src/frame_sync/integrated_client_udp.cpp"
+    ],
+    "criteria": [
+      "- [ ] 回滚时调用 `RecordPrediction(correct/incorrect)`",
+      "- [ ] 预测准确率可在运行时查询",
+      "- [ ] 准确率数据可用于自适应调整",
+      "- [ ] 编译通过"
+    ],
+    "id": "16.5",
+    "status": "已修复统计缺陷",
+    "finding": "原实现把服务端 hash 与自身比较；改为真实预测输入对权威输入的结果统计。",
+    "next_action": "输入准确率与独立状态 hash 校验分开展示。"
+  },
+  {
+    "document": ".project/milestones/ms-16.6-adaptive-predict.md",
+    "title": "# ms-16.6: 自适应预测上限",
+    "files": [
+      "engine/src/frame_sync/client_state.hpp",
+      "engine/src/frame_sync/integrated_client.cpp",
+      "engine/src/frame_sync/ux_optimizer.hpp"
+    ],
+    "criteria": [
+      "- [ ] C++ 客户端读取 RTT 数据",
+      "- [ ] 根据 RTT 动态调整 `MAX_PREDICT_AHEAD_FRAMES`",
+      "- [ ] 高延迟时增加预测窗口，低延迟时减少",
+      "- [ ] 编译通过"
+    ],
+    "id": "16.6",
+    "status": "部分实现",
+    "finding": "自适应类有单测，接入准确率，但没有真实 RTT 测量链。",
+    "next_action": "增加对应请求的回声时间戳，再启用 RTT 策略。"
+  },
+  {
+    "document": ".project/milestones/ms-16.7-replay.md",
+    "title": "# ms-16.7: 回放系统",
+    "files": [
+      "engine/src/frame_sync/replay_recorder.hpp",
+      "engine/src/frame_sync/replay_recorder.cpp",
+      "engine/src/frame_sync/replay_player.hpp",
+      "engine/src/frame_sync/replay_player.cpp",
+      "engine/tests/replay_test.cpp",
+      "engine/sources.cmake"
+    ],
+    "criteria": [
+      "- [ ] 录制所有帧输入和状态",
+      "- [ ] 回放时按序重放输入，状态一致",
+      "- [ ] 支持快进/快退",
+      "- [ ] 回放文件大小合理（使用 Delta 压缩）",
+      "- [ ] 编译通过",
+      "- [ ] e2e 测试通过"
+    ],
+    "id": "16.7",
+    "status": "部分修复",
+    "finding": "TCP 回放录制已确认整帧输入、真实 hash 和全局槽位数。",
+    "next_action": "场景仍 unknown；压缩、seek 和完整播放链尚需接入。"
+  },
+  {
+    "document": ".project/milestones/ms-16.8-jitter-buffer.md",
+    "title": "# ms-16.8: 自适应抖动缓冲",
+    "files": [
+      "engine/src/frame_sync/client_state.hpp",
+      "engine/src/frame_sync/integrated_client.cpp",
+      "engine/src/frame_sync/jitter_stats.hpp"
+    ],
+    "criteria": [
+      "- [ ] 读取 `JitterStats` 推荐值",
+      "- [ ] 动态调整缓冲帧数（1~5帧）",
+      "- [ ] 抖动高时增加缓冲，抖动低时减少缓冲",
+      "- [ ] 编译通过"
+    ],
+    "id": "16.8",
+    "status": "部分实现",
+    "finding": "TCP 重新采集实际到达时间；抖动缓冲未控制播放延迟。",
+    "next_action": "用扰动测缓冲深度、延迟和回滚率。"
+  },
+  {
+    "document": ".project/milestones/ms-16.9-integration-test.md",
+    "title": "# ms-16.9: 集成测试",
+    "files": [],
+    "criteria": [
+      "- [ ] 队伍/裁判插值正常工作",
+      "- [ ] 确定性 PRNG 跨平台一致",
+      "- [ ] 视觉外推在延迟时平滑",
+      "- [ ] 状态 Delta 压缩正确解压",
+      "- [ ] 预测准确率追踪准确",
+      "- [ ] 自适应预测上限根据 RTT 调整",
+      "- [ ] 回放系统录制/回放一致",
+      "- [ ] 自适应抖动缓冲动态调整",
+      "- [ ] e2e 测试通过",
+      "- [ ] 性能测试通过（无明显退化）"
+    ],
+    "id": "16.9",
+    "status": "部分验证",
+    "finding": "模块集成测试可跑，默认正确性验收已分离 Debug 性能门槛。",
+    "next_action": "补真实网络/GPU 联调，Release 单独测吞吐。"
+  },
+  {
+    "document": ".project/phases/phase17.md",
+    "title": "# ms-17.1: 延迟补偿",
+    "files": [],
+    "criteria": [],
+    "id": "17.1",
+    "status": "未完成集成",
+    "finding": "删除心跳伪造的固定 50 ms RTT；单向时间戳不能推导往返延迟。",
+    "next_action": "设计回声标识、环回时间戳和服务端输入调度。"
+  },
+  {
+    "document": ".project/phases/phase17.md",
+    "title": "# ms-17.2: 状态快照压缩传输",
+    "files": [],
+    "criteria": [],
+    "id": "17.2",
+    "status": "已修复模块缺陷",
+    "finding": "快照变长回退、长度验证、失败不污染基线及统计已修复。",
+    "next_action": "接实际关键帧/增量消息并测试关键帧丢失恢复。"
+  },
+  {
+    "document": ".project/milestones/ms-17.3.md",
+    "title": "# ms-17.3: 观战模式",
+    "files": [
+      "spectator.hpp",
+      "spectator_test.cpp"
+    ],
+    "criteria": [],
+    "id": "17.3",
+    "status": "模块实现",
+    "finding": "spectator 管理逻辑有测试；真实加入、只读权限与广播链仍需验收。",
+    "next_action": "连接不发送输入的观众，验证不占用玩家槽位。"
+  },
+  {
+    "document": ".project/phases/phase17.md",
+    "title": "# ms-17.4: 回放系统集成",
+    "files": [],
+    "criteria": [],
+    "id": "17.4",
+    "status": "部分修复",
+    "finding": "TCP 回放接入与作用域已修正；播放界面、场景恢复和默认 UDP 接入未完整。",
+    "next_action": "从录制重建 GameEnv 并逐帧比对 hash。"
+  },
+  {
+    "document": ".project/phases/phase17.md",
+    "title": "# ms-17.5: 网络诊断工具",
+    "files": [],
+    "criteria": [],
+    "id": "17.5",
+    "status": "部分实现",
+    "finding": "诊断模块有测试，固定 RTT 假数据已移除。",
+    "next_action": "缺失指标显示未知，补真实丢包分母与 overlay。"
+  },
+  {
+    "document": ".project/phases/phase18.md",
+    "title": "# ms-18.1: 大厅协议与房间元数据",
+    "files": [],
+    "criteria": [],
+    "id": "18.1",
+    "status": "已修复定界",
+    "finding": "StartGame 添加 uint16 地址长度，服务端验证端口，支持分片/粘包定界。",
+    "next_action": "双方同时升级；RoomConfig/Metadata 的 sizeof 布局仍需跨平台协议治理。"
+  },
+  {
+    "document": ".project/phases/phase18.md",
+    "title": "# ms-18.2: 房间管理器",
+    "files": [],
+    "criteria": [],
+    "id": "18.2",
+    "status": "部分修复",
+    "finding": "校验房间容量/名称/地址，阻止重复 StartGame。",
+    "next_action": "补 Finished 回传、房间变更订阅及退出后的元数据同步。"
+  },
+  {
+    "document": ".project/phases/phase18.md",
+    "title": "# ms-18.3: Lobby 服务器",
+    "files": [],
+    "criteria": [],
+    "id": "18.3",
+    "status": "已接入生产测试",
+    "finding": "LobbyServer 纳入构建与测试；有界异步发送、断开清理、重名与聊天权限限制。",
+    "next_action": "自动创建游戏进程与房间列表广播未闭环。"
+  },
+  {
+    "document": ".project/phases/phase18.md",
+    "title": "# ms-18.4: 客户端大厅集成",
+    "files": [],
+    "criteria": [],
+    "id": "18.4",
+    "status": "部分修复",
+    "finding": "移除同步/异步争抢读取，修复分片聊天与 EOF，限制名字和聊天长度。",
+    "next_action": "主客户端仍需接入大厅 UI 与 GameStarted 转接。"
+  },
+  {
+    "document": ".project/phases/phase18.md",
+    "title": "# ms-18.5: 端到端测试",
+    "files": [],
+    "criteria": [],
+    "id": "18.5",
+    "status": "部分验证",
+    "finding": "实际 LobbyServer 测试覆盖创建、加入、聊天、准备、开局、重名和分片/EOF。",
+    "next_action": "尚非多游戏进程与观战的完整 E2E。"
+  }
+]

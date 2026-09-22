@@ -31,6 +31,9 @@ namespace frame_sync {
 /// efficient compression.
 class StateDeltaCodec {
  public:
+  // 2026-09-09: bound allocations from untrusted snapshot headers.
+  static constexpr size_t kMaxStateBytes = 64 * 1024 * 1024;
+  static constexpr uint32_t kFullStateFlag = 0x80000000u;
   StateDeltaCodec() = default;
 
   /// @brief Set the baseline (full) state
@@ -52,25 +55,32 @@ class StateDeltaCodec {
   /// @param current_state The current full state
   /// @return Delta-encoded string. Empty if no baseline or error.
   [[nodiscard]] std::string EncodeDelta(const std::string& current_state) {
+    if (current_state.size() > kMaxStateBytes) return {};
     if (!has_baseline_) {
       // No baseline, return full state as "delta"
       baseline_ = current_state;
       has_baseline_ = true;
-      return current_state;
+      // 2026-09-09: raw fallback was not decodable; tag and frame full states.
+      // return current_state;
+      return PackFullState(current_state);
     }
 
     // Ensure sizes match
     if (current_state.size() != baseline_.size()) {
       // Size mismatch, return full state and reset baseline
       baseline_ = current_state;
-      return current_state;
+      // return current_state;
+      return PackFullState(current_state);
     }
 
     // Compute XOR delta
     std::string xor_delta;
-    xor_delta.reserve(current_state.size());
+    // 2026-09-09: resize once instead of checking capacity per byte.
+    // xor_delta.reserve(current_state.size());
+    xor_delta.resize(current_state.size());
     for (size_t i = 0; i < current_state.size(); ++i) {
-      xor_delta.push_back(current_state[i] ^ baseline_[i]);
+      // xor_delta.push_back(current_state[i] ^ baseline_[i]);
+      xor_delta[i] = current_state[i] ^ baseline_[i];
     }
 
     // RLE compress the XOR delta
@@ -100,7 +110,9 @@ class StateDeltaCodec {
   /// @brief Decode delta to reconstruct state
   /// @param delta The delta-encoded string
   /// @return Reconstructed full state. Empty if error.
-  [[nodiscard]] std::string DecodeDelta(const std::string& delta) {
+  // 2026-09-09: validate the expected size before committing a new baseline.
+  // [[nodiscard]] std::string DecodeDelta(const std::string& delta) {
+  [[nodiscard]] std::string DecodeDelta(const std::string& delta, size_t expected_size = 0) {
     if (delta.size() < sizeof(uint32_t)) {
       return {};
     }
@@ -108,6 +120,18 @@ class StateDeltaCodec {
     // Extract original size
     uint32_t original_size;
     std::memcpy(&original_size, delta.data(), sizeof(uint32_t));
+
+    const bool full = (original_size & kFullStateFlag) != 0;
+    original_size &= ~kFullStateFlag;
+    if (original_size > kMaxStateBytes ||
+        (expected_size != 0 && expected_size != original_size)) return {};
+    if (full) {
+      if (delta.size() - sizeof(uint32_t) != original_size) return {};
+      baseline_ = delta.substr(sizeof(uint32_t));
+      has_baseline_ = true;
+      return baseline_;
+    }
+    if (!has_baseline_ || baseline_.size() != original_size) return {};
 
     // Decompress the RLE-encoded XOR delta
     std::string compressed = delta.substr(sizeof(uint32_t));
@@ -126,9 +150,12 @@ class StateDeltaCodec {
 
     // Reconstruct state by XORing with baseline
     std::string result;
-    result.reserve(original_size);
+    // 2026-09-09: allocate the exact output once.
+    // result.reserve(original_size);
+    result.resize(original_size);
     for (size_t i = 0; i < original_size; ++i) {
-      result.push_back(xor_delta[i] ^ baseline_[i]);
+      // result.push_back(xor_delta[i] ^ baseline_[i]);
+      result[i] = xor_delta[i] ^ baseline_[i];
     }
 
     // Update baseline for next frame
@@ -177,7 +204,9 @@ class StateDeltaCodec {
         ++count;
       }
 
-      if (count >= 3) {
+      // 2026-09-09: literal 0xFF must be escaped even for runs of one byte.
+      // if (count >= 3) {
+      if (count >= 3 || static_cast<uint8_t>(current) == 0xFF) {
         // Encode as run: 0xFF + count + byte
         output.push_back(static_cast<char>(0xFF));
         output.push_back(static_cast<char>(count));
@@ -198,19 +227,22 @@ class StateDeltaCodec {
   /// @param expected_size Expected output size
   /// @return Decoded string
   [[nodiscard]] static std::string RLEDecompress(const std::string& input, size_t expected_size) {
+    if (expected_size > kMaxStateBytes) return {};
     std::string output;
     output.reserve(expected_size);
 
     size_t i = 0;
     while (i < input.size() && output.size() < expected_size) {
-      if (i + 2 < input.size() && 
-          static_cast<uint8_t>(input[i]) == 0xFF) {
+      // 2026-09-09: reject truncated markers, zero runs and overflowing runs.
+      // if (i + 2 < input.size() && static_cast<uint8_t>(input[i]) == 0xFF) {
+      if (static_cast<uint8_t>(input[i]) == 0xFF) {
+        if (input.size() - i < 3) return {};
         // Run: 0xFF + count + byte
         uint8_t count = static_cast<uint8_t>(input[i + 1]);
         char byte = input[i + 2];
-        for (uint8_t j = 0; j < count && output.size() < expected_size; ++j) {
-          output.push_back(byte);
-        }
+        // for (uint8_t j = 0; j < count && output.size() < expected_size; ++j) output.push_back(byte);
+        if (count == 0 || count > expected_size - output.size()) return {};
+        output.append(count, byte);
         i += 3;
       } else {
         // Literal byte
@@ -219,10 +251,18 @@ class StateDeltaCodec {
       }
     }
 
+    // 2026-09-09: don't accept trailing garbage or a short decoded state.
+    if (i != input.size() || output.size() != expected_size) return {};
     return output;
   }
 
  private:
+  static std::string PackFullState(const std::string& state) {
+    const uint32_t header = static_cast<uint32_t>(state.size()) | kFullStateFlag;
+    std::string result(reinterpret_cast<const char*>(&header), sizeof(header));
+    result.append(state);
+    return result;
+  }
   std::string baseline_;
   bool has_baseline_ = false;
 };

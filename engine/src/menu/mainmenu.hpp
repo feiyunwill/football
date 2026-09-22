@@ -29,7 +29,8 @@ class MainMenuPage : public Gui2Page {
  private:
   void CreateMenuItems();
   void UpdateSelection();
-  void HandleInput();
+  // 2026-09-09: unused, invalid input handler archived in the implementation.
+  // void HandleInput();
 
   Gui2Caption *startGameCaption;
   Gui2Caption *multiplayerCaption;

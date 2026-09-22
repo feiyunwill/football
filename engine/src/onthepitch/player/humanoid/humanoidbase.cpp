@@ -679,7 +679,9 @@ void HumanoidBase::Process() {
     if (interruptAnim != e_InterruptAnim_ReQueue && !found) {
       DO_VALIDATION;
       std::println("RED ALERT! NO APPLICABLE ANIM FOUND FOR HUMANOIDBASE! NOOOO!");
-      std::println("currentanimtype: {}", currentAnim.anim->GetVariable("type"));
+      // 2026-09-09: read animation metadata without temporary key/value allocation.
+      // std::println("currentanimtype: {}", currentAnim.anim->GetVariable("type"));
+      std::println("currentanimtype: {}", currentAnim.anim->GetVariableRef("type"));
       for (unsigned int i = 0; i < commandQueue.size(); i++) {
         DO_VALIDATION;
         std::println("desiredanimtype: {}", static_cast<int>(commandQueue[i].desiredFunctionType));
@@ -698,7 +700,9 @@ void HumanoidBase::Process() {
       animApplyBuffer.smoothFactor = (interruptAnim == e_InterruptAnim_Switch) ? 0.6f : 1.0f;
 
       // decaying difficulty
-      float animDiff = atof(currentAnim.anim->GetVariable("animdifficultyfactor").c_str());
+      // 2026-09-09: read animation metadata without temporary key/value allocation.
+      // float animDiff = atof(currentAnim.anim->GetVariable("animdifficultyfactor").c_str());
+      float animDiff = atof(currentAnim.anim->GetVariableRef("animdifficultyfactor").c_str());
       if (animDiff > decayingDifficultyFactor) decayingDifficultyFactor = animDiff;
       // if we just requeued, for example, from movement to ballcontrol, there's no reason we can not immediately requeue to another ballcontrol again (next time). only apply the initial requeue delay on subsequent anims of the same type
       // (so we can have a fast ballcontrol -> ballcontrol requeue, but after that, use the initial delay)
@@ -771,45 +775,99 @@ void HumanoidBase::Put(bool mirror) {
 }
 
 // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
-void HumanoidBase::SaveInterpolationState() {
+// 2026-09-10: interpolate display pose buffers; keep simulation state untouched.
+// void HumanoidBase::SaveInterpolationState() {
+//   DO_VALIDATION;
+//   previousSpatialState = spatialState;
+//   interpolationStateSaved = true;
+// }
+void HumanoidBase::SaveInterpolationState(bool mirror, bool from_display, bool active) {
   DO_VALIDATION;
-  previousSpatialState = spatialState;
+  interpolationStateSaved = false;
+  if (!active) return;
+  if (joints.size() > previousRenderJoints.size())
+    throw std::length_error("Render skeleton exceeds interpolation capacity");
+  if (!from_display) UpdateFullbodyNodes(mirror);
+  previousFullbodyOffset = fullbodyNode->GetPosition();
+  previousRenderJointCount = joints.size();
+  for (size_t i = 0; i < joints.size(); ++i) {
+    previousRenderJoints[i] = {joints[i].position, joints[i].orientation};
+  }
   interpolationStateSaved = true;
 }
 
+// 2026-09-10: interpolate display pose buffers; keep simulation state untouched.
+// void HumanoidBase::PutInterpolated(float t, bool mirror) {
+//   DO_VALIDATION;
+//   // Clamp t to [0, 1]
+//   t = std::clamp(t, 0.0f, 1.0f);
+//   
+//   // If no previous state saved, use standard Put
+//   if (!interpolationStateSaved) {
+//     Put(mirror);
+//     return;
+//   }
+//   
+//   // Interpolate position
+//   Vector3 interpPos = previousSpatialState.position * (1.0f - t) + spatialState.position * t;
+//   
+//   // Interpolate direction vector
+//   Vector3 interpDir = previousSpatialState.directionVec * (1.0f - t) + spatialState.directionVec * t;
+//   float interpAngle = interpDir.GetAngle2D();
+//   
+//   // Update spatial state with interpolated values for rendering
+//   SpatialState interpState = spatialState;
+//   interpState.position = interpPos;
+//   interpState.directionVec = interpDir;
+//   interpState.angle = interpAngle;
+//   
+//   // Temporarily use interpolated state for rendering
+//   SpatialState savedState = spatialState;
+//   spatialState = interpState;
+//   
+//   // Use standard Put with the interpolated state
+//   Put(mirror);
+//   
+//   // Restore current state
+//   spatialState = savedState;
+// }
 void HumanoidBase::PutInterpolated(float t, bool mirror) {
   DO_VALIDATION;
-  // Clamp t to [0, 1]
   t = std::clamp(t, 0.0f, 1.0f);
-  
-  // If no previous state saved, use standard Put
-  if (!interpolationStateSaved) {
-    Put(mirror);
-    return;
+  UpdateFullbodyNodes(mirror);
+  if (!interpolationStateSaved || previousRenderJointCount != joints.size() || t >= 1.0f) return;
+  const Vector3 currentOffset = fullbodyNode->GetPosition();
+  const Vector3 offset = previousFullbodyOffset * (1.0f - t) + currentOffset * t;
+  fullbodyNode->SetPosition(offset);
+  for (size_t i = 0; i < joints.size(); ++i) {
+    joints[i].position = previousRenderJoints[i].position * (1.0f - t) + joints[i].position * t;
+    // 2026-09-10: the correction's first pose is exactly the last displayed pose.
+    // joints[i].orientation = previousRenderJoints[i].orientation.GetSlerped(t, joints[i].orientation);
+    joints[i].orientation = t == 0.0f ? previousRenderJoints[i].orientation
+                                    : previousRenderJoints[i].orientation.GetSlerped(t, joints[i].orientation);
   }
-  
-  // Interpolate position
-  Vector3 interpPos = previousSpatialState.position * (1.0f - t) + spatialState.position * t;
-  
-  // Interpolate direction vector
-  Vector3 interpDir = previousSpatialState.directionVec * (1.0f - t) + spatialState.directionVec * t;
-  float interpAngle = interpDir.GetAngle2D();
-  
-  // Update spatial state with interpolated values for rendering
-  SpatialState interpState = spatialState;
-  interpState.position = interpPos;
-  interpState.directionVec = interpDir;
-  interpState.angle = interpAngle;
-  
-  // Temporarily use interpolated state for rendering
-  SpatialState savedState = spatialState;
-  spatialState = interpState;
-  
-  // Use standard Put with the interpolated state
-  Put(mirror);
-  
-  // Restore current state
-  spatialState = savedState;
+  hairStyle->SetRotation(joints[2].orientation, false);
+  hairStyle->SetPosition(joints[2].position * zMultiplier + offset, false);
+  hairStyle->RecursiveUpdateSpatialData(e_SpatialDataType_Both);
+}
+
+// 2026-09-10: attachments must use the same scaled display pose as skinning.
+bool HumanoidBase::GetRenderAttachmentPose(BodyPart part, const Vector3& localOffset,
+                                          Vector3& position, Quaternion& orientation) const {
+  const auto index = std::to_underlying(part);
+  if (index < 0 || index >= body_part_max)
+    throw std::out_of_range("Invalid render attachment body part");
+  const auto& node = nodeMap[index];
+  if (!node) return false;
+  for (const auto& joint : joints) {
+    if (joint.node == node) {
+      position = fullbodyNode->GetPosition() +
+                 (joint.position + joint.orientation * localOffset) * zMultiplier;
+      orientation = joint.orientation;
+      return true;
+    }
+  }
+  return false;
 }
 
 void HumanoidBase::CalculateGeomOffsets() { DO_VALIDATION; }
@@ -965,7 +1023,9 @@ void HumanoidBase::TripMe(const Vector3 &tripVector, int tripType) {
     DO_VALIDATION;
     if (this->interruptAnim == e_InterruptAnim_None &&
         (currentAnim.functionType != e_FunctionType_Trip ||
-         (currentAnim.anim->GetVariable("triptype").compare("1") == 0 &&
+         // 2026-09-09: read animation metadata without temporary key/value allocation.
+         // (currentAnim.anim->GetVariable("triptype").compare("1") == 0 &&
+         (currentAnim.anim->GetVariableRef("triptype").compare("1") == 0 &&
           tripType > 1)) &&
         currentAnim.functionType != e_FunctionType_Sliding) {
       DO_VALIDATION;
@@ -1189,7 +1249,9 @@ bool HumanoidBase::SelectAnim(const PlayerCommand &command,
     query.tripType = command.tripType;
   }
   query.properties.set("incoming_special_state", currentAnim.anim->GetVariableCache().outgoing_special_state());
-  if (match->GetBallRetainer() == player) query.properties.set("incoming_retain_state", currentAnim.anim->GetVariable("outgoing_retain_state"));
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // if (match->GetBallRetainer() == player) query.properties.set("incoming_retain_state", currentAnim.anim->GetVariable("outgoing_retain_state"));
+  if (match->GetBallRetainer() == player) query.properties.set("incoming_retain_state", currentAnim.anim->GetVariableRef("outgoing_retain_state"));
   if (command.useSpecialVar1) query.properties.set_specialvar1(command.specialVar1);
   if (command.useSpecialVar2) query.properties.set_specialvar2(command.specialVar2);
 
@@ -1678,8 +1740,12 @@ void HumanoidBase::SetTripDirectionSimilarityPredicate(const Vector3 &relDesired
 }
 
 bool HumanoidBase::CompareTripDirectionSimilarity(int animIndex1, int animIndex2) const {
-  float rating1 = -GetVectorFromString(anims->GetAnim(animIndex1)->GetVariable("bumpdirection")).GetDotProduct(predicate_RelDesiredTripDirection);
-  float rating2 = -GetVectorFromString(anims->GetAnim(animIndex2)->GetVariable("bumpdirection")).GetDotProduct(predicate_RelDesiredTripDirection);
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // float rating1 = -GetVectorFromString(anims->GetAnim(animIndex1)->GetVariable("bumpdirection")).GetDotProduct(predicate_RelDesiredTripDirection);
+  float rating1 = -GetVectorFromString(anims->GetAnim(animIndex1)->GetVariableRef("bumpdirection")).GetDotProduct(predicate_RelDesiredTripDirection);
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // float rating2 = -GetVectorFromString(anims->GetAnim(animIndex2)->GetVariable("bumpdirection")).GetDotProduct(predicate_RelDesiredTripDirection);
+  float rating2 = -GetVectorFromString(anims->GetAnim(animIndex2)->GetVariableRef("bumpdirection")).GetDotProduct(predicate_RelDesiredTripDirection);
   return rating1 < rating2;
 }
 
@@ -1692,8 +1758,12 @@ bool HumanoidBase::CompareBaseanimSimilarity(int animIndex1, int animIndex2) con
 }
 
 bool HumanoidBase::CompareCatchOrDeflect(int animIndex1, int animIndex2) const {
-  bool catch1 = (anims->GetAnim(animIndex1)->GetVariable("outgoing_retain_state").compare("") != 0);
-  bool catch2 = (anims->GetAnim(animIndex2)->GetVariable("outgoing_retain_state").compare("") != 0);
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // bool catch1 = (anims->GetAnim(animIndex1)->GetVariable("outgoing_retain_state").compare("") != 0);
+  bool catch1 = (anims->GetAnim(animIndex1)->GetVariableRef("outgoing_retain_state").compare("") != 0);
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // bool catch2 = (anims->GetAnim(animIndex2)->GetVariable("outgoing_retain_state").compare("") != 0);
+  bool catch2 = (anims->GetAnim(animIndex2)->GetVariableRef("outgoing_retain_state").compare("") != 0);
 
   if (catch1 == true && catch2 == false) return true;
   return false;
@@ -1710,15 +1780,25 @@ bool HumanoidBase::CompareIdleVariable(int animIndex1, int animIndex2) const {
 }
 
 bool HumanoidBase::ComparePriorityVariable(int animIndex1, int animIndex2) const {
-  return fabs(atof(anims->GetAnim(animIndex1)->GetVariable("priority").c_str())) <
-         fabs(atof(anims->GetAnim(animIndex2)->GetVariable("priority").c_str()));
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // return fabs(atof(anims->GetAnim(animIndex1)->GetVariable("priority").c_str())) <
+  return fabs(atof(anims->GetAnim(animIndex1)->GetVariableRef("priority").c_str())) <
+         // 2026-09-09: read animation metadata without temporary key/value allocation.
+         // fabs(atof(anims->GetAnim(animIndex2)->GetVariable("priority").c_str()));
+         fabs(atof(anims->GetAnim(animIndex2)->GetVariableRef("priority").c_str()));
 }
 
 Vector3 HumanoidBase::CalculatePhysicsVector(Animation *anim, bool useDesiredMovement, const Vector3 &desiredMovement, bool useDesiredBodyDirection, const Vector3 &desiredBodyDirectionRel, std::vector<Vector3> &positions_ret, radian &rotationOffset_ret) const {
 
   positions_ret.clear();
+  // 2026-09-10: the loop emits one position per animation frame. Reserve once
+  // without changing sampling, floating-point operations or existing capacity.
+  if (anim->GetFrameCount() > 0)
+    positions_ret.reserve(static_cast<size_t>(anim->GetFrameCount()));
 
-  int animTouchFrame = atoi(anim->GetVariable("touchframe").c_str());
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // int animTouchFrame = atoi(anim->GetVariable("touchframe").c_str());
+  int animTouchFrame = atoi(anim->GetVariableRef("touchframe").c_str());
   bool touch = (animTouchFrame > 0);
 
   float stat_agility = player->GetStat(physical_agility);
@@ -1782,7 +1862,9 @@ Vector3 HumanoidBase::CalculatePhysicsVector(Animation *anim, bool useDesiredMov
 
   bool isBaseAnim = anim->GetVariableCache().baseanim();
 
-  float difficultyFactor = atof(anim->GetVariable("animdifficultyfactor").c_str());
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // float difficultyFactor = atof(anim->GetVariable("animdifficultyfactor").c_str());
+  float difficultyFactor = atof(anim->GetVariableRef("animdifficultyfactor").c_str());
   float difficultyPenaltyFactor = std::pow(
       clamp((difficultyFactor - 0.0f) *
                 (1.0f - (stat_agility * 0.2f + stat_acceleration * 0.2f)) *
@@ -1848,7 +1930,9 @@ Vector3 HumanoidBase::CalculatePhysicsVector(Animation *anim, bool useDesiredMov
   if (animType== e_DefString_Deflect)     { physicsBias *= 0.0f; }
 
   if (animType== e_DefString_Sliding)     { physicsBias *= 1.0f; }
-  if (animType== e_DefString_Trip)        { if (anim->GetVariable("triptype").compare("1") == 0) physicsBias *= 0.5f; else physicsBias *= 0.0f; }
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // if (animType== e_DefString_Trip)        { if (anim->GetVariable("triptype").compare("1") == 0) physicsBias *= 0.5f; else physicsBias *= 0.0f; }
+  if (animType== e_DefString_Trip)        { if (anim->GetVariableRef("triptype").compare("1") == 0) physicsBias *= 0.5f; else physicsBias *= 0.0f; }
 
   if (animType== e_DefString_Special)     { physicsBias *= 0.0f; }
   if (anim->GetVariableCache().incoming_special_state().compare("") != 0)
@@ -2367,7 +2451,9 @@ void HumanoidBase::ProcessState(EnvState *state) {
   state->process(decayingPositionOffset);
   state->process(decayingDifficultyFactor);
   int s = movementHistory.size();
-  state->process(s);
+  // 2026-09-09: bound collection size before allocation/reference use.
+  // state->process(s);
+  state->processCount(s, 1000);
   movementHistory.resize(s);
   for (auto &i : movementHistory) {
     DO_VALIDATION;

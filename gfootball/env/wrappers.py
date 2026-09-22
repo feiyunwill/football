@@ -23,7 +23,9 @@ import collections
 import cv2
 from gfootball.env import football_action_set
 from gfootball.env import observation_preprocessing
-import gym
+# 2026-09-10: retain the four-result protocol without an obsolete Gym dependency.
+# import gym
+from gfootball.env import legacy_api as gym
 import numpy as np
 
 

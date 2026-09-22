@@ -18,6 +18,13 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+# 2026-09-10: initialize Gym IDs only when the environment API is requested.
+# 2026-09-10: register the maintained API; legacy factory output remains unchanged.
+# from gfootball import register_gym_envs
+# register_gym_envs()
+from gfootball import register_gymnasium_envs
+register_gymnasium_envs()
+
 from gfootball.env import config
 from gfootball.env import football_env
 from gfootball.env import observation_preprocessing
@@ -179,7 +186,12 @@ def create_environment(env_name='',
   """
   assert env_name
 
-  scenario_config = config.Config({'level': env_name}).ScenarioConfig()
+  # 2026-09-10: explicit seeds also cover scenario discovery before construction.
+  # scenario_config = config.Config({'level': env_name}).ScenarioConfig()
+  preview_values = {'level': env_name}
+  if 'game_engine_random_seed' in other_config_options:
+    preview_values['game_engine_random_seed'] = other_config_options['game_engine_random_seed']
+  scenario_config = config.Config(preview_values).ScenarioConfig()
   players = [('agent:left_players=%d,right_players=%d' % (
       number_of_left_players_agent_controls,
       number_of_right_players_agent_controls))]
@@ -210,19 +222,41 @@ def create_environment(env_name='',
   c = config.Config(config_values)
 
   env = football_env.FootballEnv(c)
-  if multiagent_to_singleagent:
-    env = wrappers.MultiAgentToSingleAgent(
-        env, number_of_left_players_agent_controls,
-        number_of_right_players_agent_controls)
-  if dump_frequency > 1:
-    env = wrappers.PeriodicDumpWriter(env, dump_frequency, render)
-  elif render:
-    env.render()
-  env = _apply_output_wrappers(
-      env, rewards, representation, channel_dimensions,
-      (number_of_left_players_agent_controls +
-       number_of_right_players_agent_controls == 1), stacked)
-  return env
+  # 2026-09-10: release the owned environment if a later wrapper fails.
+  # if multiagent_to_singleagent:
+  # env = wrappers.MultiAgentToSingleAgent(
+  # env, number_of_left_players_agent_controls,
+  # number_of_right_players_agent_controls)
+  # if dump_frequency > 1:
+  # env = wrappers.PeriodicDumpWriter(env, dump_frequency, render)
+  # elif render:
+  # env.render()
+  # env = _apply_output_wrappers(
+  # env, rewards, representation, channel_dimensions,
+  # (number_of_left_players_agent_controls +
+  # number_of_right_players_agent_controls == 1), stacked)
+  # return env
+  try:
+    if multiagent_to_singleagent:
+      env = wrappers.MultiAgentToSingleAgent(
+          env, number_of_left_players_agent_controls,
+          number_of_right_players_agent_controls)
+    if dump_frequency > 1:
+      env = wrappers.PeriodicDumpWriter(env, dump_frequency, render)
+    elif render:
+      env.render()
+    env = _apply_output_wrappers(
+        env, rewards, representation, channel_dimensions,
+        (number_of_left_players_agent_controls +
+         number_of_right_players_agent_controls == 1), stacked)
+    return env
+  except BaseException as error:
+    try:
+      env.close(finalize=False)
+    except BaseException:
+      if hasattr(error, "add_note"):
+        error.add_note("Environment wrapper construction cleanup also failed.")
+    raise
 
 
 def create_remote_environment(

@@ -86,6 +86,11 @@ enum e_Side {
   e_Side_Left,
   e_Side_Right
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_Side, int64_t value) {
+  return value >= e_Side_Left && value <= e_Side_Right;
+}
+
 constexpr std::strong_ordering operator<=>(e_Side a, e_Side b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }
@@ -96,6 +101,11 @@ enum e_Velocity {
   e_Velocity_Walk,
   e_Velocity_Sprint
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_Velocity, int64_t value) {
+  return value >= e_Velocity_Idle && value <= e_Velocity_Sprint;
+}
+
 constexpr std::strong_ordering operator<=>(e_Velocity a, e_Velocity b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }
@@ -117,6 +127,11 @@ enum e_FunctionType {
   e_FunctionType_Sliding,
   e_FunctionType_Special
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_FunctionType, int64_t value) {
+  return value >= e_FunctionType_None && value <= e_FunctionType_Special;
+}
+
 constexpr std::strong_ordering operator<=>(e_FunctionType a, e_FunctionType b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }
@@ -128,6 +143,11 @@ enum e_TouchType {
   e_TouchType_None,
   e_TouchType_SIZE
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_TouchType, int64_t value) {
+  return value >= e_TouchType_Intentional_Kicked && value <= e_TouchType_None;
+}
+
 constexpr std::strong_ordering operator<=>(e_TouchType a, e_TouchType b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }
@@ -137,6 +157,11 @@ enum e_MatchPhase {
   e_MatchPhase_1stHalf,
   e_MatchPhase_2ndHalf,
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_MatchPhase, int64_t value) {
+  return value >= e_MatchPhase_PreMatch && value <= e_MatchPhase_2ndHalf;
+}
+
 constexpr std::strong_ordering operator<=>(e_MatchPhase a, e_MatchPhase b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }
@@ -179,6 +204,11 @@ enum e_StrictMovement {
   e_StrictMovement_True,
   e_StrictMovement_Dynamic
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_StrictMovement, int64_t value) {
+  return value >= e_StrictMovement_False && value <= e_StrictMovement_Dynamic;
+}
+
 constexpr std::strong_ordering operator<=>(e_StrictMovement a, e_StrictMovement b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }
@@ -318,14 +348,18 @@ struct PlayerImage {
   Vector3 position;
   Vector3 directionVec;
   Vector3 movement;
-  Player *player;
+  // 2026-09-09: newly resized history entries must not contain indeterminate pointers.
+  // Player *player;
+  Player *player = nullptr;
   e_Velocity velocity = e_Velocity_Idle;
   e_PlayerRole role;
   void ProcessState(EnvState* state) { DO_VALIDATION;
     state->process(position);
     state->process(directionVec);
     state->process(movement);
-    state->process(player);
+    // 2026-09-09: mental-image mirroring requires a valid player identity.
+    // state->process(player);
+    state->processRequired(player);
     state->process(velocity);
     state->process(role);
   }

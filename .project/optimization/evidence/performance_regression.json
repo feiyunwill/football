@@ -1,0 +1,15 @@
+{
+  "check": "performance_regression",
+  "fingerprint": "b007765c7460179af180b0df2e284da2a8d0e7297017d40594d5617fb17eb885",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1789272183.9798408,
+  "duration_seconds": 413.573,
+  "argv": [
+    "python3",
+    ".project/checks/performance_regression.py"
+  ],
+  "log": "performance_regression-1789272183979857872.log",
+  "log_sha256": "318c5e057dbedfa0577c114cab5c6d081d85cba7ba70fbb59580b884a7d4f970"
+}

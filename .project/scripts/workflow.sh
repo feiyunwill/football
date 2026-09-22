@@ -9,6 +9,10 @@ TARGET_ID="${2:-}"
 OPTIONS="${3:-}"
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
+# 2026-09-09: route the optimization program through evidence-backed acceptance.
+source "$PROJECT_ROOT/scripts/quality_route.sh"
+quality_route "$ACTION" "$TARGET_ID"
+
 if [[ -z "$ACTION" || -z "$TARGET_ID" ]]; then
   echo "用法: $0 <action> <target_id> [options]"
   echo ""

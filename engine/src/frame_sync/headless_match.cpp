@@ -1,12 +1,14 @@
+#include "frame_sync/default_scenario.hpp"  // 2026-09-09: common deterministic initial state.
 // Copyright 2019 Google LLC & Contributors
 // Headless match runner: runs AI vs AI match without rendering.
 // Verifies the engine + AI can play complete matches without crash.
-// Usage: ./headless_match [left_agents] [right_agents] [seed] [num_frames]
+// Usage: ./headless_match [left_agents] [right_agents] [seed] [num_frames] [--verify-rollback]
 
 #include "game_env.hpp"
 #include "main.hpp"
 
 #include <chrono>
+#include "frame_sync/state_hash.hpp"
 #include <iostream>
 #include <print>
 
@@ -30,11 +32,13 @@ int main(int argc, char* argv[]) {
   env.game_config.render_resolution_x = 1280;
   env.game_config.render_resolution_y = 720;
 
-  auto scenario = ScenarioConfig::make();
-  scenario->left_agents = left;
-  scenario->right_agents = right;
-  scenario->game_engine_random_seed = seed;
-  scenario->real_time = false;
+// 2026-09-09: empty teams cannot initialize a real match.
+// auto scenario = ScenarioConfig::make();
+// scenario->left_agents = left;
+// scenario->right_agents = right;
+// scenario->game_engine_random_seed = seed;
+// scenario->real_time = false;
+  auto scenario = frame_sync::MakeDefaultScenario(left, right, seed);
 
   try {
     env.start_game(*scenario);
@@ -42,6 +46,8 @@ int main(int argc, char* argv[]) {
 
     std::println("GameEnv initialized. Running match...");
 
+    const bool verify_rollback = argc >= 6 && std::string(argv[5]) == "--verify-rollback";
+    const std::string initial_state = verify_rollback ? env.get_state("") : std::string();
     auto start_time = std::chrono::steady_clock::now();
 
     for (int i = 0; i < num_frames; ++i) {
@@ -63,6 +69,20 @@ int main(int argc, char* argv[]) {
     std::println("Duration: {:.1f}s ({:.1f} fps)", total_ms / 1000.0f,
                  num_frames * 1000.0f / total_ms);
     std::println("All {} frames completed without crash.", num_frames);
+    const auto digest = env.get_state_digest();
+    const uint64_t final_hash = frame_sync::ComputeStateHash(digest.data(), digest.size());
+    std::println("Final state hash: {:016x}", final_hash);
+    if (verify_rollback) {
+      env.set_state(initial_state);
+      for (int i = 0; i < num_frames; ++i) env.step();
+      const auto replayed = env.get_state_digest();
+      const auto replay_hash = frame_sync::ComputeStateHash(replayed.data(), replayed.size());
+      if (replay_hash != final_hash) {
+        std::cerr << "Snapshot restore/replay hash mismatch" << std::endl;
+        return 2;
+      }
+      std::println("Snapshot restore/replay verified for {} frames.", num_frames);
+    }
 
     return 0;
 

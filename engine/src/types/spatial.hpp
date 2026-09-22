@@ -39,6 +39,11 @@ namespace blunted {
     e_LocalMode_Relative,
     e_LocalMode_Absolute
   };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_LocalMode, int64_t value) {
+  return value >= e_LocalMode_Relative && value <= e_LocalMode_Absolute;
+}
+
   constexpr std::strong_ordering operator<=>(e_LocalMode a, e_LocalMode b) {
     return std::to_underlying(a) <=> std::to_underlying(b);
   }

@@ -72,34 +72,36 @@ void MainMenuPage::UpdateSelection() {
   }
 }
 
-void MainMenuPage::HandleInput() {
-  DO_VALIDATION;
-
-  if (windowManager->GetButtonPressed(0, 0)) {
-    selectedItem--;
-    if (selectedItem < 0) selectedItem = menuItems.size() - 1;
-    UpdateSelection();
-  }
-
-  if (windowManager->GetButtonPressed(0, 1)) {
-    selectedItem++;
-    if (selectedItem >= static_cast<int>(menuItems.size())) selectedItem = 0;
-    UpdateSelection();
-  }
-
-  if (windowManager->GetButtonPressed(0, 2)) {
-    switch (selectedItem) {
-      case 0:
-        break;
-      case 1:
-        break;
-      case 2:
-        break;
-      case 3:
-        break;
-    }
-  }
-
-  if (windowManager->GetButtonPressed(0, 3)) {
-  }
-}
+// 2026-09-09: archive unused handler calling a nonexistent GUI API.
+// These pages still require a real event/navigation implementation.
+// void MainMenuPage::HandleInput() {
+//   DO_VALIDATION;
+//
+//   if (windowManager->GetButtonPressed(0, 0)) {
+//     selectedItem--;
+//     if (selectedItem < 0) selectedItem = menuItems.size() - 1;
+//     UpdateSelection();
+//   }
+//
+//   if (windowManager->GetButtonPressed(0, 1)) {
+//     selectedItem++;
+//     if (selectedItem >= static_cast<int>(menuItems.size())) selectedItem = 0;
+//     UpdateSelection();
+//   }
+//
+//   if (windowManager->GetButtonPressed(0, 2)) {
+//     switch (selectedItem) {
+//       case 0:
+//         break;
+//       case 1:
+//         break;
+//       case 2:
+//         break;
+//       case 3:
+//         break;
+//     }
+//   }
+//
+//   if (windowManager->GetButtonPressed(0, 3)) {
+//   }
+// }

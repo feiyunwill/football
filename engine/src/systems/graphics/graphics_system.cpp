@@ -44,8 +44,9 @@ void GraphicsSystem::Initialize(bool render, int width, int height) {
   if (!static_cast<Renderer3D *>(renderer_3d_)
            ->CreateContext(width_, height_, bpp_, false)) {
     DO_VALIDATION;
-    Log(e_FatalError, "GraphicsSystem", "Initialize",
-        "Could not create context");
+    // 2026-09-09: startup cleanup belongs to the embedding environment.
+    // Log(e_FatalError, "GraphicsSystem", "Initialize", "Could not create context");
+    throw std::runtime_error("Could not create graphics context");
   }
 
   task_ = new GraphicsTask(this);

@@ -26,6 +26,8 @@ class SystemGraph {
   /// @param depends_on 依赖的系统名称列表
   void Register(const std::string& name, SystemFn fn,
                 std::vector<std::string> depends_on = {}) {
+    // 2026-09-09: stable registration order avoids unordered_map-dependent simulation.
+    if (!systems_.contains(name)) registration_order_.push_back(name);
     systems_[name] = std::move(fn);
     dependencies_[name] = std::move(depends_on);
     sorted_ = false;
@@ -40,7 +42,8 @@ class SystemGraph {
     std::unordered_set<std::string> visited;
     std::unordered_set<std::string> in_stack;
 
-    for (const auto& [name, _] : systems_) {
+    // for (const auto& [name, _] : systems_) {
+    for (const auto& name : registration_order_) {
       if (visited.count(name)) continue;
       if (!TopoSort(name, visited, in_stack)) {
         sorted_order_.clear();
@@ -80,6 +83,7 @@ class SystemGraph {
   /// 清空所有系统
   void Clear() {
     systems_.clear();
+    registration_order_.clear();
     dependencies_.clear();
     sorted_order_.clear();
     sorted_ = false;
@@ -89,6 +93,7 @@ class SystemGraph {
   bool TopoSort(const std::string& name,
                 std::unordered_set<std::string>& visited,
                 std::unordered_set<std::string>& in_stack) {
+    if (!systems_.contains(name)) return false;  // Missing dependency.
     if (in_stack.count(name)) return false;  // 循环依赖
     if (visited.count(name)) return true;
 
@@ -107,6 +112,7 @@ class SystemGraph {
     return true;
   }
 
+  std::vector<std::string> registration_order_;
   std::unordered_map<std::string, SystemFn> systems_;
   std::unordered_map<std::string, std::vector<std::string>> dependencies_;
   std::vector<std::string> sorted_order_;

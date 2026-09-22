@@ -16,6 +16,8 @@
 // i do not offer support, so don't ask. to be used for inspiration :)
 
 #include "opengl_renderer3d.hpp"
+// 2026-09-13: service UI only on the current render owner between batches.
+#include "../render_service.hpp"
 
 #ifndef GL_GLEXT_PROTOTYPES
 #define GL_GLEXT_PROTOTYPES
@@ -38,6 +40,8 @@
 #endif
 
 #include <cmath>
+#include <mutex>
+#include <stdexcept>
 #include "wrap_SDL.h"
 
 #include "../../../base/geometry/aabb.hpp"
@@ -59,9 +63,17 @@ struct GLfunctions {
 #undef SDL_PROC
 };
 
-GLfunctions mapping;
+// 2026-09-09: GL dispatch belongs to the calling thread and selected context.
+// GLfunctions mapping;
+thread_local GLfunctions mapping{};
+#ifdef __linux__
+namespace {
+std::mutex egl_lifecycle_mutex;
+std::map<EGLDisplay, size_t> egl_display_users;
+}
+#endif
 
-OpenGLRenderer3D::OpenGLRenderer3D() {
+OpenGLRenderer3D::OpenGLRenderer3D() : functions_(std::make_unique<GLfunctions>()) {
   DO_VALIDATION;
   FOV = 45;
   overallBrightness = 128;
@@ -73,18 +85,72 @@ OpenGLRenderer3D::OpenGLRenderer3D() {
   // SetPriorityClass(thread.native_handle(), HIGH_PRIORITY_CLASS);
 };
 
+// 2026-09-09: destroying the owned GL context releases its remaining GL objects.
+// OpenGLRenderer3D::~OpenGLRenderer3D() { DO_VALIDATION; };
 OpenGLRenderer3D::~OpenGLRenderer3D() {
-    DO_VALIDATION;
-};
+  DO_VALIDATION;
+  if (context) {
+    SDL_GL_MakeCurrent(window, nullptr);
+    SDL_GL_DeleteContext(context);
+    context = nullptr;
+  }
+  if (window) {
+    SDL_DestroyWindow(window);
+    window = nullptr;
+  }
+  if (video_initialized_) SDL_QuitSubSystem(SDL_INIT_VIDEO);
+#ifdef __linux__
+  if (egl_display != EGL_NO_DISPLAY) {
+    std::lock_guard lock(egl_lifecycle_mutex);
+    eglMakeCurrent(egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    if (egl_context != EGL_NO_CONTEXT) eglDestroyContext(egl_display, egl_context);
+    if (egl_surface != EGL_NO_SURFACE) eglDestroySurface(egl_display, egl_surface);
+    auto found = egl_display_users.find(egl_display);
+    if (found != egl_display_users.end() && --found->second == 0) {
+      eglTerminate(egl_display);
+      egl_display_users.erase(found);
+    }
+    egl_display = EGL_NO_DISPLAY;
+  }
+#endif
+}
 
 void OpenGLRenderer3D::SwapBuffers() {
+  // 2026-09-13: preserve GL state while servicing external UI input.
+  ScopedRenderService::Poll();
   DO_VALIDATION;
-  last_screen_.resize(context_width * context_height * 3);
-  if (window) {
-    SDL_GL_SwapWindow(window);
+  // 2026-09-13: avoid unused synchronous RGB transfer in native display clients.
+  //   last_screen_.resize(context_width * context_height * 3);
+  //   // 2026-09-10: read the completed back buffer before presenting it. Reading
+  //   // after the swap captured the previous frame and broke correction/HUD pixels.
+  //   // if (window) {
+  //   //   SDL_GL_SwapWindow(window);
+  //   // }
+  //   // 2026-09-09: odd RGB widths otherwise add driver row padding past the string allocation.
+  //   // mapping.glReadPixels(0, 0, context_width, context_height, GL_RGB, GL_UNSIGNED_BYTE,
+  //   //                      &last_screen_[0]);
+  //   GLint previous_alignment = 4;
+  //   mapping.glGetIntegerv(GL_PACK_ALIGNMENT, &previous_alignment);
+  //   mapping.glPixelStorei(GL_PACK_ALIGNMENT, 1);
+  //   mapping.glReadPixels(0, 0, context_width, context_height, GL_RGB, GL_UNSIGNED_BYTE,
+  //                        last_screen_.data());
+  //   mapping.glPixelStorei(GL_PACK_ALIGNMENT, previous_alignment);
+  if (GetGameConfig().capture_frames) {
+    last_screen_.resize(context_width * context_height * 3);
+    // Read the completed back buffer before presentation; preserve caller packing.
+    GLint previous_alignment = 4;
+    mapping.glGetIntegerv(GL_PACK_ALIGNMENT, &previous_alignment);
+    mapping.glPixelStorei(GL_PACK_ALIGNMENT, 1);
+    mapping.glReadPixels(0, 0, context_width, context_height, GL_RGB,
+                         GL_UNSIGNED_BYTE, last_screen_.data());
+    mapping.glPixelStorei(GL_PACK_ALIGNMENT, previous_alignment);
+  } else {
+    // A frame rendered without capture must never expose earlier RGB pixels.
+    last_screen_.clear();
   }
-  mapping.glReadPixels(0, 0, context_width, context_height, GL_RGB, GL_UNSIGNED_BYTE,
-                       &last_screen_[0]);
+  // 2026-09-13: sample again after a potentially blocking readback.
+  ScopedRenderService::Poll();
+  if (window) SDL_GL_SwapWindow(window);
 }
 
 void OpenGLRenderer3D::SetMatrix(const std::string &shaderUniformName,
@@ -139,6 +205,8 @@ void OpenGLRenderer3D::RenderOverlay2D(
 }
 
 void OpenGLRenderer3D::RenderOverlay2D() {
+  // 2026-09-13: preserve GL state while servicing external UI input.
+  ScopedRenderService::Poll();
   DO_VALIDATION;
 
   Matrix4 orthoMatrix = CreateOrthoMatrix(-1, 1, -1, 1, 0.0f, 1.0f);
@@ -212,6 +280,8 @@ void OpenGLRenderer3D::RenderLights(std::deque<LightQueueEntry> &lightQueue,
   std::deque<LightQueueEntry>::iterator lightIter = lightQueue.begin();
 
   while (lightIter != lightQueue.end()) {
+    // 2026-09-13: bounded opportunity between complete draw batches.
+    ScopedRenderService::Poll();
     DO_VALIDATION;
     const LightQueueEntry &light = (*lightIter);
 
@@ -375,156 +445,257 @@ void OpenGLRenderer3D::InitializeOverlayAndQuadBuffers() {
   quadBuffer = CreateSimpleVertexBuffer(quadVertices, sizeof(quadVertices));
 }
 
+// 2026-09-09: context failures propagate to GameEnv cleanup and retry; never terminate the host.
+// void OpenGLRenderer3D::CreateContextSdl() {
+//   DO_VALIDATION;
+//   // 2026-09-09: balance only this renderer's video subsystem reference.
+//   // SDL_Init(SDL_INIT_VIDEO);
+//   if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0) throw std::runtime_error(SDL_GetError());
+//   video_initialized_ = true;
+//
+//   SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+//   SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+//   SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+//   SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+//   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+//
+//   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+//
+//   SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);  // DISABLED?
+//
+// #ifdef __APPLE__
+//   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+//   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+//   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+// #endif
+//
+//   window = SDL_CreateWindow("Google Research Football", SDL_WINDOWPOS_UNDEFINED,
+//                             SDL_WINDOWPOS_UNDEFINED, context_width,
+//                             context_height, SDL_WINDOW_OPENGL);
+//   context = SDL_GL_CreateContext(window);
+//
+//   if (!context) {
+//     DO_VALIDATION;
+//     std::string errorString = SDL_GetError();
+//     std::cout << "Failed on SDL error: " << errorString << std::endl;
+//     std::cout << "You can solve this problem by:" << std::endl;
+//     std::cout << "1) If you are running inside Docker make sure container has "
+//                  "access to XServer by running (outside of the container):"
+//               << std::endl;
+//     std::cout << "  > xhost +\"local:docker@\"" << std::endl;
+//     std::cout << "2) Switch to off-screen rendering by unsetting DISPLAY "
+//                  "environment variable"
+//               << std::endl;
+//     std::cout
+//         << "3) Disable 3D rendering (which makes environment run much faster)."
+//         << std::endl;
+//     exit(1);
+//   }
+// #define SDL_PROC(ret, func, params)                                        \
+//   do {                                                                     \
+//     *reinterpret_cast<void **>(&(mapping.func)) =                          \
+//         SDL_GL_GetProcAddress(#func);                                      \
+//     if (!mapping.func) {                                                   \
+//       DO_VALIDATION;                                                       \
+//       printf("Couldn't load GL function %s: %s\n", #func, SDL_GetError()); \
+//       SDL_SetError("Couldn't load GL function %s: %s\n", #func,            \
+//                    SDL_GetError());                                        \
+//       print_stacktrace();                                                  \
+//       exit(1);                                                             \
+//     }                                                                      \
+//   } while (0);
+// #include "sdl_glfuncs.h"
+// #undef SDL_PROC
+//   *functions_ = mapping;
+// }
+//
+// #ifdef __linux__
+// // Helper macro to check for EGL errors.
+// #define FAIL_IF_EGL_ERROR(egl_expr)                             \
+//   do {                                                          \
+//     (egl_expr);                                                 \
+//     auto error = eglGetError();                                 \
+//     if (error != EGL_SUCCESS) {                                 \
+//       Log(e_FatalError, "OpenGLRenderer3D", "CreateContextEgl", \
+//           "EGL failure: " + int_to_str(__LINE__));              \
+//     }                                                           \
+//   } while (false)
+//
+// void OpenGLRenderer3D::CreateContextEgl() {
+//   std::lock_guard lock(egl_lifecycle_mutex);
+//   static const int MAX_DEVICES = 16;
+//   EGLDeviceEXT eglDevs[MAX_DEVICES];
+//   EGLint numDevices;
+//   PFNEGLQUERYDEVICESEXTPROC eglQueryDevicesEXT =
+//       (PFNEGLQUERYDEVICESEXTPROC)eglGetProcAddress("eglQueryDevicesEXT");
+//   if (eglQueryDevicesEXT == nullptr) {
+//     Log(e_FatalError, "OpenGLRenderer3D", "CreateContextEgl",
+//         "Failed on obtain eglQueryDevicesEXT function");
+//   }
+//   eglQueryDevicesEXT(MAX_DEVICES, eglDevs, &numDevices);
+//
+//   PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =
+//       (PFNEGLGETPLATFORMDISPLAYEXTPROC)eglGetProcAddress(
+//           "eglGetPlatformDisplayEXT");
+//   if (eglGetPlatformDisplayEXT == nullptr) {
+//     Log(e_FatalError, "OpenGLRenderer3D", "CreateContextEgl",
+//         "Failed on obtain eglGetPlatformDisplayEXT function");
+//   }
+//   EGLBoolean success;
+//   int major, minor;
+//   for (EGLint i = 0; i < numDevices; ++i) {
+//     EGLDisplay display =
+//         eglGetPlatformDisplayEXT(EGL_PLATFORM_DEVICE_EXT, eglDevs[i], nullptr);
+//     if (eglGetError() == EGL_SUCCESS && display != EGL_NO_DISPLAY) {
+//       // 2026-09-09: an existing display may serve another live environment.
+//       if (egl_display_users.contains(display)) {
+//         ++egl_display_users[display];
+//         egl_display = display;
+//         break;
+//       }
+//       success = eglInitialize(display, &major, &minor);
+//       if (eglGetError() == EGL_SUCCESS && success == EGL_TRUE) {
+//         egl_display = display;
+//         egl_display_users[display] = 1;
+//         break;
+//       }
+//     }
+//   }
+//   if (egl_display == EGL_NO_DISPLAY) {
+//     Log(e_FatalError, "OpenGLRenderer3D", "CreateContextEgl",
+//         "Failed on construct EGL Display");
+//   }
+//
+//   FAIL_IF_EGL_ERROR(success = eglBindAPI(EGL_OPENGL_API));
+//   EGLint num_configs;
+//   EGLConfig egl_config;
+//   constexpr EGLint kConfigAttribs[] = {EGL_RED_SIZE,
+//                                        8,
+//                                        EGL_GREEN_SIZE,
+//                                        8,
+//                                        EGL_BLUE_SIZE,
+//                                        8,
+//                                        EGL_SURFACE_TYPE,
+//                                        EGL_PBUFFER_BIT,
+//                                        EGL_RENDERABLE_TYPE,
+//                                        EGL_OPENGL_BIT,
+//                                        EGL_NONE};
+//   FAIL_IF_EGL_ERROR(success = eglChooseConfig(egl_display, kConfigAttribs,
+//                                               &egl_config, 1, &num_configs));
+//
+//   // Create EGL surface.
+//   EGLint kPixelBufferAttribs[] = {
+//       EGL_WIDTH, context_width, EGL_HEIGHT, context_height, EGL_NONE,
+//   };
+//   FAIL_IF_EGL_ERROR(egl_surface = eglCreatePbufferSurface(
+//                         egl_display, egl_config, kPixelBufferAttribs));
+//
+//   FAIL_IF_EGL_ERROR(egl_context = eglCreateContext(egl_display, egl_config,
+//                                                    EGL_NO_CONTEXT, nullptr));
+//   FAIL_IF_EGL_ERROR(
+//       eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context));
+// #define SDL_PROC(ret, func, params)                                        \
+//   do {                                                                     \
+//     *reinterpret_cast<void **>(&(mapping.func)) =                          \
+//         (void*) eglGetProcAddress(#func);                                          \
+//     if (!mapping.func) {                                                   \
+//       DO_VALIDATION;                                                       \
+//       printf("Couldn't load mapping.gl function %s\n", #func); \
+//       SDL_SetError("Couldn't load mapping.gl function %s\n", #func);               \
+//       print_stacktrace();                                                  \
+//       exit(1);                                                             \
+//     }                                                                      \
+//   } while (0);
+// #include "sdl_glfuncs.h"
+// #undef SDL_PROC
+//   *functions_ = mapping;
+// }
+// #endif
+//
 void OpenGLRenderer3D::CreateContextSdl() {
-  DO_VALIDATION;
-  SDL_Init(SDL_INIT_VIDEO);
-
+  if (SDL_InitSubSystem(SDL_INIT_VIDEO) != 0)
+    throw std::runtime_error(std::string("SDL video initialization: ") + SDL_GetError());
+  video_initialized_ = true;
   SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
   SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
   SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
   SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
   SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
-
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-
-  SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);  // DISABLED?
-
 #ifdef __APPLE__
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 #endif
-
-  window = SDL_CreateWindow("Google Research Football", SDL_WINDOWPOS_UNDEFINED,
+  window = SDL_CreateWindow("Football", SDL_WINDOWPOS_UNDEFINED,
                             SDL_WINDOWPOS_UNDEFINED, context_width,
                             context_height, SDL_WINDOW_OPENGL);
+  if (!window) throw std::runtime_error(std::string("SDL window creation: ") + SDL_GetError());
   context = SDL_GL_CreateContext(window);
-
-  if (!context) {
-    DO_VALIDATION;
-    std::string errorString = SDL_GetError();
-    std::cout << "Failed on SDL error: " << errorString << std::endl;
-    std::cout << "You can solve this problem by:" << std::endl;
-    std::cout << "1) If you are running inside Docker make sure container has "
-                 "access to XServer by running (outside of the container):"
-              << std::endl;
-    std::cout << "  > xhost +\"local:docker@\"" << std::endl;
-    std::cout << "2) Switch to off-screen rendering by unsetting DISPLAY "
-                 "environment variable"
-              << std::endl;
-    std::cout
-        << "3) Disable 3D rendering (which makes environment run much faster)."
-        << std::endl;
-    exit(1);
-  }
-#define SDL_PROC(ret, func, params)                                        \
-  do {                                                                     \
-    *reinterpret_cast<void **>(&(mapping.func)) =                          \
-        SDL_GL_GetProcAddress(#func);                                      \
-    if (!mapping.func) {                                                   \
-      DO_VALIDATION;                                                       \
-      printf("Couldn't load GL function %s: %s\n", #func, SDL_GetError()); \
-      SDL_SetError("Couldn't load GL function %s: %s\n", #func,            \
-                   SDL_GetError());                                        \
-      print_stacktrace();                                                  \
-      exit(1);                                                             \
-    }                                                                      \
-  } while (0);
+  if (!context) throw std::runtime_error(std::string("SDL GL context creation: ") + SDL_GetError());
+#define SDL_PROC(ret, func, params)                                       \
+  do {                                                                    \
+    mapping.func = reinterpret_cast<decltype(mapping.func)>(SDL_GL_GetProcAddress(#func)); \
+    if (!mapping.func) throw std::runtime_error("Missing SDL GL function: " #func); \
+  } while (false);
 #include "sdl_glfuncs.h"
 #undef SDL_PROC
+  *functions_ = mapping;
 }
 
 #ifdef __linux__
-// Helper macro to check for EGL errors.
-#define FAIL_IF_EGL_ERROR(egl_expr)                             \
-  do {                                                          \
-    (egl_expr);                                                 \
-    auto error = eglGetError();                                 \
-    if (error != EGL_SUCCESS) {                                 \
-      Log(e_FatalError, "OpenGLRenderer3D", "CreateContextEgl", \
-          "EGL failure: " + int_to_str(__LINE__));              \
-    }                                                           \
-  } while (false)
-
 void OpenGLRenderer3D::CreateContextEgl() {
-  static const int MAX_DEVICES = 16;
-  EGLDeviceEXT eglDevs[MAX_DEVICES];
-  EGLint numDevices;
-  PFNEGLQUERYDEVICESEXTPROC eglQueryDevicesEXT =
-      (PFNEGLQUERYDEVICESEXTPROC)eglGetProcAddress("eglQueryDevicesEXT");
-  if (eglQueryDevicesEXT == nullptr) {
-    Log(e_FatalError, "OpenGLRenderer3D", "CreateContextEgl",
-        "Failed on obtain eglQueryDevicesEXT function");
-  }
-  eglQueryDevicesEXT(MAX_DEVICES, eglDevs, &numDevices);
-
-  PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =
-      (PFNEGLGETPLATFORMDISPLAYEXTPROC)eglGetProcAddress(
-          "eglGetPlatformDisplayEXT");
-  if (eglGetPlatformDisplayEXT == nullptr) {
-    Log(e_FatalError, "OpenGLRenderer3D", "CreateContextEgl",
-        "Failed on obtain eglGetPlatformDisplayEXT function");
-  }
-  EGLBoolean success;
-  int major, minor;
-  for (EGLint i = 0; i < numDevices; ++i) {
-    EGLDisplay display =
-        eglGetPlatformDisplayEXT(EGL_PLATFORM_DEVICE_EXT, eglDevs[i], nullptr);
-    if (eglGetError() == EGL_SUCCESS && display != EGL_NO_DISPLAY) {
-      success = eglInitialize(display, &major, &minor);
-      if (eglGetError() == EGL_SUCCESS && success == EGL_TRUE) {
-        egl_display = display;
-        break;
-      }
+  std::lock_guard lock(egl_lifecycle_mutex);
+  constexpr int max_devices = 16;
+  EGLDeviceEXT devices[max_devices]{};
+  EGLint device_count = 0;
+  auto query_devices = reinterpret_cast<PFNEGLQUERYDEVICESEXTPROC>(
+      eglGetProcAddress("eglQueryDevicesEXT"));
+  auto platform_display = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
+      eglGetProcAddress("eglGetPlatformDisplayEXT"));
+  if (!query_devices || !platform_display)
+    throw std::runtime_error("EGL device enumeration extensions are unavailable");
+  if (!query_devices(max_devices, devices, &device_count) || device_count < 0 || device_count > max_devices)
+    throw std::runtime_error("EGL device enumeration failed");
+  for (EGLint index = 0; index < device_count; ++index) {
+    EGLDisplay display = platform_display(EGL_PLATFORM_DEVICE_EXT, devices[index], nullptr);
+    if (display == EGL_NO_DISPLAY) continue;
+    auto existing = egl_display_users.find(display);
+    if (existing != egl_display_users.end()) {
+      ++existing->second;
+      egl_display = display;
+      break;
+    }
+    EGLint major = 0, minor = 0;
+    if (eglInitialize(display, &major, &minor) == EGL_TRUE) {
+      egl_display = display;
+      egl_display_users[display] = 1;
+      break;
     }
   }
-  if (egl_display == EGL_NO_DISPLAY) {
-    Log(e_FatalError, "OpenGLRenderer3D", "CreateContextEgl",
-        "Failed on construct EGL Display");
-  }
-
-  FAIL_IF_EGL_ERROR(success = eglBindAPI(EGL_OPENGL_API));
-  EGLint num_configs;
-  EGLConfig egl_config;
-  constexpr EGLint kConfigAttribs[] = {EGL_RED_SIZE,
-                                       8,
-                                       EGL_GREEN_SIZE,
-                                       8,
-                                       EGL_BLUE_SIZE,
-                                       8,
-                                       EGL_SURFACE_TYPE,
-                                       EGL_PBUFFER_BIT,
-                                       EGL_RENDERABLE_TYPE,
-                                       EGL_OPENGL_BIT,
-                                       EGL_NONE};
-  FAIL_IF_EGL_ERROR(success = eglChooseConfig(egl_display, kConfigAttribs,
-                                              &egl_config, 1, &num_configs));
-
-  // Create EGL surface.
-  EGLint kPixelBufferAttribs[] = {
-      EGL_WIDTH, context_width, EGL_HEIGHT, context_height, EGL_NONE,
-  };
-  FAIL_IF_EGL_ERROR(egl_surface = eglCreatePbufferSurface(
-                        egl_display, egl_config, kPixelBufferAttribs));
-
-  FAIL_IF_EGL_ERROR(egl_context = eglCreateContext(egl_display, egl_config,
-                                                   EGL_NO_CONTEXT, nullptr));
-  FAIL_IF_EGL_ERROR(
-      eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context));
-#define SDL_PROC(ret, func, params)                                        \
-  do {                                                                     \
-    *reinterpret_cast<void **>(&(mapping.func)) =                          \
-        (void*) eglGetProcAddress(#func);                                          \
-    if (!mapping.func) {                                                   \
-      DO_VALIDATION;                                                       \
-      printf("Couldn't load mapping.gl function %s\n", #func); \
-      SDL_SetError("Couldn't load mapping.gl function %s\n", #func);               \
-      print_stacktrace();                                                  \
-      exit(1);                                                             \
-    }                                                                      \
-  } while (0);
+  if (egl_display == EGL_NO_DISPLAY) throw std::runtime_error("EGL display initialization failed");
+  if (eglBindAPI(EGL_OPENGL_API) != EGL_TRUE) throw std::runtime_error("EGL OpenGL API unavailable");
+  constexpr EGLint attributes[] = {EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE, 8,
+      EGL_SURFACE_TYPE, EGL_PBUFFER_BIT, EGL_RENDERABLE_TYPE, EGL_OPENGL_BIT, EGL_NONE};
+  EGLint config_count = 0;
+  EGLConfig config{};
+  if (eglChooseConfig(egl_display, attributes, &config, 1, &config_count) != EGL_TRUE || config_count != 1)
+    throw std::runtime_error("EGL has no matching OpenGL pbuffer configuration");
+  const EGLint surface_attributes[] = {EGL_WIDTH, context_width, EGL_HEIGHT, context_height, EGL_NONE};
+  egl_surface = eglCreatePbufferSurface(egl_display, config, surface_attributes);
+  if (egl_surface == EGL_NO_SURFACE) throw std::runtime_error("EGL pbuffer creation failed");
+  egl_context = eglCreateContext(egl_display, config, EGL_NO_CONTEXT, nullptr);
+  if (egl_context == EGL_NO_CONTEXT) throw std::runtime_error("EGL context creation failed");
+  if (eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context) != EGL_TRUE)
+    throw std::runtime_error("EGL context activation failed");
+#define SDL_PROC(ret, func, params)                                       \
+  do {                                                                    \
+    mapping.func = reinterpret_cast<decltype(mapping.func)>(eglGetProcAddress(#func)); \
+    if (!mapping.func) throw std::runtime_error("Missing EGL GL function: " #func); \
+  } while (false);
 #include "sdl_glfuncs.h"
 #undef SDL_PROC
+  *functions_ = mapping;
 }
 #endif
 
@@ -1272,6 +1443,8 @@ void OpenGLRenderer3D::DeleteVertexBuffer(VertexBufferID vertexBufferID) {
 }
 
 void DrawBufferChunk(int startIndex, int count) {
+  // 2026-09-13: preserve GL state while servicing external UI input.
+  ScopedRenderService::Poll();
   DO_VALIDATION;
   // draw buffer
   if (count > 0) {
@@ -1310,6 +1483,8 @@ void OpenGLRenderer3D::RenderVertexBuffer(
   std::deque<VertexBufferQueueEntry>::const_iterator vertexBufferQueueIter =
       vertexBufferQueue.begin();
   while (vertexBufferQueueIter != vertexBufferQueue.end()) {
+    // 2026-09-13: bounded opportunity between complete draw batches.
+    ScopedRenderService::Poll();
     DO_VALIDATION;
     const VertexBufferQueueEntry *queueEntry = &(*vertexBufferQueueIter);
 
@@ -1980,6 +2155,8 @@ void OpenGLRenderer3D::DeleteFrameBuffer(int fbID) {
 }
 
 void OpenGLRenderer3D::BindFrameBuffer(int fbID) {
+  // 2026-09-13: preserve GL state while servicing external UI input.
+  ScopedRenderService::Poll();
   DO_VALIDATION;
   
   // 2026-09-03 渲染优化：帧缓冲绑定缓存
@@ -2271,8 +2448,10 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
   if (info != GL_TRUE || mapping.glIsShader(shader.vertexShaderID) != GL_TRUE) {
     DO_VALIDATION;
     printf("%d %d\n", info, mapping.glIsShader(shader.vertexShaderID));
-    Log(e_FatalError, "OpenGLRenderer3D", "LoadShader",
-        "1Could not compile vertex program: " + name);
+    // 2026-09-09: unwind startup so the environment releases its GL context.
+    // Log(e_FatalError, "OpenGLRenderer3D", "LoadShader",
+    // "1Could not compile vertex program: " + name);
+    throw std::runtime_error("Could not compile vertex program: " + name);
   }
 
   shader.fragmentShaderID = mapping.glCreateShader(GL_FRAGMENT_SHADER);
@@ -2281,8 +2460,10 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
   if (info != GL_TRUE ||
       mapping.glIsShader(shader.fragmentShaderID) != GL_TRUE) {
     DO_VALIDATION;
-    Log(e_FatalError, "OpenGLRenderer3D", "LoadShader",
-        "2Could not compile fragment program: " + name);
+    // 2026-09-09: unwind startup so the environment releases its GL context.
+    // Log(e_FatalError, "OpenGLRenderer3D", "LoadShader",
+    // "2Could not compile fragment program: " + name);
+    throw std::runtime_error("Could not compile fragment program: " + name);
   }
 
   shader.programID = mapping.glCreateProgram();
@@ -2429,8 +2610,19 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
   }
 
   mapping.glLinkProgram(shader.programID);
+  // 2026-09-09: compilation alone does not validate the stage interface.
+  mapping.glGetProgramiv(shader.programID, GL_LINK_STATUS, &info);
+  if (info != GL_TRUE) {
+    GLint length = 0;
+    mapping.glGetProgramiv(shader.programID, GL_INFO_LOG_LENGTH, &length);
+    std::string detail(std::max(length, 1), '\0');
+    mapping.glGetProgramInfoLog(shader.programID, detail.size(), nullptr, detail.data());
+    throw std::runtime_error("Could not link shader program: " + name + ": " + detail);
+  }
 
-  mapping.glUseProgram(shader.programID);
+  // 2026-09-09: keep the program cache consistent with the actual binding.
+  // mapping.glUseProgram(shader.programID);
+  UseShader(name);
 
   GLint location = 0;
   if (name == "simple") {
@@ -2502,11 +2694,15 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
   }
   if (name == "ibl_irradiance") {
     DO_VALIDATION;
-    SetUniformInt("ibl_irradiance", "map_environment", 0);
+    // 2026-09-09: match the sampler declared in the shader.
+    // SetUniformInt("ibl_irradiance", "map_environment", 0);
+    SetUniformInt("ibl_irradiance", "environmentMap", 0);
   }
   if (name == "ibl_prefilter") {
     DO_VALIDATION;
-    SetUniformInt("ibl_prefilter", "map_environment", 0);
+    // 2026-09-09: match the sampler declared in the shader.
+    // SetUniformInt("ibl_prefilter", "map_environment", 0);
+    SetUniformInt("ibl_prefilter", "environmentMap", 0);
   }
   if (name == "ibl_brdf_lut") {
     DO_VALIDATION;
@@ -2545,7 +2741,8 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
     SetUniformFloat("auto_exposure", "contextHeight", (float)context_height);
     SetUniformFloat("auto_exposure", "minExposure", 0.1f);
     SetUniformFloat("auto_exposure", "maxExposure", 10.0f);
-    SetUniformFloat("auto_exposure", "adaptationSpeed", 1.0f);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformFloat("auto_exposure", "adaptationSpeed", 1.0f);
   }
   if (name == "csm_depth") {
     DO_VALIDATION;
@@ -2554,7 +2751,8 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
   if (name == "csm_sampling") {
     DO_VALIDATION;
     SetUniformInt("csm_sampling", "shadowMapArray", 0);
-    SetUniformInt("csm_sampling", "map_normal", 1);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformInt("csm_sampling", "map_normal", 1);
     SetUniformFloat("csm_sampling", "shadowMapSize", 2048.0f);
     SetUniformFloat("csm_sampling", "shadowBias", 0.005f);
     SetUniformFloat("csm_sampling", "normalBias", 0.02f);
@@ -2566,24 +2764,32 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
   if (name == "vsm_shadow") {
     DO_VALIDATION;
     SetUniformInt("vsm_shadow", "shadowMap", 0);
-    SetUniformInt("vsm_shadow", "map_normal", 1);
-    SetUniformFloat("vsm_shadow", "shadowBias", 0.005f);
-    SetUniformFloat("vsm_shadow", "varianceBias", 0.00001f);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformInt("vsm_shadow", "map_normal", 1);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformFloat("vsm_shadow", "shadowBias", 0.005f);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformFloat("vsm_shadow", "varianceBias", 0.00001f);
   }
   if (name == "blur") {
     DO_VALIDATION;
     SetUniformInt("blur", "map_texture", 0);
-    SetUniformFloat("blur", "contextX", (float)0.0);
-    SetUniformFloat("blur", "contextY", (float)0.0);
-    SetUniformFloat("blur", "contextWidth", (float)context_width);
-    SetUniformFloat("blur", "contextHeight", (float)context_height);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformFloat("blur", "contextX", (float)0.0);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformFloat("blur", "contextY", (float)0.0);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformFloat("blur", "contextWidth", (float)context_width);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformFloat("blur", "contextHeight", (float)context_height);
   }
   if (name == "bloom") {
     DO_VALIDATION;
     SetUniformInt("bloom", "map_hdr", 0);
     SetUniformInt("bloom", "map_bloom", 1);
     SetUniformFloat("bloom", "bloomStrength", 0.3f);
-    SetUniformFloat("bloom", "bloomThreshold", 0.8f);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformFloat("bloom", "bloomThreshold", 0.8f);
     SetUniformFloat("bloom", "bloomClamp", 1.0f);
   }
   if (name == "ssr") {
@@ -2591,11 +2797,13 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
     SetUniformInt("ssr", "map_color", 0);
     SetUniformInt("ssr", "map_normal", 1);
     SetUniformInt("ssr", "map_depth", 2);
-    SetUniformInt("ssr", "map_material", 3);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformInt("ssr", "map_material", 3);
     SetUniformInt("ssr", "maxSteps", 64);
     SetUniformFloat("ssr", "maxDistance", 10.0f);
     SetUniformFloat("ssr", "thickness", 0.1f);
-    SetUniformFloat("ssr", "fadeDistance", 5.0f);
+    // 2026-09-09: inactive in this shader; setting it never affected output.
+    // SetUniformFloat("ssr", "fadeDistance", 5.0f);
   }
   if (name == "motion_blur") {
     DO_VALIDATION;
@@ -2839,19 +3047,33 @@ void OpenGLRenderer3D::SetUniformMatrix4(const std::string &shaderName,
                              (float *)mat.elements);  // true == transposed
 }
 
+// 2026-09-09: SDL and EGL contexts both support scoped environment switching.
+// void OpenGLRenderer3D::SetContext() { if (window) SDL_GL_MakeCurrent(window, context); }
+// void OpenGLRenderer3D::DisableContext() { if (window) SDL_GL_MakeCurrent(window, nullptr); }
 void OpenGLRenderer3D::SetContext() {
-  if (window) {
-    SDL_GL_MakeCurrent(window, context);
-  }
+  mapping = *functions_;
+  if (window) SDL_GL_MakeCurrent(window, context);
+#ifdef __linux__
+  else if (egl_display != EGL_NO_DISPLAY && egl_context != EGL_NO_CONTEXT)
+    eglMakeCurrent(egl_display, egl_surface, egl_surface, egl_context);
+#endif
 }
 
 void OpenGLRenderer3D::DisableContext() {
-  if (window) {
-    SDL_GL_MakeCurrent(window, nullptr);
-  }
+  if (window) SDL_GL_MakeCurrent(window, nullptr);
+#ifdef __linux__
+  else if (egl_display != EGL_NO_DISPLAY)
+    eglMakeCurrent(egl_display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+#endif
 }
 
 const screenshoot &OpenGLRenderer3D::GetScreen() {
+  // 2026-09-13: report disabled or unavailable capture instead of stale RGB.
+  // return last_screen_;
+  if (!GetGameConfig().capture_frames)
+    throw std::logic_error("Frame capture is disabled");
+  if (last_screen_.empty())
+    throw std::logic_error("Render a frame after enabling frame capture");
   return last_screen_;
 }
 

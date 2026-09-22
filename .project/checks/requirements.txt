@@ -1,0 +1,10 @@
+# Versions used by the 2026-09-09 framework acceptance environment.
+absl-py==2.5.0
+iniconfig==2.3.0
+packaging==26.3
+pluggy==1.6.0
+Pygments==2.21.0
+pytest==9.1.1
+
+# 2026-09-10: native gates select this installed package, without a Git fetch.
+pybind11==3.1.0

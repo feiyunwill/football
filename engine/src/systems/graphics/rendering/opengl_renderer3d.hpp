@@ -22,8 +22,11 @@
 #endif
 
 #include "interface_renderer3d.hpp"
+#include <memory>
 
 namespace blunted {
+
+  struct GLfunctions;
 
   class OpenGLRenderer3D : public Renderer3D {
 
@@ -133,12 +136,18 @@ namespace blunted {
                          std::deque<VertexBufferQueueEntry> &skyboxes);
 
     protected:
+      // 2026-09-09: function tables and platform handles belong to a renderer.
+      std::unique_ptr<GLfunctions> functions_;
+      bool video_initialized_ = false;
       SDL_GLContext context = 0;
       SDL_Window* window = nullptr;
 #ifdef __linux__
       EGLDisplay egl_display = nullptr;
-      EGLSurface egl_surface;
-      EGLContext egl_context;
+      // 2026-09-09: partially initialized renderers must also be destructible.
+      // EGLSurface egl_surface;
+      // EGLContext egl_context;
+      EGLSurface egl_surface = EGL_NO_SURFACE;
+      EGLContext egl_context = EGL_NO_CONTEXT;
 #endif
       int context_width, context_height, context_bpp;
 

@@ -1,0 +1,15 @@
+{
+  "check": "environment_lifetime",
+  "fingerprint": "89c7ffb03cefce4aeb71ed21d0eb1b1c6cd83b2f0a426a399e25950514ba9bdf",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1789449546.5221796,
+  "duration_seconds": 61.978,
+  "argv": [
+    "python3",
+    ".project/checks/environment_lifetime.py"
+  ],
+  "log": "environment_lifetime-1789449546522212168.log",
+  "log_sha256": "13880be31487971140aee5cf7edcb6a940273f96f9bdd8f06e9a7445b405c932"
+}

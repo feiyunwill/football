@@ -49,6 +49,11 @@ class FrameSyncServerUDP {
         seed_(seed),
         frame_id_(0),
         retransmit_timer_(io) {
+    // 2026-09-09: each retained peer owns at least one of these bounded slots.
+    // Validate before allocating inputs or scheduling network callbacks.
+    if (left_agents_ > 11 || right_agents_ > 11)
+      throw std::invalid_argument("Each UDP team supports at most 11 controlled slots");
+    frame_sync::CheckedControlledSlots(num_slots_);
     for (size_t i = 0; i < num_slots_; ++i)
       current_inputs_.push_back(frame_sync::SlotInput::Default());
     do_receive();
@@ -99,6 +104,23 @@ class FrameSyncServerUDP {
   void stop() { running_ = false; }
 
  private:
+  // mu_ is held by the caller; channel callbacks run outside its own mutex.
+  void disconnect_locked(ClientSessionUDP* client) {
+    if (client->disconnected) return;
+    client->disconnected = true;
+    client->ready = false;
+    if (client->channel) client->channel->Close();
+    std::vector<uint8_t>().swap(client->recv_buf);
+    // Assigned slots remain reserved for this match; reconnect is a new session.
+  }
+  void send_locked(ClientSessionUDP* client, const void* data, size_t length) {
+    if (client->disconnected || !client->channel) return;
+    if (!length || !client->channel->Send(data, length)) {
+      std::println(stderr, "UDP peer {}:{} disconnected: reliable send failed",
+                   client->endpoint.address().to_string(), client->endpoint.port());
+      disconnect_locked(client);
+    }
+  }
   void do_receive() {
     if (!running_) return;
     auto buf = std::make_shared<std::vector<uint8_t>>(4096);
@@ -108,8 +130,14 @@ class FrameSyncServerUDP {
         [this, buf, sender](boost::system::error_code ec, std::size_t length) {
           if (ec) { do_receive(); return; }
           std::shared_ptr<ClientSessionUDP> client = get_or_create_client(*sender);
-          if (client && client->channel)
-            client->channel->HandleReceived(buf->data(), length);
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // if (client && client->channel)
+  // client->channel->HandleReceived(buf->data(), length);
+          if (client && client->channel &&
+              !client->channel->HandleReceived(buf->data(), length)) {
+            std::lock_guard<std::mutex> lock(mu_);
+            disconnect_locked(client.get());
+          }
           do_receive();
         });
   }
@@ -119,9 +147,14 @@ class FrameSyncServerUDP {
     retransmit_timer_.async_wait([this](boost::system::error_code ec) {
       if (ec || !running_) return;
       std::lock_guard<std::mutex> lock(mu_);
-      for (auto& p : clients_)
-        if (p.second->channel)
-          p.second->channel->TickRetransmit();
+      // 2026-09-09: flat_map iterators return proxy pairs.
+      // for (auto& p : clients_)
+      for (auto&& p : clients_)
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // if (p.second->channel)
+  // p.second->channel->TickRetransmit();
+        if (!p.second->disconnected && p.second->channel &&
+            !p.second->channel->TickRetransmit()) disconnect_locked(p.second.get());
       do_retransmit_timer();
     });
   }
@@ -148,9 +181,18 @@ class FrameSyncServerUDP {
         socket_, sender,
         [this, w](const uint8_t* d, size_t n) {
           auto c = w.lock();
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // if (!c) return;
+  // std::lock_guard<std::mutex> lock(mu_);
           if (!c) return;
           std::lock_guard<std::mutex> lock(mu_);
-          c->recv_buf.insert(c->recv_buf.end(), d, d + n);
+          if (c->disconnected) return;
+  // 2026-09-09: validate before allocation and stop on invalid/overloaded input.
+  // c->recv_buf.insert(c->recv_buf.end(), d, d + n);
+          if (!frame_sync::AppendBoundedBytes(c->recv_buf, d, n, 4096)) {
+            disconnect_locked(c.get());
+            return;
+          }
           while (process_one_message(c)) {}
         });
     clients_[sender] = client;
@@ -162,7 +204,9 @@ class FrameSyncServerUDP {
   void send_session_start(ClientSessionUDP* client) {
     uint8_t buf[32];
     size_t n = frame_sync::PackSessionStart(seed_, left_agents_, right_agents_, buf, sizeof(buf));
-    client->channel->Send(buf, n);
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // client->channel->Send(buf, n);
+    send_locked(client, buf, n);
   }
 
   void send_slot_assignment(ClientSessionUDP* client) {
@@ -170,7 +214,9 @@ class FrameSyncServerUDP {
     size_t n = frame_sync::PackSlotAssignment(
         client->assigned_slots.data(), static_cast<uint16_t>(client->assigned_slots.size()),
         buf, sizeof(buf));
-    client->channel->Send(buf, n);
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // client->channel->Send(buf, n);
+    send_locked(client, buf, n);
   }
 
   void broadcast_authoritative_frame() {
@@ -182,23 +228,29 @@ class FrameSyncServerUDP {
       prev_inputs = previous_inputs_;
     }
     
-    // 2026-09-05 优化: 使用增量广播
-    std::vector<uint8_t> buf(1024);
-    size_t n;
-    
-    // 如果是第一帧或者没有上一帧数据，使用全量广播
-    if (prev_inputs.empty() || frame_id_ == 0) {
-      n = frame_sync::PackAuthoritativeFrame(
-          frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
-          buf.data(), buf.size());
-    } else {
-      // 计算增量
-      n = frame_sync::PackDeltaAuthoritativeFrame(
-          frame_id_, inputs.data(), prev_inputs.data(),
-          static_cast<uint16_t>(inputs.size()),
-          buf.data(), buf.size());
-    }
-    
+//     // 2026-09-05 优化: 使用增量广播
+//     std::vector<uint8_t> buf(1024);
+//     size_t n;
+//
+//     // 如果是第一帧或者没有上一帧数据，使用全量广播
+//     if (prev_inputs.empty() || frame_id_ == 0) {
+//       n = frame_sync::PackAuthoritativeFrame(
+//           frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
+//           buf.data(), buf.size());
+//     } else {
+//       // 计算增量
+//       n = frame_sync::PackDeltaAuthoritativeFrame(
+//           frame_id_, inputs.data(), prev_inputs.data(),
+//           static_cast<uint16_t>(inputs.size()),
+//           buf.data(), buf.size());
+//     }
+//
+    // 2026-09-09: this client protocol has no negotiated delta decoder.
+    std::vector<uint8_t> buf(7 + inputs.size() * frame_sync::SLOT_INPUT_BYTES);
+    size_t n = frame_sync::PackAuthoritativeFrame(
+        frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
+        buf.data(), buf.size());
+
     // 保存当前帧作为下一帧的上一帧
     {
       std::lock_guard<std::mutex> lock(mu_);
@@ -206,9 +258,13 @@ class FrameSyncServerUDP {
     }
     
     std::lock_guard<std::mutex> lock(mu_);
-    for (auto& p : clients_) {
+    // 2026-09-09: flat_map iterators return proxy pairs.
+    // for (auto& p : clients_) {
+    for (auto&& p : clients_) {
       if (p.second->disconnected || !p.second->channel) continue;
-      p.second->channel->Send(buf.data(), n);
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // p.second->channel->Send(buf.data(), n);
+      send_locked(p.second.get(), buf.data(), n);
     }
   }
 
@@ -216,9 +272,13 @@ class FrameSyncServerUDP {
     uint8_t buf[frame_sync::STATE_HASH_PACK_BYTES];
     size_t n = frame_sync::PackStateHash(fid, hash, buf, sizeof(buf));
     std::lock_guard<std::mutex> lock(mu_);
-    for (auto& p : clients_) {
+    // 2026-09-09: flat_map iterators return proxy pairs.
+    // for (auto& p : clients_) {
+    for (auto&& p : clients_) {
       if (p.second->disconnected || !p.second->channel) continue;
-      p.second->channel->Send(buf, n);
+  // 2026-09-09: stop a failed reliable stream and release per-peer buffers.
+  // p.second->channel->Send(buf, n);
+      send_locked(p.second.get(), buf, n);
     }
   }
 
@@ -234,13 +294,22 @@ class FrameSyncServerUDP {
       if (client->recv_buf.size() < 7u) return false;
       uint16_t num_slots;
       memcpy(&num_slots, client->recv_buf.data() + 5, 2);
+  // 2026-09-09: validate before allocation and stop on invalid/overloaded input.
+  // size_t need = 7 + num_slots * (2 + frame_sync::SLOT_INPUT_BYTES);
+      if (num_slots == 0 || num_slots > frame_sync::kMaxControlledSlots ||
+          num_slots > client->assigned_slots.size()) {
+        disconnect_locked(client.get());
+        return false;
+      }
       size_t need = 7 + num_slots * (2 + frame_sync::SLOT_INPUT_BYTES);
       if (client->recv_buf.size() < need) return false;
       frame_sync::frame_id_t fid;
       std::vector<std::pair<uint16_t, frame_sync::SlotInput>> entries;
       size_t used = frame_sync::UnpackClientFrameInput(
           client->recv_buf.data(), client->recv_buf.size(), &fid, &entries);
-      if (used == 0) return false;
+  // 2026-09-09: validate before allocation and stop on invalid/overloaded input.
+  // if (used == 0) return false;
+      if (used == 0) { disconnect_locked(client.get()); return false; }
       if (fid == frame_id_) {
         for (const auto& e : entries) {
           // 2026-08-31 ms-1.5: 槽位索引边界检查 + 所有权检查 + 输入合法性验证

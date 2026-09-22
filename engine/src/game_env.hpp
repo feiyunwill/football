@@ -15,6 +15,7 @@
 #define _GAME_ENV
 
 #include <cstddef>
+#include <mutex>
 #include "onthepitch/match.hpp"
 #include "gamedefines.hpp"
 #include "gfootball_actions.h"
@@ -25,33 +26,64 @@ class GameTask;
 
 typedef std::vector<std::string> StringVector;
 
+// 2026-09-09: nested calls preserve their caller context and lock one environment.
+// class ContextHolder {
+//  public:
+//   ContextHolder(GameEnv* game) : game(game) {
+//      SetGame(game);
+//      // 2026-09-01: headless 模式下 GraphicsSystem 为 nullptr，跳过 SetContext。
+//      auto* gs = GetGraphicsSystem();
+//      if (gs) gs->SetContext();
+//   }
+//   ~ContextHolder() {
+//     if (GetGame() != game) {
+//       Log(e_FatalError, "football", "main", "game state was corrupted");
+//     }
+//     auto* gs = GetGraphicsSystem();
+//     if (gs) gs->DisableContext();
+//   }
+//  private:
+//   const GameEnv* game;
+// };
+//
 class ContextHolder {
  public:
-  ContextHolder(GameEnv* game) : game(game) {
-     SetGame(game);
-     // 2026-09-01: headless 模式下 GraphicsSystem 为 nullptr，跳过 SetContext。
-     auto* gs = GetGraphicsSystem();
-     if (gs) gs->SetContext();
-  }
-  ~ContextHolder() {
-    if (GetGame() != game) {
-      Log(e_FatalError, "football", "main", "game state was corrupted");
-    }
-    auto* gs = GetGraphicsSystem();
-    if (gs) gs->DisableContext();
-  }
+  explicit ContextHolder(GameEnv* game);
+  ~ContextHolder();
+  ContextHolder() = delete;
+  ContextHolder(const ContextHolder&) = delete;
+  ContextHolder& operator=(const ContextHolder&) = delete;
+  ContextHolder(ContextHolder&&) = delete;
+  ContextHolder& operator=(ContextHolder&&) = delete;
  private:
-  const GameEnv* game;
+  GameEnv* game_;
+  GameEnv* previous_;
+  std::unique_lock<std::recursive_mutex> lock_;
 };
 
 // Game environment. This is the class that can be used directly from Python.
 struct GameEnv {
-  GameEnv() { DO_VALIDATION;}
+  // 2026-09-09: construction does not inspect another environment's TLS state.
+  // GameEnv() { DO_VALIDATION;}
+  GameEnv() = default;
+  ~GameEnv();
+  GameEnv(const GameEnv&) = delete;
+  GameEnv& operator=(const GameEnv&) = delete;
+  GameEnv(GameEnv&&) = delete;
+  GameEnv& operator=(GameEnv&&) = delete;
+  void close() noexcept;
+  // 2026-09-09: explicit lifecycle transitions keep pause separate from stoppages.
+  void pause();
+  void resume();
+  void finish();
   // Start the game (in separate process).
   void start_game();
   // 2026-09-01: start_game with scenario config — avoids double reset() crash
   // (start_game() internally calls reset(); caller must not call reset() again).
   void start_game(ScenarioConfig& scenario_config);
+  // 2026-09-14: create the SDL/runtime owner before a worker loads the match.
+  // The validated scenario is installed by reset() after the caller starts UI service.
+  void prepare_game(ScenarioConfig& scenario_config);
 
   // Get the current state of the game (observation).
   SharedInfo get_info();
@@ -64,6 +96,10 @@ struct GameEnv {
   void action(int action, bool left_team, int player);
   void reset(ScenarioConfig& game_config, bool init_animation);
   void render(bool swap_buffer = true);
+  void save_render_state(bool from_display = false);
+  void render_interpolated(float alpha, bool swap_buffer = true);
+  // 2026-09-10: bounded display-only HUD, excluded from physical snapshots.
+  void set_match_status(const std::string& text);
   std::string get_state(const std::string& pickle);
   std::string set_state(const std::string& state);
   // 2026-08-26 确定性调试：以 reference 为基准序列化当前状态（EnvState save 模式
@@ -77,7 +113,9 @@ struct GameEnv {
   // 标记的不稳定区段，输出仅含比赛逻辑状态，供帧同步 StateHash 校验使用。
   // 不可作为 set_state 的输入（字节布局与全量序列化不同）。
   std::string get_state_digest();
-  void tracker_setup(long start, long end) { GetTracker()->setup(start, end); }
+  // 2026-09-09: tracker setup must address this environment.
+  // void tracker_setup(long start, long end) { GetTracker()->setup(start, end); }
+  void tracker_setup(long start, long end) { ContextHolder guard(this); GetTracker()->setup(start, end); }
   void step();
   // Server headless: apply authoritative frame input and run one env step (no render).
   void StepWithInput(const void* frame_input_buffer, size_t buffer_size);
@@ -85,11 +123,18 @@ struct GameEnv {
   ScenarioConfig& config();
 
  private:
+  friend class ContextHolder;
+  // 2026-09-14: the paired tracker owns both paused states through its rendezvous.
+  friend class Tracker;
+  void ProcessStateInternal(EnvState* state);
+  std::recursive_mutex mutex_;
   void setConfig(ScenarioConfig& scenario_config);
   void do_step(int count);
   void getObservations();
   AIControlledKeyboard* keyboard_ = nullptr;
   bool disable_graphics_ = false;
+  bool render_state_saved_ = false;
+  bool render_presented_ = false;
   int last_step_rendered_frames_ = 1;
  public:
   ScenarioConfig scenario_config;

@@ -28,7 +28,8 @@ class SettingsPage : public Gui2Page {
  private:
   void CreateSettingsItems();
   void UpdateSelection();
-  void HandleInput();
+  // 2026-09-09: unused, invalid input handler archived in the implementation.
+  // void HandleInput();
 
   Gui2Caption *volumeCaption;
   Gui2Caption *graphicsCaption;

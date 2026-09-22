@@ -70,6 +70,9 @@ class RoomManager {
   /// @brief Create a new room
   /// @return room_id, or 0 on error
   uint32_t CreateRoom(const RoomConfig& config, const std::string& host_name) {
+    // 2026-09-09: reject invalid room capacities and names at the logic boundary.
+    if (config.max_players < 2 || config.max_players > 22 || host_name.empty() ||
+        host_name.size() > 32 || rooms_.size() >= 256) return 0;
     uint32_t room_id = GenerateRoomId();
 
     RoomState room;
@@ -169,6 +172,10 @@ class RoomManager {
     auto it = rooms_.find(room_id);
     if (it == rooms_.end()) return false;
     auto& room = it->second;
+
+    // 2026-09-09: start is a one-way transition with a wire-representable address.
+    if (room.meta.status != RoomStatus::kWaiting || game_address.empty() ||
+        game_address.size() >= 32 || game_port == 0) return false;
 
     // Only host can start
     const PlayerSession* host = room.GetHost();

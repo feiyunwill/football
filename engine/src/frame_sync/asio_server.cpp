@@ -4,6 +4,7 @@
 
 #include "frame_sync/protocol.hpp"
 #include "frame_sync/protocol_io.hpp"
+#include "frame_sync/tcp_frame_server.hpp"
 
 // 2026-08-26 兼容修复（原因）：GCC 15 的 libstdc++ 不再向系统 Boost 1.75 的
 // awaitable.hpp 传递提供 <utility>（std::exchange 未声明），须先于 asio 显式包含。
@@ -28,254 +29,297 @@ static const unsigned short kDefaultPort = 12345;
 static const int kFrameTimeoutMs = 200;
 static const int kFrameRateHz = 10;
 
-struct ClientSession {
-  tcp::socket socket;
-  std::vector<uint16_t> assigned_slots;
-  bool ready = false;
-  std::vector<uint8_t> recv_buf;
-  bool disconnected = false;
+// 2026-09-09: shared actor retains callbacks; bounded async TCP replaces blocking writes.
+// struct ClientSession {
+//   tcp::socket socket;
+//   std::vector<uint16_t> assigned_slots;
+//   bool ready = false;
+//   std::vector<uint8_t> recv_buf;
+//   bool disconnected = false;
+//
+//   explicit ClientSession(asio::io_context& io) : socket(io) {}
+// };
+//
+// class FrameSyncServer {
+//  public:
+//   FrameSyncServer(asio::io_context& io, unsigned short port,
+//                   uint16_t left_agents, uint16_t right_agents, uint32_t seed)
+//       : io_(io),
+//         acceptor_(io, tcp::endpoint(tcp::v4(), port)),
+//         left_agents_(left_agents),
+//         right_agents_(right_agents),
+//         num_slots_(left_agents + right_agents),
+//         seed_(seed),
+//         frame_id_(0) {
+//     for (size_t i = 0; i < num_slots_; ++i)
+//       current_inputs_.push_back(frame_sync::SlotInput::Default());
+//     do_accept();
+//   }
+//
+//   bool all_ready() const {
+//     std::lock_guard<std::mutex> lock(mu_);
+//     auto connected = std::ranges::count_if(clients_,
+//         [](const auto& c) { return !c->disconnected; });
+//     if (connected == 0) return false;
+//     auto ready = std::ranges::count_if(clients_,
+//         [](const auto& c) { return !c->disconnected && c->ready; });
+//     return ready == connected;
+//   }
+//
+//   void run_frame_loop() {
+//     while (running_ && !all_ready()) {
+//       std::this_thread::sleep_for(std::chrono::milliseconds(50));
+//     }
+//     while (running_) {
+//       auto deadline = std::chrono::steady_clock::now() +
+//           std::chrono::milliseconds(kFrameTimeoutMs);
+//       {
+//         std::lock_guard<std::mutex> lock(mu_);
+//         received_from_.clear();
+//         inputs_ready_.store(false);
+//         for (size_t i = 0; i < num_slots_; ++i)
+//           current_inputs_[i] = frame_sync::SlotInput::Default();
+//       }
+//       // 2026-09-05 优化: 使用条件变量等待输入，而不是 sleep 轮询
+//       {
+//         std::unique_lock<std::mutex> lock(mu_);
+//         input_cv_.wait_until(lock, deadline, [this] {
+//           if (inputs_ready_.load()) return true;
+//           auto connected = std::ranges::count_if(clients_,
+//               [](const auto& c) { return !c->disconnected; });
+//           if (connected == 0) return true;
+//           return static_cast<int>(received_from_.size()) >= connected;
+//         });
+//       }
+//       broadcast_authoritative_frame();
+//       ++frame_id_;
+//       std::this_thread::sleep_for(
+//           std::chrono::milliseconds(1000 / kFrameRateHz));
+//     }
+//   }
+//
+//   void stop() { running_ = false; }
+//
+//  private:
+//   void do_accept() {
+//     acceptor_.async_accept([this](boost::system::error_code ec, tcp::socket socket) {
+//       if (ec) return;
+//       std::lock_guard<std::mutex> lock(mu_);
+//       auto client = std::make_shared<ClientSession>(io_);
+//       client->socket = std::move(socket);
+//       std::flat_set<uint16_t> used;
+//       for (const auto& c : clients_) {
+//         for (uint16_t s : c->assigned_slots) used.insert(s);
+//       }
+//       for (uint16_t s = 0; s < num_slots_; ++s) {
+//         if (used.find(s) == used.end()) {
+//           client->assigned_slots.push_back(s);
+//           break;
+//         }
+//       }
+//       if (client->assigned_slots.empty()) {
+//         return;
+//       }
+//       clients_.push_back(client);
+//       send_session_start(client);
+//       send_slot_assignment(client);
+//       do_read(client);
+//       do_accept();
+//     });
+//   }
+//
+//   void send_session_start(std::shared_ptr<ClientSession> client) {
+//     uint8_t buf[32];
+//     size_t n = frame_sync::PackSessionStart(seed_, left_agents_, right_agents_, buf, sizeof(buf));
+//     asio::write(client->socket, asio::buffer(buf, n));
+//   }
+//
+//   void send_slot_assignment(std::shared_ptr<ClientSession> client) {
+//     uint8_t buf[64];
+//     size_t n = frame_sync::PackSlotAssignment(
+//         client->assigned_slots.data(), static_cast<uint16_t>(client->assigned_slots.size()),
+//         buf, sizeof(buf));
+//     asio::write(client->socket, asio::buffer(buf, n));
+//   }
+//
+//   void broadcast_authoritative_frame() {
+//     std::vector<frame_sync::SlotInput> inputs;
+//     std::vector<frame_sync::SlotInput> prev_inputs;
+//     {
+//       std::lock_guard<std::mutex> lock(mu_);
+//       inputs = current_inputs_;
+//       prev_inputs = previous_inputs_;
+//     }
+//
+//     // 2026-09-05 优化: 使用增量广播
+//     std::vector<uint8_t> buf(1024);
+//     size_t n;
+//
+//     // 如果是第一帧或者没有上一帧数据，使用全量广播
+//     if (prev_inputs.empty() || frame_id_ == 0) {
+//       n = frame_sync::PackAuthoritativeFrame(
+//           frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
+//           buf.data(), buf.size());
+//     } else {
+//       // 计算增量
+//       n = frame_sync::PackDeltaAuthoritativeFrame(
+//           frame_id_, inputs.data(), prev_inputs.data(),
+//           static_cast<uint16_t>(inputs.size()),
+//           buf.data(), buf.size());
+//     }
+//
+//     // 保存当前帧作为下一帧的上一帧
+//     {
+//       std::lock_guard<std::mutex> lock(mu_);
+//       previous_inputs_ = inputs;
+//     }
+//
+//     std::lock_guard<std::mutex> lock(mu_);
+//     for (auto& client : clients_) {
+//       if (client->disconnected) continue;
+//       boost::system::error_code ec;
+//       asio::write(client->socket, asio::buffer(buf.data(), n), ec);
+//       if (ec) client->disconnected = true;
+//     }
+//   }
+//
+//   void do_read(std::shared_ptr<ClientSession> client) {
+//     auto buf = std::make_shared<std::vector<uint8_t>>(4096);
+//     client->socket.async_read_some(
+//         asio::buffer(*buf),
+//         [this, client, buf](boost::system::error_code ec, std::size_t length) {
+//           if (ec) {
+//             client->disconnected = true;
+//             return;
+//           }
+//           std::lock_guard<std::mutex> lock(mu_);
+//           client->recv_buf.insert(client->recv_buf.end(), buf->begin(), buf->begin() + length);
+//           while (process_one_message(client)) {}
+//           do_read(client);
+//         });
+//   }
+//
+//   bool process_one_message(std::shared_ptr<ClientSession> client) {
+//     if (client->recv_buf.empty()) return false;
+//     uint8_t type = client->recv_buf[0];
+//     if (type == std::to_underlying(frame_sync::MessageType::Ready)) {
+//       client->ready = true;
+//       client->recv_buf.erase(client->recv_buf.begin());
+//       return true;
+//     }
+//     if (type == std::to_underlying(frame_sync::MessageType::FrameInput)) {
+//       if (client->recv_buf.size() < 7u) return false;
+//       uint16_t num_slots;
+//       memcpy(&num_slots, client->recv_buf.data() + 5, 2);
+//       size_t need = 7 + num_slots * (2 + frame_sync::SLOT_INPUT_BYTES);
+//       if (client->recv_buf.size() < need) return false;
+//       frame_sync::frame_id_t fid;
+//       std::vector<std::pair<uint16_t, frame_sync::SlotInput>> entries;
+//       size_t used = frame_sync::UnpackClientFrameInput(
+//           client->recv_buf.data(), client->recv_buf.size(), &fid, &entries);
+//       if (used == 0) return false;
+//       if (fid == frame_id_) {
+//         for (const auto& e : entries) {
+//           // 2026-08-31 ms-1.5: 槽位索引边界检查 + 所有权检查 + 输入合法性验证
+//           if (e.first < num_slots_ &&
+//               std::find(client->assigned_slots.begin(), client->assigned_slots.end(), e.first) != client->assigned_slots.end() &&
+//               frame_sync::IsValidSlotInput(e.second)) {
+//             current_inputs_[e.first] = e.second;
+//           }
+//         }
+//         received_from_.insert(client.get());
+//         // 2026-09-05 优化: 通知条件变量所有输入已收集
+//         auto connected = std::ranges::count_if(clients_,
+//             [](const auto& c) { return !c->disconnected; });
+//         if (static_cast<int>(received_from_.size()) >= connected) {
+//           inputs_ready_.store(true);
+//           input_cv_.notify_one();
+//         }
+//       }
+//       client->recv_buf.erase(client->recv_buf.begin(), client->recv_buf.begin() + used);
+//       return true;
+//     }
+//     return false;
+//   }
+//
+//   asio::io_context& io_;
+//   tcp::acceptor acceptor_;
+//   mutable std::mutex mu_;
+//   std::vector<std::shared_ptr<ClientSession>> clients_;
+//   uint16_t left_agents_;
+//   uint16_t right_agents_;
+//   size_t num_slots_;
+//   uint32_t seed_;
+//   frame_sync::frame_id_t frame_id_;
+//   std::vector<frame_sync::SlotInput> current_inputs_;
+//   std::vector<frame_sync::SlotInput> previous_inputs_;  // 2026-09-05 优化: 上一帧输入用于增量广播
+//   std::flat_set<ClientSession*> received_from_;
+//   std::atomic<bool> running_{true};
+//   // 2026-09-05 优化: 条件变量用于输入收集
+//   std::condition_variable input_cv_;
+//   std::atomic<bool> inputs_ready_{false};
+// };
+using frame_sync::FrameSyncServer;
 
-  explicit ClientSession(asio::io_context& io) : socket(io) {}
-};
-
-class FrameSyncServer {
- public:
-  FrameSyncServer(asio::io_context& io, unsigned short port,
-                  uint16_t left_agents, uint16_t right_agents, uint32_t seed)
-      : io_(io),
-        acceptor_(io, tcp::endpoint(tcp::v4(), port)),
-        left_agents_(left_agents),
-        right_agents_(right_agents),
-        num_slots_(left_agents + right_agents),
-        seed_(seed),
-        frame_id_(0) {
-    for (size_t i = 0; i < num_slots_; ++i)
-      current_inputs_.push_back(frame_sync::SlotInput::Default());
-    do_accept();
-  }
-
-  bool all_ready() const {
-    std::lock_guard<std::mutex> lock(mu_);
-    auto connected = std::ranges::count_if(clients_,
-        [](const auto& c) { return !c->disconnected; });
-    if (connected == 0) return false;
-    auto ready = std::ranges::count_if(clients_,
-        [](const auto& c) { return !c->disconnected && c->ready; });
-    return ready == connected;
-  }
-
-  void run_frame_loop() {
-    while (running_ && !all_ready()) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    }
-    while (running_) {
-      auto deadline = std::chrono::steady_clock::now() +
-          std::chrono::milliseconds(kFrameTimeoutMs);
-      {
-        std::lock_guard<std::mutex> lock(mu_);
-        received_from_.clear();
-        inputs_ready_.store(false);
-        for (size_t i = 0; i < num_slots_; ++i)
-          current_inputs_[i] = frame_sync::SlotInput::Default();
-      }
-      // 2026-09-05 优化: 使用条件变量等待输入，而不是 sleep 轮询
-      {
-        std::unique_lock<std::mutex> lock(mu_);
-        input_cv_.wait_until(lock, deadline, [this] {
-          if (inputs_ready_.load()) return true;
-          auto connected = std::ranges::count_if(clients_,
-              [](const auto& c) { return !c->disconnected; });
-          if (connected == 0) return true;
-          return static_cast<int>(received_from_.size()) >= connected;
-        });
-      }
-      broadcast_authoritative_frame();
-      ++frame_id_;
-      std::this_thread::sleep_for(
-          std::chrono::milliseconds(1000 / kFrameRateHz));
-    }
-  }
-
-  void stop() { running_ = false; }
-
- private:
-  void do_accept() {
-    acceptor_.async_accept([this](boost::system::error_code ec, tcp::socket socket) {
-      if (ec) return;
-      std::lock_guard<std::mutex> lock(mu_);
-      auto client = std::make_shared<ClientSession>(io_);
-      client->socket = std::move(socket);
-      std::flat_set<uint16_t> used;
-      for (const auto& c : clients_) {
-        for (uint16_t s : c->assigned_slots) used.insert(s);
-      }
-      for (uint16_t s = 0; s < num_slots_; ++s) {
-        if (used.find(s) == used.end()) {
-          client->assigned_slots.push_back(s);
-          break;
-        }
-      }
-      if (client->assigned_slots.empty()) {
-        return;
-      }
-      clients_.push_back(client);
-      send_session_start(client);
-      send_slot_assignment(client);
-      do_read(client);
-      do_accept();
-    });
-  }
-
-  void send_session_start(std::shared_ptr<ClientSession> client) {
-    uint8_t buf[32];
-    size_t n = frame_sync::PackSessionStart(seed_, left_agents_, right_agents_, buf, sizeof(buf));
-    asio::write(client->socket, asio::buffer(buf, n));
-  }
-
-  void send_slot_assignment(std::shared_ptr<ClientSession> client) {
-    uint8_t buf[64];
-    size_t n = frame_sync::PackSlotAssignment(
-        client->assigned_slots.data(), static_cast<uint16_t>(client->assigned_slots.size()),
-        buf, sizeof(buf));
-    asio::write(client->socket, asio::buffer(buf, n));
-  }
-
-  void broadcast_authoritative_frame() {
-    std::vector<frame_sync::SlotInput> inputs;
-    std::vector<frame_sync::SlotInput> prev_inputs;
-    {
-      std::lock_guard<std::mutex> lock(mu_);
-      inputs = current_inputs_;
-      prev_inputs = previous_inputs_;
-    }
-    
-    // 2026-09-05 优化: 使用增量广播
-    std::vector<uint8_t> buf(1024);
-    size_t n;
-    
-    // 如果是第一帧或者没有上一帧数据，使用全量广播
-    if (prev_inputs.empty() || frame_id_ == 0) {
-      n = frame_sync::PackAuthoritativeFrame(
-          frame_id_, inputs.data(), static_cast<uint16_t>(inputs.size()),
-          buf.data(), buf.size());
-    } else {
-      // 计算增量
-      n = frame_sync::PackDeltaAuthoritativeFrame(
-          frame_id_, inputs.data(), prev_inputs.data(),
-          static_cast<uint16_t>(inputs.size()),
-          buf.data(), buf.size());
-    }
-    
-    // 保存当前帧作为下一帧的上一帧
-    {
-      std::lock_guard<std::mutex> lock(mu_);
-      previous_inputs_ = inputs;
-    }
-    
-    std::lock_guard<std::mutex> lock(mu_);
-    for (auto& client : clients_) {
-      if (client->disconnected) continue;
-      boost::system::error_code ec;
-      asio::write(client->socket, asio::buffer(buf.data(), n), ec);
-      if (ec) client->disconnected = true;
-    }
-  }
-
-  void do_read(std::shared_ptr<ClientSession> client) {
-    auto buf = std::make_shared<std::vector<uint8_t>>(4096);
-    client->socket.async_read_some(
-        asio::buffer(*buf),
-        [this, client, buf](boost::system::error_code ec, std::size_t length) {
-          if (ec) {
-            client->disconnected = true;
-            return;
-          }
-          std::lock_guard<std::mutex> lock(mu_);
-          client->recv_buf.insert(client->recv_buf.end(), buf->begin(), buf->begin() + length);
-          while (process_one_message(client)) {}
-          do_read(client);
-        });
-  }
-
-  bool process_one_message(std::shared_ptr<ClientSession> client) {
-    if (client->recv_buf.empty()) return false;
-    uint8_t type = client->recv_buf[0];
-    if (type == std::to_underlying(frame_sync::MessageType::Ready)) {
-      client->ready = true;
-      client->recv_buf.erase(client->recv_buf.begin());
-      return true;
-    }
-    if (type == std::to_underlying(frame_sync::MessageType::FrameInput)) {
-      if (client->recv_buf.size() < 7u) return false;
-      uint16_t num_slots;
-      memcpy(&num_slots, client->recv_buf.data() + 5, 2);
-      size_t need = 7 + num_slots * (2 + frame_sync::SLOT_INPUT_BYTES);
-      if (client->recv_buf.size() < need) return false;
-      frame_sync::frame_id_t fid;
-      std::vector<std::pair<uint16_t, frame_sync::SlotInput>> entries;
-      size_t used = frame_sync::UnpackClientFrameInput(
-          client->recv_buf.data(), client->recv_buf.size(), &fid, &entries);
-      if (used == 0) return false;
-      if (fid == frame_id_) {
-        for (const auto& e : entries) {
-          // 2026-08-31 ms-1.5: 槽位索引边界检查 + 所有权检查 + 输入合法性验证
-          if (e.first < num_slots_ &&
-              std::find(client->assigned_slots.begin(), client->assigned_slots.end(), e.first) != client->assigned_slots.end() &&
-              frame_sync::IsValidSlotInput(e.second)) {
-            current_inputs_[e.first] = e.second;
-          }
-        }
-        received_from_.insert(client.get());
-        // 2026-09-05 优化: 通知条件变量所有输入已收集
-        auto connected = std::ranges::count_if(clients_,
-            [](const auto& c) { return !c->disconnected; });
-        if (static_cast<int>(received_from_.size()) >= connected) {
-          inputs_ready_.store(true);
-          input_cv_.notify_one();
-        }
-      }
-      client->recv_buf.erase(client->recv_buf.begin(), client->recv_buf.begin() + used);
-      return true;
-    }
-    return false;
-  }
-
-  asio::io_context& io_;
-  tcp::acceptor acceptor_;
-  mutable std::mutex mu_;
-  std::vector<std::shared_ptr<ClientSession>> clients_;
-  uint16_t left_agents_;
-  uint16_t right_agents_;
-  size_t num_slots_;
-  uint32_t seed_;
-  frame_sync::frame_id_t frame_id_;
-  std::vector<frame_sync::SlotInput> current_inputs_;
-  std::vector<frame_sync::SlotInput> previous_inputs_;  // 2026-09-05 优化: 上一帧输入用于增量广播
-  std::flat_set<ClientSession*> received_from_;
-  std::atomic<bool> running_{true};
-  // 2026-09-05 优化: 条件变量用于输入收集
-  std::condition_variable input_cv_;
-  std::atomic<bool> inputs_ready_{false};
-};
-
+// 2026-09-09: validate CLI before narrowing; SIGTERM/interrupt perform owned shutdown.
+// int main(int argc, char* argv[]) {
+//   unsigned short port = kDefaultPort;
+//   uint16_t left = 1, right = 1;
+//   uint32_t seed = 42;
+//   if (argc >= 2) port = static_cast<unsigned short>(std::stoi(argv[1]));
+//   if (argc >= 4) {
+//     left = static_cast<uint16_t>(std::stoi(argv[2]));
+//     right = static_cast<uint16_t>(std::stoi(argv[3]));
+//   }
+//   if (argc >= 5) seed = static_cast<uint32_t>(std::stoul(argv[4]));
+//
+//   asio::io_context io;
+//   FrameSyncServer server(io, port, left, right, seed);
+//   std::thread io_thread([&io]() { io.run(); });
+//   std::println("Frame sync server listening on port {}", port);
+//   server.run_frame_loop();
+//   server.stop();
+//   io.stop();
+//   if (io_thread.joinable()) io_thread.join();
+//   return 0;
+// }
 int main(int argc, char* argv[]) {
-  unsigned short port = kDefaultPort;
-  uint16_t left = 1, right = 1;
-  uint32_t seed = 42;
-  if (argc >= 2) port = static_cast<unsigned short>(std::stoi(argv[1]));
-  if (argc >= 4) {
-    left = static_cast<uint16_t>(std::stoi(argv[2]));
-    right = static_cast<uint16_t>(std::stoi(argv[3]));
+  try {
+    auto number = [](const char* text, uint64_t maximum) {
+      const std::string value(text);
+      size_t used = 0;
+      if (value.empty() || value[0] == '-') throw std::invalid_argument("negative or empty argument");
+      const auto parsed = std::stoull(value, &used);
+      if (used != value.size() || parsed > maximum) throw std::invalid_argument("argument out of range");
+      return parsed;
+    };
+    if (argc != 1 && argc != 2 && argc != 4 && argc != 5)
+      throw std::invalid_argument("usage: frame_sync_server [port [left right [seed]]]");
+    const auto port = static_cast<unsigned short>(argc >= 2 ? number(argv[1], 65535) : kDefaultPort);
+    const auto left = static_cast<uint16_t>(argc >= 4 ? number(argv[2], 11) : 1);
+    const auto right = static_cast<uint16_t>(argc >= 4 ? number(argv[3], 11) : 1);
+    const auto seed = static_cast<uint32_t>(argc >= 5 ? number(argv[4], UINT32_MAX) : 42);
+    if (port == 0) throw std::invalid_argument("port must be positive");
+    asio::io_context io;
+    FrameSyncServer server(io, port, left, right, seed);
+    asio::signal_set signals(io, SIGINT, SIGTERM);
+    signals.async_wait([&](boost::system::error_code ec, int) { if (!ec) server.stop(); });
+    std::exception_ptr network_error;
+    std::jthread network([&] {
+      try { io.run(); }
+      catch (...) { network_error = std::current_exception(); server.stop(); }
+    });
+    std::setvbuf(stdout, nullptr, _IONBF, 0);
+    std::println("Frame sync server listening on port {}", port);
+    try { server.run_frame_loop(); }
+    catch (...) {
+      server.stop(); io.stop(); network.join(); throw;
+    }
+    server.stop(); io.stop(); network.join();
+    if (network_error) std::rethrow_exception(network_error);
+    return 0;
+  } catch (const std::exception& error) {
+    std::println(stderr, "Frame sync server failed: {}", error.what());
+    return 1;
   }
-  if (argc >= 5) seed = static_cast<uint32_t>(std::stoul(argv[4]));
-
-  asio::io_context io;
-  FrameSyncServer server(io, port, left, right, seed);
-  std::thread io_thread([&io]() { io.run(); });
-  std::println("Frame sync server listening on port {}", port);
-  server.run_frame_loop();
-  server.stop();
-  io.stop();
-  if (io_thread.joinable()) io_thread.join();
-  return 0;
 }

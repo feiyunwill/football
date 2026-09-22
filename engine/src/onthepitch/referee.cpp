@@ -30,13 +30,19 @@ void Foul::ProcessState(EnvState *state) {
   state->process(foulType);
   state->process(advantage);
   state->process(foulTime);
-  if (state->getConfig()->reverse_team_processing) {
-    foulPosition.Mirror();
-  }
-  state->process(foulPosition);
-  if (state->getConfig()->reverse_team_processing) {
-    foulPosition.Mirror();
-  }
+//   if (state->getConfig()->reverse_team_processing) {
+//     foulPosition.Mirror();
+//   }
+//   state->process(foulPosition);
+//   if (state->getConfig()->reverse_team_processing) {
+//     foulPosition.Mirror();
+//   }
+  // 2026-09-09: mirror a temporary so exceptions preserve the stored coordinate.
+  auto restored_foulPosition = foulPosition;
+  if (state->getConfig()->reverse_team_processing) restored_foulPosition.Mirror();
+  state->process(restored_foulPosition);
+  if (state->getConfig()->reverse_team_processing) restored_foulPosition.Mirror();
+  foulPosition = restored_foulPosition;
   state->process(hasBeenProcessed);
 }
 
@@ -44,24 +50,35 @@ void RefereeBuffer::ProcessState(EnvState *state) {
   DO_VALIDATION;
   state->process(active);
   state->process(desiredSetPiece);
-  if (state->getConfig()->reverse_team_processing) {
-    teamID = 1 - teamID;
-  }
-  state->process(teamID);
-  if (state->getConfig()->reverse_team_processing) {
-    teamID = 1 - teamID;
-  }
+//   if (state->getConfig()->reverse_team_processing) {
+//     teamID = 1 - teamID;
+//   }
+//   state->process(teamID);
+//   if (state->getConfig()->reverse_team_processing) {
+//     teamID = 1 - teamID;
+//   }
+  // 2026-09-09: do not leave team identity inverted on an invalid read.
+  int restored_team = state->getConfig()->reverse_team_processing ? 1 - teamID : teamID;
+  state->process(restored_team);
+  state->require(restored_team == 0 || restored_team == 1, "Invalid referee team");
+  teamID = state->getConfig()->reverse_team_processing ? 1 - restored_team : restored_team;
   state->process(setpiece_team);
   state->process(stopTime);
   state->process(prepareTime);
   state->process(startTime);
-  if (state->getConfig()->reverse_team_processing) {
-    restartPos.Mirror();
-  }
-  state->process(restartPos);
-  if (state->getConfig()->reverse_team_processing) {
-    restartPos.Mirror();
-  }
+//   if (state->getConfig()->reverse_team_processing) {
+//     restartPos.Mirror();
+//   }
+//   state->process(restartPos);
+//   if (state->getConfig()->reverse_team_processing) {
+//     restartPos.Mirror();
+//   }
+  // 2026-09-09: mirror a temporary so exceptions preserve the stored coordinate.
+  auto restored_restartPos = restartPos;
+  if (state->getConfig()->reverse_team_processing) restored_restartPos.Mirror();
+  state->process(restored_restartPos);
+  if (state->getConfig()->reverse_team_processing) restored_restartPos.Mirror();
+  restartPos = restored_restartPos;
   state->process(taker);
   state->process(endPhase);
 }
@@ -97,7 +114,9 @@ void Referee::Process() {
 
     Vector3 ballPos = match->GetBall()->Predict(0);
     // Single step maps to 1800 units.
-    if (match->GetMatchTime_ms() >= 1800 * GetScenarioConfig().second_half &&
+    // 2026-09-09: the disabled-half sentinel overflows a 32-bit int product.
+    // if (match->GetMatchTime_ms() >= 1800 * GetScenarioConfig().second_half &&
+    if (match->GetMatchTime_ms() >= uint64_t{1800} * GetScenarioConfig().second_half &&
         match->GetMatchPhase() == e_MatchPhase_1stHalf) {
       match->StopPlay();
       buffer.desiredSetPiece = e_GameMode_KickOff;
@@ -448,7 +467,9 @@ void Referee::ProcessState(EnvState *state) {
   buffer.ProcessState(state);
   state->process(afterSetPieceRelaxTime_ms);
   int size = offsidePlayers.size();
-  state->process(size);
+  // 2026-09-09: bound collection size before allocation/reference use.
+  // state->process(size);
+  state->processCount(size, 2 * MAX_PLAYERS);
   offsidePlayers.resize(size);
   for (auto &i : offsidePlayers) {
     DO_VALIDATION;

@@ -1332,6 +1332,10 @@ void Animation::DirtyCache() {
     return variableCache.get(name);
   }
 
+  const std::string& Animation::GetVariableRef(const char *name) const {
+    return variableCache.get_ref(name);
+  }
+
   void Animation::SetVariable(const std::string &name,
                               const std::string &value) {
     DO_VALIDATION;

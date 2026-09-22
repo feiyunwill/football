@@ -8,6 +8,7 @@
 #define GFOOTBALL_FRAME_SYNC_LOBBY_PROTOCOL_HPP
 
 #include <cstdint>
+#include <cstddef>
 #include <cstring>
 #include <string>
 #include <vector>
@@ -25,7 +26,9 @@ enum class LobbyMessageType : uint8_t {
   Chat = 4,            // payload: room_id(4) + msg_len(2) + msg_bytes
   Ready = 5,           // payload: room_id(4)
   Unready = 6,         // payload: room_id(4)
-  StartGame = 7,       // payload: room_id(4) (host only)
+  // 2026-09-09: length-prefix the address for TCP fragmentation/coalescing.
+  // StartGame = 7,       // payload: room_id(4) (host only)
+  StartGame = 7,       // room_id(4) + address_len(2) + host:port (host only)
 
   // Server → Client
   RoomCreated = 10,    // payload: room_id(4)
@@ -134,9 +137,23 @@ inline size_t PackRoomMetadata(const RoomMetadata& room, uint8_t* buf, size_t bu
   return ROOM_METADATA_SIZE;
 }
 
+// 2026-09-09: validate raw fixed strings and representations before publishing decoded values.
+// inline size_t UnpackRoomMetadata(const uint8_t* buf, size_t size, RoomMetadata* out) {
+//   if (size < ROOM_METADATA_SIZE) return 0;
+//   std::memcpy(out, buf, ROOM_METADATA_SIZE);
+//   return ROOM_METADATA_SIZE;
+// }
 inline size_t UnpackRoomMetadata(const uint8_t* buf, size_t size, RoomMetadata* out) {
-  if (size < ROOM_METADATA_SIZE) return 0;
-  std::memcpy(out, buf, ROOM_METADATA_SIZE);
+  if (!buf || !out || size < ROOM_METADATA_SIZE) return 0;
+  RoomMetadata room;
+  std::memcpy(&room, buf, ROOM_METADATA_SIZE);
+  if (!std::memchr(room.name, 0, sizeof(room.name)) ||
+      !std::memchr(room.scenario, 0, sizeof(room.scenario)) ||
+      !std::memchr(room.game_address, 0, sizeof(room.game_address)) ||
+      static_cast<uint8_t>(room.status) > static_cast<uint8_t>(RoomStatus::kFinished) ||
+      room.max_players < 2 || room.max_players > 22 || room.player_count > room.max_players)
+    return 0;
+  *out = room;
   return ROOM_METADATA_SIZE;
 }
 
@@ -147,9 +164,21 @@ inline size_t PackRoomConfig(const RoomConfig& config, uint8_t* buf, size_t buf_
   return ROOM_CONFIG_SIZE;
 }
 
+// 2026-09-09: validate raw fixed strings and representations before publishing decoded values.
+// inline size_t UnpackRoomConfig(const uint8_t* buf, size_t size, RoomConfig* out) {
+//   if (size < ROOM_CONFIG_SIZE) return 0;
+//   std::memcpy(out, buf, ROOM_CONFIG_SIZE);
+//   return ROOM_CONFIG_SIZE;
+// }
 inline size_t UnpackRoomConfig(const uint8_t* buf, size_t size, RoomConfig* out) {
-  if (size < ROOM_CONFIG_SIZE) return 0;
-  std::memcpy(out, buf, ROOM_CONFIG_SIZE);
+  if (!buf || !out || size < ROOM_CONFIG_SIZE) return 0;
+  // Check the bool representation before any typed load of untrusted bytes.
+  if (buf[offsetof(RoomConfig, allow_spectators)] > 1) return 0;
+  RoomConfig config;
+  std::memcpy(&config, buf, ROOM_CONFIG_SIZE);
+  if (!std::memchr(config.name, 0, sizeof(config.name)) ||
+      !std::memchr(config.scenario, 0, sizeof(config.scenario))) return 0;
+  *out = config;
   return ROOM_CONFIG_SIZE;
 }
 

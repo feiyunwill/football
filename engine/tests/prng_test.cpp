@@ -239,3 +239,12 @@ TEST(DeterministicPRNGTest, CrossPlatformDeterminism) {
 
 }  // namespace
 }  // namespace frame_sync
+
+// 2026-09-09: regression for signed overflow and modulo-by-zero at the full int range.
+TEST(PRNGRegression, FullIntegerRangeKeepsSequenceAndBounds) {
+  frame_sync::DeterministicPRNG actual(42), expected(42);
+  for (int i = 0; i < 100; ++i) {
+    const int64_t want = static_cast<int64_t>(std::numeric_limits<int>::min()) + expected.next_uint32();
+    EXPECT_EQ(actual.range(std::numeric_limits<int>::min(), std::numeric_limits<int>::max()), want);
+  }
+}

@@ -1,0 +1,235 @@
+Running: cmake -S engine -B /tmp/football-optimization-sanitized -DCMAKE_BUILD_TYPE=Debug -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_ENABLE_SANITIZERS=ON -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-sanitized/bin
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-optimization-sanitized
+Running: cmake --build /tmp/football-optimization-sanitized -j 1 --target engine_architecture_contract engine_lifetime_contract engine_simulation_contract standalone_game engine_animation_query_contract
+[  0%] Building CXX object CMakeFiles/datalib.dir/src/data/matchdata.cpp.o
+[  1%] Building CXX object CMakeFiles/datalib.dir/src/data/playerdata.cpp.o
+[  2%] Building CXX object CMakeFiles/datalib.dir/src/data/teamdata.cpp.o
+[  2%] Linking CXX static library libdatalib.a
+[  2%] Built target datalib
+[  2%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/caption.cpp.o
+[  3%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/image.cpp.o
+[  5%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/windowmanager.cpp.o
+[  5%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/guitask.cpp.o
+[ 10%] Built target gui2lib
+[ 11%] Building CXX object CMakeFiles/baselib.dir/src/base/utils.cpp.o
+[ 12%] Building CXX object CMakeFiles/baselib.dir/src/base/log.cpp.o
+[ 14%] Building CXX object CMakeFiles/baselib.dir/src/base/math/bluntmath.cpp.o
+[ 20%] Built target baselib
+[ 20%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_task.cpp.o
+[ 21%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_geometry.cpp.o
+[ 21%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_light.cpp.o
+[ 23%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_overlay2d.cpp.o
+[ 24%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/rendering/opengl_renderer3d.cpp.o
+[ 29%] Built target systemsgraphicslib
+[ 29%] Building CXX object CMakeFiles/loaderslib.dir/src/loaders/aseloader.cpp.o
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 35%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/geometry.cpp.o
+[ 37%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene3d/node.cpp.o
+[ 44%] Built target scenelib
+[ 46%] Building CXX object CMakeFiles/utilslib.dir/src/utils/splitgeometry.cpp.o
+[ 46%] Building CXX object CMakeFiles/utilslib.dir/src/utils/objectloader.cpp.o
+[ 50%] Built target utilslib
+[ 51%] Building CXX object CMakeFiles/blunted2.dir/src/blunted.cpp.o
+[ 52%] Linking CXX static library libblunted2.a
+[ 52%] Built target blunted2
+[ 52%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ecs_systems.cpp.o
+[ 53%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ecs_direct_systems.cpp.o
+[ 53%] Building CXX object CMakeFiles/gamelib.dir/src/ecs/system_batch.cpp.o
+[ 55%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/officials.cpp.o
+[ 56%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid_utils.cpp.o
+[ 56%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/animcollection.cpp.o
+/root/work_space/football/engine/src/onthepitch/player/humanoid/animcollection.cpp: In member function ‘void AnimCollection::CrudeSelection(DataSet&, const CrudeSelectionQuery&)’:
+/root/work_space/football/engine/src/onthepitch/player/humanoid/animcollection.cpp:617:122: warning: arithmetic between enumeration type ‘e_Side’ and floating-point type ‘blunted::real’ {aka ‘float’} is deprecated [-Wdeprecated-enum-float-conversion]
+  617 |         if (queryIncomingToFenceSide == animSide && fenceToAnimOutgoingSide == animSide && fabs(queryIncomingToFenceSide + fenceToOutgoingAngle) < pi) continue;
+      |                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+[ 57%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoidbase.cpp.o
+[ 58%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid.cpp.o
+/root/work_space/football/engine/src/onthepitch/player/humanoid/humanoid.cpp: In member function ‘bool Humanoid::NeedTouch(int, const PlayerCommand&)’:
+/root/work_space/football/engine/src/onthepitch/player/humanoid/humanoid.cpp:1676:55: warning: comparison of floating-point type ‘float’ with enumeration type ‘e_Velocity’ is deprecated [-Wdeprecated-enum-float-conversion]
+ 1676 |   if (FloatToEnumVelocity(anim->GetOutgoingVelocity() != e_Velocity_Idle)) return true;
+      |                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+[ 58%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/playerofficial.cpp.o
+[ 60%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/player.cpp.o
+[ 61%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/playerbase.cpp.o
+[ 61%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/playercontroller.cpp.o
+[ 62%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/humancontroller.cpp.o
+[ 62%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/icontroller.cpp.o
+[ 64%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/refereecontroller.cpp.o
+[ 65%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/elizacontroller.cpp.o
+[ 65%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/strategy.cpp.o
+[ 66%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_mid.cpp.o
+[ 67%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_off.cpp.o
+[ 67%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_def.cpp.o
+[ 69%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/goalie_default.cpp.o
+[ 69%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/humangamer.cpp.o
+[ 70%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ball.cpp.o
+[ 71%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/match.cpp.o
+[ 71%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/referee.cpp.o
+[ 73%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/mentalimage.cpp.o
+[ 74%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/AIfunctions.cpp.o
+[ 74%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/proceduralpitch.cpp.o
+[ 75%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/team.cpp.o
+[ 76%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/teamAIcontroller.cpp.o
+[ 76%] Linking CXX static library libgamelib.a
+[ 76%] Built target gamelib
+[ 78%] Building CXX object CMakeFiles/menulib.dir/src/menu/startmatch/loadingmatch.cpp.o
+[ 79%] Building CXX object CMakeFiles/menulib.dir/src/menu/pagefactory.cpp.o
+[ 79%] Building CXX object CMakeFiles/menulib.dir/src/menu/menutask.cpp.o
+[ 80%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/radar.cpp.o
+[ 82%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/gamepage.cpp.o
+[ 82%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/scoreboard.cpp.o
+[ 83%] Building CXX object CMakeFiles/menulib.dir/src/menu/mainmenu.cpp.o
+[ 83%] Building CXX object CMakeFiles/menulib.dir/src/menu/settings.cpp.o
+[ 84%] Building CXX object CMakeFiles/menulib.dir/src/menu/pausemenu.cpp.o
+[ 85%] Linking CXX static library libmenulib.a
+[ 85%] Built target menulib
+[ 85%] Building CXX object CMakeFiles/football_engine.dir/src/ai/ai_tactics.cpp.o
+[ 85%] Building CXX object CMakeFiles/football_engine.dir/src/cmake/file.cpp.o
+[ 87%] Building CXX object CMakeFiles/football_engine.dir/src/defines.cpp.o
+[ 88%] Building CXX object CMakeFiles/football_engine.dir/src/game_env.cpp.o
+[ 89%] Building CXX object CMakeFiles/football_engine.dir/src/gamedefines.cpp.o
+[ 91%] Building CXX object CMakeFiles/football_engine.dir/src/gametask.cpp.o
+[ 91%] Building CXX object CMakeFiles/football_engine.dir/src/main.cpp.o
+[ 91%] Building CXX object CMakeFiles/football_engine.dir/src/misc/hungarian.cpp.o
+[ 92%] Building CXX object CMakeFiles/football_engine.dir/src/utils.cpp.o
+[ 93%] Linking CXX shared library libfootball_engine.so
+[ 97%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/engine_architecture_contract.dir/tests/engine_architecture_contract.cpp.o
+[100%] Linking CXX executable bin/engine_architecture_contract
+[100%] Built target engine_architecture_contract
+[  2%] Built target datalib
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 35%] Built target typeslib
+[ 45%] Built target scenelib
+[ 50%] Built target utilslib
+[ 53%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_lifetime_contract.dir/tests/engine_lifetime_contract.cpp.o
+[100%] Linking CXX executable bin/engine_lifetime_contract
+[100%] Built target engine_lifetime_contract
+[  2%] Built target datalib
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 52%] Built target blunted2
+[ 76%] Built target gamelib
+[ 85%] Built target menulib
+[ 97%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/engine_simulation_contract.dir/tests/engine_simulation_contract.cpp.o
+[100%] Linking CXX executable bin/engine_simulation_contract
+[100%] Built target engine_simulation_contract
+[  2%] Built target datalib
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 35%] Built target typeslib
+[ 45%] Built target scenelib
+[ 50%] Built target utilslib
+[ 53%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/standalone_game.dir/src/frame_sync/standalone_game.cpp.o
+[100%] Linking CXX executable bin/standalone_game
+[100%] Built target standalone_game
+[  2%] Built target datalib
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 35%] Built target typeslib
+[ 45%] Built target scenelib
+[ 50%] Built target utilslib
+[ 53%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Linking CXX executable bin/engine_animation_query_contract
+[100%] Built target engine_animation_query_contract
+Running: readelf -d /tmp/football-optimization-sanitized/libfootball_engine.so
+Running: nm -D /tmp/football-optimization-sanitized/libfootball_engine.so
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_animation_query_contract
+vectorfromstring warning, no value
+{"passed":true,"assertions":30079,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract headless 42
+{"passed":true,"assertions":296,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract render 42
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":51,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42
+{"passed":true,"assertions":946,"skipped":0,"snapshot_bytes":87132,"collision_workspace":true,"seed":42,"reverse":false}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42 --reverse
+{"passed":true,"assertions":954,"skipped":0,"snapshot_bytes":89124,"collision_workspace":true,"seed":42,"reverse":true}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42 --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":92,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract headless 43
+{"passed":true,"assertions":296,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract render 43
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":51,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43
+{"passed":true,"assertions":942,"skipped":0,"snapshot_bytes":86124,"collision_workspace":true,"seed":43,"reverse":false}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43 --reverse
+{"passed":true,"assertions":950,"skipped":0,"snapshot_bytes":88116,"collision_workspace":true,"seed":43,"reverse":true}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43 --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":92,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_lifetime_contract
+{"passed":true,"assertions":167,"skipped":0,"warm_rss_bytes":342118400,"final_rss_bytes":342200320}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_lifetime_contract --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+No DISPLAY defined, doing off-screen rendering
+{"passed":true,"assertions":19,"skipped":0,"renderer":"llvmpipe (LLVM 22.1.8, 256 bits)"}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract sdl
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":20,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract sdl-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract font-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract font-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+{"passed": true, "assertions": 34970, "skipped": 0, "results": {"animation_metadata": {"passed": true, "assertions": 30079, "skipped": 0}, "lifecycle_42": {"passed": true, "assertions": 296, "skipped": 0}, "egl_lifecycle_42": {"passed": true, "assertions": 51, "skipped": 0}, "snapshot_42_normal": {"passed": true, "assertions": 946, "skipped": 0, "snapshot_bytes": 87132, "collision_workspace": true, "seed": 42, "reverse": false}, "snapshot_42_reverse": {"passed": true, "assertions": 954, "skipped": 0, "snapshot_bytes": 89124, "collision_workspace": true, "seed": 42, "reverse": true}, "snapshot_42_render": {"passed": true, "assertions": 92, "skipped": 0}, "lifecycle_43": {"passed": true, "assertions": 296, "skipped": 0}, "egl_lifecycle_43": {"passed": true, "assertions": 51, "skipped": 0}, "snapshot_43_normal": {"passed": true, "assertions": 942, "skipped": 0, "snapshot_bytes": 86124, "collision_workspace": true, "seed": 43, "reverse": false}, "snapshot_43_reverse": {"passed": true, "assertions": 950, "skipped": 0, "snapshot_bytes": 88116, "collision_workspace": true, "seed": 43, "reverse": true}, "snapshot_43_render": {"passed": true, "assertions": 92, "skipped": 0}, "repeated_and_concurrent_instances": {"passed": true, "assertions": 167, "skipped": 0, "warm_rss_bytes": 342118400, "final_rss_bytes": 342200320}, "two_egl_contexts": {"passed": true, "assertions": 19, "skipped": 0, "renderer": "llvmpipe (LLVM 22.1.8, 256 bits)"}, "sdl_events": {"passed": true, "assertions": 20, "skipped": 0}, "sdl_context_failure": {"passed": true, "assertions": 5, "skipped": 0}, "invalid_font_failure": {"passed": true, "assertions": 5, "skipped": 0}, "missing_font_failure": {"passed": true, "assertions": 5, "skipped": 0}}, "instrumented_translation_units": 134, "instrumentation": "complete engine ASan/UBSan, leak detection enabled, no suppressions", "asan_runtime_in_engine": true, "sdl_driver": "offscreen (real SDL GL window and event queue)"}

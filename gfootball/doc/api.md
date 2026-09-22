@@ -1,5 +1,16 @@
 # Environment API #
+<!-- 2026-09-10: distinguish the maintained API from the retained legacy protocol.
 Google Research Football environment follows GYM API design:
+-->
+
+The maintained public environment uses [Gymnasium](gymnasium.md). It returns
+`(observation, info)` from `reset(seed=...)` and
+`(observation, reward, terminated, truncated, info)` from `step(action)`.
+Use `gymnasium.make("gfootball.gymnasium:GFootball-11_vs_11_easy_stochastic-SMM-v0")`.
+
+The existing `gfootball.env.create_environment(...)` factory retains the
+four-result protocol below for existing football replay and actor code. It uses
+Gymnasium spaces, but is not itself a Gymnasium Env and does not require old Gym:
 
 * `reset()` - resets environment to the initial state.
 * `observation, reward, done, info = step(action)` - performs a single step.

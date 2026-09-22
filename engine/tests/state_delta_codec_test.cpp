@@ -65,7 +65,10 @@ TEST(StateDeltaCodecTest, NoBaseline) {
   std::string state = "State without baseline";
   std::string delta = codec.EncodeDelta(state);
   
-  EXPECT_EQ(delta, state);  // Should return full state
+  // 2026-09-09: validate the fallback roundtrip, not the formerly raw bytes.
+  // EXPECT_EQ(delta, state);
+  StateDeltaCodec decoder;
+  EXPECT_EQ(decoder.DecodeDelta(delta), state);
 }
 
 // Test decode with new codec (should reconstruct correctly)
@@ -222,7 +225,11 @@ TEST(StateDeltaCodecTest, SizeMismatch) {
   std::string delta = codec.EncodeDelta(state2);
   
   // Should return full state on size mismatch
-  EXPECT_EQ(delta, state2);
+  // 2026-09-09: size changes must be decodable by a separate receiver.
+  // EXPECT_EQ(delta, state2);
+  StateDeltaCodec decoder;
+  decoder.SetBaseline(state1);
+  EXPECT_EQ(decoder.DecodeDelta(delta), state2);
 }
 
 }  // namespace

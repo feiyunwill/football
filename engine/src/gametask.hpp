@@ -34,7 +34,9 @@ class GameTask {
     bool StopMatch();
 
     void ProcessPhase();
-    void PrepareRender();
+    // 2026-09-10: a negative value preserves ordinary rendering.
+    // void PrepareRender();
+    void PrepareRender(float interpolation = -1.0f);
 
     Match *GetMatch() { DO_VALIDATION; return match.get(); }
 

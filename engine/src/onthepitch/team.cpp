@@ -1,3 +1,4 @@
+#include "game_load.hpp"
 // Copyright 2019 Google LLC & Bastiaan Konings
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,9 +66,15 @@ void Team::Exit() {
     delete players[i];
   }
 
+// 2026-09-14: clear released ownership before any subsequent cleanup.
+//   delete teamController;
   delete teamController;
-
-  playerNode->Exit();
+  teamController = nullptr;
+  players.clear();
+// 2026-09-14: a newly allocated team may not have reached InitPlayers when loading stops.
+//   playerNode->Exit();
+//   playerNode.reset();
+  if (playerNode) playerNode->Exit();
   playerNode.reset();
 
   match->GetDynamicNode()->DeleteNode(teamNode);
@@ -85,6 +92,7 @@ void Team::InitPlayers(boost::intrusive_ptr<Node> fullbodyNode,
 
   // load all players in the team, even the players who sit on the bench. aww.
   for (int i = 0; i < (signed int)teamData->GetPlayerNum(); i++) {
+    GameLoadCheckpoint("team.player");
     DO_VALIDATION;
     PlayerData *playerData = teamData->GetPlayerData(i);
     Player *player = new Player(this, playerData);
@@ -142,6 +150,9 @@ void Team::SetFormationEntry(Player *player, FormationEntry entry) {
 
 void Team::GetActivePlayers(std::vector<Player *> &activePlayers) {
   DO_VALIDATION;
+  // 2026-09-10: reserve the roster's append bound once instead of growing the
+  // caller's vector for every few players; preserve its prefix and team order.
+  activePlayers.reserve(activePlayers.size() + players.size());
   for (auto player : players) {
     DO_VALIDATION;
     if (player->IsActive()) activePlayers.push_back(player);
@@ -544,14 +555,21 @@ void Team::Put(bool mirror) {
 }
 
 // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
-void Team::SaveInterpolationState() {
+// 2026-09-10: interpolate display pose buffers; keep simulation state untouched.
+// void Team::SaveInterpolationState() {
+//   DO_VALIDATION;
+//   for (unsigned int i = 0; i < players.size(); i++) {
+//     DO_VALIDATION;
+//     if (players[i]->IsActive()) {
+//       DO_VALIDATION;
+//       players[i]->SaveInterpolationState();
+//     }
+//   }
+// }
+void Team::SaveInterpolationState(bool mirror, bool from_display) {
   DO_VALIDATION;
-  for (unsigned int i = 0; i < players.size(); i++) {
-    DO_VALIDATION;
-    if (players[i]->IsActive()) {
-      DO_VALIDATION;
-      players[i]->SaveInterpolationState();
-    }
+  for (auto* player : players) {
+    player->SaveInterpolationState(mirror, from_display, player->IsActive());
   }
 }
 
@@ -682,7 +700,9 @@ void Team::ProcessState(EnvState *state) {
   state->process(fadingTeamPossessionAmount);
   teamController->ProcessState(state);
   int size = humanGamers.size();
-  state->process(size);
+  // 2026-09-09: bound collection size before allocation/reference use.
+  // state->process(size);
+  state->processCount(size, humanGamers.size(), humanGamers.size());
   humanGamers.resize(size);
   for (auto &g : humanGamers) {
     DO_VALIDATION;

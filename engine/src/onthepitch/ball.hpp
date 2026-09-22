@@ -83,7 +83,9 @@ class Ball {
 
     // 2026-08-31 ms-1.6: 逻辑渲染分离 — 插值渲染支持
     // Save current state for interpolation (call after Process)
-    void SaveInterpolationState();
+    // 2026-09-10: corrections may start from the actual displayed ball pose.
+    // void SaveInterpolationState();
+    void SaveInterpolationState(bool from_display = false);
     // Put with interpolation between previous and current state
     // t: interpolation factor (0 = previous, 1 = current)
     void PutInterpolated(float t);

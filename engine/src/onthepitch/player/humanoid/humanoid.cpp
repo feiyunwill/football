@@ -248,7 +248,9 @@ void Humanoid::Process() {
     if (interruptAnim == e_InterruptAnim_Switch && !found) {
       DO_VALIDATION;
       Log(e_Warning, "Humanoid", "Process", "RED ALERT! NO APPLICABLE ANIM FOUND! NOOOO!");
-      Log(e_Warning, "Humanoid", "Process", "currentanimtype: " + currentAnim.anim->GetVariable("type"));
+      // 2026-09-09: read animation metadata without temporary key/value allocation.
+      // Log(e_Warning, "Humanoid", "Process", "currentanimtype: " + currentAnim.anim->GetVariable("type"));
+      Log(e_Warning, "Humanoid", "Process", "currentanimtype: " + currentAnim.anim->GetVariableRef("type"));
       for (unsigned int i = 0; i < commandQueue.size(); i++) {
         DO_VALIDATION;
         Log(e_Warning, "Humanoid", "Process", "desiredanimtype:" + int_to_str(commandQueue[i].desiredFunctionType));
@@ -283,7 +285,9 @@ void Humanoid::Process() {
       //animApplyBuffer.offsets.clear();
 
       // decaying difficulty
-      float animDiff = atof(currentAnim.anim->GetVariable("animdifficultyfactor").c_str());
+      // 2026-09-09: read animation metadata without temporary key/value allocation.
+      // float animDiff = atof(currentAnim.anim->GetVariable("animdifficultyfactor").c_str());
+      float animDiff = atof(currentAnim.anim->GetVariableRef("animdifficultyfactor").c_str());
       if (animDiff > decayingDifficultyFactor) decayingDifficultyFactor = animDiff;
 
       // if we just requeued, for example, from movement to ballcontrol, there's no reason we can not immediately requeue to another ballcontrol again (next time). only apply the initial requeue delay on subsequent anims of the same type
@@ -351,7 +355,9 @@ void Humanoid::Process() {
 
     match->GetBall()->Touch(touchVec);
     match->GetBall()->SetRotation(xRot, yRot, 0, 0.2f * (1.0f - bumpyRideBias)); // 0.9
-    team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariable("touch_bodypart")));//, e_TouchType_Accidental);
+    // 2026-09-09: read animation metadata without temporary key/value allocation.
+    // team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariable("touch_bodypart")));//, e_TouchType_Accidental);
+    team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariableRef("touch_bodypart")));//, e_TouchType_Accidental);
   }
   // ---------------------- / EXPERIMENTAL ------------------------------------------------
 
@@ -404,7 +410,9 @@ void Humanoid::Process() {
         match->GetBall()->Touch(touchVec);
         match->GetBall()->SetRotation(xRot, yRot, 0, 0.5f * (1.0f - bumpyRideBias));
 
-        team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariable("touch_bodypart")));
+        // 2026-09-09: read animation metadata without temporary key/value allocation.
+        // team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariable("touch_bodypart")));
+        team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariableRef("touch_bodypart")));
       }
 
       else if (currentAnim.functionType == e_FunctionType_BallControl) {
@@ -423,7 +431,9 @@ void Humanoid::Process() {
         match->GetBall()->Touch(touchVec);
         match->GetBall()->SetRotation(xRot, yRot, 0, 0.6f * (1.0f - bumpyRideBias)); // 1.0
 
-        team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariable("touch_bodypart")));
+        // 2026-09-09: read animation metadata without temporary key/value allocation.
+        // team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariable("touch_bodypart")));
+        team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariableRef("touch_bodypart")));
       }
 
       else if (currentAnim.functionType == e_FunctionType_ShortPass ||
@@ -506,7 +516,9 @@ void Humanoid::Process() {
         radian yRot = touchVec.GetNormalized(0).coords[0] * (clamp(touchVec.GetLength(), 0.0, 15.0) * forwardness);
         match->GetBall()->SetRotation(xRot, yRot, zcurve, 0.9f * (1.0f - bumpyRideBias));
 
-        team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariable("touch_bodypart")));
+        // 2026-09-09: read animation metadata without temporary key/value allocation.
+        // team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariable("touch_bodypart")));
+        team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariableRef("touch_bodypart")));
       }
 
       else if (currentAnim.functionType == e_FunctionType_Shot) {
@@ -538,7 +550,9 @@ void Humanoid::Process() {
 
         match->GetBall()->Touch(touchVec);
         match->GetBall()->SetRotation(xRot, yRot, zRot, 0.7f * (1.0f - bumpyRideBias));
-        team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariable("touch_bodypart")));
+        // 2026-09-09: read animation metadata without temporary key/value allocation.
+        // team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariable("touch_bodypart")));
+        team->SetLastTouchPlayer(CastPlayer(), GetTouchTypeForBodyPart(currentAnim.anim->GetVariableRef("touch_bodypart")));
       }
 
       else if (currentAnim.functionType == e_FunctionType_Interfere) {
@@ -563,7 +577,9 @@ void Humanoid::Process() {
       else if (currentAnim.functionType == e_FunctionType_Deflect) {
         DO_VALIDATION;
         bool canRetain = true; // can we grab hold of the ball?
-        if (currentAnim.anim->GetVariable("outgoing_retain_state").compare("") == 0) canRetain = false; // not the right anim, hopeless!
+        // 2026-09-09: read animation metadata without temporary key/value allocation.
+        // if (currentAnim.anim->GetVariable("outgoing_retain_state").compare("") == 0) canRetain = false; // not the right anim, hopeless!
+        if (currentAnim.anim->GetVariableRef("outgoing_retain_state").compare("") == 0) canRetain = false; // not the right anim, hopeless!
         if (match->GetBallRetainer() != 0) canRetain = false; // somebody is already holding the ball :( (dafuq, this should not happen, right?)
 
         float veloDifficulty = NormalizedClamp((match->GetBall()->GetMovement() - player->GetMovement()).GetLength(), 0.0f, 40.0f);
@@ -603,7 +619,9 @@ void Humanoid::Process() {
 
       else if (currentAnim.functionType == e_FunctionType_Sliding) {
         DO_VALIDATION;
-        Vector3 touchVec = GetVectorFromString(currentAnim.anim->GetVariable("balldirection")).GetRotated2D(spatialState.angle);
+        // 2026-09-09: read animation metadata without temporary key/value allocation.
+        // Vector3 touchVec = GetVectorFromString(currentAnim.anim->GetVariable("balldirection")).GetRotated2D(spatialState.angle);
+        Vector3 touchVec = GetVectorFromString(currentAnim.anim->GetVariableRef("balldirection")).GetRotated2D(spatialState.angle);
         touchVec = touchVec * 6.0f + match->GetBall()->GetMovement() * -0.28f;
         touchVec += Vector3(0, 0, 6);
 
@@ -619,18 +637,28 @@ void Humanoid::Process() {
   if (match->GetBallRetainer() == player) {
     DO_VALIDATION;
     if ((currentAnim.touchFrame <= currentAnim.frameNum &&
-         currentAnim.anim->GetVariable("outgoing_retain_state") != "") ||
+         // 2026-09-09: read animation metadata without temporary key/value allocation.
+         // currentAnim.anim->GetVariable("outgoing_retain_state") != "") ||
+         currentAnim.anim->GetVariableRef("outgoing_retain_state") != "") ||
         (currentAnim.touchFrame > currentAnim.frameNum &&
          currentAnim.anim->GetVariableCache().incoming_retain_state() != "") ||
-        (currentAnim.anim->GetVariable("incoming_retain_state") != "" &&
-         currentAnim.anim->GetVariable("outgoing_retain_state") != "")) {
+        // 2026-09-09: read animation metadata without temporary key/value allocation.
+        // (currentAnim.anim->GetVariable("incoming_retain_state") != "" &&
+        (currentAnim.anim->GetVariableRef("incoming_retain_state") != "" &&
+         // 2026-09-09: read animation metadata without temporary key/value allocation.
+         // currentAnim.anim->GetVariable("outgoing_retain_state") != "")) {
+         currentAnim.anim->GetVariableRef("outgoing_retain_state") != "")) {
       DO_VALIDATION;
       // find body part the ball is stuck to (superglue powers)
-      auto outgoing = currentAnim.anim->GetVariable("outgoing_retain_state");
+      // 2026-09-09: read animation metadata without temporary key/value allocation.
+      // auto outgoing = currentAnim.anim->GetVariable("outgoing_retain_state");
+      auto outgoing = currentAnim.anim->GetVariableRef("outgoing_retain_state");
       auto bodyPart = outgoing.empty() ? nullptr : nodeMap[BodyPartFromString(outgoing)];
       if (!bodyPart) {
         DO_VALIDATION;
-        auto incoming = currentAnim.anim->GetVariable("incoming_retain_state");
+        // 2026-09-09: read animation metadata without temporary key/value allocation.
+        // auto incoming = currentAnim.anim->GetVariable("incoming_retain_state");
+        auto incoming = currentAnim.anim->GetVariableRef("incoming_retain_state");
         bodyPart = incoming.empty() ? nullptr : nodeMap[BodyPartFromString(incoming)];
       }
       assert(bodyPart);
@@ -968,7 +996,9 @@ void Humanoid::CalculateGeomOffsets() {
 
         int smoothFrames = 0;
 
-        std::string bodypart = currentAnim.anim->GetVariable("touch_bodypart");
+        // 2026-09-09: read animation metadata without temporary key/value allocation.
+        // std::string bodypart = currentAnim.anim->GetVariable("touch_bodypart");
+        std::string bodypart = currentAnim.anim->GetVariableRef("touch_bodypart");
         int leftOrRightLeg = 0; // -1 == left, 1 == right
         if (bodypart.find("left_foot") != std::string::npos || bodypart.find("left_leg") != std::string::npos) leftOrRightLeg = -1;
         if (bodypart.find("right_foot") != std::string::npos || bodypart.find("right_leg") != std::string::npos) leftOrRightLeg = 1;
@@ -1335,7 +1365,9 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
   }
 
   query.properties.set("incoming_special_state", currentAnim.anim->GetVariableCache().outgoing_special_state());
-  if (match->GetBallRetainer() == player) query.properties.set("incoming_retain_state", currentAnim.anim->GetVariable("outgoing_retain_state"));
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // if (match->GetBallRetainer() == player) query.properties.set("incoming_retain_state", currentAnim.anim->GetVariable("outgoing_retain_state"));
+  if (match->GetBallRetainer() == player) query.properties.set("incoming_retain_state", currentAnim.anim->GetVariableRef("outgoing_retain_state"));
   if (command.useSpecialVar1) query.properties.set_specialvar1(command.specialVar1);
   if (command.useSpecialVar2) query.properties.set_specialvar2(command.specialVar2);
 
@@ -1641,7 +1673,9 @@ bool Humanoid::NeedTouch(int animID, const PlayerCommand &command) {
 
   Animation *anim = anims->GetAnim(animID);
 
-  if (FloatToEnumVelocity(anim->GetOutgoingVelocity() != e_Velocity_Idle)) return true;
+  // 2026-09-14: classify the actual outgoing speed, then compare its category.
+  //if (FloatToEnumVelocity(anim->GetOutgoingVelocity() != e_Velocity_Idle)) return true;
+  if (FloatToEnumVelocity(anim->GetOutgoingVelocity()) != e_Velocity_Idle) return true;
   if (command.desiredVelocityFloat > idleDribbleSwitch) return true;
   if (fabs(match->GetBall()->GetMovement().GetLength()) > 2.0f) return true;
 
@@ -1857,7 +1891,9 @@ signed int Humanoid::GetBestCheatableAnimID(const DataSet &sortedDataSet, bool u
 #endif
     int count = 0;
 
-    int defaultTouchFrame = atoi(anim->GetVariable("touchframe").c_str());
+    // 2026-09-09: read animation metadata without temporary key/value allocation.
+    // int defaultTouchFrame = atoi(anim->GetVariable("touchframe").c_str());
+    int defaultTouchFrame = atoi(anim->GetVariableRef("touchframe").c_str());
     assert(defaultTouchFrame >= 0 && defaultTouchFrame < frameCount);
 
     // first the middle one down to the first
@@ -2157,7 +2193,9 @@ Vector3 Humanoid::CalculateMovementSmuggle(const Vector3 &desiredDirection,
   if (!enableMovementSmuggle) return Vector3(0);
 
   if (team->GetDesignatedTeamPossessionPlayer() != player || match->GetDesignatedPossessionPlayer() != player ||
-      currentAnim.touchFrame != -1 || (currentAnim.functionType == e_FunctionType_Trip && currentAnim.anim->GetVariable("triptype").compare("1") != 0) || currentAnim.anim->GetVariableCache().incoming_special_state().compare("") != 0 || currentAnim.anim->GetVariableCache().outgoing_special_state().compare("") != 0 ||
+      // 2026-09-09: read animation metadata without temporary key/value allocation.
+      // currentAnim.touchFrame != -1 || (currentAnim.functionType == e_FunctionType_Trip && currentAnim.anim->GetVariable("triptype").compare("1") != 0) || currentAnim.anim->GetVariableCache().incoming_special_state().compare("") != 0 || currentAnim.anim->GetVariableCache().outgoing_special_state().compare("") != 0 ||
+      currentAnim.touchFrame != -1 || (currentAnim.functionType == e_FunctionType_Trip && currentAnim.anim->GetVariableRef("triptype").compare("1") != 0) || currentAnim.anim->GetVariableCache().incoming_special_state().compare("") != 0 || currentAnim.anim->GetVariableCache().outgoing_special_state().compare("") != 0 ||
       !match->IsInPlay() || match->IsInSetPiece() || match->GetBallRetainer() != 0) return Vector3(0);
 
 
@@ -2240,7 +2278,9 @@ Vector3 Humanoid::GetBestPossibleTouch(const Vector3 &desiredTouch,
 
   // fetch vars
 
-  float maxPowerFactor = atof(currentAnim.anim->GetVariable("touch_maxpowerfactor").c_str());
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // float maxPowerFactor = atof(currentAnim.anim->GetVariable("touch_maxpowerfactor").c_str());
+  float maxPowerFactor = atof(currentAnim.anim->GetVariableRef("touch_maxpowerfactor").c_str());
   if (maxPowerFactor == 0.0f) maxPowerFactor = 1.0f;
   maxPowerFactor = maxPowerFactor * 0.7f + 0.3f;
 
@@ -2258,7 +2298,9 @@ Vector3 Humanoid::GetBestPossibleTouch(const Vector3 &desiredTouch,
 
   // difficulty
 
-  float difficultyFactor = atof(currentAnim.anim->GetVariable("touch_difficultyfactor").c_str());
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // float difficultyFactor = atof(currentAnim.anim->GetVariable("touch_difficultyfactor").c_str());
+  float difficultyFactor = atof(currentAnim.anim->GetVariableRef("touch_difficultyfactor").c_str());
 
   // apply stats
   if (functionType == e_FunctionType_ShortPass ||
@@ -2273,7 +2315,9 @@ Vector3 Humanoid::GetBestPossibleTouch(const Vector3 &desiredTouch,
   // difficult balls may go into a more random orientation, or, if the anim has a default outgoing direction, it may converge towards that (since it is the easiest direction for that anim)
   radian randomRotation = 0.0f;
   randomRotation = distanceFactor * 0.15f + heightFactor * 0.15f + ballMovementFactor * 0.3f + difficultyFactor * 0.5f;
-  Vector3 animBallDirection = GetVectorFromString(currentAnim.anim->GetVariable("balldirection")).GetRotated2D(startAngle + currentAnim.rotationSmuggleOffset);
+  // 2026-09-09: read animation metadata without temporary key/value allocation.
+  // Vector3 animBallDirection = GetVectorFromString(currentAnim.anim->GetVariable("balldirection")).GetRotated2D(startAngle + currentAnim.rotationSmuggleOffset);
+  Vector3 animBallDirection = GetVectorFromString(currentAnim.anim->GetVariableRef("balldirection")).GetRotated2D(startAngle + currentAnim.rotationSmuggleOffset);
   if (animBallDirection.GetLength() > 0.01f) {
     DO_VALIDATION;
     float bias = clamp(randomRotation * 1.5f, 0.0f, 1.0f);

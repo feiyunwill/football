@@ -6,27 +6,52 @@
 cmake_minimum_required(VERSION 3.14)
 project(gfootball_tests CXX)
 
+# 2026-09-09: make discovered tests visible to CTest and separate timing gates.
+enable_testing()
+option(ENABLE_PERFORMANCE_TESTS "Run machine-dependent timing benchmarks" OFF)
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # ===== 构建优化 =====
 # Unity 构建（减少编译时间 30-50%）
 option(CMAKE_UNITY_BUILD "Enable Unity builds" ON)
-set(CMAKE_UNITY_BUILD_BATCH_SIZE 8 CACHE INT "Unity build batch size")
+# 2026-09-09: INT is not a CMake cache type.
+# set(CMAKE_UNITY_BUILD_BATCH_SIZE 8 CACHE INT "Unity build batch size")
+set(CMAKE_UNITY_BUILD_BATCH_SIZE 8 CACHE STRING "Unity build batch size")
 
 # 预编译头（减少重复编译）
 option(ENABLE_PCH "Enable precompiled headers" ON)
 
-# FetchContent 自动下载 GoogleTest
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG v1.14.0
-)
-# Prevent GoogleTest from overriding our compiler/linker options
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
+# 2026-09-15: reuse an installed compatible test package before the pinned source fallback.
+# Previous unconditional download:
+# # FetchContent 自动下载 GoogleTest
+# include(FetchContent)
+# FetchContent_Declare(
+#   googletest
+#   GIT_REPOSITORY https://github.com/google/googletest.git
+#   GIT_TAG v1.14.0
+# )
+# # Prevent GoogleTest from overriding our compiler/linker options
+# set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+# FetchContent_MakeAvailable(googletest)
+find_package(GTest 1.14 CONFIG QUIET)
+if(GTest_FOUND)
+  set(FOOTBALL_GTEST_MAIN_TARGET GTest::gtest_main)
+  message(STATUS "Using installed GoogleTest ${GTest_VERSION} at ${GTest_DIR}")
+else()
+  # FetchContent 自动下载 GoogleTest
+  include(FetchContent)
+  FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG v1.14.0
+  )
+  # Prevent GoogleTest from overriding our compiler/linker options
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  FetchContent_MakeAvailable(googletest)
+  set(FOOTBALL_GTEST_MAIN_TARGET gtest_main)
+endif()
 
 include(GoogleTest)
 
@@ -70,7 +95,10 @@ set(ENGINE_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../src")
 # 所有测试目标共享的 include 目录和链接库
 function(configure_test_target target)
   target_include_directories(${target} PRIVATE ${ENGINE_SRC})
-  target_link_libraries(${target} PRIVATE gtest_main)
+  # 2026-09-15: both installed and fetched packages select the same main-test API.
+  # target_link_libraries(${target} PRIVATE gtest_main)
+  target_link_libraries(${target} PRIVATE ${FOOTBALL_GTEST_MAIN_TARGET})
+  target_compile_definitions(${target} PRIVATE FRAME_SYNC_TIMING_CHECKS=$<BOOL:${ENABLE_PERFORMANCE_TESTS}>)
   
   # 预编译头（可选）
   if(ENABLE_PCH)
@@ -89,7 +117,13 @@ endfunction()
 macro(add_frame_sync_test name source)
   add_executable(${name} ${source})
   configure_test_target(${name})
-  gtest_discover_tests(${name})
+  # 2026-09-09: performance assertions belong to an optimized benchmark run.
+  # gtest_discover_tests(${name})
+  if(ENABLE_PERFORMANCE_TESTS)
+    gtest_discover_tests(${name} PROPERTIES TIMEOUT 30)
+  else()
+    gtest_discover_tests(${name} TEST_FILTER "-PerformanceTest.*" PROPERTIES TIMEOUT 30)
+  endif()
 endmacro()
 
 # 帧同步协议测试
@@ -97,6 +131,7 @@ add_frame_sync_test(frame_sync_test frame_sync_test.cpp)
 
 # ECS 组件测试
 add_frame_sync_test(ecs_test ecs_test.cpp)
+add_frame_sync_test(ecs_query_contract_test ecs_query_contract_test.cpp)
 
 # FixedPoint 定点数测试
 add_frame_sync_test(fixed_point_test fixed_point_test.cpp)
@@ -123,7 +158,14 @@ add_frame_sync_test(phase5_test phase5_test.cpp)
 add_frame_sync_test(performance_benchmark_test performance_benchmark_test.cpp)
 
 # 帧同步性能优化测试
-add_frame_sync_test(frame_sync_performance_test frame_sync_performance_test.cpp)
+# 2026-09-09: this executable has its own main and contains no GoogleTests.
+# add_frame_sync_test(frame_sync_performance_test frame_sync_performance_test.cpp)
+add_executable(frame_sync_performance_test frame_sync_performance_test.cpp)
+target_include_directories(frame_sync_performance_test PRIVATE ${ENGINE_SRC})
+if(ENABLE_PERFORMANCE_TESTS)
+  add_test(NAME frame_sync_performance COMMAND frame_sync_performance_test)
+  set_tests_properties(frame_sync_performance PROPERTIES TIMEOUT 30 LABELS performance)
+endif()
 
 # UX 优化测试
 add_frame_sync_test(ux_optimizer_test ux_optimizer_test.cpp)
@@ -179,6 +221,20 @@ add_frame_sync_test(room_manager_test room_manager_test.cpp)
 # 大厅端到端测试 (ms-18.5)
 add_frame_sync_test(lobby_e2e_test lobby_e2e_test.cpp)
 
+add_frame_sync_test(milestone_regression_test milestone_regression_test.cpp)
+add_frame_sync_test(frame_simulation_test frame_simulation_test.cpp)
+add_frame_sync_test(memory_budget_test memory_budget_test.cpp)
+# 2026-09-10: native Linux filesystem publication and maximum replay contract.
+add_frame_sync_test(replay_file_test replay_file_test.cpp)
+# 2026-09-13: actual filesystem quotas, processes and crash recovery.
+add_frame_sync_test(replay_directory_test replay_directory_test.cpp)
+add_frame_sync_test(reliable_udp_budget_test reliable_udp_budget_test.cpp)
+add_frame_sync_test(bounded_tcp_writer_test bounded_tcp_writer_test.cpp)
+add_frame_sync_test(lobby_capacity_test lobby_capacity_test.cpp)
+add_frame_sync_test(lobby_client_capacity_test lobby_client_capacity_test.cpp)
+add_frame_sync_test(tcp_frame_server_test tcp_frame_server_test.cpp)
+add_frame_sync_test(tcp_client_capacity_test tcp_client_capacity_test.cpp)
+
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
 if(ENABLE_RLTOOLS)
@@ -201,4 +257,8 @@ endif()
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "Unity build: ${CMAKE_UNITY_BUILD}")
 message(STATUS "PCH enabled: ${ENABLE_PCH}")
-message(STATUS "Test targets: 14")
+# 2026-09-09: derive the count from the targets actually declared.
+# message(STATUS "Test targets: 14")
+get_property(review_targets DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
+list(LENGTH review_targets review_target_count)
+message(STATUS "Build targets: ${review_target_count}")

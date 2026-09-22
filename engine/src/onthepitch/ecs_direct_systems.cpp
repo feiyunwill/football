@@ -232,7 +232,10 @@ void TeamProcessSystemDirect(Match* match, int team_id) {
   
   // 获取队伍实体
   blunted::Entity team_entity = blunted::kNullEntity;
-  for (blunted::Entity e : w.GetPool<TeamStateComponent>()->Entities()) {
+  // 2026-09-09: the first team has no component pool yet.
+  // for (blunted::Entity e : w.GetPool<TeamStateComponent>()->Entities()) {
+  auto* team_pool = w.GetPool<TeamStateComponent>();
+  for (blunted::Entity e : team_pool ? team_pool->EntitiesSpan() : std::span<const blunted::Entity>{}) {
     TeamStateComponent* tsc = w.GetComponent<TeamStateComponent>(e);
     if (tsc && tsc->team_id == team_id) {
       team_entity = e;
@@ -313,9 +316,51 @@ void TeamPossessionDecisionSystemDirect(Match* match, int team_id) {
   }
 }
 
+// 2026-09-09: cache pool handles only within this call; preserve player iteration order.
+// void TeamStateFillSystemDirect(Match* match, int team_id) {
+//   DO_VALIDATION;
+//   blunted::World& w = match->GetEcsWorld();
+//
+//   // 获取 Team 对象
+//   Team* team = match->GetTeam(team_id);
+//   if (!team) return;
+//
+//   // 获取队伍实体
+//   blunted::Entity team_entity = blunted::kNullEntity;
+//   for (blunted::Entity e : w.GetPool<TeamStateComponent>()->Entities()) {
+//     TeamStateComponent* tsc = w.GetComponent<TeamStateComponent>(e);
+//     if (tsc && tsc->team_id == team_id) {
+//       team_entity = e;
+//       break;
+//     }
+//   }
+//
+//   // 如果没有队伍实体，创建一个
+//   if (team_entity == blunted::kNullEntity) {
+//     team_entity = w.CreateEntity();
+//     TeamStateComponent fresh;
+//     w.AddComponent(team_entity, fresh);
+//     TacticsComponent tact_fresh;
+//     w.AddComponent(team_entity, tact_fresh);
+//   }
+//
+//   // 填充队伍状态组件
+//   TeamStateComponent* tsc = w.GetComponent<TeamStateComponent>(team_entity);
+//   if (tsc) {
+//     team->FillTeamStateComponent(*tsc);
+//   }
+//
+//   // 填充战术组件
+//   TacticsComponent* tact = w.GetComponent<TacticsComponent>(team_entity);
+//   if (tact) {
+//     team->FillTacticsComponent(*tact);
+//   }
+// }
 void TeamStateFillSystemDirect(Match* match, int team_id) {
   DO_VALIDATION;
   blunted::World& w = match->GetEcsWorld();
+  auto* pool_TeamStateComponent = w.GetPool<TeamStateComponent>();
+  auto* pool_TacticsComponent = w.GetPool<TacticsComponent>();
   
   // 获取 Team 对象
   Team* team = match->GetTeam(team_id);
@@ -323,8 +368,8 @@ void TeamStateFillSystemDirect(Match* match, int team_id) {
   
   // 获取队伍实体
   blunted::Entity team_entity = blunted::kNullEntity;
-  for (blunted::Entity e : w.GetPool<TeamStateComponent>()->Entities()) {
-    TeamStateComponent* tsc = w.GetComponent<TeamStateComponent>(e);
+  for (blunted::Entity e : pool_TeamStateComponent->EntitiesSpan()) {
+    TeamStateComponent* tsc = pool_TeamStateComponent->Get(e);
     if (tsc && tsc->team_id == team_id) {
       team_entity = e;
       break;
@@ -341,13 +386,13 @@ void TeamStateFillSystemDirect(Match* match, int team_id) {
   }
   
   // 填充队伍状态组件
-  TeamStateComponent* tsc = w.GetComponent<TeamStateComponent>(team_entity);
+  TeamStateComponent* tsc = pool_TeamStateComponent->Get(team_entity);
   if (tsc) {
     team->FillTeamStateComponent(*tsc);
   }
   
   // 填充战术组件
-  TacticsComponent* tact = w.GetComponent<TacticsComponent>(team_entity);
+  TacticsComponent* tact = pool_TacticsComponent->Get(team_entity);
   if (tact) {
     team->FillTacticsComponent(*tact);
   }

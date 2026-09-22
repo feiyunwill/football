@@ -116,84 +116,176 @@ void Officials::FetchPutBuffers() {
   linesmen[1]->FetchPutBuffers();
 }
 
+// 2026-09-10: cards share the rendered skeleton, colour selection and delayed endpoint.
+// void Officials::Put(bool mirror) {
+//   DO_VALIDATION;
+//   referee->Put(mirror);
+//   linesmen[0]->Put(mirror);
+//   linesmen[1]->Put(mirror);
+// 
+//   if (referee->GetCurrentFunctionType() == e_FunctionType_Special &&
+//       (match->GetReferee()->GetCurrentFoulType() == 2 ||
+//        match->GetReferee()->GetCurrentFoulType() == 3)) {
+//     DO_VALIDATION;
+//     if (mirror) {
+//       referee->Mirror();
+//     }
+//     BodyPart bodyPartName = right_elbow;
+//     if (referee->GetCurrentAnim()->anim->GetName().find("mirror") != std::string::npos) bodyPartName = left_elbow;
+// 
+//     const NodeMap &nodeMap = referee->GetNodeMap();
+//     auto bodyPart = nodeMap[bodyPartName];
+//     if (bodyPart) {
+//       DO_VALIDATION;
+//       Vector3 position = bodyPart->GetDerivedPosition() + bodyPart->GetDerivedRotation() * Vector3(0.04, 0, -0.25); // -0.4
+//       if (match->GetReferee()->GetCurrentFoulType() == 2) {
+//         DO_VALIDATION;
+//         yellowCard->SetPosition(position);
+//         yellowCard->SetRotation(bodyPart->GetDerivedRotation());
+//       } else {
+//         redCard->SetPosition(position);
+//         redCard->SetRotation(bodyPart->GetDerivedRotation());
+//       }
+//     }
+//     if (mirror) {
+//       referee->Mirror();
+//     }
+//   } else if (referee->GetPreviousFunctionType() == e_FunctionType_Special) {
+//     DO_VALIDATION;
+//     yellowCard->SetPosition(Vector3(0, 0, -10));
+//     redCard->SetPosition(Vector3(0, 0, -10));
+//   }
+// }
 void Officials::Put(bool mirror) {
   DO_VALIDATION;
   referee->Put(mirror);
   linesmen[0]->Put(mirror);
   linesmen[1]->Put(mirror);
-
-  if (referee->GetCurrentFunctionType() == e_FunctionType_Special &&
-      (match->GetReferee()->GetCurrentFoulType() == 2 ||
-       match->GetReferee()->GetCurrentFoulType() == 3)) {
-    DO_VALIDATION;
-    if (mirror) {
-      referee->Mirror();
-    }
-    BodyPart bodyPartName = right_elbow;
-    if (referee->GetCurrentAnim()->anim->GetName().find("mirror") != std::string::npos) bodyPartName = left_elbow;
-
-    const NodeMap &nodeMap = referee->GetNodeMap();
-    auto bodyPart = nodeMap[bodyPartName];
-    if (bodyPart) {
-      DO_VALIDATION;
-      Vector3 position = bodyPart->GetDerivedPosition() + bodyPart->GetDerivedRotation() * Vector3(0.04, 0, -0.25); // -0.4
-      if (match->GetReferee()->GetCurrentFoulType() == 2) {
-        DO_VALIDATION;
-        yellowCard->SetPosition(position);
-        yellowCard->SetRotation(bodyPart->GetDerivedRotation());
-      } else {
-        redCard->SetPosition(position);
-        redCard->SetRotation(bodyPart->GetDerivedRotation());
-      }
-    }
-    if (mirror) {
-      referee->Mirror();
-    }
-  } else if (referee->GetPreviousFunctionType() == e_FunctionType_Special) {
-    DO_VALIDATION;
-    yellowCard->SetPosition(Vector3(0, 0, -10));
-    redCard->SetPosition(Vector3(0, 0, -10));
-  }
+  PutCard(CurrentCard());
 }
 
 // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
-void Officials::SaveInterpolationState() {
+// 2026-09-10: interpolate display pose buffers; keep simulation state untouched.
+// void Officials::SaveInterpolationState() {
+//   DO_VALIDATION;
+//   referee->SaveInterpolationState();
+//   linesmen[0]->SaveInterpolationState();
+//   linesmen[1]->SaveInterpolationState();
+// }
+// 2026-09-10: cards share the rendered skeleton, colour selection and delayed endpoint.
+// void Officials::SaveInterpolationState(bool mirror, bool from_display) {
+//   DO_VALIDATION;
+//   referee->SaveInterpolationState(mirror, from_display);
+//   linesmen[0]->SaveInterpolationState(mirror, from_display);
+//   linesmen[1]->SaveInterpolationState(mirror, from_display);
+// }
+void Officials::SaveInterpolationState(bool mirror, bool from_display) {
   DO_VALIDATION;
-  referee->SaveInterpolationState();
-  linesmen[0]->SaveInterpolationState();
-  linesmen[1]->SaveInterpolationState();
+  cardInterpolationSaved = false;
+  referee->SaveInterpolationState(mirror, from_display);
+  linesmen[0]->SaveInterpolationState(mirror, from_display);
+  linesmen[1]->SaveInterpolationState(mirror, from_display);
+  previousCard = from_display ? displayedCard : CurrentCard();
+  cardInterpolationSaved = true;
 }
 
+// 2026-09-10: cards share the rendered skeleton, colour selection and delayed endpoint.
+// void Officials::PutInterpolated(float t, bool mirror) {
+//   DO_VALIDATION;
+//   referee->PutInterpolated(t, mirror);
+//   linesmen[0]->PutInterpolated(t, mirror);
+//   linesmen[1]->PutInterpolated(t, mirror);
+// 
+//   // Keep card rendering logic from Put()
+//   if (referee->GetCurrentFunctionType() == e_FunctionType_Special &&
+//       (match->GetReferee()->GetCurrentFoulType() == 2 ||
+//        match->GetReferee()->GetCurrentFoulType() == 3)) {
+//     DO_VALIDATION;
+//     if (mirror) {
+//       referee->Mirror();
+//     }
+//     BodyPart bodyPartName = right_elbow;
+//     if (referee->GetCurrentAnim()->anim->GetName().find("mirror") != std::string::npos) bodyPartName = left_elbow;
+// 
+//     const NodeMap &nodeMap = referee->GetNodeMap();
+//     auto bodyPart = nodeMap[bodyPartName];
+//     yellowCard->SetPosition(bodyPart->GetDerivedPosition() + bodyPart->GetDerivedRotation() * Vector3(0.12f, 0, 0));
+//     yellowCard->SetRotation(bodyPart->GetDerivedRotation());
+//     redCard->SetPosition(Vector3(0, 0, -10));
+//     if (mirror) {
+//       referee->Mirror();
+//     }
+//   } else if (referee->GetPreviousFunctionType() == e_FunctionType_Special) {
+//     DO_VALIDATION;
+//     yellowCard->SetPosition(Vector3(0, 0, -10));
+//     redCard->SetPosition(Vector3(0, 0, -10));
+//   }
+// }
 void Officials::PutInterpolated(float t, bool mirror) {
   DO_VALIDATION;
   referee->PutInterpolated(t, mirror);
   linesmen[0]->PutInterpolated(t, mirror);
   linesmen[1]->PutInterpolated(t, mirror);
+  // Hold discrete appearance until reaching the new logical endpoint. Capturing
+  // from_display therefore preserves card colour/hand/visibility at alpha zero.
+  PutCard(cardInterpolationSaved && t < 1.0f ? previousCard : CurrentCard());
+}
 
-  // Keep card rendering logic from Put()
-  if (referee->GetCurrentFunctionType() == e_FunctionType_Special &&
-      (match->GetReferee()->GetCurrentFoulType() == 2 ||
-       match->GetReferee()->GetCurrentFoulType() == 3)) {
-    DO_VALIDATION;
-    if (mirror) {
-      referee->Mirror();
-    }
-    BodyPart bodyPartName = right_elbow;
-    if (referee->GetCurrentAnim()->anim->GetName().find("mirror") != std::string::npos) bodyPartName = left_elbow;
+// 2026-09-10: ordinary and interpolated renders share card selection and attachment.
+Officials::CardPresentation Officials::CurrentCard() const {
+  CardPresentation card;
+  if (referee->GetCurrentFunctionType() != e_FunctionType_Special) return card;
+  const int foul = match->GetReferee()->GetCurrentFoulType();
+  if (foul != 2 && foul != 3) return card;
+  const auto* animation = referee->GetCurrentAnim();
+  if (!animation || !animation->anim) return card;
+  card.type = foul;
+  card.hand = animation->anim->GetName().find("mirror") != std::string::npos
+                  ? left_elbow : right_elbow;
+  return card;
+}
 
-    const NodeMap &nodeMap = referee->GetNodeMap();
-    auto bodyPart = nodeMap[bodyPartName];
-    yellowCard->SetPosition(bodyPart->GetDerivedPosition() + bodyPart->GetDerivedRotation() * Vector3(0.12f, 0, 0));
-    yellowCard->SetRotation(bodyPart->GetDerivedRotation());
-    redCard->SetPosition(Vector3(0, 0, -10));
-    if (mirror) {
-      referee->Mirror();
-    }
-  } else if (referee->GetPreviousFunctionType() == e_FunctionType_Special) {
-    DO_VALIDATION;
-    yellowCard->SetPosition(Vector3(0, 0, -10));
-    redCard->SetPosition(Vector3(0, 0, -10));
+// 2026-09-10: avoid redundant recursive scene updates on hidden or unchanged cards.
+// void Officials::PutCard(const CardPresentation& card) {
+//   // Always hide the unused object, including after restoration into a non-card
+//   // animation. previousFunctionType alone cannot describe a restored display.
+//   yellowCard->SetPosition(Vector3(0, 0, -10));
+//   redCard->SetPosition(Vector3(0, 0, -10));
+//   displayedCard = {};
+//   if (card.type != 2 && card.type != 3) return;
+//   Vector3 position;
+//   Quaternion orientation;
+//   if (!referee->GetRenderAttachmentPose(card.hand, Vector3(0.04f, 0, -0.25f),
+//                                         position, orientation)) return;
+//   auto& geometry = card.type == 2 ? yellowCard : redCard;
+//   geometry->SetPosition(position);
+//   geometry->SetRotation(orientation);
+//   displayedCard = card;
+// }
+void Officials::PutCard(const CardPresentation& card) {
+  const Vector3 hidden(0, 0, -10);
+  const auto hide = [&](const boost::intrusive_ptr<Geometry>& geometry) {
+    if (geometry->GetPosition() != hidden) geometry->SetPosition(hidden);
+  };
+  Vector3 position;
+  Quaternion orientation;
+  if ((card.type != 2 && card.type != 3) ||
+      !referee->GetRenderAttachmentPose(card.hand, Vector3(0.04f, 0, -0.25f),
+                                        position, orientation)) {
+    // Restoration can jump over the previous special animation entirely.
+    hide(yellowCard);
+    hide(redCard);
+    displayedCard = {};
+    return;
   }
+  auto& selected = card.type == 2 ? yellowCard : redCard;
+  auto& unused = card.type == 2 ? redCard : yellowCard;
+  hide(unused);
+  // SetPosition/SetRotation unconditionally propagate scene updates. Do not
+  // hide then reshow an already attached card, or republish an unchanged pose.
+  if (selected->GetPosition() != position) selected->SetPosition(position);
+  if (selected->GetRotation() != orientation) selected->SetRotation(orientation);
+  displayedCard = card;
 }
 
 void Officials::ProcessState(EnvState *state) {

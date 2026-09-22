@@ -20,12 +20,28 @@
 // namespace fs = boost::filesystem;
 namespace fs = std::filesystem;
 
+// 2026-09-22: retain the prior byte-iterator reader for review.
+// Read through the same text-mode stream buffer in bounded blocks.
+// std::string GetFile(const std::string &fileName) {
+//   DO_VALIDATION;
+//   std::ifstream file;
+//   file.open(fileName.c_str(), std::ios::in);
+//   std::string str((std::istreambuf_iterator<char>(file)),
+//       std::istreambuf_iterator<char>());
+//   file.close();
+//   return str;
+// }
 std::string GetFile(const std::string &fileName) {
   DO_VALIDATION;
   std::ifstream file;
   file.open(fileName.c_str(), std::ios::in);
-  std::string str((std::istreambuf_iterator<char>(file)),
-      std::istreambuf_iterator<char>());
+  std::string str;
+  char block[64 * 1024];
+  for (;;) {
+    const std::streamsize count = file.rdbuf()->sgetn(block, sizeof(block));
+    if (count == 0) break;
+    str.append(block, static_cast<std::size_t>(count));
+  }
   file.close();
   return str;
 }

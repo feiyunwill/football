@@ -153,7 +153,9 @@ bool Properties::Exists(const std::string &name) const {
       DO_VALIDATION;
       properties_.clear();
       int size;
-      state->process(size);
+      // 2026-09-09: bound collection size before allocation/reference use.
+  // state->process(size);
+  state->processCount(size);
       while (size--) {
         DO_VALIDATION;
         string key;

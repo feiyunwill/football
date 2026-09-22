@@ -58,6 +58,9 @@ struct Foul {
 
 class Referee {
 
+    // 2026-09-10: the native render contract sets bounded foul fixtures without a public gameplay mutation API.
+    friend struct RenderPoseContractAccess;
+
   public:
     Referee(Match *match, bool animations);
     virtual ~Referee();

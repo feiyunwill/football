@@ -76,6 +76,13 @@ class PlayerBase {
     boost::intrusive_ptr<Node> GetHumanoidNode() { DO_VALIDATION; return humanoid->GetHumanoidNode(); }
     boost::intrusive_ptr<Node> GetFullbodyNode() { DO_VALIDATION; return humanoid->GetFullbodyNode(); }
 
+    // 2026-09-10: expose display attachments without borrowing logical animation nodes.
+    bool GetRenderAttachmentPose(BodyPart part, const Vector3& localOffset,
+                                 Vector3& position, Quaternion& orientation) const {
+      return isActive && humanoid &&
+             humanoid->GetRenderAttachmentPose(part, localOffset, position, orientation);
+    }
+
     float GetDecayingPositionOffsetLength() { DO_VALIDATION; return humanoid->GetDecayingPositionOffsetLength(); }
 
     virtual void Process();
@@ -84,7 +91,9 @@ class PlayerBase {
     void Put(bool mirror);
 
     // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
-    void SaveInterpolationState();
+    // 2026-09-10: preserve mirror coordinates and invalidate inactive poses.
+    // void SaveInterpolationState();
+    void SaveInterpolationState(bool mirror = false, bool from_display = false, bool active = true);
     void PutInterpolated(float t, bool mirror);
 
     void UpdateFullbodyModel() { DO_VALIDATION; humanoid->UpdateFullbodyModel(); }

@@ -36,18 +36,56 @@ jobs:
         run: |
           cmake -S tests -B build_tests \
             -DCMAKE_CXX_COMPILER=g++-15 \
-            -DCMAKE_BUILD_TYPE=Debug
+            -DCMAKE_BUILD_TYPE=Debug \
+            -DENABLE_PCH=OFF
 
       - name: Build C++ tests
         working-directory: engine
-        run: cmake --build build_tests -j 2
+        # 2026-09-09: repository builds use one compiler process.
+        # run: cmake --build build_tests -j 2
+        run: cmake --build build_tests -j 1
 
       - name: Run C++ tests
         working-directory: engine
+        # 2026-09-09: run every discovered test; three selected binaries hid failures.
+        # run: ./build_tests/frame_sync_test; ./build_tests/ecs_test; ./build_tests/ecs_physics_sync_test
+        run: ctest --test-dir build_tests --output-on-failure
+
+      - name: Build production UDP, TCP and lobby targets
+        env:
+          CC: gcc-15
+          CXX: g++-15
         run: |
-          ./build_tests/frame_sync_test
-          ./build_tests/ecs_test
-          ./build_tests/ecs_physics_sync_test
+          # 2026-09-09: verify native-only compilation and relocated Python packaging.
+          # cmake -S engine -B engine/build_ci -DCMAKE_CXX_COMPILER=g++-15 -DCMAKE_BUILD_TYPE=Release
+          # cmake --build engine/build_ci -j 1 --target football_client football_server football_client_tcp football_server_tcp football_lobby headless_match
+          python3 .project/checks/native_boundary.py --build engine/build_ci
+
+      - name: Verify native match and snapshot determinism
+        # 2026-09-09: acceptance builds keep native artifacts in their build directory.
+        # run: python3 engine/tests/run_headless_regression.py bin/headless_match --frames 1000
+        run: python3 engine/tests/run_headless_regression.py engine/build_ci/bin/headless_match --frames 1000
+
+      - name: Verify native and Python environment ownership
+        env:
+          CC: gcc-15
+          CXX: g++-15
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: python3 .project/checks/environment_lifetime.py --build engine/build_ci
+
+      - name: Verify snapshot transactions and render isolation
+        env:
+          CC: gcc-15
+          CXX: g++-15
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: python3 .project/checks/simulation_contract.py --build engine/build_ci
+
+      - name: Verify full-engine sanitizers and lifecycle integration
+        env:
+          CC: gcc-15
+          CXX: g++-15
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: python3 .project/checks/architecture_regression.py --build engine/build_ci_sanitized
 
   python-tests:
     name: Python Tests
@@ -69,24 +107,30 @@ jobs:
         run: |
           python -m pytest gfootball/frame_sync/ -v
 
-  e2e-test:
-    name: E2E Frame Sync Test
-    runs-on: ubuntu-latest
-    needs: [cpp-tests, python-tests]
-    steps:
-      - uses: actions/checkout@v4
+      - name: Verify milestone acceptance infrastructure
+        run: python3 .project/quality.py run plan-19.1.1
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install absl-py
-
-      - name: Run E2E test
-        run: |
-          python -m gfootball.frame_sync.run_e2e_test || true
-        continue-on-error: true
+  # 2026-09-09: historical E2E job had no native engine and suppressed all failures.
+  # The production lobby socket E2E is now part of CTest; full engine multi-process
+  # determinism remains a separate acceptance requirement (see milestone review).
+  #   e2e-test:
+  #     name: E2E Frame Sync Test
+  #     runs-on: ubuntu-latest
+  #     needs: [cpp-tests, python-tests]
+  #     steps:
+  #       - uses: actions/checkout@v4
+  #
+  #       - name: Set up Python
+  #         uses: actions/setup-python@v5
+  #         with:
+  #           python-version: '3.11'
+  #
+  #       - name: Install dependencies
+  #         run: |
+  #           python -m pip install --upgrade pip
+  #           python -m pip install absl-py
+  #
+  #       - name: Run E2E test
+  #         run: |
+  #           python -m gfootball.frame_sync.run_e2e_test || true
+  #         continue-on-error: true

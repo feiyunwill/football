@@ -1,3 +1,17 @@
+<!-- 2026-09-10: current checkout contract precedes historical upstream instructions. -->
+## Current checkout runtime
+
+This checkout declares Python 3.10+ and uses Gymnasium 1.3+ and pygame-ce.
+Install this checkout with `python -m pip install .` after installing the native
+[build prerequisites](gfootball/doc/compile_engine.md). Its mandatory C++23
+extension builds serially in a separate CMake directory.
+
+Use the [Gymnasium API](gfootball/doc/gymnasium.md) for new integrations.
+`gfootball.env.create_environment` retains its existing four-result API.
+The upstream PyPI package and the historical TensorFlow 1 / OpenAI Baselines
+examples below do not establish compatibility with this checkout's current
+runtime; training migration and the release matrix remain separate acceptance work.
+
 # Google Research Football
 
 This repository contains an RL environment based on open-source game Gameplay

@@ -1,0 +1,1816 @@
+{
+  "version": 1,
+  "target_platform": "Linux x86_64 (WSL development; measured hardware is recorded per gate)",
+  "nodes": [
+    {
+      "id": "task-19.1.1.1",
+      "kind": "task",
+      "title": "验收证据与依赖状态机",
+      "acceptance": [
+        "拒绝空测试、跳过、非零退出、超时、失效证据；任务/计划/里程碑依赖闭环"
+      ],
+      "depends_on": [],
+      "checks": [
+        "quality_selftest"
+      ]
+    },
+    {
+      "id": "task-19.1.1.2",
+      "kind": "task",
+      "title": "命令行与计划文档",
+      "acceptance": [
+        "自动生成层级文档；CLI 完成操作只能验证现有证据；下一任务可恢复"
+      ],
+      "depends_on": [
+        "task-19.1.1.1"
+      ],
+      "checks": [
+        "quality_selftest"
+      ]
+    },
+    {
+      "id": "plan-19.1.1",
+      "kind": "plan",
+      "title": "验收流程",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-19.1.1.1",
+        "task-19.1.1.2"
+      ],
+      "checks": [
+        "quality_selftest"
+      ]
+    },
+    {
+      "id": "task-19.1.2.1",
+      "kind": "task",
+      "title": "分离引擎与 Python 绑定",
+      "acceptance": [
+        "原生服务端、客户端、headless 不链接 Python 或绑定模块；Python 扩展保留兼容入口"
+      ],
+      "depends_on": [
+        "task-19.1.1.2"
+      ],
+      "checks": [
+        "native_boundary"
+      ]
+    },
+    {
+      "id": "task-19.1.2.2",
+      "kind": "task",
+      "title": "构建配置与回归矩阵",
+      "acceptance": [
+        "Debug 无强制 O3；Release 显式选择；无 PCH 测试与独立进程确定性回归通过"
+      ],
+      "depends_on": [
+        "task-19.1.2.1"
+      ],
+      "checks": [
+        "framework_regression"
+      ]
+    },
+    {
+      "id": "plan-19.1.2",
+      "kind": "plan",
+      "title": "原生构建边界",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-19.1.2.1",
+        "task-19.1.2.2"
+      ],
+      "checks": [
+        "native_boundary",
+        "framework_regression"
+      ]
+    },
+    {
+      "id": "ms-19.1",
+      "kind": "milestone",
+      "title": "框架与可复现验收",
+      "acceptance": [
+        "所有计划与依赖通过；不以历史完成记录替代当前验收"
+      ],
+      "children": [
+        "plan-19.1.1",
+        "plan-19.1.2"
+      ],
+      "depends_on": [],
+      "checks": [
+        "framework_regression"
+      ]
+    },
+    {
+      "id": "task-20.1.1.1",
+      "kind": "task",
+      "title": "盘点与收敛双份状态",
+      "acceptance": [
+        "记录每类 ECS/OOP 状态的唯一写入者及同步方向；修复回滚后残留状态"
+      ],
+      "depends_on": [
+        "ms-19.1"
+      ],
+      "checks": [
+        "state_ownership"
+      ]
+    },
+    {
+      "id": "task-20.1.1.2",
+      "kind": "task",
+      "title": "环境生命周期隔离",
+      "acceptance": [
+        "重复创建/销毁及独立环境无悬空引用、静态状态串扰和资源泄漏"
+      ],
+      "depends_on": [
+        "task-20.1.1.1"
+      ],
+      "checks": [
+        "environment_lifetime"
+      ]
+    },
+    {
+      "id": "plan-20.1.1",
+      "kind": "plan",
+      "title": "状态与所有权",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-20.1.1.1",
+        "task-20.1.1.2"
+      ],
+      "checks": [
+        "state_ownership",
+        "environment_lifetime"
+      ]
+    },
+    {
+      "id": "task-20.1.2.1",
+      "kind": "task",
+      "title": "逻辑与表现边界",
+      "acceptance": [
+        "渲染不推进逻辑；快照恢复是事务；逻辑结果不依赖是否渲染"
+      ],
+      "depends_on": [
+        "task-20.1.1.2"
+      ],
+      "checks": [
+        "simulation_contract"
+      ]
+    },
+    {
+      "id": "task-20.1.2.2",
+      "kind": "task",
+      "title": "架构集成回归",
+      "acceptance": [
+        "覆盖启动、踢球、暂停、恢复、结束、销毁与多实例边界"
+      ],
+      "depends_on": [
+        "task-20.1.2.1"
+      ],
+      "checks": [
+        "architecture_regression"
+      ]
+    },
+    {
+      "id": "plan-20.1.2",
+      "kind": "plan",
+      "title": "模块契约",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-20.1.2.1",
+        "task-20.1.2.2"
+      ],
+      "checks": [
+        "simulation_contract",
+        "architecture_regression"
+      ]
+    },
+    {
+      "id": "ms-20.1",
+      "kind": "milestone",
+      "title": "架构与状态生命周期",
+      "acceptance": [
+        "所有计划与依赖通过；不以历史完成记录替代当前验收"
+      ],
+      "children": [
+        "plan-20.1.1",
+        "plan-20.1.2"
+      ],
+      "depends_on": [
+        "ms-19.1"
+      ],
+      "checks": [
+        "architecture_regression"
+      ]
+    },
+    {
+      "id": "task-21.1.1.1",
+      "kind": "task",
+      "title": "真实比赛基准",
+      "acceptance": [
+        "11v11 固定输入及种子，记录硬件、编译参数、p50/p95/p99、RSS；启动与稳态分开"
+      ],
+      "depends_on": [
+        "ms-20.1"
+      ],
+      "checks": [
+        "match_benchmark"
+      ]
+    },
+    {
+      "id": "task-21.1.1.2",
+      "kind": "task",
+      "title": "查询与分配热点优化",
+      "acceptance": [
+        "缓存组件池、选择最小池、保持实体顺序；真实性能提升且不改变状态哈希"
+      ],
+      "depends_on": [
+        "task-21.1.1.1"
+      ],
+      "checks": [
+        "ecs_performance"
+      ]
+    },
+    {
+      "id": "plan-21.1.1",
+      "kind": "plan",
+      "title": "测量与热点",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-21.1.1.1",
+        "task-21.1.1.2"
+      ],
+      "checks": [
+        "match_benchmark",
+        "ecs_performance"
+      ]
+    },
+    {
+      "id": "task-21.1.2.1",
+      "kind": "task",
+      "title": "网络与回滚内存预算",
+      "acceptance": [
+        "输入/历史/日志/连接发送队列均有上界；过载行为可复现"
+      ],
+      "depends_on": [
+        "task-21.1.1.2"
+      ],
+      "checks": [
+        "memory_budget"
+      ]
+    },
+    {
+      "id": "task-21.1.2.2",
+      "kind": "task",
+      "title": "性能验收",
+      "acceptance": [
+        "目标平台稳态逻辑 p99 小于单帧预算的 50%；无退化与持续内存增长"
+      ],
+      "depends_on": [
+        "task-21.1.2.1"
+      ],
+      "checks": [
+        "performance_regression"
+      ]
+    },
+    {
+      "id": "plan-21.1.2",
+      "kind": "plan",
+      "title": "容量与预算",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-21.1.2.1",
+        "task-21.1.2.2"
+      ],
+      "checks": [
+        "memory_budget",
+        "performance_regression"
+      ]
+    },
+    {
+      "id": "ms-21.1",
+      "kind": "milestone",
+      "title": "性能与容量",
+      "acceptance": [
+        "所有计划与依赖通过；不以历史完成记录替代当前验收"
+      ],
+      "children": [
+        "plan-21.1.1",
+        "plan-21.1.2"
+      ],
+      "depends_on": [
+        "ms-20.1"
+      ],
+      "checks": [
+        "performance_regression"
+      ]
+    },
+    {
+      "id": "task-22.1.1.1",
+      "kind": "task",
+      "title": "统一输入采样",
+      "acceptance": [
+        "键盘/控制器方向归一化、死区、按钮按下/释放和同时按键一致"
+      ],
+      "depends_on": [
+        "ms-21.1"
+      ],
+      "checks": [
+        "input_contract"
+      ]
+    },
+    {
+      "id": "task-22.1.1.2",
+      "kind": "task",
+      "title": "固定步长与节拍",
+      "acceptance": [
+        "输入采样、网络帧率和物理步数协商一致；忙闲帧不丢边沿"
+      ],
+      "depends_on": [
+        "task-22.1.1.1"
+      ],
+      "checks": [
+        "fixed_timestep"
+      ]
+    },
+    {
+      "id": "plan-22.1.1",
+      "kind": "plan",
+      "title": "输入闭环",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-22.1.1.1",
+        "task-22.1.1.2"
+      ],
+      "checks": [
+        "input_contract",
+        "fixed_timestep"
+      ]
+    },
+    {
+      "id": "task-22.1.2.1",
+      "kind": "task",
+      "title": "平滑与暂停恢复",
+      "acceptance": [
+        "插值使用最后逻辑时刻；回滚无跳变；暂停恢复无大步长或粘键"
+      ],
+      "depends_on": [
+        "task-22.1.1.2"
+      ],
+      "checks": [
+        "presentation_smoothing"
+      ]
+    },
+    {
+      "id": "task-22.1.2.2",
+      "kind": "task",
+      "title": "手感自动验收",
+      "acceptance": [
+        "脚本输入到实际球员响应可测量；本机动作生效 p95 不超过 50ms；输出回放证据"
+      ],
+      "depends_on": [
+        "task-22.1.2.1"
+      ],
+      "checks": [
+        "feel_regression"
+      ]
+    },
+    {
+      "id": "plan-22.1.2",
+      "kind": "plan",
+      "title": "表现与反馈",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-22.1.2.1",
+        "task-22.1.2.2"
+      ],
+      "checks": [
+        "presentation_smoothing",
+        "feel_regression"
+      ]
+    },
+    {
+      "id": "ms-22.1",
+      "kind": "milestone",
+      "title": "输入与操作手感",
+      "acceptance": [
+        "所有计划与依赖通过；不以历史完成记录替代当前验收"
+      ],
+      "children": [
+        "plan-22.1.1",
+        "plan-22.1.2"
+      ],
+      "depends_on": [
+        "ms-21.1"
+      ],
+      "checks": [
+        "feel_regression"
+      ]
+    },
+    {
+      "id": "task-23.1.1.1",
+      "kind": "task",
+      "title": "权威输入窗口",
+      "acceptance": [
+        "未来输入有界缓存；重复、乱序与非法输入有确定规则；慢客户端不阻塞整局"
+      ],
+      "depends_on": [
+        "ms-22.1"
+      ],
+      "checks": [
+        "network_input_window"
+      ]
+    },
+    {
+      "id": "task-23.1.1.2",
+      "kind": "task",
+      "title": "断线与重连",
+      "acceptance": [
+        "连接和握手超时、心跳 RTT、全量快照恢复、重新追帧与过期会话清理"
+      ],
+      "depends_on": [
+        "task-23.1.1.1"
+      ],
+      "checks": [
+        "network_reconnect"
+      ]
+    },
+    {
+      "id": "plan-23.1.1",
+      "kind": "plan",
+      "title": "传输与恢复",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-23.1.1.1",
+        "task-23.1.1.2"
+      ],
+      "checks": [
+        "network_input_window",
+        "network_reconnect"
+      ]
+    },
+    {
+      "id": "task-23.1.2.1",
+      "kind": "task",
+      "title": "大厅到比赛生命周期",
+      "acceptance": [
+        "协议显式字节序；建房/准备/开局/比赛地址/结束回收与重进闭环"
+      ],
+      "depends_on": [
+        "task-23.1.1.2"
+      ],
+      "checks": [
+        "lobby_lifecycle"
+      ]
+    },
+    {
+      "id": "task-23.1.2.2",
+      "kind": "task",
+      "title": "真实网络故障验收",
+      "acceptance": [
+        "两客户端非零变化输入、逐帧哈希；延迟/抖动/丢包/乱序/断线矩阵自动注入并验证"
+      ],
+      "depends_on": [
+        "task-23.1.2.1"
+      ],
+      "checks": [
+        "network_regression"
+      ]
+    },
+    {
+      "id": "plan-23.1.2",
+      "kind": "plan",
+      "title": "大厅与联机闭环",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-23.1.2.1",
+        "task-23.1.2.2"
+      ],
+      "checks": [
+        "lobby_lifecycle",
+        "network_regression"
+      ]
+    },
+    {
+      "id": "ms-23.1",
+      "kind": "milestone",
+      "title": "网络与会话可靠性",
+      "acceptance": [
+        "所有计划与依赖通过；不以历史完成记录替代当前验收"
+      ],
+      "children": [
+        "plan-23.1.1",
+        "plan-23.1.2"
+      ],
+      "depends_on": [
+        "ms-22.1"
+      ],
+      "checks": [
+        "network_regression"
+      ]
+    },
+    {
+      "id": "task-24.1.1.1",
+      "kind": "task",
+      "title": "PBR 与资源生命周期",
+      "acceptance": [
+        "环境开关正确；有效材质与 IBL 数据；着色器链接/FBO 完整；资源可重建"
+      ],
+      "depends_on": [
+        "ms-23.1"
+      ],
+      "checks": [
+        "pbr_pipeline"
+      ]
+    },
+    {
+      "id": "task-24.1.1.2",
+      "kind": "task",
+      "title": "HDR 与后处理",
+      "acceptance": [
+        "曝光、Bloom、抗锯齿等启用效果有真实纹理输入、正确顺序与可关闭对照"
+      ],
+      "depends_on": [
+        "task-24.1.1.1"
+      ],
+      "checks": [
+        "postprocessing"
+      ]
+    },
+    {
+      "id": "plan-24.1.1",
+      "kind": "plan",
+      "title": "渲染管线",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-24.1.1.1",
+        "task-24.1.1.2"
+      ],
+      "checks": [
+        "pbr_pipeline",
+        "postprocessing"
+      ]
+    },
+    {
+      "id": "task-24.1.2.1",
+      "kind": "task",
+      "title": "可重复图像验收",
+      "acceptance": [
+        "实际 OpenGL 输出基线、非空帧、亮度/色彩/边界断言及渲染开关对照"
+      ],
+      "depends_on": [
+        "task-24.1.1.2"
+      ],
+      "checks": [
+        "render_images"
+      ]
+    },
+    {
+      "id": "task-24.1.2.2",
+      "kind": "task",
+      "title": "渲染性能验收",
+      "acceptance": [
+        "明确 GPU/分辨率/画质设置下 1080p 帧时间 p95≤16.67ms；缺少测量不得通过"
+      ],
+      "depends_on": [
+        "task-24.1.2.1"
+      ],
+      "checks": [
+        "render_regression"
+      ]
+    },
+    {
+      "id": "plan-24.1.2",
+      "kind": "plan",
+      "title": "画质与帧预算",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-24.1.2.1",
+        "task-24.1.2.2"
+      ],
+      "checks": [
+        "render_images",
+        "render_regression"
+      ]
+    },
+    {
+      "id": "ms-24.1",
+      "kind": "milestone",
+      "title": "渲染与图形质量",
+      "acceptance": [
+        "所有计划与依赖通过；不以历史完成记录替代当前验收"
+      ],
+      "children": [
+        "plan-24.1.1",
+        "plan-24.1.2"
+      ],
+      "depends_on": [
+        "ms-23.1"
+      ],
+      "checks": [
+        "render_regression"
+      ]
+    },
+    {
+      "id": "task-25.1.1.1",
+      "kind": "task",
+      "title": "战术接入真实球员",
+      "acceptance": [
+        "中心坐标、进攻方向、控球者、体力、比分、剩余时间采用真实比赛状态"
+      ],
+      "depends_on": [
+        "ms-24.1"
+      ],
+      "checks": [
+        "tactical_integration"
+      ]
+    },
+    {
+      "id": "task-25.1.1.2",
+      "kind": "task",
+      "title": "决策稳定性",
+      "acceptance": [
+        "每次决策重置权重和按钮；不传给自己；不同局势与种子结果可重现"
+      ],
+      "depends_on": [
+        "task-25.1.1.1"
+      ],
+      "checks": [
+        "ai_decisions"
+      ]
+    },
+    {
+      "id": "plan-25.1.1",
+      "kind": "plan",
+      "title": "比赛 AI",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-25.1.1.1",
+        "task-25.1.1.2"
+      ],
+      "checks": [
+        "tactical_integration",
+        "ai_decisions"
+      ]
+    },
+    {
+      "id": "task-25.1.2.1",
+      "kind": "task",
+      "title": "训练与检查点",
+      "acceptance": [
+        "检查点写入原子化、损坏/维度不匹配可诊断；环境实例限制明确并受测试约束"
+      ],
+      "depends_on": [
+        "task-25.1.1.2"
+      ],
+      "checks": [
+        "training_reliability"
+      ]
+    },
+    {
+      "id": "task-25.1.2.2",
+      "kind": "task",
+      "title": "AI 对照验收",
+      "acceptance": [
+        "固定种子对照比赛记录胜率、传球/射门/犯规/无效动作，统计区间和退化检查"
+      ],
+      "depends_on": [
+        "task-25.1.2.1"
+      ],
+      "checks": [
+        "ai_regression"
+      ]
+    },
+    {
+      "id": "plan-25.1.2",
+      "kind": "plan",
+      "title": "评估与训练可靠性",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-25.1.2.1",
+        "task-25.1.2.2"
+      ],
+      "checks": [
+        "training_reliability",
+        "ai_regression"
+      ]
+    },
+    {
+      "id": "ms-25.1",
+      "kind": "milestone",
+      "title": "AI 与训练工程",
+      "acceptance": [
+        "所有计划与依赖通过；不以历史完成记录替代当前验收"
+      ],
+      "children": [
+        "plan-25.1.1",
+        "plan-25.1.2"
+      ],
+      "depends_on": [
+        "ms-24.1"
+      ],
+      "checks": [
+        "ai_regression"
+      ]
+    },
+    {
+      "id": "task-26.1.1.1",
+      "kind": "task",
+      "title": "全流程自动场景",
+      "acceptance": [
+        "新启动到大厅、比赛、结束、退出完整脚本；恢复故障后可继续使用"
+      ],
+      "depends_on": [
+        "ms-25.1"
+      ],
+      "checks": [
+        "product_journey"
+      ]
+    },
+    {
+      "id": "task-26.1.1.2",
+      "kind": "task",
+      "title": "长时与资源检测",
+      "acceptance": [
+        "多种子至少 100000 逻辑帧；已覆盖路径无 ASan/UBSan 问题，资源增长有界"
+      ],
+      "depends_on": [
+        "task-26.1.1.1"
+      ],
+      "checks": [
+        "product_soak"
+      ]
+    },
+    {
+      "id": "plan-26.1.1",
+      "kind": "plan",
+      "title": "整局与长时运行",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-26.1.1.1",
+        "task-26.1.1.2"
+      ],
+      "checks": [
+        "product_journey",
+        "product_soak"
+      ]
+    },
+    {
+      "id": "task-26.1.2.1",
+      "kind": "task",
+      "title": "可安装产物",
+      "acceptance": [
+        "干净目录启动、资源定位和错误诊断；版本/协议/构建信息写入报告"
+      ],
+      "depends_on": [
+        "task-26.1.1.2"
+      ],
+      "checks": [
+        "product_package"
+      ]
+    },
+    {
+      "id": "task-26.1.2.2",
+      "kind": "task",
+      "title": "最终质量审查",
+      "acceptance": [
+        "七个领域当前源码验收全部有效；已知严重缺陷为零；产物与运行证据可复现"
+      ],
+      "depends_on": [
+        "task-26.1.2.1"
+      ],
+      "checks": [
+        "product_release"
+      ]
+    },
+    {
+      "id": "plan-26.1.2",
+      "kind": "plan",
+      "title": "交付与证据",
+      "acceptance": [
+        "子任务通过且本计划验收证据适用于当前源码"
+      ],
+      "children": [
+        "task-26.1.2.1",
+        "task-26.1.2.2"
+      ],
+      "checks": [
+        "product_package",
+        "product_release"
+      ]
+    },
+    {
+      "id": "ms-26.1",
+      "kind": "milestone",
+      "title": "产品发布验收",
+      "acceptance": [
+        "所有计划与依赖通过；不以历史完成记录替代当前验收"
+      ],
+      "children": [
+        "plan-26.1.1",
+        "plan-26.1.2"
+      ],
+      "depends_on": [
+        "ms-25.1"
+      ],
+      "checks": [
+        "product_release"
+      ]
+    }
+  ],
+  "checks": [
+    {
+      "id": "quality_selftest",
+      "ready": true,
+      "acceptance": [
+        "拒绝空测试、跳过、非零退出、超时、失效证据；任务/计划/里程碑依赖闭环",
+        "自动生成层级文档；CLI 完成操作只能验证现有证据；下一任务可恢复"
+      ],
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        ".project/tests",
+        "-p",
+        "*_test.py"
+      ],
+      "kind": "unittest",
+      "min_assertions": 70,
+      "timeout": 60,
+      "sources": [
+        ".project/quality.py",
+        ".project/tests/*_test.py",
+        ".project/optimization/program.json",
+        ".project/scripts/*.sh",
+        ".project/checks/*.py"
+      ]
+    },
+    {
+      "id": "native_boundary",
+      "ready": true,
+      "acceptance": [
+        "原生服务端、客户端、headless 不链接 Python 或绑定模块；Python 扩展保留兼容入口"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/native_boundary.py"
+      ],
+      "kind": "json",
+      "min_assertions": 12,
+      "timeout": 3600,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "setup.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt",
+        "engine/__init__.py"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "ld",
+        "readelf",
+        "nm"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "GFOOTBALL_USE_PBR"
+      ]
+    },
+    {
+      "id": "framework_regression",
+      "ready": true,
+      "acceptance": [
+        "Debug 无强制 O3；Release 显式选择；无 PCH 测试与独立进程确定性回归通过"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/framework_regression.py",
+        "--tests-build",
+        "/tmp/football-review-20260909-tests"
+      ],
+      "kind": "json",
+      "min_assertions": 589,
+      "timeout": 3600,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "setup.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/*.py",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        "engine/__init__.py",
+        "gfootball/**/*.py",
+        "requirements.txt",
+        "pyproject.toml"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "ctest",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "GFOOTBALL_USE_PBR"
+      ]
+    },
+    {
+      "id": "state_ownership",
+      "ready": true,
+      "acceptance": [
+        "记录每类 ECS/OOP 状态的唯一写入者及同步方向；修复回滚后残留状态"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/state_ownership.py"
+      ],
+      "kind": "json",
+      "min_assertions": 8000,
+      "timeout": 600,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "setup.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/*.py",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        ".project/optimization/state-ownership.md"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "ctest",
+        "c++",
+        "/tmp/football-review-20260909-venv/bin/python"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "GFOOTBALL_USE_PBR"
+      ]
+    },
+    {
+      "id": "environment_lifetime",
+      "ready": true,
+      "acceptance": [
+        "重复创建/销毁及独立环境无悬空引用、静态状态串扰和资源泄漏"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/environment_lifetime.py"
+      ],
+      "kind": "json",
+      "min_assertions": 424,
+      "timeout": 900,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "setup.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/*.py",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        ".project/optimization/state-ownership.md",
+        ".project/optimization/environment-lifetime.md",
+        "engine/__init__.py"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "GFOOTBALL_USE_PBR",
+        "DISPLAY",
+        "EGL_PLATFORM",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "MESA_LOADER_DRIVER_OVERRIDE",
+        "LD_PRELOAD",
+        "LSAN_OPTIONS"
+      ]
+    },
+    {
+      "id": "simulation_contract",
+      "ready": true,
+      "acceptance": [
+        "渲染不推进逻辑；快照恢复是事务；逻辑结果不依赖是否渲染"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/simulation_contract.py"
+      ],
+      "kind": "json",
+      "min_assertions": 3384,
+      "timeout": 900,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "setup.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/*.py",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        ".project/optimization/state-ownership.md",
+        ".project/optimization/environment-lifetime.md",
+        ".project/optimization/simulation-contract.md"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "GFOOTBALL_USE_PBR",
+        "DISPLAY",
+        "EGL_PLATFORM",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "MESA_LOADER_DRIVER_OVERRIDE",
+        "LD_PRELOAD",
+        "LSAN_OPTIONS"
+      ]
+    },
+    {
+      "id": "architecture_regression",
+      "ready": true,
+      "acceptance": [
+        "覆盖启动、踢球、暂停、恢复、结束、销毁与多实例边界"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/architecture_regression.py"
+      ],
+      "kind": "json",
+      "min_assertions": 1590816,
+      "timeout": 3600,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "setup.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/*.py",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        ".project/optimization/state-ownership.md",
+        ".project/optimization/environment-lifetime.md",
+        ".project/optimization/simulation-contract.md",
+        ".project/optimization/architecture-integration.md"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "readelf",
+        "nm"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "GFOOTBALL_USE_PBR",
+        "DISPLAY",
+        "EGL_PLATFORM",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "MESA_LOADER_DRIVER_OVERRIDE",
+        "LD_PRELOAD",
+        "LSAN_OPTIONS",
+        "ASAN_OPTIONS",
+        "UBSAN_OPTIONS",
+        "SDL_VIDEODRIVER"
+      ]
+    },
+    {
+      "id": "match_benchmark",
+      "ready": true,
+      "acceptance": [
+        "11v11 固定输入及种子，记录硬件、编译参数、p50/p95/p99、RSS；启动与稳态分开"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/match_benchmark.py"
+      ],
+      "kind": "json",
+      "min_assertions": 550,
+      "timeout": 900,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "setup.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/*.py",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        ".project/optimization/state-ownership.md",
+        ".project/optimization/environment-lifetime.md",
+        ".project/optimization/simulation-contract.md",
+        ".project/optimization/architecture-integration.md",
+        ".project/optimization/performance-benchmark.md",
+        ".project/tests/match_benchmark_test.py"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "readelf"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "GFOOTBALL_USE_PBR",
+        "DISPLAY",
+        "EGL_PLATFORM",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "MESA_LOADER_DRIVER_OVERRIDE",
+        "LD_PRELOAD",
+        "LSAN_OPTIONS",
+        "ASAN_OPTIONS",
+        "UBSAN_OPTIONS",
+        "SDL_VIDEODRIVER",
+        "MALLOC_ARENA_MAX",
+        "GLIBC_TUNABLES"
+      ]
+    },
+    {
+      "id": "ecs_performance",
+      "ready": true,
+      "acceptance": [
+        "缓存组件池、选择最小池、保持实体顺序；真实性能提升且不改变状态哈希"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/ecs_performance.py"
+      ],
+      "kind": "json",
+      "min_assertions": 1590027,
+      "timeout": 1800,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "setup.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/*.py",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        ".project/optimization/state-ownership.md",
+        ".project/optimization/environment-lifetime.md",
+        ".project/optimization/simulation-contract.md",
+        ".project/optimization/architecture-integration.md",
+        ".project/optimization/performance-benchmark.md",
+        ".project/tests/match_benchmark_test.py",
+        ".project/tests/ecs_performance_test.py",
+        ".project/optimization/ecs-performance.md",
+        ".project/optimization/benchmarks/baseline.json"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "ldd",
+        "nm",
+        "readelf"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "GFOOTBALL_USE_PBR",
+        "DISPLAY",
+        "EGL_PLATFORM",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "MESA_LOADER_DRIVER_OVERRIDE",
+        "LD_PRELOAD",
+        "LSAN_OPTIONS",
+        "ASAN_OPTIONS",
+        "UBSAN_OPTIONS",
+        "SDL_VIDEODRIVER",
+        "MALLOC_ARENA_MAX",
+        "GLIBC_TUNABLES"
+      ]
+    },
+    {
+      "id": "memory_budget",
+      "ready": true,
+      "acceptance": [
+        "输入/历史/日志/连接发送队列均有上界；过载行为可复现"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/memory_budget.py"
+      ],
+      "kind": "json",
+      "min_assertions": 1390,
+      "timeout": 7200,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "setup.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/*.py",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        ".project/optimization/state-ownership.md",
+        ".project/optimization/environment-lifetime.md",
+        ".project/optimization/simulation-contract.md",
+        ".project/optimization/architecture-integration.md",
+        ".project/optimization/performance-benchmark.md",
+        ".project/tests/match_benchmark_test.py",
+        "gfootball/**/*.py",
+        "engine/frame_sync_asio/CMakeLists.txt",
+        "pyproject.toml",
+        "requirements.txt",
+        "engine/__init__.py",
+        ".project/optimization/capacity-contract.md"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "ctest",
+        "c++",
+        "readelf"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "GFOOTBALL_USE_PBR",
+        "DISPLAY",
+        "EGL_PLATFORM",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "MESA_LOADER_DRIVER_OVERRIDE",
+        "LD_PRELOAD",
+        "LSAN_OPTIONS",
+        "ASAN_OPTIONS",
+        "UBSAN_OPTIONS",
+        "SDL_VIDEODRIVER",
+        "MALLOC_ARENA_MAX",
+        "GLIBC_TUNABLES"
+      ]
+    },
+    {
+      "id": "performance_regression",
+      "ready": true,
+      "acceptance": [
+        "目标平台稳态逻辑 p99 小于单帧预算的 50%；无退化与持续内存增长"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/performance_regression.py"
+      ],
+      "kind": "json",
+      "min_assertions": 200,
+      "timeout": 5400,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "setup.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/*.py",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        ".project/optimization/state-ownership.md",
+        ".project/optimization/environment-lifetime.md",
+        ".project/optimization/simulation-contract.md",
+        ".project/optimization/architecture-integration.md",
+        ".project/optimization/performance-benchmark.md",
+        ".project/tests/match_benchmark_test.py",
+        ".project/tests/ecs_performance_test.py",
+        ".project/optimization/ecs-performance.md",
+        ".project/optimization/benchmarks/baseline.json",
+        ".project/optimization/program.json",
+        ".project/optimization/performance-acceptance.md",
+        ".project/tests/soak_analysis_test.py",
+        ".project/tests/soak_command_test.py",
+        ".project/optimization/benchmarks/native-soak-20260910-a/evidence/report.json",
+        ".project/optimization/benchmarks/native-soak-20260910-a/evidence/seed-*.log"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "ldd",
+        "env"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "GFOOTBALL_USE_PBR",
+        "DISPLAY",
+        "EGL_PLATFORM",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "MESA_LOADER_DRIVER_OVERRIDE",
+        "LD_PRELOAD",
+        "LSAN_OPTIONS",
+        "ASAN_OPTIONS",
+        "UBSAN_OPTIONS",
+        "SDL_VIDEODRIVER",
+        "MALLOC_ARENA_MAX",
+        "GLIBC_TUNABLES",
+        "PYTHONOPTIMIZE"
+      ]
+    },
+    {
+      "id": "input_contract",
+      "ready": true,
+      "acceptance": [
+        "键盘/控制器方向归一化、死区、按钮按下/释放和同时按键一致"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/input_contract.py"
+      ],
+      "kind": "json",
+      "min_assertions": 2150000,
+      "timeout": 3600,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "ldd",
+        "nm",
+        "unshare",
+        "mount"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "FOOTBALL_TEST_X11_ROOT",
+        "PYTHONOPTIMIZE"
+      ]
+    },
+    {
+      "id": "fixed_timestep",
+      "ready": false,
+      "acceptance": [
+        "输入采样、网络帧率和物理步数协商一致；忙闲帧不丢边沿"
+      ]
+    },
+    {
+      "id": "presentation_smoothing",
+      "ready": false,
+      "acceptance": [
+        "插值使用最后逻辑时刻；回滚无跳变；暂停恢复无大步长或粘键"
+      ]
+    },
+    {
+      "id": "feel_regression",
+      "ready": false,
+      "acceptance": [
+        "脚本输入到实际球员响应可测量；本机动作生效 p95 不超过 50ms；输出回放证据"
+      ]
+    },
+    {
+      "id": "network_input_window",
+      "ready": false,
+      "acceptance": [
+        "未来输入有界缓存；重复、乱序与非法输入有确定规则；慢客户端不阻塞整局"
+      ]
+    },
+    {
+      "id": "network_reconnect",
+      "ready": false,
+      "acceptance": [
+        "连接和握手超时、心跳 RTT、全量快照恢复、重新追帧与过期会话清理"
+      ]
+    },
+    {
+      "id": "lobby_lifecycle",
+      "ready": false,
+      "acceptance": [
+        "协议显式字节序；建房/准备/开局/比赛地址/结束回收与重进闭环"
+      ]
+    },
+    {
+      "id": "network_regression",
+      "ready": false,
+      "acceptance": [
+        "两客户端非零变化输入、逐帧哈希；延迟/抖动/丢包/乱序/断线矩阵自动注入并验证"
+      ]
+    },
+    {
+      "id": "pbr_pipeline",
+      "ready": false,
+      "acceptance": [
+        "环境开关正确；有效材质与 IBL 数据；着色器链接/FBO 完整；资源可重建"
+      ]
+    },
+    {
+      "id": "postprocessing",
+      "ready": false,
+      "acceptance": [
+        "曝光、Bloom、抗锯齿等启用效果有真实纹理输入、正确顺序与可关闭对照"
+      ]
+    },
+    {
+      "id": "render_images",
+      "ready": false,
+      "acceptance": [
+        "实际 OpenGL 输出基线、非空帧、亮度/色彩/边界断言及渲染开关对照"
+      ]
+    },
+    {
+      "id": "render_regression",
+      "ready": false,
+      "acceptance": [
+        "明确 GPU/分辨率/画质设置下 1080p 帧时间 p95≤16.67ms；缺少测量不得通过"
+      ]
+    },
+    {
+      "id": "tactical_integration",
+      "ready": true,
+      "acceptance": [
+        "中心坐标、进攻方向、控球者、体力、比分、剩余时间采用真实比赛状态",
+        "真实 UDP 客户端在断线接管后继续比赛；完整解析分片接管通知，拒绝非法槽位与帧号"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/ai_tactics_contract.py",
+        "--suite",
+        "integration"
+      ],
+      "kind": "json",
+      "min_assertions": 75000,
+      "timeout": 3600,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "FOOTBALL_TEST_X11_ROOT",
+        "PYTHONOPTIMIZE"
+      ],
+      "revision_note_2026_09_14": {
+        "reason": "Executable tactical state/decision and real transport contracts replace planned checks; target completion still requires all dependencies.",
+        "previous_definition": {
+          "id": "tactical_integration",
+          "ready": false,
+          "acceptance": [
+            "中心坐标、进攻方向、控球者、体力、比分、剩余时间采用真实比赛状态"
+          ]
+        }
+      },
+      "native_client_revision_2026_09_14": {
+        "reason": "Independent server peers did not exercise the native client parser; add real client and full replay checks.",
+        "previous_acceptance": [
+          "中心坐标、进攻方向、控球者、体力、比分、剩余时间采用真实比赛状态"
+        ]
+      }
+    },
+    {
+      "id": "ai_decisions",
+      "ready": true,
+      "acceptance": [
+        "每次决策重置权重和按钮；不传给自己；不同局势与种子结果可重现"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/ai_tactics_contract.py",
+        "--suite",
+        "decisions"
+      ],
+      "kind": "json",
+      "min_assertions": 22950,
+      "timeout": 3600,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/*.inc",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "FOOTBALL_TEST_X11_ROOT",
+        "PYTHONOPTIMIZE"
+      ],
+      "revision_note_2026_09_14": {
+        "reason": "Executable tactical state/decision and real transport contracts replace planned checks; target completion still requires all dependencies.",
+        "previous_definition": {
+          "id": "ai_decisions",
+          "ready": false,
+          "acceptance": [
+            "每次决策重置权重和按钮；不传给自己；不同局势与种子结果可重现"
+          ]
+        }
+      }
+    },
+    {
+      "id": "training_reliability",
+      "ready": false,
+      "acceptance": [
+        "检查点写入原子化、损坏/维度不匹配可诊断；环境实例限制明确并受测试约束"
+      ]
+    },
+    {
+      "id": "ai_regression",
+      "ready": false,
+      "acceptance": [
+        "固定种子对照比赛记录胜率、传球/射门/犯规/无效动作，统计区间和退化检查"
+      ]
+    },
+    {
+      "id": "product_journey",
+      "ready": false,
+      "acceptance": [
+        "新启动到大厅、比赛、结束、退出完整脚本；恢复故障后可继续使用"
+      ]
+    },
+    {
+      "id": "product_soak",
+      "ready": false,
+      "acceptance": [
+        "多种子至少 100000 逻辑帧；已覆盖路径无 ASan/UBSan 问题，资源增长有界"
+      ]
+    },
+    {
+      "id": "product_package",
+      "ready": false,
+      "acceptance": [
+        "干净目录启动、资源定位和错误诊断；版本/协议/构建信息写入报告"
+      ]
+    },
+    {
+      "id": "product_release",
+      "ready": false,
+      "acceptance": [
+        "七个领域当前源码验收全部有效；已知严重缺陷为零；产物与运行证据可复现"
+      ]
+    }
+  ]
+}

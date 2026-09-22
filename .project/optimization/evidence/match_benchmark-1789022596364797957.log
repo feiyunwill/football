@@ -1,0 +1,40 @@
+Running: cmake -S engine -B /tmp/football-optimization-native -DCMAKE_BUILD_TYPE=Release -DFOOTBALL_ENABLE_SANITIZERS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: /usr/sbin/c++ --version
+Running: cmake --build /tmp/football-optimization-native -j 1 --target engine_match_benchmark
+[  2%] Built target datalib
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 35%] Built target typeslib
+[ 45%] Built target scenelib
+[ 50%] Built target utilslib
+[ 53%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_match_benchmark.dir/tests/engine_match_benchmark.cpp.o
+[100%] Linking CXX executable bin/engine_match_benchmark
+[100%] Built target engine_match_benchmark
+Running: readelf -d /tmp/football-optimization-native/libfootball_engine.so
+{"seed": 42, "repetition": 0, "startup_ms": 145.866416, "steady_p50_ms": 2.603777, "steady_p95_ms": 5.355296, "steady_p99_ms": 7.650331, "hash": "177cf7205a3272f3"}
+{"seed": 43, "repetition": 0, "startup_ms": 165.874961, "steady_p50_ms": 2.92384, "steady_p95_ms": 3.945864, "steady_p99_ms": 5.194388, "hash": "39ceb7b90729ca35"}
+{"seed": 43, "repetition": 1, "startup_ms": 166.094088, "steady_p50_ms": 2.963847, "steady_p95_ms": 4.193758, "steady_p99_ms": 5.222759, "hash": "39ceb7b90729ca35"}
+{"seed": 42, "repetition": 1, "startup_ms": 161.363918, "steady_p50_ms": 2.613962, "steady_p95_ms": 3.398519, "steady_p99_ms": 4.494549, "hash": "177cf7205a3272f3"}
+{"seed": 42, "repetition": 2, "startup_ms": 160.102657, "steady_p50_ms": 2.638715, "steady_p95_ms": 3.461524, "steady_p99_ms": 4.366195, "hash": "177cf7205a3272f3"}
+{"seed": 43, "repetition": 2, "startup_ms": 177.74387, "steady_p50_ms": 2.962079, "steady_p95_ms": 3.944376, "steady_p99_ms": 5.071394, "hash": "39ceb7b90729ca35"}
+{"seed": 43, "repetition": 3, "startup_ms": 161.159714, "steady_p50_ms": 3.088827, "steady_p95_ms": 7.213705, "steady_p99_ms": 8.785794, "hash": "39ceb7b90729ca35"}
+{"seed": 42, "repetition": 3, "startup_ms": 170.866302, "steady_p50_ms": 2.639492, "steady_p95_ms": 3.729597, "steady_p99_ms": 4.607576, "hash": "177cf7205a3272f3"}
+{"seed": 42, "repetition": 4, "startup_ms": 160.789692, "steady_p50_ms": 2.680314, "steady_p95_ms": 3.570479, "steady_p99_ms": 4.536904, "hash": "177cf7205a3272f3"}
+{"seed": 43, "repetition": 4, "startup_ms": 162.967419, "steady_p50_ms": 2.883459, "steady_p95_ms": 4.192253, "steady_p99_ms": 5.559133, "hash": "39ceb7b90729ca35"}
+{"passed": true, "assertions": 563, "skipped": 0, "artifact": ".project/optimization/benchmarks/match-1789022727133060562.json", "artifact_sha256": "1166e85ed72977ac1c87538c791e957b980511ea90113989190d82e5e2ded230", "source_identity": "82992b49a5a88641cb9c99094cdeb45d508025af41a345df2fa7dafeb54f9988", "runs": 10, "summary": [{"seed": 42, "processes": 5, "samples": 10000, "startup_p50_ms": 160.789692, "steady": {"count": 10000, "sum_ns": 27993705273, "max_ns": 35808469, "p50_ns": 2640565, "p95_ns": 4013414, "p99_ns": 5499985}, "per_process_p99_ns": [7650331, 4494549, 4366195, 4607576, 4536904], "active_frames": 10000, "stopped_frames": 0, "rss_max_observed_bytes": 88727552, "rss_max_growth_bytes": 40960, "final_hash": "177cf7205a3272f3", "input_hash": "b7f3bcf2014e649e"}, {"seed": 43, "processes": 5, "samples": 10000, "startup_p50_ms": 165.874961, "steady": {"count": 10000, "sum_ns": 31657580827, "max_ns": 18122876, "p50_ns": 2959040, "p95_ns": 4593794, "p99_ns": 7243809}, "per_process_p99_ns": [5194388, 5222759, 5071394, 8785794, 5559133], "active_frames": 9970, "stopped_frames": 30, "rss_max_observed_bytes": 88788992, "rss_max_growth_bytes": 40960, "final_hash": "39ceb7b90729ca35", "input_hash": "b7f3bcf2014e649e"}]}

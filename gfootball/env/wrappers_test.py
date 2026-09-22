@@ -20,7 +20,9 @@ from __future__ import division
 from __future__ import print_function
 
 import os
-import gym
+# 2026-09-10: exercise the maintained public five-result API.
+# import gym
+import gymnasium as gym
 import numpy as np
 from absl.testing import absltest
 
@@ -29,7 +31,9 @@ class SingleAgentWrapperTest(absltest.TestCase):
 
   def test_consistent_observation_and_action(self):
     env = gym.make(
-        'gfootball:GFootball-11_vs_11_easy_stochastic-SMM-v0',
+        # 2026-09-10: preserve this scenario assertion under the current API.
+        # 'gfootball:GFootball-11_vs_11_easy_stochastic-SMM-v0',
+        'gfootball.gymnasium:GFootball-11_vs_11_easy_stochastic-SMM-v0',
         number_of_left_players_agent_controls=1)
 
     self.assertEqual(
@@ -37,12 +41,16 @@ class SingleAgentWrapperTest(absltest.TestCase):
         env.observation_space)
 
     env.reset()
-    obs, _, _, _ = env.step(env.action_space.sample())
+    # 2026-09-10: preserve this scenario assertion under the current API.
+    # obs, _, _, _ = env.step(env.action_space.sample())
+    obs, _, _, _, _ = env.step(env.action_space.sample())
     self.assertEqual((72, 96, 4), obs.shape)
     env.close()
 
     env = gym.make(
-        'gfootball:GFootball-11_vs_11_easy_stochastic-SMM-v0',
+        # 2026-09-10: preserve this scenario assertion under the current API.
+        # 'gfootball:GFootball-11_vs_11_easy_stochastic-SMM-v0',
+        'gfootball.gymnasium:GFootball-11_vs_11_easy_stochastic-SMM-v0',
         number_of_left_players_agent_controls=2)
 
     self.assertEqual(
@@ -50,13 +58,17 @@ class SingleAgentWrapperTest(absltest.TestCase):
         env.observation_space)
 
     env.reset()
-    obs, _, _, _ = env.step(env.action_space.sample())
+    # 2026-09-10: preserve this scenario assertion under the current API.
+    # obs, _, _, _ = env.step(env.action_space.sample())
+    obs, _, _, _, _ = env.step(env.action_space.sample())
     self.assertEqual((2, 72, 96, 4), obs.shape)
     env.close()
 
   def test_consistent_observation_and_action_stacked(self):
     env = gym.make(
-        'gfootball:GFootball-11_vs_11_easy_stochastic-SMM-v0',
+        # 2026-09-10: preserve this scenario assertion under the current API.
+        # 'gfootball:GFootball-11_vs_11_easy_stochastic-SMM-v0',
+        'gfootball.gymnasium:GFootball-11_vs_11_easy_stochastic-SMM-v0',
         number_of_left_players_agent_controls=1,
         stacked=True)
 
@@ -65,12 +77,16 @@ class SingleAgentWrapperTest(absltest.TestCase):
         env.observation_space)
 
     env.reset()
-    obs, _, _, _ = env.step(env.action_space.sample())
+    # 2026-09-10: preserve this scenario assertion under the current API.
+    # obs, _, _, _ = env.step(env.action_space.sample())
+    obs, _, _, _, _ = env.step(env.action_space.sample())
     self.assertEqual((72, 96, 16), obs.shape)
     env.close()
 
     env = gym.make(
-        'gfootball:GFootball-11_vs_11_easy_stochastic-SMM-v0',
+        # 2026-09-10: preserve this scenario assertion under the current API.
+        # 'gfootball:GFootball-11_vs_11_easy_stochastic-SMM-v0',
+        'gfootball.gymnasium:GFootball-11_vs_11_easy_stochastic-SMM-v0',
         number_of_left_players_agent_controls=2,
         stacked=True)
 
@@ -79,7 +95,9 @@ class SingleAgentWrapperTest(absltest.TestCase):
         env.observation_space)
 
     env.reset()
-    obs, _, _, _ = env.step(env.action_space.sample())
+    # 2026-09-10: preserve this scenario assertion under the current API.
+    # obs, _, _, _ = env.step(env.action_space.sample())
+    obs, _, _, _, _ = env.step(env.action_space.sample())
     self.assertEqual((2, 72, 96, 16), obs.shape)
     env.close()
 
@@ -88,36 +106,50 @@ class SingleAgentWrapperTest(absltest.TestCase):
       # Forge doesn't support rendering.
       return
     env = gym.make(
-        'gfootball:GFootball-11_vs_11_easy_stochastic-Pixels-v0',
+        # 2026-09-10: preserve this scenario assertion under the current API.
+        # 'gfootball:GFootball-11_vs_11_easy_stochastic-Pixels-v0',
+        'gfootball.gymnasium:GFootball-11_vs_11_easy_stochastic-Pixels-v0',
         number_of_left_players_agent_controls=1,
-        render=True)
+        # 2026-09-10: preserve this scenario assertion under the current API.
+        # render=True)
+        render_mode="rgb_array")
 
     self.assertEqual(
         gym.spaces.Box(low=0, high=255, shape=(72, 96, 3), dtype=np.uint8),
         env.observation_space)
 
     env.reset()
-    obs, _, _, _ = env.step(env.action_space.sample())
+    # 2026-09-10: preserve this scenario assertion under the current API.
+    # obs, _, _, _ = env.step(env.action_space.sample())
+    obs, _, _, _, _ = env.step(env.action_space.sample())
     self.assertEqual((72, 96, 3), obs.shape)
     env.close()
 
     env = gym.make(
-        'gfootball:GFootball-11_vs_11_easy_stochastic-Pixels-v0',
+        # 2026-09-10: preserve this scenario assertion under the current API.
+        # 'gfootball:GFootball-11_vs_11_easy_stochastic-Pixels-v0',
+        'gfootball.gymnasium:GFootball-11_vs_11_easy_stochastic-Pixels-v0',
         number_of_left_players_agent_controls=2,
-        render=True)
+        # 2026-09-10: preserve this scenario assertion under the current API.
+        # render=True)
+        render_mode="rgb_array")
 
     self.assertEqual(
         gym.spaces.Box(low=0, high=255, shape=(2, 72, 96, 3), dtype=np.uint8),
         env.observation_space)
 
     env.reset()
-    obs, _, _, _ = env.step(env.action_space.sample())
+    # 2026-09-10: preserve this scenario assertion under the current API.
+    # obs, _, _, _ = env.step(env.action_space.sample())
+    obs, _, _, _, _ = env.step(env.action_space.sample())
     self.assertEqual((2, 72, 96, 3), obs.shape)
     env.close()
 
   def test_consistent_observation_and_action_floats(self):
     env = gym.make(
-        'gfootball:GFootball-11_vs_11_easy_stochastic-simple115-v0',
+        # 2026-09-10: preserve this scenario assertion under the current API.
+        # 'gfootball:GFootball-11_vs_11_easy_stochastic-simple115-v0',
+        'gfootball.gymnasium:GFootball-11_vs_11_easy_stochastic-simple115-v0',
         number_of_left_players_agent_controls=1)
 
     self.assertEqual(
@@ -126,12 +158,16 @@ class SingleAgentWrapperTest(absltest.TestCase):
         env.observation_space)
 
     env.reset()
-    obs, _, _, _ = env.step(env.action_space.sample())
+    # 2026-09-10: preserve this scenario assertion under the current API.
+    # obs, _, _, _ = env.step(env.action_space.sample())
+    obs, _, _, _, _ = env.step(env.action_space.sample())
     self.assertEqual((115,), obs.shape)
     env.close()
 
     env = gym.make(
-        'gfootball:GFootball-11_vs_11_easy_stochastic-simple115-v0',
+        # 2026-09-10: preserve this scenario assertion under the current API.
+        # 'gfootball:GFootball-11_vs_11_easy_stochastic-simple115-v0',
+        'gfootball.gymnasium:GFootball-11_vs_11_easy_stochastic-simple115-v0',
         number_of_left_players_agent_controls=2)
 
     self.assertEqual(
@@ -140,7 +176,9 @@ class SingleAgentWrapperTest(absltest.TestCase):
         env.observation_space)
 
     env.reset()
-    obs, _, _, _ = env.step(env.action_space.sample())
+    # 2026-09-10: preserve this scenario assertion under the current API.
+    # obs, _, _, _ = env.step(env.action_space.sample())
+    obs, _, _, _, _ = env.step(env.action_space.sample())
     self.assertEqual((2, 115), obs.shape)
     env.close()
 

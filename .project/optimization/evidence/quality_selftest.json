@@ -1,0 +1,21 @@
+{
+  "check": "quality_selftest",
+  "fingerprint": "0f389df98e1479ec8edbcc906c44d8fe0c76e543a04a932dfefb10cb99190b29",
+  "passed": true,
+  "reason": "unittest requires sufficient tests, zero failures, zero skips",
+  "returncode": 0,
+  "started": 1789448842.5443835,
+  "duration_seconds": 9.782,
+  "argv": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    ".project/tests",
+    "-p",
+    "*_test.py"
+  ],
+  "log": "quality_selftest-1789448842544453455.log",
+  "log_sha256": "8a1f27091c8155c3114df3831096199337864241e8d33d9481e065f07125af06"
+}

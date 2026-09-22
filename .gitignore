@@ -56,3 +56,7 @@ engine/frame_sync_asio/build_fs_asio/
 
 # pytest
 .pytest_cache/
+
+# Local optimization experiments and generated match recordings
+/.project/optimization/benchmarks/
+/replay_*.bin

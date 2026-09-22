@@ -1,0 +1,17 @@
+{
+  "check": "ai_decisions",
+  "fingerprint": "fc5b4518db6718e60673dbbd6d219dbb4ddc2f722eda0ddaa2ca3c67cfac44da",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1789454103.5065508,
+  "duration_seconds": 72.381,
+  "argv": [
+    "python3",
+    ".project/checks/ai_tactics_contract.py",
+    "--suite",
+    "decisions"
+  ],
+  "log": "ai_decisions-1789454103506654444.log",
+  "log_sha256": "0980a1492abbae4bd31c4aaebea639671b1882e692a4cabfb890bc32ad1fa888"
+}

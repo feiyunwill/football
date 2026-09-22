@@ -57,17 +57,36 @@ void RefereeSystemProcess(Match* match) {
   match->GetReferee()->Process();
 }
 
+// 2026-09-09: cache pool handles only within this call; preserve player iteration order.
+// void RunPlayerSystems(Match* match) {
+//   DO_VALIDATION;
+//   blunted::World& w = match->GetEcsWorld();
+//   for (blunted::Entity e : match->GetEcsPlayerEntities()) {
+//     PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
+//     PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+//     // 2026-08-25 ECS Phase 2：实时刷新活跃快照，与旧 Team 内循环判定等价
+//     if (!meta || !pref || !pref->player) continue;
+//     meta->is_active = pref->player->IsActive();
+//     if (!meta->is_active) continue;
+//     ControllerRef* cref = w.GetComponent<ControllerRef>(e);
+//     if (cref && cref->controller) cref->controller->Process();
+//     if (pref->player->CastHumanoid()) pref->player->CastHumanoid()->Process();
+//   }
+// }
 void RunPlayerSystems(Match* match) {
   DO_VALIDATION;
   blunted::World& w = match->GetEcsWorld();
+  auto* pool_PlayerMeta = w.GetPool<PlayerMeta>();
+  auto* pool_PlayerRef = w.GetPool<PlayerRef>();
+  auto* pool_ControllerRef = w.GetPool<ControllerRef>();
   for (blunted::Entity e : match->GetEcsPlayerEntities()) {
-    PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
-    PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+    PlayerMeta* meta = pool_PlayerMeta->Get(e);
+    PlayerRef* pref = pool_PlayerRef->Get(e);
     // 2026-08-25 ECS Phase 2：实时刷新活跃快照，与旧 Team 内循环判定等价
     if (!meta || !pref || !pref->player) continue;
     meta->is_active = pref->player->IsActive();
     if (!meta->is_active) continue;
-    ControllerRef* cref = w.GetComponent<ControllerRef>(e);
+    ControllerRef* cref = pool_ControllerRef->Get(e);
     if (cref && cref->controller) cref->controller->Process();
     if (pref->player->CastHumanoid()) pref->player->CastHumanoid()->Process();
   }
@@ -147,20 +166,48 @@ void SyncBallPhysicsSystem(Match* match) {
 // 2026-08-28 P2-Phase3+：碰撞结果数据化
 // 碰撞 System 执行后调用，将碰撞结果从 OOP 写入 ECS 组件。
 // 下游系统（如 possession_decision）可从 ECS 查询而非直接调用 OOP。
+// 2026-09-09: cache pool handles only within this call; preserve player iteration order.
+// void PopulateCollisionResults(Match* match) {
+//   DO_VALIDATION;
+//   blunted::World& w = match->GetEcsWorld();
+//   for (blunted::Entity e : match->GetEcsPlayerEntities()) {
+//     PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
+//     PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+//     if (!meta || !pref || !pref->player) continue;
+//     if (!meta->is_active) continue;
+//
+//     CollisionResultComponent* crc = w.GetComponent<CollisionResultComponent>(e);
+//     if (!crc) {
+//       CollisionResultComponent fresh;
+//       w.AddComponent(e, fresh);
+//       crc = w.GetComponent<CollisionResultComponent>(e);
+//     }
+//     // 读取 OOP 碰撞状态（Player 的 lastTouchType 等）
+//     // 注意：实际碰撞检测在 CheckHumanoidCollisions/CheckBallCollisions 中完成
+//     // 这里只是将结果快照到 ECS，供后续系统查询
+//     crc->collided_with_ball = false;
+//     crc->collided_with_player = false;
+//     crc->collided_player_id = -1;
+//     crc->collision_normal = Vector3(0);
+//   }
+// }
 void PopulateCollisionResults(Match* match) {
   DO_VALIDATION;
   blunted::World& w = match->GetEcsWorld();
+  auto* pool_PlayerMeta = w.GetPool<PlayerMeta>();
+  auto* pool_PlayerRef = w.GetPool<PlayerRef>();
+  auto* pool_CollisionResultComponent = w.GetPool<CollisionResultComponent>();
   for (blunted::Entity e : match->GetEcsPlayerEntities()) {
-    PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
-    PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+    PlayerMeta* meta = pool_PlayerMeta->Get(e);
+    PlayerRef* pref = pool_PlayerRef->Get(e);
     if (!meta || !pref || !pref->player) continue;
     if (!meta->is_active) continue;
 
-    CollisionResultComponent* crc = w.GetComponent<CollisionResultComponent>(e);
+    CollisionResultComponent* crc = pool_CollisionResultComponent->Get(e);
     if (!crc) {
       CollisionResultComponent fresh;
       w.AddComponent(e, fresh);
-      crc = w.GetComponent<CollisionResultComponent>(e);
+      crc = pool_CollisionResultComponent->Get(e);
     }
     // 读取 OOP 碰撞状态（Player 的 lastTouchType 等）
     // 注意：实际碰撞检测在 CheckHumanoidCollisions/CheckBallCollisions 中完成
@@ -203,18 +250,43 @@ void SyncPhysicsToSpatialState(const PlayerPhysicsComponent& src, SpatialState& 
   dst.foot = src.foot;
 }
 
+// 2026-09-09: cache pool handles only within this call; preserve player iteration order.
+// void SyncPlayerPhysicsSystem(Match* match) {
+//   DO_VALIDATION;
+//   blunted::World& w = match->GetEcsWorld();
+//   for (blunted::Entity e : match->GetEcsPlayerEntities()) {
+//     PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
+//     PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+//     if (!meta || !pref || !pref->player) continue;
+//     if (!meta->is_active) continue;
+//     auto* humanoid = pref->player->CastHumanoid();
+//     if (!humanoid) continue;
+//     // 通过新增的 GetSpatialState() public accessor 读取完整物理状态
+//     PlayerPhysicsComponent* comp = w.GetComponent<PlayerPhysicsComponent>(e);
+//     if (!comp) {
+//       PlayerPhysicsComponent fresh;
+//       SyncSpatialStateToPhysics(humanoid->GetSpatialState(), fresh);
+//       w.AddComponent(e, fresh);
+//     } else {
+//       SyncSpatialStateToPhysics(humanoid->GetSpatialState(), *comp);
+//     }
+//   }
+// }
 void SyncPlayerPhysicsSystem(Match* match) {
   DO_VALIDATION;
   blunted::World& w = match->GetEcsWorld();
+  auto* pool_PlayerMeta = w.GetPool<PlayerMeta>();
+  auto* pool_PlayerRef = w.GetPool<PlayerRef>();
+  auto* pool_PlayerPhysicsComponent = w.GetPool<PlayerPhysicsComponent>();
   for (blunted::Entity e : match->GetEcsPlayerEntities()) {
-    PlayerMeta* meta = w.GetComponent<PlayerMeta>(e);
-    PlayerRef* pref = w.GetComponent<PlayerRef>(e);
+    PlayerMeta* meta = pool_PlayerMeta->Get(e);
+    PlayerRef* pref = pool_PlayerRef->Get(e);
     if (!meta || !pref || !pref->player) continue;
     if (!meta->is_active) continue;
     auto* humanoid = pref->player->CastHumanoid();
     if (!humanoid) continue;
     // 通过新增的 GetSpatialState() public accessor 读取完整物理状态
-    PlayerPhysicsComponent* comp = w.GetComponent<PlayerPhysicsComponent>(e);
+    PlayerPhysicsComponent* comp = pool_PlayerPhysicsComponent->Get(e);
     if (!comp) {
       PlayerPhysicsComponent fresh;
       SyncSpatialStateToPhysics(humanoid->GetSpatialState(), fresh);

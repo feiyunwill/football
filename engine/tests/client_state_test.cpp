@@ -65,7 +65,9 @@ TEST_F(ClientStateTest, SaveAndRetrieve) {
 TEST_F(ClientStateTest, MultipleSnapshots) {
   for (int i = 0; i < 5; ++i) {
     fs::SlotInput input;
-    input.dir_x = static_cast<float>(i);
+    // 2026-09-09: exercise distinct inputs within the protocol's [-1, 1] range.
+    // input.dir_x = static_cast<float>(i);
+    input.dir_x = static_cast<float>(i) / 4.0f;
     cs_.save_snapshot(i, input, [&]() { return engine_.save(); });
     engine_.step(input);
   }
@@ -119,7 +121,9 @@ TEST_F(ClientStateTest, RollbackRestoresState) {
 
   // Rollback to frame 1 with authoritative input
   fs::SlotInput auth_input;
-  auth_input.dir_x = 99.0f;
+  // 2026-09-09: a correction must also satisfy the wire input contract.
+  // auth_input.dir_x = 99.0f;
+  auth_input.dir_x = -1.0f;
 
   bool ok = cs_.rollback_to(1, auth_input,
                              [&](const fs::StateBlob& b) { engine_.restore(b); },
@@ -131,7 +135,10 @@ TEST_F(ClientStateTest, RollbackRestoresState) {
 
   // The authoritative input should have been applied
   ASSERT_FALSE(engine_.applied_inputs.empty());
-  EXPECT_EQ(engine_.applied_inputs.back().dir_x, 99.0f);
+  // 2026-09-09: SlotInput has a packed ten-byte stride. Copy the scalar value;
+  // GoogleTest otherwise binds an unaligned float reference for odd indices.
+  // EXPECT_EQ(engine_.applied_inputs.back().dir_x, 99.0f);
+  EXPECT_EQ(static_cast<float>(engine_.applied_inputs.back().dir_x), -1.0f);
 }
 
 TEST_F(ClientStateTest, RollbackNotFound) {

@@ -18,8 +18,12 @@ TEST(ReplaySystemTest, BasicRecording) {
   // Record some frames
   for (uint32_t i = 0; i < 10; ++i) {
     std::vector<SlotInput> inputs(2);
-    inputs[0].dir_x = static_cast<float>(i);
-    inputs[1].dir_y = static_cast<float>(i * 2);
+    // 2026-09-09: keep varied fixtures inside the actual input protocol range.
+    // inputs[0].dir_x = static_cast<float>(i);
+    inputs[0].dir_x = static_cast<float>(i) / 10.0f;
+    // 2026-09-09: keep varied fixtures inside the actual input protocol range.
+    // inputs[1].dir_y = static_cast<float>(i * 2);
+    inputs[1].dir_y = -static_cast<float>(i) / 10.0f;
     recorder.RecordFrame(i, i * 1000, inputs);
   }
   
@@ -43,11 +47,19 @@ TEST(ReplaySystemTest, SerializationRoundtrip) {
   
   for (uint32_t i = 0; i < 20; ++i) {
     std::vector<SlotInput> inputs(3);
-    inputs[0].dir_x = static_cast<float>(i) * 0.1f;
-    inputs[0].dir_y = static_cast<float>(i) * 0.2f;
+    // 2026-09-09: keep varied fixtures inside the actual input protocol range.
+    // inputs[0].dir_x = static_cast<float>(i) * 0.1f;
+    inputs[0].dir_x = static_cast<float>(i) * 0.01f;
+    // 2026-09-09: keep varied fixtures inside the actual input protocol range.
+    // inputs[0].dir_y = static_cast<float>(i) * 0.2f;
+    inputs[0].dir_y = static_cast<float>(i) * 0.02f;
     inputs[0].buttons = static_cast<uint16_t>(i % 4);
-    inputs[1].dir_x = static_cast<float>(i) * 0.3f;
-    inputs[2].dir_y = static_cast<float>(i) * 0.4f;
+    // 2026-09-09: keep varied fixtures inside the actual input protocol range.
+    // inputs[1].dir_x = static_cast<float>(i) * 0.3f;
+    inputs[1].dir_x = static_cast<float>(i) * 0.03f;
+    // 2026-09-09: keep varied fixtures inside the actual input protocol range.
+    // inputs[2].dir_y = static_cast<float>(i) * 0.4f;
+    inputs[2].dir_y = static_cast<float>(i) * 0.04f;
     recorder.RecordFrame(i, i * 500, inputs);
   }
   
@@ -74,7 +86,9 @@ TEST(ReplaySystemTest, Playback) {
   
   for (uint32_t i = 0; i < 5; ++i) {
     std::vector<SlotInput> inputs(1);
-    inputs[0].dir_x = static_cast<float>(i);
+    // 2026-09-09: keep varied fixtures inside the actual input protocol range.
+    // inputs[0].dir_x = static_cast<float>(i);
+    inputs[0].dir_x = static_cast<float>(i) / 10.0f;
     recorder.RecordFrame(i, i * 100, inputs);
   }
   
@@ -123,7 +137,9 @@ TEST(ReplaySystemTest, Seeking) {
   
   for (uint32_t i = 0; i < 10; ++i) {
     std::vector<SlotInput> inputs(1);
-    inputs[0].dir_x = static_cast<float>(i);
+    // 2026-09-09: keep varied fixtures inside the actual input protocol range.
+    // inputs[0].dir_x = static_cast<float>(i);
+    inputs[0].dir_x = static_cast<float>(i) / 10.0f;
     recorder.RecordFrame(i, i * 100, inputs);
   }
   
@@ -137,7 +153,9 @@ TEST(ReplaySystemTest, Seeking) {
   auto frame = player.GetCurrentFrame();
   EXPECT_TRUE(frame.has_value());
   EXPECT_EQ(frame->frame_number, 5u);
-  EXPECT_FLOAT_EQ(frame->inputs[0].dir_x, 5.0f);
+  // 2026-09-09: keep varied fixtures inside the actual input protocol range.
+  // EXPECT_FLOAT_EQ(frame->inputs[0].dir_x, 5.0f);
+  EXPECT_FLOAT_EQ(frame->inputs[0].dir_x, 0.5f);
   
   // Seek to beginning
   EXPECT_TRUE(player.SeekToFrame(0));
@@ -161,7 +179,9 @@ TEST(ReplaySystemTest, FrameAtIndex) {
   
   for (uint32_t i = 0; i < 5; ++i) {
     std::vector<SlotInput> inputs(1);
-    inputs[0].dir_x = static_cast<float>(i);
+    // 2026-09-09: keep varied fixtures inside the actual input protocol range.
+    // inputs[0].dir_x = static_cast<float>(i);
+    inputs[0].dir_x = static_cast<float>(i) / 10.0f;
     recorder.RecordFrame(i, i * 100, inputs);
   }
   

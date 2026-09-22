@@ -19,6 +19,7 @@
 #include <cmath>
 #include <bit>
 #include <functional>
+#include <utility>  // 2026-09-09: to_underlying must not depend on a test PCH.
 
 namespace frame_sync {
 

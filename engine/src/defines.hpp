@@ -31,6 +31,10 @@
 #include <cstdlib>
 #include <cassert>
 #include <cstring>
+#include <limits>
+#include <stdexcept>
+#include <type_traits>
+#include "base/snapshot_envelope.hpp"
 
 #include <fstream>
 #include <cmath>
@@ -76,6 +80,7 @@ typedef std::string screenshoot;
 
 namespace blunted {
   class Animation;
+  class Quaternion;
   // 2026-08-26 确定性修复：radian 专用序列化重载（见 process(blunted::radian&)）
   class radian;
   //using namespace boost;
@@ -97,12 +102,33 @@ class EnvState {
   EnvState(GameEnv* game_env, const std::string& state, const std::string reference = "");
   const ScenarioConfig* getConfig() { return scenario_config; }
   const GameContext* getContext() { return context; }
+  ~EnvState() = default;
+  EnvState() = delete;
+  EnvState(const EnvState&) = delete;
+  EnvState& operator=(const EnvState&) = delete;
+  EnvState(EnvState&&) = delete;
+  EnvState& operator=(EnvState&&) = delete;
   void process(std::string &value);
+  void process(blunted::Vector3& value);
+  void process(blunted::Quaternion& value);
+  void processCount(int& count, size_t maximum = 16384, size_t minimum = 0);
+  void require(bool condition, const char* message) const {
+    if (!condition) throw std::invalid_argument(std::string(message) + " at snapshot offset " + std::to_string(pos));
+  }
+  template<typename T> void processRequired(T*& value) {
+    T* restored = value;
+    process(restored);
+    require(restored != nullptr, "Missing required object reference");
+    value = restored;
+  }
+
   void process(blunted::Animation* &value);
   template<typename T> void process(std::vector<T>& collection) {
     if (canonicalSkip()) return;
     int size = collection.size();
-    process(size);
+    // 2026-09-09: validate before allocating attacker-controlled counts.
+    // process(size);
+    processCount(size);
     collection.resize(size);
     for (auto& el : collection) {
       process(el);
@@ -111,7 +137,9 @@ class EnvState {
   template<typename T> void process(std::list<T>& collection) {
     if (canonicalSkip()) return;
     int size = collection.size();
-    process(size);
+    // 2026-09-09: validate before allocating attacker-controlled counts.
+    // process(size);
+    processCount(size);
     collection.resize(size);
     for (auto& el : collection) {
       process(el);
@@ -160,24 +188,67 @@ class EnvState {
   template<typename T> void process(T& obj) {
     if (canonicalSkip()) return;
     if (load) {
-      if (pos + sizeof(T) > state.size()) {
-        Log(blunted::e_FatalError, "EnvState", "state", "state is invalid");
+      // 2026-09-09: never copy unchecked input into a live object.
+      // if (pos + sizeof(T) > state.size()) {
+      // Log(blunted::e_FatalError, "EnvState", "state", "state is invalid");
+      // }
+      // memcpy(&obj, &state[pos], sizeof(T));
+      require(sizeof(T) <= state.size() - static_cast<size_t>(pos), "Truncated scalar");
+      if constexpr (std::is_same_v<T, bool>) {
+        const auto value = static_cast<unsigned char>(state[pos]);
+        require(value <= 1, "Invalid boolean");
+        obj = value != 0;
+      } else if constexpr (std::is_enum_v<T>) {
+        std::underlying_type_t<T> value;
+        memcpy(&value, state.data() + pos, sizeof(T));
+        require(SnapshotEnumValid(T{}, static_cast<int64_t>(value)), "Invalid enumeration");
+        obj = static_cast<T>(value);
+      } else {
+        static_assert(std::is_arithmetic_v<T> || std::is_enum_v<T>,
+                      "Snapshot objects need explicit member serialization");
+        T restored;
+        memcpy(&restored, state.data() + pos, sizeof(T));
+        if constexpr (std::is_floating_point_v<T>) require(std::isfinite(restored), "Non-finite scalar");
+        obj = restored;
       }
-      memcpy(&obj, &state[pos], sizeof(T));
       pos += sizeof(T);
     } else {
+      // 2026-09-09: bounded/aligned diagnostic reads replace unaligned T* casts.
+      // state.resize(pos + sizeof(T));
+      // memcpy(&state[pos], &obj, sizeof(T));
+      // if (!failure && disable_cnt == 0 && !reference.empty() && (*(T*) &state[pos]) != (*(T*) &reference[pos])) {
+      // failure = true;
+      // std::cout << "Position:  " << pos << std::endl;
+      // std::cout << "Type:      " << typeid(obj).name() << std::endl;
+      // std::cout << "Value:     " << obj << std::endl;
+      // std::cout << "Reference: " << (*(T*) &reference[pos]) << std::endl;
+      // if (crash) {
+      // Log(blunted::e_FatalError, "EnvState", "state", "Reference mismatch");
+      // } else {
+      // print_stacktrace();
+      // }
+      // }
+      require(sizeof(T) <= blunted::snapshot::kMaxBytes - static_cast<size_t>(pos), "Snapshot exceeds size limit");
       state.resize(pos + sizeof(T));
-      memcpy(&state[pos], &obj, sizeof(T));
-      if (!failure && disable_cnt == 0 && !reference.empty() && (*(T*) &state[pos]) != (*(T*) &reference[pos])) {
-        failure = true;
-        std::cout << "Position:  " << pos << std::endl;
-        std::cout << "Type:      " << typeid(obj).name() << std::endl;
-        std::cout << "Value:     " << obj << std::endl;
-        std::cout << "Reference: " << (*(T*) &reference[pos]) << std::endl;
-        if (crash) {
-          Log(blunted::e_FatalError, "EnvState", "state", "Reference mismatch");
+      memcpy(state.data() + pos, &obj, sizeof(T));
+      if (!reference.empty()) require(sizeof(T) <= reference.size() - static_cast<size_t>(pos), "Truncated reference");
+      if (!failure && disable_cnt == 0 && !reference.empty()) {
+        T expected;
+        if constexpr (std::is_enum_v<T>) {
+          std::underlying_type_t<T> value;
+          memcpy(&value, reference.data() + pos, sizeof(T));
+          require(SnapshotEnumValid(T{}, static_cast<int64_t>(value)), "Invalid reference enumeration");
+          expected = static_cast<T>(value);
         } else {
-          print_stacktrace();
+          memcpy(&expected, reference.data() + pos, sizeof(T));
+        }
+        if constexpr (std::is_same_v<T, bool>)
+          require(static_cast<unsigned char>(reference[pos]) <= 1, "Invalid reference boolean");
+        if (obj != expected) {
+          failure = true;
+          std::cout << "Position: " << pos << " Type: " << typeid(obj).name()
+                    << " Value: " << obj << " Reference: " << expected << std::endl;
+          if (crash) throw std::runtime_error("Snapshot reference mismatch");
         }
       }
       pos += sizeof(T);
@@ -205,9 +276,8 @@ class EnvState {
         }
         divergence_log.push_back(entry);
       }
-      if (pos > 10000000) {
-        Log(blunted::e_FatalError, "EnvState", "state", "state is too big");
-      }
+      // 2026-09-09: the size limit is enforced before allocation above.
+      // if (pos > 10000000) Log(blunted::e_FatalError, "EnvState", "state", "state is too big");
     }
   }
   void SetPlayers(const std::vector<Player*>& players);
@@ -241,7 +311,26 @@ class EnvState {
   ScenarioConfig* scenario_config;
   GameContext* context;
  private:
-  void process(void** collection, int size, void*& element);
+  // 2026-09-09: typed pointer tables avoid void** aliasing of T* storage.
+  // void process(void** collection, int size, void*& element);
+  template<class T> void processReference(const std::vector<T*>& collection, T*& element) {
+    if (canonicalSkip()) return;
+    if (load) {
+      int index = -1;
+      process(index);
+      require(index >= -1 && (index == -1 || static_cast<size_t>(index) < collection.size()),
+              "Object reference out of bounds");
+      element = index == -1 ? nullptr : collection[index];
+    } else {
+      int index = -1;
+      if (element) {
+        const auto found = std::find(collection.begin(), collection.end(), element);
+        require(found != collection.end(), "Object reference not registered");
+        index = static_cast<int>(found - collection.begin());
+      }
+      process(index);
+    }
+  }
 };
 
 // 3-d position of object (available from python).
@@ -295,6 +384,11 @@ enum e_PlayerRole {
   e_PlayerRole_AM,
   e_PlayerRole_CF,
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_PlayerRole, int64_t value) {
+  return value >= e_PlayerRole_GK && value <= e_PlayerRole_CF;
+}
+
 constexpr std::strong_ordering operator<=>(e_PlayerRole a, e_PlayerRole b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }
@@ -308,6 +402,11 @@ enum e_GameMode {
   e_GameMode_ThrowIn,
   e_GameMode_Penalty,
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_GameMode, int64_t value) {
+  return value >= e_GameMode_Normal && value <= e_GameMode_Penalty;
+}
+
 constexpr std::strong_ordering operator<=>(e_GameMode a, e_GameMode b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }
@@ -320,6 +419,11 @@ enum e_PlayerColor {
   e_PlayerColor_Purple,
   e_PlayerColor_Default
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_PlayerColor, int64_t value) {
+  return value >= e_PlayerColor_Blue && value <= e_PlayerColor_Default;
+}
+
 constexpr std::strong_ordering operator<=>(e_PlayerColor a, e_PlayerColor b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }
@@ -328,6 +432,11 @@ enum e_Team {
   e_Left,
   e_Right,
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_Team, int64_t value) {
+  return value >= e_Left && value <= e_Right;
+}
+
 constexpr std::strong_ordering operator<=>(e_Team a, e_Team b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }

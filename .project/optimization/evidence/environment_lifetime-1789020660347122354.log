@@ -1,0 +1,68 @@
+Running: cmake -S engine -B /tmp/football-optimization-native -DBUILD_PYTHON_BINDINGS=ON
+Using Python: 3.14
+Using pybind11 for Python bindings
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.3s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: cmake --build /tmp/football-optimization-native -j 1 --target engine_lifetime_contract game
+[  2%] Built target datalib
+[  9%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 45%] Built target scenelib
+[ 50%] Built target utilslib
+[ 53%] Built target blunted2
+[ 80%] Built target gamelib
+[ 88%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/engine_lifetime_contract.dir/tests/engine_lifetime_contract.cpp.o
+[100%] Linking CXX executable bin/engine_lifetime_contract
+[100%] Built target engine_lifetime_contract
+[  2%] Built target datalib
+[  9%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 45%] Built target scenelib
+[ 50%] Built target utilslib
+[ 53%] Built target blunted2
+[ 80%] Built target gamelib
+[ 88%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target game
+Running lifecycle probe: 
+{"passed":true,"assertions":167,"skipped":0,"warm_rss_bytes":152743936,"final_rss_bytes":152743936}
+
+Running: c++ -print-file-name=liblsan.so
+Running lifecycle probe: 
+{"passed":true,"assertions":167,"skipped":0,"warm_rss_bytes":103825408,"final_rss_bytes":83587072}
+
+Running lifecycle probe: --render
+No DISPLAY defined, doing off-screen rendering
+No DISPLAY defined, doing off-screen rendering
+{"passed":true,"assertions":19,"skipped":0,"renderer":"llvmpipe (LLVM 22.1.8, 256 bits)"}
+
+Running lifecycle probe: --startup-failure /root/.cache/football-quality-20260910/tmp/football-failed-startup-7tv99xeg/compile /root/.cache/football-quality-20260910/tmp/football-failed-startup-7tv99xeg/link
+No DISPLAY defined, doing off-screen rendering
+shader compilation error (media/shaders/zphase.frag)
+Thu Sep 10 14:11:23 2026 [Warning] in [::LoadGLShader]: shader compilation error (media/shaders/zphase.frag)
+shader compilation info: 0:2(1): error: syntax error, unexpected NEW_IDENTIFIER
+
+Thu Sep 10 14:11:23 2026 [Warning] in [::LoadGLShader]: shader compilation info (media/shaders/zphase.frag): 0:2(1): error: syntax error, unexpected NEW_IDENTIFIER 
+No DISPLAY defined, doing off-screen rendering
+{"passed":true,"assertions":11,"skipped":0}
+
+Running lifecycle probe: -I /root/work_space/football/.project/checks/python_lifetime_probe.py /tmp/football-optimization-native/libgame.so
+{"passed": true, "assertions": 60, "skipped": 0}
+
+{"passed": true, "assertions": 424, "skipped": 0, "results": {"headless": {"passed": true, "assertions": 167, "skipped": 0, "warm_rss_bytes": 152743936, "final_rss_bytes": 152743936}, "headless_lsan": {"passed": true, "assertions": 167, "skipped": 0, "warm_rss_bytes": 103825408, "final_rss_bytes": 83587072}, "egl_lsan": {"passed": true, "assertions": 19, "skipped": 0, "renderer": "llvmpipe (LLVM 22.1.8, 256 bits)"}, "startup_failure_lsan": {"passed": true, "assertions": 11, "skipped": 0}, "python_binding": {"passed": true, "assertions": 60, "skipped": 0}}, "allocation_tracking": "standalone LeakSanitizer via LD_PRELOAD; no suppressions", "graphics_scope": "real EGL contexts; renderer measured below; no GPU throughput claim"}

@@ -100,11 +100,23 @@ TEST_F(ECSBenchmarkTest, PositionUpdate) {
   auto t3 = std::chrono::high_resolution_clock::now();
   auto oop_us = std::chrono::duration_cast<std::chrono::microseconds>(t3 - t2).count();
 
+  // 2026-09-09: always verify the output, including when timing gates are disabled.
+  for (int i = 0; i < kEntityCount; ++i) {
+    const auto* position = world_.GetComponent<BenchmarkPosition>(ecs_entities_[i]);
+    ASSERT_NE(position, nullptr);
+    EXPECT_FLOAT_EQ(position->x, oop_entities_[i].pos.x);
+    EXPECT_FLOAT_EQ(position->y, oop_entities_[i].pos.y);
+    EXPECT_FLOAT_EQ(position->z, oop_entities_[i].pos.z);
+  }
+
   // ECS 有 unordered_map 开销，简单场景下比 OOP 慢是预期的
   // 真实场景下 ECS 的优势在于：并行处理、内存局部性、查询优化
   // 这里只验证 ECS 不会慢到不可用（< 100x）
   double ratio = static_cast<double>(ecs_us) / std::max(oop_us, 1L);
+  // 2026-09-09: timing ratios run in the explicit optimized benchmark configuration.
+#if FRAME_SYNC_TIMING_CHECKS
   EXPECT_LT(ratio, 100.0) << "ECS too slow: " << ecs_us << "us vs OOP " << oop_us << "us";
+#endif
 }
 
 // 测试 2: 条件查询（只处理 team 0 的实体）
@@ -135,7 +147,10 @@ TEST_F(ECSBenchmarkTest, ConditionalQuery) {
 
   EXPECT_EQ(ecs_count, oop_count);
   double ratio = static_cast<double>(ecs_us) / std::max(oop_us, 1L);
+  // 2026-09-09: timing ratios run in the explicit optimized benchmark configuration.
+#if FRAME_SYNC_TIMING_CHECKS
   EXPECT_LT(ratio, 100.0) << "ECS conditional query too slow: " << ecs_us << "us vs OOP " << oop_us << "us";
+#endif
 }
 
 // 测试 3: 双组件查询（模拟复杂游戏逻辑）
@@ -168,7 +183,10 @@ TEST_F(ECSBenchmarkTest, DualComponentQuery) {
   // 值应该接近（浮点误差允许）
   EXPECT_NEAR(ecs_sum, oop_sum, oop_sum * 0.01f);
   double ratio = static_cast<double>(ecs_us) / std::max(oop_us, 1L);
+  // 2026-09-09: timing ratios run in the explicit optimized benchmark configuration.
+#if FRAME_SYNC_TIMING_CHECKS
   EXPECT_LT(ratio, 100.0) << "ECS dual-component query too slow: " << ecs_us << "us vs OOP " << oop_us << "us";
+#endif
 }
 
 // 测试 4: 随机访问（GetComponent vs 指针数组）
@@ -200,7 +218,10 @@ TEST_F(ECSBenchmarkTest, RandomAccess) {
   EXPECT_NEAR(ecs_sum, oop_sum, 0.01f);
   // 随机访问 ECS 会慢一些（间接寻址），但不应超过 100x
   double ratio = static_cast<double>(ecs_us) / std::max(oop_us, 1L);
+  // 2026-09-09: timing ratios run in the explicit optimized benchmark configuration.
+#if FRAME_SYNC_TIMING_CHECKS
   EXPECT_LT(ratio, 100.0) << "ECS random access too slow: " << ecs_us << "us vs OOP " << oop_us << "us";
+#endif
 }
 
 // 测试 5: 确定性遍历顺序验证

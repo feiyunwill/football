@@ -31,6 +31,8 @@ class PlayerBase;
 
 #include "../../data/teamdata.hpp"
 
+#include <array>
+
 struct TimeNeeded {
   TimeNeeded() { DO_VALIDATION;
     usual_ms = 0;
@@ -54,6 +56,47 @@ float AI_GetOffsideLine(Match *match, const MentalImage *mentalImage, int teamID
 void AI_GetBestDribbleMovement(Match *match, PlayerBase* player, const MentalImage *mentalImage, Vector3 &desiredDirection, float &desiredVelocity, const TeamTactics &teamTactics);
 Vector3 AI_GetForceFieldMovement(const std::vector<ForceSpot> &forceField, const Vector3 &currentPos, float attractorDampingDistance = 10);
 TimeNeeded AI_GetTimeNeededForDistance_ms(const Vector3 &playerPos, const Vector3 &playerMovement, const Vector3 &targetPos, float maxVelocity = sprintVelocity, bool precise = false, unsigned int maxTime_ms = -1);
+
+// 2026-09-13: one possession scan owns one immutable player-state snapshot.
+// Lazily reuse only target-independent running trajectories; walking foot
+// offsets still follow the original target-dependent calculation. No heap use.
+class AIReachabilityTrajectory {
+ public:
+  AIReachabilityTrajectory() = delete;
+  AIReachabilityTrajectory(const Vector3& position, const Vector3& movement,
+                           float max_velocity);
+  ~AIReachabilityTrajectory() = default;
+  AIReachabilityTrajectory(const AIReachabilityTrajectory&) = delete;
+  AIReachabilityTrajectory& operator=(const AIReachabilityTrajectory&) = delete;
+  AIReachabilityTrajectory(AIReachabilityTrajectory&&) = delete;
+  AIReachabilityTrajectory& operator=(AIReachabilityTrajectory&&) = delete;
+
+  TimeNeeded Estimate(const Vector3& target, bool precise = false,
+                      unsigned int maximum_ms = -1);
+
+ private:
+  friend TimeNeeded AI_GetTimeNeededForDistance_ms(
+      const Vector3&, const Vector3&, const Vector3&, float, bool, unsigned int);
+  template <bool Reuse>
+  static TimeNeeded EstimateImpl(const Vector3& position, const Vector3& movement,
+                                const Vector3& target, float max_velocity,
+                                bool precise, unsigned int maximum_ms,
+                                AIReachabilityTrajectory* trajectory);
+  void Prepare();
+  void GrowTo(unsigned int index);
+
+  const Vector3 position_;
+  const Vector3 movement_;
+  const float max_velocity_;
+  const Vector3 drift_position_;
+  Vector3 initial_position_;
+  bool prepared_ = false;
+  bool reusable_ = false;
+  unsigned int size_ = 0;
+  // x, y, z, usual radius, optimistic radius after each original 10 ms step.
+  // Entries are written before publication through size_; avoid eager clearing.
+  std::array<std::array<float, 5>, 70> states_;
+};
 unsigned int AI_GetToBallMovement(Match *match, const MentalImage *mentalImage, Player *player, const Vector3 &desiredDirection, float desiredVelocityFloat, Vector3 &bestDirection, float &bestVelocityFloat, Vector3 &bestLookAt, float haste = 0.0f);
 unsigned int AI_GetBallControlMovement(const MentalImage *mentalImage, Player *player, const Vector3 &desiredDirection, float desiredVelocityFloat, Vector3 &bestDirection, float &bestVelocityFloat, Vector3 &bestLookAt);
 bool AI_HasPossession(Ball *ball, Player *player);

@@ -432,3 +432,7 @@ SDL_PROC_UNUSED(void,glVertex4s,(GLshort x, GLshort y, GLshort z, GLshort w))
 SDL_PROC_UNUSED(void,glVertex4sv,(const GLshort *v))
 SDL_PROC_UNUSED(void,glVertexPointer,(GLint size, GLenum type, GLsizei stride, const GLvoid *pointer))
 SDL_PROC(void,glViewport,(GLint x, GLint y, GLsizei width, GLsizei height))
+
+// 2026-09-09: validate linked programs before using their uniforms.
+SDL_PROC(void,glGetProgramiv,(GLuint program, GLenum pname, GLint *params))
+SDL_PROC(void,glGetProgramInfoLog,(GLuint program, GLsizei bufSize, GLsizei *length, GLchar *infoLog))

@@ -1,0 +1,96 @@
+Running: cmake -S engine -B /tmp/football-optimization-native -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_ENABLE_SANITIZERS=OFF -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.4s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: cmake --build /tmp/football-optimization-native -j 1 --target engine_match_benchmark engine_hotspot_profile engine_animation_query_contract
+[  2%] Built target datalib
+[  9%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 86%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target engine_match_benchmark
+[100%] Built target engine_hotspot_profile
+[  2%] Built target datalib
+[  9%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 86%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target engine_animation_query_contract
+Running: /usr/sbin/c++ --version
+Running: cmake -S engine/tests -B /tmp/football-optimization-query-tests -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/sbin/c++ -DENABLE_PCH=OFF -DENABLE_ASAN=ON -DENABLE_UBSAN=ON -DFETCHCONTENT_SOURCE_DIR_GOOGLETEST=/tmp/football-review-20260909-tests/_deps/googletest-src
+-- AddressSanitizer enabled
+-- UndefinedBehaviorSanitizer enabled
+-- Build type: Debug
+-- Unity build: ON
+-- PCH enabled: OFF
+-- Build targets: 41
+-- Configuring done (0.1s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-optimization-query-tests
+Running: cmake --build /tmp/football-optimization-query-tests -j 1 --target ecs_query_contract_test
+[ 33%] Built target gtest
+[ 66%] Built target gtest_main
+[100%] Built target ecs_query_contract_test
+Running: readelf -d /tmp/football-optimization-query-tests/ecs_query_contract_test
+{"seed": 42, "repetition": 0, "cpu_ratio": 0.7881359852823311, "wall_ratio": 0.7909894380712992}
+{"seed": 43, "repetition": 0, "cpu_ratio": 0.9526813140129756, "wall_ratio": 0.9531816233822428}
+{"seed": 43, "repetition": 1, "cpu_ratio": 1.0629117689317602, "wall_ratio": 1.0616768619746855}
+{"seed": 42, "repetition": 1, "cpu_ratio": 1.030908175999863, "wall_ratio": 1.029884685593304}
+{"seed": 42, "repetition": 2, "cpu_ratio": 0.9953197443514745, "wall_ratio": 0.9969355204788802}
+{"seed": 43, "repetition": 2, "cpu_ratio": 1.1314681217656355, "wall_ratio": 1.1314582581599408}
+{"seed": 43, "repetition": 3, "cpu_ratio": 1.0081001218385104, "wall_ratio": 1.0078684403120295}
+{"seed": 42, "repetition": 3, "cpu_ratio": 1.0037306832696995, "wall_ratio": 1.0038441522776889}
+{"seed": 42, "repetition": 4, "cpu_ratio": 1.065990692970528, "wall_ratio": 1.0676112125475739}
+{"seed": 43, "repetition": 4, "cpu_ratio": 0.9953104780358591, "wall_ratio": 0.9952770588900989}
+{"seed": 43, "repetition": 5, "cpu_ratio": 0.9163141151187777, "wall_ratio": 0.9171612157363443}
+{"seed": 42, "repetition": 5, "cpu_ratio": 0.9704699017061483, "wall_ratio": 0.9694756717243709}
+{"seed": 42, "repetition": 6, "cpu_ratio": 1.039617152565486, "wall_ratio": 1.0413230087417353}
+{"seed": 43, "repetition": 6, "cpu_ratio": 1.1971452247642882, "wall_ratio": 1.1968935395634068}
+{"seed": 43, "repetition": 7, "cpu_ratio": 1.151018593809367, "wall_ratio": 1.151486374803789}
+{"seed": 42, "repetition": 7, "cpu_ratio": 0.9655151328047535, "wall_ratio": 0.963597329035728}
+{"seed": 42, "repetition": 8, "cpu_ratio": 0.9517118437966565, "wall_ratio": 0.9515927988442495}
+{"seed": 43, "repetition": 8, "cpu_ratio": 0.8829786762277865, "wall_ratio": 0.8759892239955562}
+{"seed": 43, "repetition": 9, "cpu_ratio": 0.8219994726185148, "wall_ratio": 0.8182725778657439}
+{"seed": 42, "repetition": 9, "cpu_ratio": 0.971705292412002, "wall_ratio": 0.9706745041161768}
+{"seed": 42, "repetition": 10, "cpu_ratio": 1.004081873054613, "wall_ratio": 1.0039310100695518}
+{"seed": 43, "repetition": 10, "cpu_ratio": 1.0716911347964218, "wall_ratio": 1.0712928171421296}
+{"seed": 43, "repetition": 11, "cpu_ratio": 0.9087225647561611, "wall_ratio": 0.909246537593803}
+{"seed": 42, "repetition": 11, "cpu_ratio": 1.0461926529011938, "wall_ratio": 1.0451512515001697}
+{"seed": 42, "repetition": 12, "cpu_ratio": 0.9419310083536804, "wall_ratio": 0.9409549760573942}
+{"seed": 43, "repetition": 12, "cpu_ratio": 1.1116142108526064, "wall_ratio": 1.1117535896169164}
+{"seed": 43, "repetition": 13, "cpu_ratio": 1.0419503112096522, "wall_ratio": 1.043195409492451}
+{"seed": 42, "repetition": 13, "cpu_ratio": 1.0672471042821197, "wall_ratio": 1.067552327370596}
+{"seed": 42, "repetition": 14, "cpu_ratio": 0.9648134945853453, "wall_ratio": 0.9645912155350984}
+{"seed": 43, "repetition": 14, "cpu_ratio": 0.9937622476432169, "wall_ratio": 0.9908424096234424}
+{"passed": false, "assertions": 34181, "skipped": 0, "failures": ["seed 42: CPU improvement not established", "seed 43: CPU improvement not established", "seed 43: wall-time mean did not improve"], "artifact": ".project/optimization/benchmarks/ecs-comparison-1789262766408036630.json", "artifact_sha256": "72864344a0bdce4e0004f1c73506895af2080d0f60d275c43a88792fddc7eabf", "comparisons": [{"seed": 42, "cpu": {"pairs": 15, "ratios": [0.7881359852823311, 1.030908175999863, 0.9953197443514745, 1.0037306832696995, 1.065990692970528, 0.9704699017061483, 1.039617152565486, 0.9655151328047535, 0.9517118437966565, 0.971705292412002, 1.004081873054613, 1.0461926529011938, 0.9419310083536804, 1.0672471042821197, 0.9648134945853453], "geometric_ratio": 0.9847541429392233, "bootstrap_95_lower": 0.9475678509859335, "bootstrap_95_upper": 1.0159925406484769}, "wall": {"pairs": 15, "ratios": [0.7909894380712992, 1.029884685593304, 0.9969355204788802, 1.0038441522776889, 1.0676112125475739, 0.9694756717243709, 1.0413230087417353, 0.963597329035728, 0.9515927988442495, 0.9706745041161768, 1.0039310100695518, 1.0451512515001697, 0.9409549760573942, 1.067552327370596, 0.9645912155350984], "geometric_ratio": 0.9848320859479177, "bootstrap_95_lower": 0.9479122773693526, "bootstrap_95_upper": 1.0161418789040397}, "p99_ratio": 0.9973599098142631}, {"seed": 43, "cpu": {"pairs": 15, "ratios": [0.9526813140129756, 1.0629117689317602, 1.1314681217656355, 1.0081001218385104, 0.9953104780358591, 0.9163141151187777, 1.1971452247642882, 1.151018593809367, 0.8829786762277865, 0.8219994726185148, 1.0716911347964218, 0.9087225647561611, 1.1116142108526064, 1.0419503112096522, 0.9937622476432169], "geometric_ratio": 1.0111492995297053, "bootstrap_95_lower": 0.9590252479507577, "bootstrap_95_upper": 1.0633657692933285}, "wall": {"pairs": 15, "ratios": [0.9531816233822428, 1.0616768619746855, 1.1314582581599408, 1.0078684403120295, 0.9952770588900989, 0.9171612157363443, 1.1968935395634068, 1.151486374803789, 0.8759892239955562, 0.8182725778657439, 1.0712928171421296, 0.909246537593803, 1.1117535896169164, 1.043195409492451, 0.9908424096234424], "geometric_ratio": 1.0102262600195324, "bootstrap_95_lower": 0.9574763895741094, "bootstrap_95_upper": 1.0628494295254356}, "p99_ratio": 1.008896949048368}]}
+Traceback (most recent call last):
+  File "/root/work_space/football/.project/checks/ecs_performance.py", line 259, in <module>
+    main()
+    ~~~~^^
+  File "/root/work_space/football/.project/checks/ecs_performance.py", line 255, in main
+    require(not failures, "Performance gain is unproven; retain evidence and continue optimization")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/native_boundary.py", line 30, in require
+    raise RuntimeError(message)
+RuntimeError: Performance gain is unproven; retain evidence and continue optimization

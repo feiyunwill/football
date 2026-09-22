@@ -160,12 +160,16 @@ TEST(ClientStateEngineIntegrationTest, PredictAndRollback) {
   EXPECT_FLOAT_EQ(engine.position, 4.0f);
 
   // Server sends authoritative frame 2 with different input
-  SlotInput auth_input{10.0f, 0.0f, 0};
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // SlotInput auth_input{10.0f, 0.0f, 0};
+  SlotInput auth_input{-1.0f, 0.0f, 0};
   bool ok = cs.rollback_to(2, auth_input, cb.restore_state, cb.step);
 
   EXPECT_TRUE(ok);
   // Restored to frame 2 (position=2.0), stepped once with auth_input
-  EXPECT_FLOAT_EQ(engine.position, 12.0f);
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // EXPECT_FLOAT_EQ(engine.position, 12.0f);
+  EXPECT_FLOAT_EQ(engine.position, 1.0f);
   EXPECT_EQ(cs.rollback_count(), 1);
 }
 
@@ -212,8 +216,12 @@ TEST(EndToEndTest, AuthoritativeFrameRoundTrip) {
 
   EXPECT_FLOAT_EQ(engine.position, 2.0f);
 
-  // Server sends authoritative frame 0 with input=5.0
-  SlotInput auth{5.0f, 0.0f, 0};
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // // Server sends authoritative frame 0 with input=5.0
+  // Server corrects frame 0 with the opposite direction.
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // SlotInput auth{5.0f, 0.0f, 0};
+  SlotInput auth{-1.0f, 0.0f, 0};
 
   // Pack and unpack authoritative frame
   std::vector<SlotInput> auth_inputs = {auth};
@@ -230,14 +238,19 @@ TEST(EndToEndTest, AuthoritativeFrameRoundTrip) {
   EXPECT_EQ(used, n);
   EXPECT_EQ(fid, 0u);
   EXPECT_EQ(unpacked.size(), 1u);
-  EXPECT_FLOAT_EQ(unpacked[0].dir_x, 5.0f);
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // EXPECT_FLOAT_EQ(unpacked[0].dir_x, 5.0f);
+  EXPECT_FLOAT_EQ(unpacked[0].dir_x, -1.0f);
 
   // Rollback to frame 0 with server's input
   bool ok = cs.rollback_to(0, unpacked[0], cb.restore_state, cb.step);
   EXPECT_TRUE(ok);
 
-  // Position: restored to 0.0, stepped once with 5.0
-  EXPECT_FLOAT_EQ(engine.position, 5.0f);
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // // Position: restored to 0.0, stepped once with 5.0
+  // EXPECT_FLOAT_EQ(engine.position, 5.0f);
+  // Position: restored to 0.0, stepped once with -1.0.
+  EXPECT_FLOAT_EQ(engine.position, -1.0f);
 }
 
 // ===== StateHash Pack/Unpack =====
@@ -354,7 +367,9 @@ TEST(FullLoopTest, ClientServerSyncWithoutRollback) {
 }
 
 TEST(FullLoopTest, ClientServerSyncWithRollback) {
-  // Server and client run 10 frames. Server diverges at frame 2 (input=5.0
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // // Server and client run 10 frames. Server diverges at frame 2 (input=5.0
+  // Server and client run 10 frames. Server diverges at frame 2 (input=-1.0
   // instead of 1.0). Client predicts ahead, then rolls back when it receives
   // the authoritative frame.
   MockGameEngine server_engine;
@@ -382,7 +397,9 @@ TEST(FullLoopTest, ClientServerSyncWithRollback) {
   for (int i = 0; i < kTotalFrames; ++i) {
     // Server input: diverges at frame 2
     SlotInput server_input = (server_frame == 2) ?
-        SlotInput{5.0f, 0.0f, 0} : SlotInput{1.0f, 0.0f, 0};
+        // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+        // SlotInput{5.0f, 0.0f, 0} : SlotInput{1.0f, 0.0f, 0};
+        SlotInput{-1.0f, 0.0f, 0} : SlotInput{1.0f, 0.0f, 0};
     server_cb.step(server_input);
 
     // Client predicts with input=1.0 (doesn't know about server divergence)
@@ -428,8 +445,11 @@ TEST(FullLoopTest, ClientServerSyncWithRollback) {
   // Verify last_confirmed is valid
   EXPECT_GE(last_confirmed, 0);
 
-  // Server: 1+1+5+1*7 = 14.0
-  // Client after rollback: restored to 2.0, +5.0=7.0, +1+1=9.0, +1*5=14.0
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // // Server: 1+1+5+1*7 = 14.0
+  // // Client after rollback: restored to 2.0, +5.0=7.0, +1+1=9.0, +1*5=14.0
+  // Both engines apply nine forward inputs and one backward input.
+  EXPECT_FLOAT_EQ(server_engine.position, 8.0f);
   EXPECT_FLOAT_EQ(server_engine.position, client_engine.position);
   EXPECT_EQ(server_engine.step_count, client_engine.step_count);
   EXPECT_TRUE(rollback_done);

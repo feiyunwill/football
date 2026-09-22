@@ -1,0 +1,512 @@
+Running: cmake -S engine -B /tmp/football-optimization-sanitized -DCMAKE_BUILD_TYPE=Debug -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_ENABLE_SANITIZERS=ON -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-sanitized/bin
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.4s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-sanitized
+Running: cmake --build /tmp/football-optimization-sanitized -j 1 --target engine_architecture_contract engine_lifetime_contract engine_simulation_contract standalone_game engine_animation_query_contract engine_ai_reachability_contract engine_ai_touch_contract engine_ai_tactical_state_contract engine_ai_tactics_contract engine_ai_tactics_roles_contract football_server football_client football_server_tcp football_client_tcp football_lobby headless_match standalone_game engine_prepared_lifecycle_contract engine_tracker_owner_contract engine_loading_cancellation_contract engine_loading_seat_contract engine_loading_tcp_contract engine_loading_client_drain_contract
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 50%] Built target blunted2
+[ 73%] Built target gamelib
+[ 82%] Built target menulib
+[ 85%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_architecture_contract
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 50%] Built target blunted2
+[ 73%] Built target gamelib
+[ 82%] Built target menulib
+[ 85%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_lifetime_contract
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 50%] Built target blunted2
+[ 73%] Built target gamelib
+[ 82%] Built target menulib
+[ 85%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_simulation_contract
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 50%] Built target blunted2
+[ 73%] Built target gamelib
+[ 82%] Built target menulib
+[ 85%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target standalone_game
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 50%] Built target blunted2
+[ 73%] Built target gamelib
+[ 82%] Built target menulib
+[ 85%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_animation_query_contract
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 75%] Built target gamelib
+[ 83%] Built target menulib
+[ 87%] Built target datalib
+[100%] Built target football_engine
+[100%] Built target engine_ai_reachability_contract
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 50%] Built target blunted2
+[ 73%] Built target gamelib
+[ 82%] Built target menulib
+[ 85%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_ai_touch_contract
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 50%] Built target blunted2
+[ 73%] Built target gamelib
+[ 82%] Built target menulib
+[ 85%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_ai_tactical_state_contract
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 50%] Built target blunted2
+[ 73%] Built target gamelib
+[ 82%] Built target menulib
+[ 85%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_ai_tactics_contract
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 50%] Built target blunted2
+[ 73%] Built target gamelib
+[ 82%] Built target menulib
+[ 85%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_ai_tactics_roles_contract
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 50%] Built target blunted2
+[ 73%] Built target gamelib
+[ 82%] Built target menulib
+[ 85%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target football_server
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 50%] Built target blunted2
+[ 73%] Built target gamelib
+[ 82%] Built target menulib
+[ 85%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target football_client
+[  1%] Built target football_native_recovery
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 74%] Built target gamelib
+[ 82%] Built target menulib
+[ 86%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target football_server_tcp
+[  1%] Built target football_native_recovery
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 74%] Built target gamelib
+[ 82%] Built target menulib
+[ 86%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target football_client_tcp
+[100%] Built target football_lobby
+[  8%] Built target gui2lib
+[ 19%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 75%] Built target gamelib
+[ 83%] Built target menulib
+[ 87%] Built target datalib
+[100%] Built target football_engine
+[100%] Built target headless_match
+[  1%] Built target football_native_recovery
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 74%] Built target gamelib
+[ 82%] Built target menulib
+[ 86%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_prepared_lifecycle_contract
+[  1%] Built target football_native_recovery
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 74%] Built target gamelib
+[ 82%] Built target menulib
+[ 86%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_tracker_owner_contract
+[  1%] Built target football_native_recovery
+[ 10%] Built target gui2lib
+[ 21%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 35%] Built target typeslib
+[ 45%] Built target scenelib
+[ 50%] Built target utilslib
+[ 52%] Built target blunted2
+[ 75%] Built target gamelib
+[ 84%] Built target menulib
+[ 87%] Built target datalib
+[100%] Built target football_engine
+[100%] Built target engine_loading_cancellation_contract
+[  1%] Built target football_native_recovery
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 74%] Built target gamelib
+[ 82%] Built target menulib
+[ 86%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_loading_seat_contract
+[  1%] Built target football_native_recovery
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 74%] Built target gamelib
+[ 82%] Built target menulib
+[ 86%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_loading_tcp_contract
+[  1%] Built target football_native_recovery
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 74%] Built target gamelib
+[ 82%] Built target menulib
+[ 86%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Built target engine_loading_client_drain_contract
+Running: readelf -d /tmp/football-optimization-sanitized/libfootball_engine.so
+Running: nm -D /tmp/football-optimization-sanitized/libfootball_engine.so
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_prepared_lifecycle_contract contract
+Actual engine mapping verified
+{"passed":true,"assertions":123,"prepared_operations":19,"frames":20,"skipped":0,"actual_gameenv":true}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_tracker_owner_contract
+TRACKER_RENDEZVOUS_ENTER
+{"passed":true,"paired_tracker":true,"workers":2,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.begin 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract match.begin 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract animations.template 2
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract animations.generate 17
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract animations.prepare-generated 5
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract animations.file 3
+{"passed":true,"assertions":19,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract animations.cache 4
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract team.player 2
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract match.players 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract match.stadium 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract match.finalized 1
+{"passed":true,"assertions":19,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.controllers 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.cache 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.pages 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.match-data 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.loading-page 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.background.create 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.background.load 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.background.ready 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.caption.left 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.logo.left.create 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.logo.left.load 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.caption.right 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.logo.right.create 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.logo.right.load 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.finalize 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_seat_contract
+{"passed":true,"checks":14,"ownership_checks":12,"stream_terminal_checks":2,"assertions":1038,"skipped":0,"real_tcp":true,"frame_owner_checked":true,"actual_gameenv":false}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_tcp_contract
+CASE loading_wire_bounds
+PASS loading_wire_bounds
+CASE loading_barrier_and_ready
+PASS loading_barrier_and_ready
+CASE loading_requires_completion
+PASS loading_requires_completion
+CASE loading_does_not_extend_on_resume
+PASS loading_does_not_extend_on_resume
+CASE loading_idle_and_offline_barrier
+PASS loading_idle_and_offline_barrier
+CASE loading_complete_starts_ready_budget
+PASS loading_complete_starts_ready_budget
+CASE pregame_expiry
+PASS pregame_expiry
+CASE invalid_ready_release
+PASS invalid_ready_release
+CASE sealed_expiry
+PASS sealed_expiry
+CASE retries_do_not_extend_grace
+PASS retries_do_not_extend_grace
+CASE snapshot_rejection_is_local
+PASS snapshot_rejection_is_local
+{"passed":true,"checks":11,"assertions":479,"skipped":0,"real_tcp":true,"frame_owner_checked":true,"actual_gameenv":false}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_client_drain_contract
+GameEnv runtime prepared: 1v2, seed=42
+TCP loading cancel: sent=1 acknowledged=1 rejected=0
+GameEnv runtime prepared: 1v2, seed=42
+TCP invalid message: type=92 phase=10 buffered=68 transport=1
+TCP connection stopped: invalid or unexpected message
+GameEnv runtime prepared: 1v2, seed=42
+TCP invalid message: type=92 phase=10 buffered=68 transport=1
+TCP connection stopped: invalid or unexpected message
+GameEnv runtime prepared: 1v2, seed=42
+TCP loading cancel: sent=1 acknowledged=0 rejected=0
+GameEnv runtime prepared: 1v2, seed=42
+TCP loading cancel: sent=1 acknowledged=0 rejected=0
+{"passed":true,"checks":5,"assertions":35,"skipped":0,"actual_gameenv":true,"actual_client":true,"real_tcp":true,"maximum_cancel_seconds":0.100819141}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_ai_tactical_state_contract
+{"seed":42,"physics":2,"actual_frames":240}
+{"seed":42,"physics":10,"actual_frames":240}
+{"seed":43,"physics":2,"actual_frames":240}
+{"seed":43,"physics":10,"actual_frames":240}
+{"passed":true,"assertions":27618,"skipped":0,"actual_gameenv":true,"frames":960,"nonzero_actors":3513,"restarts":331}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_ai_tactics_contract
+{"passed":true,"assertions":7288,"skipped":0,"symmetry_cases":600}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_ai_tactics_roles_contract
+{"passed":true,"assertions":3601,"failed":0,"skipped":0,"role_mirror_cases":1800}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_ai_touch_contract
+{"assets":1452,"quiet_idle":8,"categories":[28,26,18,18],"needed":[20,26,18,18],"missed":[0,0,0,0]}
+{"assets":1452,"quiet_idle":8,"categories":[28,26,18,18],"needed":[20,26,18,18],"missed":[0,0,0,0]}
+{"assets":1452,"quiet_idle":8,"categories":[28,26,18,18],"needed":[20,26,18,18],"missed":[0,0,0,0]}
+{"passed":true,"assertions":586,"skipped":0,"actual_gameenv":true,"seeds":3,"ball_control_assets":270,"quiet_idle":24}
+
+Running arrival-time differential contract: /tmp/football-optimization-sanitized/bin/engine_ai_reachability_contract
+{"passed":true,"skipped":0,"assertions":1555846,"cached_cases":561280,"trajectory_bytes":1460,"cases":216640,"zero_results":11664,"fast_distance_cases":46855,"finite_timeout_cases":204535}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_animation_query_contract
+vectorfromstring warning, no value
+{"passed":true,"assertions":30079,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract headless 42
+{"passed":true,"assertions":296,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract render 42
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":51,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42
+{"passed":true,"assertions":946,"skipped":0,"snapshot_bytes":87132,"collision_workspace":true,"seed":42,"reverse":false}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42 --reverse
+{"passed":true,"assertions":954,"skipped":0,"snapshot_bytes":89124,"collision_workspace":true,"seed":42,"reverse":true}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42 --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":92,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract headless 43
+{"passed":true,"assertions":296,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract render 43
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":51,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43
+{"passed":true,"assertions":942,"skipped":0,"snapshot_bytes":86124,"collision_workspace":true,"seed":43,"reverse":false}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43 --reverse
+{"passed":true,"assertions":950,"skipped":0,"snapshot_bytes":88116,"collision_workspace":true,"seed":43,"reverse":true}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43 --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":92,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_lifetime_contract
+{"passed":true,"assertions":167,"skipped":0,"warm_rss_bytes":308125696,"final_rss_bytes":226910208}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_lifetime_contract --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+No DISPLAY defined, doing off-screen rendering
+{"passed":true,"assertions":19,"skipped":0,"renderer":"llvmpipe (LLVM 22.1.8, 256 bits)"}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract sdl
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":20,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract sdl-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract font-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract font-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+{"passed": true, "assertions": 1632030, "skipped": 0, "results": {"loading": {"passed": true, "assertions": 2121, "checks": 31, "skipped": 0, "cancellation_checkpoints": 26, "prepared_operations": 19, "actual_client_drain_cases": 5, "socket_ownership_cases": 12, "legacy_loading_cases": 11, "stream_terminal_cases": 2, "results": {"prepared": {"passed": true, "assertions": 123, "prepared_operations": 19, "frames": 20, "skipped": 0, "actual_gameenv": true}, "tracker": {"passed": true, "paired_tracker": true, "workers": 2, "skipped": 0}, "reset.begin": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "match.begin": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "animations.template": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "animations.generate": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "animations.prepare-generated": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "animations.file": {"passed": true, "assertions": 19, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "animations.cache": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "team.player": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "match.players": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "match.stadium": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "match.finalized": {"passed": true, "assertions": 19, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "reset.controllers": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "reset.cache": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "reset.pages": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "reset.match-data": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "reset.loading-page": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.background.create": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.background.load": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.background.ready": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.caption.left": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.logo.left.create": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.logo.left.load": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.caption.right": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.logo.right.create": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.logo.right.load": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.finalize": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "seat": {"passed": true, "checks": 14, "ownership_checks": 12, "stream_terminal_checks": 2, "assertions": 1038, "skipped": 0, "real_tcp": true, "frame_owner_checked": true, "actual_gameenv": false}, "legacy_loading": {"passed": true, "checks": 11, "assertions": 479, "skipped": 0, "real_tcp": true, "frame_owner_checked": true, "actual_gameenv": false}, "client_drain": {"passed": true, "checks": 5, "assertions": 35, "skipped": 0, "actual_gameenv": true, "actual_client": true, "real_tcp": true, "maximum_cancel_seconds": 0.100819141}}}, "engine_ai_tactical_state_contract": {"passed": true, "assertions": 27618, "skipped": 0, "actual_gameenv": true, "frames": 960, "nonzero_actors": 3513, "restarts": 331}, "engine_ai_tactics_contract": {"passed": true, "assertions": 7288, "skipped": 0, "symmetry_cases": 600}, "engine_ai_tactics_roles_contract": {"passed": true, "assertions": 3601, "failed": 0, "skipped": 0, "role_mirror_cases": 1800}, "ai_touch": {"passed": true, "assertions": 586, "skipped": 0, "actual_gameenv": true, "seeds": 3, "ball_control_assets": 270, "quiet_idle": 24}, "ai_reachability": {"passed": true, "skipped": 0, "assertions": 1555846, "cached_cases": 561280, "trajectory_bytes": 1460, "cases": 216640, "zero_results": 11664, "fast_distance_cases": 46855, "finite_timeout_cases": 204535, "reference_sha256": "b3cae7d462cf8e894ba12c9e5ccf04f22e69b8b4a2c5c7e6227a901a3aafb923"}, "animation_metadata": {"passed": true, "assertions": 30079, "skipped": 0}, "lifecycle_42": {"passed": true, "assertions": 296, "skipped": 0}, "egl_lifecycle_42": {"passed": true, "assertions": 51, "skipped": 0}, "snapshot_42_normal": {"passed": true, "assertions": 946, "skipped": 0, "snapshot_bytes": 87132, "collision_workspace": true, "seed": 42, "reverse": false}, "snapshot_42_reverse": {"passed": true, "assertions": 954, "skipped": 0, "snapshot_bytes": 89124, "collision_workspace": true, "seed": 42, "reverse": true}, "snapshot_42_render": {"passed": true, "assertions": 92, "skipped": 0}, "lifecycle_43": {"passed": true, "assertions": 296, "skipped": 0}, "egl_lifecycle_43": {"passed": true, "assertions": 51, "skipped": 0}, "snapshot_43_normal": {"passed": true, "assertions": 942, "skipped": 0, "snapshot_bytes": 86124, "collision_workspace": true, "seed": 43, "reverse": false}, "snapshot_43_reverse": {"passed": true, "assertions": 950, "skipped": 0, "snapshot_bytes": 88116, "collision_workspace": true, "seed": 43, "reverse": true}, "snapshot_43_render": {"passed": true, "assertions": 92, "skipped": 0}, "repeated_and_concurrent_instances": {"passed": true, "assertions": 167, "skipped": 0, "warm_rss_bytes": 308125696, "final_rss_bytes": 226910208}, "two_egl_contexts": {"passed": true, "assertions": 19, "skipped": 0, "renderer": "llvmpipe (LLVM 22.1.8, 256 bits)"}, "sdl_events": {"passed": true, "assertions": 20, "skipped": 0}, "sdl_context_failure": {"passed": true, "assertions": 5, "skipped": 0}, "invalid_font_failure": {"passed": true, "assertions": 5, "skipped": 0}, "missing_font_failure": {"passed": true, "assertions": 5, "skipped": 0}}, "instrumented_translation_units": 167, "instrumentation": "complete engine ASan/UBSan, leak detection enabled, no suppressions", "asan_runtime_in_engine": true, "sdl_driver": "offscreen (real SDL GL window and event queue)"}

@@ -209,6 +209,9 @@ void GraphicsCamera::SetPosition(const Vector3 &newPosition) {
 
     View &view = renderer->GetView(viewID);
 
+    // 2026-09-10: build this frame's projection with this camera's FOV. The
+    // previous order used the last frame/camera FOV and made still poses jump.
+    renderer->SetFOV(buffer.cameraFOV);
     Matrix4 projectionMatrix = renderer->CreatePerspectiveMatrix(view.width / (view.height * 1.0f), buffer.cameraNearCap, buffer.cameraFarCap);
     Matrix4 viewMatrix = buffer.cameraMatrix;
 
@@ -225,7 +228,8 @@ void GraphicsCamera::SetPosition(const Vector3 &newPosition) {
     // opengl window starts lower left, so invert y
     renderer->SetViewport(view.x, height - view.y - view.height, view.width, view.height);
 
-    renderer->SetFOV(buffer.cameraFOV);
+    // 2026-09-10: moved before projection construction above.
+    // renderer->SetFOV(buffer.cameraFOV);
 
     float depthParamNear = 0;
     float depthParamFar = 0;

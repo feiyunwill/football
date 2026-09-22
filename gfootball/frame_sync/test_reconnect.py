@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Reconnection test: Simulate disconnect and verify auto-reconnect."""
 
+# 2026-09-09: collected through asserting wrappers in legacy_network_test.py.
+__test__ = False
+
 import sys
 import time
 import threading

@@ -377,11 +377,48 @@ Vector3 AI_GetForceFieldMovement(const std::vector<ForceSpot> &forceField,
   if (cumulForce == 0.0f) return 0; else return (cumulVec / cumulForce) * sprintVelocity;
 }
 
-TimeNeeded AI_GetTimeNeededForDistance_ms(const Vector3 &playerPos,
-                                          const Vector3 &playerMovement,
-                                          const Vector3 &targetPos,
-                                          float maxVelocity, bool precise,
-                                          unsigned int maxTime_ms) {
+// 2026-09-13: lazy, bounded trajectory reuse within one possession update.
+AIReachabilityTrajectory::AIReachabilityTrajectory(
+    const Vector3& position, const Vector3& movement, float max_velocity)
+    : position_(position), movement_(movement), max_velocity_(max_velocity),
+      drift_position_(position + movement * 0.2f), initial_position_(position) {}
+
+void AIReachabilityTrajectory::Prepare() {
+  if (prepared_) return;
+  reusable_ = movement_.GetLength() > idleDribbleSwitch;
+  if (reusable_) {
+    initial_position_ += movement_.GetNormalized() * 0.1f;
+    initial_position_ += movement_ * 0.01f;
+  }
+  prepared_ = true;
+}
+
+void AIReachabilityTrajectory::GrowTo(unsigned int index) {
+  const float adaptedMaxVelocity = max_velocity_ * 0.94f;
+  while (size_ <= index) {
+    const float bias = (float)(size_ * 10) / 700.0f;
+    const float movement_x = movement_.coords[0] * (1.0f - bias);
+    const float movement_y = movement_.coords[1] * (1.0f - bias);
+    auto& next = states_[size_];
+    next[0] = size_ == 0 ? initial_position_.coords[0] : states_[size_ - 1][0];
+    next[1] = size_ == 0 ? initial_position_.coords[1] : states_[size_ - 1][1];
+    next[2] = initial_position_.coords[2];
+    next[3] = size_ == 0 ? 0.28f : states_[size_ - 1][3];
+    next[4] = size_ == 0 ? 0.9f : states_[size_ - 1][4];
+    next[0] += movement_x * 10 * 0.001f;
+    next[1] += movement_y * 10 * 0.001f;
+    next[3] += adaptedMaxVelocity * bias * 10 * 0.001f;
+    next[4] += adaptedMaxVelocity * bias * 10 * 0.001f;
+    ++size_;
+  }
+}
+
+// Previous exported body is now shared by the uncached and cached paths.
+template <bool Reuse>
+TimeNeeded AIReachabilityTrajectory::EstimateImpl(
+    const Vector3& playerPos, const Vector3& playerMovement,
+    const Vector3& targetPos, float maxVelocity, bool precise,
+    unsigned int maxTime_ms, AIReachabilityTrajectory* trajectory) {
   DO_VALIDATION;
 
   TimeNeeded result;
@@ -390,8 +427,14 @@ TimeNeeded AI_GetTimeNeededForDistance_ms(const Vector3 &playerPos,
   if (precise) optimizeDist = 48.0f;
 
   float initialDist = (playerPos - targetPos).GetLength();
+  // 2026-09-13: the drift position is identical for this immutable snapshot.
+  // Previous expression: targetPos - (playerPos + playerMovement * 0.2f).
+  const Vector3 drift = [&]() {
+    if constexpr (Reuse) return trajectory->drift_position_;
+    else return playerPos + playerMovement * 0.2f;
+  }();
   unsigned int defaultOptimizedTime_ms = int(
-      std::round((targetPos - (playerPos + playerMovement * 0.2f)).GetLength() /
+      std::round((targetPos - drift).GetLength() /
                  (maxVelocity * 0.75f) * 1000));
   if (initialDist > optimizeDist) {
     DO_VALIDATION;
@@ -407,8 +450,16 @@ TimeNeeded AI_GetTimeNeededForDistance_ms(const Vector3 &playerPos,
   Vector3 currentPos = playerPos;
   Vector3 currentMovement = playerMovement;
 
+  // 2026-09-13: only running foot offsets are independent of the target.
+  bool reuseTrajectory = false;
+  if constexpr (Reuse) {
+    trajectory->Prepare();
+    reuseTrajectory = trajectory->reusable_;
+  }
   float ffo = 0.1f; // in front of foot offset (ideal ball position)
-  if (currentMovement.GetLength() > idleDribbleSwitch) {
+  if (reuseTrajectory) {
+    currentPos = trajectory->initial_position_;
+  } else if (!Reuse && currentMovement.GetLength() > idleDribbleSwitch) {
 
     DO_VALIDATION;
     currentPos += currentMovement.GetNormalized() * ffo;
@@ -435,7 +486,14 @@ TimeNeeded AI_GetTimeNeededForDistance_ms(const Vector3 &playerPos,
     // round to 10s
     //timeStep_ms = int(floor(timeStep_ms / 10.0f)) * 10;
 
+    // 2026-09-13: time advances by 10 from 0 and this loop exits at 700.
+    // Preserve the diagnostic clamp call when validation tracing is enabled.
+#ifdef FULL_VALIDATION
     float bias = clamp((float)currentTime_ms / (float)changeTime_ms, 0.0f, 1.0f);
+#else
+    // Previous: float bias = clamp((float)currentTime_ms / (float)changeTime_ms, 0.0f, 1.0f);
+    float bias = (float)currentTime_ms / (float)changeTime_ms;
+#endif
     //bias = pow(bias, 1.7f); // higher exp == slower
     //bias = 0.1f + pow(bias, 0.8f) * 0.9f; // higher exp == slower
     //bias = 0.01f + pow(bias, 1.0f) * 0.99f; // higher exp == slower
@@ -459,20 +517,39 @@ TimeNeeded AI_GetTimeNeededForDistance_ms(const Vector3 &playerPos,
 
     } else {
       DO_VALIDATION;
-      // manual copy: this function is called a lot, so if we use the Vector3::operator*, it's creating a lot of temp vars.
-      // currentMovement = playerMovement * (1.0f - bias);
-      currentMovement.coords[0] = playerMovement.coords[0] * (1.0f - bias);
-      currentMovement.coords[1] = playerMovement.coords[1] * (1.0f - bias);
+      // 2026-09-13: preserve the original recurrence below for single queries
+      // and target-dependent walking. Running queries share the exact states.
+      if (reuseTrajectory) {
+        const unsigned int index = currentTime_ms / timeStep_ms;
+        trajectory->GrowTo(index);
+        const auto& state = trajectory->states_[index];
+        currentPos.coords[0] = state[0];
+        currentPos.coords[1] = state[1];
+        currentPos.coords[2] = state[2];
+        radius_usual = state[3];
+        radius_optimistic = state[4];
+      } else {
+        // manual copy: this function is called a lot, so if we use the Vector3::operator*, it's creating a lot of temp vars.
+        // currentMovement = playerMovement * (1.0f - bias);
+        currentMovement.coords[0] = playerMovement.coords[0] * (1.0f - bias);
+        currentMovement.coords[1] = playerMovement.coords[1] * (1.0f - bias);
+  
+        //currentPos += currentMovement * timeStep_ms * 0.001f;
+        currentPos.coords[0] += currentMovement.coords[0] * timeStep_ms * 0.001f;
+        currentPos.coords[1] += currentMovement.coords[1] * timeStep_ms * 0.001f;
+  
+        // within this radius, we can get to a ball
+        radius_usual += adaptedMaxVelocity * bias * timeStep_ms * 0.001f;
+        radius_optimistic += adaptedMaxVelocity * bias * timeStep_ms * 0.001f;
+      }
 
-      //currentPos += currentMovement * timeStep_ms * 0.001f;
-      currentPos.coords[0] += currentMovement.coords[0] * timeStep_ms * 0.001f;
-      currentPos.coords[1] += currentMovement.coords[1] * timeStep_ms * 0.001f;
-
-      // within this radius, we can get to a ball
-      radius_usual += adaptedMaxVelocity * bias * timeStep_ms * 0.001f;
-      radius_optimistic += adaptedMaxVelocity * bias * timeStep_ms * 0.001f;
-
-      float targetDistance = (targetPos - currentPos).GetSquaredLength();
+      // 2026-09-13: avoid the out-of-line temporary Vector3 constructor.
+      // Keep subtraction, multiplication, and addition order identical.
+      // float targetDistance = (targetPos - currentPos).GetSquaredLength();
+      const float dx = targetPos.coords[0] - currentPos.coords[0];
+      const float dy = targetPos.coords[1] - currentPos.coords[1];
+      const float dz = targetPos.coords[2] - currentPos.coords[2];
+      float targetDistance = dx * dx + dy * dy + dz * dz;
       //if (currentTime_ms > 1000 && currentTime_ms % 100 == 0) printf("currentTime_ms: %i, targetDistance: %f, currentMovementLength: %f, bias: %f, radius: %f, changeTime_ms: %i\n", currentTime_ms, targetDistance, currentMovement.GetLength(), bias, radius, changeTime_ms);
       if ((targetDistance < radius_optimistic * radius_optimistic ||
            (maxTime_ms != -1 && currentTime_ms > (unsigned int)maxTime_ms)) &&
@@ -516,6 +593,26 @@ TimeNeeded AI_GetTimeNeededForDistance_ms(const Vector3 &playerPos,
   /* too simple version
   return int(round((targetPos - (playerPos + playerMovement * 0.02)).GetLength() / (sprintVelocity * 0.9) * 1000));
   */
+}
+
+TimeNeeded AI_GetTimeNeededForDistance_ms(
+    const Vector3& playerPos, const Vector3& playerMovement,
+    const Vector3& targetPos, float maxVelocity, bool precise,
+    unsigned int maxTime_ms) {
+  return AIReachabilityTrajectory::EstimateImpl<false>(
+      playerPos, playerMovement, targetPos, maxVelocity, precise, maxTime_ms, nullptr);
+}
+
+TimeNeeded AIReachabilityTrajectory::Estimate(
+    const Vector3& target, bool precise, unsigned int maximum_ms) {
+#ifdef FULL_VALIDATION
+  // Keep the original per-query validation operations in diagnostic builds.
+  return AI_GetTimeNeededForDistance_ms(
+      position_, movement_, target, max_velocity_, precise, maximum_ms);
+#else
+  return EstimateImpl<true>(
+      position_, movement_, target, max_velocity_, precise, maximum_ms, this);
+#endif
 }
 
 unsigned int AI_GetToBallMovement(Match *match, const MentalImage *mentalImage,

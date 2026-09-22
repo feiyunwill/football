@@ -148,5 +148,38 @@ TEST(LobbyProtocolTest, LobbyMessageTypeValues) {
   EXPECT_EQ(static_cast<uint8_t>(LobbyMessageType::Error), 20);
 }
 
+// 2026-09-09: malformed wire values must not escape staged decoders.
+TEST(LobbyProtocolTest, InvalidConfigRepresentationAndStringsPreserveOutput) {
+  RoomConfig valid;
+  valid.seed = 1;
+  std::array<uint8_t, ROOM_CONFIG_SIZE> bytes;
+  PackRoomConfig(valid, bytes.data(), bytes.size());
+  RoomConfig output;
+  output.seed = 987;
+  bytes[offsetof(RoomConfig, allow_spectators)] = 2;
+  EXPECT_EQ(UnpackRoomConfig(bytes.data(), bytes.size(), &output), 0u);
+  EXPECT_EQ(output.seed, 987u);
+  EXPECT_TRUE(output.allow_spectators);
+  bytes[offsetof(RoomConfig, allow_spectators)] = 1;
+  std::memset(bytes.data() + offsetof(RoomConfig, scenario), 'x', sizeof(valid.scenario));
+  EXPECT_EQ(UnpackRoomConfig(bytes.data(), bytes.size(), &output), 0u);
+  EXPECT_EQ(output.seed, 987u);
+}
+TEST(LobbyProtocolTest, InvalidMetadataFieldsPreserveOutput) {
+  const auto reject = [](RoomMetadata invalid) {
+    std::array<uint8_t, ROOM_METADATA_SIZE> bytes;
+    PackRoomMetadata(invalid, bytes.data(), bytes.size());
+    RoomMetadata output;
+    output.room_id = 987;
+    EXPECT_EQ(UnpackRoomMetadata(bytes.data(), bytes.size(), &output), 0u);
+    EXPECT_EQ(output.room_id, 987u);
+  };
+  RoomMetadata room;
+  room.status = static_cast<RoomStatus>(255); reject(room);
+  room = {}; room.player_count = 3; reject(room);
+  room = {}; room.max_players = 23; reject(room);
+  room = {}; std::memset(room.game_address, 'x', sizeof(room.game_address)); reject(room);
+}
+
 }  // namespace
 }  // namespace frame_sync

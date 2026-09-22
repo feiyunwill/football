@@ -62,8 +62,12 @@ void GameTask::ProcessPhase() {
   }
 }
 
-void GameTask::PrepareRender() {
-  match->Put();
+// 2026-09-10: apply interpolated display poses before skinning/upload.
+// void GameTask::PrepareRender() {
+//   match->Put();
+void GameTask::PrepareRender(float interpolation) {
+  if (interpolation >= 0.0f) match->PutInterpolated(interpolation);
+  else match->Put();
   std::vector<Player*> players;
   match->GetActiveTeamPlayers(match->FirstTeam(), players);
   match->GetActiveTeamPlayers(match->SecondTeam(), players);

@@ -15,6 +15,7 @@
 #define GFOOTBALL_FRAME_SYNC_PREDICTION_ACCURACY_TRACKER_HPP
 
 #include <cstdint>
+#include <unordered_map>  // 2026-09-09: standalone header, independent of PCH.
 #include <deque>
 #include <optional>
 #include <vector>
@@ -54,6 +55,13 @@ class PredictionAccuracyTracker {
 
     bool correct = (it->second == authoritative_hash);
     
+    RecordOutcome(frame, correct);
+    predictions_.erase(it);
+    return correct;
+  }
+
+  // 2026-09-09: authoritative input reconciliation can report a real outcome directly.
+  void RecordOutcome(uint32_t frame, bool correct) {
     // Record result
     results_.push_back(correct);
     if (results_.size() > kMaxSamples) {
@@ -70,8 +78,6 @@ class PredictionAccuracyTracker {
     total_frames_++;
     if (correct) correct_frames_++;
 
-    predictions_.erase(it);
-    return correct;
   }
 
   /// @brief Get current prediction accuracy

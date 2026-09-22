@@ -7,11 +7,15 @@
 #ifndef GFOOTBALL_FRAME_SYNC_ENGINE_INTEGRATION_HPP
 #define GFOOTBALL_FRAME_SYNC_ENGINE_INTEGRATION_HPP
 
+// 2026-09-13: product cadence is explicit, separate from the legacy protocol family.
+// #include "frame_sync/protocol.hpp"
 #include "frame_sync/protocol.hpp"
+#include "frame_sync/native_match_contract.hpp"
 #include "frame_sync/client_state.hpp"
 
 #include <cstdint>
 #include <functional>
+#include <span>
 #include <string>
 #include <vector>
 
@@ -27,6 +31,8 @@ struct EngineCallbacks {
   std::function<void(const StateBlob&)> restore_state;
   // Step the engine one frame with the given input.
   std::function<void(const SlotInput&)> step;
+  // 2026-09-09: a network frame advances all controlled slots exactly once.
+  std::function<void(std::span<const SlotInput>)> step_frame;
   // Compute a state hash for verification.
   std::function<uint64_t()> compute_hash;
 };
@@ -40,7 +46,10 @@ struct MultiplayerConfig {
   uint32_t seed = 42;
   bool is_server = false;
   bool render = true;   // false for headless server
-  int frame_rate_hz = 10;  // Logic tick rate
+  // 2026-09-13: product executables opt into their own negotiated contract.
+  // int frame_rate_hz = 10;  // Logic tick rate
+  int frame_rate_hz = 10;  // Legacy API default
+  bool native_product = false;
   // 2026-08-31 ms-1.7: 渲染平滑 — 独立渲染帧率
   int render_rate_hz = 60;  // Render rate (should be >= 30 for smooth rendering)
 };

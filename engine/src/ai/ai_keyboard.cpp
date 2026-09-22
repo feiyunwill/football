@@ -73,6 +73,7 @@ void AIControlledKeyboard::ProcessState(EnvState* state) {
   blunted::Vector3 direction = direction_ * mirror;
   state->setValidate(false);
   state->process(mirror);
+  state->require(mirror == -1.0f || mirror == 1.0f, "Invalid controller mirror");
   state->setValidate(true);
   state->process(direction);
   direction_ = direction * mirror;

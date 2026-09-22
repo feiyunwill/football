@@ -127,7 +127,9 @@ class Team {
     void Hide2D();
 
     // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
-    void SaveInterpolationState();
+    // 2026-09-10: capture display-space poses under the same mirror as Put.
+    // void SaveInterpolationState();
+    void SaveInterpolationState(bool mirror = false, bool from_display = false);
     void PutInterpolated(float t, bool mirror);
 
     void UpdatePossessionStats();

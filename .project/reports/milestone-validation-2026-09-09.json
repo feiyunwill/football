@@ -1,0 +1,77 @@
+{
+  "date": "2026-09-09",
+  "environment": "Arch Linux in WSL; GCC 16.2.1; CMake 4.4.3",
+  "build_types": {
+    "engine": "",
+    "tests": "Debug"
+  },
+  "production_targets": [
+    "football_client",
+    "football_server",
+    "football_client_tcp",
+    "football_server_tcp",
+    "football_lobby",
+    "headless_match"
+  ],
+  "cpp": {
+    "passed": 421,
+    "failed": 0,
+    "pch": false,
+    "performance_thresholds": false
+  },
+  "python": {
+    "passed": 165,
+    "skipped": 10,
+    "skip_reason": "external server integration is opt-in"
+  },
+  "optimized_benchmarks": {
+    "passed": 8,
+    "failed": 0,
+    "flags": "-O3 -DFRAME_SYNC_TIMING_CHECKS=1",
+    "delta_throughput_ms": 12
+  },
+  "sanitizers": {
+    "passed": 30,
+    "failed": 0,
+    "flags": "-O1 -g1 -fsanitize=address,undefined -fno-omit-frame-pointer"
+  },
+  "native": [
+    {
+      "seed": 42,
+      "frames": 1000,
+      "slots": [
+        2,
+        2
+      ],
+      "independent_processes": 2,
+      "snapshot_replay": true,
+      "hash": "25f5d42974a8c79d"
+    },
+    {
+      "seed": 43,
+      "frames": 1000,
+      "slots": [
+        2,
+        2
+      ],
+      "independent_processes": 2,
+      "snapshot_replay": true,
+      "hash": "ecbf4729db088aa3"
+    }
+  ],
+  "tcp_smoke": {
+    "server_processes": 1,
+    "client_processes": 2,
+    "duration_seconds": 5,
+    "headless": true,
+    "handshake_ready": true,
+    "hash_mismatch_logs": false,
+    "note": "smoke only, no authoritative-frame-count assertion; not a full network determinism test"
+  },
+  "limitations": [
+    "No GPU output verification",
+    "No multi-room game-process E2E",
+    "No cross-platform determinism proof",
+    "RL was source-reviewed only"
+  ]
+}

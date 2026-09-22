@@ -7,6 +7,9 @@ set -euo pipefail
 TASK_ID="${1:-}"
 COMMIT_MSG="${2:-}"
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# 2026-09-09: completion in Phase 19+ requires current passing evidence.
+source "$PROJECT_ROOT/scripts/quality_route.sh"
+quality_route complete "$TASK_ID"
 COORD_PY="$PROJECT_ROOT/../.agent-coordination/coord.py"
 
 if [[ -z "$TASK_ID" ]]; then

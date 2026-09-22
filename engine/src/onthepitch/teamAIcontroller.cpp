@@ -1330,7 +1330,9 @@ void TeamAIController::ProcessState(EnvState *state) {
   state->process(endApplyKeeperRush_ms);
   state->process(forwardSupportPlayer);
   int size = tacticalOpponentInfo.size();
-  state->process(size);
+  // 2026-09-09: bound collection size before allocation/reference use.
+  // state->process(size);
+  state->processCount(size, MAX_PLAYERS);
   tacticalOpponentInfo.resize(size);
   for (auto &a : tacticalOpponentInfo) {
     DO_VALIDATION;

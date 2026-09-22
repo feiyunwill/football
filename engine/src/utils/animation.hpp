@@ -20,6 +20,7 @@
 
 #include <compare>
 #include <iostream>
+#include <string_view>
 
 #include "../defines.hpp"
 
@@ -56,6 +57,10 @@ enum e_DefString {
   e_DefString_IncomingRetainState = 20,
   e_DefString_Size = 21
 };
+// 2026-09-09: serialized animation tags cannot use the size sentinel.
+constexpr bool SnapshotEnumValid(e_DefString, int64_t value) {
+  return value >= e_DefString_Empty && value < e_DefString_Size;
+}
 constexpr std::strong_ordering operator<=>(e_DefString a, e_DefString b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }
@@ -112,6 +117,11 @@ e_FunctionType StringToFunctionType(e_DefString fun);
     player,
     body_part_max
   };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(BodyPart, int64_t value) {
+  return value >= middle && value <= body_part_max - 1;
+}
+
   constexpr std::strong_ordering operator<=>(BodyPart a, BodyPart b) {
     return std::to_underlying(a) <=> std::to_underlying(b);
   }
@@ -198,6 +208,11 @@ e_FunctionType StringToFunctionType(e_DefString fun);
     e_Foot_Left,
     e_Foot_Right
   };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_Foot, int64_t value) {
+  return value >= e_Foot_Left && value <= e_Foot_Right;
+}
+
   constexpr std::strong_ordering operator<=>(e_Foot a, e_Foot b) {
     return std::to_underlying(a) <=> std::to_underlying(b);
   }
@@ -259,6 +274,13 @@ e_FunctionType StringToFunctionType(e_DefString fun);
 
   class VariableCache {
    public:
+    // 2026-09-09: avoid temporary keys and value copies in animation queries.
+    // References remain valid until this key is changed or the cache is destroyed.
+    const std::string& get_ref(std::string_view key) const {
+      const auto iter = values.find(key);
+      static const std::string empty;
+      return iter == values.end() ? empty : iter->second;
+    }
     std::string get(const std::string& key) const {
       auto iter = values.find(key);
       if (iter != values.end()) { DO_VALIDATION;
@@ -335,7 +357,9 @@ e_FunctionType StringToFunctionType(e_DefString fun);
     std::string _outgoing_special_state;
     std::string _incoming_retain_state;
     std::string _incoming_special_state;
-    std::map<std::string, std::string> values;
+    // 2026-09-09: transparent comparison accepts non-owning lookup keys.
+    // std::map<std::string, std::string> values;
+    std::map<std::string, std::string, std::less<>> values;
   };
 
   class Animation {
@@ -394,6 +418,7 @@ e_FunctionType StringToFunctionType(e_DefString fun);
       std::shared_ptr<AnimationExtension> GetExtension(const std::string &name);
 
       const std::string GetVariable(const char *name) const;
+      const std::string& GetVariableRef(const char *name) const;
       const VariableCache& GetVariableCache() const {
         return variableCache;
       }

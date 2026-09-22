@@ -70,15 +70,21 @@ void MentalImage::ProcessState(EnvState* state, Match* match) {
   state->process(maxDistanceDeviation);
   state->process(maxMovementDeviation);
   int size = players.size();
-  state->process(size);
+  // 2026-09-09: bound collection size before allocation/reference use.
+  // state->process(size);
+  state->processCount(size, 2 * MAX_PLAYERS, 1);
   players.resize(size);
   for (auto& p : players) {
     p.ProcessState(state);
   }
   size = ballPredictions.size();
-  state->process(size);
+  // 2026-09-09: bound collection size before allocation/reference use.
+  // state->process(size);
+  state->processCount(size, 1000, 1);
   ballPredictions.resize(size);
-  for (auto& b : ballPredictions) {
+  for (auto& destination : ballPredictions) {
+    // 2026-09-09: failed reads leave the old coordinate unchanged.
+    auto b = destination;
     if (state->getConfig()->reverse_team_processing &&
         !ballPredictions_mirrored) {
       b.Mirror();
@@ -88,6 +94,7 @@ void MentalImage::ProcessState(EnvState* state, Match* match) {
         !ballPredictions_mirrored) {
       b.Mirror();
     }
+    destination = b;
   }
 }
 

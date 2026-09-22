@@ -97,6 +97,11 @@ Gui2WindowManager::~Gui2WindowManager() {
 
 void Gui2WindowManager::Exit() {
   DO_VALIDATION;
+  // 2026-09-09: PagePath owns the current page, also referenced by root children.
+  // Clear that ownership before root recursively deletes its children; otherwise
+  // PagePath's destructor calls Exit/delete again on the already freed page.
+  if (!root) return;
+  pagePath->Clear();
   std::vector<boost::intrusive_ptr<Image2D> > images;
   root->GetImages(images);
   for (unsigned int i = 0; i < images.size(); i++) {
@@ -111,6 +116,8 @@ void Gui2WindowManager::Exit() {
 
   root->Exit();
   delete root;
+  root = nullptr;
+  focus = nullptr;
 }
 
 void Gui2WindowManager::SetFocus(Gui2View *view) {

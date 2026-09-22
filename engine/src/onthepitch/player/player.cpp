@@ -196,12 +196,22 @@ void Player::UpdatePossessionStats() {
   unsigned int previous_ms = 0;
   bool precise = (team->GetDesignatedTeamPossessionPlayer() == this) ? true : false;
   float previousDist = 0; // debug
+#ifndef FULL_VALIDATION
+  // 2026-09-13: this scan does not mutate the player; retain one trajectory
+  // across its different ball predictions, then discard it before the next tick.
+  AIReachabilityTrajectory reachability(GetPosition(), GetMovement(), GetMaxVelocity());
+#endif
   for (unsigned int ms = startTime_ms; ms < ballPredictionSize_ms;
        ms += timeStep_ms) {
     DO_VALIDATION;
     if (match->GetBall()->Predict(ms).coords[2] < 1.5f) {
       DO_VALIDATION;
+#ifdef FULL_VALIDATION
       TimeNeeded result = AI_GetTimeNeededForDistance_ms(GetPosition(), GetMovement(), match->GetBall()->Predict(ms).Get2D(), GetMaxVelocity(), precise, ms);
+#else
+      // 2026-09-13: previous single-query call is retained above for tracing.
+      TimeNeeded result = reachability.Estimate(match->GetBall()->Predict(ms).Get2D(), precise, ms);
+#endif
       unsigned int timeNeeded = result.usual_ms;
       unsigned int timeNeeded_optimistic = result.optimistic_ms;
 

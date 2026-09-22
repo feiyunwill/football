@@ -94,6 +94,13 @@ class Config(object):
         'physics_steps_per_frame': 10,
         'render_resolution_x': 1280,
         'real_time': False,
+        # 2026-09-09: bounded observation recording; omitted keys use safe defaults.
+        'recording_limits': {},
+        # 2026-09-09: file/encoder/directory reservations survive sequential resets
+        # through accounting of existing files; overflow explicitly stops recording.
+        'recording_output_limits': {},
+        # 2026-09-09: bounded replay reads, exports and shared player sources.
+        'replay_limits': {},
         'tracesdir': os.path.join(tempfile.gettempdir(), 'dumps'),
         'video_format': 'avi',
         'video_quality_level': 0,  # 0 - low, 1 - medium, 2 - high

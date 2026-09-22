@@ -15,7 +15,10 @@
 // this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
 // i do not offer support, so don't ask. to be used for inspiration :)
 
+// 2026-09-13: sample UI input at bounded render work opportunities.
+// #include "graphics_task.hpp"
 #include "graphics_task.hpp"
+#include "render_service.hpp"
 
 #include "../../base/log.hpp"
 #include "../../base/utils.hpp"
@@ -40,7 +43,17 @@ GraphicsTask::~GraphicsTask() {
 void GraphicsTask::Render(bool swap_buffer) {
   DO_VALIDATION;
   Renderer3D *renderer3D = graphics_system_->GetRenderer3D();
+  // 2026-09-09: release partial-frame texture references even if PokeObjects,
+  // camera preparation, vector allocation or the renderer throws.
+  auto& overlay2DQueue = graphics_system_->GetOverlay2DQueue();
+  struct FrameQueueCleanup {
+    MessageQueue<Overlay2DQueueEntry>& queue;
+    ~FrameQueueCleanup() { queue.Clear(); }
+  } cleanup{overlay2DQueue};
 
+// 2026-09-13: sample UI input at bounded render work opportunities.
+//   // poke all image2D objects
+  ScopedRenderService::Poll();
   // poke all image2D objects
   if (GetContext().scene2D) {
     DO_VALIDATION;
@@ -60,23 +73,37 @@ void GraphicsTask::Render(bool swap_buffer) {
     }
     cameraIter++;
   }
+// 2026-09-13: sample UI input at bounded render work opportunities.
+//   // poke lights
+  ScopedRenderService::Poll();
   // poke lights
   GetContext().scene3D->PokeObjects(e_ObjectType_Light, e_SystemType_Graphics);
+// 2026-09-13: sample UI input at bounded render work opportunities.
+//   // poke camera
+  ScopedRenderService::Poll();
   // poke camera
   GetContext().scene3D->PokeObjects(e_ObjectType_Camera, e_SystemType_Graphics);
   // render the Overlay2D queue
-  auto &overlay2DQueue = graphics_system_->GetOverlay2DQueue();
+  // 2026-09-09: queue acquired before producers so exception cleanup covers them.
+  // auto &overlay2DQueue = graphics_system_->GetOverlay2DQueue();
   bool isMessage = true;
   std::vector<Overlay2DQueueEntry> queue;
+  queue.reserve(overlay2DQueue.Size());
   while (isMessage) {
     DO_VALIDATION;
     Overlay2DQueueEntry queueEntry = overlay2DQueue.GetMessage(isMessage);
     if (isMessage) {
       DO_VALIDATION;
-      queue.push_back(queueEntry);
+      // 2026-09-09: transfer texture ownership without an extra refcount pair.
+      // queue.push_back(queueEntry);
+      queue.push_back(std::move(queueEntry));
     }
   }
+// 2026-09-13: sample UI input at bounded render work opportunities.
+//   renderer3D->RenderOverlay2D(queue);
+  ScopedRenderService::Poll();
   renderer3D->RenderOverlay2D(queue);
+  ScopedRenderService::Poll();
   if (swap_buffer) {
     renderer3D->SwapBuffers();
   }

@@ -76,6 +76,11 @@ class GameConfig {
   }
   // Is rendering enabled.
   bool render = false;
+  // 2026-09-13: CPU image capture is a presentation policy, like render, and is
+  // deliberately excluded from snapshots. Change it only on the game owner.
+  // Default callers retain RGB capture; native display-only clients opt out.
+  // When disabled get_frame() rejects; re-enable and render to capture anew.
+  bool capture_frames = true;
   // Directory with textures and other resources.
   std::string data_dir;
   // How many physics animation steps are done per single environment step.
@@ -144,10 +149,14 @@ struct ScenarioConfig {
     cache_computed = false;
     state->process(ball_position);
     int size = left_team.size();
-    state->process(size);
+    // 2026-09-09: bound collection size before allocation/reference use.
+    // state->process(size);
+    state->processCount(size, left_team.size(), left_team.size());
     left_team.resize(size);
     size = right_team.size();
-    state->process(size);
+    // 2026-09-09: bound collection size before allocation/reference use.
+    // state->process(size);
+    state->processCount(size, right_team.size(), right_team.size());
     right_team.resize(size);
     state->process(left_agents);
     state->process(right_agents);
@@ -244,8 +253,18 @@ enum GameState {
   game_created,
   game_initiated,
   game_running,
-  game_done
+  // 2026-09-09: keep existing numeric values; add explicit paused lifecycle.
+  // game_done
+  game_done,
+  game_paused
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(GameState, int64_t value) {
+  // 2026-09-09: paused matches participate in snapshot restoration.
+  // return value >= game_created && value <= game_done;
+  return value >= game_created && value <= game_paused;
+}
+
 
 class GameContext {
  public:
@@ -261,6 +280,8 @@ class GameContext {
   boost::intrusive_ptr<Node> stadiumNoRender;
   Properties *config = nullptr;
   std::string font;
+  // 2026-09-09: balance shared TTF initialization per environment.
+  bool font_system_initialized = false;
   TTF_Font *defaultFont = nullptr;
   TTF_Font *defaultOutlineFont = nullptr;
 

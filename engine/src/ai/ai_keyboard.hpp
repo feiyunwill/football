@@ -36,6 +36,11 @@ enum e_ButtonFunction {
   e_ButtonFunction_Dribble,
   e_ButtonFunction_Size
 };
+// 2026-09-09: validate the integer before constructing a snapshot enum.
+constexpr bool SnapshotEnumValid(e_ButtonFunction, int64_t value) {
+  return value >= e_ButtonFunction_LongPass && value <= e_ButtonFunction_Dribble;
+}
+
 constexpr std::strong_ordering operator<=>(e_ButtonFunction a, e_ButtonFunction b) {
   return std::to_underlying(a) <=> std::to_underlying(b);
 }

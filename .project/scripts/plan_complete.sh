@@ -6,6 +6,9 @@ set -euo pipefail
 
 PLAN_ID="${1:-}"
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# 2026-09-09: completion in Phase 19+ requires all child and integration gates.
+source "$PROJECT_ROOT/scripts/quality_route.sh"
+quality_route complete "$PLAN_ID"
 
 if [[ -z "$PLAN_ID" ]]; then
   echo "用法: $0 <plan_id>"

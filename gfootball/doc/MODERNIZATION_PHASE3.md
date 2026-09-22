@@ -41,6 +41,7 @@
 3. **验证**  
    - 在 Linux/macOS/Windows 上执行 `pip install -e .` 并运行 `python -c "import gfootball_engine; env = gfootball_engine.GameEnv(); ..."` 及现有测试，确认与 Boost.Python 行为一致。
 
+<!-- 2026-09-10: 保留原说明；旧示例共用服务端引擎并未等待异步关闭。
 ## 3.2 帧同步可选 asyncio 实现（已完成）
 
 **状态**：已提供 `FrameSyncServerAsync`（`server_async.py`）与 `FrameSyncClientAsync`（`client_async.py`），协议与线程版一致，可与现有 `ClientLogicLoop` 配合使用。
@@ -82,3 +83,50 @@ asyncio.run(main())
 ```
 
 **目标**（原设计）：在保留现有线程版的前提下，提供基于 asyncio 的版本，便于与其它 async 代码集成、减少线程数。
+
+-->
+
+## 3.2 帧同步 asyncio 与同步入口
+
+**2026-09-10 更新**：`FrameSyncServer` 与 `FrameSyncServerAsync` 现在共用有界 TCP 运行时。同步入口在一个自有线程中运行事件循环；异步入口使用调用方事件循环。输入收集、连接状态和引擎调用各有唯一所有者。Windows 的真实 TCP 合约检查通过，实际 GameEnv 与 Linux 验收仍待执行，详见 [服务端使用与容量约定](frame_sync_server.md)。
+
+- `await server.start_server()` 初始化引擎并监听；也可先调用兼容入口 `server.start()` 单独初始化引擎。
+- `run_loop_async()` 提供连续调度，`run_one_frame()` 提供外部逐帧调度；同一服务端只运行一个帧调度者。
+- `stop()` 立即禁止新帧并请求清理；`await close_async()` 等待套接字、任务和引擎关闭。推荐异步上下文管理器。
+- `ClientLogicLoop` 必须使用独立的客户端引擎，并按服务端种子、场景、球员布局初始化；不能把 `server.get_env()` 交给预测逻辑再次推进。
+
+下面演示单个真实客户端提交输入和接收权威帧。示例依赖已构建的原生引擎，不启动预测或渲染，也不固定等待监听启动时间。
+
+```python
+import asyncio
+from gfootball.frame_sync import FrameSyncServerAsync, FrameSyncClientAsync
+from gfootball.frame_sync.protocol import default_slot_input
+
+async def wait_ready(server):
+    while not await server.all_clients_ready():
+        await asyncio.sleep(0.005)
+
+async def receive_frame(client):
+    while not client.has_authoritative_frame():
+        if client.is_disconnected():
+            raise ConnectionError("The server disconnected")
+        await asyncio.sleep(0.005)
+    return client.pop_authoritative_frame()
+
+async def main():
+    async with FrameSyncServerAsync(listen_host="127.0.0.1", listen_port=0) as server:
+        client = FrameSyncClientAsync("127.0.0.1", server.listen_port)
+        try:
+            session_start, slots = await client.connect_async()
+            client.send_ready()
+            await asyncio.wait_for(wait_ready(server), timeout=2)
+            for frame_id in range(50):
+                client.send_frame_entries(frame_id, [(slots[0], default_slot_input())])
+                await server.run_one_frame()
+                received_id, inputs = await asyncio.wait_for(receive_frame(client), timeout=2)
+                assert received_id == frame_id
+        finally:
+            await client.close_async()
+
+asyncio.run(main())
+```

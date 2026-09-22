@@ -1,3 +1,4 @@
+#include "game_load.hpp"
 // Copyright 2019 Google LLC & Bastiaan Konings
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,12 +17,16 @@
 // i do not offer support, so don't ask. to be used for inspiration :)
 
 #include "match.hpp"
+#include <tuple>
 #include "ecs_systems.hpp"
 #include "ecs_direct_systems.hpp"
 #include "../ecs/system_batch.hpp"
 
 #include <algorithm>
+// 2026-09-10: stage the HUD allocation until the view is registered.
+#include <memory>
 #include <cmath>
+#include <stdexcept>
 
 #include "../base/geometry/triangle.hpp"
 #include "../base/log.hpp"
@@ -65,6 +70,22 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
   // shared ptr to menutask, because menutask shouldn't die before match does
   menuTask = GetMenuTask();
 
+  // 2026-09-14: every partially constructed resource has a nullable owner.
+  teams[0] = teams[1] = nullptr;
+  officials = nullptr;
+  referee = nullptr;
+  radar = nullptr;
+  scoreboard = nullptr;
+  messageCaption = nullptr;
+  scene3D = GetScene3D();
+  GameLoadCleanup rollback([this] {
+    Exit();
+    GetContext().animPositionCache.clear();
+    GetContext().anims.reset();
+    GetContext().colorCoords.clear();
+  });
+  GameLoadCheckpoint("match.begin");
+
   actualTime_ms = 0;
   goalScoredTimer = 0;
 
@@ -74,6 +95,7 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
   dynamicNode = boost::intrusive_ptr<Node>(new Node("dynamicNode"));
   GetScene3D()->AddNode(dynamicNode);
 
+  GameLoadCheckpoint("match.ball");
   ball = new Ball(this);
 
   if (!anims) {
@@ -83,8 +105,10 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
     // cache animation positions
 
     const std::vector < Animation* > &animationsTmp = anims->GetAnimations();
+// 2026-09-14: animation cache work is cancellable between complete entries.
+//     for (unsigned int i = 0; i < animationsTmp.size(); i++) {
     for (unsigned int i = 0; i < animationsTmp.size(); i++) {
-      DO_VALIDATION;
+      GameLoadCheckpoint("animations.cache");      DO_VALIDATION;
       std::vector<Vector3> positions;
       Animation *someAnim = animationsTmp[i];
       Quaternion dud;
@@ -103,6 +127,7 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
       a->DirtyCache();
     }
   }
+  GameLoadCheckpoint("match.animations");
   // full body model template
 
   ObjectLoader loader;
@@ -113,6 +138,7 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
   designatedPossessionPlayer = 0;
 
 
+  GameLoadCheckpoint("match.body");
   // teams
 
   assert(matchData != 0);
@@ -136,6 +162,7 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
   ballRetainer = 0;
 
 
+  GameLoadCheckpoint("match.players");
   // officials
 
   std::string kitFilename = "media/objects/players/textures/referee_kit.png";
@@ -147,6 +174,7 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
   dynamicNode->AddObject(officials->GetRedCardGeom());
 
 
+  GameLoadCheckpoint("match.officials");
   // camera
 
   camera = new Camera("camera");
@@ -162,6 +190,7 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
   autoUpdateIngameCamera = true;
 
 
+  GameLoadCheckpoint("match.camera");
   // stadium
   Node* tmpStadiumNode;
   if (GetGameConfig().render) {
@@ -189,6 +218,9 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
   std::list < boost::intrusive_ptr<Geometry> >::iterator iter = stadiumGeoms.begin();
   while (iter != stadiumGeoms.end()) {
     DO_VALIDATION;
+// 2026-09-14: cancel between fully owned stadium geometry chunks.
+//     boost::intrusive_ptr<Node> tmpNode = SplitGeometry(GetScene3D(), *iter, 24);
+    GameLoadCheckpoint("stadium.geometry");
     boost::intrusive_ptr<Node> tmpNode = SplitGeometry(GetScene3D(), *iter, 24);
     tmpNode->SetLocalMode(e_LocalMode_Absolute);
     stadiumNode->AddNode(tmpNode);
@@ -200,26 +232,37 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
   GetScene3D()->AddNode(stadiumNode);
 
 
+  GameLoadCheckpoint("match.stadium");
   // goal netting
+  // 2026-09-14: the cached goal node remains attached across matches;
+  // registering it again duplicates scene traversal after reset or retry.
+//   if (!GetContext().goalsNode) {
+//     GetContext().goalsNode = loader.LoadObject("media/objects/stadiums/goals.object");
+//     GetContext().goalsNode->SetLocalMode(e_LocalMode_Absolute);
+//   }
+//   GetScene3D()->AddNode(GetContext().goalsNode);
   if (!GetContext().goalsNode) {
     GetContext().goalsNode = loader.LoadObject("media/objects/stadiums/goals.object");
     GetContext().goalsNode->SetLocalMode(e_LocalMode_Absolute);
+    GetScene3D()->AddNode(GetContext().goalsNode);
   }
-  GetScene3D()->AddNode(GetContext().goalsNode);
   PrepareGoalNetting();
 
 
+  GameLoadCheckpoint("match.goals");
   // pitch
   if (GetGameConfig().render) {
     GeneratePitch(2048, 1024, 1024, 512, 2048, 1024);
   }
 
+  GameLoadCheckpoint("match.pitch");
   // sun
   sunNode = loader.LoadObject("media/objects/lighting/generic.object");
   GetDynamicNode()->AddNode(sunNode);
   SetRandomSunParams();
 
 
+  GameLoadCheckpoint("match.sun");
   // human gamers
   UpdateControllerSetup();
 
@@ -243,6 +286,7 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
   referee = new Referee(this, animations);
 
 
+  GameLoadCheckpoint("match.referee");
   // GUI
   Gui2Root *root = menuTask->GetWindowManager()->GetRoot();
 
@@ -268,6 +312,8 @@ Match::Match(MatchData *matchData, const std::vector<AIControlledKeyboard *> &co
 
   // 2025-03-17 ECS 迁移：注册比赛实体与组件
   RegisterEcsEntities();
+  GameLoadCheckpoint("match.finalized");
+  rollback.release();
 }
 
 Match::~Match() { DO_VALIDATION; }
@@ -290,36 +336,66 @@ void Match::Mirror(bool team_0, bool team_1, bool ball) {
   GetTracker()->setDisabled(false);
 }
 
+// 2026-09-14: release both complete matches and partial construction without dereferencing absent owners.
+// void Match::Exit() {
+//   DO_VALIDATION;
+//   // 2025-03-17 ECS 迁移：先清理 ECS 再销毁 OOP 对象，避免悬空引用
+//   ecs_world_.Clear();
+//   ecs_ball_entity_ = blunted::kNullEntity;
+//   ecs_player_entities_.clear();
+//   ecs_referee_entity_ = blunted::kNullEntity;
+// 
+//   teams[first_team]->Exit();
+//   teams[second_team]->Exit();
+//   delete teams[first_team];
+//   delete teams[second_team];
+//   delete officials;
+//   delete ball;
+//   delete referee;
+//   delete matchData;
+//   menuTask->SetMatchData(0);
+//   mentalImages.clear();
+// 
+//   messageCaption->Exit();
+//   delete messageCaption;
+//   // 2026-09-10: release the display-only caption with its match owner.
+//   if (controlCaption) {
+//     controlCaption->Exit();
+//     delete controlCaption;
+//     controlCaption = nullptr;
+//   }
+// 
+//   scene3D->DeleteNode(GetDynamicNode());
+//   scene3D->DeleteNode(stadiumNode);
+//   radar->Exit();
+//   delete radar;
+// 
+//   scoreboard->Exit();
+//   delete scoreboard;
+// 
+//   menuTask.reset();
+// }
 void Match::Exit() {
   DO_VALIDATION;
-  // 2025-03-17 ECS 迁移：先清理 ECS 再销毁 OOP 对象，避免悬空引用
   ecs_world_.Clear();
   ecs_ball_entity_ = blunted::kNullEntity;
   ecs_player_entities_.clear();
   ecs_referee_entity_ = blunted::kNullEntity;
-
-  teams[first_team]->Exit();
-  teams[second_team]->Exit();
-  delete teams[first_team];
-  delete teams[second_team];
-  delete officials;
-  delete ball;
-  delete referee;
-  delete matchData;
-  menuTask->SetMatchData(0);
+  for (int team : {first_team, second_team}) {
+    if (teams[team]) { teams[team]->Exit(); delete teams[team]; teams[team] = nullptr; }
+  }
+  delete officials; officials = nullptr;
+  delete ball; ball = nullptr;
+  delete referee; referee = nullptr;
+  delete matchData; matchData = nullptr;
+  if (menuTask) menuTask->SetMatchData(nullptr);
   mentalImages.clear();
-
-  messageCaption->Exit();
-  delete messageCaption;
-
-  scene3D->DeleteNode(GetDynamicNode());
-  scene3D->DeleteNode(stadiumNode);
-  radar->Exit();
-  delete radar;
-
-  scoreboard->Exit();
-  delete scoreboard;
-
+  if (messageCaption) { messageCaption->Exit(); delete messageCaption; messageCaption = nullptr; }
+  if (controlCaption) { controlCaption->Exit(); delete controlCaption; controlCaption = nullptr; }
+  if (scene3D && dynamicNode) scene3D->DeleteNode(dynamicNode);
+  if (scene3D && stadiumNode) scene3D->DeleteNode(stadiumNode);
+  if (radar) { radar->Exit(); delete radar; radar = nullptr; }
+  if (scoreboard) { scoreboard->Exit(); delete scoreboard; scoreboard = nullptr; }
   menuTask.reset();
 }
 
@@ -385,6 +461,8 @@ void Match::RegisterEcsEntities() {
   officials_comp.red_card_position = Vector3(0, 0, -10);
   officials_comp.is_processing = false;
   ecs_world_.AddComponent(ecs_officials_entity_, officials_comp);
+  // 2026-09-09: queries are valid immediately after initial registration.
+  SyncEcsFromOop();
 }
 
 void Match::SetRandomSunParams() {
@@ -501,6 +579,31 @@ void Match::UpdateControllerSetup() {
   }
   teams[0]->AddHumanGamers(left_players);
   teams[1]->AddHumanGamers(right_players);
+}
+
+// 2026-09-10: persistent control feedback must survive zero physical steps.
+void Match::SetControlStatus(const std::string& text) {
+  if (text.size() > 96 || std::any_of(text.begin(), text.end(), [](unsigned char c) {
+        return c < 32 || c > 126;
+      })) throw std::invalid_argument("Invalid match status text");
+  if (text == controlStatus) return;
+  if (!controlCaption && !text.empty()) {
+    std::unique_ptr<Gui2Caption> caption(new Gui2Caption(
+        menuTask->GetWindowManager(), "match_control", 0, 14, 100, 3, ""));
+    caption->SetTransparency(0.3f);
+    menuTask->GetWindowManager()->GetRoot()->AddView(caption.get());
+    controlCaption = caption.release();
+  }
+  if (controlCaption) {
+    if (text.empty()) controlCaption->Hide();
+    else {
+      controlCaption->SetCaption(text);
+      const float width = controlCaption->GetTextWidthPercent();
+      controlCaption->SetPosition(std::max(2.0f, 50.0f - width * 0.5f), 14);
+      controlCaption->Show();
+    }
+  }
+  controlStatus = text;
 }
 
 void Match::SpamMessage(const std::string &msg, int time_ms) {
@@ -716,119 +819,238 @@ void Match::UpdateIngameCamera() {
   }
 }
 
+// 2026-09-09: preserve coordinate orientation on failed snapshot reads.
+// void Match::ProcessState(EnvState* state) {
+//   if (state->getConfig()->reverse_team_processing) {
+//     std::swap(first_team, second_team);
+//   }
+//   state->process(first_team);
+//   state->process(second_team);
+//   if (state->getConfig()->reverse_team_processing) {
+//     std::swap(first_team, second_team);
+//   }
+//   bool team_0_mirror = teams[0]->isMirrored();
+//   bool team_1_mirror = teams[1]->isMirrored();
+//   bool ball_mirror =
+//       ball_mirrored ^ state->getConfig()->reverse_team_processing;
+//   Mirror(team_0_mirror, team_1_mirror, ball_mirror);
+//   std::vector<Player*> players;
+//   teams[first_team]->GetAllPlayers(players);
+//   teams[second_team]->GetAllPlayers(players);
+//   state->SetControllers(controllers);
+//   state->SetPlayers(players);
+//   state->SetAnimations(state->getContext()->anims->GetAnimations());
+//   state->SetTeams(teams[first_team], teams[second_team]);
+//
+//   int size = mentalImages.size();
+//   // 2026-09-09: bound collection size before allocation/reference use.
+//   // state->process(size);
+//   state->processCount(size, 1000);
+//   mentalImages.resize(size);
+//   for (int x = 0; x < size; x++) {
+//     mentalImages[x].ProcessState(state, this);
+//   }
+//   teams[first_team]->ProcessState(state);
+//   teams[second_team]->ProcessState(state);
+//   std::vector<HumanGamer*> humanControllers;
+//   teams[first_team]->GetHumanControllers(humanControllers);
+//   teams[second_team]->GetHumanControllers(humanControllers);
+//   state->SetHumanControllers(humanControllers);
+//   for (auto &player : players) {
+//     player->ProcessState(state);
+//   }
+//   matchData->ProcessState(state, first_team);
+//   officials->ProcessState(state);
+//   {
+//     std::vector<HumanGamer*> human_gamers;
+//     std::set<AIControlledKeyboard*> visited;
+//     teams[first_team]->GetHumanControllers(human_gamers);
+//     teams[second_team]->GetHumanControllers(human_gamers);
+//     for (auto& c : human_gamers) {
+//       c->GetHIDevice()->ProcessState(state);
+//       visited.insert(c->GetHIDevice());
+//     }
+//     for (auto& c : controllers) {
+//       if (!visited.count(c)) {
+//         c->ProcessState(state);
+//       }
+//     }
+//   }
+//   ball->ProcessState(state);
+//   state->process(matchTime_ms);
+//   state->process(actualTime_ms);
+//   state->process(goalScoredTimer);
+//   state->process(matchPhase);
+//   state->process(inPlay);
+//   state->process(inSetPiece);
+//   state->process(goalScored);
+//   state->process(ballIsInGoal);
+//   state->process(lastGoalTeam);
+//   state->process(lastGoalScorer);
+//   if (first_team == 1) {
+//     for (int &v : lastTouchTeamIDs) {
+//       if (v != -1) {
+//         v = 1 - v;
+//       }
+//     }
+//   }
+//   for (int& v : lastTouchTeamIDs) {
+//     state->process(v);
+//   }
+//   if (first_team == 1) {
+//     for (int &v : lastTouchTeamIDs) {
+//       if (v != -1) {
+//         v = 1 - v;
+//       }
+//     }
+//   }
+//   if (first_team == 1 && lastTouchTeamID != -1) {
+//     lastTouchTeamID = 1 - lastTouchTeamID;
+//   }
+//   state->process(lastTouchTeamID);
+//   if (first_team == 1 && lastTouchTeamID != -1) {
+//     lastTouchTeamID = 1 - lastTouchTeamID;
+//   }
+//   state->process(bestPossessionTeam);
+//   state->process(designatedPossessionPlayer);
+//   state->process(ballRetainer);
+//   possessionSideHistory.ProcessState(state);
+//   state->process(autoUpdateIngameCamera);
+//   state->setValidate(false);
+//   state->process(cameraOrientation);
+//   state->process(cameraNodeOrientation);
+//   state->process(cameraNodePosition);
+//   state->process(cameraFOV);
+//   state->process(cameraNearCap);
+//   state->process(cameraFarCap);
+//   size = camPos.size();
+//   // 2026-09-09: bound collection size before allocation/reference use.
+//   // state->process(size);
+//   state->processCount(size, 1000);
+//   camPos.resize(size);
+//   for (auto& v : camPos) {
+//     state->process(v);
+//   }
+//   state->setValidate(true);
+//   state->process(lastBodyBallCollisionTime_ms);
+//   referee->ProcessState(state);
+//
+//   resetNetting = true;
+//   nettingHasChanged = true;
+//   Mirror(team_0_mirror, team_1_mirror, ball_mirror);
+//
+//   // 2025-03-17 ECS 迁移：反序列化后从 OOP 同步到 ECS
+//   if (state->Load()) SyncEcsFromOop();
+// }
 void Match::ProcessState(EnvState* state) {
-  if (state->getConfig()->reverse_team_processing) {
-    std::swap(first_team, second_team);
-  }
-  state->process(first_team);
-  state->process(second_team);
-  if (state->getConfig()->reverse_team_processing) {
-    std::swap(first_team, second_team);
-  }
+  // 2026-09-09: normalize local values so failures cannot leave team indices swapped.
+  int saved_first = first_team, saved_second = second_team;
+  if (state->getConfig()->reverse_team_processing) std::swap(saved_first, saved_second);
+  state->process(saved_first);
+  state->process(saved_second);
+  state->require((saved_first == 0 || saved_first == 1) && saved_second == 1 - saved_first,
+                 "Invalid team processing order");
+  if (state->getConfig()->reverse_team_processing) std::swap(saved_first, saved_second);
+  first_team = saved_first;
+  second_team = saved_second;
   bool team_0_mirror = teams[0]->isMirrored();
   bool team_1_mirror = teams[1]->isMirrored();
   bool ball_mirror =
       ball_mirrored ^ state->getConfig()->reverse_team_processing;
   Mirror(team_0_mirror, team_1_mirror, ball_mirror);
-  std::vector<Player*> players;
-  teams[first_team]->GetAllPlayers(players);
-  teams[second_team]->GetAllPlayers(players);
-  state->SetControllers(controllers);
-  state->SetPlayers(players);
-  state->SetAnimations(state->getContext()->anims->GetAnimations());
-  state->SetTeams(teams[first_team], teams[second_team]);
+  try {
+    std::vector<Player*> players;
+    teams[first_team]->GetAllPlayers(players);
+    teams[second_team]->GetAllPlayers(players);
+    state->SetControllers(controllers);
+    state->SetPlayers(players);
+    state->SetAnimations(state->getContext()->anims->GetAnimations());
+    state->SetTeams(teams[first_team], teams[second_team]);
 
-  int size = mentalImages.size();
-  state->process(size);
-  mentalImages.resize(size);
-  for (int x = 0; x < size; x++) {
-    mentalImages[x].ProcessState(state, this);
-  }
-  teams[first_team]->ProcessState(state);
-  teams[second_team]->ProcessState(state);
-  std::vector<HumanGamer*> humanControllers;
-  teams[first_team]->GetHumanControllers(humanControllers);
-  teams[second_team]->GetHumanControllers(humanControllers);
-  state->SetHumanControllers(humanControllers);
-  for (auto &player : players) {
-    player->ProcessState(state);
-  }
-  matchData->ProcessState(state, first_team);
-  officials->ProcessState(state);
-  {
-    std::vector<HumanGamer*> human_gamers;
-    std::set<AIControlledKeyboard*> visited;
-    teams[first_team]->GetHumanControllers(human_gamers);
-    teams[second_team]->GetHumanControllers(human_gamers);
-    for (auto& c : human_gamers) {
-      c->GetHIDevice()->ProcessState(state);
-      visited.insert(c->GetHIDevice());
+    auto restored_images = state->Load() ? mentalImages : std::vector<MentalImage>{};
+    auto& images = state->Load() ? restored_images : mentalImages;
+    int size = images.size();
+    state->processCount(size, 1000);
+    images.resize(size);
+    for (auto& image : images) image.ProcessState(state, this);
+    teams[first_team]->ProcessState(state);
+    teams[second_team]->ProcessState(state);
+    std::vector<HumanGamer*> humanControllers;
+    teams[first_team]->GetHumanControllers(humanControllers);
+    teams[second_team]->GetHumanControllers(humanControllers);
+    state->SetHumanControllers(humanControllers);
+    for (auto &player : players) {
+      player->ProcessState(state);
     }
-    for (auto& c : controllers) {
-      if (!visited.count(c)) {
-        c->ProcessState(state);
+    matchData->ProcessState(state, first_team);
+    officials->ProcessState(state);
+    {
+      std::vector<HumanGamer*> human_gamers;
+      std::set<AIControlledKeyboard*> visited;
+      teams[first_team]->GetHumanControllers(human_gamers);
+      teams[second_team]->GetHumanControllers(human_gamers);
+      for (auto& c : human_gamers) {
+        c->GetHIDevice()->ProcessState(state);
+        visited.insert(c->GetHIDevice());
+      }
+      for (auto& c : controllers) {
+        if (!visited.count(c)) {
+          c->ProcessState(state);
+        }
       }
     }
-  }
-  ball->ProcessState(state);
-  state->process(matchTime_ms);
-  state->process(actualTime_ms);
-  state->process(goalScoredTimer);
-  state->process(matchPhase);
-  state->process(inPlay);
-  state->process(inSetPiece);
-  state->process(goalScored);
-  state->process(ballIsInGoal);
-  state->process(lastGoalTeam);
-  state->process(lastGoalScorer);
-  if (first_team == 1) {
-    for (int &v : lastTouchTeamIDs) {
-      if (v != -1) {
-        v = 1 - v;
-      }
+    ball->ProcessState(state);
+    state->process(matchTime_ms);
+    state->process(actualTime_ms);
+    state->process(goalScoredTimer);
+    state->process(matchPhase);
+    state->process(inPlay);
+    state->process(inSetPiece);
+    state->process(goalScored);
+    state->process(ballIsInGoal);
+    state->process(lastGoalTeam);
+    state->process(lastGoalScorer);
+    for (int& touch : lastTouchTeamIDs) {
+      int value = first_team == 1 && touch != -1 ? 1 - touch : touch;
+      state->process(value);
+      state->require(value >= -1 && value <= 1, "Invalid last-touch team");
+      touch = first_team == 1 && value != -1 ? 1 - value : value;
     }
-  }
-  for (int& v : lastTouchTeamIDs) {
-    state->process(v);
-  }
-  if (first_team == 1) {
-    for (int &v : lastTouchTeamIDs) {
-      if (v != -1) {
-        v = 1 - v;
-      }
+    int touch = first_team == 1 && lastTouchTeamID != -1 ? 1 - lastTouchTeamID : lastTouchTeamID;
+    state->process(touch);
+    state->require(touch >= -1 && touch <= 1, "Invalid last-touch team");
+    lastTouchTeamID = first_team == 1 && touch != -1 ? 1 - touch : touch;
+    state->process(bestPossessionTeam);
+    state->process(designatedPossessionPlayer);
+    state->process(ballRetainer);
+    possessionSideHistory.ProcessState(state);
+    state->process(autoUpdateIngameCamera);
+    state->setValidate(false);
+    state->process(cameraOrientation);
+    state->process(cameraNodeOrientation);
+    state->process(cameraNodePosition);
+    state->process(cameraFOV);
+    state->process(cameraNearCap);
+    state->process(cameraFarCap);
+    size = camPos.size();
+    // 2026-09-09: bound collection size before allocation/reference use.
+    // state->process(size);
+    state->processCount(size, 1000);
+    camPos.resize(size);
+    for (auto& v : camPos) {
+      state->process(v);
     }
-  }
-  if (first_team == 1 && lastTouchTeamID != -1) {
-    lastTouchTeamID = 1 - lastTouchTeamID;
-  }
-  state->process(lastTouchTeamID);
-  if (first_team == 1 && lastTouchTeamID != -1) {
-    lastTouchTeamID = 1 - lastTouchTeamID;
-  }
-  state->process(bestPossessionTeam);
-  state->process(designatedPossessionPlayer);
-  state->process(ballRetainer);
-  possessionSideHistory.ProcessState(state);
-  state->process(autoUpdateIngameCamera);
-  state->setValidate(false);
-  state->process(cameraOrientation);
-  state->process(cameraNodeOrientation);
-  state->process(cameraNodePosition);
-  state->process(cameraFOV);
-  state->process(cameraNearCap);
-  state->process(cameraFarCap);
-  size = camPos.size();
-  state->process(size);
-  camPos.resize(size);
-  for (auto& v : camPos) {
-    state->process(v);
-  }
-  state->setValidate(true);
-  state->process(lastBodyBallCollisionTime_ms);
-  referee->ProcessState(state);
+    state->setValidate(true);
+    state->process(lastBodyBallCollisionTime_ms);
+    referee->ProcessState(state);
 
-  resetNetting = true;
-  nettingHasChanged = true;
+    if (state->Load()) mentalImages = std::move(restored_images);
+    resetNetting = true;
+    nettingHasChanged = true;
+  } catch (...) {
+    Mirror(team_0_mirror, team_1_mirror, ball_mirror);
+    throw;
+  }
   Mirror(team_0_mirror, team_1_mirror, ball_mirror);
 
   // 2025-03-17 ECS 迁移：反序列化后从 OOP 同步到 ECS
@@ -849,9 +1071,11 @@ void Match::FillMatchStateComponent(MatchStateComponent& out) const {
   out.match_phase = static_cast<int>(matchPhase);
   // 触球追踪
   out.last_touch_team_id = lastTouchTeamID;
-  for (int i = 0; i < 8; ++i) {
-    out.last_touch_team_ids[i] = lastTouchTeamIDs[i];
-  }
+  // 2026-09-09: the source has e_TouchType_SIZE entries (4), not 8.
+  // for (int i = 0; i < 8; ++i) out.last_touch_team_ids[i] = lastTouchTeamIDs[i];
+  std::fill(std::begin(out.last_touch_team_ids), std::end(out.last_touch_team_ids), -1);
+  std::copy(std::begin(lastTouchTeamIDs), std::end(lastTouchTeamIDs),
+            std::begin(out.last_touch_team_ids));
   // 控球追踪
   out.best_possession_team_id = bestPossessionTeam ? bestPossessionTeam->GetID() : -1;
   out.designated_possession_player_id = designatedPossessionPlayer
@@ -862,32 +1086,220 @@ void Match::FillMatchStateComponent(MatchStateComponent& out) const {
   out.second_team = second_team;
 }
 
+// 2026-09-09: all ECS state below is a derived read model. Rebuild it at
+// frame boundaries and snapshot restoration; never write an old cache back to
+// the simulation after Humanoid::Process has advanced it.
+// // 2026-09-09: cache pool handles only within this call; preserve player iteration order.
+// void Match::SyncEcsFromOop() {
+// //   DO_VALIDATION;
+// //   if (ecs_ball_entity_ == blunted::kNullEntity) return;
+// //   BallComponent bc;
+// //   ball->FillBallComponent(bc);
+// //   ecs_world_.AddComponent(ecs_ball_entity_, bc);
+// //   Transform ball_tr;
+// //   ball_tr.position = bc.positionBuffer;
+// //   ball_tr.rotation = bc.orientationBuffer;
+// //   ball_tr.scale = Vector3(1.0f, 1.0f, 1.0f);
+// //   ecs_world_.AddComponent(ecs_ball_entity_, ball_tr);
+// //
+// //   std::vector<Player*> all_players;
+// //   teams[first_team]->GetAllPlayers(all_players);
+// //   teams[second_team]->GetAllPlayers(all_players);
+// //   if (all_players.size() != ecs_player_entities_.size()) return;
+// //   for (size_t i = 0; i < ecs_player_entities_.size(); ++i) {
+// //     Player* p = all_players[i];
+// //     blunted::Entity e = ecs_player_entities_[i];
+// //     PlayerMeta meta;
+// //     meta.stable_id = p->GetStableID();
+// //     meta.team_id = p->GetTeam()->GetID();
+// //     meta.is_active = p->IsActive();
+// //     meta.player_data = const_cast<PlayerData*>(p->GetPlayerData());
+// //     ecs_world_.AddComponent(e, meta);
+// //   }
+// // }
+// void Match::SyncEcsFromOop() {
+//   DO_VALIDATION;
+//   if (ecs_ball_entity_ == blunted::kNullEntity) return;
+//   auto update = [&]<typename Component>(blunted::Entity entity, auto&& fill) {
+//     auto* component = ecs_world_.GetComponent<Component>(entity);
+//     if (!component) {
+//       ecs_world_.AddComponent(entity, Component{});
+//       component = ecs_world_.GetComponent<Component>(entity);
+//     }
+//     fill(*component);
+//   };
+//   update.template operator()<BallComponent>(ecs_ball_entity_, [&](auto& value) { ball->FillBallComponent(value); });
+//   auto* ball_state = ecs_world_.GetComponent<BallComponent>(ecs_ball_entity_);
+//   Transform transform;
+//   transform.position = ball_state->positionBuffer;
+//   transform.rotation = ball_state->orientationBuffer;
+//   transform.scale = Vector3(1, 1, 1);
+//   ecs_world_.AddComponent(ecs_ball_entity_, transform);
+//   SyncBallPhysicsSystem(this);
+//
+//   // References are keyed by stable player identity, independent of component
+//   // storage order. Inactive players retain identity but no stale motion cache.
+//   for (auto entity : ecs_player_entities_) {
+//     auto* reference = ecs_world_.GetComponent<PlayerRef>(entity);
+//     if (!reference || !reference->player) throw std::logic_error("ECS player identity is missing");
+//     auto* player = reference->player;
+//     PlayerMeta metadata;
+//     metadata.stable_id = player->GetStableID();
+//     metadata.team_id = player->GetTeam()->GetID();
+//     metadata.is_active = player->IsActive();
+//     metadata.player_data = const_cast<PlayerData*>(player->GetPlayerData());
+//     ecs_world_.AddComponent(entity, metadata);
+//     ecs_world_.AddComponent(entity, ControllerRef{player->GetController()});
+//     auto* humanoid = player->CastHumanoid();
+//     if (humanoid) {
+//       update.template operator()<PlayerPhysicsComponent>(entity, [&](auto& value) {
+//         SyncSpatialStateToPhysics(humanoid->GetSpatialState(), value);
+//       });
+//       update.template operator()<PlayerStateComponent>(entity, [&](auto& value) { player->FillPlayerStateComponent(value); });
+//       update.template operator()<HumanoidStateComponent>(entity, [&](auto& value) { humanoid->FillHumanoidStateComponent(value); });
+//       update.template operator()<PossessionComponent>(entity, [&](auto& value) { SyncPossessionToEcs(*player, value); });
+//     } else {
+//       ecs_world_.RemoveComponent<PlayerPhysicsComponent>(entity);
+//       ecs_world_.RemoveComponent<PlayerStateComponent>(entity);
+//       ecs_world_.RemoveComponent<HumanoidStateComponent>(entity);
+//       ecs_world_.RemoveComponent<PossessionComponent>(entity);
+//     }
+//     // Collision results are transient; reconstruct current flags after restore.
+//   }
+//   PopulateCollisionResults(this);
+//   update.template operator()<OfficialsComponent>(ecs_officials_entity_, [&](auto& value) { officials->FillOfficialsComponent(value); });
+//   RefereeStateFillSystemDirect(this);
+//   TeamStateFillSystemDirect(this, 0);
+//   TeamStateFillSystemDirect(this, 1);
+//
+//   auto singleton = [&]<typename Component>() {
+//     auto* pool = ecs_world_.GetPool<Component>();
+//     if (pool && pool->Size() > 0) return pool->EntitiesSpan().front();
+//     auto entity = ecs_world_.CreateEntity();
+//     ecs_world_.AddComponent(entity, Component{});
+//     return entity;
+//   };
+//   update.template operator()<MatchStateComponent>(singleton.template operator()<MatchStateComponent>(),
+//       [&](auto& value) { FillMatchStateComponent(value); });
+//   update.template operator()<MentalImageComponent>(singleton.template operator()<MentalImageComponent>(),
+//       [&](auto& value) {
+//         if (mentalImages.empty()) value = MentalImageComponent{};
+//         else mentalImages.front().FillMentalImageComponent(value);
+//       });
+// }
+// 2026-09-09: preserve the historical implementation as an inactive comment.
+// void Match::SyncEcsFromOop() {
+//   DO_VALIDATION;
+//   if (ecs_ball_entity_ == blunted::kNullEntity) return;
+//   BallComponent bc;
+//   ball->FillBallComponent(bc);
+//   ecs_world_.AddComponent(ecs_ball_entity_, bc);
+//   Transform ball_tr;
+//   ball_tr.position = bc.positionBuffer;
+//   ball_tr.rotation = bc.orientationBuffer;
+//   ball_tr.scale = Vector3(1.0f, 1.0f, 1.0f);
+//   ecs_world_.AddComponent(ecs_ball_entity_, ball_tr);
+//
+//   std::vector<Player*> all_players;
+//   teams[first_team]->GetAllPlayers(all_players);
+//   teams[second_team]->GetAllPlayers(all_players);
+//   if (all_players.size() != ecs_player_entities_.size()) return;
+//   for (size_t i = 0; i < ecs_player_entities_.size(); ++i) {
+//     Player* p = all_players[i];
+//     blunted::Entity e = ecs_player_entities_[i];
+//     PlayerMeta meta;
+//     meta.stable_id = p->GetStableID();
+//     meta.team_id = p->GetTeam()->GetID();
+//     meta.is_active = p->IsActive();
+//     meta.player_data = const_cast<PlayerData*>(p->GetPlayerData());
+//     ecs_world_.AddComponent(e, meta);
+//   }
+// }
 void Match::SyncEcsFromOop() {
   DO_VALIDATION;
   if (ecs_ball_entity_ == blunted::kNullEntity) return;
-  BallComponent bc;
-  ball->FillBallComponent(bc);
-  ecs_world_.AddComponent(ecs_ball_entity_, bc);
-  Transform ball_tr;
-  ball_tr.position = bc.positionBuffer;
-  ball_tr.rotation = bc.orientationBuffer;
-  ball_tr.scale = Vector3(1.0f, 1.0f, 1.0f);
-  ecs_world_.AddComponent(ecs_ball_entity_, ball_tr);
+  auto update = [&]<typename Component>(blunted::Entity entity, auto&& fill) {
+    auto* component = ecs_world_.GetComponent<Component>(entity);
+    if (!component) {
+      ecs_world_.AddComponent(entity, Component{});
+      component = ecs_world_.GetComponent<Component>(entity);
+    }
+    fill(*component);
+  };
+  update.template operator()<BallComponent>(ecs_ball_entity_, [&](auto& value) { ball->FillBallComponent(value); });
+  auto* ball_state = ecs_world_.GetComponent<BallComponent>(ecs_ball_entity_);
+  Transform transform;
+  transform.position = ball_state->positionBuffer;
+  transform.rotation = ball_state->orientationBuffer;
+  transform.scale = Vector3(1, 1, 1);
+  ecs_world_.AddComponent(ecs_ball_entity_, transform);
+  SyncBallPhysicsSystem(this);
 
-  std::vector<Player*> all_players;
-  teams[first_team]->GetAllPlayers(all_players);
-  teams[second_team]->GetAllPlayers(all_players);
-  if (all_players.size() != ecs_player_entities_.size()) return;
-  for (size_t i = 0; i < ecs_player_entities_.size(); ++i) {
-    Player* p = all_players[i];
-    blunted::Entity e = ecs_player_entities_[i];
-    PlayerMeta meta;
-    meta.stable_id = p->GetStableID();
-    meta.team_id = p->GetTeam()->GetID();
-    meta.is_active = p->IsActive();
-    meta.player_data = const_cast<PlayerData*>(p->GetPlayerData());
-    ecs_world_.AddComponent(e, meta);
+  auto* references = ecs_world_.GetPool<PlayerRef>();
+  auto* metadata_pool = ecs_world_.GetPool<PlayerMeta>();
+  auto* controllers = ecs_world_.GetPool<ControllerRef>();
+  const auto player_pools = std::tuple{
+      ecs_world_.GetPool<PlayerPhysicsComponent>(), ecs_world_.GetPool<PlayerStateComponent>(),
+      ecs_world_.GetPool<HumanoidStateComponent>(), ecs_world_.GetPool<PossessionComponent>()};
+  auto update_player = [&]<typename Component>(blunted::Entity entity, auto&& fill) {
+    auto* pool = std::get<blunted::ComponentPool<Component>*>(player_pools);
+    auto* component = pool->Get(entity);
+    if (!component) {
+      pool->Set(entity, Component{});
+      component = pool->Get(entity);
+    }
+    fill(*component);
+  };
+
+  // References are keyed by stable player identity, independent of component
+  // storage order. Inactive players retain identity but no stale motion cache.
+  for (auto entity : ecs_player_entities_) {
+    auto* reference = references->Get(entity);
+    if (!reference || !reference->player) throw std::logic_error("ECS player identity is missing");
+    auto* player = reference->player;
+    PlayerMeta metadata;
+    metadata.stable_id = player->GetStableID();
+    metadata.team_id = player->GetTeam()->GetID();
+    metadata.is_active = player->IsActive();
+    metadata.player_data = const_cast<PlayerData*>(player->GetPlayerData());
+    metadata_pool->Set(entity, metadata);
+    controllers->Set(entity, ControllerRef{player->GetController()});
+    auto* humanoid = player->CastHumanoid();
+    if (humanoid) {
+      update_player.template operator()<PlayerPhysicsComponent>(entity, [&](auto& value) {
+        SyncSpatialStateToPhysics(humanoid->GetSpatialState(), value);
+      });
+      update_player.template operator()<PlayerStateComponent>(entity, [&](auto& value) { player->FillPlayerStateComponent(value); });
+      update_player.template operator()<HumanoidStateComponent>(entity, [&](auto& value) { humanoid->FillHumanoidStateComponent(value); });
+      update_player.template operator()<PossessionComponent>(entity, [&](auto& value) { SyncPossessionToEcs(*player, value); });
+    } else {
+      std::get<blunted::ComponentPool<PlayerPhysicsComponent>*>(player_pools)->Remove(entity);
+      std::get<blunted::ComponentPool<PlayerStateComponent>*>(player_pools)->Remove(entity);
+      std::get<blunted::ComponentPool<HumanoidStateComponent>*>(player_pools)->Remove(entity);
+      std::get<blunted::ComponentPool<PossessionComponent>*>(player_pools)->Remove(entity);
+    }
+    // Collision results are transient; reconstruct current flags after restore.
   }
+  PopulateCollisionResults(this);
+  update.template operator()<OfficialsComponent>(ecs_officials_entity_, [&](auto& value) { officials->FillOfficialsComponent(value); });
+  RefereeStateFillSystemDirect(this);
+  TeamStateFillSystemDirect(this, 0);
+  TeamStateFillSystemDirect(this, 1);
+
+  auto singleton = [&]<typename Component>() {
+    auto* pool = ecs_world_.GetPool<Component>();
+    if (pool && pool->Size() > 0) return pool->EntitiesSpan().front();
+    auto entity = ecs_world_.CreateEntity();
+    ecs_world_.AddComponent(entity, Component{});
+    return entity;
+  };
+  update.template operator()<MatchStateComponent>(singleton.template operator()<MatchStateComponent>(),
+      [&](auto& value) { FillMatchStateComponent(value); });
+  update.template operator()<MentalImageComponent>(singleton.template operator()<MentalImageComponent>(),
+      [&](auto& value) {
+        if (mentalImages.empty()) value = MentalImageComponent{};
+        else mentalImages.front().FillMentalImageComponent(value);
+      });
 }
 
 void Match::GetTeamState(SharedInfo *state,
@@ -1071,30 +1483,42 @@ bool Match::StepPlayersProcess(bool reverse) {
   DO_VALIDATION;
   // 2025-03-17 ECS 迁移：由 RunPlayerSystems 统一执行球员 controller/humanoid Process
   RunPlayerSystems(this);
-  // 2026-09-02 Phase 9: 使用 ECS 系统批处理
-  blunted::PlayerSystemBatch player_batch;
-  player_batch.Execute(GetEcsWorld());
+  // 2026-09-09: the frame boundary fills complete caches once.
+  // blunted::PlayerSystemBatch player_batch;
+  // player_batch.Execute(GetEcsWorld());
   return true;
 }
 
 bool Match::StepOfficialsProcess(bool reverse) {
   DO_VALIDATION;
   Mirror(reverse, !reverse, reverse);
-  // 2026-09-02 Phase 9: 使用 ECS 系统批处理
-  blunted::OfficialsSystemBatch officials_batch;
-  officials_batch.Execute(GetEcsWorld(), this);
+  // 2026-09-09: the batch only copied flags and never advanced officials.
+  // blunted::OfficialsSystemBatch officials_batch;
+  // officials_batch.Execute(GetEcsWorld(), this);
+  OfficialsSystemProcess(this);
   Mirror(reverse, !reverse, reverse);
   return true;
 }
 
+// 2026-09-09: restore the actual two-team possession calculation; the batch
+// initialized default components without calling UpdatePossessionStats.
+// bool Match::StepPossessionStats(bool reverse) {
+//   DO_VALIDATION;
+//   // 2026-09-02 Phase 9: 使用 ECS 系统批处理
+//   blunted::PossessionStatsBatch possession_batch;
+//   Mirror(first_team == 1, first_team == 0, first_team == 1);
+//   possession_batch.Execute(GetEcsWorld(), this, first_team, second_team);
+//   Mirror(true, true, true);
+//   possession_batch.Execute(GetEcsWorld(), this, first_team, second_team);
+//   Mirror(first_team == 0, first_team == 1, first_team == 0);
+//   return true;
+// }
 bool Match::StepPossessionStats(bool reverse) {
   DO_VALIDATION;
-  // 2026-09-02 Phase 9: 使用 ECS 系统批处理
-  blunted::PossessionStatsBatch possession_batch;
   Mirror(first_team == 1, first_team == 0, first_team == 1);
-  possession_batch.Execute(GetEcsWorld(), this, first_team, second_team);
+  TeamPossessionStatsSystemProcess(this, first_team);
   Mirror(true, true, true);
-  possession_batch.Execute(GetEcsWorld(), this, first_team, second_team);
+  TeamPossessionStatsSystemProcess(this, second_team);
   Mirror(first_team == 0, first_team == 1, first_team == 0);
   return true;
 }
@@ -1234,7 +1658,9 @@ void Match::InitSystemGraph() {
         auto* pc = static_cast<PipelineContext*>(ctx);
         return StepPlayersProcess(pc->reverse);
       },
-      {"teams"});
+      // 2026-09-09: player logic requires the fresh OOP-to-ECS physics snapshot.
+      // {"teams"});
+      {"sync_player_physics"});
 
   // 2026-08-29 ECS Phase 2 Task 7：PlayerPhysicsComponent 双向同步
   // sync_player_physics (OOP→ECS) 在 players 之前，确保 ECS 有最新物理状态供查询
@@ -1245,10 +1671,13 @@ void Match::InitSystemGraph() {
       },
       {"teams"});
 
-  // sync_physics_to_spatial (ECS→OOP) 在 players 之后，将 ECS 修改同步回 Humanoid
-  system_graph_.Register("sync_physics_to_spatial",
+  // 2026-09-09: simulation-to-cache direction; this node never writes to Humanoid.
+  // system_graph_.Register("sync_physics_to_spatial",
+  system_graph_.Register("refresh_player_physics",
       [this](void* ctx) -> bool {
-        SyncPhysicsToSpatialSystem(this);
+        // 2026-09-09: Humanoid::Process owns motion; refresh the read model.
+        // SyncPhysicsToSpatialSystem(this);
+        SyncPlayerPhysicsSystem(this);
         return true;
       },
       {"players"});
@@ -1264,7 +1693,7 @@ void Match::InitSystemGraph() {
         auto* pc = static_cast<PipelineContext*>(ctx);
         return StepPossessionStats(pc->reverse);
       },
-      {"sync_physics_to_spatial"});
+      {"refresh_player_physics"});
 
   system_graph_.Register("possession_decision",
       [this](void* ctx) -> bool {
@@ -1278,7 +1707,7 @@ void Match::InitSystemGraph() {
         auto* pc = static_cast<PipelineContext*>(ctx);
         return StepHumanoidCollisions(pc->reverse);
       },
-      {"sync_physics_to_spatial"});
+      {"refresh_player_physics"});
 
   // 2026-08-28 P2-Phase3+：碰撞结果数据化 — 碰撞 System 后将结果写入 ECS
   system_graph_.Register("populate_collision_results",
@@ -1300,7 +1729,12 @@ bool Match::Process() {
   DO_VALIDATION;
   const bool reverse = GetScenarioConfig().reverse_team_processing;
   DO_VALIDATION;
-  if (!RunFramePipeline(reverse)) return false;
+  // 2026-09-09: even a paused/early-return frame must expose current caches.
+  // if (!RunFramePipeline(reverse)) return false;
+  if (!RunFramePipeline(reverse)) {
+    SyncEcsFromOop();
+    return false;
+  }
 
   BumpActualTime_ms(10);
 
@@ -1399,6 +1833,8 @@ bool Match::Process() {
        SetAutoUpdateIngameCamera(true);
      }
   }
+  // 2026-09-09: caches use the restored frame coordinate system.
+  SyncEcsFromOop();
   return true;
 }
 
@@ -1499,17 +1935,75 @@ void Match::Put() {
 }
 
 // 2026-08-31 ms-1.6: 逻辑渲染分离 — 插值渲染支持
-void Match::SaveInterpolationState() {
+// 2026-09-10: interpolate display pose buffers; keep simulation state untouched.
+// void Match::SaveInterpolationState() {
+//   DO_VALIDATION;
+//   ball->SaveInterpolationState();
+//   teams[first_team]->SaveInterpolationState();
+//   teams[second_team]->SaveInterpolationState();
+//   officials->SaveInterpolationState();
+// }
+void Match::SaveInterpolationState(bool from_display) {
   DO_VALIDATION;
-  ball->SaveInterpolationState();
-  teams[first_team]->SaveInterpolationState();
-  teams[second_team]->SaveInterpolationState();
-  officials->SaveInterpolationState();
+  interpolationStateSaved = false;
+  const bool reverse = GetScenarioConfig().reverse_team_processing;
+  ball->SaveInterpolationState(from_display);
+  teams[first_team]->SaveInterpolationState(reverse, from_display);
+  teams[second_team]->SaveInterpolationState(!reverse, from_display);
+  officials->SaveInterpolationState(reverse, from_display);
+  previousCameraOrientation = from_display ? camera->GetRotation() : cameraOrientation;
+  previousCameraNodeOrientation = from_display ? cameraNode->GetRotation() : cameraNodeOrientation;
+  previousCameraNodePosition = from_display ? cameraNode->GetPosition() : cameraNodePosition;
+  previousCameraFOV = from_display ? camera->GetFOV() : cameraFOV;
+  previousCameraNearCap = cameraNearCap;
+  previousCameraFarCap = cameraFarCap;
+  if (from_display) camera->GetCapping(previousCameraNearCap, previousCameraFarCap);
+  interpolationStateSaved = true;
 }
 
+// 2026-09-10: interpolate display pose buffers; keep simulation state untouched.
+// void Match::PutInterpolated(float t) {
+//   DO_VALIDATION;
+//   bool reverse = GetScenarioConfig().reverse_team_processing;
+// 
+//   // Use interpolated rendering for all entities
+//   ball->PutInterpolated(t);
+//   teams[first_team]->PutInterpolated(t, reverse);
+//   teams[second_team]->PutInterpolated(t, !reverse);
+//   officials->PutInterpolated(t, reverse);
+// 
+//   camera->SetPosition(Vector3(0, 0, 0), false);
+//   camera->SetRotation(cameraOrientation, false);
+//   cameraNode->SetPosition(cameraNodePosition, false);
+//   cameraNode->SetRotation(cameraNodeOrientation, false);
+//   camera->SetFOV(cameraFOV);
+//   camera->SetCapping(cameraNearCap, cameraFarCap);
+// 
+//   GetDynamicNode()->RecursiveUpdateSpatialData(e_SpatialDataType_Both);
+//   DO_VALIDATION;
+//   teams[first_team]->Put2D(reverse);
+//   teams[second_team]->Put2D(!reverse);
+// 
+//   int seconds = (int)(matchTime_ms / 1000.0) % 60;
+//   int minutes = (int)(matchTime_ms / 60000.0);
+// 
+//   std::string timeStr = "";
+//   if (minutes < 10) timeStr += "0";
+//   timeStr += int_to_str(minutes);
+//   timeStr += ":";
+//   if (seconds < 10) timeStr += "0";
+//   timeStr += int_to_str(seconds);
+//   scoreboard->SetTimeStr(timeStr);
+//   if (messageCaptionRemoveTime_ms <= actualTime_ms) messageCaption->Hide();
+//   radar->Put();
+//   UpdateGoalNetting(GetBall()->BallTouchesNet());
+// }
 void Match::PutInterpolated(float t) {
   DO_VALIDATION;
+  if (!interpolationStateSaved || t >= 1.0f) { Put(); return; }
   bool reverse = GetScenarioConfig().reverse_team_processing;
+  // 2026-09-10: retain ordinary ECS scene publication before display pose overrides.
+  PutEcsSync(this);
 
   // Use interpolated rendering for all entities
   ball->PutInterpolated(t);
@@ -1518,11 +2012,17 @@ void Match::PutInterpolated(float t) {
   officials->PutInterpolated(t, reverse);
 
   camera->SetPosition(Vector3(0, 0, 0), false);
-  camera->SetRotation(cameraOrientation, false);
-  cameraNode->SetPosition(cameraNodePosition, false);
-  cameraNode->SetRotation(cameraNodeOrientation, false);
-  camera->SetFOV(cameraFOV);
-  camera->SetCapping(cameraNearCap, cameraFarCap);
+  // 2026-09-10: preserve the exact correction endpoint at alpha zero.
+  // camera->SetRotation(previousCameraOrientation.GetSlerped(t, cameraOrientation), false);
+  camera->SetRotation(t == 0.0f ? previousCameraOrientation
+                              : previousCameraOrientation.GetSlerped(t, cameraOrientation), false);
+  cameraNode->SetPosition(previousCameraNodePosition * (1.0f - t) + cameraNodePosition * t, false);
+  // cameraNode->SetRotation(previousCameraNodeOrientation.GetSlerped(t, cameraNodeOrientation), false);
+  cameraNode->SetRotation(t == 0.0f ? previousCameraNodeOrientation
+                                  : previousCameraNodeOrientation.GetSlerped(t, cameraNodeOrientation), false);
+  camera->SetFOV(previousCameraFOV * (1.0f - t) + cameraFOV * t);
+  camera->SetCapping(previousCameraNearCap * (1.0f - t) + cameraNearCap * t,
+                     previousCameraFarCap * (1.0f - t) + cameraFarCap * t);
 
   GetDynamicNode()->RecursiveUpdateSpatialData(e_SpatialDataType_Both);
   DO_VALIDATION;
@@ -1609,19 +2109,32 @@ void Match::CalculateBestPossessionTeamID() {
 
 void Match::CheckHumanoidCollisions() {
   DO_VALIDATION;
-  std::vector<Player*> players;
+  // 2026-09-13: reuse Match-owned storage instead of allocating the player list
+  // and each bounce row on every physics tick. Clear on entry as well as exit:
+  // an interrupted tick or restored snapshot must not leave logical contents.
+  // std::vector<Player*> players;
+  auto& players = collision_players_;
+  players.clear();
+  auto& playerBounces = collision_bounces_;
+  for (auto& bounces : playerBounces) bounces.clear();
 
   GetTeam(first_team)->GetActivePlayers(players);
   GetTeam(second_team)->GetActivePlayers(players);
 
   // outer vectors index == players[] index
-  std::vector < std::vector<PlayerBounce> > playerBounces;
+  // 2026-09-13: the rows above retain their capacities, including temporarily
+  // inactive roster slots. No row beyond players.size() participates this tick.
+  // std::vector < std::vector<PlayerBounce> > playerBounces;
 
   // insert an empty entry for every player
-  playerBounces.resize(players.size());
+  // 2026-09-13: shrinking would discard row capacities after a roster change.
+  // playerBounces.resize(players.size());
+  if (playerBounces.size() < players.size()) playerBounces.resize(players.size());
 
   // check each combination of humanoids once
-  for (unsigned int i1 = 0; i1 < players.size() - 1; i1++) {
+  // 2026-09-13: preserve pair order without unsigned underflow for no players.
+  // for (unsigned int i1 = 0; i1 < players.size() - 1; i1++) {
+  for (size_t i1 = 0; i1 + 1 < players.size(); i1++) {
     DO_VALIDATION;
     for (unsigned int i2 = i1 + 1; i2 < players.size(); i2++) {
       DO_VALIDATION;
@@ -1657,6 +2170,11 @@ void Match::CheckHumanoidCollisions() {
       players.at(i1)->OffsetPosition(bounceVec * 0.01f * 1.0f);
     }
   }
+
+  // Retain storage only; never carry an earlier tick's borrowed pointers into
+  // the next collision calculation, even when a player has become inactive.
+  players.clear();
+  for (auto& bounces : playerBounces) bounces.clear();
 }
 
 void Match::CheckHumanoidCollision(Player *p1, Player *p2,

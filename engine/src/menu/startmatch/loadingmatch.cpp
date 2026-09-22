@@ -16,6 +16,7 @@
 // i do not offer support, so don't ask. to be used for inspiration :)
 
 #include "loadingmatch.hpp"
+#include "game_load.hpp"
 
 #include "../../main.hpp"
 
@@ -28,9 +29,18 @@ LoadingMatchPage::LoadingMatchPage(Gui2WindowManager *windowManager,
     : Gui2Page(windowManager, pageData) {
   DO_VALIDATION;
 
+  // 2026-09-14: construction may be cancelled only while page children are owned.
+  GameLoadCleanup rollback([&] { Exit(); });
+  GameLoadCheckpoint("loading.background.create");
+
   Gui2Image *loading = new Gui2Image(windowManager, "image_main_loading", 0, 0, 100, 100);
-  loading->LoadImage("media/menu/main/loading01.png");
+  // 2026-09-14: retain previous transfer after load; the page now owns it first.
+  // loading->LoadImage("media/menu/main/loading01.png");
+  // this->AddView(loading);
   this->AddView(loading);
+  GameLoadCheckpoint("loading.background.load");
+  loading->LoadImage("media/menu/main/loading01.png");
+  GameLoadCheckpoint("loading.background.ready");
   loading->Show();
 
   // logos
@@ -38,22 +48,29 @@ LoadingMatchPage::LoadingMatchPage(Gui2WindowManager *windowManager,
   const TeamData& teamData1 = matchData->GetTeamData(0);
   const TeamData& teamData2 = matchData->GetTeamData(1);
 
+  GameLoadCheckpoint("loading.caption.left");
   Gui2Caption *caption1 = new Gui2Caption(windowManager, "main_loading_team1caption", 20, 35, 40, 5, teamData1.GetName());
   float w = caption1->GetTextWidthPercent();
   caption1->SetPosition(30 - w * 0.5, 35);
   this->AddView(caption1);
+  GameLoadCheckpoint("loading.logo.left.create");
   Gui2Image *logo1 = new Gui2Image(windowManager, "main_loading_team1logo", 25, 48, 10, 12.5);
   this->AddView(logo1);
+  GameLoadCheckpoint("loading.logo.left.load");
   logo1->LoadImage(teamData1.GetLogoUrl());
 
+  GameLoadCheckpoint("loading.caption.right");
   Gui2Caption *caption2 = new Gui2Caption(windowManager, "main_loading_team2caption", 60, 35, 40, 5, teamData2.GetName());
   w = caption2->GetTextWidthPercent();
   caption2->SetPosition(70 - w * 0.5, 35);
   this->AddView(caption2);
+  GameLoadCheckpoint("loading.logo.right.create");
   Gui2Image *logo2 = new Gui2Image(windowManager, "main_loading_team2logo", 65, 48, 10, 12.5);
   this->AddView(logo2);
+  GameLoadCheckpoint("loading.logo.right.load");
   logo2->LoadImage(teamData2.GetLogoUrl());
 
+  GameLoadCheckpoint("loading.finalize");
   caption1->Show();
   caption2->Show();
   logo1->Show();
@@ -63,6 +80,7 @@ LoadingMatchPage::LoadingMatchPage(Gui2WindowManager *windowManager,
 
   this->Show();
   windowManager->GetPagePath()->Clear();
+  rollback.release();
 }
 
 LoadingMatchPage::~LoadingMatchPage() { DO_VALIDATION; }

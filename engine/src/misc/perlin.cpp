@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include <cmath>
+#include <random>
 
 #include "../base/log.hpp"
 #include "../base/math/bluntmath.hpp"
@@ -92,6 +93,8 @@ void Perlin::normalize2(float v[2])
 	float s = 0.0f;
 
         s = (float)std::sqrt(v[0] * v[0] + v[1] * v[1]);
+        // 2026-09-09: choose a finite unit gradient for the zero sample.
+        if (s == 0.0f) { v[0] = 1.0f; return; }
         s = 1.0f / s;
         v[0] = v[0] * s;
         v[1] = v[1] * s;
@@ -102,6 +105,8 @@ void Perlin::normalize3(float v[3])
 	float s = 0.0f;
 
         s = (float)std::sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+        // 2026-09-09: choose a finite unit gradient for the zero sample.
+        if (s == 0.0f) { v[0] = 1.0f; return; }
         s = 1.0f / s;
 
         v[0] = v[0] * s;
@@ -112,23 +117,34 @@ void Perlin::normalize3(float v[3])
 void Perlin::init(void)
 {
 	int i, j, k;
+  // 2026-09-09: local noise generation cannot consume/reseed another environment
+  // or the embedding host C RNG. Frequency/amplitude provide layer variation.
+  std::minstd_rand noise(1);
 
 	for (i = 0 ; i < B ; i++)
   {
 		p[i] = i;
-		g1[i] = (float)((rand() % (B + B)) - B) / B;
+		// 2026-09-09: instance-local generator replaces process-global rand().
+		// g1[i] = (float)((rand() % (B + B)) - B) / B;
+		g1[i] = (float)((static_cast<int>(noise()) % (B + B)) - B) / B;
 		for (j = 0 ; j < 2 ; j++)
-			g2[i][j] = (float)((rand() % (B + B)) - B) / B;
+		// 2026-09-09: instance-local generator replaces process-global rand().
+		// g2[i][j] = (float)((rand() % (B + B)) - B) / B;
+			g2[i][j] = (float)((static_cast<int>(noise()) % (B + B)) - B) / B;
 		normalize2(g2[i]);
 		for (j = 0 ; j < 3 ; j++)
-			g3[i][j] = (float)((rand() % (B + B)) - B) / B;
+		// 2026-09-09: instance-local generator replaces process-global rand().
+		// g3[i][j] = (float)((rand() % (B + B)) - B) / B;
+			g3[i][j] = (float)((static_cast<int>(noise()) % (B + B)) - B) / B;
 		normalize3(g3[i]);
 	}
 
 	while (--i)
   {
 		k = p[i];
-		p[i] = p[j = rand() % B];
+		// 2026-09-09: instance-local generator replaces process-global rand().
+		// p[i] = p[j = rand() % B];
+		p[i] = p[j = static_cast<int>(noise()) % B];
 		p[j] = k;
 	}
 

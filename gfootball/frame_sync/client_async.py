@@ -12,12 +12,14 @@ import collections
 import struct
 import threading
 
-try:
-  import gfootball_engine as libgame
-  from gfootball_engine import GameState
-except ImportError:
-  libgame = None
-  GameState = None
+# 2026-09-10: retired implementations no longer use these imports; actual
+# engine factories load the native runtime only when constructing a match.
+# try:
+#   import gfootball_engine as libgame
+#   from gfootball_engine import GameState
+# except ImportError:
+#   libgame = None
+#   GameState = None
 
 from gfootball.frame_sync.protocol import (
     MessageType,
@@ -37,245 +39,249 @@ from gfootball.frame_sync.protocol import (
 from gfootball.frame_sync.config import HEARTBEAT_INTERVAL_MS, HEARTBEAT_MISS_LIMIT
 
 
-class FrameSyncClientAsync(object):
-  """Asyncio frame sync client: connect_async(), then same sync API as FrameSyncClient
-  (pop_authoritative_frame, send_ready, send_frame_input, etc.) for ClientLogicLoop.
-  Writes are scheduled on the event loop via call_soon_threadsafe."""
+# 2026-09-09: replace one-task-per-send and partial handshake completion with
+# shared bounded buffers and a single asynchronous socket writer.
+# class FrameSyncClientAsync(object):
+#   """Asyncio frame sync client: connect_async(), then same sync API as FrameSyncClient
+#   (pop_authoritative_frame, send_ready, send_frame_input, etc.) for ClientLogicLoop.
+#   Writes are scheduled on the event loop via call_soon_threadsafe."""
+#
+#   def __init__(self, host, port, controlled_slots_callback=None):
+#     self.host = host
+#     self.port = port
+#     self.controlled_slots_callback = controlled_slots_callback or (lambda: [])
+#     self._reader = None
+#     self._writer = None
+#     self._loop = None
+#     self._lock = threading.Lock()
+#     self._recv_buf = bytearray()
+#     self._auth_frame_queue = collections.deque()
+#     self._session_start = None
+#     self._slot_assignment = None
+#     self._last_state_hash = None
+#     self._running = False
+#     self._recv_task = None
+#     self._last_auth_frame_id = -1
+#     self._frames_without_packet = 0
+#     self._disconnect_after_frames = 30
+#     self._disconnected = False
+#     self._session_ready = None  # asyncio.Event set when SessionStart+SlotAssignment received
+#     self._writer_lock = None  # asyncio.Lock, created when connected
+#     # 2026-08-28 心跳状态
+#     self._last_heartbeat_ms = 0
+#     self._heartbeat_miss_count = 0
+#
+#   async def connect_async(self):
+#     """Connect to server, wait for SessionStart + SlotAssignment, return (session_start, slot_assignment)."""
+#     self._reader, self._writer = await asyncio.open_connection(self.host, self.port)
+#     self._loop = asyncio.get_running_loop()
+#     self._writer_lock = asyncio.Lock()
+#     self._session_ready = asyncio.Event()
+#     self._running = True
+#     self._recv_task = asyncio.create_task(self._recv_loop_async())
+#     try:
+#       await asyncio.wait_for(self._session_ready.wait(), timeout=10.0)
+#     except asyncio.TimeoutError:
+#       self._running = False
+#       if self._recv_task:
+#         self._recv_task.cancel()
+#       self._writer.close()
+#       await self._writer.wait_closed()
+#       raise RuntimeError('Did not receive SessionStart and SlotAssignment')
+#     with self._lock:
+#       if self._session_start is None or self._slot_assignment is None:
+#         raise RuntimeError('Did not receive SessionStart and SlotAssignment')
+#       return self._session_start, self._slot_assignment
+#
+#   def _parse_one_message(self):
+#     if len(self._recv_buf) < 1:
+#       return None, None
+#     msg_type = self._recv_buf[0]
+#     if msg_type == MessageType.Heartbeat:
+#       if len(self._recv_buf) < HEARTBEAT_BYTES:
+#         return None, None
+#       data = bytes(self._recv_buf[:HEARTBEAT_BYTES])
+#       del self._recv_buf[:HEARTBEAT_BYTES]
+#       try:
+#         frame_id, ts = unpack_heartbeat(data)
+#         return msg_type, (frame_id, ts)
+#       except ValueError:
+#         return None, None
+#     if msg_type == MessageType.AuthoritativeFrame:
+#       if len(self._recv_buf) < 7:
+#         return None, None
+#       num_slots = struct.unpack_from('<H', self._recv_buf, 5)[0]
+#       need = 7 + num_slots * SLOT_INPUT_BYTES
+#       if len(self._recv_buf) < need:
+#         return None, None
+#       data = bytes(self._recv_buf[:need])
+#       del self._recv_buf[:need]
+#       try:
+#         frame_id, slot_inputs = unpack_authoritative_frame(data)
+#         return msg_type, (frame_id, slot_inputs)
+#       except ValueError:
+#         return None, None
+#     if msg_type == MessageType.SessionStart:
+#       need = 1 + SESSION_START_PAYLOAD_BYTES
+#       if len(self._recv_buf) < need:
+#         return None, None
+#       data = bytes(self._recv_buf[:need])
+#       del self._recv_buf[:need]
+#       try:
+#         seed, left, right = unpack_session_start(data)
+#         return msg_type, (seed, left, right)
+#       except ValueError:
+#         return None, None
+#     if msg_type == MessageType.SlotAssignment:
+#       if len(self._recv_buf) < 1 + 2:
+#         return None, None
+#       num = struct.unpack_from('<H', self._recv_buf, 1)[0]
+#       need = 1 + 2 + num * 2
+#       if len(self._recv_buf) < need:
+#         return None, None
+#       data = bytes(self._recv_buf[:need])
+#       del self._recv_buf[:need]
+#       try:
+#         slots = unpack_slot_assignment(data)
+#         return msg_type, slots
+#       except ValueError:
+#         return None, None
+#     if msg_type == MessageType.StateHash:
+#       if len(self._recv_buf) < STATE_HASH_BYTES:
+#         return None, None
+#       data = bytes(self._recv_buf[:STATE_HASH_BYTES])
+#       del self._recv_buf[:STATE_HASH_BYTES]
+#       try:
+#         return msg_type, unpack_state_hash(data)
+#       except ValueError:
+#         return None, None
+#     return None, None
+#
+#   async def _recv_loop_async(self):
+#     while self._running and self._reader:
+#       try:
+#         chunk = await self._reader.read(4096)
+#         if not chunk:
+#           break
+#         with self._lock:
+#           self._recv_buf.extend(chunk)
+#           while True:
+#             msg_type, payload = self._parse_one_message()
+#             if payload is None:
+#               break
+#             if msg_type == MessageType.AuthoritativeFrame:
+#               self._auth_frame_queue.append(payload)
+#               self._last_auth_frame_id = payload[0]
+#               self._frames_without_packet = 0
+#             elif msg_type == MessageType.Heartbeat:
+#               # 2026-08-28 收到心跳：重置计数器
+#               import time as _time
+#               self._last_heartbeat_ms = int(_time.time() * 1000)
+#               self._heartbeat_miss_count = 0
+#             elif msg_type == MessageType.StateHash:
+#               self._last_state_hash = payload
+#             elif msg_type == MessageType.SessionStart:
+#               self._session_start = payload
+#               self._session_ready.set()
+#             elif msg_type == MessageType.SlotAssignment:
+#               self._slot_assignment = payload
+#               self._session_ready.set()
+#       except (asyncio.CancelledError, ConnectionResetError, OSError):
+#         break
+#
+#   def _schedule_send(self, data):
+#     if self._writer is None or self._loop is None:
+#       return
+#
+#     async def _do_send():
+#       try:
+#         async with self._writer_lock:
+#           self._writer.write(data)
+#           await self._writer.drain()
+#       except (OSError, ConnectionResetError, asyncio.CancelledError):
+#         pass
+#
+#     self._loop.call_soon_threadsafe(
+#         lambda: asyncio.ensure_future(_do_send())
+#     )
+#
+#   def send_ready(self):
+#     self._schedule_send(pack_ready())
+#
+#   def send_frame_input(self, frame_id):
+#     entries = self.controlled_slots_callback()
+#     if not entries:
+#       return
+#     self._schedule_send(pack_client_frame_input(frame_id, entries))
+#
+#   def pop_authoritative_frame(self):
+#     with self._lock:
+#       if not self._auth_frame_queue:
+#         return None
+#       self._frames_without_packet = 0
+#       return self._auth_frame_queue.popleft()
+#
+#   def has_authoritative_frame(self):
+#     with self._lock:
+#       return len(self._auth_frame_queue) > 0
+#
+#   def tick_disconnect_detection(self):
+#     """检测断连：同时检查帧包超时和心跳超时。"""
+#     with self._lock:
+#       if not self._auth_frame_queue:
+#         self._frames_without_packet += 1
+#       if self._frames_without_packet >= self._disconnect_after_frames:
+#         self._disconnected = True
+#       # 2026-08-28 心跳超时检测
+#       import time as _time
+#       now_ms = int(_time.time() * 1000)
+#       if self._last_heartbeat_ms > 0:
+#         elapsed = now_ms - self._last_heartbeat_ms
+#         expected_misses = elapsed // HEARTBEAT_INTERVAL_MS
+#         if expected_misses > self._heartbeat_miss_count:
+#           self._heartbeat_miss_count = expected_misses
+#         if self._heartbeat_miss_count >= HEARTBEAT_MISS_LIMIT:
+#           self._disconnected = True
+#
+#   def is_disconnected(self):
+#     with self._lock:
+#       return self._disconnected
+#
+#   def pop_state_hash(self):
+#     with self._lock:
+#       out = self._last_state_hash
+#       self._last_state_hash = None
+#       return out
+#
+#   # 2026-08-26 参数语义变更（原因）：服务器 StateHash 改用 canonical digest
+#   # （get_state_digest，跳过 setValidate(false) 不稳定区段），本地侧必须同样传
+#   # get_state_digest() 的返回值；全量 get_state hash 跨进程必然不同会误报。
+#   def check_state_hash(self, frame_id, local_state_str):
+#     """local_state_str 必须是 env.get_state_digest() 的返回值（canonical 摘要）。"""
+#     h = self.pop_state_hash()
+#     if h is None:
+#       return True
+#     fid, server_hash = h
+#     if fid != frame_id:
+#       return True
+#     local_hash = compute_state_hash(
+#         local_state_str if isinstance(local_state_str, bytes) else local_state_str.encode()
+#     )
+#     return local_hash == server_hash
+#
+#   def close(self):
+#     w = self._writer
+#     loop = self._loop
+#     self._running = False
+#     self._writer = None
+#     self._reader = None
+#     self._loop = None
+#     if self._recv_task and not self._recv_task.done():
+#       self._recv_task.cancel()
+#     if loop and w:
+#       try:
+#         loop.call_soon_threadsafe(lambda: w.close())
+#       except Exception:
+#         pass
 
-  def __init__(self, host, port, controlled_slots_callback=None):
-    self.host = host
-    self.port = port
-    self.controlled_slots_callback = controlled_slots_callback or (lambda: [])
-    self._reader = None
-    self._writer = None
-    self._loop = None
-    self._lock = threading.Lock()
-    self._recv_buf = bytearray()
-    self._auth_frame_queue = collections.deque()
-    self._session_start = None
-    self._slot_assignment = None
-    self._last_state_hash = None
-    self._running = False
-    self._recv_task = None
-    self._last_auth_frame_id = -1
-    self._frames_without_packet = 0
-    self._disconnect_after_frames = 30
-    self._disconnected = False
-    self._session_ready = None  # asyncio.Event set when SessionStart+SlotAssignment received
-    self._writer_lock = None  # asyncio.Lock, created when connected
-    # 2026-08-28 心跳状态
-    self._last_heartbeat_ms = 0
-    self._heartbeat_miss_count = 0
-
-  async def connect_async(self):
-    """Connect to server, wait for SessionStart + SlotAssignment, return (session_start, slot_assignment)."""
-    self._reader, self._writer = await asyncio.open_connection(self.host, self.port)
-    self._loop = asyncio.get_running_loop()
-    self._writer_lock = asyncio.Lock()
-    self._session_ready = asyncio.Event()
-    self._running = True
-    self._recv_task = asyncio.create_task(self._recv_loop_async())
-    try:
-      await asyncio.wait_for(self._session_ready.wait(), timeout=10.0)
-    except asyncio.TimeoutError:
-      self._running = False
-      if self._recv_task:
-        self._recv_task.cancel()
-      self._writer.close()
-      await self._writer.wait_closed()
-      raise RuntimeError('Did not receive SessionStart and SlotAssignment')
-    with self._lock:
-      if self._session_start is None or self._slot_assignment is None:
-        raise RuntimeError('Did not receive SessionStart and SlotAssignment')
-      return self._session_start, self._slot_assignment
-
-  def _parse_one_message(self):
-    if len(self._recv_buf) < 1:
-      return None, None
-    msg_type = self._recv_buf[0]
-    if msg_type == MessageType.Heartbeat:
-      if len(self._recv_buf) < HEARTBEAT_BYTES:
-        return None, None
-      data = bytes(self._recv_buf[:HEARTBEAT_BYTES])
-      del self._recv_buf[:HEARTBEAT_BYTES]
-      try:
-        frame_id, ts = unpack_heartbeat(data)
-        return msg_type, (frame_id, ts)
-      except ValueError:
-        return None, None
-    if msg_type == MessageType.AuthoritativeFrame:
-      if len(self._recv_buf) < 7:
-        return None, None
-      num_slots = struct.unpack_from('<H', self._recv_buf, 5)[0]
-      need = 7 + num_slots * SLOT_INPUT_BYTES
-      if len(self._recv_buf) < need:
-        return None, None
-      data = bytes(self._recv_buf[:need])
-      del self._recv_buf[:need]
-      try:
-        frame_id, slot_inputs = unpack_authoritative_frame(data)
-        return msg_type, (frame_id, slot_inputs)
-      except ValueError:
-        return None, None
-    if msg_type == MessageType.SessionStart:
-      need = 1 + SESSION_START_PAYLOAD_BYTES
-      if len(self._recv_buf) < need:
-        return None, None
-      data = bytes(self._recv_buf[:need])
-      del self._recv_buf[:need]
-      try:
-        seed, left, right = unpack_session_start(data)
-        return msg_type, (seed, left, right)
-      except ValueError:
-        return None, None
-    if msg_type == MessageType.SlotAssignment:
-      if len(self._recv_buf) < 1 + 2:
-        return None, None
-      num = struct.unpack_from('<H', self._recv_buf, 1)[0]
-      need = 1 + 2 + num * 2
-      if len(self._recv_buf) < need:
-        return None, None
-      data = bytes(self._recv_buf[:need])
-      del self._recv_buf[:need]
-      try:
-        slots = unpack_slot_assignment(data)
-        return msg_type, slots
-      except ValueError:
-        return None, None
-    if msg_type == MessageType.StateHash:
-      if len(self._recv_buf) < STATE_HASH_BYTES:
-        return None, None
-      data = bytes(self._recv_buf[:STATE_HASH_BYTES])
-      del self._recv_buf[:STATE_HASH_BYTES]
-      try:
-        return msg_type, unpack_state_hash(data)
-      except ValueError:
-        return None, None
-    return None, None
-
-  async def _recv_loop_async(self):
-    while self._running and self._reader:
-      try:
-        chunk = await self._reader.read(4096)
-        if not chunk:
-          break
-        with self._lock:
-          self._recv_buf.extend(chunk)
-          while True:
-            msg_type, payload = self._parse_one_message()
-            if payload is None:
-              break
-            if msg_type == MessageType.AuthoritativeFrame:
-              self._auth_frame_queue.append(payload)
-              self._last_auth_frame_id = payload[0]
-              self._frames_without_packet = 0
-            elif msg_type == MessageType.Heartbeat:
-              # 2026-08-28 收到心跳：重置计数器
-              import time as _time
-              self._last_heartbeat_ms = int(_time.time() * 1000)
-              self._heartbeat_miss_count = 0
-            elif msg_type == MessageType.StateHash:
-              self._last_state_hash = payload
-            elif msg_type == MessageType.SessionStart:
-              self._session_start = payload
-              self._session_ready.set()
-            elif msg_type == MessageType.SlotAssignment:
-              self._slot_assignment = payload
-              self._session_ready.set()
-      except (asyncio.CancelledError, ConnectionResetError, OSError):
-        break
-
-  def _schedule_send(self, data):
-    if self._writer is None or self._loop is None:
-      return
-
-    async def _do_send():
-      try:
-        async with self._writer_lock:
-          self._writer.write(data)
-          await self._writer.drain()
-      except (OSError, ConnectionResetError, asyncio.CancelledError):
-        pass
-
-    self._loop.call_soon_threadsafe(
-        lambda: asyncio.ensure_future(_do_send())
-    )
-
-  def send_ready(self):
-    self._schedule_send(pack_ready())
-
-  def send_frame_input(self, frame_id):
-    entries = self.controlled_slots_callback()
-    if not entries:
-      return
-    self._schedule_send(pack_client_frame_input(frame_id, entries))
-
-  def pop_authoritative_frame(self):
-    with self._lock:
-      if not self._auth_frame_queue:
-        return None
-      self._frames_without_packet = 0
-      return self._auth_frame_queue.popleft()
-
-  def has_authoritative_frame(self):
-    with self._lock:
-      return len(self._auth_frame_queue) > 0
-
-  def tick_disconnect_detection(self):
-    """检测断连：同时检查帧包超时和心跳超时。"""
-    with self._lock:
-      if not self._auth_frame_queue:
-        self._frames_without_packet += 1
-      if self._frames_without_packet >= self._disconnect_after_frames:
-        self._disconnected = True
-      # 2026-08-28 心跳超时检测
-      import time as _time
-      now_ms = int(_time.time() * 1000)
-      if self._last_heartbeat_ms > 0:
-        elapsed = now_ms - self._last_heartbeat_ms
-        expected_misses = elapsed // HEARTBEAT_INTERVAL_MS
-        if expected_misses > self._heartbeat_miss_count:
-          self._heartbeat_miss_count = expected_misses
-        if self._heartbeat_miss_count >= HEARTBEAT_MISS_LIMIT:
-          self._disconnected = True
-
-  def is_disconnected(self):
-    with self._lock:
-      return self._disconnected
-
-  def pop_state_hash(self):
-    with self._lock:
-      out = self._last_state_hash
-      self._last_state_hash = None
-      return out
-
-  # 2026-08-26 参数语义变更（原因）：服务器 StateHash 改用 canonical digest
-  # （get_state_digest，跳过 setValidate(false) 不稳定区段），本地侧必须同样传
-  # get_state_digest() 的返回值；全量 get_state hash 跨进程必然不同会误报。
-  def check_state_hash(self, frame_id, local_state_str):
-    """local_state_str 必须是 env.get_state_digest() 的返回值（canonical 摘要）。"""
-    h = self.pop_state_hash()
-    if h is None:
-      return True
-    fid, server_hash = h
-    if fid != frame_id:
-      return True
-    local_hash = compute_state_hash(
-        local_state_str if isinstance(local_state_str, bytes) else local_state_str.encode()
-    )
-    return local_hash == server_hash
-
-  def close(self):
-    w = self._writer
-    loop = self._loop
-    self._running = False
-    self._writer = None
-    self._reader = None
-    self._loop = None
-    if self._recv_task and not self._recv_task.done():
-      self._recv_task.cancel()
-    if loop and w:
-      try:
-        loop.call_soon_threadsafe(lambda: w.close())
-      except Exception:
-        pass
+from gfootball.frame_sync.client_tcp_async import FrameSyncClientAsync

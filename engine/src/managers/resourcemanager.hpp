@@ -43,6 +43,12 @@ namespace blunted {
         loaders.clear();
       };
 
+      // 2026-09-09: GPU-backed resources must die while the renderer is alive.
+      void Clear() {
+        resources.clear();
+        loaders.clear();
+      }
+
       void RegisterLoader(const std::string &extension, Loader<T> *loader) { DO_VALIDATION;
         //printf("registering loader for extension %s\n", extension.c_str());
         loaders.insert(std::make_pair(extension, loader));

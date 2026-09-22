@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/root/work_space/football/.project/checks/memory_budget.py", line 284, in <module>
+    main()
+    ~~~~^^
+  File "/root/work_space/football/.project/checks/memory_budget.py", line 210, in main
+    run([sys.executable, ROOT / ".project/checks/replay_persistence.py", "--output", replay],
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        "replay", timeout=1800)
+        ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/memory_budget.py", line 100, in run
+    require(not timed_out and process.returncode == 0 and not any(marker in text for marker in MARKERS),
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            f"Capacity command failed: {log}")
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/native_boundary.py", line 30, in require
+    raise RuntimeError(message)
+RuntimeError: Capacity command failed: /root/work_space/football/.project/optimization/benchmarks/memory-budget-1789239179430327335/replay.log

@@ -59,9 +59,13 @@ void HumanGamer::SetSelectedPlayer(Player *player) {
 void HumanGamer::ProcessState(EnvState *state) {
   DO_VALIDATION;
   state->process(selectedPlayer);
-  state->process(team);
+  // 2026-09-09: this association is required before controller processing.
+  // state->process(team);
+  state->processRequired(team);
   state->setValidate(false);
-  state->process(hid);
+  // 2026-09-09: this association is required before controller processing.
+  // state->process(hid);
+  state->processRequired(hid);
   state->setValidate(true);
   controller.PreProcess(team->GetMatch(), hid);
   controller.ProcessState(state);

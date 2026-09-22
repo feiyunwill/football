@@ -151,12 +151,21 @@ class Matchmaker:
         best_pair = None
         best_diff = float('inf')
 
-        for i in range(len(sorted_queue)):
-            for j in range(i + 1, len(sorted_queue)):
-                diff = abs(sorted_queue[i].rating - sorted_queue[j].rating)
-                if diff < best_diff:
-                    best_diff = diff
-                    best_pair = (sorted_queue[i].player_id, sorted_queue[j].player_id)
+        # 2026-09-09: adjacent ratings suffice; enforce the expanding rating window.
+        # for i in range(len(sorted_queue)):
+        # for j in range(i + 1, len(sorted_queue)):
+        # diff = abs(sorted_queue[i].rating - sorted_queue[j].rating)
+        # if diff < best_diff:
+        # best_diff = diff
+        # best_pair = (sorted_queue[i].player_id, sorted_queue[j].player_id)
+        now = time.time()
+        for first, second in zip(sorted_queue, sorted_queue[1:]):
+            diff = second.rating - first.rating
+            wait = max(0.0, now - first.queued_at, now - second.queued_at)
+            window = self._max_rating_diff + int(wait * self._expand_rate)
+            if diff <= window and diff < best_diff:
+                best_diff = diff
+                best_pair = (first.player_id, second.player_id)
 
         if best_pair:
             self._queue = [e for e in self._queue

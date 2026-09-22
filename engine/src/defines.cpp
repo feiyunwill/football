@@ -29,87 +29,113 @@ EnvState::EnvState(GameEnv* game, const std::string& state,
       reference(reference),
       scenario_config(&game->scenario_config),
       context(game->context) {
+  require(state.size() <= blunted::snapshot::kMaxBytes, "Snapshot exceeds size limit");
+  require(reference.size() <= blunted::snapshot::kMaxBytes, "Reference exceeds size limit");
 }
 
 void EnvState::process(std::string& value) {
   if (canonicalSkip()) return;
   int s = value.size();
-  process(s);
+  // 2026-09-09: payload strings are bounded before resize.
+  // process(s);
+  processCount(s, blunted::snapshot::kMaxBytes);
   value.resize(s);
   for (char& c : value) {
     process(c);
   }
 }
 
-void EnvState::process(void** collection, int size, void*& element) {
-  if (canonicalSkip()) return;
-  DO_VALIDATION;
-  if (load) {
-    DO_VALIDATION;
-    int index;
-    process(index);
-    if (index == -1) {
-      DO_VALIDATION;
-      element = 0;
-    } else {
-      if (index >= size) {
-        DO_VALIDATION;
-        Log(blunted::e_FatalError, "EnvState", "element", "element index out of bound");
-      }
-      element = collection[index];
-    }
-  } else {
-    if (element == 0) {
-      DO_VALIDATION;
-      int index = -1;
-      process(index);
-    } else {
-      for (int x = 0; x < size; x++) {
-        DO_VALIDATION;
-        if (collection[x] == element) {
-          DO_VALIDATION;
-          process(x);
-          return;
-        }
-      }
-      Log(blunted::e_FatalError, "EnvState", "element", "element not found");
-    }
-  }
-}
-
+// 2026-09-09: reference tables preserve their pointer type.
+// void EnvState::process(void** collection, int size, void*& element) {
+//   if (canonicalSkip()) return;
+//   DO_VALIDATION;
+//   if (load) {
+//     DO_VALIDATION;
+//     int index;
+//     process(index);
+//     if (index == -1) {
+//       DO_VALIDATION;
+//       element = 0;
+//     } else {
+//       // 2026-09-09: both negative and positive invalid indices must fail.
+//       // if (index >= size) Log(blunted::e_FatalError, "EnvState", "element", "element index out of bound");
+//       require(index >= 0 && index < size, "Object reference out of bounds");
+//       element = collection[index];
+//     }
+//   } else {
+//     if (element == 0) {
+//       DO_VALIDATION;
+//       int index = -1;
+//       process(index);
+//     } else {
+//       for (int x = 0; x < size; x++) {
+//         DO_VALIDATION;
+//         if (collection[x] == element) {
+//           DO_VALIDATION;
+//           process(x);
+//           return;
+//         }
+//       }
+//       // 2026-09-09: report invalid ownership to the caller without killing the host.
+//       // Log(blunted::e_FatalError, "EnvState", "element", "element not found");
+//       require(false, "Object reference not registered");
+//     }
+//   }
+// }
+//
+// void EnvState::process(Team*& value) {
+//   DO_VALIDATION;
+//   void* v = value;
+//   process(reinterpret_cast<void**>(teams.data()), teams.size(), v);
+//   value = static_cast<Team*>(v);
+// }
+//
+// void EnvState::process(Player*& value) {
+//   DO_VALIDATION;
+//   void* v = value;
+//   process(reinterpret_cast<void**>(players.data()), players.size(), v);
+//   value = static_cast<Player*>(v);
+// }
+//
+// void EnvState::process(HumanGamer*& value) {
+//   DO_VALIDATION;
+//   void* v = value;
+//   process(reinterpret_cast<void**>(human_controllers.data()), human_controllers.size(), v);
+//   value = static_cast<HumanGamer*>(v);
+// }
+//
+// void EnvState::process(AIControlledKeyboard*& value) {
+//   DO_VALIDATION;
+//   void* v = value;
+//   process(reinterpret_cast<void**>(controllers.data()), controllers.size(), v);
+//   value = static_cast<AIControlledKeyboard*>(v);
+// }
+//
+// void EnvState::process(blunted::Animation*& value) {
+//   DO_VALIDATION;
+//   void* v = value;
+//   process(reinterpret_cast<void**>(animations.data()), animations.size(), v);
+//   value = static_cast<blunted::Animation*>(v);
+// }
+//
 void EnvState::process(Team*& value) {
-  DO_VALIDATION;
-  void* v = value;
-  process(reinterpret_cast<void**>(&teams[0]), 2, v);
-  value = static_cast<Team*>(v);
+  processReference(teams, value);
 }
 
 void EnvState::process(Player*& value) {
-  DO_VALIDATION;
-  void* v = value;
-  process(reinterpret_cast<void**>(&players[0]), players.size(), v);
-  value = static_cast<Player*>(v);
+  processReference(players, value);
 }
 
 void EnvState::process(HumanGamer*& value) {
-  DO_VALIDATION;
-  void* v = value;
-  process(reinterpret_cast<void**>(&human_controllers[0]), human_controllers.size(), v);
-  value = static_cast<HumanGamer*>(v);
+  processReference(human_controllers, value);
 }
 
 void EnvState::process(AIControlledKeyboard*& value) {
-  DO_VALIDATION;
-  void* v = value;
-  process(reinterpret_cast<void**>(&controllers[0]), controllers.size(), v);
-  value = static_cast<AIControlledKeyboard*>(v);
+  processReference(controllers, value);
 }
 
 void EnvState::process(blunted::Animation*& value) {
-  DO_VALIDATION;
-  void* v = value;
-  process(reinterpret_cast<void**>(&animations[0]), animations.size(), v);
-  value = static_cast<blunted::Animation*>(v);
+  processReference(animations, value);
 }
 
 // 2026-08-26 确定性修复（原因）：radian 布局为 float angle_(4B) + bool
@@ -126,6 +152,7 @@ void EnvState::process(blunted::radian& value) {
   unsigned char rotated = value.rotated_ ? 1 : 0;
   process(rotated);
   if (load) {
+    require(rotated <= 1, "Invalid angle mirror flag");
     value.rotated_ = rotated != 0;
   }
   // 固定填充：save 写全 0（canonical），load 读入后丢弃，维持旧布局总长。
@@ -171,4 +198,29 @@ void EnvState::SetTeams(Team* team0, Team* team1) {
 const std::string& EnvState::GetState() {
   DO_VALIDATION;
   return state;
+}
+
+// 2026-09-09: no input count may allocate more than the bounded payload budget.
+void EnvState::processCount(int& count, size_t maximum, size_t minimum) {
+  if (canonicalSkip()) return;
+  int restored = count;
+  process(restored);
+  require(restored >= 0 && static_cast<size_t>(restored) >= minimum &&
+          static_cast<size_t>(restored) <= maximum, "Invalid collection count");
+  if (load) require(static_cast<size_t>(restored) <= state.size() - pos, "Collection exceeds remaining payload");
+  count = restored;
+}
+
+void EnvState::process(blunted::Vector3& value) {
+  if (canonicalSkip()) return;
+  auto restored = value;
+  for (auto& coordinate : restored.coords) process(coordinate);
+  value = restored;
+}
+
+void EnvState::process(blunted::Quaternion& value) {
+  if (canonicalSkip()) return;
+  auto restored = value;
+  for (auto& element : restored.elements) process(element);
+  value = restored;
 }

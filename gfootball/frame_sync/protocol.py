@@ -45,6 +45,28 @@ class MessageType:
   HandbackNotify = 11    # server -> client: 控制权归还
   ReconnectRequest = 12  # client -> server: 重连请求，携带 session_token
   StateSnapshot = 13     # server -> client: 完整游戏状态
+  # 2026-09-10: v4 resume explicitly names its version before the capability.
+  MatchReconnectRequest = 15  # client -> server: version(uint16), token(uint64)
+  # 2026-09-10: canonical state hashes use the existing 64-bit wire contract.
+  # MatchEnd = 16  # server -> client: next frame(uint32), canonical hash(uint32)
+  MatchEnd = 16  # server -> client: next frame(uint32), canonical hash(uint64)
+  MatchEndAck = 17  # client -> server: next frame(uint32)
+  # 2026-09-10: v6 also confirms the snapshot control epoch.
+  # MatchReady = 18  # v5 client -> server: version and explicit cadence confirmation
+  MatchReady = 18
+  MatchControl = 19
+  MatchControlAck = 20
+  MatchEpochInput = 21
+
+
+MATCH_RECONNECT_REQUEST_BYTES = 11
+# 2026-09-10: preserve all 64 bits of the canonical state hash.
+# MATCH_END_BYTES = 9
+MATCH_END_BYTES = 13
+MATCH_END_ACK_BYTES = 5
+# 2026-09-10: reject old Ready shapes rather than silently dropping the epoch.
+# MATCH_READY_BYTES = 13  # <BHHHHI: type, version, input Hz, network Hz, steps, step us
+MATCH_READY_BYTES = 17  # <BHHHHII: cadence followed by uint32 control epoch
 
 
 def pack_slot_input(slot_input):

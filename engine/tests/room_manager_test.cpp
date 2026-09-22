@@ -194,3 +194,21 @@ TEST(RoomManagerTest, Cleanup) {
 
 }  // namespace
 }  // namespace frame_sync
+
+// 2026-09-09: production validation and single start transition.
+TEST(RoomManagerRegression, ValidatesCapacityAndStartAddress) {
+  frame_sync::RoomManager rooms;
+  frame_sync::RoomConfig config;
+  config.max_players = 0;
+  EXPECT_EQ(rooms.CreateRoom(config, "Alice"), 0u);
+  config.max_players = 2;
+  EXPECT_EQ(rooms.CreateRoom(config, ""), 0u);
+  auto id = rooms.CreateRoom(config, "Alice");
+  ASSERT_NE(id, 0u);
+  ASSERT_TRUE(rooms.JoinRoom(id, "Bob"));
+  ASSERT_TRUE(rooms.SetReady(id, "Bob", true));
+  EXPECT_FALSE(rooms.StartGame(id, "Alice", "127.0.0.1", 0));
+  EXPECT_FALSE(rooms.StartGame(id, "Alice", std::string(32, 'x'), 5000));
+  ASSERT_TRUE(rooms.StartGame(id, "Alice", "127.0.0.1", 5000));
+  EXPECT_FALSE(rooms.StartGame(id, "Alice", "127.0.0.1", 5001));
+}

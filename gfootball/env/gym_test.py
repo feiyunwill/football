@@ -21,7 +21,9 @@ from __future__ import print_function
 
 import unittest
 
-import gym
+# 2026-09-10: exercise the maintained public five-result API.
+# import gym
+import gymnasium as gym
 from absl.testing import parameterized
 
 
@@ -31,11 +33,16 @@ class GymTest(parameterized.TestCase):
   def test_environment(self, rewards):
     # Tests it is possible to create and run an environment twice.
     for _ in range(2):
-      env = gym.make('gfootball:GFootball-11_vs_11_easy_stochastic-SMM-v0',
+      # 2026-09-10: preserve this scenario assertion under the current API.
+      # env = gym.make('gfootball:GFootball-11_vs_11_easy_stochastic-SMM-v0',
+      env = gym.make('gfootball.gymnasium:GFootball-11_vs_11_easy_stochastic-SMM-v0',
                      stacked=True, rewards=rewards)
       env.reset()
       for _ in range(10):
-        _, _, done, _ = env.step(env.action_space.sample())
+        # 2026-09-10: preserve this scenario assertion under the current API.
+        # _, _, done, _ = env.step(env.action_space.sample())
+        _, _, terminated, truncated, _ = env.step(env.action_space.sample())
+        done = terminated or truncated
         if done:
           env.reset()
       env.close()

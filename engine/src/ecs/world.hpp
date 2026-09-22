@@ -58,12 +58,15 @@ class ComponentPool : public IComponentPool {
     entities_.pop_back();
     components_.pop_back();
     entity_to_index_.erase(it);
+    order_dirty_ = true;
   }
 
   void Clear() override {
     entities_.clear();
     components_.clear();
     entity_to_index_.clear();
+    sorted_entities_.clear();
+    order_dirty_ = false;
   }
 
   auto Get(this ComponentPool& self, Entity e) -> T* {
@@ -89,51 +92,76 @@ class ComponentPool : public IComponentPool {
     entity_to_index_[e] = entities_.size();
     entities_.push_back(e);
     components_.push_back(std::move(comp));
+    order_dirty_ = true;
   }
 
   /// 批量插入后统一排序，保持确定性顺序
-  void SortIfNeeded() {
-    if (entities_.size() <= 1) return;
-    
-    // 使用插入排序保持稳定性
-    for (size_t i = 1; i < entities_.size(); ++i) {
-      Entity key_entity = entities_[i];
-      T key_component = std::move(components_[i]);
-      size_t j = i;
-      
-      while (j > 0 && entities_[j - 1] > key_entity) {
-        entities_[j] = entities_[j - 1];
-        components_[j] = std::move(components_[j - 1]);
-        --j;
-      }
-      
-      if (j != i) {
-        entities_[j] = key_entity;
-        components_[j] = std::move(key_component);
-      }
-    }
-    
-    // 更新索引映射
-    for (size_t i = 0; i < entities_.size(); ++i) {
-      entity_to_index_[entities_[i]] = i;
-    }
-  }
+  // 2026-09-09: replaced to preserve deterministic traversal and component values.
+  //   void SortIfNeeded() {
+  //     if (entities_.size() <= 1) return;
+  //
+  //     // 使用插入排序保持稳定性
+  //     for (size_t i = 1; i < entities_.size(); ++i) {
+  //       Entity key_entity = entities_[i];
+  //       T key_component = std::move(components_[i]);
+  //       size_t j = i;
+  //
+  //       while (j > 0 && entities_[j - 1] > key_entity) {
+  //         entities_[j] = entities_[j - 1];
+  //         components_[j] = std::move(components_[j - 1]);
+  //         --j;
+  //       }
+  //
+  //       if (j != i) {
+  //         entities_[j] = key_entity;
+  //         components_[j] = std::move(key_component);
+  //       }
+  //     }
+  //
+  //     // 更新索引映射
+  //     for (size_t i = 0; i < entities_.size(); ++i) {
+  //       entity_to_index_[entities_[i]] = i;
+  //     }
+  //   }
+  //
+  //   /// Returns entities in deterministic order (sorted by ID).
+  //   /// This is O(n) because entities_ is maintained in ID order.
+  //   std::vector<Entity> Entities() const {
+  //     // entities_ is already sorted by ID due to our insertion logic
+  //     return entities_;
+  //   }
+  //
+  //   // 2026-09-05 优化: 零拷贝版本，返回 span
+  //   std::span<const Entity> EntitiesSpan() const {
+  //     return std::span<const Entity>(entities_);
+  //   }
+  //
+  void SortIfNeeded() { RefreshEntityOrder(); }
 
-  /// Returns entities in deterministic order (sorted by ID).
-  /// This is O(n) because entities_ is maintained in ID order.
+  // Dense component storage stays in place; only the ID view is sorted.
   std::vector<Entity> Entities() const {
-    // entities_ is already sorted by ID due to our insertion logic
-    return entities_;
+    RefreshEntityOrder();
+    return sorted_entities_;
   }
 
-  // 2026-09-05 优化: 零拷贝版本，返回 span
+  // Valid until the next structural mutation and subsequent view refresh.
   std::span<const Entity> EntitiesSpan() const {
-    return std::span<const Entity>(entities_);
+    RefreshEntityOrder();
+    return sorted_entities_;
   }
 
   size_t Size() const { return entities_.size(); }
 
  private:
+  void RefreshEntityOrder() const {
+    if (!order_dirty_) return;
+    sorted_entities_ = entities_;
+    std::sort(sorted_entities_.begin(), sorted_entities_.end());
+    order_dirty_ = false;
+  }
+
+  mutable std::vector<Entity> sorted_entities_;
+  mutable bool order_dirty_ = false;
   std::vector<Entity> entities_;           // Dense storage of entity IDs
   std::vector<T> components_;             // Parallel dense storage of components
   std::unordered_map<Entity, size_t> entity_to_index_;  // Entity -> index mapping
@@ -176,8 +204,13 @@ class World {
   }
 
   template <typename T>
+// 2026-09-09: const reads of absent component types must return null.
+//   auto GetComponent(this const World& self, Entity e) -> const T* {
+//     return self.Pool<T>()->Get(e);
+//   }
   auto GetComponent(this const World& self, Entity e) -> const T* {
-    return self.Pool<T>()->Get(e);
+    const auto* pool = self.Pool<T>();
+    return pool ? pool->Get(e) : nullptr;
   }
 
   template <typename T>
@@ -217,8 +250,11 @@ class World {
   void ForEach(Fn&& fn) {
     auto* p1 = Pool<T1>();
     auto* p2 = Pool<T2>();
+    // Snapshot first-pool candidates: callbacks may add a missing second
+    // component to a later candidate. Keep that existing mutation contract.
     for (const Entity e : p1->Entities()) {
-      if (!p2->Has(e)) continue;
+      // 2026-09-09: Get below already checks membership; avoid duplicate lookup.
+      // if (!p2->Has(e)) continue;
       T1* c1 = p1->Get(e);
       T2* c2 = p2->Get(e);
       if (c1 && c2) fn(e, *c1, *c2);
@@ -233,12 +269,18 @@ class World {
     auto* p3 = Pool<T3>();
     
     // 选择最小的池作为主遍历池
-    const auto* smallest_pool = p1;
-    if (p2->Size() < smallest_pool->Size()) smallest_pool = p2;
-    if (p3->Size() < smallest_pool->Size()) smallest_pool = p3;
-    
-    for (const Entity e : smallest_pool->Entities()) {
-      if (!p1->Has(e) || !p2->Has(e) || !p3->Has(e)) continue;
+// 2026-09-09: select IDs, not incompatible heterogeneous ComponentPool pointers; Get checks membership.
+//     const auto* smallest_pool = p1;
+//     if (p2->Size() < smallest_pool->Size()) smallest_pool = p2;
+//     if (p3->Size() < smallest_pool->Size()) smallest_pool = p3;
+//
+//     for (const Entity e : smallest_pool->Entities()) {
+//       if (!p1->Has(e) || !p2->Has(e) || !p3->Has(e)) continue;
+    std::vector<Entity> candidates;
+    if (p1->Size() <= p2->Size() && p1->Size() <= p3->Size()) candidates = p1->Entities();
+    else if (p2->Size() <= p3->Size()) candidates = p2->Entities();
+    else candidates = p3->Entities();
+    for (const Entity e : candidates) {
       T1* c1 = p1->Get(e);
       T2* c2 = p2->Get(e);
       T3* c3 = p3->Get(e);

@@ -123,9 +123,12 @@ void PlayerBase::Put(bool mirror) {
 }
 
 // 2026-09-04 ms-16.1: 逻辑渲染分离 — 队伍/裁判插值支持
-void PlayerBase::SaveInterpolationState() {
+// 2026-09-10: pass display pose selection without touching logical spatial state.
+// void PlayerBase::SaveInterpolationState() {
+void PlayerBase::SaveInterpolationState(bool mirror, bool from_display, bool active) {
   DO_VALIDATION;
-  humanoid->SaveInterpolationState();
+  // humanoid->SaveInterpolationState();
+  humanoid->SaveInterpolationState(mirror, from_display, active);
 }
 
 void PlayerBase::PutInterpolated(float t, bool mirror) {

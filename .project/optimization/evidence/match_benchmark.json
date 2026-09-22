@@ -1,0 +1,15 @@
+{
+  "check": "match_benchmark",
+  "fingerprint": "10ab1940f93132a4ddb847461fd700ae94edf7be88538e7f93c6bc1d3ab62547",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1789270332.768168,
+  "duration_seconds": 130.961,
+  "argv": [
+    "python3",
+    ".project/checks/match_benchmark.py"
+  ],
+  "log": "match_benchmark-1789270332768202080.log",
+  "log_sha256": "2ab5af95a9f8f8ae219ea810a314f622da99c9a24bbaeb8f72f7e84497b3a777"
+}

@@ -259,10 +259,15 @@ TEST(ReplaySystemIntegration, FullReplayCycle) {
   
   for (uint32_t i = 0; i < 50; ++i) {
     std::vector<SlotInput> inputs(2);
-    inputs[0].dir_x = static_cast<float>(i) * 0.1f;
-    inputs[0].dir_y = static_cast<float>(i) * 0.2f;
-    inputs[1].dir_x = static_cast<float>(i) * 0.3f;
-    recorder.RecordFrame(i, i * 100, inputs);
+    // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+    // inputs[0].dir_x = static_cast<float>(i) * 0.1f;
+    // inputs[0].dir_y = static_cast<float>(i) * 0.2f;
+    // inputs[1].dir_x = static_cast<float>(i) * 0.3f;
+    // recorder.RecordFrame(i, i * 100, inputs);
+    inputs[0].dir_x = static_cast<float>(i) * 0.01f;
+    inputs[0].dir_y = static_cast<float>(i) * 0.005f;
+    inputs[1].dir_x = -static_cast<float>(i) * 0.01f;
+    ASSERT_TRUE(recorder.RecordFrame(i, i * 100, inputs));
   }
   
   recorder.StopRecording();
@@ -280,7 +285,11 @@ TEST(ReplaySystemIntegration, FullReplayCycle) {
     ASSERT_TRUE(frame.has_value());
     EXPECT_EQ(frame->frame_number, i);
     EXPECT_EQ(frame->state_hash, i * 100);
-    EXPECT_FLOAT_EQ(frame->inputs[0].dir_x, static_cast<float>(i) * 0.1f);
+    // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+    // EXPECT_FLOAT_EQ(frame->inputs[0].dir_x, static_cast<float>(i) * 0.1f);
+    EXPECT_FLOAT_EQ(frame->inputs[0].dir_x, static_cast<float>(i) * 0.01f);
+    EXPECT_FLOAT_EQ(frame->inputs[0].dir_y, static_cast<float>(i) * 0.005f);
+    EXPECT_FLOAT_EQ(frame->inputs[1].dir_x, -static_cast<float>(i) * 0.01f);
     
     if (i < 49) {
       EXPECT_TRUE(player.Advance());
@@ -297,8 +306,11 @@ TEST(ReplaySystemIntegration, SeekWorks) {
   recorder.StartRecording(42, "seek_test", 1);
   for (uint32_t i = 0; i < 100; ++i) {
     std::vector<SlotInput> inputs(1);
-    inputs[0].dir_x = static_cast<float>(i);
-    recorder.RecordFrame(i, i * 100, inputs);
+    // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+    // inputs[0].dir_x = static_cast<float>(i);
+    // recorder.RecordFrame(i, i * 100, inputs);
+    inputs[0].dir_x = static_cast<float>(i) * 0.01f;
+    ASSERT_TRUE(recorder.RecordFrame(i, i * 100, inputs));
   }
   recorder.StopRecording();
   
@@ -310,7 +322,9 @@ TEST(ReplaySystemIntegration, SeekWorks) {
   auto frame = player.GetCurrentFrame();
   ASSERT_TRUE(frame.has_value());
   EXPECT_EQ(frame->frame_number, 50u);
-  EXPECT_FLOAT_EQ(frame->inputs[0].dir_x, 50.0f);
+  // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+  // EXPECT_FLOAT_EQ(frame->inputs[0].dir_x, 50.0f);
+  EXPECT_FLOAT_EQ(frame->inputs[0].dir_x, 0.5f);
 }
 
 // ============================================================
@@ -388,8 +402,11 @@ TEST(CombinedIntegration, FullPipeline) {
     
     // Record replay
     std::vector<SlotInput> inputs(1);
-    inputs[0].dir_x = static_cast<float>(i) * 0.1f;
-    recorder.RecordFrame(i, prng.next(), inputs);
+    // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+    // inputs[0].dir_x = static_cast<float>(i) * 0.1f;
+    // recorder.RecordFrame(i, prng.next(), inputs);
+    inputs[0].dir_x = static_cast<float>(i) * 0.01f;
+    ASSERT_TRUE(recorder.RecordFrame(i, prng.next(), inputs));
     
     // Delta compress
     std::string delta = encoder.EncodeDelta(state);
@@ -431,7 +448,10 @@ TEST(CombinedIntegration, FullPipeline) {
   for (uint32_t i = 0; i < 100; ++i) {
     auto frame = player.GetCurrentFrame();
     ASSERT_TRUE(frame.has_value());
+    // 2026-09-10: use valid directional input while retaining correction/round-trip assertions.
+    // EXPECT_EQ(frame->frame_number, i);
     EXPECT_EQ(frame->frame_number, i);
+    EXPECT_FLOAT_EQ(frame->inputs[0].dir_x, static_cast<float>(i) * 0.01f);
     if (i < 99) EXPECT_TRUE(player.Advance());
   }
 }

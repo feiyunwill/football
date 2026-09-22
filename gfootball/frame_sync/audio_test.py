@@ -5,6 +5,7 @@ Tests for the audio and commentary systems.
 import sys
 import os
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -83,9 +84,19 @@ class TestCommentarySystem(unittest.TestCase):
 
     def test_trigger_goal(self):
         context = CommentaryContext(event=CommentaryEvent.GOAL, minute=45)
-        text = self.commentary.trigger_event(context)
-        self.assertIsNotNone(text)
-        self.assertIn("GOAL", text.upper() or "goal" in text.lower())
+        # 2026-09-09: legitimate goal variants need not contain the word GOAL.
+        # text = self.commentary.trigger_event(context)
+        # self.assertIsNotNone(text)
+        # self.assertIn("GOAL", text.upper() or "goal" in text.lower())
+        with patch("commentary.time.time", return_value=100):
+            available = self.commentary.get_database().get_lines_for_event(CommentaryEvent.GOAL)
+            expected = {line.text for line in available}
+            self.assertGreaterEqual(len(expected), 4)
+            heard = [self.commentary.trigger_event(context) for _ in available]
+            self.assertEqual(set(heard), expected)
+            self.assertEqual(len(heard), len(set(heard)))
+            self.assertIsNone(self.commentary.trigger_event(context))
+            self.assertEqual(self.commentary.get_history(limit=len(heard)), heard)
 
     def test_trigger_miss(self):
         context = CommentaryContext(event=CommentaryEvent.MISS, minute=30)

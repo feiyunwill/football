@@ -43,7 +43,9 @@ namespace blunted {
     return std::to_underlying(a) <=> std::to_underlying(b);
   }
 
-  void Log(e_LogType logType, std::string className, std::string methodName, std::string message);
+  // 2026-09-09: avoid copying arbitrarily large diagnostic inputs.
+  //  void Log(e_LogType logType, std::string className, std::string methodName, std::string message);
+  void Log(e_LogType logType, const std::string& className, const std::string& methodName, const std::string& message);
 
 }
 
