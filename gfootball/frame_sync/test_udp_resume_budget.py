@@ -6,6 +6,7 @@ import struct
 import threading
 import time
 import unittest
+from unittest import mock
 
 from gfootball.frame_sync import protocol as wire, udp_session as session
 from gfootball.frame_sync.client_buffers import ClientFailure, ClientLimits
@@ -460,19 +461,69 @@ class UDPResumeTest(unittest.TestCase):
     self.assertFalse(client.stats()['worker_alive'])
 
   def test_restore_error_never_sends_ready_or_success(self):
-    server, client, replica = self.make_reconnecting()
-    self.frame(server, client, replica)
-    self.drop(server)
-    client.client.close()
-    until(lambda: client.stats()['state'] == 'restoring')
-    def fail():
-      raise RuntimeError('restore rejected')
-    replica.on_restore = fail
-    with self.assertRaisesRegex(RuntimeError, 'restore rejected'):
-      client.tick()
-    self.assertEqual(client.stats()['state'], 'gave_up')
-    self.assertFalse(server.all_clients_ready())
-    self.assertEqual(client.stats()['restores'], 0)
+    entered, release = threading.Event(), threading.Event()
+    original = ReconnectingFrameSyncUDPClient._work
+    def held_work(client):
+      try:
+        original(client)
+      finally:
+        entered.set()
+        if not release.wait(5):
+          raise AssertionError('Test failed to release controlled owner exit')
+    try:
+      with mock.patch.object(ReconnectingFrameSyncUDPClient, '_work', held_work):
+        server, client, replica = self.make_reconnecting()
+        self.frame(server, client, replica)
+        notices, successes = [], []
+        client.set_on_give_up(lambda: notices.append(
+            (threading.current_thread(), client._worker.is_alive())))
+        client.set_on_reconnect(lambda *args: successes.append(args))
+        self.drop(server)
+        client.client.close()
+        until(lambda: client.stats()['state'] == 'restoring')
+        with client._condition:
+          candidate = client._candidate
+        def fail():
+          raise RuntimeError('restore rejected')
+        replica.on_restore = fail
+        with mock.patch.object(candidate, 'send_ready', wraps=candidate.send_ready) as ready:
+          with self.assertRaisesRegex(RuntimeError, 'restore rejected'):
+            client.tick()
+          self.assertTrue(entered.wait(2))
+          self.assertTrue(client._worker.is_alive())
+          self.assertEqual(client.stats()['state'], 'giving_up')
+          attempts = client.stats()['total_attempts']
+          started = time.monotonic()
+          for _ in range(1000):
+            client.tick()
+          self.assertLess(time.monotonic() - started, .3)
+          self.assertEqual(client.stats()['state'], 'giving_up')
+          self.assertEqual(notices, [])
+          self.assertEqual(successes, [])
+          ready.assert_not_called()
+          self.assertFalse(server.all_clients_ready())
+          self.assertEqual(client.stats()['restores'], 0)
+          self.assertEqual(client.stats()['snapshot_bytes'], 0)
+          self.assertFalse(client.stats()['active_restore'])
+          self.assertFalse(client.stats()['candidate'])
+          self.assertFalse(candidate.stats()['worker_alive'])
+          release.set()
+          until(lambda: not client._worker.is_alive())
+          self.assertEqual(client.stats()['state'], 'gave_up')
+          self.assertEqual(notices, [])
+          for _ in range(1000):
+            client.tick()
+          self.assertEqual(notices, [(threading.current_thread(), False)])
+          self.assertEqual(successes, [])
+          self.assertEqual(client.stats()['total_attempts'], attempts)
+          self.assertEqual(client.stats()['restores'], 0)
+          self.assertEqual(client.stats()['snapshot_bytes'], 0)
+          self.assertEqual(client.failure_reason, 'restore_or_callback_failed')
+          ready.assert_not_called()
+          self.assertFalse(server.all_clients_ready())
+    finally:
+      release.set()
+
 
 
 if __name__ == '__main__':

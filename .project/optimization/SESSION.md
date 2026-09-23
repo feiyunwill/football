@@ -1,3 +1,354 @@
+## 2026-09-24 REAL GRAPHICAL INPUT DEFECT REPRODUCED; RTT/CADENCE C PASSED, FINAL D LIVE
+
+Current goal turn is PROGRESS. Canonical recovery C + snapshot C exit0: six actual R/S pairs, 7005 authority frames, 11295 replay frames, 12 snapshots. Canonical GUI B exit1: Release original client0 sent706 nonzero frames but only16 matched authority; client1 sent203 with4 matches. Keyboard capture is correct. Inputs reached relay ~13ms before their target authority frame, insufficient for impaired outbound delivery. Canonical S GUI passed1000frames/eight actions/two snapshots. Chain proof A correctly failed because canonical Release GUI failed; never promote its result.
+
+New private candidates, NO canonical production changes:
+- native-input-rtt-candidate-20260924-a failed test build for missing SDL include; retained.
+- B added pkg-config SDL2; 6 scheduler tests + original clock contract passed R/S. RTT EWMA+4*variation gives bounded lead1..15 in unchanged16-frame server window. Initial inputs accepted, but full-window waits and repeated horizon jumps caused frame gaps after recovery; Release exhausted gameplay tail, S1002/replay passed. Retained.
+- C preserves independent cadence at a stable horizon and does not count waiting for window capacity as missed publication ticks. 7 tests (including old/new deterministic batch-arrival counterexample), original clock contract, actual R/S GUI and independent replay ALL PASSED: R1002, S1001, each eight phases of8 CONSECUTIVE frames, two recovery snapshots.
+- D adds correct re-anchoring after a long authority jump overtakes all published input; eighth deterministic test. R1000 GUI+replay already passed; full Debug units/original clock passed, Debug product validation currently live. Poll exact D handle below. Original1000 frame target, 3.4s outages, 30s startup and300s replay budgets unchanged. No matrix/latency/product promotion.
+- Candidate changes are exactly3 files in D/candidate/frame_sync: native_publication_clock.hpp, native_input_publication.hpp, integrated_client.cpp. The latter updates smoothed RTT/variation and atomic publication budget, resets all on transport reset, passes budget into PublishTimed. Low budget<=20ms retains original one-frame behavior; default legacy UDP still uses old implementation, so default target migration remains required.
+- Reproducible offline datagram decoder: native-gui-input-failure-analysis-20260924-b/analyze.py with --pair and --output. Stored original/rtt_b/rtt_c source-pinned summaries: C R client0 71/71, client1 74/74 nonzero inputs matched authority. This is not end-to-end latency acceptance.
+
+Training:
+- rl-checkpoint-write-error-20260924-a exit0 reproduces original exact write boundary falsely returning success on real /dev/full under full Debug sanitizers.
+- rl-checkpoint-file-candidate-20260924-a exit0: R and full Debug each12 checkpoint file tests+10 old replay file+16 old replay directory=38. Candidate extracts existing atomic publisher into atomic_file.hpp with replay API compatibility wrapper; checkpoint_file.hpp bounds archives64MiB(default overridable), validates regular files, handles partial I/O/sync/close/rename, preserves prior destination before commit and explicit committed status after sync failure; tests include realRLIMIT_FSIZE, concurrent readers, errors.
+- Candidate checkpoint.hpp integration NOT instantiated against actual RLtools: declared third_party/rl-tools still empty. Full serialization memory bound, dimension/corruption atomic state restore and training lifecycle UNVERIFIED. Do not adopt/report full training based only on file tests.
+- No candidate adoption or extra Git commit/push this turn; latest remote remains63234ab.
+
+Latest authoritative25-document manifest: native-network-training-evidence-20260924-a/documents-after.json (archives prior23 first). New reports: optimization-native-udp-graphical-input-2026-09-24.md, optimization-training-checkpoint-io-2026-09-24.md. Canonical1117 source manifest unchanged apart from previously adopted UDP test; current framework C remains valid.
+
+NEXT: finish D, inspect report/logs/source/product hashes. If passed, adopt exact3 candidate files and permanent8-test suite with old original/unpaced clock fixtures, register CMake and strengthen required framework suite coverage. Update framework minimum703→711 and sanitizer component selection143→151 (include the new test prefix); update acceptance verifier tests accordingly. Recompute actual source_manifest count rather than carrying1117 into new drivers. Archive originals/docs before adoption; use fresh gate/recovery/snapshot/GUI/proof stage directories, original budgets and full Debug flags. Do not edit any executed stage. Preserve all seven optimization domains and remaining default UDP/menu/full weaknet/latency/render/AI/training/packaging requirements.
+
+Verified process observation at 1790194803.756868
+
+{
+  "native-canonical-udp-recovery-20260924-c": {
+    "handle": {
+      "pid": 2354398,
+      "start_ticks": 67593138,
+      "launched": 1790192847.1296446
+    },
+    "live": false,
+    "status": {
+      "phase": "sanitized-impaired-replay",
+      "time": 1790193418.1662283,
+      "canonical_changed": false
+    },
+    "terminal": {
+      "exit_code": 0,
+      "started": 1790192847.1741145,
+      "finished": 1790193507.9931357,
+      "canonical_changed": false
+    }
+  },
+  "native-canonical-udp-snapshot-20260924-c": {
+    "handle": {
+      "pid": 2354399,
+      "start_ticks": 67593139,
+      "launched": 1790192847.1301408
+    },
+    "live": false,
+    "status": {
+      "phase": "sanitized-snapshot-interruption-replay",
+      "time": 1790193609.7821388
+    },
+    "terminal": {
+      "exit_code": 0,
+      "started": 1790192847.175483,
+      "finished": 1790193738.6128998,
+      "canonical_changed": false
+    }
+  },
+  "native-canonical-udp-gui-input-20260924-b": {
+    "handle": {
+      "pid": 2354400,
+      "start_ticks": 67593139,
+      "launched": 1790192847.1315536
+    },
+    "live": false,
+    "status": {
+      "phase": "sanitized-gui-input-replay",
+      "time": 1790193839.1401293
+    },
+    "terminal": {
+      "exit_code": 1,
+      "started": 1790192847.1806734,
+      "finished": 1790193914.6443124,
+      "canonical_changed": false
+    }
+  },
+  "native-canonical-chain-proof-20260924-a": {
+    "handle": {
+      "pid": 2372445,
+      "start_ticks": 67625082,
+      "launched": 1790193166.5615618
+    },
+    "live": false,
+    "status": {
+      "phase": "verifying-canonical-artifacts",
+      "time": 1790193914.784791
+    },
+    "terminal": {
+      "exit_code": 1,
+      "started": 1790193166.6078572,
+      "finished": 1790193914.7866123
+    }
+  },
+  "rl-checkpoint-write-error-20260924-a": {
+    "handle": {
+      "pid": 2374045,
+      "start_ticks": 67647217,
+      "launched": 1790193387.9192243
+    },
+    "live": false,
+    "status": {
+      "phase": "complete",
+      "time": 1790193917.001085
+    },
+    "terminal": {
+      "exit_code": 0,
+      "started": 1790193387.993373,
+      "finished": 1790193917.0011942
+    }
+  },
+  "rl-checkpoint-file-candidate-20260924-a": {
+    "handle": {
+      "pid": 2385658,
+      "start_ticks": 67680339,
+      "launched": 1790193719.1336586
+    },
+    "live": false,
+    "status": {
+      "phase": "complete",
+      "time": 1790193953.2008655
+    },
+    "terminal": {
+      "exit_code": 0,
+      "started": 1790193719.1904345,
+      "finished": 1790193953.2011015
+    }
+  },
+  "native-input-rtt-candidate-20260924-c": {
+    "handle": {
+      "pid": 2389060,
+      "start_ticks": 67752706,
+      "launched": 1790194442.8030047
+    },
+    "live": false,
+    "status": {
+      "phase": "complete",
+      "time": 1790194660.1773489
+    },
+    "terminal": {
+      "exit_code": 0,
+      "started": 1790194442.85694,
+      "finished": 1790194660.1777387
+    }
+  },
+  "native-input-rtt-candidate-20260924-d": {
+    "handle": {
+      "pid": 2389791,
+      "start_ticks": 67762292,
+      "launched": 1790194538.6675866
+    },
+    "live": true,
+    "status": {
+      "phase": "sanitized-gui-input-replay",
+      "time": 1790194802.8170636
+    },
+    "terminal": null
+  }
+}
+
+## 2026-09-24 FULL CANONICAL FRAMEWORK PASSED; NETWORK CHAIN LIVE
+
+This turn is PROGRESS. Gate C exit0: 703 C++ / 783 Python / 305 subtests; 143 full Debug ASan+UBSan components; seeds42/43 each1000frames with2independent processes and snapshot replay passed. Source1117 and gate driver/product hashes verified. Current framework evidence: native-canonical-framework-evidence-20260924-a; latest authoritative23-doc manifest there/documents-after.json.
+
+Recovery C Release outage/impaired pairs and independent replay passed; sanitized outage and replay passed (1002frames), sanitized impaired running. Snapshot C then GUI-input B remain serial. New chain-proof driver waits for GUI terminal, verifies source/product/input/log hashes and actual pair/replay scope; do not treat its queued state as acceptance. It may need a NEW corrected proof stage if a schema assumption fails; never edit queued/executed scripts.
+
+Training checkpoint review (graph partial42,125; full source fallback): save_checkpoint opens/truncates destination directly, does not check write/close or root-group success before returning true; load_checkpoint allocates from unchecked tellg. New rl-checkpoint-write-error-20260924-a reproduces the EXACT original file-write boundary with fixed1024byte writer buffer and real Linux /dev/full under full Debug sanitizers, queued AFTER chain proof terminal to preserve serial measurement. It does not use or validate actual RLtools serialization; full dependency remains absent. Production checkpoint not changed. On its success, implement bounded atomic file I/O and then actual training integration when dependency available, preserving full scope.
+
+Next: poll live handles below, inspect current pair/snapshot/GUI failures if any, verify completed chain, update docs from exact evidence. Do not modify canonical sources while chain is live. Default UDP migration prerequisites remain in native-default-udp-migration-audit-20260924-a. No full weaknet/latency/render/training/product acceptance; no new commit/push after63234ab.
+
+Observed at 1790193429.7833364
+
+{
+  "native-canonical-adoption-gates-20260924-c": {
+    "handle": {
+      "pid": 2354397,
+      "start_ticks": 67593138,
+      "launched": 1790192847.1286948
+    },
+    "live": false,
+    "status": {
+      "phase": "complete",
+      "time": 1790193182.9935162,
+      "pid": 2354397
+    },
+    "terminal": {
+      "exit_code": 0,
+      "started": 1790192847.1816149,
+      "finished": 1790193182.9937418
+    }
+  },
+  "native-canonical-udp-recovery-20260924-c": {
+    "handle": {
+      "pid": 2354398,
+      "start_ticks": 67593138,
+      "launched": 1790192847.1296446
+    },
+    "live": true,
+    "status": {
+      "phase": "sanitized-impaired-replay",
+      "time": 1790193418.1662283,
+      "canonical_changed": false
+    },
+    "terminal": null
+  },
+  "native-canonical-udp-snapshot-20260924-c": {
+    "handle": {
+      "pid": 2354399,
+      "start_ticks": 67593139,
+      "launched": 1790192847.1301408
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-recovery",
+      "time": 1790192847.1761816
+    },
+    "terminal": null
+  },
+  "native-canonical-udp-gui-input-20260924-b": {
+    "handle": {
+      "pid": 2354400,
+      "start_ticks": 67593139,
+      "launched": 1790192847.1315536
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-snapshot",
+      "time": 1790192847.181575
+    },
+    "terminal": null
+  },
+  "native-canonical-chain-proof-20260924-a": {
+    "handle": {
+      "pid": 2372445,
+      "start_ticks": 67625082,
+      "launched": 1790193166.5615618
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-gui",
+      "time": 1790193166.608248
+    },
+    "terminal": null
+  },
+  "rl-checkpoint-write-error-20260924-a": {
+    "handle": {
+      "pid": 2374045,
+      "start_ticks": 67647217,
+      "launched": 1790193387.9192243
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-after-network-chain",
+      "time": 1790193387.9940557
+    },
+    "terminal": null
+  }
+}
+
+## Latest verified C-pipeline observation 1790193075.1101449
+
+Current turn is PROGRESS: UDP restore-error regression strengthened; old failure and premature-terminal mutation proved deterministically, 46 related tests pass. Canonical native_boundary and 143 Debug sanitizer component tests pass; full framework currently running (pytest phase observed). Defaults migration audit prepared in native-default-udp-migration-audit-20260924-a; do not change canonical sources while current pipeline validates their frozen hashes. Latest authoritative 23-document manifest: udp-restore-drain-contract-20260924-a/documents-after.json. Next action: poll exact handles below and inspect terminal/full-framework results, then actual recovery/snapshot/GUI input results. No new commit/push since 63234ab; no product-readiness promotion.
+
+{
+  "native-canonical-adoption-gates-20260924-c": {
+    "handle": {
+      "pid": 2354397,
+      "start_ticks": 67593138,
+      "launched": 1790192847.1286948
+    },
+    "live": true,
+    "status": {
+      "phase": "full-framework",
+      "time": 1790192958.8323662,
+      "pid": 2354397
+    },
+    "terminal": null
+  },
+  "native-canonical-udp-recovery-20260924-c": {
+    "handle": {
+      "pid": 2354398,
+      "start_ticks": 67593138,
+      "launched": 1790192847.1296446
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-gates",
+      "time": 1790192847.1750343,
+      "canonical_changed": false
+    },
+    "terminal": null
+  },
+  "native-canonical-udp-snapshot-20260924-c": {
+    "handle": {
+      "pid": 2354399,
+      "start_ticks": 67593139,
+      "launched": 1790192847.1301408
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-recovery",
+      "time": 1790192847.1761816
+    },
+    "terminal": null
+  },
+  "native-canonical-udp-gui-input-20260924-b": {
+    "handle": {
+      "pid": 2354400,
+      "start_ticks": 67593139,
+      "launched": 1790192847.1315536
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-snapshot",
+      "time": 1790192847.181575
+    },
+    "terminal": null
+  }
+}\n
+## 2026-09-24 UDP RESTORE DRAIN TEST REPAIRED; C PIPELINE LAUNCHED
+
+Previous turn: progress (commit 63234ab pushed and verified). Current turn: deterministic old failure reproduced, strengthened test accepted, premature-terminal mutation rejected, 46 reconnect tests passed. Production lifecycle unchanged. See udp-restore-drain-contract-20260924-a and its documents-after.json (23 docs). All B gate/recovery/snapshot and GUI A failures retained. New serial pipeline handles:
+
+{
+  "native-canonical-adoption-gates-20260924-c": {
+    "pid": 2354397,
+    "start_ticks": 67593138,
+    "launched": 1790192847.1286948
+  },
+  "native-canonical-udp-recovery-20260924-c": {
+    "pid": 2354398,
+    "start_ticks": 67593138,
+    "launched": 1790192847.1296446
+  },
+  "native-canonical-udp-snapshot-20260924-c": {
+    "pid": 2354399,
+    "start_ticks": 67593139,
+    "launched": 1790192847.1301408
+  },
+  "native-canonical-udp-gui-input-20260924-b": {
+    "pid": 2354400,
+    "start_ticks": 67593139,
+    "launched": 1790192847.1315536
+  }
+}
+
+Full framework, canonical real recovery/snapshot and graphical input remain pending; no product promotion. Poll these exact handles and terminal records; do not restart on observation timeout.
+
 ## 2026-09-24 COMMIT CHECKPOINT: B PIPELINE TERMINATED
 
 This entry supersedes earlier LIVE/queued descriptions. All four drivers have terminal exit_code=1: native-canonical-adoption-gates-20260924-b, native-canonical-udp-recovery-20260924-b, native-canonical-udp-snapshot-20260924-b, and native-canonical-udp-gui-input-20260924-a.
