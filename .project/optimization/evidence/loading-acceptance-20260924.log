@@ -1,0 +1,18 @@
+test_actual_client_and_engine_are_required (__main__.LoadingTransportGate.test_actual_client_and_engine_are_required) ... ok
+test_ambiguous_reports_are_rejected (__main__.LoadingTransportGate.test_ambiguous_reports_are_rejected) ... ok
+test_both_transports_preserve_all_prior_contracts (__main__.LoadingTransportGate.test_both_transports_preserve_all_prior_contracts) ... ok
+test_budget_boundary_applies_to_both_transports (__main__.LoadingTransportGate.test_budget_boundary_applies_to_both_transports) ... ok
+test_drain_assertions_cannot_shrink (__main__.LoadingTransportGate.test_drain_assertions_cannot_shrink) ... ok
+test_drain_case_count_cannot_shrink (__main__.LoadingTransportGate.test_drain_case_count_cannot_shrink) ... ok
+test_missing_transport_is_rejected (__main__.LoadingTransportGate.test_missing_transport_is_rejected) ... ok
+test_nonzero_exit_is_rejected (__main__.LoadingTransportGate.test_nonzero_exit_is_rejected) ... ok
+test_original_ownership_scope_remains_required (__main__.LoadingTransportGate.test_original_ownership_scope_remains_required) ... ok
+test_sanitizer_diagnostic_is_rejected (__main__.LoadingTransportGate.test_sanitizer_diagnostic_is_rejected) ... ok
+test_skips_and_failed_results_are_rejected (__main__.LoadingTransportGate.test_skips_and_failed_results_are_rejected) ... ok
+test_tcp_cannot_be_replaced_by_udp (__main__.LoadingTransportGate.test_tcp_cannot_be_replaced_by_udp) ... ok
+test_udp_cannot_be_replaced_by_tcp (__main__.LoadingTransportGate.test_udp_cannot_be_replaced_by_tcp) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.020s
+
+OK

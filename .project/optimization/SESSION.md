@@ -1,3 +1,443 @@
+## 2026-09-24 COMMIT SNAPSHOT: LOADING ADOPTED; FRAMEWORK DISPLAY FAILURE; ARCHITECTURE LIVE
+
+用户已明确要求提交并推送当前代码。本次提交包含正式加载门禁、13 项永久回归、已结束的检查记录和最新里程碑说明。运行中的 architecture_regression 日志不纳入本次快照；继续由原 PID 2504929/start_ticks 68142502 完成，不重复启动或改写其输入。
+
+2026-09-24 提交时状态：正式 loading_regression.py 已接入 TCP/UDP 的 transport 字段校验及两种传输各 5 个取消场景，保留 250 毫秒上限并拒绝负值。新增 loading_acceptance_test.py 的 13 项永久回归通过；native_boundary 通过。正式框架检查为失败（711 项 C++ 通过；Python 780 项及 305 子测试通过，3 项图形测试因未提供 DISPLAY、无法获得 SDL 窗口而失败）；正式架构检查仍在运行，不能标为整体通过。以下较早记录保留为历史。
+
+2026-09-24 提交时状态：集成 B 已构建 8 个实际 TCP/UDP 入口并通过 30 个原有契约；服务端边界检查在 Release/完整 Debug 各通过 13 项。真实多席位运行 B 的 4 个场景未通过 AI 非零输入判据，尚未完成 1000 帧及最终独立回放验收。两组失败轨迹的诊断回放分别验证 704/644 帧、71/65 个哈希，AI 输入均与重建决策一致；零输入阶段包含等待另一队开球。单客户端全员断线时，被动网络观测缺少完整权威帧，需要补齐服务端记录。集成 C 仅有草稿，尚未构建或执行。多席位仍为私有候选，未接入正式源码。以下较早记录保留为历史。
+
+当前正式源码清单：loading-transport-gate-adoption-20260924-b/sources-after.json，1120 项；新增永久测试单独固定哈希。adoption A 因测试包装器实际运行 0 项而被拒绝，未改源码；B 正确运行 13 项，旧门禁触发预期 1 项错误，新门禁全部通过。B 的框架阶段失败原因是图形环境缺失，不能沿用旧通过记录；架构阶段尚在运行。输入、战术、AI 的已完成正式记录随本次提交保留。
+
+最新 31 项文档及 SESSION 的编辑前备份：native-slot-group-evidence-20260924-e/originals；终态和运行观察记录在同目录。未发布 .project/optimization/benchmarks 下被 Git 忽略的私有候选或大体积产物。
+
+NEXT: 等待 adoption B 原架构检查终态，保存证据；在新阶段修正图形检查启动环境后串行重验框架。之后完成私有集成 C 的服务端权威记录测试与真实多席位回放，保留合法等待和可行动 AI 正例。不得将多席位、默认 UDP/menu、完整弱网、输入延迟、渲染、完整训练、打包及硬件性能标为完成。
+
+以下为历史记录，较早“未接入”“排队中”描述不代表当前状态。
+
+## 2026-09-24 PRIVATE LOADING GATE FULLY PASSED; GROUP INTEGRATION B RUNNING
+
+This turn is PROGRESS. LoadingcandidateA exit0finished1790197680.5891025:14negativecontrolspassed;fullDebugarchitecture1632099assertions/172units passed539.233s;Release loading32results/2175assertions passed65.498s. Sanitizedloading32results/2190assertions. Bothretain26cancellationcheckpoints/19preparedoperations/12ownership/11loadingprotocol/2terminalstream/10TCP+UDPdraincases. Allcandidateinputs/3commandloghashes/172fullDebugrecipesverified. ProductioncheckerNOTadopted,formalarchitecturefailureremainscurrent.
+
+RuntimeA has nowterminatedexit1 becauseintegrationAfailed (expecteddependencyrejection,noactualcaseexecuted). IntegrationB runningactualprivateR/STCP+UDPbuildswithstrictdependencyclosurechecks. Rphasefinished15originalrecovery/draincases;Sphasecontinues. RuntimeB then4actualgroupGUIcases+independentGameEnvreplay, thenservercontractA13R/13SactualTCPboundarycases. These unfinishedstagesstillFREEZEcanonical1120sources. No concurrentbuilds/tests.
+
+Latest31docmanifest native-slot-group-evidence-20260924-d/documents-after.json. Prior31docs+SESSIONarchived. Completedloadingcandidatefullproof copiedandhashedthere;formal/componentproof remainspriorstages. Newserver13contracts documentedinevidenceC. Latestremotecommit ea92986; noadditionalcommit/push.
+
+NEXT: inspectintegrationB/sourceoverlay+oldcontracts, runtimeBactual11+11/single22recovery/window/replay, thenserver13boundarytests. Preservealloriginalbudgets. FixactualfailuresinNEWstages; whenentirequeuefinishedandconditionsallow,adoptvalidatedloadinggateandrunfreshformalarchitecture. Do notconfuseprivatepasseswithformalorproductacceptance. Overallscope defaultUDP/menu/fullweaknet/inputp95/render/fullRLtools/packaging/performancebaseline remainsunfinished.
+
+~~~json
+{
+  "loading-transport-gate-candidate-20260924-a": {
+    "handle": {
+      "pid": 2472182,
+      "start_ticks": 67980946,
+      "launched": 1790196725.2097535
+    },
+    "live": false,
+    "status.json": {
+      "phase": "complete-private-gate-candidate",
+      "time": 1790197680.5889142
+    },
+    "exit.json": {
+      "exit_code": 0,
+      "started": 1790196725.2586317,
+      "finished": 1790197680.5891025
+    }
+  },
+  "native-slot-group-runtime-candidate-20260924-a": {
+    "handle": {
+      "pid": 2474522,
+      "start_ticks": 68001103,
+      "launched": 1790196926.777877
+    },
+    "live": false,
+    "status.json": {
+      "phase": "queued-after-loading-gate-candidate",
+      "time": 1790196926.82706
+    },
+    "exit.json": {
+      "exit_code": 1,
+      "started": 1790196926.8258834,
+      "finished": 1790197680.9743853
+    },
+    "failure.json": {
+      "error": "",
+      "type": "AssertionError"
+    }
+  },
+  "native-slot-group-integration-candidate-20260924-b": {
+    "handle": {
+      "pid": 2478412,
+      "start_ticks": 68024589,
+      "launched": 1790197161.6368995
+    },
+    "live": true,
+    "status.json": {
+      "phase": "sanitized-engine_native_recovery_tcp_contract-compile",
+      "time": 1790197844.4762769
+    }
+  },
+  "native-slot-group-runtime-candidate-20260924-b": {
+    "handle": {
+      "pid": 2478413,
+      "start_ticks": 68024590,
+      "launched": 1790197161.640251
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-integration-b",
+      "time": 1790197161.693569
+    }
+  },
+  "native-slot-group-server-contract-20260924-a": {
+    "handle": {
+      "pid": 2489679,
+      "start_ticks": 68052253,
+      "launched": 1790197438.2727535
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-multiseat-runtime-b",
+      "time": 1790197438.3276336
+    }
+  }
+}
+~~~
+
+## 2026-09-24 GROUP SERVER BOUNDARY CONTRACT QUEUED; FULL ARCHITECTURE STILL RUNNING
+
+Previous goal turn and this turn are PROGRESS. Current canonical1120sources unchanged andFROZEN untilALLstagesbelow terminate. Latestcommit ea92986 remainsremote; noadditionalcommit/push.
+
+New native-slot-group-server-contract-20260924-a:PID2489679/start68052253. QueuedAFTER runtimeBterminal andrequiresintegrationBsuccess. ActualTCP ownerchecked callbacks (NOTactualGameEnv), R/S13caseseach:5adaptedoriginallifecycle,partition/allavailable,explicitcapabilityrequired,wholegroupcancelrelease,distinctpermemberauthorityinputs,4malformedinputs(countmissing/duplicate/foreignmember/NaNdirection)isolatedfromhealthygroup. Testsource+driverpreparedandpinned,NOTcompiled/executedyet. Original3sfixturedeadlines preserved. CallbackfixturecomplementsactualGUI/GameEnvreplay,doesnotreplaceit.
+
+LoadinggateA14negativecontrols and10DebugrealTCP/UDPdraincases alreadypassed. Latestpartialfullarchitecture:42/43normal+reverse+render snapshots passed; repeatedinstance/lifetime probescontinue. Noformalarchitecturepromotion. RuntimeA remainsqueuedthenwillrejectfailedintegrationA. ThenintegrationB→runtimeB→newservercontractA serially. Allqueuedinputsverifiedunchanged.
+
+Latest31docmanifest native-slot-group-evidence-20260924-c/documents-after.json;allprior31docs+SESSIONarchived. Newcontractinputidentities/processobservationrecordedthere. Previouscompletedformal/componentproof remains evidenceB. Sourcegraph generation20:57:23Z,metadata21:00:32Z;boundedprotocol/oldTCPfixture discovery+exactsourcecheck;privateoverlaydirectlyread.
+
+NEXT: finishloadingcandidate, inspectintegrationB actualcompiledeps+originalcontracts, then4GUI11+11/single22cases+independent300sreplays, then13R/Sserverboundarycases. ResolvefailuresinNEWstages withoutrelaxingoriginalbudgets orchangingcanonicalinputs duringqueue. Afterallterminal andsuccessfulproof,consideradoption+freshformalgates. Overallproductscope remainsdefaultUDP/menu/fullweaknet/inputp95/render/fullRLtools/packaging andmissingprotectedbaseline;notcomplete.
+
+~~~json
+{
+  "loading-transport-gate-candidate-20260924-a": {
+    "handle": {
+      "pid": 2472182,
+      "start_ticks": 67980946,
+      "launched": 1790196725.2097535
+    },
+    "live": true,
+    "status.json": {
+      "phase": "architecture-sanitized",
+      "time": 1790197075.6389768
+    }
+  },
+  "native-slot-group-runtime-candidate-20260924-a": {
+    "handle": {
+      "pid": 2474522,
+      "start_ticks": 68001103,
+      "launched": 1790196926.777877
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-loading-gate-candidate",
+      "time": 1790196926.82706
+    }
+  },
+  "native-slot-group-integration-candidate-20260924-b": {
+    "handle": {
+      "pid": 2478412,
+      "start_ticks": 68024589,
+      "launched": 1790197161.6368995
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-prior-runtime-terminal",
+      "time": 1790197161.6916072
+    }
+  },
+  "native-slot-group-runtime-candidate-20260924-b": {
+    "handle": {
+      "pid": 2478413,
+      "start_ticks": 68024590,
+      "launched": 1790197161.640251
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-integration-b",
+      "time": 1790197161.693569
+    }
+  },
+  "native-slot-group-server-contract-20260924-a": {
+    "handle": {
+      "pid": 2489679,
+      "start_ticks": 68052253,
+      "launched": 1790197438.2727535
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-multiseat-runtime-b",
+      "time": 1790197438.3276336
+    }
+  }
+}
+~~~
+
+## 2026-09-24 CROSS-DOMAIN TERMINAL; COMPONENTS PASSED; INTEGRATION B QUEUED
+
+This goal turn is PROGRESS. Latest remote commit remains ea92986397869af0ddbf7d484fba396ed88c2e7b. No newcommit/push.
+
+CrossdomainA terminal1790197030.5770788 exit1 ONLY architecture gatefailed. Formal input3065419assertions/362.056s, tactical146349/265.025s, AIdecisions22950/14.011s passed withlogs/recordhashesverified. No inputlatency/hardware/fullRLtools/productacceptance.
+
+UDPprotocoladapterA exit0finished1790197052.066018: R/S originalTCP+currentUDPprotocol50frames and22logicalpeer22slot50frame authority passed. Notoneclient22seats.
+LeasecomponentA exit0finished1790197062.028141;wirecomponentA exit0finished1790197070.3443565;each16R+16fullDebugtests;allcomponentinput/producthashesverified.
+
+IntegrationA exit1finished1790197075.1766882 atfirstservercompile. Exactdependencyfile shows canonical native_recovery_transfer.hpp quoted native_recovery_wire.hpp resolvingcanonicalwire ratherthancandidate. NEWintegrationB copies originaltransferheader byteforbyte intocandidate/frame_sync;all5candidateimplementationfilesotherwiseunchanged. Driver now requirescandidatewire inactualdependencyset andrejectsallcanonicalcopiesof6patchedsource/headernames. B waits runtimeAterminal, thenbuilds8R/STCP/UDPproducts+30originalcontracts. Do notrerunmutateA.
+
+LoadinggatecandidateA14negativecontrolsPASSED;fullDebugTCP/UDPdrain5eachpassed~.101s;fullarchitecturestillrunning. Afteritsterminal runtimeA willrejectfailedintegrationA andexit. IntegrationB thenruns; runtimeB queuesAFTERB andrequiresBsuccess, unchanged4actualGUI1000frame11+11/single22cases+independentreplay. Allinputsimmutable;canonical1120sourcesremainFROZEN untilALLqueuedstages finish. No concurrentbuilds/tests.
+
+Latest authoritative31docmanifest native-slot-group-evidence-20260924-b/documents-after.json;previous31docs+SESSIONarchived. Completedcomponent/probe/crossdomain/failedintegrationproof and3formalrecords copied/pinnedthere. Productimplementation/candidatesnotyetadopted. Reportlinksconnectms20→plan20.1.2→task20.1.2.2andms23→plan23.1.1→task23.1.1.2.
+
+NEXT: pollsameexactlivehandles below. Finishloadingcandidate; inspectBcompile/oldcontracts andactualgroupGUI/replay. Fix failuresinNEWstages; keep startup30s/cancel250ms/GUI1000/snapshot1500/replay300s/fullDebug-g+ASANUBSAN+leaks/noO1. PreservedefaultUDP/menu/fullweaknet/inputp95/render/AItraining/packaging scope. Overallgoalnotcomplete.
+
+~~~json
+{
+  "native-input-rtt-cross-domain-20260924-a": {
+    "handle": {
+      "pid": 2435404,
+      "start_ticks": 67847189,
+      "launched": 1790195387.6383452
+    },
+    "live": false,
+    "status.json": {
+      "phase": "failed-formal-checks",
+      "time": 1790197030.5769048
+    },
+    "exit.json": {
+      "exit_code": 1,
+      "started": 1790195387.6807358,
+      "finished": 1790197030.5770788
+    }
+  },
+  "native-udp-probe-migration-20260924-a": {
+    "handle": {
+      "pid": 2438846,
+      "start_ticks": 67864284,
+      "launched": 1790195558.5836244
+    },
+    "live": false,
+    "status.json": {
+      "phase": "complete",
+      "time": 1790197052.0656612
+    },
+    "exit.json": {
+      "exit_code": 0,
+      "started": 1790195558.6362073,
+      "finished": 1790197052.066018
+    }
+  },
+  "native-slot-group-candidate-20260924-a": {
+    "handle": {
+      "pid": 2450448,
+      "start_ticks": 67893983,
+      "launched": 1790195855.5752776
+    },
+    "live": false,
+    "status.json": {
+      "phase": "complete",
+      "time": 1790197062.0279782
+    },
+    "exit.json": {
+      "exit_code": 0,
+      "started": 1790195855.6348147,
+      "finished": 1790197062.028141
+    }
+  },
+  "native-slot-group-wire-candidate-20260924-a": {
+    "handle": {
+      "pid": 2450842,
+      "start_ticks": 67904294,
+      "launched": 1790195958.680899
+    },
+    "live": false,
+    "status.json": {
+      "phase": "complete",
+      "time": 1790197070.3440464
+    },
+    "exit.json": {
+      "exit_code": 0,
+      "started": 1790195958.7513812,
+      "finished": 1790197070.3443565
+    }
+  },
+  "native-slot-group-integration-candidate-20260924-a": {
+    "handle": {
+      "pid": 2452651,
+      "start_ticks": 67935452,
+      "launched": 1790196270.2686892
+    },
+    "live": false,
+    "status.json": {
+      "phase": "release-football_server_tcp-compile",
+      "time": 1790197070.5942311
+    },
+    "exit.json": {
+      "exit_code": 1,
+      "started": 1790196270.3169847,
+      "finished": 1790197075.1766882
+    }
+  },
+  "loading-transport-gate-candidate-20260924-a": {
+    "handle": {
+      "pid": 2472182,
+      "start_ticks": 67980946,
+      "launched": 1790196725.2097535
+    },
+    "live": true,
+    "status.json": {
+      "phase": "architecture-sanitized",
+      "time": 1790197075.6389768
+    }
+  },
+  "native-slot-group-runtime-candidate-20260924-a": {
+    "handle": {
+      "pid": 2474522,
+      "start_ticks": 68001103,
+      "launched": 1790196926.777877
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-loading-gate-candidate",
+      "time": 1790196926.82706
+    }
+  },
+  "native-slot-group-integration-candidate-20260924-b": {
+    "handle": {
+      "pid": 2478412,
+      "start_ticks": 68024589,
+      "launched": 1790197161.6368995
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-prior-runtime-terminal",
+      "time": 1790197161.6916072
+    }
+  },
+  "native-slot-group-runtime-candidate-20260924-b": {
+    "handle": {
+      "pid": 2478413,
+      "start_ticks": 68024590,
+      "launched": 1790197161.640251
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-integration-b",
+      "time": 1790197161.693569
+    }
+  }
+}
+~~~
+
+## 2026-09-24 MULTI-SEAT RUNTIME AND LOADING-GATE CANDIDATES QUEUED; INPUT CONTRACT PASSED
+
+Previous commit turn and this goal turn are PROGRESS. ea92986397869af0ddbf7d484fba396ed88c2e7b is verified on origin/master. No new push this goal turn.
+
+Canonical1120 production sources remain FROZEN until ALL live serial stages below terminate. Canonical network proofB passed:8actualpairs/9010authorityframes/16snapshots/16graphicalactions. Framework711C++/783Python/151sanitizedcomponents passed. Formal input_contract nowpassed3065419assertions in362.056s; actualX11/XTest/nativeGameEnv and unchangedTSanharnesses verified, latency_acceptance=false. Original architecture gate FAILED due real_tcp-vs-transport output mismatch; do not erase or promote. Cross-domain currently continues tactical/AI independently.
+
+New loading-transport-gate-candidate-20260924-a queues AFTER integration terminal: private expected transport repair + realUDP loading drain;14negative-control tests then fullDebug architecture andRelease loading32results/10draincases. Not executed/adopted/passed yet. Own handle below.
+
+New native-slot-group-runtime-candidate-20260924-a queues AFTER loading candidate terminal, requires successful multi-seat component/integration products. Four1000frame actualGUI cases: R/S two11seatgroups andsingle22seatclient (explicit CLI0), eachgroupmember8consecutivekeyboardframes, atomic allmembertakeover/handback, impairedbyteunchangedUDP, then independentGameEnv replay withoriginal300s budget. No product promotion. All private stage inputs immutable afterqueue.
+
+Latest authoritative31-document manifest: native-slot-group-evidence-20260924-a/documents-after.json. Prior29docs+SESSION archived beforeedits; two newreports linked through ms20/plan20/task20 andms23/plan23/task23. Actual runtime tests may reveal bugs; use NEW stage for fixes. Keep 30sstartup/250mscancel/1000GUI/1500snapshot/300sreplay budgets. No parallel builds/tests or parentmount/environment changes.
+
+NEXT: inspect exactlivehandles andterminalrecords. Resolve any candidatecompile/lease/wire/runtimefailures withnewstages; only adopt successful candidates afterqueue/sourcefreezeconditions allow. DefaultUDP/menu,fullweaknet,inputp95,render,trainingRLtools,packaging remain unverified. Missingprotectedperformancebaseline unchanged. Do not mark overallgoalcomplete.
+
+~~~json
+{
+  "native-input-rtt-cross-domain-20260924-a": {
+    "handle": {
+      "pid": 2435404,
+      "start_ticks": 67847189,
+      "launched": 1790195387.6383452
+    },
+    "live": true,
+    "status.json": {
+      "phase": "ai_decisions",
+      "time": 1790197016.3085208
+    }
+  },
+  "native-udp-probe-migration-20260924-a": {
+    "handle": {
+      "pid": 2438846,
+      "start_ticks": 67864284,
+      "launched": 1790195558.5836244
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-cross-domain-gates",
+      "time": 1790195558.63683
+    }
+  },
+  "native-slot-group-candidate-20260924-a": {
+    "handle": {
+      "pid": 2450448,
+      "start_ticks": 67893983,
+      "launched": 1790195855.5752776
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-protocol-adapter",
+      "time": 1790195855.635938
+    }
+  },
+  "native-slot-group-wire-candidate-20260924-a": {
+    "handle": {
+      "pid": 2450842,
+      "start_ticks": 67904294,
+      "launched": 1790195958.680899
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-slot-group-lease-tests",
+      "time": 1790195958.7539973
+    }
+  },
+  "native-slot-group-integration-candidate-20260924-a": {
+    "handle": {
+      "pid": 2452651,
+      "start_ticks": 67935452,
+      "launched": 1790196270.2686892
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-group-components",
+      "time": 1790196270.318
+    }
+  },
+  "loading-transport-gate-candidate-20260924-a": {
+    "handle": {
+      "pid": 2472182,
+      "start_ticks": 67980946,
+      "launched": 1790196725.2097535
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-slot-group-integration",
+      "time": 1790196725.2596147
+    }
+  },
+  "native-slot-group-runtime-candidate-20260924-a": {
+    "handle": {
+      "pid": 2474522,
+      "start_ticks": 68001103,
+      "launched": 1790196926.777877
+    },
+    "live": true,
+    "status.json": {
+      "phase": "queued-after-loading-gate-candidate",
+      "time": 1790196926.82706
+    }
+  }
+}
+~~~
+
 ## 2026-09-24 提交前验证状态
 
 正式 RTT 修复的网络验证链已通过：8 组真实客户端/服务端场景、9010 个权威帧、16 次快照、16 个真实窗口输入动作；框架验收为 711 个 C++ 用例、783 个 Python 用例。可提交的结果摘要和源文件哈希保存在 .project/optimization/evidence/native-input-rtt-chain-20260924/。构建产物哈希代表该验证链结束时的状态；后续跨域检查会重新配置临时构建目录。

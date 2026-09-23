@@ -1,0 +1,22 @@
+{
+  "recorded": 1790198690.8080382,
+  "scope": "commit snapshot; architecture validation still running",
+  "permanent_tests": 13,
+  "passed": true,
+  "log": "loading-acceptance-20260924.log",
+  "log_sha256": "2f988517d3cad6146150e09760a1e1f79172265bfb9f04dbe677186c363e06f2",
+  "adopted": {
+    "time": 1790198341.2148776,
+    "files": {
+      ".project/checks/loading_regression.py": "f850b4f339cc83510d63fa7f3c48379564e515f9a3802bef3b7092453b724a65",
+      ".project/tests/loading_acceptance_test.py": "c5a2f37c8a2092499c53bc1df1983024d678068628387cf9ba7d40958b546951"
+    },
+    "canonical_manifest_changed": [
+      ".project/checks/loading_regression.py"
+    ],
+    "permanent_test_separately_pinned": true
+  },
+  "formal_framework_passed": false,
+  "architecture_pending": true,
+  "product_acceptance": false
+}

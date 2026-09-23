@@ -11,6 +11,7 @@ TARGETS = (
     "engine_prepared_lifecycle_contract", "engine_tracker_owner_contract",
     "engine_loading_cancellation_contract", "engine_loading_seat_contract",
     "engine_loading_tcp_contract", "engine_loading_client_drain_contract",
+    "engine_loading_udp_client_drain_contract",
 )
 CHECKPOINTS = (
     ("reset.begin", 1), ("match.begin", 1), ("animations.template", 2),
@@ -60,14 +61,16 @@ def probe(build, environment):
                                                 "real_tcp": True, "actual_gameenv": False})
     results["legacy_loading"] = check(TARGETS[4],
                                      expected={"checks": 11, "real_tcp": True, "actual_gameenv": False})
-    results["client_drain"] = check(TARGETS[5],
-                                    expected={"checks": 5, "assertions": 35, "real_tcp": True,
-                                              "actual_client": True, "actual_gameenv": True})
-    require(results["client_drain"]["maximum_cancel_seconds"] < .25,
-            "Actual client cancellation drain exceeds 250ms")
+    for key, target, transport in (("client_drain", TARGETS[5], "TCP"),
+                                    ("udp_client_drain", TARGETS[6], "UDP")):
+        results[key] = check(target, expected={"checks": 5, "assertions": 35,
+                             "transport": transport, "actual_client": True,
+                             "actual_gameenv": True})
+        require(0 <= results[key]["maximum_cancel_seconds"] < .25,
+                f"Actual {transport} client cancellation drain exceeds 250ms or is invalid")
     return {"passed": True, "assertions": sum(row.get("assertions", 0) for row in results.values()),
             "checks": len(results), "skipped": 0, "cancellation_checkpoints": len(CHECKPOINTS),
-            "prepared_operations": 19, "actual_client_drain_cases": 5, "socket_ownership_cases": 12,
+            "prepared_operations": 19, "actual_client_drain_cases": 10, "socket_ownership_cases": 12,
             "legacy_loading_cases": 11, "stream_terminal_cases": 2, "results": results}
 
 def main():
