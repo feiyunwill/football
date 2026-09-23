@@ -1,3 +1,203 @@
+## 2026-09-24 COMMIT CHECKPOINT: B PIPELINE TERMINATED
+
+This entry supersedes earlier LIVE/queued descriptions. All four drivers have terminal exit_code=1: native-canonical-adoption-gates-20260924-b, native-canonical-udp-recovery-20260924-b, native-canonical-udp-snapshot-20260924-b, and native-canonical-udp-gui-input-20260924-a.
+
+Canonical native_boundary passed. Full framework CTest recorded 703 passing cases; pytest recorded 782 passing cases and one failure in UDPResumeTest.test_restore_error_never_sends_ready_or_success (test_udp_resume_budget.py:473): observed giving_up, expected gave_up. Full framework acceptance remains failed. Downstream recovery, snapshot and graphical input jobs stopped on dependency failure; their product cases did not execute.
+
+Next optimization work: verify and strengthen the restore-error test against asynchronous worker drain, preserving nonblocking tick, no premature terminal callback, and no ready/success after restore failure. Preserve current failure evidence and use new stage directories for subsequent validation. Do not promote network, training, rendering or overall product readiness.
+
+At the user's request, commit and push the current implementation and evidence checkpoint. Pre-commit validation: acceptance_inputs_test.py passed all 8 tests; git diff --check passed. This checkpoint does not claim full regression success.
+
+## Latest verified B-pipeline observation 1790191905.9389997
+
+{
+  "native-canonical-adoption-gates-20260924-b": {
+    "handle": {
+      "pid": 2314276,
+      "start_ticks": 67488931,
+      "launched": 1790191805.055059
+    },
+    "live": true,
+    "status": {
+      "phase": "sanitized-tests-build",
+      "time": 1790191893.062892,
+      "pid": 2314276
+    },
+    "terminal": null
+  },
+  "native-canonical-udp-recovery-20260924-b": {
+    "handle": {
+      "pid": 2314277,
+      "start_ticks": 67488931,
+      "launched": 1790191805.0556483
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-gates",
+      "time": 1790191805.1019979,
+      "canonical_changed": false
+    },
+    "terminal": null
+  },
+  "native-canonical-udp-snapshot-20260924-b": {
+    "handle": {
+      "pid": 2314278,
+      "start_ticks": 67488931,
+      "launched": 1790191805.0561109
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-recovery",
+      "time": 1790191805.1020343
+    },
+    "terminal": null
+  }
+}
+
+## 2026-09-24 CANONICAL GATE A TERMINAL FAILURE; CORRECTED B PIPELINE LAUNCHED
+
+This supersedes the LIVE wording in the previous entry. Gate A passed native_boundary, then failed after Debug TCP products built: the Make invocation read its old target table before CMake regenerated new UDP targets, and reported no rule for football_server_udp. Current generated Makefile contains both UDP rules. Recovery A/snapshot A ended on this dependency failure, without running their product cases. All A evidence is immutable.
+
+Gate B explicitly configures the SAME sanitized build/cache before invoking new targets. Source remains1117 and unchanged; no flags/budgets relaxed. All three B drivers preserve original product/replay tests and serial dependencies. Exact new handles follow; poll B, not A. Current progress includes the implemented observation fix and passing Linux4x1850 Release/Debug checks, but no fullframework/product completion.
+{
+  "native-canonical-adoption-gates-20260924-b": {
+    "pid": 2314276,
+    "start_ticks": 67488931,
+    "launched": 1790191805.055059
+  },
+  "native-canonical-udp-recovery-20260924-b": {
+    "pid": 2314277,
+    "start_ticks": 67488931,
+    "launched": 1790191805.0556483
+  },
+  "native-canonical-udp-snapshot-20260924-b": {
+    "pid": 2314278,
+    "start_ticks": 67488931,
+    "launched": 1790191805.0561109
+  }
+}
+
+## 2026-09-24 WSL RECOVERED; TRAINING OBSERVATION FIX ADOPTED; CANONICAL GATES LIVE
+
+Goal ACTIVE/INCOMPLETE. This resumed work is PROGRESS. The WSL blocker no longer holds: old diagnostic tool sessions10806/10220 and their Windows processes disappeared; new explicit /bin/true returned0, Linux execution and original toolchains work. No WSL restart/global configuration/install was performed by this work. Reset any blocker audit; do not mark blocked for the historical launch problem.
+
+TRAINING FIX (task25.1.2.1 / plan25.1.2 / ms25.1):
+- Original GameEnvWrapper OBS_DIM128 emitted147 values; source-exact observe-body bounded compile-time probe proves19 outside writes.
+- Added dependency-free constexpr observation_layout.hpp with shared147 count, field-order-preserving writer, compile-time minimum-width and state array-size check. Default OBS_DIM147; real wrapper also requires Matrix::ROWS1 and COLS==environment OBS_DIM.
+- Permanent rl_observation_static_contract.cpp and engine_rl_observation_contract.cpp registered in standalone CMake/CTest.
+- Framework now requires >=703 C++ cases, including six UDP prefixes (142 cases) AND rl_observation_contract. 703 is a requirement, not a completed result.
+- acceptance_inputs_test.py now8 tests; all passed.
+- Prior implementation bytes preserved in rl-observation-adoption-20260924-a/originals; sources-before/after8files and adoption-onlyexit. Four copied files exactly match tested candidate.
+- MSVC isolated compile-time proof: rl-observation-layout-20260924-d and rl-observation-wrapper-20260924-a pass, reject undersized columns/state extent/wrong matrix width/multiple rows. Wrapper proof uses an explicit bounded Matrix/set test double, NOT full RLtools.
+- Failed exploratory stages layoutA(command quoting), B(missing Windows SDK), C(bootstrap newlines) preserved. D uses freestanding compile-only contracts, not a substitute for target runtime.
+- Canonical Linux runtime proof rl-observation-linux-20260924-a: GCC16.2.1 Release and full-g O0 ASan/UBSan/no recovery/leaks each4cases1850assertions pass.
+- Adoption integrity/unit proof rl-observation-adoption-proof-20260924-a:8sourceSHAs,4exactcandidatefiles,8unit tests.
+- Official pinned RLtools matrix header retrieved read-only to stage (not installed): b32d9985c65a5e098a6bbf190fd994962d288b99, SHA4f831eab198a903a24af57e08c177d701eb0ce79c1db35bb992d63a09fe5d842.
+- Full training still unverified: third_party/rl-tools empty; old128-column checkpoint compatibility/explicit diagnostics, atomic save, corruption/failure behavior, signed sentinels and environment lifetime remain outstanding.
+
+CURRENT NATIVE SOURCE IDENTITY:
+Linux match_benchmark.source_manifest measured1117 entries, includes12 nestedUDPfixtures. Source frozen by live canonical gate; NO CODE/PROGRAM edits while jobs run. Previous1102/1092 and prior formal framework pass historical. Original missing protected performance baseline must not be replaced.
+
+LIVE PIPELINE (all serial dependencies; exact handles below):
+1. native-canonical-adoption-gates-20260924-a PID2311343/start67463409: actual native_boundary already PASS; canonical Release TCP/UDP products and relocated binding verified. Now compiling original fullDebug ASanUBSan products, then143 selected UDP/observation cases, then original fullframework under privateX11. Old formal records archived prior-formal; fresh records copied formal-result.
+2. native-canonical-udp-recovery-20260924-a PID2312592/start67474403 waits for1 terminalpass. Uses actual CMake bin/football_server_udp and football_client_udp, unchanged recoveryD pair_probe/observer/engine_verify.cpp, new verifier compiled against canonical includes (no private candidate path). R/S x outage/impaired4pairs, original30sstartup and300s independent replay.
+3. native-canonical-udp-snapshot-20260924-a PID2312593/start67474403 waits for2 terminalpass. Unchanged prior snapshot-interruption/stale-generation probe, actual canonical binaries, new canonical verifier; original300s replay.
+Check exit/report before stale status and validate PID+startticks. Never restart on observation timeout. If dependency fails, preserve terminal evidence and use a new stage after correction.
+
+DOCS:
+Latest authoritative manifest rl-observation-evidence-20260924-a/documents-after.json has22docs. Exact previous19 plus task/plan25 (21total) archived before editing. New report optimization-rl-observation-layout-2026-09-24.md. SOURCE CHANGES THIS WORK UNCOMMITTED; previous requested push remains1231ec5 origin/master.
+
+No subagents. Preserve serial builds, fullDebug-g, ASanUBSan/no-O1/leaks, original startup/cancel/replay budgets, immutable executed stages. Full framework/architecture/performance/feel/network/render/AI/training/package quality remains incomplete, including actual GUI/p95/soak and general changing-input weak-network matrix. Neither observation repair nor native_boundary pass establishes product acceptance.
+
+LATEST LIVE OBSERVATION:
+{
+  "native-canonical-adoption-gates-20260924-a": {
+    "handle": {
+      "pid": 2311343,
+      "start_ticks": 67463409,
+      "launched": 1790191549.837294
+    },
+    "live": false,
+    "status": {
+      "phase": "sanitized-products",
+      "time": 1790191696.6864245,
+      "pid": 2311343
+    },
+    "terminal": {
+      "exit_code": 1,
+      "started": 1790191549.936408,
+      "finished": 1790191741.462095
+    }
+  },
+  "native-canonical-udp-recovery-20260924-a": {
+    "handle": {
+      "pid": 2312592,
+      "start_ticks": 67474403,
+      "launched": 1790191659.7715755
+    },
+    "live": false,
+    "status": {
+      "phase": "queued-behind-canonical-gates",
+      "time": 1790191659.8439834,
+      "canonical_changed": false
+    },
+    "terminal": {
+      "exit_code": 1,
+      "started": 1790191659.8419027,
+      "finished": 1790191741.861805,
+      "canonical_changed": false
+    }
+  },
+  "native-canonical-udp-snapshot-20260924-a": {
+    "handle": {
+      "pid": 2312593,
+      "start_ticks": 67474403,
+      "launched": 1790191659.7724261
+    },
+    "live": false,
+    "status": {
+      "phase": "queued-behind-canonical-recovery",
+      "time": 1790191659.8534064
+    },
+    "terminal": {
+      "exit_code": 1,
+      "started": 1790191659.8510547,
+      "finished": 1790191741.8710597,
+      "canonical_changed": false
+    }
+  }
+}
+
+## 2026-09-24 NATIVE EXECUTION CHANNEL BLOCKER REVALIDATED
+
+Previous goal turn PROGRESS (acceptance scopes, tests and evidence changed). Current work revalidated the same execution blocker across the user publication turn and two goal continuations, then attempted bounded recovery. Linux /proc uptime, loadavg and meminfo remain readable; over 14 GB is available. Existing codebase-memory MCP responds. Windows WslService reports Running. No /bin/true process was observed in the Linux process snapshot despite pending Windows wsl clients. Exact cause is NOT established; this is not a native product test failure.
+
+Only our own read-only diagnostic clients were stopped after PID/command checks: Windows8360/27884,33316/26880,32288/8024,8244/21596 (child processes exited with parents). Old sessions34227/96504 are terminal exit1 due to explicit cancellation, NOT native-test failure. No project job was restarted. No user process, MCP server, service or global configuration was modified.
+
+After that concrete recovery attempt a single fresh explicit-root /bin/true probe was launched: tool session10806, still pending at the final observation. Poll this same handle; do not duplicate probes or infer terminal from an observation timeout. Precise process state and before-SESSION archived in native-execution-channel-20260924-a/observation.json. No native build or test started.
+
+Current source hashes still match native-udp-acceptance-inputs-20260924-a/sources-after.json. Its 6 Windows acceptance-infrastructure tests remain valid for their scope. Complete canonical Linux source identity, Release/Debug ASan/UBSan builds, actual network integration and full framework acceptance remain pending, with all original limits intact.
+
+The objective remains unachieved. This repeated environment blocker now prevents the required native validation. Restore WSL native-command execution before resuming canonical acceptance; do not promote product quality from Windows verifier tests or candidate evidence. All milestone/frame/feel/network/render/AI/training/package requirements remain unchanged. Current unpublished source changes and latest19-doc manifest are recorded in the prior entry.
+
+## 2026-09-24 NATIVE ACCEPTANCE INPUT COVERAGE REPAIRED; LINUX EXECUTION PENDING
+
+Goal ACTIVE/INCOMPLETE. This continuation is PROGRESS: changed actual source fingerprint scopes and framework acceptance, added regression tests, independently proved old false positives versus new rejection, and archived/updated milestone-plan-task evidence. Previous user-requested publication completed as 1231ec5 on origin/master; changes from this continuation are NOT committed or pushed.
+
+CURRENT CHANGES:
+- .project/optimization/program.json: 12 checks now use engine/tests/fixtures/**/*.inc. The former glob covered 5 top-level fixtures; the new glob covers all 17, including 12 nested native UDP fixtures.
+- .project/checks/framework_regression.py: requires >=702 C++ tests (existing560+UDP142), unique names and six named UDP prefixes with minimum counts 28/37/27/20/24/6. Existing failure/error/skipped rejection retained. This is a requirement, NOT an observed 702-test execution.
+- .project/tests/acceptance_inputs_test.py: 6 permanent unittest cases passed on Windows Python3.14. Actual quality.Program.fingerprint over each declared fixture scope proves content changes and additions invalidate every affected check. JUnit tests reject omitted/partial suites, duplicates and failure/error/skipped outcomes.
+- Immutable stage native-udp-acceptance-inputs-20260924-a: originals, comparison.json (all12 old-ignore/new-detect; old JUnit accepts702 unrelated/new rejects), 17 actual fixture paths, unittest.log, 3 source hashes, exit0. This stage proves acceptance infrastructure ONLY, not Linux native runtime.
+- Latest authoritative docs manifest: native-udp-adoption-evidence-20260924-a/documents-after.json (19docs). Exact previous18 archived and hashes verified. Eight docs updated, new report optimization-native-udp-adoption-2026-09-24.md. Previous complete framework evidence is historical after native adoption.
+
+ENVIRONMENT / FIRST NEXT:
+WSL launch interface is unresponsive, while UNC file reads/writes and Windows Git function. No native build started this turn. Pending diagnostic /bin/true session34227 (Windows wsl PIDs32288/8024) and explicit --exec root variant session96504. Re-poll these SAME handles; observation timeouts do not mean terminal. Earlier user-publication read-only WSL sessions77523 and85427 also pending. Do not restart or reset WSL/global configuration or assume test failure. Existing MCP graph process responds; generation2026-09-23T18:47:56Z; Verify tier coverage checked for modified gate/source inputs. New test coverage missing -> exact source and execution fallback.
+
+When Linux execution works, first run canonical source_manifest with recursive fixtures (expected prior1102+12=1114; must measure actual, Windows symlink behavior is not authoritative). Then serial canonical native Release and full Debug ASan/UBSan no-O1 builds, six permanent nativeUDP suites, actual canonical TCP/UDP integration/recovery/snapshot interruption and full framework. Preserve original30s startup/250ms cancellation/300s replay. Do not relaunch completed private E/D/snapshotA stages as if they were current canonical tests.
+
+No subagents, installs, protected baseline substitutions, manual quality promotion or global changes. Full GUI/feel/weaknet/soak/p95/render/AI/training/package objective unchanged. Prior native candidate terminal successes and adoption state remain in the entry below. Keep goal active; runtime execution pending is not grounds for claiming completion.
+
 ## 2026-09-24 USER-REQUESTED CODE PUBLICATION; NATIVE ADOPTION VALIDATION PENDING
 
 This entry supersedes stale live-process and pre-adoption statements below. The user requested committing and pushing the current code to origin/master. The optimization objective remains incomplete; publication is not product acceptance.

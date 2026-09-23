@@ -582,3 +582,7 @@ set(NATIVE_UDP_TEST_TARGETS
   native_udp_dialer_test
   native_udp_terminal_drain_test
 )
+
+# 2026-09-24: fixed observation dimensions and independent compile/runtime contracts.
+list(APPEND CORE_HEADERS src/frame_sync/rl_training/observation_layout.hpp)
+set(ENGINE_RL_OBSERVATION_CONTRACT_SOURCES tests/engine_rl_observation_contract.cpp)

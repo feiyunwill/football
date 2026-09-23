@@ -6,7 +6,7 @@
       "heartbeat_at": "2026-09-08T16:46:05Z",
       "metadata": {},
       "registered_at": "2026-09-08T16:46:05Z",
-      "status": "active",
+      "status": "zombie",
       "type": "opencode"
     },
     "-179719": {
@@ -52,6 +52,15 @@
       "metadata": {},
       "registered_at": "2026-09-02T07:38:47Z",
       "status": "zombie",
+      "type": "opencode"
+    },
+    "codex-product-optimization": {
+      "capabilities": [],
+      "current_milestone": null,
+      "heartbeat_at": "2026-09-09T02:59:25Z",
+      "metadata": {},
+      "registered_at": "2026-09-09T02:59:25Z",
+      "status": "active",
       "type": "opencode"
     }
   },

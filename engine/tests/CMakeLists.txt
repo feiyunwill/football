@@ -253,6 +253,14 @@ if(UNIX)
   endforeach()
 endif()
 
+# 2026-09-24: the real training observation layout is testable without RLtools.
+add_library(rl_observation_static_contract OBJECT rl_observation_static_contract.cpp)
+target_include_directories(rl_observation_static_contract PRIVATE ${ENGINE_SRC})
+add_executable(engine_rl_observation_contract engine_rl_observation_contract.cpp)
+target_include_directories(engine_rl_observation_contract PRIVATE ${ENGINE_SRC})
+add_test(NAME rl_observation_contract COMMAND engine_rl_observation_contract)
+set_tests_properties(rl_observation_contract PROPERTIES TIMEOUT 30)
+
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
 if(ENABLE_RLTOOLS)

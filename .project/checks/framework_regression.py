@@ -13,12 +13,34 @@ import xml.etree.ElementTree as ET
 from native_boundary import ROOT, require, run
 
 
-def junit_count(path, minimum):
+# 2026-09-24: explicit transport suite coverage prevents silent CMake omissions.
+NATIVE_UDP_SUITES = {
+    "native_udp_bootstrap_test.": 28,
+    "native_udp_window_test.": 37,
+    "native_udp_stream_test.": 27,
+    "native_udp_listener_test.": 20,
+    "native_udp_dialer_test.": 24,
+    "native_udp_terminal_drain_test.": 6,
+}
+
+
+REQUIRED_CPP_SUITES = {**NATIVE_UDP_SUITES, "rl_observation_contract": 1}
+
+# Previous implementation preserved in native-udp-acceptance-inputs-20260924-a/originals.
+def junit_count(path, minimum, required_suites=None):
     tree = ET.parse(path)
     cases = list(tree.iter("testcase"))
     require(len(cases) >= minimum, f"Only {len(cases)} cases, expected at least {minimum}: {path}")
     require(not any(case.find(tag) is not None for case in cases for tag in ("failure", "error", "skipped")),
             f"Failure, error or skipped test in {path}")
+    if required_suites:
+        names = [case.get("name", "") for case in cases]
+        require(all(names) and len(set(names)) == len(names),
+                f"Missing or duplicate test identity in {path}")
+        for prefix, required in required_suites.items():
+            actual = sum(name.startswith(prefix) for name in names)
+            require(actual >= required,
+                    f"Incomplete suite {prefix}: {actual}, expected at least {required}: {path}")
     return len(cases)
 
 
@@ -45,7 +67,8 @@ def main():
     reports.mkdir(parents=True, exist_ok=True)
     cpp_report = reports / "framework-ctest.xml"
     run(["ctest", "--test-dir", tests, "--output-on-failure", "--output-junit", cpp_report])
-    cpp_count = junit_count(cpp_report, 421)
+    # 560 existing + 142 UDP + the actual observation layout runtime contract.
+    cpp_count = junit_count(cpp_report, 703, REQUIRED_CPP_SUITES)
     # 2026-09-22: permanently run the actual shared-engine asset parser contracts.
     run(["cmake", "--build", native, "--target", "engine_ase_parser_contract", "-j", "1"])
     asset_parser = json.loads(run([native / "bin/engine_ase_parser_contract"], capture=True))
@@ -124,6 +147,8 @@ print(json.dumps({key:dict(path=str(path),sha256=hashlib.sha256(path.read_bytes(
                       "native_file_reader": file_reader,
                       "native_asset_parser": asset_parser,
                       "cpp_tests": cpp_count, "python_tests": python_count,
+                      "native_udp_required_suites": NATIVE_UDP_SUITES,
+                      "required_cpp_suites": REQUIRED_CPP_SUITES,
                       "debug_compilation_units": len(commands), "native_determinism": results,
                       "python_executable": str(python), "python_native_runtime": native_identity,
                       "network_integration": "separate required milestone ms-23.1"}))

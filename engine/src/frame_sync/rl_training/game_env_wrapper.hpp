@@ -5,6 +5,7 @@
 #ifndef _HPP_GAME_ENV_WRAPPER
 #define _HPP_GAME_ENV_WRAPPER
 
+#include "observation_layout.hpp"
 #include "../../game_env.hpp"
 #include "../../gamedefines.hpp"
 #include "../../main.hpp"
@@ -27,7 +28,9 @@ template <typename T_T, typename T_TI = unsigned long>
 struct DefaultParameters {
   using T = T_T;
   using TI = T_TI;
-  static constexpr TI OBS_DIM = 128;
+  // 2026-09-24: the original 128 columns truncated a 147-value layout.
+  // static constexpr TI OBS_DIM = 128;
+  static constexpr TI OBS_DIM = ::football::training::kObservationFeatures;
   static constexpr TI ACTION_DIM = 1;
   static constexpr TI N_AGENTS = 1;
   static constexpr TI EPISODE_STEP_LIMIT = 1500;
@@ -394,25 +397,14 @@ static void observe(DEVICE&, const rl::environments::GameEnvWrapper<SPEC>&,
                      const STATE_TYPE& state,
                      const typename rl::environments::GameEnvWrapper<SPEC>::Observation&,
                      Matrix<OBS_SPEC>& observation, RNG&) {
-  typename SPEC::TI idx = 0;
-  for (int i = 0; i < 3; i++) rl_tools::set(observation, 0, idx++, state.ball_pos[i]);
-  for (int i = 0; i < 3; i++) rl_tools::set(observation, 0, idx++, state.ball_dir[i]);
-  for (int i = 0; i < 3; i++) rl_tools::set(observation, 0, idx++, state.ball_rot[i]);
-  for (int i = 0; i < 22; i++) rl_tools::set(observation, 0, idx++, state.left_pos[i]);
-  for (int i = 0; i < 22; i++) rl_tools::set(observation, 0, idx++, state.left_dir[i]);
-  for (int i = 0; i < 11; i++) rl_tools::set(observation, 0, idx++, state.left_tired[i]);
-  for (int i = 0; i < 11; i++) rl_tools::set(observation, 0, idx++, state.left_active[i]);
-  for (int i = 0; i < 22; i++) rl_tools::set(observation, 0, idx++, state.right_pos[i]);
-  for (int i = 0; i < 22; i++) rl_tools::set(observation, 0, idx++, state.right_dir[i]);
-  for (int i = 0; i < 11; i++) rl_tools::set(observation, 0, idx++, state.right_tired[i]);
-  for (int i = 0; i < 11; i++) rl_tools::set(observation, 0, idx++, state.right_active[i]);
-  rl_tools::set(observation, 0, idx++, state.score[0]);
-  rl_tools::set(observation, 0, idx++, state.score[1]);
-  rl_tools::set(observation, 0, idx++, static_cast<float>(state.game_mode));
-  rl_tools::set(observation, 0, idx++, static_cast<float>(state.ball_owned_team));
-  rl_tools::set(observation, 0, idx++, static_cast<float>(state.ball_owned_player));
-  rl_tools::set(observation, 0, idx++, static_cast<float>(state.steps_left));
-  while (idx < 128) rl_tools::set(observation, 0, idx++, 0.0f);
+  static_assert(OBS_SPEC::ROWS == 1, "Observation must contain one row");
+  static_assert(OBS_SPEC::COLS == SPEC::PARAMETERS::OBS_DIM,
+                "Observation matrix width differs from environment");
+  // Previous serialization retained in rl-observation-layout-20260924-a/originals.
+  ::football::training::WriteObservation<SPEC::PARAMETERS::OBS_DIM>(
+      state, [&](::football::training::ObservationIndex index, typename STATE_TYPE::T value) {
+        rl_tools::set(observation, 0, static_cast<typename SPEC::TI>(index), value);
+      });
 }
 
 template <typename DEVICE, typename SPEC, typename RNG>
