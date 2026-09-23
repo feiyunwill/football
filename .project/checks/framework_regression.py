@@ -24,7 +24,8 @@ NATIVE_UDP_SUITES = {
 }
 
 
-REQUIRED_CPP_SUITES = {**NATIVE_UDP_SUITES, "rl_observation_contract": 1}
+REQUIRED_CPP_SUITES = {**NATIVE_UDP_SUITES, "rl_observation_contract": 1,
+                       "native_input_rtt_test.": 8}
 
 # Previous implementation preserved in native-udp-acceptance-inputs-20260924-a/originals.
 def junit_count(path, minimum, required_suites=None):
@@ -67,8 +68,8 @@ def main():
     reports.mkdir(parents=True, exist_ok=True)
     cpp_report = reports / "framework-ctest.xml"
     run(["ctest", "--test-dir", tests, "--output-on-failure", "--output-junit", cpp_report])
-    # 560 existing + 142 UDP + the actual observation layout runtime contract.
-    cpp_count = junit_count(cpp_report, 703, REQUIRED_CPP_SUITES)
+    # 560 existing + 142 UDP + observation layout + 8 input lead/cadence contracts.
+    cpp_count = junit_count(cpp_report, 711, REQUIRED_CPP_SUITES)
     # 2026-09-22: permanently run the actual shared-engine asset parser contracts.
     run(["cmake", "--build", native, "--target", "engine_ase_parser_contract", "-j", "1"])
     asset_parser = json.loads(run([native / "bin/engine_ase_parser_contract"], capture=True))

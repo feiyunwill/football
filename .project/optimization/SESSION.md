@@ -1,3 +1,266 @@
+## 2026-09-24 提交前验证状态
+
+正式 RTT 修复的网络验证链已通过：8 组真实客户端/服务端场景、9010 个权威帧、16 次快照、16 个真实窗口输入动作；框架验收为 711 个 C++ 用例、783 个 Python 用例。可提交的结果摘要和源文件哈希保存在 .project/optimization/evidence/native-input-rtt-chain-20260924/。构建产物哈希代表该验证链结束时的状态；后续跨域检查会重新配置临时构建目录。
+
+跨域架构回归尚未通过：loading_regression.py 要求客户端 drain 结果包含 real_tcp: true，实际契约输出为 transport: "TCP"，导致 Loading contract coverage changed。该失败已保留，未修改门禁或将整体质量标记为通过。后续输入、战术、AI 检查及多席位候选仍在运行或排队。
+
+用户本轮明确要求提交并推送当前改动。提交包括已落地的 RTT 调度修复、8 项永久回归、验收门禁和已完成的验证记录。运行中的日志及被 Git 忽略的私有候选/构建产物不纳入提交。生产源文件继续保持冻结，等待串行验证链结束；本轮不重启或终止现有任务。
+
+当前仍未完成：默认 UDP/menu 迁移、单客户端多席位运行验证、完整弱网矩阵、输入延迟 p95、渲染、完整 RLtools 训练与打包验收。整体目标保持进行中。以下为提交准备时的进程快照；后续应核对实际终态。
+
+~~~json
+{
+  "native-input-rtt-cross-domain-20260924-a": {
+    "process.json": {
+      "pid": 2435404,
+      "start_ticks": 67847189,
+      "launched": 1790195387.6383452
+    },
+    "status.json": {
+      "phase": "input_contract",
+      "time": 1790196388.6732543
+    }
+  },
+  "native-udp-probe-migration-20260924-a": {
+    "process.json": {
+      "pid": 2438846,
+      "start_ticks": 67864284,
+      "launched": 1790195558.5836244
+    },
+    "status.json": {
+      "phase": "queued-after-cross-domain-gates",
+      "time": 1790195558.63683
+    }
+  },
+  "native-slot-group-candidate-20260924-a": {
+    "process.json": {
+      "pid": 2450448,
+      "start_ticks": 67893983,
+      "launched": 1790195855.5752776
+    },
+    "status.json": {
+      "phase": "queued-after-protocol-adapter",
+      "time": 1790195855.635938
+    }
+  },
+  "native-slot-group-wire-candidate-20260924-a": {
+    "process.json": {
+      "pid": 2450842,
+      "start_ticks": 67904294,
+      "launched": 1790195958.680899
+    },
+    "status.json": {
+      "phase": "queued-after-slot-group-lease-tests",
+      "time": 1790195958.7539973
+    }
+  },
+  "native-slot-group-integration-candidate-20260924-a": {
+    "process.json": {
+      "pid": 2452651,
+      "start_ticks": 67935452,
+      "launched": 1790196270.2686892
+    },
+    "status.json": {
+      "phase": "queued-after-group-components",
+      "time": 1790196270.318
+    }
+  }
+}
+~~~
+
+## 2026-09-24 CANONICAL RTT FRAMEWORK PASSED; NETWORK AND CROSS-DOMAIN CHAIN LIVE
+
+Previous and current turns are PROGRESS. Formal gateD exit0 finished1790195575.2406802:151 fullDebugASanUBSan components,711C++/783Python/305subtests,172Debugunits,42/43each1000frames/twoindependentprocesses/snapshot replay passed. Current1120 source manifest,3driver inputs,10R/S products and all command/formal logs verified. Root/core fullDebug flags unchanged. This proves scoped framework acceptance only.
+
+Latest authoritative25-document manifest: native-input-rtt-framework-evidence-20260924-a/documents-after.json. Prior25docs and SESSION archived there before edits; gate-evidence.json pins completed D evidence. Prior exact production adoption record remains native-input-rtt-adoption-20260924-a/adopted-final.json and sources-final.json.
+
+RecoveryD is now executing real pairs/replays, then snapshotD -> GUIinputC -> chainproofB. Canonical source must remain FROZEN until ALL queued downstream stages below finish. Do not rebuild root binaries concurrently. Original budgets unchanged. Poll exact handles, do not restart a live owner due observation timeout.
+
+Added downstream native-input-rtt-cross-domain-20260924-a (PID2435404/start67847189): waits successful chainproofB, then runs original Program gates architecture_regression,input_contract,tactical_integration,ai_decisions serially. Retains original checks/counts/deadlines; entire Debug recipes verified -g,ASanUBSan,no-recover,framepointer,noO1 at end. Original input gate separately uses its existing O1 TSan-only harnesses, not full-engine Debug. Failures recorded independently; no product promotion. It may reconfigure root products only AFTER chainproofB terminal verification.
+
+Added native-udp-probe-migration-20260924-a (PID2438846/start67864284): private independent current UDP adapter, original two-peer protocol assertions, plus new22peer/22slot50frame actual engine authority cohort. Queued AFTER cross-domain terminal and requires canonicalchainBsuccess. No production mutation. NOT proof of single-client22slots/resourcefaultcapacity/recovery/independent replay. Read migration-boundaries.md before using results. Server currently one scalar slot per session, no slots_per_client config, old default supports allslots; implement this difference rather than silently narrowing legacy capacity or merely changing default executable names. All old negative/resource/real-client probes remain required.
+
+NEXT: finish canonical recovery/snapshot/GUI/proof; handle any actual failure in a NEW immutable stage. Then inspect cross-domain and adapter reports/logs. Source remains1120 and formalframework passed; fullweaknet,defaultUDP/menu,singleclientmulti-seat,inputp95,render,AItraining,packaging remain unfinished. Do not mark overall goal complete. No new commit/push beyond e76cc16 (already remote).
+
+Verified process observation at 1790195648.361093
+
+{
+  "native-canonical-adoption-gates-20260924-d": {
+    "handle": {
+      "pid": 2420425,
+      "start_ticks": 67822127,
+      "launched": 1790195137.0195827
+    },
+    "live": false,
+    "status": {
+      "phase": "complete",
+      "time": 1790195575.2404618,
+      "pid": 2420425
+    },
+    "exit": {
+      "exit_code": 0,
+      "started": 1790195137.0663977,
+      "finished": 1790195575.2406802
+    }
+  },
+  "native-canonical-udp-recovery-20260924-d": {
+    "handle": {
+      "pid": 2420426,
+      "start_ticks": 67822128,
+      "launched": 1790195137.0202148
+    },
+    "live": true,
+    "status": {
+      "phase": "sanitized-outage",
+      "time": 1790195636.1285617,
+      "canonical_changed": false
+    }
+  },
+  "native-canonical-udp-snapshot-20260924-d": {
+    "handle": {
+      "pid": 2420427,
+      "start_ticks": 67822128,
+      "launched": 1790195137.0206459
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-recovery",
+      "time": 1790195137.072381
+    }
+  },
+  "native-canonical-udp-gui-input-20260924-c": {
+    "handle": {
+      "pid": 2420428,
+      "start_ticks": 67822128,
+      "launched": 1790195137.0210614
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-snapshot",
+      "time": 1790195137.0671325
+    }
+  },
+  "native-canonical-chain-proof-20260924-b": {
+    "handle": {
+      "pid": 2420429,
+      "start_ticks": 67822128,
+      "launched": 1790195137.0220363
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-gui",
+      "time": 1790195137.0601404
+    }
+  },
+  "native-input-rtt-cross-domain-20260924-a": {
+    "handle": {
+      "pid": 2435404,
+      "start_ticks": 67847189,
+      "launched": 1790195387.6383452
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-after-canonical-chain-proof",
+      "time": 1790195387.6813586
+    }
+  },
+  "native-udp-probe-migration-20260924-a": {
+    "handle": {
+      "pid": 2438846,
+      "start_ticks": 67864284,
+      "launched": 1790195558.5836244
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-after-cross-domain-gates",
+      "time": 1790195558.63683
+    }
+  }
+}
+
+## 2026-09-24 RTT INPUT CANDIDATE D ADOPTED; NEW CANONICAL CHAIN LIVE
+
+Previous turn was PROGRESS: commit e76cc164b8fba9f50479fabedadfeabb9f34fb39 pushed and remote verified. Current turn is PROGRESS: candidate D exit0 (finished1790194877.914544), exact3 implementation files adopted, permanent8-case RTT suite and2 historical algorithm fixtures added, required gates strengthened; acceptance verifier8tests passed. Do not infer ongoing push authorization.
+
+D verification before adoption:1513 input hashes,2 binary hashes,16 successful command logs verified; canonical1117 sources matched D manifest; Release/Debug scheduler8tests each and original clock contracts passed. Real R GUI1000 and S GUI1001 frames,8 keyboard phases each with8consecutive authority matches,2 recoveries and2 independently replayed snapshots each; replay frames1664/1533. Preserve failed A/B and prior canonical GUI Release failure.
+
+Adoption record: native-input-rtt-adoption-20260924-a. Exact originals archived;25 authoritative docs archived before edits. Latest25-document manifest there/documents-after.json. adopted-final.json is final9-file identity. sources-final.json is1120 items. Earlier sources-after.json/adopted.json in this stage record interim .hpp fixture names; fixture-scope-correction.json records rename to .inc so existing12 recursive fingerprint scopes cover them. Tests include old one-frame miss, invalid/bounded budgets, low RTT, monotonic changes, immutable sampling/reset, batch/capacity gaps, long authority jump.
+
+Formal gate minimum711 (560+142+1+8), required prefix native_input_rtt_test.:8. Sanitizer component selection includes this prefix, minimum151; full-g/ASanUBSan/no-recover/framepointer/leaks and noO1 preserved. .project/tests/acceptance_inputs_test.py now checks omissions/partial coverage for ALL required suites, not only UDP. Eight verifier tests pass. Production adopted files are engine/src/frame_sync/{native_publication_clock.hpp,native_input_publication.hpp,integrated_client.cpp}; permanent tests engine/tests/native_input_rtt_test.cpp and fixtures/native_input/{original_clock,unpaced_lead_clock}.inc.
+
+New immutable serial pipeline: gatesD -> recoveryD -> snapshotD -> guiC -> proofB. Canonical source FROZEN while it runs; do not modify source or rebuild root products alongside. Drivers pin1120 sources, root products and helpers. GUI helper is exact candidateD helper with8consecutive-frame bursts; proofB additionally validates consecutive frames. Original30s server start,1000 GUI/1500 snapshot frames,300s replay,250ms cancellation budgets remain.
+
+NEXT: poll exact live handles below; inspect formal gate logs if terminal failure. If gates pass verify151sanitized/711C++/783Python and native determinism. Continue canonical4recovery+2snapshot+2GUI pairs and independent replay, then proofB. Never restart a live handle from observation timeout. Never edit executed stage scripts; use new stage for fixes. Archive current25docs before updates. After pipeline terminal, continue default-public UDP migration using native-default-udp-migration-audit-20260924-a; preserve real22slot capacity, update legacy protocol probes, verify menu separately. Training checkpoint candidate only file-I/O38R/38S verified; realRLtools dependency/serialization still unverified. Fullweaknet,inputp95,render,AI,training,packaging and all7domains remain required, product goal active.
+
+Graph Tier2 currentgeneration2026-09-23T20:25:34Z. integrated_client.cpp partial around clear_transport_payload_locked (1321 before adoption), exact fallback read; missing templates pump_input/PublishTimed read directly. Both .inc fixtures partial entirefile, read entirely. Clean coverage is not completeness.
+
+Verified process observation at 1790195238.014115
+
+{
+  "native-canonical-adoption-gates-20260924-d": {
+    "handle": {
+      "pid": 2420425,
+      "start_ticks": 67822127,
+      "launched": 1790195137.0195827
+    },
+    "live": true,
+    "status": {
+      "phase": "sanitized-products",
+      "time": 1790195182.5561795,
+      "pid": 2420425
+    }
+  },
+  "native-canonical-udp-recovery-20260924-d": {
+    "handle": {
+      "pid": 2420426,
+      "start_ticks": 67822128,
+      "launched": 1790195137.0202148
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-gates",
+      "time": 1790195137.0663865,
+      "canonical_changed": false
+    }
+  },
+  "native-canonical-udp-snapshot-20260924-d": {
+    "handle": {
+      "pid": 2420427,
+      "start_ticks": 67822128,
+      "launched": 1790195137.0206459
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-recovery",
+      "time": 1790195137.072381
+    }
+  },
+  "native-canonical-udp-gui-input-20260924-c": {
+    "handle": {
+      "pid": 2420428,
+      "start_ticks": 67822128,
+      "launched": 1790195137.0210614
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-snapshot",
+      "time": 1790195137.0671325
+    }
+  },
+  "native-canonical-chain-proof-20260924-b": {
+    "handle": {
+      "pid": 2420429,
+      "start_ticks": 67822128,
+      "launched": 1790195137.0220363
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-behind-canonical-gui",
+      "time": 1790195137.0601404
+    }
+  }
+}
+
 ## 2026-09-24 REAL GRAPHICAL INPUT DEFECT REPRODUCED; RTT/CADENCE C PASSED, FINAL D LIVE
 
 Current goal turn is PROGRESS. Canonical recovery C + snapshot C exit0: six actual R/S pairs, 7005 authority frames, 11295 replay frames, 12 snapshots. Canonical GUI B exit1: Release original client0 sent706 nonzero frames but only16 matched authority; client1 sent203 with4 matches. Keyboard capture is correct. Inputs reached relay ~13ms before their target authority frame, insufficient for impaired outbound delivery. Canonical S GUI passed1000frames/eight actions/two snapshots. Chain proof A correctly failed because canonical Release GUI failed; never promote its result.

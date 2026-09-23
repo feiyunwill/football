@@ -72,10 +72,12 @@ class NativePublishedHistory {
                               std::forward<Sample>(sample),std::forward<Send>(send));
   }
   template<class Sample,class Send>
-  std::optional<frame_id_t> PublishTimed(frame_id_t authority,Sample&& sample,Send&& send) {
+  std::optional<frame_id_t> PublishTimed(frame_id_t authority,Sample&& sample,Send&& send,
+                                           double transport_budget_ms = 0) {
     std::lock_guard lock(mu_);
     auto candidate = schedule_;
-    const auto target = candidate.Next(std::max(authority,history_.confirmed_count()),next_,clock_());
+    const auto target = candidate.Next(std::max(authority,history_.confirmed_count()),next_,clock_(),
+        NativePublicationClock::LeadFrames(transport_budget_ms));
     if (target) {
       const auto [input,fresh] = history_.ForFrame(*target,std::forward<Sample>(sample));
       if (fresh && !std::invoke(std::forward<Send>(send),*target,input))

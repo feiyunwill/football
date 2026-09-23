@@ -70,32 +70,32 @@ class AcceptanceInputsTest(unittest.TestCase):
 
     def baseline(self):
         cases = [(f"existing.case{i}", None) for i in range(560)]
-        for prefix, count in framework.NATIVE_UDP_SUITES.items():
+        for prefix, count in framework.REQUIRED_CPP_SUITES.items():
             cases.extend((f"{prefix}case{i}", None) for i in range(count))
         return cases
 
     def test_complete_report_is_accepted(self):
         with tempfile.TemporaryDirectory() as directory:
             path = self.report(Path(directory), self.baseline())
-            self.assertEqual(framework.junit_count(path, 702, framework.NATIVE_UDP_SUITES), 702)
+            self.assertEqual(framework.junit_count(path, 711, framework.REQUIRED_CPP_SUITES), 711)
 
     def test_unrelated_cases_cannot_replace_any_required_suite(self):
-        for prefix in framework.NATIVE_UDP_SUITES:
+        for prefix in framework.REQUIRED_CPP_SUITES:
             with self.subTest(prefix=prefix), tempfile.TemporaryDirectory() as directory:
                 cases = [(name.replace(prefix, "unrelated.", 1) if name.startswith(prefix) else name, outcome)
                          for name, outcome in self.baseline()]
                 path = self.report(Path(directory), cases)
                 with self.assertRaisesRegex(RuntimeError, "Incomplete suite"):
-                    framework.junit_count(path, 702, framework.NATIVE_UDP_SUITES)
+                    framework.junit_count(path, 711, framework.REQUIRED_CPP_SUITES)
 
     def test_partial_suite_is_rejected_even_with_enough_total_cases(self):
-        for prefix in framework.NATIVE_UDP_SUITES:
+        for prefix in framework.REQUIRED_CPP_SUITES:
             with self.subTest(prefix=prefix), tempfile.TemporaryDirectory() as directory:
                 cases = [(name if name != prefix + "case0" else "padding.case", outcome)
                          for name, outcome in self.baseline()]
                 path = self.report(Path(directory), cases)
                 with self.assertRaisesRegex(RuntimeError, "Incomplete suite"):
-                    framework.junit_count(path, 702, framework.NATIVE_UDP_SUITES)
+                    framework.junit_count(path, 711, framework.REQUIRED_CPP_SUITES)
 
     def test_duplicate_test_names_cannot_pad_coverage(self):
         cases = self.baseline()
@@ -103,18 +103,19 @@ class AcceptanceInputsTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = self.report(Path(directory), cases)
             with self.assertRaisesRegex(RuntimeError, "duplicate"):
-                framework.junit_count(path, 702, framework.NATIVE_UDP_SUITES)
+                framework.junit_count(path, 711, framework.REQUIRED_CPP_SUITES)
 
     def test_framework_requires_the_observation_runtime_contract(self):
         with tempfile.TemporaryDirectory() as directory:
-            path = self.report(Path(directory), self.baseline() + [("padding.case", None)])
+            path = self.report(Path(directory), [(name if not name.startswith("rl_observation_contract") else "padding.case", outcome)
+                                                  for name, outcome in self.baseline()])
             with self.assertRaisesRegex(RuntimeError, "Incomplete suite rl_observation_contract"):
-                framework.junit_count(path, 703, framework.REQUIRED_CPP_SUITES)
+                framework.junit_count(path, 711, framework.REQUIRED_CPP_SUITES)
 
     def test_framework_accepts_the_observation_runtime_contract(self):
         with tempfile.TemporaryDirectory() as directory:
-            path = self.report(Path(directory), self.baseline() + [("rl_observation_contract", None)])
-            self.assertEqual(framework.junit_count(path, 703, framework.REQUIRED_CPP_SUITES), 703)
+            path = self.report(Path(directory), self.baseline())
+            self.assertEqual(framework.junit_count(path, 711, framework.REQUIRED_CPP_SUITES), 711)
 
     def test_failure_error_and_skip_are_rejected(self):
         for outcome in ("failure", "error", "skipped"):
@@ -123,7 +124,7 @@ class AcceptanceInputsTest(unittest.TestCase):
                 cases[-1] = (cases[-1][0], outcome)
                 path = self.report(Path(directory), cases)
                 with self.assertRaisesRegex(RuntimeError, "Failure, error or skipped"):
-                    framework.junit_count(path, 702, framework.NATIVE_UDP_SUITES)
+                    framework.junit_count(path, 711, framework.REQUIRED_CPP_SUITES)
 
 
 if __name__ == "__main__":

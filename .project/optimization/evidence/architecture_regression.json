@@ -1,15 +1,15 @@
 {
   "check": "architecture_regression",
-  "fingerprint": "dc655c112ed8a7fdd341754dcd01415b10a2aed16986c5bfb91f32e4c4be6a84",
-  "passed": true,
-  "reason": "Structured assertions evaluated",
-  "returncode": 0,
-  "started": 1789449675.9658298,
-  "duration_seconds": 2914.913,
+  "fingerprint": "f6abd570c6090a89d00824c58824a1905948e668d3d4bd4acf0531d56de7aeb5",
+  "passed": false,
+  "reason": "Command exited with 1",
+  "returncode": 1,
+  "started": 1790196258.1000154,
+  "duration_seconds": 130.412,
   "argv": [
     "python3",
     ".project/checks/architecture_regression.py"
   ],
-  "log": "architecture_regression-1789449675965890580.log",
-  "log_sha256": "5fe9c0c92125f8ca256d695b6392255e7c10e9547dd24d42332662b3a30c7993"
+  "log": "architecture_regression-1790196258100071129.log",
+  "log_sha256": "d0c910c1c589ca400fcf067f9f80bd2be611e0d6a89fea6b02ac2eb76f572c09"
 }

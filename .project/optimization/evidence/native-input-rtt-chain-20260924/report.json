@@ -1,0 +1,39 @@
+{
+  "passed": true,
+  "summary": {
+    "gates": {
+      "commands": 7,
+      "seconds": 438.17428255081177,
+      "sanitized_cases": 151,
+      "cpp_cases": 711,
+      "python_cases": 783
+    },
+    "recovery": {
+      "commands": 12,
+      "seconds": 737.4568464756012,
+      "pairs": 4
+    },
+    "snapshot": {
+      "commands": 4,
+      "seconds": 946.1490082740784,
+      "pairs": 2
+    },
+    "gui": {
+      "commands": 4,
+      "seconds": 1117.4600648880005,
+      "pairs": 2
+    }
+  },
+  "totals": {
+    "actual_pairs": 8,
+    "authority_frames": 9010,
+    "snapshots": 16,
+    "graphical_input_actions": 16
+  },
+  "source_entries": 1120,
+  "default_public_udp_migration_verified": false,
+  "full_weaknet_matrix_verified": false,
+  "input_latency_verified": false,
+  "full_RLtools_training_verified": false,
+  "product_acceptance": false
+}

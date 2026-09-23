@@ -579,7 +579,7 @@ class BasicIntegratedFrameSyncClient {
             const bool sent = send_frame_input(frame,my_slots_.data(),inputs.data(),
                                                static_cast<uint16_t>(my_slots_.size()),generation);
             send_aborted = !sent;return sent;
-          });
+          }, native_input_budget_ms_.load());
       } catch (...) {
         if (!send_aborted) throw;
         // A stale/transient send is cleared by owner reset before the next Accepted.
@@ -1254,7 +1254,12 @@ class BasicIntegratedFrameSyncClient {
           const auto milliseconds = std::chrono::duration<double,std::milli>(
               RecoveryClock::now()-recovery_last_ping_).count();
           const auto prior = native_rtt_ms_.load();
-          native_rtt_ms_ = prior > 0 ? prior*.875+milliseconds*.125 : milliseconds;
+          native_rtt_variation_ms_ = prior > 0
+              ? native_rtt_variation_ms_ * .75 + std::abs(milliseconds-prior) * .25
+              : milliseconds * .5;
+          const double smoothed = prior > 0 ? prior*.875+milliseconds*.125 : milliseconds;
+          native_rtt_ms_ = smoothed;
+          native_input_budget_ms_ = smoothed + 4*native_rtt_variation_ms_;
           ++recovery_heartbeat_echoes_;recovery_ping_pending_ = false;
         }
       }
@@ -1322,6 +1327,7 @@ class BasicIntegratedFrameSyncClient {
     pending_hashes_.clear();arrival_times_.clear();bot_slots_.fill(false);
     recovery_snapshot_.reset();recovery_assembler_.reset();
     recovery_ping_pending_ = false;recovery_last_ping_ = {};native_rtt_ms_ = 0;
+    native_rtt_variation_ms_ = 0;native_input_budget_ms_ = 0;
   }
   void close_native_attempt_locked() {
     ++transport_generation_;
@@ -1754,6 +1760,9 @@ class BasicIntegratedFrameSyncClient {
   bool recovery_ping_pending_ = false;
   size_t recovery_heartbeat_echoes_ = 0;
   std::atomic<double> native_rtt_ms_{0.0};
+  // Variation is owned by the transport mutex; only the derived budget is shared.
+  double native_rtt_variation_ms_ = 0;
+  std::atomic<double> native_input_budget_ms_{0.0};
 
 // 2026-09-21: share the product session state across TCP and reliable UDP.
 //   std::shared_ptr<tcp::socket> socket_;

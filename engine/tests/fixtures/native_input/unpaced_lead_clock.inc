@@ -9,15 +9,15 @@
 #include <optional>
 #include <stdexcept>
 namespace frame_sync {
-class NativePublicationClock {
+class UnpacedLeadClock {
  public:
   static constexpr std::int64_t kPeriod = 1000000000LL / NativeMatchContract::kHz;
-  NativePublicationClock() = default;
-  ~NativePublicationClock() = default;
-  NativePublicationClock(const NativePublicationClock&) = default;
-  NativePublicationClock& operator=(const NativePublicationClock&) = default;
-  NativePublicationClock(NativePublicationClock&&) = default;
-  NativePublicationClock& operator=(NativePublicationClock&&) = default;
+  UnpacedLeadClock() = default;
+  ~UnpacedLeadClock() = default;
+  UnpacedLeadClock(const UnpacedLeadClock&) = default;
+  UnpacedLeadClock& operator=(const UnpacedLeadClock&) = default;
+  UnpacedLeadClock(UnpacedLeadClock&&) = default;
+  UnpacedLeadClock& operator=(UnpacedLeadClock&&) = default;
 
   // Authority is already one receive trip old. Budget the complete measured
   // round trip (including its variation) before assigning immutable input.
@@ -37,38 +37,21 @@ class NativePublicationClock {
     if (now > std::numeric_limits<std::int64_t>::max() - kPeriod)
       throw std::overflow_error("Native publication time exhausted");
     const auto known = std::max(authority_, authority);
-    const auto minimum = std::max(std::uint64_t(known) + 1, std::uint64_t(simulation));
-    // Establish a new horizon when its measured budget changes. Otherwise keep
-    // the independent cadence: receipt batches must not jump over future frames.
-    const auto floor = published_ && lead_frames > 1 && lead_frames == lead_frames_ && minimum <= last_frame_
-        ? minimum : std::max(std::uint64_t(known) + lead_frames, std::uint64_t(simulation));
+    const auto floor = std::max(std::uint64_t(known) + lead_frames, std::uint64_t(simulation));
     const auto ceiling = std::min(std::uint64_t(known) + ServerInputWindow::kFrames - 1,
                                   std::uint64_t(UINT32_MAX) - 1);
     if (floor >= UINT32_MAX) throw std::overflow_error("Native publication frame exhausted");
     // 2026-09-13: fresh authority corrects speculative wall-clock lead after slow
     // authority work. Existing future publications remain immutable while it catches up.
-    if (lead_frames == 1 && published_ && known > authority_ && floor <= last_frame_)
+    if (published_ && known > authority_ && floor <= last_frame_)
       deadline_ = now + kPeriod;
-    authority_ = known; observed_ = true; observed_time_ = now;lead_frames_ = lead_frames;
+    authority_ = known; observed_ = true; observed_time_ = now;
     // Do not consume device edges if prediction or a stalled authority leaves no slot.
-    if (floor > ceiling) {
-      if (lead_frames > 1) capacity_limited_ = true;
-      return std::nullopt;
-    }
+    if (floor > ceiling) return std::nullopt;
     if (!published_ || floor > last_frame_) {
       last_frame_ = static_cast<frame_id_t>(floor);
-      published_ = true; deadline_ = now + kPeriod;capacity_limited_ = false;
+      published_ = true; deadline_ = now + kPeriod;
       return last_frame_;
-    }
-    if (lead_frames > 1 && last_frame_ >= ceiling) {
-      capacity_limited_ = true;
-      return std::nullopt;
-    }
-    if (lead_frames > 1 && capacity_limited_) {
-      // There was no admissible future slot during the wait. Begin a fresh
-      // opportunity when capacity returns; never charge that wait as missed ticks.
-      deadline_ = now;
-      capacity_limited_ = false;
     }
     if (now < deadline_ || last_frame_ >= ceiling) return std::nullopt;
     // Expired local publication opportunities cannot be filled with newly observed
@@ -79,8 +62,8 @@ class NativePublicationClock {
     return last_frame_;
   }
  private:
-  frame_id_t authority_ = 0, last_frame_ = 0, lead_frames_ = 1;
+  frame_id_t authority_ = 0, last_frame_ = 0;
   std::int64_t observed_time_ = 0, deadline_ = 0;
-  bool observed_ = false, published_ = false, capacity_limited_ = false;
+  bool observed_ = false, published_ = false;
 };
 } // namespace frame_sync

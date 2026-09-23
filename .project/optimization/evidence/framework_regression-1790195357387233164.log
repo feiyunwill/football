@@ -1,0 +1,1562 @@
+Running: cmake -S engine -B /tmp/football-optimization-native-debug-config -DCMAKE_BUILD_TYPE=Debug -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native-debug-config/bin
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.3s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-native-debug-config
+Running: cmake -S engine/tests -B /tmp/football-review-20260909-tests -DCMAKE_BUILD_TYPE=Debug -DENABLE_PCH=OFF
+-- Using installed GoogleTest 1.18.0 at /usr/lib/cmake/GTest
+-- Build type: Debug
+-- Unity build: ON
+-- PCH enabled: OFF
+-- Build targets: 51
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-review-20260909-tests
+Running: cmake --build /tmp/football-review-20260909-tests -j 1
+[  2%] Built target frame_sync_test
+[  4%] Built target ecs_test
+[  6%] Built target ecs_query_contract_test
+[  8%] Built target fixed_point_test
+[ 10%] Built target fixed_point_determinism_test
+[ 12%] Built target client_state_test
+[ 14%] Built target ecs_physics_sync_test
+[ 16%] Built target ecs_benchmark_test
+[ 18%] Built target engine_integration_test
+[ 20%] Built target phase5_test
+[ 22%] Built target performance_benchmark_test
+[ 24%] Built target frame_sync_performance_test
+[ 26%] Built target ux_optimizer_test
+[ 28%] Built target frame_sync_coverage_test
+[ 30%] Built target prng_test
+[ 32%] Built target interpolator_test
+[ 34%] Built target state_delta_codec_test
+[ 36%] Built target prediction_accuracy_tracker_test
+[ 38%] Built target adaptive_prediction_cap_test
+[ 40%] Built target replay_system_test
+[ 41%] Built target adaptive_jitter_buffer_test
+[ 43%] Built target phase16_integration_test
+[ 45%] Built target latency_compensator_test
+[ 47%] Built target state_snapshot_codec_test
+[ 49%] Built target spectator_test
+[ 51%] Built target replay_integration_test
+[ 53%] Built target network_diagnostics_test
+[ 55%] Built target lobby_protocol_test
+[ 57%] Built target room_manager_test
+[ 59%] Built target lobby_e2e_test
+[ 61%] Built target milestone_regression_test
+[ 63%] Built target frame_simulation_test
+[ 65%] Built target memory_budget_test
+[ 67%] Built target replay_file_test
+[ 69%] Built target replay_directory_test
+[ 71%] Built target reliable_udp_budget_test
+[ 73%] Built target bounded_tcp_writer_test
+[ 75%] Built target lobby_capacity_test
+[ 77%] Built target lobby_client_capacity_test
+[ 79%] Built target tcp_frame_server_test
+[ 81%] Built target tcp_client_capacity_test
+[ 83%] Built target football_test_native_recovery
+[ 85%] Built target native_udp_bootstrap_test
+[ 87%] Built target native_udp_window_test
+[ 89%] Built target native_udp_stream_test
+[ 91%] Built target native_udp_listener_test
+[ 93%] Built target native_udp_dialer_test
+[ 95%] Built target native_udp_terminal_drain_test
+[ 96%] Building CXX object CMakeFiles/native_input_rtt_test.dir/Unity/unity_0_cxx.cxx.o
+[ 97%] Linking CXX executable native_input_rtt_test
+[ 97%] Built target native_input_rtt_test
+[ 98%] Built target rl_observation_static_contract
+[100%] Built target engine_rl_observation_contract
+Running: ctest --test-dir /tmp/football-review-20260909-tests --output-on-failure --output-junit /root/work_space/football/.project/optimization/evidence/framework-ctest.xml
+Test project /tmp/football-review-20260909-tests
+        Start   1: SlotInputTest.DefaultConstruction
+  1/711 Test   #1: SlotInputTest.DefaultConstruction ............................................................................   Passed    0.00 sec
+        Start   2: SlotInputTest.Equality
+  2/711 Test   #2: SlotInputTest.Equality .......................................................................................   Passed    0.00 sec
+        Start   3: SlotInputTest.BinaryLayoutSize
+  3/711 Test   #3: SlotInputTest.BinaryLayoutSize ...............................................................................   Passed    0.00 sec
+        Start   4: SlotInputTest.MemcpyRoundTrip
+  4/711 Test   #4: SlotInputTest.MemcpyRoundTrip ................................................................................   Passed    0.00 sec
+        Start   5: MessageTypeTest.UniqueValues
+  5/711 Test   #5: MessageTypeTest.UniqueValues .................................................................................   Passed    0.00 sec
+        Start   6: ProtocolConstantsTest.HeartbeatPacketSize
+  6/711 Test   #6: ProtocolConstantsTest.HeartbeatPacketSize ....................................................................   Passed    0.00 sec
+        Start   7: ProtocolConstantsTest.TimeoutConstants
+  7/711 Test   #7: ProtocolConstantsTest.TimeoutConstants .......................................................................   Passed    0.00 sec
+        Start   8: AuthoritativeFrameTest.HeaderSize
+  8/711 Test   #8: AuthoritativeFrameTest.HeaderSize ............................................................................   Passed    0.00 sec
+        Start   9: ClientFrameInputTest.HeaderSize
+  9/711 Test   #9: ClientFrameInputTest.HeaderSize ..............................................................................   Passed    0.00 sec
+        Start  10: ClientFrameInputTest.SlotEntrySize
+ 10/711 Test  #10: ClientFrameInputTest.SlotEntrySize ...........................................................................   Passed    0.00 sec
+        Start  11: SessionStartTest.ParamsSize
+ 11/711 Test  #11: SessionStartTest.ParamsSize ..................................................................................   Passed    0.00 sec
+        Start  12: LayoutTest.SlotInputNoPadding
+ 12/711 Test  #12: LayoutTest.SlotInputNoPadding ................................................................................   Passed    0.00 sec
+        Start  13: TypesTest.FrameIdIsUint32
+ 13/711 Test  #13: TypesTest.FrameIdIsUint32 ....................................................................................   Passed    0.00 sec
+        Start  14: TypesTest.StateHashIsUint64
+ 14/711 Test  #14: TypesTest.StateHashIsUint64 ..................................................................................   Passed    0.00 sec
+        Start  15: PredictionRollbackTest.PredictThenRollback
+ 15/711 Test  #15: PredictionRollbackTest.PredictThenRollback ...................................................................   Passed    0.00 sec
+        Start  16: PredictionRollbackTest.PredictWithNoRollback
+ 16/711 Test  #16: PredictionRollbackTest.PredictWithNoRollback .................................................................   Passed    0.00 sec
+        Start  17: PredictionRollbackTest.EvictionPreventsStaleRollback
+ 17/711 Test  #17: PredictionRollbackTest.EvictionPreventsStaleRollback .........................................................   Passed    0.00 sec
+        Start  18: PredictionRollbackTest.StateHashVerification
+ 18/711 Test  #18: PredictionRollbackTest.StateHashVerification .................................................................   Passed    0.00 sec
+        Start  19: EntityTest.NullEntityIsZero
+ 19/711 Test  #19: EntityTest.NullEntityIsZero ..................................................................................   Passed    0.00 sec
+        Start  20: EntityTest.EntityTypeIsUint64
+ 20/711 Test  #20: EntityTest.EntityTypeIsUint64 ................................................................................   Passed    0.00 sec
+        Start  21: WorldTest.CreateEntity
+ 21/711 Test  #21: WorldTest.CreateEntity .......................................................................................   Passed    0.00 sec
+        Start  22: WorldTest.CreateMultipleEntities
+ 22/711 Test  #22: WorldTest.CreateMultipleEntities .............................................................................   Passed    0.00 sec
+        Start  23: WorldTest.EntityIdsAreMonotonic
+ 23/711 Test  #23: WorldTest.EntityIdsAreMonotonic ..............................................................................   Passed    0.00 sec
+        Start  24: WorldTest.AddAndGetComponent
+ 24/711 Test  #24: WorldTest.AddAndGetComponent .................................................................................   Passed    0.00 sec
+        Start  25: WorldTest.GetComponentReturnsNullForMissing
+ 25/711 Test  #25: WorldTest.GetComponentReturnsNullForMissing ..................................................................   Passed    0.00 sec
+        Start  26: WorldTest.HasComponent
+ 26/711 Test  #26: WorldTest.HasComponent .......................................................................................   Passed    0.00 sec
+        Start  27: WorldTest.RemoveComponent
+ 27/711 Test  #27: WorldTest.RemoveComponent ....................................................................................   Passed    0.00 sec
+        Start  28: WorldTest.OverwriteComponent
+ 28/711 Test  #28: WorldTest.OverwriteComponent .................................................................................   Passed    0.00 sec
+        Start  29: WorldTest.MultipleComponentsOnSameEntity
+ 29/711 Test  #29: WorldTest.MultipleComponentsOnSameEntity .....................................................................   Passed    0.00 sec
+        Start  30: WorldTest.ForEachSingleComponent
+ 30/711 Test  #30: WorldTest.ForEachSingleComponent .............................................................................   Passed    0.00 sec
+        Start  31: WorldTest.ForEachTwoComponents
+ 31/711 Test  #31: WorldTest.ForEachTwoComponents ...............................................................................   Passed    0.00 sec
+        Start  32: WorldTest.ForEachModifiesData
+ 32/711 Test  #32: WorldTest.ForEachModifiesData ................................................................................   Passed    0.00 sec
+        Start  33: WorldTest.DestroyEntityRemovesAllComponents
+ 33/711 Test  #33: WorldTest.DestroyEntityRemovesAllComponents ..................................................................   Passed    0.00 sec
+        Start  34: WorldTest.ClearRemovesAll
+ 34/711 Test  #34: WorldTest.ClearRemovesAll ....................................................................................   Passed    0.00 sec
+        Start  35: WorldTest.ForEachDeterministicOrder
+ 35/711 Test  #35: WorldTest.ForEachDeterministicOrder ..........................................................................   Passed    0.00 sec
+        Start  36: WorldTest.MoveConstruction
+ 36/711 Test  #36: WorldTest.MoveConstruction ...................................................................................   Passed    0.00 sec
+        Start  37: TeamStateComponentTest.DefaultConstruction
+ 37/711 Test  #37: TeamStateComponentTest.DefaultConstruction ...................................................................   Passed    0.00 sec
+        Start  38: TeamStateComponentTest.EcsIntegration
+ 38/711 Test  #38: TeamStateComponentTest.EcsIntegration ........................................................................   Passed    0.00 sec
+        Start  39: TeamStateComponentTest.MultipleTeams
+ 39/711 Test  #39: TeamStateComponentTest.MultipleTeams .........................................................................   Passed    0.00 sec
+        Start  40: TeamStateComponentTest.ForEachTeamState
+ 40/711 Test  #40: TeamStateComponentTest.ForEachTeamState ......................................................................   Passed    0.00 sec
+        Start  41: RefereeStateComponentTest.DefaultConstruction
+ 41/711 Test  #41: RefereeStateComponentTest.DefaultConstruction ................................................................   Passed    0.00 sec
+        Start  42: RefereeStateComponentTest.EcsIntegration
+ 42/711 Test  #42: RefereeStateComponentTest.EcsIntegration .....................................................................   Passed    0.00 sec
+        Start  43: RefereeStateComponentTest.FoulState
+ 43/711 Test  #43: RefereeStateComponentTest.FoulState ..........................................................................   Passed    0.00 sec
+        Start  44: MatchStateComponentTest.DefaultConstruction
+ 44/711 Test  #44: MatchStateComponentTest.DefaultConstruction ..................................................................   Passed    0.00 sec
+        Start  45: MatchStateComponentTest.EcsIntegration
+ 45/711 Test  #45: MatchStateComponentTest.EcsIntegration .......................................................................   Passed    0.00 sec
+        Start  46: MatchStateComponentTest.GoalState
+ 46/711 Test  #46: MatchStateComponentTest.GoalState ............................................................................   Passed    0.00 sec
+        Start  47: SerializationTest.TeamStateRoundTrip
+ 47/711 Test  #47: SerializationTest.TeamStateRoundTrip .........................................................................   Passed    0.00 sec
+        Start  48: SerializationTest.RefereeStateRoundTrip
+ 48/711 Test  #48: SerializationTest.RefereeStateRoundTrip ......................................................................   Passed    0.00 sec
+        Start  49: SerializationTest.MatchStateRoundTrip
+ 49/711 Test  #49: SerializationTest.MatchStateRoundTrip ........................................................................   Passed    0.00 sec
+        Start  50: SerializationTest.AllComponentsRoundTrip
+ 50/711 Test  #50: SerializationTest.AllComponentsRoundTrip .....................................................................   Passed    0.00 sec
+        Start  51: QueryContract.ConstEmptyWorldReturnsNull
+ 51/711 Test  #51: QueryContract.ConstEmptyWorldReturnsNull .....................................................................   Passed    0.00 sec
+        Start  52: QueryContract.ThreeDistinctComponentsUseStableEntityOrder
+ 52/711 Test  #52: QueryContract.ThreeDistinctComponentsUseStableEntityOrder ....................................................   Passed    0.00 sec
+        Start  53: QueryContract.ResultCanBeReusedAfterPoolDestructionAndRecreation
+ 53/711 Test  #53: QueryContract.ResultCanBeReusedAfterPoolDestructionAndRecreation .............................................   Passed    0.00 sec
+        Start  54: QueryContract.SnapshotQuerySkipsDeletedFutureMatchesAndIgnoresNewMatches
+ 54/711 Test  #54: QueryContract.SnapshotQuerySkipsDeletedFutureMatchesAndIgnoresNewMatches .....................................   Passed    0.00 sec
+        Start  55: QueryContract.MutableWorldTraversalPreservesFirstPoolCandidateSnapshot
+ 55/711 Test  #55: QueryContract.MutableWorldTraversalPreservesFirstPoolCandidateSnapshot .......................................   Passed    0.00 sec
+        Start  56: QueryContract.SmallestPoolCanHaveAnyComponentPosition
+ 56/711 Test  #56: QueryContract.SmallestPoolCanHaveAnyComponentPosition ........................................................   Passed    0.00 sec
+        Start  57: QueryContract.MissingTypesDoNotAllocatePoolsDuringResultConstruction
+ 57/711 Test  #57: QueryContract.MissingTypesDoNotAllocatePoolsDuringResultConstruction .........................................   Passed    0.00 sec
+        Start  58: QueryContract.ThreeComponentTraversalSurvivesRemovalAndPoolGrowth
+ 58/711 Test  #58: QueryContract.ThreeComponentTraversalSurvivesRemovalAndPoolGrowth ............................................   Passed    0.00 sec
+        Start  59: FixedPointTest.DefaultConstruction
+ 59/711 Test  #59: FixedPointTest.DefaultConstruction ...........................................................................   Passed    0.00 sec
+        Start  60: FixedPointTest.IntConstruction
+ 60/711 Test  #60: FixedPointTest.IntConstruction ...............................................................................   Passed    0.00 sec
+        Start  61: FixedPointTest.FloatConstruction
+ 61/711 Test  #61: FixedPointTest.FloatConstruction .............................................................................   Passed    0.00 sec
+        Start  62: FixedPointTest.FromRaw
+ 62/711 Test  #62: FixedPointTest.FromRaw .......................................................................................   Passed    0.00 sec
+        Start  63: FixedPointTest.Constants
+ 63/711 Test  #63: FixedPointTest.Constants .....................................................................................   Passed    0.00 sec
+        Start  64: FixedPointTest.ToRaw
+ 64/711 Test  #64: FixedPointTest.ToRaw .........................................................................................   Passed    0.00 sec
+        Start  65: FixedPointTest.Addition
+ 65/711 Test  #65: FixedPointTest.Addition ......................................................................................   Passed    0.00 sec
+        Start  66: FixedPointTest.Subtraction
+ 66/711 Test  #66: FixedPointTest.Subtraction ...................................................................................   Passed    0.00 sec
+        Start  67: FixedPointTest.Multiplication
+ 67/711 Test  #67: FixedPointTest.Multiplication ................................................................................   Passed    0.00 sec
+        Start  68: FixedPointTest.Division
+ 68/711 Test  #68: FixedPointTest.Division ......................................................................................   Passed    0.00 sec
+        Start  69: FixedPointTest.CompoundAssignment
+ 69/711 Test  #69: FixedPointTest.CompoundAssignment ............................................................................   Passed    0.00 sec
+        Start  70: FixedPointTest.FractionalArithmetic
+ 70/711 Test  #70: FixedPointTest.FractionalArithmetic ..........................................................................   Passed    0.00 sec
+        Start  71: FixedPointTest.DivisionPrecision
+ 71/711 Test  #71: FixedPointTest.DivisionPrecision .............................................................................   Passed    0.00 sec
+        Start  72: FixedPointTest.Comparison
+ 72/711 Test  #72: FixedPointTest.Comparison ....................................................................................   Passed    0.00 sec
+        Start  73: FixedPointTest.Negation
+ 73/711 Test  #73: FixedPointTest.Negation ......................................................................................   Passed    0.00 sec
+        Start  74: FixedPointTest.Abs
+ 74/711 Test  #74: FixedPointTest.Abs ...........................................................................................   Passed    0.00 sec
+        Start  75: FixedPointTest.SinZero
+ 75/711 Test  #75: FixedPointTest.SinZero .......................................................................................   Passed    0.00 sec
+        Start  76: FixedPointTest.SinHalfPi
+ 76/711 Test  #76: FixedPointTest.SinHalfPi .....................................................................................   Passed    0.00 sec
+        Start  77: FixedPointTest.CosZero
+ 77/711 Test  #77: FixedPointTest.CosZero .......................................................................................   Passed    0.00 sec
+        Start  78: FixedPointTest.CosPi
+ 78/711 Test  #78: FixedPointTest.CosPi .........................................................................................   Passed    0.00 sec
+        Start  79: FixedPointTest.SinPiOver4
+ 79/711 Test  #79: FixedPointTest.SinPiOver4 ....................................................................................   Passed    0.00 sec
+        Start  80: FixedPointTest.Sqrt4
+ 80/711 Test  #80: FixedPointTest.Sqrt4 .........................................................................................   Passed    0.00 sec
+        Start  81: FixedPointTest.Sqrt9
+ 81/711 Test  #81: FixedPointTest.Sqrt9 .........................................................................................   Passed    0.00 sec
+        Start  82: FixedPointTest.Sqrt2
+ 82/711 Test  #82: FixedPointTest.Sqrt2 .........................................................................................   Passed    0.00 sec
+        Start  83: FixedPointTest.SqrtZero
+ 83/711 Test  #83: FixedPointTest.SqrtZero ......................................................................................   Passed    0.00 sec
+        Start  84: FixedPointTest.SqrtNegative
+ 84/711 Test  #84: FixedPointTest.SqrtNegative ..................................................................................   Passed    0.00 sec
+        Start  85: FixedPointTest.AdditionDeterminism
+ 85/711 Test  #85: FixedPointTest.AdditionDeterminism ...........................................................................   Passed    0.00 sec
+        Start  86: FixedPointTest.MultiplicationDeterminism
+ 86/711 Test  #86: FixedPointTest.MultiplicationDeterminism .....................................................................   Passed    0.00 sec
+        Start  87: FixedPointTest.DivisionDeterminism
+ 87/711 Test  #87: FixedPointTest.DivisionDeterminism ...........................................................................   Passed    0.00 sec
+        Start  88: FixedPointTest.SinDeterminism
+ 88/711 Test  #88: FixedPointTest.SinDeterminism ................................................................................   Passed    0.00 sec
+        Start  89: FixedPointTest.IntegerFraction
+ 89/711 Test  #89: FixedPointTest.IntegerFraction ...............................................................................   Passed    0.00 sec
+        Start  90: FixedPointDeterminism.AdditionBitExact
+ 90/711 Test  #90: FixedPointDeterminism.AdditionBitExact .......................................................................   Passed    0.00 sec
+        Start  91: FixedPointDeterminism.MultiplicationBitExact
+ 91/711 Test  #91: FixedPointDeterminism.MultiplicationBitExact .................................................................   Passed    0.00 sec
+        Start  92: FixedPointDeterminism.DivisionBitExact
+ 92/711 Test  #92: FixedPointDeterminism.DivisionBitExact .......................................................................   Passed    0.00 sec
+        Start  93: FixedPointDeterminism.TrigBitExact
+ 93/711 Test  #93: FixedPointDeterminism.TrigBitExact ...........................................................................   Passed    0.00 sec
+        Start  94: FixedPointDeterminism.SqrtBitExact
+ 94/711 Test  #94: FixedPointDeterminism.SqrtBitExact ...........................................................................   Passed    0.00 sec
+        Start  95: FixedPointDeterminism.Atan2BitExact
+ 95/711 Test  #95: FixedPointDeterminism.Atan2BitExact ..........................................................................   Passed    0.00 sec
+        Start  96: FixedPointDeterminism.PythagoreanIdentity
+ 96/711 Test  #96: FixedPointDeterminism.PythagoreanIdentity ....................................................................   Passed    0.00 sec
+        Start  97: FixedPointDeterminism.SinCosPeriodicity
+ 97/711 Test  #97: FixedPointDeterminism.SinCosPeriodicity ......................................................................   Passed    0.00 sec
+        Start  98: FixedPointDeterminism.SinOddFunction
+ 98/711 Test  #98: FixedPointDeterminism.SinOddFunction .........................................................................   Passed    0.00 sec
+        Start  99: FixedPointDeterminism.CosEvenFunction
+ 99/711 Test  #99: FixedPointDeterminism.CosEvenFunction ........................................................................   Passed    0.00 sec
+        Start 100: FixedPointDeterminism.SqrtMultiplicative
+100/711 Test #100: FixedPointDeterminism.SqrtMultiplicative .....................................................................   Passed    0.00 sec
+        Start 101: FixedPointDeterminism.ConstexprConstruction
+101/711 Test #101: FixedPointDeterminism.ConstexprConstruction ..................................................................   Passed    0.00 sec
+        Start 102: FixedPointDeterminism.ConstexprTrig
+102/711 Test #102: FixedPointDeterminism.ConstexprTrig ..........................................................................   Passed    0.00 sec
+        Start 103: ClientStateTest.SaveAndRetrieve
+103/711 Test #103: ClientStateTest.SaveAndRetrieve ..............................................................................   Passed    0.00 sec
+        Start 104: ClientStateTest.MultipleSnapshots
+104/711 Test #104: ClientStateTest.MultipleSnapshots ............................................................................   Passed    0.00 sec
+        Start 105: ClientStateTest.GetSnapshotNotFound
+105/711 Test #105: ClientStateTest.GetSnapshotNotFound ..........................................................................   Passed    0.00 sec
+        Start 106: ClientStateTest.Eviction
+106/711 Test #106: ClientStateTest.Eviction .....................................................................................   Passed    0.00 sec
+        Start 107: ClientStateTest.RollbackRestoresState
+107/711 Test #107: ClientStateTest.RollbackRestoresState ........................................................................   Passed    0.00 sec
+        Start 108: ClientStateTest.RollbackNotFound
+108/711 Test #108: ClientStateTest.RollbackNotFound .............................................................................   Passed    0.00 sec
+        Start 109: ClientStateTest.RestoreSnapshotWithoutStep
+109/711 Test #109: ClientStateTest.RestoreSnapshotWithoutStep ...................................................................   Passed    0.00 sec
+        Start 110: ClientStateTest.StateHashMatch
+110/711 Test #110: ClientStateTest.StateHashMatch ...............................................................................   Passed    0.00 sec
+        Start 111: ClientStateTest.StateHashMismatch
+111/711 Test #111: ClientStateTest.StateHashMismatch ............................................................................   Passed    0.00 sec
+        Start 112: ClientStateTest.StateHashUnknown
+112/711 Test #112: ClientStateTest.StateHashUnknown .............................................................................   Passed    0.00 sec
+        Start 113: ClientStateTest.FullPredictionRollbackCycle
+113/711 Test #113: ClientStateTest.FullPredictionRollbackCycle ..................................................................   Passed    0.00 sec
+        Start 114: ClientStateTest.ClearResetsEverything
+114/711 Test #114: ClientStateTest.ClearResetsEverything ........................................................................   Passed    0.00 sec
+        Start 115: ClientStateTest.CatchupWhenBehind
+115/711 Test #115: ClientStateTest.CatchupWhenBehind ............................................................................   Passed    0.00 sec
+        Start 116: ClientStateTest.CatchupCappedAtMax
+116/711 Test #116: ClientStateTest.CatchupCappedAtMax ...........................................................................   Passed    0.00 sec
+        Start 117: ClientStateTest.NoCatchupWhenSynced
+117/711 Test #117: ClientStateTest.NoCatchupWhenSynced ..........................................................................   Passed    0.00 sec
+        Start 118: ClientStateTest.WaitWhenAhead
+118/711 Test #118: ClientStateTest.WaitWhenAhead ................................................................................   Passed    0.00 sec
+        Start 119: ClientStateTest.FramesBehindCalculation
+119/711 Test #119: ClientStateTest.FramesBehindCalculation ......................................................................   Passed    0.00 sec
+        Start 120: ClientStateTest.JitterTracking
+120/711 Test #120: ClientStateTest.JitterTracking ...............................................................................   Passed    0.00 sec
+        Start 121: ClientStateTest.JitterHigh
+121/711 Test #121: ClientStateTest.JitterHigh ...................................................................................   Passed    0.00 sec
+        Start 122: ClientStateTest.JitterResetsOnClear
+122/711 Test #122: ClientStateTest.JitterResetsOnClear ..........................................................................   Passed    0.00 sec
+        Start 123: PlayerPhysicsTest.DefaultValues
+123/711 Test #123: PlayerPhysicsTest.DefaultValues ..............................................................................   Passed    0.00 sec
+        Start 124: PlayerPhysicsTest.AddGetComponent
+124/711 Test #124: PlayerPhysicsTest.AddGetComponent ............................................................................   Passed    0.00 sec
+        Start 125: PlayerPhysicsTest.OverwriteComponent
+125/711 Test #125: PlayerPhysicsTest.OverwriteComponent .........................................................................   Passed    0.00 sec
+        Start 126: PlayerPhysicsTest.ForEachFiltersCorrectly
+126/711 Test #126: PlayerPhysicsTest.ForEachFiltersCorrectly ....................................................................   Passed    0.00 sec
+        Start 127: PlayerPhysicsTest.ForEachDeterministicOrder
+127/711 Test #127: PlayerPhysicsTest.ForEachDeterministicOrder ..................................................................   Passed    0.00 sec
+        Start 128: PlayerPhysicsTest.MultipleComponentsOnSameEntity
+128/711 Test #128: PlayerPhysicsTest.MultipleComponentsOnSameEntity .............................................................   Passed    0.00 sec
+        Start 129: PlayerPhysicsTest.ForEachTwoComponents
+129/711 Test #129: PlayerPhysicsTest.ForEachTwoComponents .......................................................................   Passed    0.00 sec
+        Start 130: PlayerPhysicsTest.RemoveComponent
+130/711 Test #130: PlayerPhysicsTest.RemoveComponent ............................................................................   Passed    0.00 sec
+        Start 131: PlayerPhysicsTest.DestroyEntityRemovesAll
+131/711 Test #131: PlayerPhysicsTest.DestroyEntityRemovesAll ....................................................................   Passed    0.00 sec
+        Start 132: PlayerPhysicsTest.ClearRemovesAll
+132/711 Test #132: PlayerPhysicsTest.ClearRemovesAll ............................................................................   Passed    0.00 sec
+        Start 133: PlayerPhysicsTest.BidirectionalSyncPattern
+133/711 Test #133: PlayerPhysicsTest.BidirectionalSyncPattern ...................................................................   Passed    0.00 sec
+        Start 134: TacticsComponentTest.DefaultValues
+134/711 Test #134: TacticsComponentTest.DefaultValues ...........................................................................   Passed    0.00 sec
+        Start 135: TacticsComponentTest.AddGetComponent
+135/711 Test #135: TacticsComponentTest.AddGetComponent .........................................................................   Passed    0.00 sec
+        Start 136: TacticsComponentTest.RoundTripOopToEcsToOop
+136/711 Test #136: TacticsComponentTest.RoundTripOopToEcsToOop ..................................................................   Passed    0.00 sec
+        Start 137: BallComponentTest.AddGetComponent
+137/711 Test #137: BallComponentTest.AddGetComponent ............................................................................   Passed    0.00 sec
+        Start 138: BallComponentTest.RoundTripOopToEcsToOop
+138/711 Test #138: BallComponentTest.RoundTripOopToEcsToOop .....................................................................   Passed    0.00 sec
+        Start 139: BallComponentTest.OverwriteComponent
+139/711 Test #139: BallComponentTest.OverwriteComponent .........................................................................   Passed    0.00 sec
+        Start 140: BallComponentTest.ForEachDeterministicOrder
+140/711 Test #140: BallComponentTest.ForEachDeterministicOrder ..................................................................   Passed    0.00 sec
+        Start 141: WorldSerializerTest.SerializeEmptyWorld
+141/711 Test #141: WorldSerializerTest.SerializeEmptyWorld ......................................................................   Passed    0.00 sec
+        Start 142: WorldSerializerTest.SerializeDeserializeRoundTrip
+142/711 Test #142: WorldSerializerTest.SerializeDeserializeRoundTrip ............................................................   Passed    0.00 sec
+        Start 143: WorldSerializerTest.PreserveComponentData
+143/711 Test #143: WorldSerializerTest.PreserveComponentData ....................................................................   Passed    0.00 sec
+        Start 144: WorldSerializerTest.MultipleComponentTypes
+144/711 Test #144: WorldSerializerTest.MultipleComponentTypes ...................................................................   Passed    0.00 sec
+        Start 145: WorldSerializerTest.DeterministicEntityOrder
+145/711 Test #145: WorldSerializerTest.DeterministicEntityOrder .................................................................   Passed    0.00 sec
+        Start 146: SystemGraphTest.EmptyGraph
+146/711 Test #146: SystemGraphTest.EmptyGraph ...................................................................................   Passed    0.00 sec
+        Start 147: SystemGraphTest.SingleSystem
+147/711 Test #147: SystemGraphTest.SingleSystem .................................................................................   Passed    0.00 sec
+        Start 148: SystemGraphTest.LinearDependency
+148/711 Test #148: SystemGraphTest.LinearDependency .............................................................................   Passed    0.00 sec
+        Start 149: SystemGraphTest.DiamondDependency
+149/711 Test #149: SystemGraphTest.DiamondDependency ............................................................................   Passed    0.00 sec
+        Start 150: SystemGraphTest.CycleDetection
+150/711 Test #150: SystemGraphTest.CycleDetection ...............................................................................   Passed    0.00 sec
+        Start 151: SystemGraphTest.EarlyAbort
+151/711 Test #151: SystemGraphTest.EarlyAbort ...................................................................................   Passed    0.00 sec
+        Start 152: SystemGraphTest.ContextPassing
+152/711 Test #152: SystemGraphTest.ContextPassing ...............................................................................   Passed    0.00 sec
+        Start 153: SystemGraphTest.ClearResetsState
+153/711 Test #153: SystemGraphTest.ClearResetsState .............................................................................   Passed    0.00 sec
+        Start 154: SystemGraphTest.IndependentSystems
+154/711 Test #154: SystemGraphTest.IndependentSystems ...........................................................................   Passed    0.00 sec
+        Start 155: ECSBenchmarkTest.PositionUpdate
+155/711 Test #155: ECSBenchmarkTest.PositionUpdate ..............................................................................   Passed    0.02 sec
+        Start 156: ECSBenchmarkTest.ConditionalQuery
+156/711 Test #156: ECSBenchmarkTest.ConditionalQuery ............................................................................   Passed    0.01 sec
+        Start 157: ECSBenchmarkTest.DualComponentQuery
+157/711 Test #157: ECSBenchmarkTest.DualComponentQuery ..........................................................................   Passed    0.01 sec
+        Start 158: ECSBenchmarkTest.RandomAccess
+158/711 Test #158: ECSBenchmarkTest.RandomAccess ................................................................................   Passed    0.01 sec
+        Start 159: ECSBenchmarkTest.DeterministicTraversalOrder
+159/711 Test #159: ECSBenchmarkTest.DeterministicTraversalOrder .................................................................   Passed    0.01 sec
+        Start 160: ECSBenchmarkTest.MemoryLocality
+160/711 Test #160: ECSBenchmarkTest.MemoryLocality ..............................................................................   Passed    0.01 sec
+        Start 161: EngineCallbacksTest.DefaultCallbacksAreEmpty
+161/711 Test #161: EngineCallbacksTest.DefaultCallbacksAreEmpty .................................................................   Passed    0.00 sec
+        Start 162: EngineCallbacksTest.WiringToMockEngine
+162/711 Test #162: EngineCallbacksTest.WiringToMockEngine .......................................................................   Passed    0.00 sec
+        Start 163: Fnv1aHashTest.Deterministic
+163/711 Test #163: Fnv1aHashTest.Deterministic ..................................................................................   Passed    0.00 sec
+        Start 164: Fnv1aHashTest.DifferentInputsDifferentHashes
+164/711 Test #164: Fnv1aHashTest.DifferentInputsDifferentHashes .................................................................   Passed    0.00 sec
+        Start 165: Fnv1aHashTest.EmptyString
+165/711 Test #165: Fnv1aHashTest.EmptyString ....................................................................................   Passed    0.00 sec
+        Start 166: MultiplayerConfigTest.DefaultValues
+166/711 Test #166: MultiplayerConfigTest.DefaultValues ..........................................................................   Passed    0.00 sec
+        Start 167: ClientStateEngineIntegrationTest.PredictAndRollback
+167/711 Test #167: ClientStateEngineIntegrationTest.PredictAndRollback ..........................................................   Passed    0.00 sec
+        Start 168: ClientStateEngineIntegrationTest.HashVerification
+168/711 Test #168: ClientStateEngineIntegrationTest.HashVerification ............................................................   Passed    0.00 sec
+        Start 169: EndToEndTest.AuthoritativeFrameRoundTrip
+169/711 Test #169: EndToEndTest.AuthoritativeFrameRoundTrip .....................................................................   Passed    0.00 sec
+        Start 170: StateHashTest.PackUnpackRoundTrip
+170/711 Test #170: StateHashTest.PackUnpackRoundTrip ............................................................................   Passed    0.00 sec
+        Start 171: MultiSlotTest.PackUnpackFrameInput
+171/711 Test #171: MultiSlotTest.PackUnpackFrameInput ...........................................................................   Passed    0.00 sec
+        Start 172: FullLoopTest.ClientServerSyncWithoutRollback
+172/711 Test #172: FullLoopTest.ClientServerSyncWithoutRollback .................................................................   Passed    0.00 sec
+        Start 173: FullLoopTest.ClientServerSyncWithRollback
+173/711 Test #173: FullLoopTest.ClientServerSyncWithRollback ....................................................................   Passed    0.00 sec
+        Start 174: FullLoopTest.StateHashVerificationAcrossFrames
+174/711 Test #174: FullLoopTest.StateHashVerificationAcrossFrames ...............................................................   Passed    0.00 sec
+        Start 175: FullLoopTest.MultiSlotClientServerSync
+175/711 Test #175: FullLoopTest.MultiSlotClientServerSync .......................................................................   Passed    0.00 sec
+        Start 176: JitterStatsTest.InitialState
+176/711 Test #176: JitterStatsTest.InitialState .................................................................................   Passed    0.00 sec
+        Start 177: JitterStatsTest.RecordArrival
+177/711 Test #177: JitterStatsTest.RecordArrival ................................................................................   Passed    0.00 sec
+        Start 178: JitterStatsTest.LossRate
+178/711 Test #178: JitterStatsTest.LossRate .....................................................................................   Passed    0.00 sec
+        Start 179: JitterStatsTest.RTTTracking
+179/711 Test #179: JitterStatsTest.RTTTracking ..................................................................................   Passed    0.00 sec
+        Start 180: JitterStatsTest.RecommendedBufferSize
+180/711 Test #180: JitterStatsTest.RecommendedBufferSize ........................................................................   Passed    0.00 sec
+        Start 181: DeltaSlotInputTest.NoChange
+181/711 Test #181: DeltaSlotInputTest.NoChange ..................................................................................   Passed    0.00 sec
+        Start 182: DeltaSlotInputTest.AllFieldsChanged
+182/711 Test #182: DeltaSlotInputTest.AllFieldsChanged ..........................................................................   Passed    0.00 sec
+        Start 183: DeltaSlotInputTest.PartialChange
+183/711 Test #183: DeltaSlotInputTest.PartialChange .............................................................................   Passed    0.00 sec
+        Start 184: DeltaSlotInputTest.CompressionRatio
+184/711 Test #184: DeltaSlotInputTest.CompressionRatio ..........................................................................   Passed    0.00 sec
+        Start 185: DeltaEncoderTest.EncodeDecode
+185/711 Test #185: DeltaEncoderTest.EncodeDecode ................................................................................   Passed    0.00 sec
+        Start 186: DeltaEncoderTest.MultiFrameCompression
+186/711 Test #186: DeltaEncoderTest.MultiFrameCompression .......................................................................   Passed    0.00 sec
+        Start 187: PerformanceBenchmark.AuthoritativeFrameEncodeDecode
+187/711 Test #187: PerformanceBenchmark.AuthoritativeFrameEncodeDecode ..........................................................   Passed    0.00 sec
+        Start 188: PerformanceBenchmark.ClientFrameInputEncodeDecode
+188/711 Test #188: PerformanceBenchmark.ClientFrameInputEncodeDecode ............................................................   Passed    0.00 sec
+        Start 189: PerformanceBenchmark.DeltaCompressionThroughput
+189/711 Test #189: PerformanceBenchmark.DeltaCompressionThroughput ..............................................................   Passed    0.05 sec
+        Start 190: PerformanceBenchmark.ClientStateSnapshotThroughput
+190/711 Test #190: PerformanceBenchmark.ClientStateSnapshotThroughput ...........................................................   Passed    0.02 sec
+        Start 191: PerformanceBenchmark.ClientStateRollbackPerformance
+191/711 Test #191: PerformanceBenchmark.ClientStateRollbackPerformance ..........................................................   Passed    0.01 sec
+        Start 192: PerformanceBenchmark.Fnv1aHashThroughput
+192/711 Test #192: PerformanceBenchmark.Fnv1aHashThroughput .....................................................................   Passed    0.88 sec
+        Start 193: PerformanceBenchmark.JitterStatsUpdateThroughput
+193/711 Test #193: PerformanceBenchmark.JitterStatsUpdateThroughput .............................................................   Passed    0.08 sec
+        Start 194: PerformanceBenchmark.SlotInputMemcpyThroughput
+194/711 Test #194: PerformanceBenchmark.SlotInputMemcpyThroughput ...............................................................   Passed    0.01 sec
+        Start 195: PerformanceBenchmark.StateHashPackUnpackThroughput
+195/711 Test #195: PerformanceBenchmark.StateHashPackUnpackThroughput ...........................................................   Passed    0.00 sec
+        Start 196: UXOptimizerTest.InitialState
+196/711 Test #196: UXOptimizerTest.InitialState .................................................................................   Passed    0.00 sec
+        Start 197: UXOptimizerTest.RecordInputLatency
+197/711 Test #197: UXOptimizerTest.RecordInputLatency ...........................................................................   Passed    0.00 sec
+        Start 198: UXOptimizerTest.RecordFrameTime
+198/711 Test #198: UXOptimizerTest.RecordFrameTime ..............................................................................   Passed    0.00 sec
+        Start 199: UXOptimizerTest.NetworkQuality
+199/711 Test #199: UXOptimizerTest.NetworkQuality ...............................................................................   Passed    0.00 sec
+        Start 200: UXOptimizerTest.PredictionAccuracy
+200/711 Test #200: UXOptimizerTest.PredictionAccuracy ...........................................................................   Passed    0.00 sec
+        Start 201: UXOptimizerTest.RollbackCount
+201/711 Test #201: UXOptimizerTest.RollbackCount ................................................................................   Passed    0.00 sec
+        Start 202: UXOptimizerTest.Reset
+202/711 Test #202: UXOptimizerTest.Reset ........................................................................................   Passed    0.00 sec
+        Start 203: UXOptimizerTest.QualityRecommendation
+203/711 Test #203: UXOptimizerTest.QualityRecommendation ........................................................................   Passed    0.00 sec
+        Start 204: InputLatencyTrackerTest.BasicTracking
+204/711 Test #204: InputLatencyTrackerTest.BasicTracking ........................................................................   Passed    0.00 sec
+        Start 205: InputLatencyTrackerTest.P95Latency
+205/711 Test #205: InputLatencyTrackerTest.P95Latency ...........................................................................   Passed    0.00 sec
+        Start 206: InputLatencyTrackerTest.Cleanup
+206/711 Test #206: InputLatencyTrackerTest.Cleanup ..............................................................................   Passed    0.00 sec
+        Start 207: Vec3Test.DefaultConstruction
+207/711 Test #207: Vec3Test.DefaultConstruction .................................................................................   Passed    0.00 sec
+        Start 208: Vec3Test.ParameterizedConstruction
+208/711 Test #208: Vec3Test.ParameterizedConstruction ...........................................................................   Passed    0.00 sec
+        Start 209: Vec3Test.Addition
+209/711 Test #209: Vec3Test.Addition ............................................................................................   Passed    0.00 sec
+        Start 210: Vec3Test.Subtraction
+210/711 Test #210: Vec3Test.Subtraction .........................................................................................   Passed    0.00 sec
+        Start 211: Vec3Test.ScalarMultiply
+211/711 Test #211: Vec3Test.ScalarMultiply ......................................................................................   Passed    0.00 sec
+        Start 212: Vec3Test.Length
+212/711 Test #212: Vec3Test.Length ..............................................................................................   Passed    0.00 sec
+        Start 213: Vec3Test.LengthSquared
+213/711 Test #213: Vec3Test.LengthSquared .......................................................................................   Passed    0.00 sec
+        Start 214: Vec3Test.Normalized
+214/711 Test #214: Vec3Test.Normalized ..........................................................................................   Passed    0.00 sec
+        Start 215: Vec3Test.NormalizedZeroVector
+215/711 Test #215: Vec3Test.NormalizedZeroVector ................................................................................   Passed    0.00 sec
+        Start 216: QuatTest.DefaultConstruction
+216/711 Test #216: QuatTest.DefaultConstruction .................................................................................   Passed    0.00 sec
+        Start 217: QuatTest.ParameterizedConstruction
+217/711 Test #217: QuatTest.ParameterizedConstruction ...........................................................................   Passed    0.00 sec
+        Start 218: QuatTest.Normalized
+218/711 Test #218: QuatTest.Normalized ..........................................................................................   Passed    0.00 sec
+        Start 219: QuatTest.SlerpIdentity
+219/711 Test #219: QuatTest.SlerpIdentity .......................................................................................   Passed    0.00 sec
+        Start 220: QuatTest.SlerpHalfway
+220/711 Test #220: QuatTest.SlerpHalfway ........................................................................................   Passed    0.00 sec
+        Start 221: QuatTest.SlerpShortestPath
+221/711 Test #221: QuatTest.SlerpShortestPath ...................................................................................   Passed    0.00 sec
+        Start 222: InterpolatorTest.InitialState
+222/711 Test #222: InterpolatorTest.InitialState ................................................................................   Passed    0.00 sec
+        Start 223: InterpolatorTest.SaveState
+223/711 Test #223: InterpolatorTest.SaveState ...................................................................................   Passed    0.00 sec
+        Start 224: InterpolatorTest.InterpolateSingleFrame
+224/711 Test #224: InterpolatorTest.InterpolateSingleFrame ......................................................................   Passed    0.00 sec
+        Start 225: InterpolatorTest.InterpolateBetweenFrames
+225/711 Test #225: InterpolatorTest.InterpolateBetweenFrames ....................................................................   Passed    0.00 sec
+        Start 226: InterpolatorTest.InterpolateAtFrameBoundary
+226/711 Test #226: InterpolatorTest.InterpolateAtFrameBoundary ..................................................................   Passed    0.00 sec
+        Start 227: InterpolatorTest.InterpolateBeforeFrame
+227/711 Test #227: InterpolatorTest.InterpolateBeforeFrame ......................................................................   Passed    0.00 sec
+        Start 228: InterpolatorTest.MultipleEntities
+228/711 Test #228: InterpolatorTest.MultipleEntities ............................................................................   Passed    0.00 sec
+        Start 229: InterpolatorTest.EntityNotFound
+229/711 Test #229: InterpolatorTest.EntityNotFound ..............................................................................   Passed    0.00 sec
+        Start 230: ProtocolIOTest.PackUnpackSessionStart
+230/711 Test #230: ProtocolIOTest.PackUnpackSessionStart ........................................................................   Passed    0.00 sec
+        Start 231: ProtocolIOTest.PackUnpackSlotAssignment
+231/711 Test #231: ProtocolIOTest.PackUnpackSlotAssignment ......................................................................   Passed    0.00 sec
+        Start 232: ProtocolIOTest.PackUnpackAuthoritativeFrame
+232/711 Test #232: ProtocolIOTest.PackUnpackAuthoritativeFrame ..................................................................   Passed    0.00 sec
+        Start 233: ProtocolIOTest.PackUnpackClientFrameInput
+233/711 Test #233: ProtocolIOTest.PackUnpackClientFrameInput ....................................................................   Passed    0.00 sec
+        Start 234: ProtocolIOTest.PackReady
+234/711 Test #234: ProtocolIOTest.PackReady .....................................................................................   Passed    0.00 sec
+        Start 235: ProtocolIOTest.PackUnpackStateHash
+235/711 Test #235: ProtocolIOTest.PackUnpackStateHash ...........................................................................   Passed    0.00 sec
+        Start 236: ProtocolIOTest.PackUnpackHeartbeat
+236/711 Test #236: ProtocolIOTest.PackUnpackHeartbeat ...........................................................................   Passed    0.00 sec
+        Start 237: ProtocolIOTest.PackUnpackVersionNegotiate
+237/711 Test #237: ProtocolIOTest.PackUnpackVersionNegotiate ....................................................................   Passed    0.00 sec
+        Start 238: DeltaSlotInputTest.ConstexprCompute
+238/711 Test #238: DeltaSlotInputTest.ConstexprCompute ..........................................................................   Passed    0.00 sec
+        Start 239: DeltaSlotInputTest.PackedSizeTable
+239/711 Test #239: DeltaSlotInputTest.PackedSizeTable ...........................................................................   Passed    0.00 sec
+        Start 240: DeltaSlotInputTest.BytesSaved
+240/711 Test #240: DeltaSlotInputTest.BytesSaved ................................................................................   Passed    0.00 sec
+        Start 241: DeterministicPRNGTest.BasicGeneration
+241/711 Test #241: DeterministicPRNGTest.BasicGeneration ........................................................................   Passed    0.00 sec
+        Start 242: DeterministicPRNGTest.Determinism
+242/711 Test #242: DeterministicPRNGTest.Determinism ............................................................................   Passed    0.00 sec
+        Start 243: DeterministicPRNGTest.DifferentSeeds
+243/711 Test #243: DeterministicPRNGTest.DifferentSeeds .........................................................................   Passed    0.00 sec
+        Start 244: DeterministicPRNGTest.Uint32Generation
+244/711 Test #244: DeterministicPRNGTest.Uint32Generation .......................................................................   Passed    0.00 sec
+        Start 245: DeterministicPRNGTest.FloatRange
+245/711 Test #245: DeterministicPRNGTest.FloatRange .............................................................................   Passed    0.00 sec
+        Start 246: DeterministicPRNGTest.DoubleRange
+246/711 Test #246: DeterministicPRNGTest.DoubleRange ............................................................................   Passed    0.00 sec
+        Start 247: DeterministicPRNGTest.RangeInt
+247/711 Test #247: DeterministicPRNGTest.RangeInt ...............................................................................   Passed    0.00 sec
+        Start 248: DeterministicPRNGTest.RangeSame
+248/711 Test #248: DeterministicPRNGTest.RangeSame ..............................................................................   Passed    0.00 sec
+        Start 249: DeterministicPRNGTest.RangeFloat
+249/711 Test #249: DeterministicPRNGTest.RangeFloat .............................................................................   Passed    0.00 sec
+        Start 250: DeterministicPRNGTest.Skip
+250/711 Test #250: DeterministicPRNGTest.Skip ...................................................................................   Passed    0.00 sec
+        Start 251: DeterministicPRNGTest.StateSerialization
+251/711 Test #251: DeterministicPRNGTest.StateSerialization .....................................................................   Passed    0.00 sec
+        Start 252: DeterministicPRNGTest.Distribution
+252/711 Test #252: DeterministicPRNGTest.Distribution ...........................................................................   Passed    0.00 sec
+        Start 253: DeterministicPRNGTest.ZeroSeed
+253/711 Test #253: DeterministicPRNGTest.ZeroSeed ...............................................................................   Passed    0.00 sec
+        Start 254: DeterministicPRNGTest.LargeSeed
+254/711 Test #254: DeterministicPRNGTest.LargeSeed ..............................................................................   Passed    0.00 sec
+        Start 255: DeterministicPRNGTest.CrossPlatformDeterminism
+255/711 Test #255: DeterministicPRNGTest.CrossPlatformDeterminism ...............................................................   Passed    0.00 sec
+        Start 256: PRNGRegression.FullIntegerRangeKeepsSequenceAndBounds
+256/711 Test #256: PRNGRegression.FullIntegerRangeKeepsSequenceAndBounds ........................................................   Passed    0.00 sec
+        Start 257: InterpolatorTest.BasicInterpolation
+257/711 Test #257: InterpolatorTest.BasicInterpolation ..........................................................................   Passed    0.00 sec
+        Start 258: InterpolatorTest.BasicExtrapolation
+258/711 Test #258: InterpolatorTest.BasicExtrapolation ..........................................................................   Passed    0.00 sec
+        Start 259: InterpolatorTest.ExtrapolationBoundsMaxDistance
+259/711 Test #259: InterpolatorTest.ExtrapolationBoundsMaxDistance ..............................................................   Passed    0.00 sec
+        Start 260: InterpolatorTest.ExtrapolationBoundsMaxSpeed
+260/711 Test #260: InterpolatorTest.ExtrapolationBoundsMaxSpeed .................................................................   Passed    0.00 sec
+        Start 261: InterpolatorTest.ExtrapolationBoundsMaxTime
+261/711 Test #261: InterpolatorTest.ExtrapolationBoundsMaxTime ..................................................................   Passed    0.00 sec
+        Start 262: InterpolatorTest.ExtrapolationNotNeeded
+262/711 Test #262: InterpolatorTest.ExtrapolationNotNeeded ......................................................................   Passed    0.00 sec
+        Start 263: InterpolatorTest.NeedsExtrapolation
+263/711 Test #263: InterpolatorTest.NeedsExtrapolation ..........................................................................   Passed    0.00 sec
+        Start 264: InterpolatorTest.ExtrapolationZeroVelocity
+264/711 Test #264: InterpolatorTest.ExtrapolationZeroVelocity ...................................................................   Passed    0.00 sec
+        Start 265: InterpolatorTest.ExtrapolationMultipleEntities
+265/711 Test #265: InterpolatorTest.ExtrapolationMultipleEntities ...............................................................   Passed    0.00 sec
+        Start 266: InterpolatorTest.ExtrapolationSingleFrame
+266/711 Test #266: InterpolatorTest.ExtrapolationSingleFrame ....................................................................   Passed    0.00 sec
+        Start 267: InterpolatorTest.ExtrapolationTimestamp
+267/711 Test #267: InterpolatorTest.ExtrapolationTimestamp ......................................................................   Passed    0.00 sec
+        Start 268: StateDeltaCodecTest.BasicRoundtrip
+268/711 Test #268: StateDeltaCodecTest.BasicRoundtrip ...........................................................................   Passed    0.00 sec
+        Start 269: StateDeltaCodecTest.IdenticalFrames
+269/711 Test #269: StateDeltaCodecTest.IdenticalFrames ..........................................................................   Passed    0.00 sec
+        Start 270: StateDeltaCodecTest.ManyChanges
+270/711 Test #270: StateDeltaCodecTest.ManyChanges ..............................................................................   Passed    0.00 sec
+        Start 271: StateDeltaCodecTest.NoBaseline
+271/711 Test #271: StateDeltaCodecTest.NoBaseline ...............................................................................   Passed    0.00 sec
+        Start 272: StateDeltaCodecTest.DecodeWithNewCodec
+272/711 Test #272: StateDeltaCodecTest.DecodeWithNewCodec .......................................................................   Passed    0.00 sec
+        Start 273: StateDeltaCodecTest.MultipleFrames
+273/711 Test #273: StateDeltaCodecTest.MultipleFrames ...........................................................................   Passed    0.00 sec
+        Start 274: StateDeltaCodecTest.CompressionRatioSparse
+274/711 Test #274: StateDeltaCodecTest.CompressionRatioSparse ...................................................................   Passed    0.00 sec
+        Start 275: StateDeltaCodecTest.CompressionRatioDense
+275/711 Test #275: StateDeltaCodecTest.CompressionRatioDense ....................................................................   Passed    0.00 sec
+        Start 276: StateDeltaCodecTest.Reset
+276/711 Test #276: StateDeltaCodecTest.Reset ....................................................................................   Passed    0.00 sec
+        Start 277: StateDeltaCodecTest.RawBytesInterface
+277/711 Test #277: StateDeltaCodecTest.RawBytesInterface ........................................................................   Passed    0.00 sec
+        Start 278: StateDeltaCodecTest.EmptyState
+278/711 Test #278: StateDeltaCodecTest.EmptyState ...............................................................................   Passed    0.00 sec
+        Start 279: StateDeltaCodecTest.RLECompression
+279/711 Test #279: StateDeltaCodecTest.RLECompression ...........................................................................   Passed    0.00 sec
+        Start 280: StateDeltaCodecTest.RLEMixedPattern
+280/711 Test #280: StateDeltaCodecTest.RLEMixedPattern ..........................................................................   Passed    0.00 sec
+        Start 281: StateDeltaCodecTest.SizeMismatch
+281/711 Test #281: StateDeltaCodecTest.SizeMismatch .............................................................................   Passed    0.00 sec
+        Start 282: PredictionAccuracyTrackerTest.BasicTracking
+282/711 Test #282: PredictionAccuracyTrackerTest.BasicTracking ..................................................................   Passed    0.00 sec
+        Start 283: PredictionAccuracyTrackerTest.NoPrediction
+283/711 Test #283: PredictionAccuracyTrackerTest.NoPrediction ...................................................................   Passed    0.00 sec
+        Start 284: PredictionAccuracyTrackerTest.RecentAccuracy
+284/711 Test #284: PredictionAccuracyTrackerTest.RecentAccuracy .................................................................   Passed    0.00 sec
+        Start 285: PredictionAccuracyTrackerTest.AccuracyTrend
+285/711 Test #285: PredictionAccuracyTrackerTest.AccuracyTrend ..................................................................   Passed    0.00 sec
+        Start 286: PredictionAccuracyTrackerTest.DegradingTrend
+286/711 Test #286: PredictionAccuracyTrackerTest.DegradingTrend .................................................................   Passed    0.00 sec
+        Start 287: PredictionAccuracyTrackerTest.PendingPredictions
+287/711 Test #287: PredictionAccuracyTrackerTest.PendingPredictions .............................................................   Passed    0.00 sec
+        Start 288: PredictionAccuracyTrackerTest.RecentMismatches
+288/711 Test #288: PredictionAccuracyTrackerTest.RecentMismatches ...............................................................   Passed    0.00 sec
+        Start 289: PredictionAccuracyTrackerTest.Cleanup
+289/711 Test #289: PredictionAccuracyTrackerTest.Cleanup ........................................................................   Passed    0.00 sec
+        Start 290: PredictionAccuracyTrackerTest.Reset
+290/711 Test #290: PredictionAccuracyTrackerTest.Reset ..........................................................................   Passed    0.00 sec
+        Start 291: PredictionAccuracyTrackerTest.PerfectAccuracy
+291/711 Test #291: PredictionAccuracyTrackerTest.PerfectAccuracy ................................................................   Passed    0.00 sec
+        Start 292: PredictionAccuracyTrackerTest.ZeroAccuracy
+292/711 Test #292: PredictionAccuracyTrackerTest.ZeroAccuracy ...................................................................   Passed    0.00 sec
+        Start 293: AdaptivePredictionCapTest.DefaultValues
+293/711 Test #293: AdaptivePredictionCapTest.DefaultValues ......................................................................   Passed    0.00 sec
+        Start 294: AdaptivePredictionCapTest.RTTScaling
+294/711 Test #294: AdaptivePredictionCapTest.RTTScaling .........................................................................   Passed    0.00 sec
+        Start 295: AdaptivePredictionCapTest.PacketLossAdjustment
+295/711 Test #295: AdaptivePredictionCapTest.PacketLossAdjustment ...............................................................   Passed    0.00 sec
+        Start 296: AdaptivePredictionCapTest.AccuracyAdjustment
+296/711 Test #296: AdaptivePredictionCapTest.AccuracyAdjustment .................................................................   Passed    0.00 sec
+        Start 297: AdaptivePredictionCapTest.FrameStabilityAdjustment
+297/711 Test #297: AdaptivePredictionCapTest.FrameStabilityAdjustment ...........................................................   Passed    0.00 sec
+        Start 298: AdaptivePredictionCapTest.Clamping
+298/711 Test #298: AdaptivePredictionCapTest.Clamping ...........................................................................   Passed    0.00 sec
+        Start 299: AdaptivePredictionCapTest.CapSummary
+299/711 Test #299: AdaptivePredictionCapTest.CapSummary .........................................................................   Passed    0.00 sec
+        Start 300: AdaptivePredictionCapTest.RecommendedBounds
+300/711 Test #300: AdaptivePredictionCapTest.RecommendedBounds ..................................................................   Passed    0.00 sec
+        Start 301: AdaptivePredictionCapTest.Reset
+301/711 Test #301: AdaptivePredictionCapTest.Reset ..............................................................................   Passed    0.00 sec
+        Start 302: AdaptivePredictionCapTest.CombinedConditions
+302/711 Test #302: AdaptivePredictionCapTest.CombinedConditions .................................................................   Passed    0.00 sec
+        Start 303: ReplaySystemTest.BasicRecording
+303/711 Test #303: ReplaySystemTest.BasicRecording ..............................................................................   Passed    0.00 sec
+        Start 304: ReplaySystemTest.SerializationRoundtrip
+304/711 Test #304: ReplaySystemTest.SerializationRoundtrip ......................................................................   Passed    0.00 sec
+        Start 305: ReplaySystemTest.Playback
+305/711 Test #305: ReplaySystemTest.Playback ....................................................................................   Passed    0.00 sec
+        Start 306: ReplaySystemTest.Seeking
+306/711 Test #306: ReplaySystemTest.Seeking .....................................................................................   Passed    0.00 sec
+        Start 307: ReplaySystemTest.FrameAtIndex
+307/711 Test #307: ReplaySystemTest.FrameAtIndex ................................................................................   Passed    0.00 sec
+        Start 308: ReplaySystemTest.PauseResume
+308/711 Test #308: ReplaySystemTest.PauseResume .................................................................................   Passed    0.00 sec
+        Start 309: ReplaySystemTest.Reset
+309/711 Test #309: ReplaySystemTest.Reset .......................................................................................   Passed    0.00 sec
+        Start 310: ReplaySystemTest.EmptyReplay
+310/711 Test #310: ReplaySystemTest.EmptyReplay .................................................................................   Passed    0.00 sec
+        Start 311: ReplaySystemTest.Metadata
+311/711 Test #311: ReplaySystemTest.Metadata ....................................................................................   Passed    0.00 sec
+        Start 312: AdaptiveJitterBufferTest.DefaultValues
+312/711 Test #312: AdaptiveJitterBufferTest.DefaultValues .......................................................................   Passed    0.00 sec
+        Start 313: AdaptiveJitterBufferTest.JitterScaling
+313/711 Test #313: AdaptiveJitterBufferTest.JitterScaling .......................................................................   Passed    0.00 sec
+        Start 314: AdaptiveJitterBufferTest.RTTAdjustment
+314/711 Test #314: AdaptiveJitterBufferTest.RTTAdjustment .......................................................................   Passed    0.00 sec
+        Start 315: AdaptiveJitterBufferTest.FrameArrival
+315/711 Test #315: AdaptiveJitterBufferTest.FrameArrival ........................................................................   Passed    0.00 sec
+        Start 316: AdaptiveJitterBufferTest.GapDetection
+316/711 Test #316: AdaptiveJitterBufferTest.GapDetection ........................................................................   Passed    0.00 sec
+        Start 317: AdaptiveJitterBufferTest.FrameDrop
+317/711 Test #317: AdaptiveJitterBufferTest.FrameDrop ...........................................................................   Passed    0.00 sec
+        Start 318: AdaptiveJitterBufferTest.BufferStatus
+318/711 Test #318: AdaptiveJitterBufferTest.BufferStatus ........................................................................   Passed    0.00 sec
+        Start 319: AdaptiveJitterBufferTest.Reset
+319/711 Test #319: AdaptiveJitterBufferTest.Reset ...............................................................................   Passed    0.00 sec
+        Start 320: AdaptiveJitterBufferTest.Smoothing
+320/711 Test #320: AdaptiveJitterBufferTest.Smoothing ...........................................................................   Passed    0.00 sec
+        Start 321: AdaptiveJitterBufferTest.Clamping
+321/711 Test #321: AdaptiveJitterBufferTest.Clamping ............................................................................   Passed    0.00 sec
+        Start 322: InterpolationExtrapolationTest.InterpolationWorks
+322/711 Test #322: InterpolationExtrapolationTest.InterpolationWorks ............................................................   Passed    0.00 sec
+        Start 323: InterpolationExtrapolationTest.ExtrapolationWorks
+323/711 Test #323: InterpolationExtrapolationTest.ExtrapolationWorks ............................................................   Passed    0.00 sec
+        Start 324: InterpolationExtrapolationTest.MultipleEntities
+324/711 Test #324: InterpolationExtrapolationTest.MultipleEntities ..............................................................   Passed    0.00 sec
+        Start 325: InterpolationExtrapolationTest.BoundsRespected
+325/711 Test #325: InterpolationExtrapolationTest.BoundsRespected ...............................................................   Passed    0.00 sec
+        Start 326: DeterministicPRNGIntegration.CrossPlatformConsistency
+326/711 Test #326: DeterministicPRNGIntegration.CrossPlatformConsistency ........................................................   Passed    0.00 sec
+        Start 327: DeterministicPRNGIntegration.DifferentSeedsDifferentOutput
+327/711 Test #327: DeterministicPRNGIntegration.DifferentSeedsDifferentOutput ...................................................   Passed    0.00 sec
+        Start 328: DeterministicPRNGIntegration.DeterministicFromSeed
+328/711 Test #328: DeterministicPRNGIntegration.DeterministicFromSeed ...........................................................   Passed    0.00 sec
+        Start 329: StateDeltaCodecIntegration.MultiFrameRoundtrip
+329/711 Test #329: StateDeltaCodecIntegration.MultiFrameRoundtrip ...............................................................   Passed    0.00 sec
+        Start 330: StateDeltaCodecIntegration.CompressionEfficiency
+330/711 Test #330: StateDeltaCodecIntegration.CompressionEfficiency .............................................................   Passed    0.00 sec
+        Start 331: PredictionAccuracyIntegration.AccuracyTracking
+331/711 Test #331: PredictionAccuracyIntegration.AccuracyTracking ...............................................................   Passed    0.00 sec
+        Start 332: PredictionAccuracyIntegration.TrendDetection
+332/711 Test #332: PredictionAccuracyIntegration.TrendDetection .................................................................   Passed    0.00 sec
+        Start 333: AdaptivePredictionCapIntegration.RTTBasedScaling
+333/711 Test #333: AdaptivePredictionCapIntegration.RTTBasedScaling .............................................................   Passed    0.00 sec
+        Start 334: AdaptivePredictionCapIntegration.PacketLossReducesPrediction
+334/711 Test #334: AdaptivePredictionCapIntegration.PacketLossReducesPrediction .................................................   Passed    0.00 sec
+        Start 335: AdaptivePredictionCapIntegration.AccuracyReducesPrediction
+335/711 Test #335: AdaptivePredictionCapIntegration.AccuracyReducesPrediction ...................................................   Passed    0.00 sec
+        Start 336: ReplaySystemIntegration.FullReplayCycle
+336/711 Test #336: ReplaySystemIntegration.FullReplayCycle ......................................................................   Passed    0.00 sec
+        Start 337: ReplaySystemIntegration.SeekWorks
+337/711 Test #337: ReplaySystemIntegration.SeekWorks ............................................................................   Passed    0.00 sec
+        Start 338: AdaptiveJitterBufferIntegration.JitterIncreasesBuffer
+338/711 Test #338: AdaptiveJitterBufferIntegration.JitterIncreasesBuffer ........................................................   Passed    0.00 sec
+        Start 339: AdaptiveJitterBufferIntegration.RTTIncreasesBuffer
+339/711 Test #339: AdaptiveJitterBufferIntegration.RTTIncreasesBuffer ...........................................................   Passed    0.00 sec
+        Start 340: AdaptiveJitterBufferIntegration.FrameDropDecision
+340/711 Test #340: AdaptiveJitterBufferIntegration.FrameDropDecision ............................................................   Passed    0.00 sec
+        Start 341: CombinedIntegration.FullPipeline
+341/711 Test #341: CombinedIntegration.FullPipeline .............................................................................   Passed    0.00 sec
+        Start 342: LatencyCompensatorTest.BasicRTT
+342/711 Test #342: LatencyCompensatorTest.BasicRTT ..............................................................................   Passed    0.00 sec
+        Start 343: LatencyCompensatorTest.MultipleSamples
+343/711 Test #343: LatencyCompensatorTest.MultipleSamples .......................................................................   Passed    0.00 sec
+        Start 344: LatencyCompensatorTest.JitterCalculation
+344/711 Test #344: LatencyCompensatorTest.JitterCalculation .....................................................................   Passed    0.00 sec
+        Start 345: LatencyCompensatorTest.AdjustedOffset
+345/711 Test #345: LatencyCompensatorTest.AdjustedOffset ........................................................................   Passed    0.00 sec
+        Start 346: LatencyCompensatorTest.MinMaxRTT
+346/711 Test #346: LatencyCompensatorTest.MinMaxRTT .............................................................................   Passed    0.00 sec
+        Start 347: LatencyCompensatorTest.ActiveStatus
+347/711 Test #347: LatencyCompensatorTest.ActiveStatus ..........................................................................   Passed    0.00 sec
+        Start 348: LatencyCompensatorTest.Reset
+348/711 Test #348: LatencyCompensatorTest.Reset .................................................................................   Passed    0.00 sec
+        Start 349: LatencyCompensatorTest.CompensationStatus
+349/711 Test #349: LatencyCompensatorTest.CompensationStatus ....................................................................   Passed    0.00 sec
+        Start 350: LatencyCompensatorTest.ServerTimestamp
+350/711 Test #350: LatencyCompensatorTest.ServerTimestamp .......................................................................   Passed    0.00 sec
+        Start 351: LatencyCompensatorTest.NegativeRTT
+351/711 Test #351: LatencyCompensatorTest.NegativeRTT ...........................................................................   Passed    0.00 sec
+        Start 352: LatencyCompensatorTest.WeightedAverage
+352/711 Test #352: LatencyCompensatorTest.WeightedAverage .......................................................................   Passed    0.00 sec
+        Start 353: StateSnapshotCodecTest.BasicRoundtrip
+353/711 Test #353: StateSnapshotCodecTest.BasicRoundtrip ........................................................................   Passed    0.00 sec
+        Start 354: StateSnapshotCodecTest.ForcedFullSnapshot
+354/711 Test #354: StateSnapshotCodecTest.ForcedFullSnapshot ....................................................................   Passed    0.00 sec
+        Start 355: StateSnapshotCodecTest.DeltaCompression
+355/711 Test #355: StateSnapshotCodecTest.DeltaCompression ......................................................................   Passed    0.00 sec
+        Start 356: StateSnapshotCodecTest.MultiFrame
+356/711 Test #356: StateSnapshotCodecTest.MultiFrame ............................................................................   Passed    0.00 sec
+        Start 357: StateSnapshotCodecTest.CompressionEfficiency
+357/711 Test #357: StateSnapshotCodecTest.CompressionEfficiency .................................................................   Passed    0.00 sec
+        Start 358: StateSnapshotCodecTest.Reset
+358/711 Test #358: StateSnapshotCodecTest.Reset .................................................................................   Passed    0.00 sec
+        Start 359: StateSnapshotCodecTest.EmptyState
+359/711 Test #359: StateSnapshotCodecTest.EmptyState ............................................................................   Passed    0.00 sec
+        Start 360: StateSnapshotCodecTest.RawBytesInterface
+360/711 Test #360: StateSnapshotCodecTest.RawBytesInterface .....................................................................   Passed    0.00 sec
+        Start 361: StateSnapshotCodecTest.UnknownMarker
+361/711 Test #361: StateSnapshotCodecTest.UnknownMarker .........................................................................   Passed    0.00 sec
+        Start 362: StateSnapshotCodecTest.SizeMismatch
+362/711 Test #362: StateSnapshotCodecTest.SizeMismatch ..........................................................................   Passed    0.00 sec
+        Start 363: SpectatorTest.Construction
+363/711 Test #363: SpectatorTest.Construction ...................................................................................   Passed    0.00 sec
+        Start 364: SpectatorTest.ReceivesFrames
+364/711 Test #364: SpectatorTest.ReceivesFrames .................................................................................   Passed    0.21 sec
+        Start 365: SpectatorTest.NoInputSent
+365/711 Test #365: SpectatorTest.NoInputSent ....................................................................................   Passed    0.41 sec
+        Start 366: SpectatorTest.MultipleSpectators
+366/711 Test #366: SpectatorTest.MultipleSpectators .............................................................................   Passed    0.00 sec
+        Start 367: SpectatorTest.FrameCallback
+367/711 Test #367: SpectatorTest.FrameCallback ..................................................................................   Passed    0.21 sec
+        Start 368: SpectatorTest.StateHashCounted
+368/711 Test #368: SpectatorTest.StateHashCounted ...............................................................................   Passed    0.21 sec
+        Start 369: ReplayIntegrationTest.RecordSerializeLoadRoundtrip
+369/711 Test #369: ReplayIntegrationTest.RecordSerializeLoadRoundtrip ...........................................................   Passed    0.00 sec
+        Start 370: ReplayIntegrationTest.PlaybackControls
+370/711 Test #370: ReplayIntegrationTest.PlaybackControls .......................................................................   Passed    0.00 sec
+        Start 371: ReplayIntegrationTest.FileSaveLoad
+371/711 Test #371: ReplayIntegrationTest.FileSaveLoad ...........................................................................   Passed    0.00 sec
+        Start 372: ReplayIntegrationTest.EmptyReplay
+372/711 Test #372: ReplayIntegrationTest.EmptyReplay ............................................................................   Passed    0.00 sec
+        Start 373: NetworkDiagnosticsTest.InitialState
+373/711 Test #373: NetworkDiagnosticsTest.InitialState ..........................................................................   Passed    0.00 sec
+        Start 374: NetworkDiagnosticsTest.ExcellentQuality
+374/711 Test #374: NetworkDiagnosticsTest.ExcellentQuality ......................................................................   Passed    0.00 sec
+        Start 375: NetworkDiagnosticsTest.GoodQuality
+375/711 Test #375: NetworkDiagnosticsTest.GoodQuality ...........................................................................   Passed    0.00 sec
+        Start 376: NetworkDiagnosticsTest.FairQuality
+376/711 Test #376: NetworkDiagnosticsTest.FairQuality ...........................................................................   Passed    0.00 sec
+        Start 377: NetworkDiagnosticsTest.PoorQuality
+377/711 Test #377: NetworkDiagnosticsTest.PoorQuality ...........................................................................   Passed    0.00 sec
+        Start 378: NetworkDiagnosticsTest.CriticalQuality
+378/711 Test #378: NetworkDiagnosticsTest.CriticalQuality .......................................................................   Passed    0.00 sec
+        Start 379: NetworkDiagnosticsTest.CriticalByPacketLoss
+379/711 Test #379: NetworkDiagnosticsTest.CriticalByPacketLoss ..................................................................   Passed    0.00 sec
+        Start 380: NetworkDiagnosticsTest.SmoothedRTT
+380/711 Test #380: NetworkDiagnosticsTest.SmoothedRTT ...........................................................................   Passed    0.00 sec
+        Start 381: NetworkDiagnosticsTest.FormatOverlay
+381/711 Test #381: NetworkDiagnosticsTest.FormatOverlay .........................................................................   Passed    0.00 sec
+        Start 382: NetworkDiagnosticsTest.QualityString
+382/711 Test #382: NetworkDiagnosticsTest.QualityString .........................................................................   Passed    0.00 sec
+        Start 383: NetworkDiagnosticsTest.PacketLossEstimate
+383/711 Test #383: NetworkDiagnosticsTest.PacketLossEstimate ....................................................................   Passed    0.00 sec
+        Start 384: LobbyProtocolTest.PackUnpackUint32
+384/711 Test #384: LobbyProtocolTest.PackUnpackUint32 ...........................................................................   Passed    0.00 sec
+        Start 385: LobbyProtocolTest.PackUnpackUint16
+385/711 Test #385: LobbyProtocolTest.PackUnpackUint16 ...........................................................................   Passed    0.00 sec
+        Start 386: LobbyProtocolTest.PackUnpackString
+386/711 Test #386: LobbyProtocolTest.PackUnpackString ...........................................................................   Passed    0.00 sec
+        Start 387: LobbyProtocolTest.PackUnpackEmptyString
+387/711 Test #387: LobbyProtocolTest.PackUnpackEmptyString ......................................................................   Passed    0.00 sec
+        Start 388: LobbyProtocolTest.PackUnpackRoomMetadata
+388/711 Test #388: LobbyProtocolTest.PackUnpackRoomMetadata .....................................................................   Passed    0.00 sec
+        Start 389: LobbyProtocolTest.PackUnpackRoomConfig
+389/711 Test #389: LobbyProtocolTest.PackUnpackRoomConfig .......................................................................   Passed    0.00 sec
+        Start 390: LobbyProtocolTest.PackRoomMetadata_BufferTooSmall
+390/711 Test #390: LobbyProtocolTest.PackRoomMetadata_BufferTooSmall ............................................................   Passed    0.00 sec
+        Start 391: LobbyProtocolTest.UnpackRoomMetadata_BufferTooSmall
+391/711 Test #391: LobbyProtocolTest.UnpackRoomMetadata_BufferTooSmall ..........................................................   Passed    0.00 sec
+        Start 392: LobbyProtocolTest.PackString_BufferTooSmall
+392/711 Test #392: LobbyProtocolTest.PackString_BufferTooSmall ..................................................................   Passed    0.00 sec
+        Start 393: LobbyProtocolTest.RoomStatusValues
+393/711 Test #393: LobbyProtocolTest.RoomStatusValues ...........................................................................   Passed    0.00 sec
+        Start 394: LobbyProtocolTest.LobbyMessageTypeValues
+394/711 Test #394: LobbyProtocolTest.LobbyMessageTypeValues .....................................................................   Passed    0.00 sec
+        Start 395: LobbyProtocolTest.InvalidConfigRepresentationAndStringsPreserveOutput
+395/711 Test #395: LobbyProtocolTest.InvalidConfigRepresentationAndStringsPreserveOutput ........................................   Passed    0.00 sec
+        Start 396: LobbyProtocolTest.InvalidMetadataFieldsPreserveOutput
+396/711 Test #396: LobbyProtocolTest.InvalidMetadataFieldsPreserveOutput ........................................................   Passed    0.00 sec
+        Start 397: RoomManagerTest.CreateRoom
+397/711 Test #397: RoomManagerTest.CreateRoom ...................................................................................   Passed    0.00 sec
+        Start 398: RoomManagerTest.JoinRoom
+398/711 Test #398: RoomManagerTest.JoinRoom .....................................................................................   Passed    0.00 sec
+        Start 399: RoomManagerTest.JoinRoom_Full
+399/711 Test #399: RoomManagerTest.JoinRoom_Full ................................................................................   Passed    0.00 sec
+        Start 400: RoomManagerTest.JoinRoom_AlreadyIn
+400/711 Test #400: RoomManagerTest.JoinRoom_AlreadyIn ...........................................................................   Passed    0.00 sec
+        Start 401: RoomManagerTest.JoinRoom_NotFound
+401/711 Test #401: RoomManagerTest.JoinRoom_NotFound ............................................................................   Passed    0.00 sec
+        Start 402: RoomManagerTest.LeaveRoom
+402/711 Test #402: RoomManagerTest.LeaveRoom ....................................................................................   Passed    0.00 sec
+        Start 403: RoomManagerTest.LeaveRoom_HostLeaves
+403/711 Test #403: RoomManagerTest.LeaveRoom_HostLeaves .........................................................................   Passed    0.00 sec
+        Start 404: RoomManagerTest.LeaveRoom_LastPlayerLeaves
+404/711 Test #404: RoomManagerTest.LeaveRoom_LastPlayerLeaves ...................................................................   Passed    0.00 sec
+        Start 405: RoomManagerTest.SetReady
+405/711 Test #405: RoomManagerTest.SetReady .....................................................................................   Passed    0.00 sec
+        Start 406: RoomManagerTest.StartGame_AllReady
+406/711 Test #406: RoomManagerTest.StartGame_AllReady ...........................................................................   Passed    0.00 sec
+        Start 407: RoomManagerTest.StartGame_NotHost
+407/711 Test #407: RoomManagerTest.StartGame_NotHost ............................................................................   Passed    0.00 sec
+        Start 408: RoomManagerTest.StartGame_NotAllReady
+408/711 Test #408: RoomManagerTest.StartGame_NotAllReady ........................................................................   Passed    0.00 sec
+        Start 409: RoomManagerTest.StartGame_NeedTwoPlayers
+409/711 Test #409: RoomManagerTest.StartGame_NeedTwoPlayers .....................................................................   Passed    0.00 sec
+        Start 410: RoomManagerTest.ListRooms
+410/711 Test #410: RoomManagerTest.ListRooms ....................................................................................   Passed    0.00 sec
+        Start 411: RoomManagerTest.FindRoomByPlayer
+411/711 Test #411: RoomManagerTest.FindRoomByPlayer .............................................................................   Passed    0.00 sec
+        Start 412: RoomManagerTest.JoinStartedRoom
+412/711 Test #412: RoomManagerTest.JoinStartedRoom ..............................................................................   Passed    0.00 sec
+        Start 413: RoomManagerTest.Cleanup
+413/711 Test #413: RoomManagerTest.Cleanup ......................................................................................   Passed    0.00 sec
+        Start 414: RoomManagerRegression.ValidatesCapacityAndStartAddress
+414/711 Test #414: RoomManagerRegression.ValidatesCapacityAndStartAddress .......................................................   Passed    0.00 sec
+        Start 415: LobbyE2ETest.CreateJoinChatAndStartProductionRoom
+415/711 Test #415: LobbyE2ETest.CreateJoinChatAndStartProductionRoom ............................................................   Passed    0.05 sec
+        Start 416: LobbyE2ETest.RejectsDuplicateNamesAndForeignChat
+416/711 Test #416: LobbyE2ETest.RejectsDuplicateNamesAndForeignChat .............................................................   Passed    0.01 sec
+        Start 417: LobbyE2ETest.FragmentedChatAndEofAtClient
+417/711 Test #417: LobbyE2ETest.FragmentedChatAndEofAtClient ....................................................................   Passed    0.02 sec
+        Start 418: MilestoneEcs.MutationHistoryDoesNotChangeIterationOrder
+418/711 Test #418: MilestoneEcs.MutationHistoryDoesNotChangeIterationOrder ......................................................   Passed    0.00 sec
+        Start 419: MilestoneEcs.QueriesStayOrderedAfterDestruction
+419/711 Test #419: MilestoneEcs.QueriesStayOrderedAfterDestruction ..............................................................   Passed    0.00 sec
+        Start 420: MilestoneEcs.SystemOrderIsStableAndDependenciesExecuteFirst
+420/711 Test #420: MilestoneEcs.SystemOrderIsStableAndDependenciesExecuteFirst ..................................................   Passed    0.00 sec
+        Start 421: MilestoneEcs.MissingDependencyDoesNotRunPartialPipeline
+421/711 Test #421: MilestoneEcs.MissingDependencyDoesNotRunPartialPipeline ......................................................   Passed    0.00 sec
+        Start 422: MilestoneCodec.EveryByteIncludingRleMarkerRoundtrips
+422/711 Test #422: MilestoneCodec.EveryByteIncludingRleMarkerRoundtrips .........................................................   Passed    0.00 sec
+        Start 423: MilestoneCodec.RejectsMalformedRunsAndTrailingBytes
+423/711 Test #423: MilestoneCodec.RejectsMalformedRunsAndTrailingBytes ..........................................................   Passed    0.00 sec
+        Start 424: MilestoneCodec.ResizedSnapshotsAndStatsRoundtrip
+424/711 Test #424: MilestoneCodec.ResizedSnapshotsAndStatsRoundtrip .............................................................   Passed    0.00 sec
+        Start 425: MilestoneCodec.RejectedSnapshotDoesNotChangeBaseline
+425/711 Test #425: MilestoneCodec.RejectedSnapshotDoesNotChangeBaseline .........................................................   Passed    0.00 sec
+        Start 426: FrameSimulationTest.WholeFramePreservesIndependentInputsAndFrameZero
+426/711 Test #426: FrameSimulationTest.WholeFramePreservesIndependentInputsAndFrameZero .........................................   Passed    0.00 sec
+        Start 427: FrameSimulationTest.AuthorityUnblocksPredictionAtCap
+427/711 Test #427: FrameSimulationTest.AuthorityUnblocksPredictionAtCap .........................................................   Passed    0.00 sec
+        Start 428: FrameSimulationTest.SuccessiveCorrectionsRefreshLaterSnapshots
+428/711 Test #428: FrameSimulationTest.SuccessiveCorrectionsRefreshLaterSnapshots ...............................................   Passed    0.00 sec
+        Start 429: FrameSimulationTest.OutOfOrderDuplicatesAndThousandFrameRun
+429/711 Test #429: FrameSimulationTest.OutOfOrderDuplicatesAndThousandFrameRun ..................................................   Passed    0.00 sec
+        Start 430: FrameSimulationTest.HashMatchesPythonSha256LittleEndianPrefix
+430/711 Test #430: FrameSimulationTest.HashMatchesPythonSha256LittleEndianPrefix ................................................   Passed    0.00 sec
+        Start 431: FrameSimulationTest.MissingAuthorityStopsEvenWithExpandedPredictionWindow
+431/711 Test #431: FrameSimulationTest.MissingAuthorityStopsEvenWithExpandedPredictionWindow ....................................   Passed    0.00 sec
+        Start 432: SnapshotBudgetTest.RejectsBadCountsAndBudgetsBeforeAllocation
+432/711 Test #432: SnapshotBudgetTest.RejectsBadCountsAndBudgetsBeforeAllocation ................................................   Passed    0.00 sec
+        Start 433: SnapshotBudgetTest.RejectsCapacityAndFailedCallbacksWithoutChangingHistory
+433/711 Test #433: SnapshotBudgetTest.RejectsCapacityAndFailedCallbacksWithoutChangingHistory ...................................   Passed    0.00 sec
+        Start 434: SnapshotBudgetTest.EnforcesBothCountAndBytesAndReleasesOnClear
+434/711 Test #434: SnapshotBudgetTest.EnforcesBothCountAndBytesAndReleasesOnClear ...............................................   Passed    0.00 sec
+        Start 435: SnapshotBudgetTest.DuplicateReplacementKeepsItsIndexWhenOtherFramesAreEvicted
+435/711 Test #435: SnapshotBudgetTest.DuplicateReplacementKeepsItsIndexWhenOtherFramesAreEvicted ................................   Passed    0.00 sec
+        Start 436: SnapshotBudgetTest.CopiesAreIndependentAndMovedFromHistoriesRemainUsable
+436/711 Test #436: SnapshotBudgetTest.CopiesAreIndependentAndMovedFromHistoriesRemainUsable .....................................   Passed    0.00 sec
+        Start 437: SnapshotBudgetTest.InvalidCorrectionCannotRestoreOrStep
+437/711 Test #437: SnapshotBudgetTest.InvalidCorrectionCannotRestoreOrStep ......................................................   Passed    0.00 sec
+        Start 438: FrameMemoryBudgetTest.RejectsOversizedCapacityBeforeSteppingAndCanResume
+438/711 Test #438: FrameMemoryBudgetTest.RejectsOversizedCapacityBeforeSteppingAndCanResume .....................................   Passed    0.00 sec
+        Start 439: FrameMemoryBudgetTest.AggregateBudgetFillsThenAuthorityFreesPredictionSpace
+439/711 Test #439: FrameMemoryBudgetTest.AggregateBudgetFillsThenAuthorityFreesPredictionSpace ..................................   Passed    0.00 sec
+        Start 440: FrameMemoryBudgetTest.RollbackGrowthRecoversTheCorrectedAuthorityAndDropsSpeculation
+440/711 Test #440: FrameMemoryBudgetTest.RollbackGrowthRecoversTheCorrectedAuthorityAndDropsSpeculation .........................   Passed    0.00 sec
+        Start 441: FrameMemoryBudgetTest.FailedSaveDuringResimulationLeavesRetryableAuthority
+441/711 Test #441: FrameMemoryBudgetTest.FailedSaveDuringResimulationLeavesRetryableAuthority ...................................   Passed    0.00 sec
+        Start 442: FrameMemoryBudgetTest.FailedPredictionDoesNotCommitAFrameOrHistoryNode
+442/711 Test #442: FrameMemoryBudgetTest.FailedPredictionDoesNotCommitAFrameOrHistoryNode .......................................   Passed    0.00 sec
+        Start 443: FrameMemoryBudgetTest.AuthorityOwnsOnlyItsBoundedPayloadAndRecoversAfterDrain
+443/711 Test #443: FrameMemoryBudgetTest.AuthorityOwnsOnlyItsBoundedPayloadAndRecoversAfterDrain ................................   Passed    0.00 sec
+        Start 444: ReplayMemoryBudgetTest.FrameCapPreservesSerializablePrefixAndRestartResetsMetadata
+444/711 Test #444: ReplayMemoryBudgetTest.FrameCapPreservesSerializablePrefixAndRestartResetsMetadata ...........................   Passed    0.00 sec
+        Start 445: ReplayMemoryBudgetTest.ByteCapRejectsWithoutLosingTheLastAcceptedFrame
+445/711 Test #445: ReplayMemoryBudgetTest.ByteCapRejectsWithoutLosingTheLastAcceptedFrame .......................................   Passed    0.00 sec
+        Start 446: ReplayMemoryBudgetTest.LiveSerializationIsConsistentAndUsesExplicitLittleEndian
+446/711 Test #446: ReplayMemoryBudgetTest.LiveSerializationIsConsistentAndUsesExplicitLittleEndian ..............................   Passed    0.00 sec
+        Start 447: ReplayMemoryBudgetTest.MalformedLoadsPreservePreviousPositionAndPlayback
+447/711 Test #447: ReplayMemoryBudgetTest.MalformedLoadsPreservePreviousPositionAndPlayback .....................................   Passed    0.00 sec
+        Start 448: ReplayMemoryBudgetTest.BadInputsStopRecordingWithoutAppending
+448/711 Test #448: ReplayMemoryBudgetTest.BadInputsStopRecordingWithoutAppending ................................................   Passed    0.00 sec
+        Start 449: ReplayMemoryBudgetTest.CopiesMovesAndCapacityRecoveryPreserveIndependentData
+449/711 Test #449: ReplayMemoryBudgetTest.CopiesMovesAndCapacityRecoveryPreserveIndependentData .................................   Passed    0.00 sec
+        Start 450: ReplayMemoryBudgetTest.FullDefaultBudgetSupportsAFullMatchAndThenStops
+450/711 Test #450: ReplayMemoryBudgetTest.FullDefaultBudgetSupportsAFullMatchAndThenStops .......................................   Passed    0.59 sec
+        Start 451: ReceiveMemoryBudget.FillRejectPreservesBytesThenConsumeAndRecover
+451/711 Test #451: ReceiveMemoryBudget.FillRejectPreservesBytesThenConsumeAndRecover ............................................   Passed    0.00 sec
+        Start 452: ReceiveMemoryBudget.BadLengthsAndExcessCallerCapacityAreRejected
+452/711 Test #452: ReceiveMemoryBudget.BadLengthsAndExcessCallerCapacityAreRejected .............................................   Passed    0.00 sec
+        Start 453: ReplayFileTest.ChunksAreBoundedAndExactlyMatchExistingWireFormat
+453/711 Test #453: ReplayFileTest.ChunksAreBoundedAndExactlyMatchExistingWireFormat .............................................   Passed    0.00 sec
+        Start 454: ReplayFileTest.ShortWritesAndInterruptedWritesPreserveEveryByte
+454/711 Test #454: ReplayFileTest.ShortWritesAndInterruptedWritesPreserveEveryByte ..............................................   Passed    0.00 sec
+        Start 455: ReplayFileTest.EveryPreCommitIoFailurePreservesOldFileAndAllowsRetry
+455/711 Test #455: ReplayFileTest.EveryPreCommitIoFailurePreservesOldFileAndAllowsRetry .........................................   Passed    0.01 sec
+        Start 456: ReplayFileTest.CommittedDirectorySyncFailureIsNotReportedAsOldData
+456/711 Test #456: ReplayFileTest.CommittedDirectorySyncFailureIsNotReportedAsOldData ...........................................   Passed    0.00 sec
+        Start 457: ReplayFileTest.CleanupFailureIsObservableAndDoesNotRemoveSomeoneElsesFile
+457/711 Test #457: ReplayFileTest.CleanupFailureIsObservableAndDoesNotRemoveSomeoneElsesFile ....................................   Passed    0.00 sec
+        Start 458: ReplayFileTest.ExceptionsReleaseTemporaryFileAndDescriptors
+458/711 Test #458: ReplayFileTest.ExceptionsReleaseTemporaryFileAndDescriptors ..................................................   Passed    0.02 sec
+        Start 459: ReplayFileTest.InvalidPathsAndEmptyRecordingsDoNotCreateFiles
+459/711 Test #459: ReplayFileTest.InvalidPathsAndEmptyRecordingsDoNotCreateFiles ................................................   Passed    0.00 sec
+        Start 460: ReplayFileTest.MaximumReplayReopensInAnotherProcessAndKeepsEveryFrame
+460/711 Test #460: ReplayFileTest.MaximumReplayReopensInAnotherProcessAndKeepsEveryFrame ........................................   Passed    0.41 sec
+        Start 461: ReplayFileTest.RealFilesystemLimitRejectsWriteAndPreservesOldReplay
+461/711 Test #461: ReplayFileTest.RealFilesystemLimitRejectsWriteAndPreservesOldReplay ..........................................   Passed    0.00 sec
+        Start 462: ReplayFileTest.ConcurrentReaderAlwaysSeesOneCompletePublishedVersion
+462/711 Test #462: ReplayFileTest.ConcurrentReaderAlwaysSeesOneCompletePublishedVersion .........................................   Passed    0.01 sec
+        Start 463: ReplayDirectoryTest.RejectsInvalidBudgetsBeforeFilesystemUse
+463/711 Test #463: ReplayDirectoryTest.RejectsInvalidBudgetsBeforeFilesystemUse .................................................   Passed    0.00 sec
+        Start 464: ReplayDirectoryTest.RequiresCanonicalSeedNameAndNonemptyRecording
+464/711 Test #464: ReplayDirectoryTest.RequiresCanonicalSeedNameAndNonemptyRecording ............................................   Passed    0.00 sec
+        Start 465: ReplayDirectoryTest.CountFillsRejectsPreservesFilesAndRecoversAfterExplicitRemoval
+465/711 Test #465: ReplayDirectoryTest.CountFillsRejectsPreservesFilesAndRecoversAfterExplicitRemoval ...........................   Passed    0.00 sec
+        Start 466: ReplayDirectoryTest.ByteQuotaIncludesOldDestinationAndNewScratchDuringReplacement
+466/711 Test #466: ReplayDirectoryTest.ByteQuotaIncludesOldDestinationAndNewScratchDuringReplacement ............................   Passed    0.00 sec
+        Start 467: ReplayDirectoryTest.SameSeedCanReplaceAtFileCountLimit
+467/711 Test #467: ReplayDirectoryTest.SameSeedCanReplaceAtFileCountLimit .......................................................   Passed    0.00 sec
+        Start 468: ReplayDirectoryTest.MinimumScanBudgetIncludesPrivateDirectoryAndAllowsReplacement
+468/711 Test #468: ReplayDirectoryTest.MinimumScanBudgetIncludesPrivateDirectoryAndAllowsReplacement ............................   Passed    0.00 sec
+        Start 469: ReplayDirectoryTest.DefaultFileCountRejectsTheSixtyFifthDistinctSeed
+469/711 Test #469: ReplayDirectoryTest.DefaultFileCountRejectsTheSixtyFifthDistinctSeed .........................................   Passed    0.00 sec
+        Start 470: ReplayDirectoryTest.UnsafeInterruptedLinksAreRejectedWithoutRemovingThem
+470/711 Test #470: ReplayDirectoryTest.UnsafeInterruptedLinksAreRejectedWithoutRemovingThem .....................................   Passed    0.00 sec
+        Start 471: ReplayDirectoryTest.PrivateUnknownAndLegacyParentScratchArePreservedAndCounted
+471/711 Test #471: ReplayDirectoryTest.PrivateUnknownAndLegacyParentScratchArePreservedAndCounted ...............................   Passed    0.00 sec
+        Start 472: ReplayDirectoryTest.RejectsSymlinkedScratchDirectoryAndLinkedPublishedFiles
+472/711 Test #472: ReplayDirectoryTest.RejectsSymlinkedScratchDirectoryAndLinkedPublishedFiles ..................................   Passed    0.00 sec
+        Start 473: ReplayDirectoryTest.RejectsUnsafeScratchPermissionsAndBoundsUnrelatedDirectoryScan
+473/711 Test #473: ReplayDirectoryTest.RejectsUnsafeScratchPermissionsAndBoundsUnrelatedDirectoryScan ...........................   Passed    0.00 sec
+        Start 474: ReplayDirectoryTest.KilledWriterReleasesLockAndOnlyOwnedInterruptedFileIsRecovered
+474/711 Test #474: ReplayDirectoryTest.KilledWriterReleasesLockAndOnlyOwnedInterruptedFileIsRecovered ...........................   Passed    0.00 sec
+        Start 475: ReplayDirectoryTest.ThreeProcessesShareTheSameSingleFileAdmission
+475/711 Test #475: ReplayDirectoryTest.ThreeProcessesShareTheSameSingleFileAdmission ............................................   Passed    0.01 sec
+        Start 476: ReplayDirectoryTest.AllocationExceptionsReleaseLockDescriptorsAndPendingFiles
+476/711 Test #476: ReplayDirectoryTest.AllocationExceptionsReleaseLockDescriptorsAndPendingFiles ................................   Passed    0.01 sec
+        Start 477: ReplayDirectoryTest.CommittedSyncFailureRemainsPublishedAndConsumesQuota
+477/711 Test #477: ReplayDirectoryTest.CommittedSyncFailureRemainsPublishedAndConsumesQuota .....................................   Passed    0.00 sec
+        Start 478: ReplayDirectoryTest.MaximumRecordingUsesTheSameWireBytesAndReplacesWithinPeakBudget
+478/711 Test #478: ReplayDirectoryTest.MaximumRecordingUsesTheSameWireBytesAndReplacesWithinPeakBudget ..........................   Passed    1.02 sec
+        Start 479: DatagramTest.ConstructorValidatesBudgetBeforeUse
+479/711 Test #479: DatagramTest.ConstructorValidatesBudgetBeforeUse .............................................................   Passed    0.02 sec
+        Start 480: DatagramTest.PacketCapRejectsBeforeSequenceAndRecoversAfterAck
+480/711 Test #480: DatagramTest.PacketCapRejectsBeforeSequenceAndRecoversAfterAck ...............................................   Passed    0.05 sec
+        Start 481: DatagramTest.ByteCapIsIndependentOfPacketCountAndSurvivesRepeatedDrain
+481/711 Test #481: DatagramTest.ByteCapIsIndependentOfPacketCountAndSurvivesRepeatedDrain .......................................   Passed    0.48 sec
+        Start 482: DatagramTest.InvalidLengthsNeverAllocateOrConsumeSequence
+482/711 Test #482: DatagramTest.InvalidLengthsNeverAllocateOrConsumeSequence ....................................................   Passed    0.02 sec
+        Start 483: DatagramTest.RetryExhaustionIsTerminalAndReleasesAllPackets
+483/711 Test #483: DatagramTest.RetryExhaustionIsTerminalAndReleasesAllPackets ..................................................   Passed    0.05 sec
+        Start 484: DatagramTest.AckAfterRetransmitDoesNotDistortRttAndFreesCapacity
+484/711 Test #484: DatagramTest.AckAfterRetransmitDoesNotDistortRttAndFreesCapacity .............................................   Passed    0.04 sec
+        Start 485: DatagramTest.SendAndRetransmitSocketFailuresReleasePendingStorage
+485/711 Test #485: DatagramTest.SendAndRetransmitSocketFailuresReleasePendingStorage ............................................   Passed    0.08 sec
+        Start 486: DatagramTest.MalformedDataAndUnknownAcksDoNotChangePendingOrDeliver
+486/711 Test #486: DatagramTest.MalformedDataAndUnknownAcksDoNotChangePendingOrDeliver ..........................................   Passed    0.04 sec
+        Start 487: DatagramTest.RealReceiverAcknowledgesAndCallbackCanSendAndClose
+487/711 Test #487: DatagramTest.RealReceiverAcknowledgesAndCallbackCanSendAndClose ..............................................   Passed    0.04 sec
+        Start 488: DatagramTest.AckSendFailureDoesNotDeliverAndClosePreservesSharedSocket
+488/711 Test #488: DatagramTest.AckSendFailureDoesNotDeliverAndClosePreservesSharedSocket .......................................   Passed    0.04 sec
+        Start 489: DatagramTest.ConcurrentSendsCannotExceedBudget
+489/711 Test #489: DatagramTest.ConcurrentSendsCannotExceedBudget ...............................................................   Passed    0.08 sec
+        Start 490: DatagramTest.ReorderedDatagramsDeliverExactlyOnceAndInSequence
+490/711 Test #490: DatagramTest.ReorderedDatagramsDeliverExactlyOnceAndInSequence ...............................................   Passed    0.03 sec
+        Start 491: DatagramTest.ConflictingFutureDatagramFailsBeforeApplicationDelivery
+491/711 Test #491: DatagramTest.ConflictingFutureDatagramFailsBeforeApplicationDelivery .........................................   Passed    0.04 sec
+        Start 492: DatagramTest.ReceiveCapacityCountsInFlightCallbacksAndRetainedFuturePackets
+492/711 Test #492: DatagramTest.ReceiveCapacityCountsInFlightCallbacksAndRetainedFuturePackets ..................................   Passed    0.04 sec
+        Start 493: DatagramTest.ReentrantReceiveQueuesBehindCurrentCallbackWithoutDeadlock
+493/711 Test #493: DatagramTest.ReentrantReceiveQueuesBehindCurrentCallbackWithoutDeadlock ......................................   Passed    0.04 sec
+        Start 494: DatagramTest.ThrowingReceiveCallbackReleasesBothDirectionsAndRejectsFurtherWork
+494/711 Test #494: DatagramTest.ThrowingReceiveCallbackReleasesBothDirectionsAndRejectsFurtherWork ..............................   Passed    0.04 sec
+        Start 495: DatagramTest.ReceiveByteLimitAndSequenceWindowRejectBeforeAck
+495/711 Test #495: DatagramTest.ReceiveByteLimitAndSequenceWindowRejectBeforeAck ................................................   Passed    0.04 sec
+        Start 496: RTTBudget.ExtremeDurationsAndDeviationRemainBoundedInMilliseconds
+496/711 Test #496: RTTBudget.ExtremeDurationsAndDeviationRemainBoundedInMilliseconds ............................................   Passed    0.00 sec
+        Start 497: BoundedTCP.ValidatesBudgetsAndInvalidMessagesBeforeCopy
+497/711 Test #497: BoundedTCP.ValidatesBudgetsAndInvalidMessagesBeforeCopy ......................................................   Passed    0.01 sec
+        Start 498: BoundedTCP.CountLimitCopiesCallerBytesThenDrainsInOrderAndRecovers
+498/711 Test #498: BoundedTCP.CountLimitCopiesCallerBytesThenDrainsInOrderAndRecovers ...........................................   Passed    0.02 sec
+        Start 499: BoundedTCP.ByteLimitAppliesBeforeExecutorRunsAndAfterRepeatedDrain
+499/711 Test #499: BoundedTCP.ByteLimitAppliesBeforeExecutorRunsAndAfterRepeatedDrain ...........................................   Passed    0.03 sec
+        Start 500: BoundedTCP.CloseBeforeDispatchDropsQueuedDataWithoutSending
+500/711 Test #500: BoundedTCP.CloseBeforeDispatchDropsQueuedDataWithoutSending ..................................................   Passed    0.01 sec
+        Start 501: BoundedTCP.CancelKeepsInFlightStorageUntilItsCallbackCompletes
+501/711 Test #501: BoundedTCP.CancelKeepsInFlightStorageUntilItsCallbackCompletes ...............................................   Passed    0.04 sec
+        Start 502: BoundedTCP.SlowReaderCannotBlockAnotherConnectionAndHasWriteDeadline
+502/711 Test #502: BoundedTCP.SlowReaderCannotBlockAnotherConnectionAndHasWriteDeadline .........................................   Passed    0.23 sec
+        Start 503: BoundedTCP.PeerResetReleasesAcceptedMessages
+503/711 Test #503: BoundedTCP.PeerResetReleasesAcceptedMessages .................................................................   Passed    0.01 sec
+        Start 504: BoundedTCP.ReadIsBoundedAndCallbackCanSendWithoutReenteringMutex
+504/711 Test #504: BoundedTCP.ReadIsBoundedAndCallbackCanSendWithoutReenteringMutex .............................................   Passed    0.02 sec
+        Start 505: BoundedTCP.DestructionCancelsWriteAndReleasesOwnedSocketAfterCompletion
+505/711 Test #505: BoundedTCP.DestructionCancelsWriteAndReleasesOwnedSocketAfterCompletion ......................................   Passed    0.03 sec
+        Start 506: BoundedTCP.ConcurrentProducersCannotQueueUnboundedExecutorWork
+506/711 Test #506: BoundedTCP.ConcurrentProducersCannotQueueUnboundedExecutorWork ...............................................   Passed    0.01 sec
+        Start 507: LobbyCapacity.ConstructorRejectsBadLimits
+507/711 Test #507: LobbyCapacity.ConstructorRejectsBadLimits ....................................................................   Passed    0.02 sec
+        Start 508: LobbyCapacity.RejectsExcessConnectionThenAcceptsAfterActualDisconnect
+508/711 Test #508: LobbyCapacity.RejectsExcessConnectionThenAcceptsAfterActualDisconnect ........................................   Passed    0.03 sec
+        Start 509: LobbyCapacity.UnidentifiedReservationExpiresButNamedConnectionSurvives
+509/711 Test #509: LobbyCapacity.UnidentifiedReservationExpiresButNamedConnectionSurvives .......................................   Passed    0.22 sec
+        Start 510: LobbyCapacity.OversizedLengthHeadersAreRejectedWithoutTheirPayloads
+510/711 Test #510: LobbyCapacity.OversizedLengthHeadersAreRejectedWithoutTheirPayloads ..........................................   Passed    0.01 sec
+        Start 511: LobbyCapacity.InvalidConfigBoolAndUnterminatedStringAreRejectedBeforeRoomCreation
+511/711 Test #511: LobbyCapacity.InvalidConfigBoolAndUnterminatedStringAreRejectedBeforeRoomCreation ............................   Passed    0.02 sec
+        Start 512: LobbyCapacity.OutboundMessageCapDisconnectsFlooderAndHealthyPeerStillWorks
+512/711 Test #512: LobbyCapacity.OutboundMessageCapDisconnectsFlooderAndHealthyPeerStillWorks ...................................   Passed    0.02 sec
+        Start 513: LobbyCapacity.OutboundByteCapIsIndependentOfMessageCapAndRecovers
+513/711 Test #513: LobbyCapacity.OutboundByteCapIsIndependentOfMessageCapAndRecovers ............................................   Passed    0.02 sec
+        Start 514: LobbyCapacity.LargestChatWithFragmentationAndFollowingMessageRemainsValid
+514/711 Test #514: LobbyCapacity.LargestChatWithFragmentationAndFollowingMessageRemainsValid ....................................   Passed    0.02 sec
+        Start 515: LobbyCapacity.DestroyServerWithActiveReadsAndQueuedOutputDrainsCallbacks
+515/711 Test #515: LobbyCapacity.DestroyServerWithActiveReadsAndQueuedOutputDrainsCallbacks .....................................   Passed    0.03 sec
+        Start 516: LobbyCapacity.StoppedIoCanDestroyServerAndPendingHandlersWithoutResurrection
+516/711 Test #516: LobbyCapacity.StoppedIoCanDestroyServerAndPendingHandlersWithoutResurrection .................................   Passed    0.01 sec
+        Start 517: LobbyClientCapacity.CountLimitIsReservedBeforeIoAndOverflowDisconnectsExplicitly
+517/711 Test #517: LobbyClientCapacity.CountLimitIsReservedBeforeIoAndOverflowDisconnectsExplicitly .............................   Passed    0.02 sec
+        Start 518: LobbyClientCapacity.ByteLimitIsIndependentOfMessageCount
+518/711 Test #518: LobbyClientCapacity.ByteLimitIsIndependentOfMessageCount .....................................................   Passed    0.02 sec
+        Start 519: LobbyClientCapacity.FullQueueDrainsInOrderAndCanBeReusedOneHundredTimes
+519/711 Test #519: LobbyClientCapacity.FullQueueDrainsInOrderAndCanBeReusedOneHundredTimes ......................................   Passed    0.14 sec
+        Start 520: LobbyClientCapacity.OversizedHeadersAndUnknownTypesFailBeforePayloadArrival
+520/711 Test #520: LobbyClientCapacity.OversizedHeadersAndUnknownTypesFailBeforePayloadArrival ..................................   Passed    0.11 sec
+        Start 521: LobbyClientCapacity.MaximumRoomListFragmentedThenCoalescedMessageIsPreserved
+521/711 Test #521: LobbyClientCapacity.MaximumRoomListFragmentedThenCoalescedMessageIsPreserved .................................   Passed    0.02 sec
+        Start 522: LobbyClientCapacity.ByteBoundedChatHistoryAccountsMixedStringCapacitiesAndRecovers
+522/711 Test #522: LobbyClientCapacity.ByteBoundedChatHistoryAccountsMixedStringCapacitiesAndRecovers ...........................   Passed    0.71 sec
+        Start 523: LobbyClientCapacity.ChatCountLimitRetainsLatestMessagesBelowByteLimit
+523/711 Test #523: LobbyClientCapacity.ChatCountLimitRetainsLatestMessagesBelowByteLimit ........................................   Passed    1.26 sec
+        Start 524: LobbyClientCapacity.CallbackCanDisconnectReplaceItselfAndKeepPacketAlive
+524/711 Test #524: LobbyClientCapacity.CallbackCanDisconnectReplaceItselfAndKeepPacketAlive .....................................   Passed    0.01 sec
+        Start 525: LobbyClientCapacity.InvalidRoomMetadataDoesNotReplacePreviouslyValidList
+525/711 Test #525: LobbyClientCapacity.InvalidRoomMetadataDoesNotReplacePreviouslyValidList .....................................   Passed    0.02 sec
+        Start 526: LobbyClientCapacity.DestructionDiscardsNeverDispatchedReadsAndWritesSafely
+526/711 Test #526: LobbyClientCapacity.DestructionDiscardsNeverDispatchedReadsAndWritesSafely ...................................   Passed    0.02 sec
+        Start 527: TCPFrameServer.InvalidSlotsAndMutatedBudgetsFailBeforeClientAllocation
+527/711 Test #527: TCPFrameServer.InvalidSlotsAndMutatedBudgetsFailBeforeClientAllocation .......................................   Passed    0.08 sec
+        Start 528: TCPFrameServer.FullConnectionsRejectAndRecoverBeforeMatchStarts
+528/711 Test #528: TCPFrameServer.FullConnectionsRejectAndRecoverBeforeMatchStarts ..............................................   Passed    0.03 sec
+        Start 529: TCPFrameServer.UnreadyConnectionsExpireAndReleaseReservation
+529/711 Test #529: TCPFrameServer.UnreadyConnectionsExpireAndReleaseReservation .................................................   Passed    0.14 sec
+        Start 530: TCPFrameServer.InvalidHeadersAndForeignSlotDisconnectWithoutGrowingBuffer
+530/711 Test #530: TCPFrameServer.InvalidHeadersAndForeignSlotDisconnectWithoutGrowingBuffer ....................................   Passed    0.08 sec
+        Start 531: TCPFrameServer.FragmentedInputAndHeartbeatPreserveFrameAndSlotOrder
+531/711 Test #531: TCPFrameServer.FragmentedInputAndHeartbeatPreserveFrameAndSlotOrder ..........................................   Passed    0.11 sec
+        Start 532: TCPFrameServer.SlowReaderIsClosedWhileHealthyPeerReceivesConsecutiveFullFrames
+532/711 Test #532: TCPFrameServer.SlowReaderIsClosedWhileHealthyPeerReceivesConsecutiveFullFrames ...............................   Passed    0.46 sec
+        Start 533: TCPFrameServer.StopWakesWaitingFrameLoopAndDrainsPendingSocketCallbacks
+533/711 Test #533: TCPFrameServer.StopWakesWaitingFrameLoopAndDrainsPendingSocketCallbacks ......................................   Passed    0.02 sec
+        Start 534: TCPFrameServer.WrapperDestructionWithLiveIoKeepsCallbacksSafe
+534/711 Test #534: TCPFrameServer.WrapperDestructionWithLiveIoKeepsCallbacksSafe ................................................   Passed    0.01 sec
+        Start 535: TCPClientCapacity.InvalidConfigurationIsRejectedBeforeConnecting
+535/711 Test #535: TCPClientCapacity.InvalidConfigurationIsRejectedBeforeConnecting .............................................   Passed    0.00 sec
+        Start 536: TCPClientCapacity.PartialHandshakeHasAnAbsoluteDeadline
+536/711 Test #536: TCPClientCapacity.PartialHandshakeHasAnAbsoluteDeadline ......................................................   Passed    0.06 sec
+        Start 537: TCPClientCapacity.InvalidSessionAndSlotHeadersFailEarly
+537/711 Test #537: TCPClientCapacity.InvalidSessionAndSlotHeadersFailEarly ......................................................   Passed    0.11 sec
+        Start 538: TCPClientCapacity.AuthorityCapacityReleasesOnPopAndPreservesWholeFrames
+538/711 Test #538: TCPClientCapacity.AuthorityCapacityReleasesOnPopAndPreservesWholeFrames ......................................   Passed    0.06 sec
+        Start 539: TCPClientCapacity.AuthorityAndHashOverflowStopAndReleasePayloads
+539/711 Test #539: TCPClientCapacity.AuthorityAndHashOverflowStopAndReleasePayloads .............................................   Passed    0.03 sec
+        Start 540: TCPClientCapacity.MalformedInputsAndConflictingHashesAreTerminal
+540/711 Test #540: TCPClientCapacity.MalformedInputsAndConflictingHashesAreTerminal .............................................   Passed    0.08 sec
+        Start 541: TCPClientCapacity.ControlsConsumeEntirePacketsAndLeaveAuthorityAligned
+541/711 Test #541: TCPClientCapacity.ControlsConsumeEntirePacketsAndLeaveAuthorityAligned .......................................   Passed    0.07 sec
+        Start 542: TCPClientCapacity.OutgoingLimitIncludesUndispatchedPacketsAndCloseDrains
+542/711 Test #542: TCPClientCapacity.OutgoingLimitIncludesUndispatchedPacketsAndCloseDrains .....................................   Passed    0.01 sec
+        Start 543: TCPClientCapacity.IdlePeerTerminatesAndForeignSlotsCannotBeSent
+543/711 Test #543: TCPClientCapacity.IdlePeerTerminatesAndForeignSlotsCannotBeSent ..............................................   Passed    0.08 sec
+        Start 544: TCPClientCapacity.ResumeRestoresOneBoundedSnapshotAndKeepsCoalescedFrames
+544/711 Test #544: TCPClientCapacity.ResumeRestoresOneBoundedSnapshotAndKeepsCoalescedFrames ....................................   Passed    0.02 sec
+        Start 545: TCPClientCapacity.MaximumAssignmentAndInputUseAllTwentyTwoSlots
+545/711 Test #545: TCPClientCapacity.MaximumAssignmentAndInputUseAllTwentyTwoSlots ..............................................   Passed    0.06 sec
+        Start 546: TCPClientCapacity.OversizedSnapshotFailsAndASecondAttemptRetainsSessionIdentity
+546/711 Test #546: TCPClientCapacity.OversizedSnapshotFailsAndASecondAttemptRetainsSessionIdentity ..............................   Passed    0.10 sec
+        Start 547: TCPClientCapacity.DestructionDiscardsPendingReadAndUndispatchedWrites
+547/711 Test #547: TCPClientCapacity.DestructionDiscardsPendingReadAndUndispatchedWrites ........................................   Passed    0.40 sec
+        Start 548: TCPFrameClient.FrameZeroAndIndependentInputsUnblockPredictionAtItsCap
+548/711 Test #548: TCPFrameClient.FrameZeroAndIndependentInputsUnblockPredictionAtItsCap ........................................   Passed    0.02 sec
+        Start 549: TCPFrameClient.HashMismatchStopsAllFurtherEngineSteps
+549/711 Test #549: TCPFrameClient.HashMismatchStopsAllFurtherEngineSteps ........................................................   Passed    0.02 sec
+        Start 550: TCPFrameClient.ResumeUsesSnapshotFrameOriginWithoutReinitializingEngine
+550/711 Test #550: TCPFrameClient.ResumeUsesSnapshotFrameOriginWithoutReinitializingEngine ......................................   Passed    0.06 sec
+        Start 551: ReconnectingClient.RetryConfigurationAndMissingCredentialFailBeforeIO
+551/711 Test #551: ReconnectingClient.RetryConfigurationAndMissingCredentialFailBeforeIO ........................................   Passed    0.00 sec
+        Start 552: ReconnectingClient.ConnectionRefusalSaturatesDelayAndExhaustsFiniteRetryBudget
+552/711 Test #552: ReconnectingClient.ConnectionRefusalSaturatesDelayAndExhaustsFiniteRetryBudget ...............................   Passed    0.02 sec
+        Start 553: ReconnectingClient.EOFTriggersAutomaticSnapshotResumeAndConfirmedHashProgress
+553/711 Test #553: ReconnectingClient.EOFTriggersAutomaticSnapshotResumeAndConfirmedHashProgress ................................   Passed    0.05 sec
+        Start 554: ReconnectingClient.ProtocolAndHashFailuresDoNotRetryOrKeepStepping
+554/711 Test #554: ReconnectingClient.ProtocolAndHashFailuresDoNotRetryOrKeepStepping ...........................................   Passed    0.03 sec
+        Start 555: ReconnectingClient.CloseInsideDisconnectCallbackCancelsAutomaticRecovery
+555/711 Test #555: ReconnectingClient.CloseInsideDisconnectCallbackCancelsAutomaticRecovery .....................................   Passed    0.02 sec
+        Start 556: ReconnectingClient.CloseOrThrowInsideRetryCallbackCannotStartANewConnection
+556/711 Test #556: ReconnectingClient.CloseOrThrowInsideRetryCallbackCannotStartANewConnection ..................................   Passed    0.04 sec
+        Start 557: ReconnectingClient.CloseDuringEnginePreparationCannotReportConnectionSuccess
+557/711 Test #557: ReconnectingClient.CloseDuringEnginePreparationCannotReportConnectionSuccess .................................   Passed    0.01 sec
+        Start 558: ReconnectingClient.FailedInitialEnginePreparationIsTerminal
+558/711 Test #558: ReconnectingClient.FailedInitialEnginePreparationIsTerminal ..................................................   Passed    0.02 sec
+        Start 559: ReconnectingClient.PartialResumeTimeoutRetriesTheSameSessionAndRestoresOnSecondAttempt
+559/711 Test #559: ReconnectingClient.PartialResumeTimeoutRetriesTheSameSessionAndRestoresOnSecondAttempt .......................   Passed    0.16 sec
+        Start 560: ReconnectingClient.InvalidEngineSnapshotDoesNotSendReadyOrRetry
+560/711 Test #560: ReconnectingClient.InvalidEngineSnapshotDoesNotSendReadyOrRetry ..............................................   Passed    0.06 sec
+        Start 561: native_udp_bootstrap_test.UDPBootstrap.CanonicalEndpointAndScope
+561/711 Test #561: native_udp_bootstrap_test.UDPBootstrap.CanonicalEndpointAndScope .............................................   Passed    0.00 sec
+        Start 562: native_udp_bootstrap_test.UDPBootstrap.RejectInvalidEndpointsAndPadding
+562/711 Test #562: native_udp_bootstrap_test.UDPBootstrap.RejectInvalidEndpointsAndPadding ......................................   Passed    0.00 sec
+        Start 563: native_udp_bootstrap_test.UDPBootstrap.ExactBoundedWireFormat
+563/711 Test #563: native_udp_bootstrap_test.UDPBootstrap.ExactBoundedWireFormat ................................................   Passed    0.00 sec
+        Start 564: native_udp_bootstrap_test.UDPBootstrap.RejectMalformedWireBeforeState
+564/711 Test #564: native_udp_bootstrap_test.UDPBootstrap.RejectMalformedWireBeforeState ........................................   Passed    0.00 sec
+        Start 565: native_udp_bootstrap_test.UDPBootstrap.ServerEntropyFailsClosedAndIsBounded
+565/711 Test #565: native_udp_bootstrap_test.UDPBootstrap.ServerEntropyFailsClosedAndIsBounded ..................................   Passed    0.00 sec
+        Start 566: native_udp_bootstrap_test.UDPBootstrap.ClientEntropyFailsClosedAndIsBounded
+566/711 Test #566: native_udp_bootstrap_test.UDPBootstrap.ClientEntropyFailsClosedAndIsBounded ..................................   Passed    0.00 sec
+        Start 567: native_udp_bootstrap_test.UDPBootstrap.CookieBindsAllBytesAndReturnRoute
+567/711 Test #567: native_udp_bootstrap_test.UDPBootstrap.CookieBindsAllBytesAndReturnRoute .....................................   Passed    0.00 sec
+        Start 568: native_udp_bootstrap_test.UDPBootstrap.ServerExpirationAndOverflowAreAbsolute
+568/711 Test #568: native_udp_bootstrap_test.UDPBootstrap.ServerExpirationAndOverflowAreAbsolute ................................   Passed    0.00 sec
+        Start 569: native_udp_bootstrap_test.UDPBootstrap.RestartAndFreshNonceChangeIdentity
+569/711 Test #569: native_udp_bootstrap_test.UDPBootstrap.RestartAndFreshNonceChangeIdentity ....................................   Passed    0.00 sec
+        Start 570: native_udp_bootstrap_test.UDPBootstrap.NoRegistrySlotsAllocatedByHelloFlood
+570/711 Test #570: native_udp_bootstrap_test.UDPBootstrap.NoRegistrySlotsAllocatedByHelloFlood ..................................   Passed    0.01 sec
+        Start 571: native_udp_bootstrap_test.UDPBootstrap.CapacityIsHardBoundIncludingTombstones
+571/711 Test #571: native_udp_bootstrap_test.UDPBootstrap.CapacityIsHardBoundIncludingTombstones ................................   Passed    0.00 sec
+        Start 572: native_udp_bootstrap_test.UDPBootstrap.DuplicateConfirmReusesExistingChannel
+572/711 Test #572: native_udp_bootstrap_test.UDPBootstrap.DuplicateConfirmReusesExistingChannel .................................   Passed    0.00 sec
+        Start 573: native_udp_bootstrap_test.UDPBootstrap.RetiredGenerationCannotReopenBeforeCookieExpiry
+573/711 Test #573: native_udp_bootstrap_test.UDPBootstrap.RetiredGenerationCannotReopenBeforeCookieExpiry .......................   Passed    0.00 sec
+        Start 574: native_udp_bootstrap_test.UDPBootstrap.ActiveConnectionOutlivesBootstrapCookie
+574/711 Test #574: native_udp_bootstrap_test.UDPBootstrap.ActiveConnectionOutlivesBootstrapCookie ...............................   Passed    0.00 sec
+        Start 575: native_udp_bootstrap_test.UDPBootstrap.RegistryRejectsClockReversalAndWrongRetirement
+575/711 Test #575: native_udp_bootstrap_test.UDPBootstrap.RegistryRejectsClockReversalAndWrongRetirement ........................   Passed    0.00 sec
+        Start 576: native_udp_bootstrap_test.UDPBootstrap.ClientUsesOwnClockAndDeadline
+576/711 Test #576: native_udp_bootstrap_test.UDPBootstrap.ClientUsesOwnClockAndDeadline .........................................   Passed    0.00 sec
+        Start 577: native_udp_bootstrap_test.UDPBootstrap.RetransmissionNeverRenewsDeadline
+577/711 Test #577: native_udp_bootstrap_test.UDPBootstrap.RetransmissionNeverRenewsDeadline .....................................   Passed    0.00 sec
+        Start 578: native_udp_bootstrap_test.UDPBootstrap.FirstChallengeRemainsStableAcrossRetries
+578/711 Test #578: native_udp_bootstrap_test.UDPBootstrap.FirstChallengeRemainsStableAcrossRetries ..............................   Passed    0.00 sec
+        Start 579: native_udp_bootstrap_test.UDPBootstrap.DuplicateWelcomeCannotResetEstablishedState
+579/711 Test #579: native_udp_bootstrap_test.UDPBootstrap.DuplicateWelcomeCannotResetEstablishedState ...........................   Passed    0.00 sec
+        Start 580: native_udp_bootstrap_test.UDPBootstrap.WelcomeBeforeChallengeAndConfirmAreIgnored
+580/711 Test #580: native_udp_bootstrap_test.UDPBootstrap.WelcomeBeforeChallengeAndConfirmAreIgnored ............................   Passed    0.00 sec
+        Start 581: native_udp_bootstrap_test.UDPBootstrap.WrongReplyEndpointCannotEstablishOrChooseCookie
+581/711 Test #581: native_udp_bootstrap_test.UDPBootstrap.WrongReplyEndpointCannotEstablishOrChooseCookie .......................   Passed    0.01 sec
+        Start 582: native_udp_bootstrap_test.UDPBootstrap.OldAttemptCannotEstablishFreshAttempt
+582/711 Test #582: native_udp_bootstrap_test.UDPBootstrap.OldAttemptCannotEstablishFreshAttempt .................................   Passed    0.00 sec
+        Start 583: native_udp_bootstrap_test.UDPBootstrap.SelectedCookieMustMatchEveryWelcomeByte
+583/711 Test #583: native_udp_bootstrap_test.UDPBootstrap.SelectedCookieMustMatchEveryWelcomeByte ...............................   Passed    0.00 sec
+        Start 584: native_udp_bootstrap_test.UDPBootstrap.LateRepliesAndClockReversalNeverExtendAttempt
+584/711 Test #584: native_udp_bootstrap_test.UDPBootstrap.LateRepliesAndClockReversalNeverExtendAttempt .........................   Passed    0.00 sec
+        Start 585: native_udp_bootstrap_test.UDPBootstrap.ActualEntropyGeneratesDistinctPhysicalAttempts
+585/711 Test #585: native_udp_bootstrap_test.UDPBootstrap.ActualEntropyGeneratesDistinctPhysicalAttempts ........................   Passed    0.00 sec
+        Start 586: native_udp_bootstrap_test.UDPBootstrap.MatchesIndependentHmacSha256Vector
+586/711 Test #586: native_udp_bootstrap_test.UDPBootstrap.MatchesIndependentHmacSha256Vector ....................................   Passed    0.01 sec
+        Start 587: native_udp_bootstrap_test.UDPBootstrapSocket.LostMessagesRetryWithoutDuplicatingChannel
+587/711 Test #587: native_udp_bootstrap_test.UDPBootstrapSocket.LostMessagesRetryWithoutDuplicatingChannel ......................   Passed    0.16 sec
+        Start 588: native_udp_bootstrap_test.UDPBootstrapSocket.FreshNegotiationRejectsPreviousDataAndAck
+588/711 Test #588: native_udp_bootstrap_test.UDPBootstrapSocket.FreshNegotiationRejectsPreviousDataAndAck .......................   Passed    0.04 sec
+        Start 589: native_udp_window_test.DatagramTest.ConstructorValidatesBudgetBeforeUse
+589/711 Test #589: native_udp_window_test.DatagramTest.ConstructorValidatesBudgetBeforeUse ......................................   Passed    0.04 sec
+        Start 590: native_udp_window_test.DatagramTest.PacketCapRejectsBeforeSequenceAndRecoversAfterAck
+590/711 Test #590: native_udp_window_test.DatagramTest.PacketCapRejectsBeforeSequenceAndRecoversAfterAck ........................   Passed    0.05 sec
+        Start 591: native_udp_window_test.DatagramTest.ByteCapIsIndependentOfPacketCountAndSurvivesRepeatedDrain
+591/711 Test #591: native_udp_window_test.DatagramTest.ByteCapIsIndependentOfPacketCountAndSurvivesRepeatedDrain ................   Passed    0.48 sec
+        Start 592: native_udp_window_test.DatagramTest.InvalidLengthsNeverAllocateOrConsumeSequence
+592/711 Test #592: native_udp_window_test.DatagramTest.InvalidLengthsNeverAllocateOrConsumeSequence .............................   Passed    0.02 sec
+        Start 593: native_udp_window_test.DatagramTest.RetryExhaustionIsTerminalAndReleasesAllPackets
+593/711 Test #593: native_udp_window_test.DatagramTest.RetryExhaustionIsTerminalAndReleasesAllPackets ...........................   Passed    0.05 sec
+        Start 594: native_udp_window_test.DatagramTest.AckAfterRetransmitDoesNotDistortRttAndFreesCapacity
+594/711 Test #594: native_udp_window_test.DatagramTest.AckAfterRetransmitDoesNotDistortRttAndFreesCapacity ......................   Passed    0.04 sec
+        Start 595: native_udp_window_test.DatagramTest.SendAndRetransmitSocketFailuresReleasePendingStorage
+595/711 Test #595: native_udp_window_test.DatagramTest.SendAndRetransmitSocketFailuresReleasePendingStorage .....................   Passed    0.08 sec
+        Start 596: native_udp_window_test.DatagramTest.MalformedDataAndUnknownAcksDoNotChangePendingOrDeliver
+596/711 Test #596: native_udp_window_test.DatagramTest.MalformedDataAndUnknownAcksDoNotChangePendingOrDeliver ...................   Passed    0.04 sec
+        Start 597: native_udp_window_test.DatagramTest.RealReceiverAcknowledgesAndCallbackCanSendAndClose
+597/711 Test #597: native_udp_window_test.DatagramTest.RealReceiverAcknowledgesAndCallbackCanSendAndClose .......................   Passed    0.04 sec
+        Start 598: native_udp_window_test.DatagramTest.AckSendFailureDoesNotDeliverAndClosePreservesSharedSocket
+598/711 Test #598: native_udp_window_test.DatagramTest.AckSendFailureDoesNotDeliverAndClosePreservesSharedSocket ................   Passed    0.04 sec
+        Start 599: native_udp_window_test.DatagramTest.ConcurrentSendsCannotExceedBudget
+599/711 Test #599: native_udp_window_test.DatagramTest.ConcurrentSendsCannotExceedBudget ........................................   Passed    0.08 sec
+        Start 600: native_udp_window_test.DatagramTest.ReorderedDatagramsDeliverExactlyOnceAndInSequence
+600/711 Test #600: native_udp_window_test.DatagramTest.ReorderedDatagramsDeliverExactlyOnceAndInSequence ........................   Passed    0.03 sec
+        Start 601: native_udp_window_test.DatagramTest.ConflictingFutureDatagramFailsBeforeApplicationDelivery
+601/711 Test #601: native_udp_window_test.DatagramTest.ConflictingFutureDatagramFailsBeforeApplicationDelivery ..................   Passed    0.04 sec
+        Start 602: native_udp_window_test.DatagramTest.ReceiveCapacityCountsInFlightCallbacksAndRetainedFuturePackets
+602/711 Test #602: native_udp_window_test.DatagramTest.ReceiveCapacityCountsInFlightCallbacksAndRetainedFuturePackets ...........   Passed    0.04 sec
+        Start 603: native_udp_window_test.DatagramTest.ReentrantReceiveQueuesBehindCurrentCallbackWithoutDeadlock
+603/711 Test #603: native_udp_window_test.DatagramTest.ReentrantReceiveQueuesBehindCurrentCallbackWithoutDeadlock ...............   Passed    0.04 sec
+        Start 604: native_udp_window_test.DatagramTest.ThrowingReceiveCallbackReleasesBothDirectionsAndRejectsFurtherWork
+604/711 Test #604: native_udp_window_test.DatagramTest.ThrowingReceiveCallbackReleasesBothDirectionsAndRejectsFurtherWork .......   Passed    0.04 sec
+        Start 605: native_udp_window_test.DatagramTest.ReceiveByteLimitAndSequenceWindowRejectBeforeAck
+605/711 Test #605: native_udp_window_test.DatagramTest.ReceiveByteLimitAndSequenceWindowRejectBeforeAck .........................   Passed    0.04 sec
+        Start 606: native_udp_window_test.RTTBudget.ExtremeDurationsAndDeviationRemainBoundedInMilliseconds
+606/711 Test #606: native_udp_window_test.RTTBudget.ExtremeDurationsAndDeviationRemainBoundedInMilliseconds .....................   Passed    0.00 sec
+        Start 607: native_udp_window_test.GenerationDatagramTest.LateDataCannotAdvanceNewConnection
+607/711 Test #607: native_udp_window_test.GenerationDatagramTest.LateDataCannotAdvanceNewConnection .............................   Passed    0.04 sec
+        Start 608: native_udp_window_test.GenerationDatagramTest.LateAckCannotClearNewPending
+608/711 Test #608: native_udp_window_test.GenerationDatagramTest.LateAckCannotClearNewPending ...................................   Passed    0.04 sec
+        Start 609: native_udp_window_test.GenerationDatagramTest.HeaderCarriesEveryIdentityByteAndExactMaximum
+609/711 Test #609: native_udp_window_test.GenerationDatagramTest.HeaderCarriesEveryIdentityByteAndExactMaximum ..................   Passed    0.04 sec
+        Start 610: native_udp_window_test.GenerationDatagramTest.OversizedPayloadDoesNotConsumeSequence
+610/711 Test #610: native_udp_window_test.GenerationDatagramTest.OversizedPayloadDoesNotConsumeSequence .........................   Passed    0.04 sec
+        Start 611: native_udp_window_test.GenerationDatagramTest.AllZeroIdentityRejectedWithoutSocketEffects
+611/711 Test #611: native_udp_window_test.GenerationDatagramTest.AllZeroIdentityRejectedWithoutSocketEffects ....................   Passed    0.04 sec
+        Start 612: native_udp_window_test.GenerationDatagramTest.EveryWrongIdentityByteIsIgnoredBeforeQueueAndAck
+612/711 Test #612: native_udp_window_test.GenerationDatagramTest.EveryWrongIdentityByteIsIgnoredBeforeQueueAndAck ...............   Passed    0.06 sec
+        Start 613: native_udp_window_test.GenerationDatagramTest.TruncatedAndExtendedPrefixesHaveNoStateEffects
+613/711 Test #613: native_udp_window_test.GenerationDatagramTest.TruncatedAndExtendedPrefixesHaveNoStateEffects .................   Passed    0.03 sec
+        Start 614: native_udp_window_test.GenerationDatagramTest.WrongMalformedAndUnknownAcksKeepPendingAndRtt
+614/711 Test #614: native_udp_window_test.GenerationDatagramTest.WrongMalformedAndUnknownAcksKeepPendingAndRtt ..................   Passed    0.06 sec
+        Start 615: native_udp_window_test.GenerationDatagramTest.LegacyAndScopedModesDoNotMix
+615/711 Test #615: native_udp_window_test.GenerationDatagramTest.LegacyAndScopedModesDoNotMix ...................................   Passed    0.03 sec
+        Start 616: native_udp_window_test.GenerationDatagramTest.ScopedDataReordersAndDeliversExactlyOnce
+616/711 Test #616: native_udp_window_test.GenerationDatagramTest.ScopedDataReordersAndDeliversExactlyOnce .......................   Passed    0.04 sec
+        Start 617: native_udp_window_test.GenerationDatagramTest.ScopedSendByteBudgetIncludesIdentityStorage
+617/711 Test #617: native_udp_window_test.GenerationDatagramTest.ScopedSendByteBudgetIncludesIdentityStorage ....................   Passed    0.04 sec
+        Start 618: native_udp_window_test.GenerationDatagramTest.ScopedReceiveByteBudgetCountsHeaderBeforeAck
+618/711 Test #618: native_udp_window_test.GenerationDatagramTest.ScopedReceiveByteBudgetCountsHeaderBeforeAck ...................   Passed    0.04 sec
+        Start 619: native_udp_window_test.GenerationDatagramTest.WrongGenerationExtremeSequenceCannotCloseCurrentWindow
+619/711 Test #619: native_udp_window_test.GenerationDatagramTest.WrongGenerationExtremeSequenceCannotCloseCurrentWindow .........   Passed    0.04 sec
+        Start 620: native_udp_window_test.GenerationDatagramTest.LostAckRetransmitsSameScopedPacketWithoutDuplicateDelivery
+620/711 Test #620: native_udp_window_test.GenerationDatagramTest.LostAckRetransmitsSameScopedPacketWithoutDuplicateDelivery .....   Passed    0.04 sec
+        Start 621: native_udp_window_test.GenerationDatagramTest.ScopedRetryExhaustionReleasesBothQueues
+621/711 Test #621: native_udp_window_test.GenerationDatagramTest.ScopedRetryExhaustionReleasesBothQueues ........................   Passed    0.04 sec
+        Start 622: native_udp_window_test.GenerationDatagramTest.CallbackCanReplyAndCloseWithIdentityPreserved
+622/711 Test #622: native_udp_window_test.GenerationDatagramTest.CallbackCanReplyAndCloseWithIdentityPreserved ..................   Passed    0.04 sec
+        Start 623: native_udp_window_test.GenerationDatagramTest.RepeatedPhysicalGenerationsCannotReusePreviousPackets
+623/711 Test #623: native_udp_window_test.GenerationDatagramTest.RepeatedPhysicalGenerationsCannotReusePreviousPackets ..........   Passed    0.75 sec
+        Start 624: native_udp_window_test.GenerationDatagramTest.SelectiveAcksCannotAdvancePastLostFirstPacket
+624/711 Test #624: native_udp_window_test.GenerationDatagramTest.SelectiveAcksCannotAdvancePastLostFirstPacket ..................   Passed    0.05 sec
+        Start 625: native_udp_window_test.GenerationDatagramTest.SelectiveAcksCannotAdvancePastLostMiddlePacket
+625/711 Test #625: native_udp_window_test.GenerationDatagramTest.SelectiveAcksCannotAdvancePastLostMiddlePacket .................   Passed    0.06 sec
+        Start 626: native_udp_stream_test.StreamPair.LargeComposedTransferPipelinesWithinWireAndMemoryLimits
+626/711 Test #626: native_udp_stream_test.StreamPair.LargeComposedTransferPipelinesWithinWireAndMemoryLimits ....................   Passed    1.08 sec
+        Start 627: native_udp_stream_test.StreamPair.ScatterGatherPreservesEmptyAndPartialBuffers
+627/711 Test #627: native_udp_stream_test.StreamPair.ScatterGatherPreservesEmptyAndPartialBuffers ...............................   Passed    0.03 sec
+        Start 628: native_udp_stream_test.StreamPair.RingWrapPreservesUnreadPrefix
+628/711 Test #628: native_udp_stream_test.StreamPair.RingWrapPreservesUnreadPrefix ..............................................   Passed    0.04 sec
+        Start 629: native_udp_stream_test.StreamPair.SmallWireBudgetStillMakesProgress
+629/711 Test #629: native_udp_stream_test.StreamPair.SmallWireBudgetStillMakesProgress ..........................................   Passed    0.04 sec
+        Start 630: native_udp_stream_test.StreamPair.FullReliabilityWindowWaitsForAckWithoutDroppingNextBytes
+630/711 Test #630: native_udp_stream_test.StreamPair.FullReliabilityWindowWaitsForAckWithoutDroppingNextBytes ...................   Passed    0.04 sec
+        Start 631: native_udp_stream_test.StreamPair.OutOfOrderPacketsDeliverOnceInOriginalOrder
+631/711 Test #631: native_udp_stream_test.StreamPair.OutOfOrderPacketsDeliverOnceInOriginalOrder ................................   Passed    0.04 sec
+        Start 632: native_udp_stream_test.StreamPair.BoundedWriterUsesTheSameSocketCancellationAndBackpressure
+632/711 Test #632: native_udp_stream_test.StreamPair.BoundedWriterUsesTheSameSocketCancellationAndBackpressure ..................   Passed    0.05 sec
+        Start 633: native_udp_stream_test.StreamPair.FullReorderedWindowFitsDefaultReceiveRingWhileReadCompletionIsPosted
+633/711 Test #633: native_udp_stream_test.StreamPair.FullReorderedWindowFitsDefaultReceiveRingWhileReadCompletionIsPosted .......   Passed    0.11 sec
+        Start 634: native_udp_stream_test.StreamPair.ActualDataAndAckLossRecoverWithoutDuplicateApplicationBytes
+634/711 Test #634: native_udp_stream_test.StreamPair.ActualDataAndAckLossRecoverWithoutDuplicateApplicationBytes ................   Passed    0.03 sec
+        Start 635: native_udp_stream_test.StreamPair.SelectiveAckWindowBackpressureResumesAfterMissingFirstPacket
+635/711 Test #635: native_udp_stream_test.StreamPair.SelectiveAckWindowBackpressureResumesAfterMissingFirstPacket ...............   Passed    0.04 sec
+        Start 636: native_udp_stream_test.StreamPair.CloseBeforeDispatchCompletesEachOperationOnceWithoutSending
+636/711 Test #636: native_udp_stream_test.StreamPair.CloseBeforeDispatchCompletesEachOperationOnceWithoutSending ................   Passed    0.04 sec
+        Start 637: native_udp_stream_test.StreamPair.OverlappingOperationsRejectOnlyTheSecondRequest
+637/711 Test #637: native_udp_stream_test.StreamPair.OverlappingOperationsRejectOnlyTheSecondRequest ............................   Passed    0.03 sec
+        Start 638: native_udp_stream_test.StreamPair.DestructionAbortsPendingOperationsAndExpiresWeakControl
+638/711 Test #638: native_udp_stream_test.StreamPair.DestructionAbortsPendingOperationsAndExpiresWeakControl ....................   Passed    0.04 sec
+        Start 639: native_udp_stream_test.StreamPair.MoveTransfersConnectionAndAssignmentCancelsReplacedState
+639/711 Test #639: native_udp_stream_test.StreamPair.MoveTransfersConnectionAndAssignmentCancelsReplacedState ...................   Passed    0.04 sec
+        Start 640: native_udp_stream_test.StreamPair.EmptyOperationsAreAsynchronousAndDoNotConsumeWireSequence
+640/711 Test #640: native_udp_stream_test.StreamPair.EmptyOperationsAreAsynchronousAndDoNotConsumeWireSequence ..................   Passed    0.04 sec
+        Start 641: native_udp_stream_test.StreamPair.AssociatedExecutorAndWorkLifetimeSurvivePendingRead
+641/711 Test #641: native_udp_stream_test.StreamPair.AssociatedExecutorAndWorkLifetimeSurvivePendingRead ........................   Passed    0.04 sec
+        Start 642: native_udp_stream_test.StreamPair.FutureTokensAndCloseErrorsFollowAsioCompletionContract
+642/711 Test #642: native_udp_stream_test.StreamPair.FutureTokensAndCloseErrorsFollowAsioCompletionContract .....................   Passed    0.04 sec
+        Start 643: native_udp_stream_test.StreamPair.BoundedWriterDeadlineCancelsBlockedFragmentAndRetainedBytes
+643/711 Test #643: native_udp_stream_test.StreamPair.BoundedWriterDeadlineCancelsBlockedFragmentAndRetainedBytes ................   Passed    0.05 sec
+        Start 644: native_udp_stream_test.StreamPair.CloseFromAnotherThreadSerializesWithPendingOperations
+644/711 Test #644: native_udp_stream_test.StreamPair.CloseFromAnotherThreadSerializesWithPendingOperations ......................   Passed    0.03 sec
+        Start 645: native_udp_stream_test.StreamPair.InvalidLimitsAndIdentityFailBeforeAffectingSharedSocket
+645/711 Test #645: native_udp_stream_test.StreamPair.InvalidLimitsAndIdentityFailBeforeAffectingSharedSocket ....................   Passed    0.04 sec
+        Start 646: native_udp_stream_test.StreamPair.ReceiveOverflowClosesOnlyTheOverloadedStream
+646/711 Test #646: native_udp_stream_test.StreamPair.ReceiveOverflowClosesOnlyTheOverloadedStream ...............................   Passed    0.05 sec
+        Start 647: native_udp_stream_test.StreamPair.RetransmissionExhaustionFailsBlockedReadAndWriteOnce
+647/711 Test #647: native_udp_stream_test.StreamPair.RetransmissionExhaustionFailsBlockedReadAndWriteOnce .......................   Passed    0.04 sec
+        Start 648: native_udp_stream_test.StreamPair.ForeignEndpointCannotDeliverValidIdentityOrEmitAck
+648/711 Test #648: native_udp_stream_test.StreamPair.ForeignEndpointCannotDeliverValidIdentityOrEmitAck .........................   Passed    0.06 sec
+        Start 649: native_udp_stream_test.StreamPair.OldGenerationDataAckAndWeakCallbackCannotChangeFreshStream
+649/711 Test #649: native_udp_stream_test.StreamPair.OldGenerationDataAckAndWeakCallbackCannotChangeFreshStream .................   Passed    0.04 sec
+        Start 650: native_udp_stream_test.StreamPair.TruncatedDatagramsDoNotMutateStreamOrPendingWrites
+650/711 Test #650: native_udp_stream_test.StreamPair.TruncatedDatagramsDoNotMutateStreamOrPendingWrites .........................   Passed    0.04 sec
+        Start 651: native_udp_stream_test.StreamPair.ActualSharedSocketFailureReleasesAllPendingOperations
+651/711 Test #651: native_udp_stream_test.StreamPair.ActualSharedSocketFailureReleasesAllPendingOperations ......................   Passed    0.04 sec
+        Start 652: native_udp_stream_test.StreamPair.DatagramAndRetransmitCallsRequireListenerExecutor
+652/711 Test #652: native_udp_stream_test.StreamPair.DatagramAndRetransmitCallsRequireListenerExecutor ..........................   Passed    0.04 sec
+        Start 653: native_udp_listener_test.ListenerFixture.InvalidLimitsOrUnavailableEntropyCannotOpenListener
+653/711 Test #653: native_udp_listener_test.ListenerFixture.InvalidLimitsOrUnavailableEntropyCannotOpenListener .................   Passed    0.02 sec
+        Start 654: native_udp_listener_test.ListenerFixture.HelloFloodHasFixedReplySizeAndAllocatesNoChannel
+654/711 Test #654: native_udp_listener_test.ListenerFixture.HelloFloodHasFixedReplySizeAndAllocatesNoChannel ....................   Passed    2.37 sec
+        Start 655: native_udp_listener_test.ListenerFixture.MalformedAndUnprovenTrafficCannotAllocateOrPoisonNextHandshake
+655/711 Test #655: native_udp_listener_test.ListenerFixture.MalformedAndUnprovenTrafficCannotAllocateOrPoisonNextHandshake ......   Passed    0.18 sec
+        Start 656: native_udp_listener_test.ListenerFixture.PendingAcceptCompletesOnlyAfterReturnRouteProof
+656/711 Test #656: native_udp_listener_test.ListenerFixture.PendingAcceptCompletesOnlyAfterReturnRouteProof .....................   Passed    0.02 sec
+        Start 657: native_udp_listener_test.ListenerFixture.CompletedHandshakeWaitsWithinBoundedAcceptBacklog
+657/711 Test #657: native_udp_listener_test.ListenerFixture.CompletedHandshakeWaitsWithinBoundedAcceptBacklog ...................   Passed    0.04 sec
+        Start 658: native_udp_listener_test.ListenerFixture.DuplicateConfirmationDoesNotCreateASecondAcceptedStream
+658/711 Test #658: native_udp_listener_test.ListenerFixture.DuplicateConfirmationDoesNotCreateASecondAcceptedStream .............   Passed    0.05 sec
+        Start 659: native_udp_listener_test.ListenerFixture.RetiredConnectionsRemainCapacityBoundedUntilCookieExpiry
+659/711 Test #659: native_udp_listener_test.ListenerFixture.RetiredConnectionsRemainCapacityBoundedUntilCookieExpiry ............   Passed    0.15 sec
+        Start 660: native_udp_listener_test.ListenerFixture.UnacceptedTimeoutRetiresConnectionWithoutRevivingOnConfirmReplay
+660/711 Test #660: native_udp_listener_test.ListenerFixture.UnacceptedTimeoutRetiresConnectionWithoutRevivingOnConfirmReplay ....   Passed    0.09 sec
+        Start 661: native_udp_listener_test.ListenerFixture.LargeActualStreamRoundTripPreservesEveryByte
+661/711 Test #661: native_udp_listener_test.ListenerFixture.LargeActualStreamRoundTripPreservesEveryByte ........................   Passed    0.14 sec
+        Start 662: native_udp_listener_test.ListenerFixture.EndpointAndGenerationAreBothRequiredBeforeApplicationDelivery
+662/711 Test #662: native_udp_listener_test.ListenerFixture.EndpointAndGenerationAreBothRequiredBeforeApplicationDelivery .......   Passed    0.04 sec
+        Start 663: native_udp_listener_test.ListenerFixture.ClosingOneStreamPreservesOtherLivePeerAndListener
+663/711 Test #663: native_udp_listener_test.ListenerFixture.ClosingOneStreamPreservesOtherLivePeerAndListener ...................   Passed    0.10 sec
+        Start 664: native_udp_listener_test.ListenerFixture.ReusedPhysicalEndpointRejectsOldDataAndConfirmation
+664/711 Test #664: native_udp_listener_test.ListenerFixture.ReusedPhysicalEndpointRejectsOldDataAndConfirmation .................   Passed    0.07 sec
+        Start 665: native_udp_listener_test.ListenerFixture.TimerExhaustionClosesOnlyTimedOutChannelAndFinishesOperations
+665/711 Test #665: native_udp_listener_test.ListenerFixture.TimerExhaustionClosesOnlyTimedOutChannelAndFinishesOperations .......   Passed    0.24 sec
+        Start 666: native_udp_listener_test.ListenerFixture.AcceptedChannelOutlivesBootstrapCookieDeadline
+666/711 Test #666: native_udp_listener_test.ListenerFixture.AcceptedChannelOutlivesBootstrapCookieDeadline ......................   Passed    0.06 sec
+        Start 667: native_udp_listener_test.ListenerFixture.LostEstablishedReplyRecoversWithoutAcceptingTwice
+667/711 Test #667: native_udp_listener_test.ListenerFixture.LostEstablishedReplyRecoversWithoutAcceptingTwice ...................   Passed    0.04 sec
+        Start 668: native_udp_listener_test.ListenerFixture.CloseBeforeAcceptCompletesAsynchronouslyExactlyOnce
+668/711 Test #668: native_udp_listener_test.ListenerFixture.CloseBeforeAcceptCompletesAsynchronouslyExactlyOnce .................   Passed    0.00 sec
+        Start 669: native_udp_listener_test.ListenerFixture.AcceptUsesAssociatedExecutorAndKeepsItAliveUntilCompletion
+669/711 Test #669: native_udp_listener_test.ListenerFixture.AcceptUsesAssociatedExecutorAndKeepsItAliveUntilCompletion ..........   Passed    0.05 sec
+        Start 670: native_udp_listener_test.ListenerFixture.OverlappingAcceptRejectsOnlySecondRequest
+670/711 Test #670: native_udp_listener_test.ListenerFixture.OverlappingAcceptRejectsOnlySecondRequest ...........................   Passed    0.04 sec
+        Start 671: native_udp_listener_test.ListenerFixture.DestructionCancelsAcceptedStreamAndPendingAcceptWithoutOwnerCycle
+671/711 Test #671: native_udp_listener_test.ListenerFixture.DestructionCancelsAcceptedStreamAndPendingAcceptWithoutOwnerCycle ...   Passed    0.06 sec
+        Start 672: native_udp_listener_test.ListenerFixture.CloseFromAnotherThreadClosesWireOnItsExecutor
+672/711 Test #672: native_udp_listener_test.ListenerFixture.CloseFromAnotherThreadClosesWireOnItsExecutor .......................   Passed    0.05 sec
+        Start 673: native_udp_dialer_test.DialFixture.NumericAddressEstablishesOneScopedStreamAsynchronously
+673/711 Test #673: native_udp_dialer_test.DialFixture.NumericAddressEstablishesOneScopedStreamAsynchronously ....................   Passed    0.04 sec
+        Start 674: native_udp_dialer_test.DialFixture.InvalidLimitsAndHostFailWithoutStartingNetworkWork
+674/711 Test #674: native_udp_dialer_test.DialFixture.InvalidLimitsAndHostFailWithoutStartingNetworkWork ........................   Passed    0.01 sec
+        Start 675: native_udp_dialer_test.DialFixture.HostnameResolutionConnectsUsingABoundedEndpointList
+675/711 Test #675: native_udp_dialer_test.DialFixture.HostnameResolutionConnectsUsingABoundedEndpointList .......................   Passed    1.57 sec
+        Start 676: native_udp_dialer_test.DialFixture.MultipleResolvedEndpointsFallbackAndIgnoreOldPhysicalCallbacks
+676/711 Test #676: native_udp_dialer_test.DialFixture.MultipleResolvedEndpointsFallbackAndIgnoreOldPhysicalCallbacks ............   Passed    0.10 sec
+        Start 677: native_udp_dialer_test.DialFixture.HandshakeRetriesCannotExtendTheAbsoluteConnectionDeadline
+677/711 Test #677: native_udp_dialer_test.DialFixture.HandshakeRetriesCannotExtendTheAbsoluteConnectionDeadline .................   Passed    0.15 sec
+        Start 678: native_udp_dialer_test.DialFixture.OverlappingDialRejectsSecondAndAllowsReuseAfterCancellation
+678/711 Test #678: native_udp_dialer_test.DialFixture.OverlappingDialRejectsSecondAndAllowsReuseAfterCancellation ...............   Passed    0.07 sec
+        Start 679: native_udp_dialer_test.DialFixture.UnavailableEntropyFailsClosedBeforeSendingHello
+679/711 Test #679: native_udp_dialer_test.DialFixture.UnavailableEntropyFailsClosedBeforeSendingHello ...........................   Passed    0.04 sec
+        Start 680: native_udp_dialer_test.DialFixture.EveryHandshakeDatagramCanBeLostOnceWithoutDuplicateAcceptance
+680/711 Test #680: native_udp_dialer_test.DialFixture.EveryHandshakeDatagramCanBeLostOnceWithoutDuplicateAcceptance .............   Passed    0.50 sec
+        Start 681: native_udp_dialer_test.DialFixture.ServerClockEpochIsOpaqueToClientHandshake
+681/711 Test #681: native_udp_dialer_test.DialFixture.ServerClockEpochIsOpaqueToClientHandshake .................................   Passed    0.02 sec
+        Start 682: native_udp_dialer_test.DialFixture.MutatedResolvedEndpointCountCannotOverflowFixedStorage
+682/711 Test #682: native_udp_dialer_test.DialFixture.MutatedResolvedEndpointCountCannotOverflowFixedStorage ....................   Passed    0.01 sec
+        Start 683: native_udp_dialer_test.DialFixture.ResolverCancellationCompletesOnceBeforeAnEndpointCanBeInstalled
+683/711 Test #683: native_udp_dialer_test.DialFixture.ResolverCancellationCompletesOnceBeforeAnEndpointCanBeInstalled ...........   Passed    0.02 sec
+        Start 684: native_udp_dialer_test.DialFixture.LargeBidirectionalTransferRunsWithActualClientAndListenerIOOwners
+684/711 Test #684: native_udp_dialer_test.DialFixture.LargeBidirectionalTransferRunsWithActualClientAndListenerIOOwners .........   Passed    0.29 sec
+        Start 685: native_udp_dialer_test.DialFixture.ClientDataAndServerAckLossRecoverWithoutDuplicateBytes
+685/711 Test #685: native_udp_dialer_test.DialFixture.ClientDataAndServerAckLossRecoverWithoutDuplicateBytes ....................   Passed    0.39 sec
+        Start 686: native_udp_dialer_test.DialFixture.ForeignEndpointCannotDeliverCapturedValidServerPacket
+686/711 Test #686: native_udp_dialer_test.DialFixture.ForeignEndpointCannotDeliverCapturedValidServerPacket .....................   Passed    0.08 sec
+        Start 687: native_udp_dialer_test.DialFixture.GenericWriterDeadlineClosesClientPhysicalSocketAfterBlockedFragment
+687/711 Test #687: native_udp_dialer_test.DialFixture.GenericWriterDeadlineClosesClientPhysicalSocketAfterBlockedFragment .......   Passed    0.11 sec
+        Start 688: native_udp_dialer_test.DialFixture.EstablishedStreamOutlivesTheOriginalDialDeadline
+688/711 Test #688: native_udp_dialer_test.DialFixture.EstablishedStreamOutlivesTheOriginalDialDeadline ..........................   Passed    0.06 sec
+        Start 689: native_udp_dialer_test.DialFixture.CancelBeforeDispatchSendsNothingAndCompletesExactlyOnce
+689/711 Test #689: native_udp_dialer_test.DialFixture.CancelBeforeDispatchSendsNothingAndCompletesExactlyOnce ...................   Passed    0.00 sec
+        Start 690: native_udp_dialer_test.DialFixture.CancelCompletesEstablishedPendingReadAndReleasesTheBoundPort
+690/711 Test #690: native_udp_dialer_test.DialFixture.CancelCompletesEstablishedPendingReadAndReleasesTheBoundPort ..............   Passed    0.06 sec
+        Start 691: native_udp_dialer_test.DialFixture.DroppingReturnedStreamReleasesDialerIOWithoutExplicitCancel
+691/711 Test #691: native_udp_dialer_test.DialFixture.DroppingReturnedStreamReleasesDialerIOWithoutExplicitCancel ...............   Passed    0.06 sec
+        Start 692: native_udp_dialer_test.DialFixture.DestructionCancelsAttemptAndAcceptedStreamWithoutCallbackCycles
+692/711 Test #692: native_udp_dialer_test.DialFixture.DestructionCancelsAttemptAndAcceptedStreamWithoutCallbackCycles ...........   Passed    0.05 sec
+        Start 693: native_udp_dialer_test.DialFixture.AssociatedExecutorPreservesWorkAndOwnsConnectCompletion
+693/711 Test #693: native_udp_dialer_test.DialFixture.AssociatedExecutorPreservesWorkAndOwnsConnectCompletion ...................   Passed    0.04 sec
+        Start 694: native_udp_dialer_test.DialFixture.FutureTokenReturnsMoveOnlyStreamAndPropagatesCancellation
+694/711 Test #694: native_udp_dialer_test.DialFixture.FutureTokenReturnsMoveOnlyStreamAndPropagatesCancellation .................   Passed    0.04 sec
+        Start 695: native_udp_dialer_test.DialFixture.ConcurrentRepeatedCancelCompletesPendingReadOnce
+695/711 Test #695: native_udp_dialer_test.DialFixture.ConcurrentRepeatedCancelCompletesPendingReadOnce ..........................   Passed    0.03 sec
+        Start 696: native_udp_dialer_test.DialFixture.RepeatedPhysicalConnectionsRetireAndReleaseAllClientPorts
+696/711 Test #696: native_udp_dialer_test.DialFixture.RepeatedPhysicalConnectionsRetireAndReleaseAllClientPorts .................   Passed    2.13 sec
+        Start 697: native_udp_terminal_drain_test.NativeUDPTerminalDrain.CancellationWithoutLoss
+697/711 Test #697: native_udp_terminal_drain_test.NativeUDPTerminalDrain.CancellationWithoutLoss ................................   Passed    0.09 sec
+        Start 698: native_udp_terminal_drain_test.NativeUDPTerminalDrain.CancellationRetransmitsDroppedReceipt
+698/711 Test #698: native_udp_terminal_drain_test.NativeUDPTerminalDrain.CancellationRetransmitsDroppedReceipt ..................   Passed    0.17 sec
+        Start 699: native_udp_terminal_drain_test.NativeUDPTerminalDrain.RejectionRetransmitsDroppedReceipt
+699/711 Test #699: native_udp_terminal_drain_test.NativeUDPTerminalDrain.RejectionRetransmitsDroppedReceipt .....................   Passed    0.17 sec
+        Start 700: native_udp_terminal_drain_test.NativeUDPTerminalDrain.UnresponsivePeerEventuallyReleasesTransport
+700/711 Test #700: native_udp_terminal_drain_test.NativeUDPTerminalDrain.UnresponsivePeerEventuallyReleasesTransport ............   Passed    0.42 sec
+        Start 701: native_udp_terminal_drain_test.NativeUDPTerminalDrain.StopWithPendingApplicationRead
+701/711 Test #701: native_udp_terminal_drain_test.NativeUDPTerminalDrain.StopWithPendingApplicationRead .........................   Passed    0.06 sec
+        Start 702: native_udp_terminal_drain_test.NativeUDPTerminalDrain.StopBeforeFirstDispatch
+702/711 Test #702: native_udp_terminal_drain_test.NativeUDPTerminalDrain.StopBeforeFirstDispatch ................................   Passed    0.00 sec
+        Start 703: native_input_rtt_test.NativeInputRTT.OldOneFrameLeadMissesHundredMillisecondRoundTrip
+703/711 Test #703: native_input_rtt_test.NativeInputRTT.OldOneFrameLeadMissesHundredMillisecondRoundTrip ........................   Passed    0.00 sec
+        Start 704: native_input_rtt_test.NativeInputRTT.ZeroAndLowLatencyKeepOriginalOneFrameLead
+704/711 Test #704: native_input_rtt_test.NativeInputRTT.ZeroAndLowLatencyKeepOriginalOneFrameLead ...............................   Passed    0.00 sec
+        Start 705: native_input_rtt_test.NativeInputRTT.ExtremeDelayIsBoundedByUnchangedServerWindow
+705/711 Test #705: native_input_rtt_test.NativeInputRTT.ExtremeDelayIsBoundedByUnchangedServerWindow ............................   Passed    0.00 sec
+        Start 706: native_input_rtt_test.NativeInputRTT.InvalidBudgetAndLeadRejectBeforeMutation
+706/711 Test #706: native_input_rtt_test.NativeInputRTT.InvalidBudgetAndLeadRejectBeforeMutation ................................   Passed    0.00 sec
+        Start 707: native_input_rtt_test.NativeInputRTT.LeadChangesNeverRewriteOrReorderPublishedFrames
+707/711 Test #707: native_input_rtt_test.NativeInputRTT.LeadChangesNeverRewriteOrReorderPublishedFrames .........................   Passed    0.00 sec
+        Start 708: native_input_rtt_test.NativeInputRTT.PublicationKeepsExactSampleAndRecoveryClearsLead
+708/711 Test #708: native_input_rtt_test.NativeInputRTT.PublicationKeepsExactSampleAndRecoveryClearsLead ........................   Passed    0.00 sec
+        Start 709: native_input_rtt_test.NativeInputRTT.FullWindowWaitDoesNotSkipFutureInputAfterAuthorityBatch
+709/711 Test #709: native_input_rtt_test.NativeInputRTT.FullWindowWaitDoesNotSkipFutureInputAfterAuthorityBatch .................   Passed    0.00 sec
+        Start 710: native_input_rtt_test.NativeInputRTT.LargeAuthorityJumpReanchorsTheMeasuredHorizon
+710/711 Test #710: native_input_rtt_test.NativeInputRTT.LargeAuthorityJumpReanchorsTheMeasuredHorizon ...........................   Passed    0.00 sec
+        Start 711: rl_observation_contract
+711/711 Test #711: rl_observation_contract ......................................................................................   Passed    0.00 sec
+
+100% tests passed out of 711
+
+Total Test time (real) =  27.97 sec
+Running: cmake --build /tmp/football-optimization-native --target engine_ase_parser_contract -j 1
+[  3%] Built target datalib
+[ 11%] Built target gui2lib
+[ 21%] Built target baselib
+[ 30%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 76%] Built target gamelib
+[ 86%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target engine_ase_parser_contract
+Running: /tmp/football-optimization-native/bin/engine_ase_parser_contract
+Running: cmake --build /tmp/football-optimization-native --target engine_file_read_contract -j 1
+[  3%] Built target datalib
+[ 11%] Built target gui2lib
+[ 21%] Built target baselib
+[ 30%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 76%] Built target gamelib
+[ 86%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target engine_file_read_contract
+Running: /tmp/football-optimization-native/bin/engine_file_read_contract
+Running: /root/.cache/football-quality-20260910/venv/bin/python3 -c 
+import hashlib, json
+from pathlib import Path
+import gfootball_engine
+import gfootball_engine._gameplayfootball as native
+paths = dict(loader=Path(gfootball_engine.__file__),
+             binding=Path(native.__file__),
+             engine=Path(gfootball_engine.__file__).parent/'libfootball_engine.so')
+print(json.dumps({key:dict(path=str(path),sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+                  for key,path in paths.items()}))
+
+Running: /root/.cache/football-quality-20260910/venv/bin/python3 -m pytest gfootball/frame_sync -q --ignore=gfootball/frame_sync/legacy_network_test.py --junitxml=/root/work_space/football/.project/optimization/evidence/framework-pytest.xml
+........................................................................ [  9%]
+........................................................................ [ 18%]
+........................................................... [ 25%]
+............................................................................ [ 35%]
+........................................................................ [ 44%]
+.................................... [ 49%]
+.................................................................. [ 57%]
+.................................................... [ 64%]
+...................................................... [ 71%]
+........................................ [ 76%]
+............................................................... [ 84%]
+.................................... [ 89%]
+............ [ 90%]
+................................................................. [ 98%]
+........                                                                 [100%]
+783 passed, 305 subtests passed in 161.24s (0:02:41)
+Running: /root/.cache/football-quality-20260910/venv/bin/python3 engine/tests/run_headless_regression.py /tmp/football-optimization-native/bin/headless_match --frames 1000
+{"passed": true, "assertions": 2090, "skipped": 0, "native_file_reader": {"passed": true, "checks": 14, "assertions": 39, "skipped": 0}, "native_asset_parser": {"passed": true, "checks": 10, "assertions": 554, "skipped": 0}, "cpp_tests": 711, "python_tests": 783, "native_udp_required_suites": {"native_udp_bootstrap_test.": 28, "native_udp_window_test.": 37, "native_udp_stream_test.": 27, "native_udp_listener_test.": 20, "native_udp_dialer_test.": 24, "native_udp_terminal_drain_test.": 6}, "required_cpp_suites": {"native_udp_bootstrap_test.": 28, "native_udp_window_test.": 37, "native_udp_stream_test.": 27, "native_udp_listener_test.": 20, "native_udp_dialer_test.": 24, "native_udp_terminal_drain_test.": 6, "rl_observation_contract": 1, "native_input_rtt_test.": 8}, "debug_compilation_units": 172, "native_determinism": [{"seed": 42, "frames": 1000, "slots": [2, 2], "independent_processes": 2, "snapshot_replay": true, "hash": "606593fad9c78ea9"}, {"seed": 43, "frames": 1000, "slots": [2, 2], "independent_processes": 2, "snapshot_replay": true, "hash": "a8c11d6b25d70198"}], "python_executable": "/root/.cache/football-quality-20260910/venv/bin/python3", "python_native_runtime": {"loader": {"path": "/tmp/football-framework-python-qtcphkp4/gfootball_engine/__init__.py", "sha256": "f8d5a7b3993f8255259ffd2c0bccbfac837cbd14412c9f6f86cd3488809b41bc"}, "binding": {"path": "/tmp/football-framework-python-qtcphkp4/gfootball_engine/_gameplayfootball.so", "sha256": "c1e933c1abe1ca2234f7d71ab0cdf9449982a6229bce64b3b6a5e26d150813a3"}, "engine": {"path": "/tmp/football-framework-python-qtcphkp4/gfootball_engine/libfootball_engine.so", "sha256": "833abb16d46f27a80409f63a62e8f7fc5d6a10a7511314e7b90af63fa47aad2f"}}, "network_integration": "separate required milestone ms-23.1"}

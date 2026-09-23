@@ -253,6 +253,11 @@ if(UNIX)
   endforeach()
 endif()
 
+# Measured transport lead and cadence contracts retain regression witnesses.
+add_executable(native_input_rtt_test native_input_rtt_test.cpp)
+configure_test_target(native_input_rtt_test)
+gtest_discover_tests(native_input_rtt_test TEST_PREFIX "native_input_rtt_test." PROPERTIES TIMEOUT 30)
+
 # 2026-09-24: the real training observation layout is testable without RLtools.
 add_library(rl_observation_static_contract OBJECT rl_observation_static_contract.cpp)
 target_include_directories(rl_observation_static_contract PRIVATE ${ENGINE_SRC})
