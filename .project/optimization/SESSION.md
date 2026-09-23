@@ -1,3 +1,95 @@
+## 2026-09-24 USER-REQUESTED CODE PUBLICATION; NATIVE ADOPTION VALIDATION PENDING
+
+This entry supersedes stale live-process and pre-adoption statements below. The user requested committing and pushing the current code to origin/master. The optimization objective remains incomplete; publication is not product acceptance.
+
+Native integration E, recovery D, and snapshot interruption A have terminal exit_code 0. Recovery D plus snapshot interruption A checked 7007 authoritative frames, 11231 saved-segment frames and 12 snapshots; longest independent replay was approximately 115 seconds within the original 300-second limit. Immutable evidence: native-product-udp-integration-e-proof-20260922-a and native-product-udp-recovery-proof-20260924-a.
+
+native-udp-adoption-20260924-a adopted the shared TCP/UDP implementation, explicit football_client_udp/football_server_udp targets, six permanent test suites and fixtures, and native-boundary target coverage. The legacy default UDP entrypoints remain. Adoption exit is explicitly adoption_only=true and formal_validation_pending=true. The earlier 560 C++ / 783 Python framework pass predates this native adoption and is historical evidence, not validation of the current tree.
+
+NEXT: include test .inc fixtures in relevant program.json source fingerprints (1102-entry adoption manifest omits these fixtures), then build and validate canonical native Release and full Debug ASan/UBSan products, permanent suites and full framework. Preserve original deadlines, full debug information and immutable completed evidence stages. Latest prior document manifest: python-udp-reconnect-evidence-20260922-c/documents-after.json.
+
+Publication preparation removes one comment-only trailing space; original bytes archived in precommit-20260924-a. WSL command execution stopped responding during publication checks; Windows Git can access the worktree and origin. No new native runtime acceptance is claimed. Runtime .agent-coordination/agents.json changes are kept local.
+
+## 2026-09-22 PYTHON UDP/RECONNECT ADOPTED; FULL FRAMEWORK PASS; NATIVE E/D LIVE
+
+Goal ACTIVE/INCOMPLETE. This goal turn PROGRESS: stable old/new reconnect race reproduction, candidate integration and repeated original failure checks pass,4 canonical changes adopted, current1092 complete original framework passed, fresh native integration/recovery queued and integration now executing. Previous user-requested Git commit/push completed as601678e on origin/master; this turn's new changes NOT committed/pushed. Do not update_goal. No subagents/Git/installs/global changes this goal turn. Preserve original budgets, serial builds/tests/fullDebug-g/ASanUBSan/leaks/no-O1. Executed stages immutable; archive EXACT current docs before editing; SESSION exempt. Check exit/report before stale status and poll exact live PID+startticks. Observation timeout never implies terminal/restart.
+
+FIRST NEXT: observe SAME native-product-udp-integration-20260922-e PID1812361/start53529534; then dependent native-product-udp-recovery-20260922-d PID1812362/start53529534. Current fresh observation appended below. Do not restart prior failed integrationD/recoveryC.
+
+CURRENT CANONICAL1092:
+python-udp-reconnect-adoption-20260922-a/sources-after.json.
+Four changes, originals and hashes archived:
+- gfootball/frame_sync/udp_state.py adopts private flightD64pending-prefix due() scheduling for epoch delivery ACK mode and first-pending unretransmitted RTT probe; old ACK mode unchanged, probe cleared onclose. Client direct initial send bypasses due(), so not universal flight bound. Wire/retry/gap/handshake assertions unchanged.
+- gfootball/frame_sync/client_reconnect.py: giving_up cleanup phase, tick/stats nonblocking completion only when actual worker.is_alive false; notice only then. _work terminal guards include giving_up and prevent in-flight connect success/error rearming recovery. Old method bodies kept as dated comments. No new tick wait/join/sleep.
+- NEW test_reconnect_terminal.py: real TCP reducer fixture (notGameEnv), controlled worker exit gate proves original premature terminal;1000ticks<.15s, callback withheld until true thread exit, once-only and no moreattempts.
+- NEW test_udp_delivery_schedule.py: canonical224deterministicassertions ported from flightD contract; wrap/order/refunds/64prefix/legacy/RTT/Karn/deadlines. Existing tests not weakened.
+
+PRIVATE EVIDENCE:
+python-reconnect-terminal-20260922-a exit0 finished1790051767.8004334:
+ original controlled-terminal test FAIL expected (gave_up published with actualworker alive);
+ candidate same test pass;47 original TCP/UDP/reconnect/native tests pass.
+python-udp-reconnect-combined-20260922-a exit0 finished1790051901.9860387:
+117tests pass across8existingmodules+controlledterminal; each of original maximum snapshot and1000tick/give_up test repeated20times allpass. All same UDPflightD+reconnectcandidate source; no canonical edits until adoption.
+Older flightBhandshakefailure/CpollutedRTT and regressionA87pass1fail remain immutable.
+
+COMPLETE CURRENT FORMAL PASS:
+python-udp-reconnect-gates-20260922-a exit0 started1790051998.6945202 finished1790052235.2389913.
+Canonical preflight118tests pass.
+Full original framework560C++ +783Python +305subtests;14file/39assert +10ASE/554assert;169Debugcompilationunits; structured1939assert; seeds42,43 each1000frames twoindependentprocesses+snapshotreplay. Real privateX11 existing helper reused; no parent/global env changes.
+Record .project/optimization/evidence/framework_regression.json:
+fingerprint eac1944353dca836be51a09acd4b7aa9fb150f2644966ee2fe05dcb0d349ed59
+started1790052032.1373215 duration202.776 passedtrue.
+log framework_regression-1790052032137354649.log
+SHA88c9a4f836633e2b345c13a672f09914e19beaea2e50cc070050a137f8905b48.
+Source manifest and native core/parser/file binaries unchanged across gate, inputs frozen. Previous formal fail copied prior-formal/; fresh full records/XML/log copied formal-result/. No fullproduct acceptance inference.
+
+CURRENT AUTHORITATIVE18DOCMANIFEST:
+python-udp-reconnect-evidence-20260922-b/documents-after.json.
+Supersedes evidenceA18 (archived previous15+2publicdocs and added newreport).
+B archived exactcurrent18 before8updates. Includes .project/reports/optimization-python-udp-reconnect-2026-09-22.md; task/plan19,23 plusframework/snapshot/file-read reports; gfootball/doc/frame_sync_reconnect.md and frame_sync_udp_resume.md document giving_up/RTT behavior.
+B independently validated formal logSHA,recordequalscanonical,formal-filehashes,structured560/783/independent1000frames and copied proof. No manually elevated product status. B/product-observation.json is historical snapshot; query actual jobs.
+
+NATIVE NEW STAGES:
+IntegrationE copies exactD/C10candidatefiles (private native sharedTCP/UDP clients/servers+terminaldrain fixes), originals/deps revalidated. Dependency changed to current Python gatesA/report/native-products-before and canonical1092adoption manifest. All8producthosts,20loadingcancel,12terminaldrain,4actualTCPUDPpairs+independentreplay unchanged. Original30sstartup/250mscancel/300sreplay/fullDebug.
+RecoveryD copies exactC/B observer.py,pair_probe.py,engine_verify.cpp hashes; dependencyE. R/S x outage/impaired,2automaticrecoveries,1000+authorityframes,snapshots,independent300sengineverification. Do not count diagnostic900s replay as300spass.
+No native candidate adoption yet. Prior C older1089pass does not substitute currentE; recoveryB30s/300sfailures preserved.
+
+Graph current verified generation2026-09-22T02:15:16Z root-work_space-football (listprojects refreshed); exactclass snippet and all27canonicalmethods paginated; _give_up_locked inbound _work/_retry_locked/tick. Coverage no_recorded_issue metadata_match for reconnect/tests/UDPstate at discovery. Newtestpaths were absent -> exact source read/AST/test execution fallback. Broad qn search matched475 historical manifests; narrowed canonicalprefixMethod27/27 instead, no exhaustiveness claim from firstpage.
+
+Goal remains full framework/architecture/performance/feel/network/render/AI/training/packaging acceptance, actualGUI/startup/cancellation/weaknet/soak/p95, etc. Missing protected baseline never substitute; identity below remains. Product-quality not achieved by frameworkpass.
+
+Latest actual job observation 1790052372.3411674:
+{
+  "native-product-udp-integration-20260922-e": {
+    "handle": {
+      "pid": 1812361,
+      "start_ticks": 53529534,
+      "launched": 1790052211.0870602
+    },
+    "live": true,
+    "terminal": null,
+    "status": {
+      "phase": "sanitized-tcp-engine_loading_client_drain_contract-compile",
+      "time": 1790052370.1523623,
+      "canonical_changed": false
+    }
+  },
+  "native-product-udp-recovery-20260922-d": {
+    "handle": {
+      "pid": 1812362,
+      "start_ticks": 53529534,
+      "launched": 1790052211.0876517
+    },
+    "live": true,
+    "terminal": null,
+    "status": {
+      "phase": "queued-behind-udp-integration-e",
+      "time": 1790052211.135687,
+      "canonical_changed": false
+    }
+  }
+}
+
 ## 2026-09-22 USER AUTHORIZED COMMIT AND REMOTE PUSH
 
 User explicitly requested committing code and pushing remote; this supersedes historical no-Git instruction for this operation. Branch master, remote origin git@github.com:feiyunwill/football.git; fetch confirmed no divergence before commit. Commit scope: accumulated canonical code, tests, milestone plans/reports and formal evidence. Exclude local benchmark tree (~17.5 GB) and generated replay files via root .gitignore; preserve local coordination agents.json runtime modification. Private UDP candidate remains unadopted. Preserve known failed framework and reconnect regressions; this checkpoint is not product-quality acceptance. Full-suite tests not rerun merely for checkpoint. All previous task constraints and remaining work below continue after submission.

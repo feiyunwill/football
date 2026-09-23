@@ -566,3 +566,19 @@ set(ENGINE_ASE_PARSER_CONTRACT_SOURCES tests/engine_ase_parser_contract.cpp)
 
 # 2026-09-22: bounded resource reads preserve legacy file semantics.
 set(ENGINE_FILE_READ_CONTRACT_SOURCES tests/engine_file_read_contract.cpp)
+
+# 2026-09-24: native reliable UDP product transport and permanent regressions.
+list(APPEND CORE_HEADERS
+  src/frame_sync/native_udp_bootstrap.hpp
+  src/frame_sync/native_udp_dialer.hpp
+  src/frame_sync/native_udp_listener.hpp
+  src/frame_sync/native_udp_stream.hpp
+)
+set(NATIVE_UDP_TEST_TARGETS
+  native_udp_bootstrap_test
+  native_udp_window_test
+  native_udp_stream_test
+  native_udp_listener_test
+  native_udp_dialer_test
+  native_udp_terminal_drain_test
+)

@@ -28,6 +28,8 @@
 #include "frame_sync/native_input_publication.hpp"
 #include <atomic>
 #include "frame_sync/bounded_tcp_writer.hpp"
+#include "frame_sync/native_udp_dialer.hpp"
+#include <type_traits>
 #include <array>
 #include <stdexcept>
 #include <algorithm>
@@ -118,29 +120,59 @@ struct KeyboardState {
 
 // ===== IntegratedFrameSyncClient =====
 
-class IntegratedFrameSyncClient {
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+// class IntegratedFrameSyncClient {
+template<class Socket>
+class BasicIntegratedFrameSyncClient {
  public:
-  IntegratedFrameSyncClient(asio::io_context& io, const std::string& host,
+  // 2026-09-21: diagnostics identify the selected physical transport.
+  static constexpr const char* kTransportName =
+      std::is_same_v<Socket,tcp::socket> ? "TCP" : "UDP";
+  BasicIntegratedFrameSyncClient() = delete;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   IntegratedFrameSyncClient(asio::io_context& io, const std::string& host,
+  BasicIntegratedFrameSyncClient(asio::io_context& io, const std::string& host,
                             unsigned short port, GameEnv* env,
                             const frame_sync::MultiplayerConfig& config)
 // 2026-09-09: private IO is dispatched only by the owning client poll loop
 //       : io_(io), socket_(io), host_(host), port_(port),
-      : socket_(std::make_shared<tcp::socket>(io_)), host_(host), port_(port),
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//       : socket_(std::make_shared<tcp::socket>(io_)), host_(host), port_(port),
+      : host_(host), port_(port),
         env_(env), config_(config),
         client_state_(frame_sync::MAX_PREDICT_AHEAD_FRAMES + 4) {
     // 2026-09-13: the client owns presentation longer than its wrapped engine callbacks.
     // engine_ = frame_sync::MakeGameEnvCallbacks(env);
     if (!env_) throw std::invalid_argument("Client requires an environment");
+    if constexpr (std::is_same_v<Socket,tcp::socket>) {
+      socket_ = std::make_shared<Socket>(io_);
+    } else {
+      static_assert(std::is_same_v<Socket,frame_sync::NativeUDPSocket>);
+      if (!config_.native_product)
+        throw std::invalid_argument("Reliable UDP requires the native product contract");
+      socket_ = std::make_shared<Socket>(asio::make_strand(io_));
+      recovery_dialer_ = std::make_unique<frame_sync::NativeUDPDialer>(io_);
+    }
     // 2026-09-13: defer presentation until the game owner first uses the initialized match.
 //     presentation_ = std::make_unique<frame_sync::NativePresentation<GameEnv>>(
 //         *env_, config_.render, std::chrono::nanoseconds(frame_sync::NativeLoopClock::Period(config_.frame_rate_hz)));
 //     engine_ = presentation_->Wrap(frame_sync::MakeGameEnvCallbacks(env));
   }
-  ~IntegratedFrameSyncClient() { stop(); }
-  IntegratedFrameSyncClient(const IntegratedFrameSyncClient&) = delete;
-  IntegratedFrameSyncClient& operator=(const IntegratedFrameSyncClient&) = delete;
-  IntegratedFrameSyncClient(IntegratedFrameSyncClient&&) = delete;
-  IntegratedFrameSyncClient& operator=(IntegratedFrameSyncClient&&) = delete;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   ~IntegratedFrameSyncClient() { stop(); }
+  ~BasicIntegratedFrameSyncClient() { stop(); }
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   IntegratedFrameSyncClient(const IntegratedFrameSyncClient&) = delete;
+  BasicIntegratedFrameSyncClient(const BasicIntegratedFrameSyncClient&) = delete;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   IntegratedFrameSyncClient& operator=(const IntegratedFrameSyncClient&) = delete;
+  BasicIntegratedFrameSyncClient& operator=(const BasicIntegratedFrameSyncClient&) = delete;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   IntegratedFrameSyncClient(IntegratedFrameSyncClient&&) = delete;
+  BasicIntegratedFrameSyncClient(BasicIntegratedFrameSyncClient&&) = delete;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   IntegratedFrameSyncClient& operator=(IntegratedFrameSyncClient&&) = delete;
+  BasicIntegratedFrameSyncClient& operator=(BasicIntegratedFrameSyncClient&&) = delete;
 // 2026-09-13: only one owner may restart or dispatch this IO context at a time.
 //   void poll() {
 //     io_.restart();
@@ -230,11 +262,15 @@ class IntegratedFrameSyncClient {
     } catch (...) {
       // stop() is also called by the destructor; always close the owned attempt.
       failed_ = true;
-      fprintf(stderr, "TCP cancellation drain failed\n");
+// 2026-09-21: retain original diagnostic format for comparison.
+//       fprintf(stderr, "TCP cancellation drain failed\n");
+      fprintf(stderr, "%s cancellation drain failed\n",kTransportName);
     }
     std::lock_guard lock(mu_);
     if (loading_cancel_requested_ && recovery_phase_ != RecoveryPhase::Stopped)
-      fprintf(stderr, "TCP loading cancel: sent=%d acknowledged=%d rejected=%d\n",
+// 2026-09-21: retain original diagnostic format for comparison.
+//       fprintf(stderr, "TCP loading cancel: sent=%d acknowledged=%d rejected=%d\n",
+      fprintf(stderr, "%s loading cancel: sent=%d acknowledged=%d rejected=%d\n",kTransportName,
               loading_cancel_sent_, loading_cancel_acknowledged_, loading_cancel_rejected_);
     running_ = false;
     if (config_.native_product) {
@@ -277,6 +313,9 @@ class IntegratedFrameSyncClient {
   bool connect() {
     // 2026-09-14: native product sessions use the explicit recoverable protocol.
     if (config_.native_product) return connect_recovery();
+    if constexpr (!std::is_same_v<Socket,tcp::socket>) {
+      return false;
+    } else {
     boost::system::error_code ec;
     tcp::resolver resolver(io_);
     auto endpoints = resolver.resolve(host_, std::to_string(port_), ec);
@@ -306,13 +345,16 @@ class IntegratedFrameSyncClient {
       asio::write(*socket_, asio::buffer(&connect_message, 1), ec);
     }
     if (ec || !receive_slot_assignment()) return false;
-    writer_ = std::make_unique<frame_sync::BoundedTCPWriter>(socket_);
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//     writer_ = std::make_unique<frame_sync::BoundedTCPWriter>(socket_);
+    writer_ = std::make_unique<frame_sync::BasicBoundedStreamWriter<Socket>>(socket_);
     init_game_env();
     running_ = true;
     if (!send_ready()) return false;
     do_read();
     replay_recorder_.StartRecording(seed_, "default_11v11", static_cast<uint32_t>(left_agents_) + right_agents_);
     return true;
+    }
   }
 
   // 2026-09-13: presentation is created on the same thread that ticks and renders.
@@ -846,7 +888,9 @@ class IntegratedFrameSyncClient {
   void fail_locked(const char* reason) {
     if (!running_) return;
     running_ = false;failed_ = true;
-    fprintf(stderr,"TCP connection stopped: %s\n",reason);
+// 2026-09-21: retain original diagnostic format for comparison.
+//     fprintf(stderr,"TCP connection stopped: %s\n",reason);
+    fprintf(stderr,"%s connection stopped: %s\n",kTransportName,reason);
     if (config_.native_product) close_native_attempt_locked();
     else if (writer_) writer_->Close();
     clear_transport_payload_locked();recovery_phase_ = RecoveryPhase::Stopped;
@@ -854,7 +898,9 @@ class IntegratedFrameSyncClient {
   // 2026-09-14: recover native sessions while preserving the legacy path.
   //   bool invalid_message() { fail_locked("invalid or unexpected message"); return false; }
   bool invalid_message() {
-    fprintf(stderr,"TCP invalid message: type=%u phase=%u buffered=%zu transport=%llu\n",
+// 2026-09-21: retain original diagnostic format for comparison.
+//     fprintf(stderr,"TCP invalid message: type=%u phase=%u buffered=%zu transport=%llu\n",
+    fprintf(stderr,"%s invalid message: type=%u phase=%u buffered=%zu transport=%llu\n",kTransportName,
             recv_buf_.empty() ? 0U : unsigned(recv_buf_[0]),unsigned(recovery_phase_),recv_buf_.size(),
             static_cast<unsigned long long>(transport_generation_));
     fail_locked("invalid or unexpected message");return false;
@@ -990,6 +1036,9 @@ class IntegratedFrameSyncClient {
 //     return got;
 //   }
   size_t read_exact(uint8_t* bytes, size_t need) {
+    if constexpr (!std::is_same_v<Socket,tcp::socket>) {
+      return 0;
+    } else {
     boost::system::error_code ec;
     socket_->non_blocking(true, ec);
     if (ec) return 0;
@@ -1005,6 +1054,7 @@ class IntegratedFrameSyncClient {
     boost::system::error_code ignored;
     socket_->non_blocking(false, ignored);
     return got == need && !ec ? got : 0;
+    }
   }
 
 // 2026-09-09: Ready uses the same ordered bounded writer as frame inputs
@@ -1276,10 +1326,16 @@ class IntegratedFrameSyncClient {
   void close_native_attempt_locked() {
     ++transport_generation_;
     recovery_resolver_.cancel();
+    if (recovery_dialer_) recovery_dialer_->Cancel();
     boost::system::error_code ignored;
     recovery_timer_.cancel();
     if (writer_) writer_->Close();
-    if (socket_) { socket_->cancel(ignored);socket_->close(ignored); }
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//     if (socket_) { socket_->cancel(ignored);socket_->close(ignored); }
+    if (socket_) {
+      if constexpr (std::is_same_v<Socket,tcp::socket>) socket_->cancel(ignored);
+      socket_->close(ignored);
+    }
   }
   void transport_lost_locked(const char* reason) {
     if (!config_.native_product) { fail_locked(reason);return; }
@@ -1300,7 +1356,9 @@ class IntegratedFrameSyncClient {
     close_native_attempt_locked();clear_transport_payload_locked();
     recovery_phase_ = RecoveryPhase::Retrying;
     const auto generation = transport_generation_;
-    fprintf(stderr,"TCP reconnect pending: %s\n",reason);
+// 2026-09-21: retain original diagnostic format for comparison.
+//     fprintf(stderr,"TCP reconnect pending: %s\n",reason);
+    fprintf(stderr,"%s reconnect pending: %s\n",kTransportName,reason);
     recovery_timer_.expires_after(recovery_delay_);
     recovery_delay_ = std::min(recovery_delay_ * 2,std::chrono::milliseconds(1000));
     recovery_timer_.async_wait([this,generation](boost::system::error_code error) {
@@ -1311,35 +1369,80 @@ class IntegratedFrameSyncClient {
       begin_native_attempt_locked();
     });
   }
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   void begin_native_attempt_locked() {
+//     ++transport_generation_;const auto generation = transport_generation_;
+//     ++recovery_attempts_;recovery_phase_ = RecoveryPhase::Connecting;
+//     recovery_phase_since_ = RecoveryClock::now();
+//     socket_ = std::make_shared<tcp::socket>(io_);
+//     const auto candidate = socket_;
+//     recovery_resolver_.async_resolve(host_,std::to_string(port_),
+//       [this,candidate,generation](boost::system::error_code error,tcp::resolver::results_type endpoints) {
+//         std::lock_guard lock(mu_);
+//         if (!running_ || generation != transport_generation_) return;
+//         if (error) { transport_lost_locked("address resolution failed");return; }
+//         asio::async_connect(*candidate,endpoints,
+//           [this,candidate,generation](boost::system::error_code connected,const tcp::endpoint&) {
+//             std::lock_guard lock(mu_);
+//             if (!running_ || generation != transport_generation_) return;
+//             if (connected) { transport_lost_locked("connection attempt failed");return; }
+//             candidate->set_option(tcp::no_delay(true),connected);
+//             if (connected) { transport_lost_locked("connection setup failed");return; }
+//             writer_ = std::make_unique<frame_sync::BoundedTCPWriter>(candidate);
+//             recovery_phase_ = RecoveryPhase::AwaitSession;
+//             recovery_phase_since_ = recovery_last_activity_ = RecoveryClock::now();
+//             const auto hello = recovery_grant_ ? frame_sync::pack_recovery_resume(*recovery_grant_)
+//                                               : frame_sync::pack_recovery_load_hello();
+//             if (!writer_->TrySend(hello.bytes.data(),hello.size)) {
+//               transport_lost_locked("session request send failed");return;
+//             }
+//             do_read();
+//           });
+//       });
+//   }
+  void start_native_session_locked(const std::shared_ptr<Socket>& candidate) {
+    socket_ = candidate;
+    writer_ = std::make_unique<frame_sync::BasicBoundedStreamWriter<Socket>>(candidate);
+    recovery_phase_ = RecoveryPhase::AwaitSession;
+    recovery_phase_since_ = recovery_last_activity_ = RecoveryClock::now();
+    const auto hello = recovery_grant_ ? frame_sync::pack_recovery_resume(*recovery_grant_)
+                                      : frame_sync::pack_recovery_load_hello();
+    if (!writer_->TrySend(hello.bytes.data(),hello.size)) {
+      transport_lost_locked("session request send failed");return;
+    }
+    do_read();
+  }
   void begin_native_attempt_locked() {
     ++transport_generation_;const auto generation = transport_generation_;
     ++recovery_attempts_;recovery_phase_ = RecoveryPhase::Connecting;
     recovery_phase_since_ = RecoveryClock::now();
-    socket_ = std::make_shared<tcp::socket>(io_);
-    const auto candidate = socket_;
-    recovery_resolver_.async_resolve(host_,std::to_string(port_),
-      [this,candidate,generation](boost::system::error_code error,tcp::resolver::results_type endpoints) {
-        std::lock_guard lock(mu_);
-        if (!running_ || generation != transport_generation_) return;
-        if (error) { transport_lost_locked("address resolution failed");return; }
-        asio::async_connect(*candidate,endpoints,
-          [this,candidate,generation](boost::system::error_code connected,const tcp::endpoint&) {
-            std::lock_guard lock(mu_);
-            if (!running_ || generation != transport_generation_) return;
-            if (connected) { transport_lost_locked("connection attempt failed");return; }
-            candidate->set_option(tcp::no_delay(true),connected);
-            if (connected) { transport_lost_locked("connection setup failed");return; }
-            writer_ = std::make_unique<frame_sync::BoundedTCPWriter>(candidate);
-            recovery_phase_ = RecoveryPhase::AwaitSession;
-            recovery_phase_since_ = recovery_last_activity_ = RecoveryClock::now();
-            const auto hello = recovery_grant_ ? frame_sync::pack_recovery_resume(*recovery_grant_)
-                                              : frame_sync::pack_recovery_load_hello();
-            if (!writer_->TrySend(hello.bytes.data(),hello.size)) {
-              transport_lost_locked("session request send failed");return;
-            }
-            do_read();
-          });
-      });
+    if constexpr (std::is_same_v<Socket,tcp::socket>) {
+      socket_ = std::make_shared<Socket>(io_);
+      const auto candidate = socket_;
+      recovery_resolver_.async_resolve(host_,std::to_string(port_),
+        [this,candidate,generation](boost::system::error_code error,tcp::resolver::results_type endpoints) {
+          std::lock_guard lock(mu_);
+          if (!running_ || generation != transport_generation_) return;
+          if (error) { transport_lost_locked("address resolution failed");return; }
+          asio::async_connect(*candidate,endpoints,
+            [this,candidate,generation](boost::system::error_code connected,const tcp::endpoint&) {
+              std::lock_guard lock(mu_);
+              if (!running_ || generation != transport_generation_) return;
+              if (connected) { transport_lost_locked("connection attempt failed");return; }
+              candidate->set_option(tcp::no_delay(true),connected);
+              if (connected) { transport_lost_locked("connection setup failed");return; }
+              start_native_session_locked(candidate);
+            });
+        });
+    } else {
+      recovery_dialer_->async_connect(host_,port_,
+        [this,generation](boost::system::error_code error,frame_sync::NativeUDPSocket socket) {
+          std::lock_guard lock(mu_);
+          if (!running_ || generation != transport_generation_) return;
+          if (error) { transport_lost_locked("UDP connection attempt failed");return; }
+          start_native_session_locked(std::make_shared<Socket>(std::move(socket)));
+        });
+    }
   }
 // 2026-09-15: the bounded cancellation drain owns shutdown once requested.
 //   void maintain_recovery_locked() {
@@ -1495,7 +1598,9 @@ class IntegratedFrameSyncClient {
         if (recovery_phase_ != RecoveryPhase::AwaitAccepted) return invalid_message();
         recovery_phase_ = RecoveryPhase::Streaming;recovery_accepted_boundary_ = accepted->second;
         ++recovery_acceptances_;
-        fprintf(stderr,"TCP recovery accepted: attempt=%zu slot=%u frame=%u generation=%llu\n",
+// 2026-09-21: retain original diagnostic format for comparison.
+//         fprintf(stderr,"TCP recovery accepted: attempt=%zu slot=%u frame=%u generation=%llu\n",
+        fprintf(stderr,"%s recovery accepted: attempt=%zu slot=%u frame=%u generation=%llu\n",kTransportName,
                 recovery_attempts_,unsigned(recovery_grant_->slot),accepted->second,
                 static_cast<unsigned long long>(recovery_grant_->generation));
       }
@@ -1603,8 +1708,12 @@ class IntegratedFrameSyncClient {
               path.c_str(),recovery_journal_->GetFrameCount(),result.bytes);
       size_t attempts,acceptances,echoes;
       { std::lock_guard lock(mu_);attempts = recovery_attempts_;acceptances = recovery_acceptances_;echoes = recovery_heartbeat_echoes_; }
-      fprintf(stderr,"TCP heartbeat: echoes=%zu rtt_ms=%.3f\n",echoes,native_rtt_ms_.load());
-      fprintf(stderr,"TCP recovery replay: checkpoints=%zu next_frame=%u attempts=%zu acceptances=%zu\n",
+// 2026-09-21: retain original diagnostic format for comparison.
+//       fprintf(stderr,"TCP heartbeat: echoes=%zu rtt_ms=%.3f\n",echoes,native_rtt_ms_.load());
+      fprintf(stderr,"%s heartbeat: echoes=%zu rtt_ms=%.3f\n",kTransportName,echoes,native_rtt_ms_.load());
+// 2026-09-21: retain original diagnostic format for comparison.
+//       fprintf(stderr,"TCP recovery replay: checkpoints=%zu next_frame=%u attempts=%zu acceptances=%zu\n",
+      fprintf(stderr,"%s recovery replay: checkpoints=%zu next_frame=%u attempts=%zu acceptances=%zu\n",kTransportName,
               recovery_journal_->checkpoint_count(),recovery_journal_->next_frame(),attempts,acceptances);
       return true;
     } catch (const std::exception& error) {
@@ -1616,6 +1725,7 @@ class IntegratedFrameSyncClient {
 
   // 2026-09-14: native reconnection state is guarded by mu_; engine/journal stay on the frame owner.
   tcp::resolver recovery_resolver_{io_};
+  std::unique_ptr<frame_sync::NativeUDPDialer> recovery_dialer_;
   asio::steady_timer recovery_timer_{io_};
   std::mutex native_input_mu_;
   RecoveryPhase recovery_phase_ = RecoveryPhase::Stopped;
@@ -1645,8 +1755,12 @@ class IntegratedFrameSyncClient {
   size_t recovery_heartbeat_echoes_ = 0;
   std::atomic<double> native_rtt_ms_{0.0};
 
-  std::shared_ptr<tcp::socket> socket_;
-  std::unique_ptr<frame_sync::BoundedTCPWriter> writer_;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   std::shared_ptr<tcp::socket> socket_;
+  std::shared_ptr<Socket> socket_;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   std::unique_ptr<frame_sync::BoundedTCPWriter> writer_;
+  std::unique_ptr<frame_sync::BasicBoundedStreamWriter<Socket>> writer_;
 // 2026-09-13: transport failure and stop are visible while the owner draws.
 //   bool running_ = false, failed_ = false;
   std::atomic<bool> running_{false}, failed_{false};
@@ -1698,6 +1812,10 @@ class IntegratedFrameSyncClient {
   frame_sync::NetworkDiagnostics net_diag_;                     ///< Network diagnostics (ms-17.5)
   frame_sync::frame_id_t server_frame_ = 0;                                ///< Latest server frame number
 };
+
+// 2026-09-21: both products instantiate the same loading/recovery/replay implementation.
+using IntegratedFrameSyncClient = BasicIntegratedFrameSyncClient<tcp::socket>;
+using IntegratedFrameSyncUDPClient = BasicIntegratedFrameSyncClient<frame_sync::NativeUDPSocket>;
 
 // ===== Main with SDL2 rendering =====
 
@@ -1915,14 +2033,28 @@ int main(int argc, char* argv[]) {
     const auto [config, frames] = frame_sync::NativeClientOptions(argc, argv);
     GameEnv env;
     asio::io_context io;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//     IntegratedFrameSyncClient client(io, config.host, config.port, &env, config);
+#if defined(FOOTBALL_NATIVE_UDP_CLIENT)
+    IntegratedFrameSyncUDPClient client(io, config.host, config.port, &env, config);
+#else
     IntegratedFrameSyncClient client(io, config.host, config.port, &env, config);
+#endif
     if (!client.connect()) {
       fprintf(stderr, "Failed to connect\n");
       return 1;
     }
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//     return frame_sync::RunNativeClient(env, client, config, frames, "TCP");
+#if defined(FOOTBALL_NATIVE_UDP_CLIENT)
+    return frame_sync::RunNativeClient(env, client, config, frames, "UDP");
+#else
     return frame_sync::RunNativeClient(env, client, config, frames, "TCP");
+#endif
   } catch (const std::exception& error) {
-    fprintf(stderr, "Native TCP client failed: %s\n", error.what());
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//     fprintf(stderr, "Native TCP client failed: %s\n", error.what());
+    fprintf(stderr, "Native client failed: %s\n", error.what());
     return 1;
   }
 }

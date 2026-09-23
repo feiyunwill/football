@@ -78,6 +78,8 @@ class UDPState:
     self.receipts = OrderedDict()
     self.active = None
     self.rtt = deque(maxlen=32)
+    # 2026-09-22: one unambiguous head-of-line RTT probe for delivery ACKs.
+    self._rtt_probe = None
     self.failure = None
     self._tokens = float(self.limits.burst_packets)
     self._token_time = None
@@ -100,6 +102,7 @@ class UDPState:
       self.receive_bytes = sys.getsizeof(active[0])
     self.receipts.clear()
     self.rtt.clear()
+    self._rtt_probe = None
 
   def fail(self, reason):
     self.close(reason)
@@ -136,12 +139,30 @@ class UDPState:
     deviation = sum(abs(value - mean) for value in self.rtt) / len(self.rtt)
     return max(.05, min(1.0, mean + 4 * deviation))
 
+  # 2026-09-22: retain the previous scheduling implementation for review.
+  # def due(self, now, count=64):
+  #   self._open()
+  #   self.check_deadlines(now)
+  #   result = []
+  #   rto = self.rto
+  #   for seq, (packet, admitted, sent, retries) in self.pending.items():
+  #     if sent is None or now - sent >= rto:
+  #       if sent is not None and retries >= self.limits.max_retries:
+  #         self.fail('udp_retry_exhausted')
+  #       result.append((seq, packet))
+  #       if len(result) >= count:
+  #         break
+  #   return result
   def due(self, now, count=64):
     self._open()
     self.check_deadlines(now)
     result = []
     rto = self.rto
-    for seq, (packet, admitted, sent, retries) in self.pending.items():
+    # Epoch peers acknowledge completed in-order delivery. Keep only one
+    # bounded batch in flight instead of repeatedly flooding all future data.
+    for index, (seq, (packet, admitted, sent, retries)) in enumerate(self.pending.items()):
+      if self.ack_on_delivery and index >= 64:
+        break
       if sent is None or now - sent >= rto:
         if sent is not None and retries >= self.limits.max_retries:
           self.fail('udp_retry_exhausted')
@@ -150,8 +171,18 @@ class UDPState:
           break
     return result
 
+  # 2026-09-22: previous send accounting retained.
+  # def mark_sent(self, seq, now):
+  #   packet, admitted, sent, retries = self.pending[seq]
+  #   if sent is not None:
+  #     retries += 1
+  #     self.count('retransmitted')
+  #   self.pending[seq] = (packet, admitted, now, retries)
   def mark_sent(self, seq, now):
     packet, admitted, sent, retries = self.pending[seq]
+    if (self.ack_on_delivery and sent is None and self._rtt_probe is None
+        and seq == next(iter(self.pending))):
+      self._rtt_probe = seq
     if sent is not None:
       retries += 1
       self.count('retransmitted')
@@ -187,7 +218,14 @@ class UDPState:
       if entry is not None and entry[2] is not None:
         del self.pending[seq]
         self.pending_bytes -= sys.getsizeof(entry[0])
-        if entry[3] == 0 and now >= entry[2]:
+        # 2026-09-22: a delivered future fragment's ACK includes waiting
+        # for earlier gaps. Only a probe sent at the pending head measures RTT.
+        # if entry[3] == 0 and now >= entry[2]:
+        #   self.rtt.append(min(60.0, now - entry[2]))
+        sample_rtt = not self.ack_on_delivery or seq == self._rtt_probe
+        if seq == self._rtt_probe:
+          self._rtt_probe = None
+        if sample_rtt and entry[3] == 0 and now >= entry[2]:
           self.rtt.append(min(60.0, now - entry[2]))
         self.count('acknowledged')
       return None

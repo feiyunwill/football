@@ -513,3 +513,18 @@ set_target_properties(engine_ase_parser_contract PROPERTIES RUNTIME_OUTPUT_DIREC
 add_executable(engine_file_read_contract EXCLUDE_FROM_ALL ${ENGINE_FILE_READ_CONTRACT_SOURCES})
 target_link_libraries(engine_file_read_contract PRIVATE football_engine)
 set_target_properties(engine_file_read_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+
+# 2026-09-24: reliable UDP shares the native TCP session owner and recovery protocol.
+add_executable(football_client_udp src/frame_sync/integrated_client.cpp)
+add_executable(football_server_udp src/frame_sync/integrated_server.cpp)
+target_compile_definitions(football_client_udp PRIVATE FOOTBALL_NATIVE_UDP_CLIENT=1)
+target_compile_definitions(football_server_udp PRIVATE FOOTBALL_NATIVE_UDP_SERVER=1)
+foreach(target football_client_udp football_server_udp)
+  target_include_directories(${target} PRIVATE ${PROJECT_SOURCE_DIR}/src)
+  target_link_libraries(${target} PRIVATE football_engine Boost::system football_native_recovery)
+  set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+endforeach()
+add_executable(engine_loading_udp_client_drain_contract EXCLUDE_FROM_ALL tests/engine_loading_client_drain_contract.cpp)
+target_compile_definitions(engine_loading_udp_client_drain_contract PRIVATE FOOTBALL_NATIVE_UDP_CLIENT=1)
+target_link_libraries(engine_loading_udp_client_drain_contract PRIVATE football_engine Boost::system football_native_recovery)
+set_target_properties(engine_loading_udp_client_drain_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})

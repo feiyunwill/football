@@ -9,6 +9,7 @@
 #include "frame_sync/engine_bridge.hpp"
 #include "frame_sync/bot_takeover.hpp"
 #include "frame_sync/engine_tcp_bridge.hpp"
+#include "frame_sync/native_udp_listener.hpp"
 #include <csignal>
 #include "game_env.hpp"
 #include "main.hpp"
@@ -651,7 +652,13 @@ int main(int argc, char* argv[]) {
     GameEnv env;
     frame_sync::StartTCPGame(env, config);
     asio::io_context io;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//     frame_sync::EngineTCPServer server(io, config.port, config,
+#if defined(FOOTBALL_NATIVE_UDP_SERVER)
+    frame_sync::BasicEngineSessionServer<frame_sync::NativeUDPTransport> server(io, config.port, config,
+#else
     frame_sync::EngineTCPServer server(io, config.port, config,
+#endif
         frame_sync::MakeGameEnvCallbacks(&env),
         frame_sync::MakeGameEnvBotObserver(&env, config.left_agents, config.right_agents));
     asio::signal_set signals(io, SIGINT, SIGTERM);
@@ -661,14 +668,22 @@ int main(int argc, char* argv[]) {
       try { io.run(); }
       catch (...) { network_error = std::current_exception(); server.stop(); }
     });
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//     std::println("Integrated TCP server listening on port {}", server.port());
+#if defined(FOOTBALL_NATIVE_UDP_SERVER)
+    std::println("Integrated UDP server listening on port {}", server.port());
+#else
     std::println("Integrated TCP server listening on port {}", server.port());
+#endif
     try { server.run_frame_loop(); }
     catch (...) { server.stop(); io.stop(); network.join(); throw; }
     server.stop(); io.stop(); network.join();
     if (network_error) std::rethrow_exception(network_error);
     return 0;
   } catch (const std::exception& error) {
-    std::println(stderr, "Integrated TCP server failed: {}", error.what());
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//     std::println(stderr, "Integrated TCP server failed: {}", error.what());
+    std::println(stderr, "Integrated server failed: {}", error.what());
     return 1;
   }
 }

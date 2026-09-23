@@ -1,5 +1,9 @@
 # Python TCP 自动恢复
 
+2026-09-22 更新：恢复终止先进入 giving_up 清理阶段；tick() 或 stats() 确认后台所有者实际退出后才发布 gave_up。终止回调仍由逻辑线程派发一次，清理期间不重试，状态观察不等待线程。
+
+以下为原有协议和使用说明。
+
 2026-09-10。入口为 `gfootball.frame_sync.client.ReconnectingFrameSyncClient`。现有同步/异步 Python 服务端共用此版本的恢复服务；原生 C++ 服务及 UDP 恢复还需要独立验收。
 
 ## 恢复契约

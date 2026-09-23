@@ -17,15 +17,26 @@ enum class StreamStatus { Ready, Capacity, InvalidMessage, IoError, WriteTimeout
 // A shared socket must be a separately owned object (not an alias to its session).
 // After handshake, reads and shutdown use this object so all socket operations
 // are serialized. External synchronous socket access requires quiescent IO.
-class BoundedTCPWriter {
+// 2026-09-15: private transport-policy extraction; original lines:
+// class BoundedTCPWriter {
+template<class Socket>
+class BasicBoundedStreamWriter {
  private:
-  using Socket = boost::asio::ip::tcp::socket;
+// 2026-09-15: private transport-policy extraction; original lines:
+//   using Socket = boost::asio::ip::tcp::socket;
   struct State : std::enable_shared_from_this<State> {
     State(std::shared_ptr<Socket> socket, StreamBudget budget,
           std::chrono::milliseconds timeout)
         : socket(std::move(socket)), budget(budget.message_limit, budget.byte_limit),
           executor(boost::asio::make_strand(this->socket->get_executor())),
           timer(executor), timeout(timeout) {}
+// 2026-09-15: private transport-policy extraction; original lines:
+    State() = delete;
+    ~State() = default;
+    State(const State&) = delete;
+    State& operator=(const State&) = delete;
+    State(State&&) = delete;
+    State& operator=(State&&) = delete;
     std::shared_ptr<Socket> socket;
     const StreamBudget budget;
     boost::asio::strand<boost::asio::any_io_executor> executor;
@@ -62,7 +73,9 @@ class BoundedTCPWriter {
         DiscardWaiting();
       }
       if (close_posted) return;
-      boost::asio::post(executor, [self = shared_from_this()] { self->CloseSocket(); });
+// 2026-09-15: private transport-policy extraction; original lines:
+//       boost::asio::post(executor, [self = shared_from_this()] { self->CloseSocket(); });
+      boost::asio::post(executor, [self = this->shared_from_this()] { self->CloseSocket(); });
       close_posted = true;
     }
     bool Send(const void* data, size_t length) {
@@ -82,7 +95,9 @@ class BoundedTCPWriter {
       bytes += retained;
       if (!scheduled) {
         try {
-          boost::asio::post(executor, [self = shared_from_this()] { self->Write(); });
+// 2026-09-15: private transport-policy extraction; original lines:
+//           boost::asio::post(executor, [self = shared_from_this()] { self->Write(); });
+          boost::asio::post(executor, [self = this->shared_from_this()] { self->Write(); });
         } catch (...) {
           bytes -= RetainedBytes(waiting.back());
           waiting.pop_back();
@@ -101,7 +116,9 @@ class BoundedTCPWriter {
       writing = true;
       const auto current_generation = ++generation;
       timer.expires_after(timeout);
-      timer.async_wait([self = shared_from_this(), current_generation](boost::system::error_code ec) {
+// 2026-09-15: private transport-policy extraction; original lines:
+//       timer.async_wait([self = shared_from_this(), current_generation](boost::system::error_code ec) {
+      timer.async_wait([self = this->shared_from_this(), current_generation](boost::system::error_code ec) {
         if (ec) return;
         {
           std::lock_guard lock(self->mutex);
@@ -114,7 +131,9 @@ class BoundedTCPWriter {
       });
       boost::asio::async_write(*socket, boost::asio::buffer(active),
           boost::asio::bind_executor(executor,
-            [self = shared_from_this()](boost::system::error_code ec, size_t sent) {
+// 2026-09-15: private transport-policy extraction; original lines:
+//             [self = shared_from_this()](boost::system::error_code ec, size_t sent) {
+            [self = this->shared_from_this()](boost::system::error_code ec, size_t sent) {
               bool again = false, failed = false;
               {
                 std::lock_guard lock(self->mutex);
@@ -138,18 +157,27 @@ class BoundedTCPWriter {
   };
 
  public:
-  explicit BoundedTCPWriter(std::shared_ptr<Socket> socket,
+// 2026-09-15: private transport-policy extraction; original lines:
+//   explicit BoundedTCPWriter(std::shared_ptr<Socket> socket,
+  BasicBoundedStreamWriter() = delete;
+  explicit BasicBoundedStreamWriter(std::shared_ptr<Socket> socket,
                             StreamBudget budget = StreamBudget{},
                             std::chrono::milliseconds timeout = std::chrono::seconds(5)) {
     if (!socket || timeout.count() < 1 || timeout > std::chrono::seconds(30))
       throw std::invalid_argument("TCP writer needs a socket and bounded write timeout");
     state_ = std::make_shared<State>(std::move(socket), budget, timeout);
   }
-  ~BoundedTCPWriter() { Close(); }
-  BoundedTCPWriter(const BoundedTCPWriter&) = delete;
-  BoundedTCPWriter& operator=(const BoundedTCPWriter&) = delete;
-  BoundedTCPWriter(BoundedTCPWriter&&) = delete;
-  BoundedTCPWriter& operator=(BoundedTCPWriter&&) = delete;
+// 2026-09-15: private transport-policy extraction; original lines:
+//   ~BoundedTCPWriter() { Close(); }
+//   BoundedTCPWriter(const BoundedTCPWriter&) = delete;
+//   BoundedTCPWriter& operator=(const BoundedTCPWriter&) = delete;
+//   BoundedTCPWriter(BoundedTCPWriter&&) = delete;
+//   BoundedTCPWriter& operator=(BoundedTCPWriter&&) = delete;
+  ~BasicBoundedStreamWriter() { Close(); }
+  BasicBoundedStreamWriter(const BasicBoundedStreamWriter&) = delete;
+  BasicBoundedStreamWriter& operator=(const BasicBoundedStreamWriter&) = delete;
+  BasicBoundedStreamWriter(BasicBoundedStreamWriter&&) = delete;
+  BasicBoundedStreamWriter& operator=(BasicBoundedStreamWriter&&) = delete;
 
   [[nodiscard]] bool TrySend(const void* data, size_t length) { return state_->Send(data, length); }
   void Close() { state_->Close(StreamStatus::Closed); }
@@ -190,5 +218,7 @@ class BoundedTCPWriter {
  private:
   std::shared_ptr<State> state_;
 };
+// 2026-09-15: private transport-policy extraction; original lines:
+using BoundedTCPWriter = BasicBoundedStreamWriter<boost::asio::ip::tcp::socket>;
 }  // namespace frame_sync
 #endif

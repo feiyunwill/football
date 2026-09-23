@@ -1,5 +1,9 @@
 # UDP 会话恢复
 
+2026-09-22 更新：恢复终止先进入 giving_up 清理阶段；tick() 或 stats() 确认后台所有者实际退出后才发布 gave_up。终止回调仍由逻辑线程派发一次，清理期间不重试，状态观察不等待线程。 按序 ACK 模式的 due() 只调度 pending 前 64 项，并仅从未重传的首项探针采样 RTT；客户端直接首次发送不受此调度窗口限制。协议及既有期限不变。
+
+以下为原有协议和使用说明。
+
 2026-09-10。`ReconnectingFrameSyncUDPClient` 现在使用显式的 cookie/epoch 协议，配套服务端为 `gfootball.frame_sync.server_udp.FrameSyncUDPServer`。现有 C++ UDP 服务不支持此协议；原始 `FrameSyncUDPClient` 仍用于旧协议的初始会话。
 
 ## 使用与生命周期

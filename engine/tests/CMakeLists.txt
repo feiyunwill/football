@@ -235,6 +235,24 @@ add_frame_sync_test(lobby_client_capacity_test lobby_client_capacity_test.cpp)
 add_frame_sync_test(tcp_frame_server_test tcp_frame_server_test.cpp)
 add_frame_sync_test(tcp_client_capacity_test tcp_client_capacity_test.cpp)
 
+
+# 2026-09-24: permanent native UDP contracts, including real loopback and ownership.
+# The supported acceptance target is Linux x86_64; fixtures use poll().
+if(UNIX)
+  find_package(OpenSSL 3.0 REQUIRED COMPONENTS Crypto)
+  find_package(Threads REQUIRED)
+  add_library(football_test_native_recovery STATIC ../src/frame_sync/native_recovery_digest.cpp)
+  target_include_directories(football_test_native_recovery PUBLIC ${ENGINE_SRC})
+  target_link_libraries(football_test_native_recovery PUBLIC OpenSSL::Crypto)
+  foreach(target native_udp_bootstrap_test native_udp_window_test native_udp_stream_test native_udp_listener_test native_udp_dialer_test native_udp_terminal_drain_test)
+    add_executable(${target} ${target}.cpp)
+    configure_test_target(${target})
+    target_link_libraries(${target} PRIVATE football_test_native_recovery Threads::Threads)
+    # Prefixes keep inherited legacy witnesses distinct from their original target.
+    gtest_discover_tests(${target} TEST_PREFIX "${target}." PROPERTIES TIMEOUT 30)
+  endforeach()
+endif()
+
 # ===== RLtools PPO 训练 POC =====
 option(ENABLE_RLTOOLS "Build RLtools PPO training POC" OFF)
 if(ENABLE_RLTOOLS)

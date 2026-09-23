@@ -153,15 +153,32 @@ class ReconnectingFrameSyncClient:
     return ClientLogicLoop(client, env, self._session[1] + self._session[2],
         self.controlled_slots_callback or (lambda: []), initial_frame_id=initial_frame_id, **options)
 
+  # 2026-09-22: preserve previous terminal publication for audit.
+  #   def _give_up_locked(self, reason):
+  #     # 2026-09-10: even a throwing give-up callback must not rearm itself.
+  #     # if self._state == 'closed':
+  #     if self._state in ('closed', 'gave_up'):
+  #       return
+  #     self._state, self._failure = 'gave_up', reason
+  #     self._give_up_notice = True
+  #     self._pending = None
+  #     self._condition.notify_all()
   def _give_up_locked(self, reason):
     # 2026-09-10: even a throwing give-up callback must not rearm itself.
     # if self._state == 'closed':
-    if self._state in ('closed', 'gave_up'):
+    if self._state in ('closed', 'giving_up', 'gave_up'):
       return
-    self._state, self._failure = 'gave_up', reason
-    self._give_up_notice = True
+    self._state, self._failure = 'giving_up', reason
     self._pending = None
     self._condition.notify_all()
+
+
+  def _complete_give_up_locked(self):
+    # Terminal state and its callback require the actual attempt owner to exit.
+    # This only observes thread liveness; tick/stats never wait or join.
+    if self._state == 'giving_up' and (self._worker is None or not self._worker.is_alive()):
+      self._state = 'gave_up'
+      self._give_up_notice = True
 
   def _retry_locked(self, reason, now):
     self._last_error = reason
@@ -177,6 +194,98 @@ class ReconnectingFrameSyncClient:
       self._next_attempt = now + self._delay
       self._delay = min(self.reconnect_limits.max_seconds, self._delay * 2)
 
+  # 2026-09-22: preserve previous terminal publication for audit.
+  #   def _work(self):
+  #     try:
+  #       while True:
+  #         close_client = None
+  #         attempt = False
+  #         with self._condition:
+  #           now = time.monotonic()
+  #           if self._state in ('closed', 'gave_up'):
+  #             return
+  #           if self._state == 'connected' and self._client.is_disconnected():
+  #             # 2026-09-10: logic failures close a transport but aren't network loss.
+  #             # reason = self._client.failure_reason or 'io_error'
+  #             reason = (self._logic.failure_reason if self._logic is not None else None) or self._client.failure_reason or 'io_error'
+  #             self._disconnect_notice = True
+  #             self._attempts = 0
+  #             self._delay = self.reconnect_limits.base_seconds
+  #             self._recovery_deadline = now + self.reconnect_limits.recovery_seconds
+  #             close_client = self._client
+  #             # if reason not in _RETRYABLE:
+  #             if reason not in self._retryable:
+  #               self._give_up_locked(reason)
+  #             elif self._token is None:
+  #               self._give_up_locked('resume_token_required')
+  #             elif self._logic is None:
+  #               self._give_up_locked('resume_logic_required')
+  #             else:
+  #               self._state, self._next_attempt = 'backoff', now
+  #           # 2026-09-10: completed restoration still needs server handback.
+  #           # if self._state == 'restoring' and (self._candidate.is_disconnected() or now >= self._recovery_deadline):
+  #           if self._state in ('restoring', 'handback') and (self._candidate.is_disconnected() or now >= self._recovery_deadline):
+  #             close_client = self._candidate
+  #             self._pending = self._candidate = None
+  #             self._retry_locked(close_client.failure_reason or 'handshake_timeout', now)
+  #           if self._state == 'backoff':
+  #             if now >= self._recovery_deadline:
+  #               self._give_up_locked('recovery_timeout')
+  #             elif now >= self._next_attempt:
+  #               self._state = 'attempting'
+  #               self._attempts += 1
+  #               self._total_attempts = min(0xffffffffffffffff, self._total_attempts + 1)
+  #               attempt = True
+  #           if close_client is None and not attempt:
+  #             self._condition.wait(.01)
+  #             continue
+  #         if close_client is not None:
+  #           close_client.close()
+  #         if not attempt:
+  #           continue
+  #         candidate = self._new_client()
+  #         with self._condition:
+  #           if self._state == 'closed':
+  #             candidate.close()
+  #             return
+  #           self._candidate = candidate
+  #         try:
+  #           # 2026-09-10: absolute deadline and confirmed-frame bound cross attempts.
+  #           # candidate.connect(resume_token=self._token, expected_session=self._session, expected_slots=self._slots)
+  #           candidate.connect(resume_token=self._token, expected_session=self._session, expected_slots=self._slots,
+  #                             minimum_frame=self._logic.get_last_confirmed_frame_id() + 1, deadline=self._recovery_deadline)
+  #           snapshot = candidate.take_resume_snapshot()
+  #           if snapshot is None:
+  #             raise ClientFailure('missing_resume_snapshot')
+  #           with self._condition:
+  #             if self._state == 'closed':
+  #               candidate.close()
+  #               return
+  #             if time.monotonic() >= self._recovery_deadline:
+  #               raise ClientFailure('recovery_timeout')
+  #             self._pending = snapshot
+  #             self._state = 'restoring'
+  #             self._condition.notify_all()
+  #           del snapshot
+  #         except Exception as error:
+  #           reason = error.reason if isinstance(error, ClientFailure) else 'connect_failed'
+  #           candidate.close()
+  #           with self._condition:
+  #             self._candidate = self._pending = None
+  #             if self._state != 'closed':
+  #               self._retry_locked(reason, time.monotonic())
+  #         finally:
+  #           del candidate
+  #     except Exception:
+  #       with self._condition:
+  #         self._give_up_locked('reconnect_worker_error')
+  #     finally:
+  #       with self._condition:
+  #         candidate = self._candidate
+  #         if self._state in ('closed', 'gave_up'):
+  #           self._candidate = self._pending = None
+  #       if candidate is not None:
+  #         candidate.close()
   def _work(self):
     try:
       while True:
@@ -184,7 +293,7 @@ class ReconnectingFrameSyncClient:
         attempt = False
         with self._condition:
           now = time.monotonic()
-          if self._state in ('closed', 'gave_up'):
+          if self._state in ('closed', 'giving_up', 'gave_up'):
             return
           if self._state == 'connected' and self._client.is_disconnected():
             # 2026-09-10: logic failures close a transport but aren't network loss.
@@ -227,7 +336,7 @@ class ReconnectingFrameSyncClient:
           continue
         candidate = self._new_client()
         with self._condition:
-          if self._state == 'closed':
+          if self._state in ('closed', 'giving_up', 'gave_up'):
             candidate.close()
             return
           self._candidate = candidate
@@ -240,7 +349,7 @@ class ReconnectingFrameSyncClient:
           if snapshot is None:
             raise ClientFailure('missing_resume_snapshot')
           with self._condition:
-            if self._state == 'closed':
+            if self._state in ('closed', 'giving_up', 'gave_up'):
               candidate.close()
               return
             if time.monotonic() >= self._recovery_deadline:
@@ -254,7 +363,7 @@ class ReconnectingFrameSyncClient:
           candidate.close()
           with self._condition:
             self._candidate = self._pending = None
-            if self._state != 'closed':
+            if self._state not in ('closed', 'giving_up', 'gave_up'):
               self._retry_locked(reason, time.monotonic())
         finally:
           del candidate
@@ -264,17 +373,105 @@ class ReconnectingFrameSyncClient:
     finally:
       with self._condition:
         candidate = self._candidate
-        if self._state in ('closed', 'gave_up'):
+        if self._state in ('closed', 'giving_up', 'gave_up'):
           self._candidate = self._pending = None
       if candidate is not None:
         candidate.close()
 
+  # 2026-09-22: preserve previous terminal publication for audit.
+  #   def tick(self):
+  #     self._owner()
+  #     if not self._tick_guard.acquire(blocking=False):
+  #       raise RuntimeError('Concurrent or reentrant reconnect tick')
+  #     try:
+  #       with self._condition:
+  #         if self._state == 'closed':
+  #           return
+  #         disconnect, give_up = self._disconnect_notice, self._give_up_notice
+  #         self._disconnect_notice = self._give_up_notice = False
+  #         on_disconnect, on_give_up = self._on_disconnect, self._on_give_up
+  #       if disconnect and self._logic is not None:
+  #         self._logic.stop()
+  #         self._logic.run_one_tick()  # Refund stopped prediction on its owner.
+  #       if disconnect and on_disconnect is not None:
+  #         on_disconnect()
+  #       if give_up and on_give_up is not None:
+  #         on_give_up()
+  #       with self._condition:
+  #         if self._state == 'handback' and self._candidate.resume_handback_complete:
+  #           self._candidate = None
+  #           self._state = 'connected'
+  #           self._attempts = 0
+  #           self._restores = min(0xffffffffffffffff, self._restores + 1)
+  #           on_reconnect = self._on_reconnect
+  #           self._condition.notify_all()
+  #         else:
+  #           on_reconnect = None
+  #       if on_reconnect is not None:
+  #         on_reconnect(self._session, list(self._slots))
+  #       with self._condition:
+  #         if self._state != 'restoring':
+  #           return
+  #         # 2026-09-10: expired recovery must not mutate the caller's engine.
+  #         if time.monotonic() >= self._recovery_deadline:
+  #           raise ClientFailure('recovery_timeout')
+  #         snapshot, self._pending = self._pending, None
+  #         self._active_snapshot = snapshot
+  #         candidate = self._candidate
+  #         self._state = 'applying'
+  #       try:
+  #         frame, payload = snapshot
+  #         if frame <= self._logic.get_last_confirmed_frame_id():
+  #           raise ClientFailure('stale_resume_snapshot')
+  #         # 2026-09-10: Validate protocol-specific native origins on the logic owner before restore.
+  #         # self._env.set_state(payload)
+  #         self._restore_snapshot(payload)
+  #         # 2026-09-10: resumed controls bind to this snapshot before sending Ready.
+  #         # loop = ClientLogicLoop(candidate, self._env, self._session[1] + self._session[2],
+  #         #                        self.controlled_slots_callback or (lambda: []), initial_frame_id=frame,
+  #         #                        **self._logic_options)
+  #         loop = self._make_logic(candidate, self._env, self._logic_options, frame)
+  #         with self._condition:
+  #           if self._state == 'closed':
+  #             loop.stop()
+  #             return
+  #           if time.monotonic() >= self._recovery_deadline:
+  #             raise ClientFailure('recovery_timeout')
+  #           if not candidate.send_ready():
+  #             raise ClientFailure(candidate.failure_reason or 'ready_failed')
+  #           self._client, self._logic = candidate, loop
+  #           # 2026-09-10: queued Ready is not proof of server handback.
+  #           # self._candidate = None
+  #           # self._state = 'connected'
+  #           # self._attempts = 0
+  #           # self._restores = min(0xffffffffffffffff, self._restores + 1)
+  #           # on_reconnect = self._on_reconnect
+  #           self._state = 'handback'
+  #           self._condition.notify_all()
+  #         # 2026-09-10: dispatch success on a later tick after wire handback.
+  #         # if on_reconnect is not None:
+  #         #   on_reconnect(self._session, list(self._slots))
+  #       finally:
+  #         with self._condition:
+  #           self._active_snapshot = None
+  #         del snapshot
+  #     except Exception as error:
+  #       with self._condition:
+  #         self._give_up_locked(error.reason if isinstance(error, ClientFailure) else 'restore_or_callback_failed')
+  #         candidate = self._candidate
+  #       if candidate is not None:
+  #         candidate.close()
+  #       self._client.close()
+  #       raise
+  #     finally:
+  #       self._tick_guard.release()
   def tick(self):
     self._owner()
     if not self._tick_guard.acquire(blocking=False):
       raise RuntimeError('Concurrent or reentrant reconnect tick')
     try:
       with self._condition:
+        self._complete_give_up_locked()
         if self._state == 'closed':
           return
         disconnect, give_up = self._disconnect_notice, self._give_up_notice
@@ -392,8 +589,20 @@ class ReconnectingFrameSyncClient:
     with self._condition:
       return self._failure
 
+  # 2026-09-22: preserve previous terminal publication for audit.
+  #   def stats(self):
+  #     with self._condition:
+  #       return dict(state=self._state, attempts=self._attempts, total_attempts=self._total_attempts,
+  #                   restores=self._restores, failure=self._failure, last_error=self._last_error,
+  #                   # 2026-09-10: active engine restoration remains charged through close.
+  #                   # snapshot_bytes=sys.getsizeof(self._pending[1]) if self._pending is not None else 0,
+  #                   snapshot_bytes=sum(sys.getsizeof(value[1]) for value in (self._pending, self._active_snapshot) if value is not None),
+  #                   active_restore=self._active_snapshot is not None,
+  #                   candidate=self._candidate is not None,
+  #                   worker_alive=self._worker is not None and self._worker.is_alive())
   def stats(self):
     with self._condition:
+      self._complete_give_up_locked()
       return dict(state=self._state, attempts=self._attempts, total_attempts=self._total_attempts,
                   restores=self._restores, failure=self._failure, last_error=self._last_error,
                   # 2026-09-10: active engine restoration remains charged through close.

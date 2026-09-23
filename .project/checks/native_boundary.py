@@ -12,8 +12,12 @@ import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
+# 2026-09-24: include the actual recoverable UDP products in the native-only gate.
+# TARGETS = ("football_server", "football_client", "football_server_tcp", "football_client_tcp",
+#            "football_lobby", "headless_match", "standalone_game")
+
 TARGETS = ("football_server", "football_client", "football_server_tcp", "football_client_tcp",
-           "football_lobby", "headless_match", "standalone_game")
+           "football_server_udp", "football_client_udp", "football_lobby", "headless_match", "standalone_game")
 
 
 # 2026-09-10: relocation checks must control the loader environment explicitly.

@@ -5,12 +5,20 @@
 #include "frame_sync/integrated_client.cpp"
 #undef main
 #include "frame_sync/engine_tcp_server.hpp"
+#include "frame_sync/native_udp_listener.hpp"
 #include <iostream>
 namespace fs=frame_sync;
 using namespace std::chrono_literals;
 size_t assertions=0;
 void require(bool value,const char* reason) {++assertions;if(!value)throw std::runtime_error(reason);}
 enum class Reply { Valid, Secret, Generation, Silent, Closed };
+#if defined(FOOTBALL_NATIVE_UDP_CLIENT)
+using DrainTransport = fs::NativeUDPTransport;
+using DrainClient = IntegratedFrameSyncUDPClient;
+#else
+using DrainTransport = fs::NativeTCPTransport;
+using DrainClient = IntegratedFrameSyncClient;
+#endif
 class ReplyServer {
  public:
   ReplyServer()=delete;
@@ -31,12 +39,18 @@ class ReplyServer {
   }
  private:
   void accept() {
-   acceptor_.async_accept([this](boost::system::error_code ec,tcp::socket socket) {
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//    acceptor_.async_accept([this](boost::system::error_code ec,tcp::socket socket) {
+   acceptor_.async_accept([this](boost::system::error_code ec,DrainTransport::Socket socket) {
     if(ec)return;
     ++connections_;
     if(writer_) {boost::system::error_code ignored;socket.close(ignored);accept();return;}
-    socket_=std::make_shared<tcp::socket>(std::move(socket));
-    writer_=std::make_unique<fs::BoundedTCPWriter>(socket_);
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//     socket_=std::make_shared<tcp::socket>(std::move(socket));
+    socket_=std::make_shared<DrainTransport::Socket>(std::move(socket));
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//     writer_=std::make_unique<fs::BoundedTCPWriter>(socket_);
+    writer_=std::make_unique<fs::BasicBoundedStreamWriter<DrainTransport::Socket>>(socket_);
     read();accept();
    });
   }
@@ -83,11 +97,17 @@ class ReplyServer {
    }))throw std::runtime_error("Fixture read dispatch failed");
   }
   asio::io_context io_;
-  tcp::acceptor acceptor_;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   tcp::acceptor acceptor_;
+  DrainTransport::Acceptor acceptor_;
   const Reply reply_;
   fs::NativeRecoveryGrant grant_;
-  std::shared_ptr<tcp::socket> socket_;
-  std::unique_ptr<fs::BoundedTCPWriter> writer_;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   std::shared_ptr<tcp::socket> socket_;
+  std::shared_ptr<DrainTransport::Socket> socket_;
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//   std::unique_ptr<fs::BoundedTCPWriter> writer_;
+  std::unique_ptr<fs::BasicBoundedStreamWriter<DrainTransport::Socket>> writer_;
   std::array<uint8_t,4096> bytes_{};
   std::vector<uint8_t> receive_;
   std::thread thread_;
@@ -112,7 +132,9 @@ int main(int,char**) {
    ReplyServer server(reply);GameEnv env;asio::io_context unused;
    fs::MultiplayerConfig config;config.native_product=true;config.render=false;
    config.frame_rate_hz=50;config.host="127.0.0.1";config.port=server.port();
-   IntegratedFrameSyncClient client(unused,config.host,config.port,&env,config);
+// 2026-09-21: share the product session state across TCP and reliable UDP.
+//    IntegratedFrameSyncClient client(unused,config.host,config.port,&env,config);
+   DrainClient client(unused,config.host,config.port,&env,config);
    require(client.connect(),"Actual client could not prepare runtime");
    CancelWindow window;bool cancelled=false;
    const auto begin=std::chrono::steady_clock::now();
@@ -127,6 +149,12 @@ int main(int,char**) {
    client.stop();server.check();
   }
   std::cout<<"{\"passed\":true,\"checks\":5,\"assertions\":"<<assertions
-    <<",\"skipped\":0,\"actual_gameenv\":true,\"actual_client\":true,\"real_tcp\":true,\"maximum_cancel_seconds\":"<<maximum<<"}\n";
+    <<",\"skipped\":0,\"actual_gameenv\":true,\"actual_client\":true,\"transport\":\""
+#if defined(FOOTBALL_NATIVE_UDP_CLIENT)
+    <<"UDP"
+#else
+    <<"TCP"
+#endif
+    <<"\",\"maximum_cancel_seconds\":"<<maximum<<"}\n";
  }catch(const std::exception& e){std::cerr<<e.what()<<'\n';return 1;}
 }

@@ -61,17 +61,52 @@ struct EngineTCPServerStats {
 };
 // Engine callbacks are invoked only by run_frame_loop (never by IO callbacks).
 // The host keeps its engine alive until that call has returned after stop().
-class EngineTCPServer {
+// 2026-09-15: private transport-policy extraction; original lines:
+// class EngineTCPServer {
+// Transport policy owns only connection establishment and stream options.
+// Session grants, admission, snapshots, AI ownership and frame execution stay
+// in one BasicEngineSessionServer implementation.
+struct NativeTCPTransport {
+  using Socket = boost::asio::ip::tcp::socket;
+  using Acceptor = boost::asio::ip::tcp::acceptor;
+  NativeTCPTransport() = delete;
+  ~NativeTCPTransport() = default;
+  NativeTCPTransport(const NativeTCPTransport&) = delete;
+  NativeTCPTransport& operator=(const NativeTCPTransport&) = delete;
+  NativeTCPTransport(NativeTCPTransport&&) = delete;
+  NativeTCPTransport& operator=(NativeTCPTransport&&) = delete;
+  static boost::asio::ip::tcp::endpoint BindEndpoint(unsigned short port) {
+    return {boost::asio::ip::tcp::v4(),port};
+  }
+  // 2026-09-21: TCP writes drain into the kernel, whose close retains queued output.
+  static bool OutputDrained(const Socket&) { return true; }
+  static void BeginClose(Acceptor&) {}
+  static void Configure(Socket& socket,bool native,int send_bytes,boost::system::error_code& error) {
+    if(native) {
+      socket.set_option(boost::asio::ip::tcp::no_delay(true),error);
+      if(error)return;
+    }
+    socket.set_option(boost::asio::socket_base::send_buffer_size(send_bytes),error);
+  }
+};
+template<class Transport>
+class BasicEngineSessionServer {
  private:
-  using tcp = boost::asio::ip::tcp;
+// 2026-09-15: private transport-policy extraction; original lines:
+//   using tcp = boost::asio::ip::tcp;
+  using Socket = typename Transport::Socket;
+  using Acceptor = typename Transport::Acceptor;
   // 2026-09-14: loading does not satisfy the opening barrier or accept inputs.
   // enum class Phase { Identify, AwaitReady, SnapshotPending, Streaming };
 // 2026-09-15: terminal admissions must not hold the opening barrier while their receipt drains.
 //   enum class Phase { Identify, Loading, AwaitReady, SnapshotPending, Streaming };
   enum class Phase { Identify, Loading, AwaitReady, SnapshotPending, Streaming, Cancelled };
   struct Session {
-    std::shared_ptr<tcp::socket> socket;
-    BoundedTCPWriter writer;
+// 2026-09-15: private transport-policy extraction; original lines:
+//     std::shared_ptr<tcp::socket> socket;
+//     BoundedTCPWriter writer;
+    std::shared_ptr<Socket> socket;
+    BasicBoundedStreamWriter<Socket> writer;
     std::vector<uint8_t> receive;
     std::optional<uint16_t> slot;
     session_token_t token = 0;
@@ -89,8 +124,11 @@ class EngineTCPServer {
     std::chrono::steady_clock::time_point last_activity = connected_at;
     std::chrono::steady_clock::time_point ready_since = connected_at;
     std::optional<std::chrono::steady_clock::time_point> loading_until;
-    Session(tcp::socket socket, const EngineTCPServerLimits& limits)
-        : socket(std::make_shared<tcp::socket>(std::move(socket))),
+// 2026-09-15: private transport-policy extraction; original lines:
+//     Session(tcp::socket socket, const EngineTCPServerLimits& limits)
+//         : socket(std::make_shared<tcp::socket>(std::move(socket))),
+    Session(Socket socket, const EngineTCPServerLimits& limits)
+        : socket(std::make_shared<Socket>(std::move(socket))),
           writer(this->socket, limits.send, limits.write_timeout) {}
     ~Session() = default;
     Session(const Session&) = delete;
@@ -102,7 +140,9 @@ class EngineTCPServer {
     Impl(boost::asio::io_context& io, unsigned short port, MultiplayerConfig config,
          EngineCallbacks engine, std::function<BotGameSnapshot()> observe,
          EngineTCPServerLimits limits)
-        : io(io), acceptor(io, {tcp::v4(), port}), timer(io), config(std::move(config)),
+// 2026-09-15: private transport-policy extraction; original lines:
+//         : io(io), acceptor(io, {tcp::v4(), port}), timer(io), config(std::move(config)),
+        : io(io), acceptor(io, Transport::BindEndpoint(port)), timer(io), config(std::move(config)),
 // 2026-09-13: fixed pending input storage covers every controlled slot.
 //           engine(std::move(engine)), observe(std::move(observe)), limits(std::move(limits)) {
           engine(std::move(engine)), observe(std::move(observe)), limits(std::move(limits)),
@@ -118,15 +158,26 @@ class EngineTCPServer {
       if (this->config.native_product)
         credentials = std::make_unique<NativeRecoveryCredentials>(inputs.size(), this->limits.recovery_grace);
     }
+// 2026-09-15: private transport-policy extraction; original lines:
+    Impl() = delete;
+    ~Impl() = default;
+    Impl(const Impl&) = delete;
+    Impl& operator=(const Impl&) = delete;
+    Impl(Impl&&) = delete;
+    Impl& operator=(Impl&&) = delete;
     void Start() { Accept(); Maintain(); }
     void Stop() {
       if (!running.exchange(false)) return;
+      // 2026-09-21: custom accept/read completions must be detached before callers stop IO.
+      Transport::BeginClose(acceptor);
       {
         std::lock_guard lock(mutex);
         for (auto& client : clients) CloseLocked(client);
         input_cv.notify_all();
       }
-      boost::asio::post(io, [self = shared_from_this(), this] {
+// 2026-09-15: private transport-policy extraction; original lines:
+//       boost::asio::post(io, [self = shared_from_this(), this] {
+      boost::asio::post(io, [self = this->shared_from_this(), this] {
         std::lock_guard lock(mutex);
         boost::system::error_code ec; acceptor.close(ec); timer.cancel(); CleanupLocked();
       });
@@ -202,7 +253,9 @@ class EngineTCPServer {
       CloseLocked(client); return false;
     }
     void Accept() {
-      acceptor.async_accept([self = shared_from_this(), this](boost::system::error_code ec, tcp::socket socket) {
+// 2026-09-15: private transport-policy extraction; original lines:
+//       acceptor.async_accept([self = shared_from_this(), this](boost::system::error_code ec, tcp::socket socket) {
+      acceptor.async_accept([self = this->shared_from_this(), this](boost::system::error_code ec, Socket socket) {
         std::lock_guard lock(mutex);
         if (ec || !running) return;
         CleanupLocked();
@@ -211,11 +264,13 @@ class EngineTCPServer {
         }
 // 2026-09-13: send product authority/hash packets promptly instead of delaying the peer frame clock.
 //         socket.set_option(boost::asio::socket_base::send_buffer_size(limits.socket_send_bytes), ec);
-        if (config.native_product) {
-          socket.set_option(tcp::no_delay(true),ec);
-          if (ec) { ++counters.rejected_connections; socket.close(ec); Accept(); return; }
-        }
-        socket.set_option(boost::asio::socket_base::send_buffer_size(limits.socket_send_bytes), ec);
+// 2026-09-15: private transport-policy extraction; original lines:
+//         if (config.native_product) {
+//           socket.set_option(tcp::no_delay(true),ec);
+//           if (ec) { ++counters.rejected_connections; socket.close(ec); Accept(); return; }
+//         }
+//         socket.set_option(boost::asio::socket_base::send_buffer_size(limits.socket_send_bytes), ec);
+        Transport::Configure(socket,config.native_product,limits.socket_send_bytes,ec);
         if (ec) { ++counters.rejected_connections; socket.close(ec); Accept(); return; }
         auto client = std::make_shared<Session>(std::move(socket), limits);
         clients.push_back(client);  // Includes peers that have not sent a byte.
@@ -230,7 +285,9 @@ class EngineTCPServer {
     }
     void Maintain() {
       timer.expires_after(std::chrono::milliseconds(25));
-      timer.async_wait([self = shared_from_this(), this](boost::system::error_code ec) {
+// 2026-09-15: private transport-policy extraction; original lines:
+//       timer.async_wait([self = shared_from_this(), this](boost::system::error_code ec) {
+      timer.async_wait([self = this->shared_from_this(), this](boost::system::error_code ec) {
         std::lock_guard lock(mutex);
         if (ec || !running) return;
         const auto now = std::chrono::steady_clock::now();
@@ -238,7 +295,10 @@ class EngineTCPServer {
           if (client->disconnected) continue;
 // 2026-09-14: expire the recovery lease and drain explicit rejections.
 //           if (client->writer.is_closed()) CloseLocked(client);
-          if (client->rejecting && client->writer.queued_messages() == 0) CloseLocked(client);
+// 2026-09-21: reliable UDP must retain terminal data until its transport ACK arrives.
+//           if (client->rejecting && client->writer.queued_messages() == 0) CloseLocked(client);
+          if (client->rejecting && client->writer.queued_messages() == 0 &&
+              Transport::OutputDrained(*client->socket)) CloseLocked(client);
           else if (client->writer.is_closed()) CloseLocked(client);
           else if (client->recovery && client->grant && !OwnsRecoveryLocked(client, now)) CloseLocked(client);
           // 2026-09-14: use independent absolute loading and Ready deadlines.
@@ -262,7 +322,9 @@ class EngineTCPServer {
       auto bytes = std::make_shared<std::array<uint8_t, 4096>>();
       client->read_pending = true;
       if (!client->writer.AsyncReadSome(boost::asio::buffer(*bytes),
-          [self = shared_from_this(), this, client, bytes](boost::system::error_code ec, size_t length) {
+// 2026-09-15: private transport-policy extraction; original lines:
+//           [self = shared_from_this(), this, client, bytes](boost::system::error_code ec, size_t length) {
+          [self = this->shared_from_this(), this, client, bytes](boost::system::error_code ec, size_t length) {
             std::lock_guard lock(mutex);
             client->read_pending = false;
             if (ec || !running || client->disconnected) { CloseLocked(client); CleanupLocked(); return; }
@@ -916,7 +978,9 @@ class EngineTCPServer {
       return result;
     }
     boost::asio::io_context& io;
-    tcp::acceptor acceptor;
+// 2026-09-15: private transport-policy extraction; original lines:
+//     tcp::acceptor acceptor;
+    Acceptor acceptor;
     boost::asio::steady_timer timer;
     const MultiplayerConfig config;
     const EngineCallbacks engine;
@@ -939,17 +1003,27 @@ class EngineTCPServer {
     std::optional<uint64_t> initial_hash;
   };
  public:
+// 2026-09-15: private transport-policy extraction; original lines:
+  BasicEngineSessionServer() = delete;
   static constexpr size_t kReceiveLimit = 8192;
-  EngineTCPServer(boost::asio::io_context& io, unsigned short port, MultiplayerConfig config,
+// 2026-09-15: private transport-policy extraction; original lines:
+//   EngineTCPServer(boost::asio::io_context& io, unsigned short port, MultiplayerConfig config,
+  BasicEngineSessionServer(boost::asio::io_context& io, unsigned short port, MultiplayerConfig config,
                   EngineCallbacks engine, std::function<BotGameSnapshot()> observe,
                   EngineTCPServerLimits limits = {})
       : impl_(std::make_shared<Impl>(io, port, std::move(config), std::move(engine),
                                      std::move(observe), std::move(limits))) { impl_->Start(); }
-  ~EngineTCPServer() { stop(); }
-  EngineTCPServer(const EngineTCPServer&) = delete;
-  EngineTCPServer& operator=(const EngineTCPServer&) = delete;
-  EngineTCPServer(EngineTCPServer&&) = delete;
-  EngineTCPServer& operator=(EngineTCPServer&&) = delete;
+// 2026-09-15: private transport-policy extraction; original lines:
+//   ~EngineTCPServer() { stop(); }
+//   EngineTCPServer(const EngineTCPServer&) = delete;
+//   EngineTCPServer& operator=(const EngineTCPServer&) = delete;
+//   EngineTCPServer(EngineTCPServer&&) = delete;
+//   EngineTCPServer& operator=(EngineTCPServer&&) = delete;
+  ~BasicEngineSessionServer() { stop(); }
+  BasicEngineSessionServer(const BasicEngineSessionServer&) = delete;
+  BasicEngineSessionServer& operator=(const BasicEngineSessionServer&) = delete;
+  BasicEngineSessionServer(BasicEngineSessionServer&&) = delete;
+  BasicEngineSessionServer& operator=(BasicEngineSessionServer&&) = delete;
   void stop() { impl_->Stop(); }
   void run_frame_loop() {
     auto lifetime = impl_;
@@ -961,5 +1035,7 @@ class EngineTCPServer {
  private:
   std::shared_ptr<Impl> impl_;
 };
+// 2026-09-15: private transport-policy extraction; original lines:
+using EngineTCPServer = BasicEngineSessionServer<NativeTCPTransport>;
 }  // namespace frame_sync
 #endif
