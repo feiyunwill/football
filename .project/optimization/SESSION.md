@@ -1,3 +1,121 @@
+## 2026-09-24 COMMIT SNAPSHOT: PRIVATE CANDIDATES PASSED; CANONICAL ADOPTION PENDING
+
+2026-09-24 提交前核验：正式框架与架构检查均已通过；多席位运行 C 的 Release/完整 Debug 四场合计 4007 个权威帧、6 个恢复快照、4859 个保存段回放帧，全部 AI 指令与独立重建一致。默认 UDP 候选构建及 28 项非法参数拒绝检查通过，四场实际运行合计 4004 个权威帧、6 个恢复快照、4845 个保存段回放帧。新增永久测试候选在 Release/完整 Debug 各通过 56 项 C++ 测试，验收器自测 21 项通过。本次复核终态、执行日志哈希和两份 56 项 CTest XML；候选尚未接入正式源码，菜单、完整弱网矩阵、资源容量、延迟及整体产品验收仍未完成。以下排队/运行中描述为历史记录。
+
+用户明确要求提交并推送当前成果。本次提交保存正式验收记录及更新后的里程碑、计划、任务与报告；被忽略的私有候选目录仍保留在本地，未将其作为正式源码发布。正式源码继续保持 loading-transport-gate-adoption-20260924-b 的 1120 项清单。下一工程步骤为复核候选输入及产物哈希、正式接入并重新运行完整门禁与公共入口实测；整体优化目标仍未完成。
+
+最新文档归档：native-slot-group-evidence-20260924-h，编辑前保存 32 份文档及 SESSION；四个候选阶段的终态和汇总报告另存 completed-proof。最新运行终态均 exit_code=0；此前失败记录继续保留。
+
+## 2026-09-24 FULL FORMAL FRAMEWORK PASSED; GROUP C RELEASE PASSED; DEFAULT UDP QUEUED
+
+This turn is PROGRESS. Full formal framework private-X11 recheck exit0finished1790199292.6651208. 711C++ /783Python /305subtests,2090summaryassertions,172Debugunits;42/43each1000frames,2independentprocesses,snapshotreplay passed. X11reaped. Previousdisplayfailure preserved. Alongside currentnative/13permanenttests/architecture1632093pass;NOTwholeproductacceptance.
+
+IntegrationC exit0finished1790199512.8133774:8products+30originalcontracts+22R/Srecordercases passed. 38commands andallinput/producthashesverified. RuntimeC14acceptancecounterexamples passed. Release11+11:1002frames,2snapshots,1655segmentframes,AI81positiveframes;solo22:1001frames,1snapshot,830segmentframes,AI139positiveframes. Everybotcommandmatchedindependentreplay. One11seatoutagehas189legitimatewaitingframes;solo has137action+48waiting withinmeasuredinterval. CurrentDebugcontinues. No productionmulti-seat adoption yet.
+
+Two new actualdriverstages areQUEUED afterruntimeCsuccess: native-default-udp-migration-20260924-a and native-default-udp-runtime-20260924-a. ActualcandidateCMake/publicmainpatches preservepublicdefaultallslots0 vs explicitTCP/UDPdefault1;strictfrom_charsnumbers;28CLIrejections;4actualpublicwindowcases includingomittedsixthargumentforsolo22. CMakeprivateoverlayconfigandhostcompile/linkreusepinnedcanonicalcore. No fullcorerebuildclaim. PythonmenuownHostedMatch/NetworkPlayerstillseparate;mustnotclaimnativebinaryaliasprovesmenuintegration.
+
+Latest32docmanifest native-slot-group-evidence-20260924-g/documents-after.json. Original31+SESSIONarchivedbeforeedits,newdefaultreportlinked. Fullframework+Cbuildproof andcompletedReleaseowner/AI/replayartifacts copiedthere. GraphTier2 gen21:25:57Z metadata21:34:57Z;partialC++rangesreadexactly;allprivateexcludedfilesread/written directly.
+
+Canonical1120manifest remains loading-transport-gate-adoption-20260924-b/sources-after.json. FREEZEcanonicalthroughALLqueuedstages. Inputsimmutable;builds/testsserial. Latestremotecommit8c474b456f5830553fdebc7e4ff8dc0a7075d984;nonewcommit/push.
+
+NEXT: pollsameDebugruntimeCowner,finishbothSactualcases+independentAI/snapshotreplays.TheninspectdefaultactualCMakeconfig/28CLI/publicruntimequeuedresults.Ifanyfailure,retaininputsandcreateNEWstage.Followwithformaladoption+permanenttestsONLYafterproof. Preservedefaultmenu/oldprotocol/weaknet/capacity/inputp95/render/fullRLtools/packaging/hardware/performancebaseline scope;overallgoalnotcomplete.
+
+~~~json
+{
+  "native-slot-group-runtime-candidate-20260924-c": {
+    "process": {
+      "pid": 2527226,
+      "start_ticks": 68211876,
+      "launched": 1790199034.5005534
+    },
+    "live": true,
+    "status": {
+      "phase": "sanitized-all-seats-replay",
+      "time": 1790199767.8189998
+    }
+  },
+  "native-default-udp-migration-20260924-a": {
+    "process": {
+      "pid": 2544743,
+      "start_ticks": 68262520,
+      "launched": 1790199540.9442556
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-after-multiseat-runtime-c",
+      "time": 1790199541.0946555
+    }
+  },
+  "native-default-udp-runtime-20260924-a": {
+    "process": {
+      "pid": 2544744,
+      "start_ticks": 68262524,
+      "launched": 1790199540.9863417
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-after-public-udp-build",
+      "time": 1790199541.2246656
+    }
+  }
+}
+~~~
+
+## 2026-09-24 FORMAL ARCHITECTURE PASSED; PRIVATE X11 FRAMEWORK RUNNING; C CHAIN QUEUED
+
+Previous goal turn is PROGRESS: commit 8c474b456f5830553fdebc7e4ff8dc0a7075d984 pushed and remote verified. This turn is PROGRESS: full formal architecture completed, private X11 framework recheck launched, optional owner recording with 22 R/S file/ownership/bounds contracts and full 4-case multi-seat runtime C prepared and queued. No new commit or push.
+
+2026-09-24 最新正式终态：加载修复后的 architecture_regression 已通过（1,632,093 条断言，545.839 秒，172 个完整 Debug 编译单元）；正式日志、哈希及 -g/ASan/UBSan/禁止恢复/帧指针配置已核验，无优化降级。adoption B 整体仍因框架的 3 项图形环境失败而为失败。新的 loading-framework-x11-recheck-20260924-a 已在独立 X11 环境重跑完整正式框架；此前失败保留。
+
+2026-09-24 新串行链已实际启动：完整框架 X11 重验 → 集成 C → 运行 C。集成 C 增加显式启用的帧线程权威记录，覆盖无客户端在线时的帧与 AI 切换，并计划在 Release/完整 Debug 各验证 11 项真实文件 I/O、排他创建、线程归属和容量边界，再构建 8 个入口及复验 30 个旧契约。运行 C 保留 4 场真实 22 席对局、1000 帧和 300 秒回放预算；新增 14 项记录/AI 验收器反例，分别比对服务端原始记录与网络抓包，再用独立 GameEnv 逐帧核对所有 AI 指令。每场至少 8 个 AI 正向动作帧仍须满足；不足 8 帧的单次断线阶段，所有零输入帧必须由独立状态证明为合法等待。C 仍排队未验证，不代表多席位产品通过。
+
+Canonical1120 source manifest remains loading-transport-gate-adoption-20260924-b/sources-after.json; loading_acceptance_test.py separately pinned. Canonical source MUST remain frozen until all queued stages terminate. All stage inputs verified immutable; every build/test runs serially. Do not restart live handles, shorten original budgets, rewrite executed inputs, or treat queued tests as passes.
+
+Architecture formal report/log, adoption commands and outcomes, and full172-unit compile recipes copied into native-slot-group-evidence-20260924-f/formal-adoption-proof. Latest31-doc manifest native-slot-group-evidence-20260924-f/documents-after.json; all31 previous documents plusSESSION archived first. Private stages are excluded from graph and were read directly. Graph generation2026-09-23T21:25:57Z, metadata21:25:58Z; Tier2 canonical framework and native-match evidence verified.
+
+NEXT: Inspect same framework owner then C integration and C runtime terminal outcomes. C owner files have FTAC marker, seed42,11+11 roster and physics2 explicitly checked; raw owner bytes and passive UDP maps are kept separate. Owner-prefix replay replaces missing solo outage capture, with every bot command compared to independent tactical reconstruction before original snapshot/segment verification. Keep prior B four failed cases and diagnostic evidence. If new failures occur, fix in NEW stages. Default UDP/menu, capacity faults, full weaknet, input p95, rendering, fullRLtools training, packaging/hardware/performance protected baseline remain incomplete.
+
+~~~json
+{
+  "loading-framework-x11-recheck-20260924-a": {
+    "process": {
+      "pid": 2526003,
+      "start_ticks": 68189063,
+      "launched": 1790198806.3751595
+    },
+    "live": true,
+    "status": {
+      "phase": "full-framework-private-x11",
+      "time": 1790199076.5835052
+    }
+  },
+  "native-slot-group-integration-candidate-20260924-c": {
+    "process": {
+      "pid": 2526323,
+      "start_ticks": 68194830,
+      "launched": 1790198864.0451987
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-after-formal-framework-x11",
+      "time": 1790198864.1002457
+    }
+  },
+  "native-slot-group-runtime-candidate-20260924-c": {
+    "process": {
+      "pid": 2527226,
+      "start_ticks": 68211876,
+      "launched": 1790199034.5005534
+    },
+    "live": true,
+    "status": {
+      "phase": "queued-after-integration-c",
+      "time": 1790199034.5548372
+    }
+  }
+}
+~~~
+
 ## 2026-09-24 COMMIT SNAPSHOT: LOADING ADOPTED; FRAMEWORK DISPLAY FAILURE; ARCHITECTURE LIVE
 
 用户已明确要求提交并推送当前代码。本次提交包含正式加载门禁、13 项永久回归、已结束的检查记录和最新里程碑说明。运行中的 architecture_regression 日志不纳入本次快照；继续由原 PID 2504929/start_ticks 68142502 完成，不重复启动或改写其输入。
