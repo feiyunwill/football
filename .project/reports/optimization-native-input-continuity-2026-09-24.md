@@ -1,3 +1,13 @@
+2026-09-24 提交快照：权威时钟校正 adoption B 已终止且七项正式门禁全部通过，七份日志哈希已复核；详细结果见 optimization-native-authority-resync-2026-09-24.md。原生控制会话私有集成 A 正在串行验证，未采纳为正式暂停功能。原 UDP 中立帧根因及整体产品缺口仍未关闭。以下保留历史阶段记录。
+
+2026-09-24 当前 1138 项源码清单：正式 input_contract 已通过，42 项结果、3067495 个断言，Release/full Debug 各独立回放 1021 个真实记录帧；87 份命令日志及报告哈希已核对，真实窗口和双构建 56 项采样器检查通过，X11 已回收。正式 framework_regression 随后通过，包含新增回归后的 773 项 C++ 要求。当前继续战术、AI、边界和端口验收，尚非全部门禁通过；原 UDP 中立帧根因仍未证实。输入验证文件在 native-input-authority-resync-adoption-20260924-b/input-verification.json。
+
+2026-09-24 已正式采纳权威时钟校正：runtime C 三轮原始窗口套件全部通过，共 9 个 standalone/TCP/UDP 场景；持续输入、释放、失焦、控制暂停及重新按键断言全部保留，私有 X11 均回收。TCP 候选双构建共 4 个真实客户端通过；复用的 UDP 候选此前双构建共 4 个真实客户端通过。每个会话 100 个确认帧、10 次哈希核验；窗口产品场景为 Release，键盘采样器另覆盖完整 Debug Sanitizer。runtime C 的 9 份命令日志已核对。
+
+adoption B 已接入 4 文件：NativePublicationClock 校正适用于多帧提前、原 RTT 测试增至 14 项、冻结旧实现反例夹具、框架最低计数升至 773。当前源码清单 1138 项，sources-after.json 及 adopted-files.json 在 native-input-authority-resync-adoption-20260924-b；正式 quality_selftest 已通过，input_contract 正在执行，随后串行 framework_regression、tactical_integration、ai_decisions、native_boundary、native_session_ports。执行期间冻结当前源码及程序配置。正式门禁尚未全部完成；原始 UDP 中立帧未在三轮抓取复现，根因仍未证实，不能仅靠本次候选窗口通过关闭该问题。
+
+2026-09-24 当前版本输入验收仍失败：自动端口 adoption B 的 input_contract 在 UDP 持续按住方向和冲刺期间，服务端 68 个检查区间步骤中有 1 个中立步骤（trace index 163）；客户端同时记录该步骤。trace index 不当作网络帧号。原始 actions、两端 trace 和 replay 的哈希及精确时间见 native-input-failure-review-20260924-b/failure-proof.json。新诊断 native-input-wire-diagnosis-20260924-b 已串行启动三轮真实窗口场景，保留原动作和全部断言，额外记录本机 UDP 原消息与持续按住区间的网络空帧邻居，用于区分漏发、迟到与中立值。观察器增加本机转发开销，不用于延迟验收；正式失败未关闭。
+
 2026-09-24 完整阶段结果：native-control-fragment-adoption-20260924-a 已全部通过 quality_selftest、tactical_integration、input_contract、framework_regression、ai_decisions、native_boundary；日志及私有 X11 回收已核对。输入为 42 项结果、3098318 个断言、两种构建各 1031 帧独立回放，战术为 32 项结果、163494 个断言及 24 次回放。之后自动端口采纳改变源码，新版相关门禁另行执行；此记录只覆盖分片采纳的 1135 项清单。
 
 2026-09-24 更新：连续输入修复正式门禁已通过 42 项结果、3070762 个断言，TCP/UDP 共 1030 个记录帧在两种构建独立回放。证据来自 native-input-contiguous-adoption-20260924-a。之后战术检查器源码发生变更，native-control-fragment-adoption-20260924-a 已排新一轮完整 input_contract；此前通过不自动覆盖新清单。以下为历史记录。

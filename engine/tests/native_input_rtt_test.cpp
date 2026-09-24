@@ -2,6 +2,7 @@
 #include "fixtures/native_input/original_clock.inc"
 #include "fixtures/native_input/unpaced_lead_clock.inc"
 #include "fixtures/native_input/before_contiguous_horizon.inc"
+#include "fixtures/native_input/before_authority_resync.inc"
 #include <gtest/gtest.h>
 #include <cmath>
 #include <limits>
@@ -131,6 +132,40 @@ TEST(NativeInputRTT,HorizonCatchupSamplesAnEdgeOnceAndKeepsPublishedBytes) {
   EXPECT_FALSE(pub.PublishTimed(205,sample,send,40));EXPECT_EQ(samples,3u);
   ASSERT_EQ(sent.size(),3u);EXPECT_EQ(sent[1].second.buttons,520);EXPECT_EQ(sent[2].second.buttons,512);
   EXPECT_EQ(pub.Read(206,0).buttons,520);
+}
+
+
+TEST(NativeInputRTT,FreshAuthorityPreventsAccumulatedWallClockLead) {
+  fs::BeforeAuthorityResyncClock before;fs::NativePublicationClock current;
+  unsigned before_max=0,after_max=0,publications=0;
+  // Independent server boundary: each frame takes 21 ms, input pumping takes 4 ms.
+  // The transport budget stays 40 ms; it does not justify a growing queue.
+  for(std::int64_t ms=0;ms<40000;ms+=4) {
+    const auto authority=static_cast<fs::frame_id_t>(ms/21);
+    if(auto frame=before.Next(authority,0,ms*1000000,2))
+      before_max=std::max(before_max,*frame-authority);
+    if(auto frame=current.Next(authority,0,ms*1000000,2)) {
+      after_max=std::max(after_max,*frame-authority);++publications;
+    }
+  }
+  EXPECT_EQ(before_max,15u);
+  EXPECT_LE(after_max,3u);
+  EXPECT_GE(publications,1904u);
+}
+TEST(NativeInputRTT,AuthorityCorrectionRetainsContinuousAdmissibleFrames) {
+  for(unsigned period:{20u,21u,22u,24u,28u}) for(unsigned lead:{2u,3u,5u,10u,15u}) {
+    fs::NativePublicationClock clock;std::optional<fs::frame_id_t> last;unsigned count=0;
+    for(std::int64_t ms=0;ms<40000;ms+=4) {
+      const auto authority=static_cast<fs::frame_id_t>(ms/period);
+      const auto frame=clock.Next(authority,0,ms*1000000,lead);
+      if(!frame)continue;
+      if(last)ASSERT_EQ(*frame,*last+1)<<"period="<<period<<" lead="<<lead<<" time="<<ms;
+      EXPECT_LT(*frame-authority,fs::ServerInputWindow::kFrames);
+      EXPECT_LE(*frame-authority,lead+1);
+      last=frame;++count;
+    }
+    EXPECT_GE(count,40000u/period-2)<<"period="<<period<<" lead="<<lead;
+  }
 }
 
 }

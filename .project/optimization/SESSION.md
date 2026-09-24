@@ -1,3 +1,63 @@
+## 2026-09-24 提交快照：权威时钟校正的七项正式验收通过
+
+native-input-authority-resync-adoption-20260924-b 已终止，exit 0。当前 1138 项源码清单及 4 个采纳文件哈希均已复核一致。quality_selftest、input_contract、framework_regression、tactical_integration、ai_decisions、native_boundary、native_session_ports 全部通过，七份正式日志的 SHA-256 已逐一复核。本次提交包含时钟修复、两个永久回归测试、旧实现反例夹具、框架计数及对应文档与验收证据。
+
+输入验收为 42 项结果、3067495 个断言，Release/full Debug 各独立回放 1021 个真实记录帧；框架覆盖 773 项 C++ 和 783 项 Python 测试。未修改原门禁时限或断言。
+
+原生控制会话私有集成 A 已进入构建验证；帧线程暂停/ACK 私有候选仍在准备，均不属于本次正式代码。后台队列继续串行运行，正式源码仍冻结至控制会话 A 终止。原 UDP 中立帧根因、架构 RSS 失败及其余产品缺口尚未关闭，整体产品验收仍为 false，目标保持 ACTIVE。下方条目为历史记录，状态以本快照为准。
+
+## 2026-09-24 INPUT/FRAMEWORK PASSED; ACTUAL CONTROL SESSION INTEGRATION QUEUED
+
+This goal turn PROGRESS: canonical full input and framework verified; private control session code now wired into actual client/server/recovery paths and queued for execution.
+
+2026-09-24 当前 1138 项源码清单：正式 input_contract 已通过，42 项结果、3067495 个断言，Release/full Debug 各独立回放 1021 个真实记录帧；87 份命令日志及报告哈希已核对，真实窗口和双构建 56 项采样器检查通过，X11 已回收。正式 framework_regression 随后通过，包含新增回归后的 773 项 C++ 要求。当前继续战术、AI、边界和端口验收，尚非全部门禁通过；原 UDP 中立帧根因仍未证实。输入验证文件在 native-input-authority-resync-adoption-20260924-b/input-verification.json。
+
+2026-09-24 原生暂停前置路径已形成私有集成候选 native-control-session-integration-20260924-a：修改真实 integrated_client、BasicEngineSessionServer、恢复 wire/transfer，并接入已验证控制/周期输入头文件。LoadHello 显式协商控制能力，Session、Snapshot、Ready 增加可选 epoch/phase，服务端按协商状态拒绝旧格式绕过、未来周期及不匹配 Ready；恢复连接继承原会话能力，快照保留周期，客户端实际发送周期输入。旧报文默认布局保留。该候选尚未编译，不是完整暂停实现：全局暂停帧线程、ACK 屏障、Host 入口和完整恢复竞争处理仍待接入。
+
+队列 PID 2925787 / start_ticks 70449082，只在权威时钟正式验收 owner 终止后开始：每种构建 10 项 wire/真实 TCP 新测试和原 13 项席位服务端测试，随后编译真实 TCP/UDP/public UDP 服务与客户端，执行 6 对服务、12 个实际客户端会话，并检查协商遥测。使用完整 Debug ASan/UBSan、原时限与固定源码；不并行构建或测试。此阶段只用于验证实际协议接入，control_pause_implemented 和 product_acceptance 均为 false，禁止据此宣称产品暂停完成。
+
+Live owners: authority-resync-adoption B PID2902867/start70362401 now tactical→AI→boundary→ports; control-session-integration A PID2925787/start70449082 queued behind its terminal state. Canonical source1138 +4adoptedpins/program.json frozen until BOTH terminal. Executed/queued input files immutable; corrections require new stage. Private control candidate has no Host pause entry or ACK processing yet; it must not be adopted as completed pause. GraphVerify generation2026-09-24T03:32:35Z, server1049/client1334 missing ranges read directly; evidence in control-session stage. All previous unresolved product gaps remain; GoalACTIVE. Last pushed349ad6f; new canonical/docs changes uncommitted.
+
+## 2026-09-24 AUTHORITY CLOCK CORRECTION ADOPTED; FULL RELATED GATES RUNNING
+
+This goal turn PROGRESS: real combined TCP/UDP candidate passed; 4 canonical files adopted; quality_selftest passed; full input gate running.
+
+2026-09-24 已正式采纳权威时钟校正：runtime C 三轮原始窗口套件全部通过，共 9 个 standalone/TCP/UDP 场景；持续输入、释放、失焦、控制暂停及重新按键断言全部保留，私有 X11 均回收。TCP 候选双构建共 4 个真实客户端通过；复用的 UDP 候选此前双构建共 4 个真实客户端通过。每个会话 100 个确认帧、10 次哈希核验；窗口产品场景为 Release，键盘采样器另覆盖完整 Debug Sanitizer。runtime C 的 9 份命令日志已核对。
+
+adoption B 已接入 4 文件：NativePublicationClock 校正适用于多帧提前、原 RTT 测试增至 14 项、冻结旧实现反例夹具、框架最低计数升至 773。当前源码清单 1138 项，sources-after.json 及 adopted-files.json 在 native-input-authority-resync-adoption-20260924-b；正式 quality_selftest 已通过，input_contract 正在执行，随后串行 framework_regression、tactical_integration、ai_decisions、native_boundary、native_session_ports。执行期间冻结当前源码及程序配置。正式门禁尚未全部完成；原始 UDP 中立帧未在三轮抓取复现，根因仍未证实，不能仅靠本次候选窗口通过关闭该问题。
+
+Only live test/build owner: native-input-authority-resync-adoption-20260924-b PID2902867/start70362401. runtime C and regressions B terminal exit0; predecessor failures remain immutable. Authoritative source profile1138 plus4adoptedpins and program.json pinned. No overlapping tests, no queued-input edits, no restart from observation timeout. Last pushed revision349ad6f; current runtime/test/doc changes uncommitted. GoalACTIVE. Original architecture RSS failure, protected baseline, native pause/menu/full recovery, WAN/capacity/renderhardware/latency/RLtools/training/packaging remain open.
+
+## 2026-09-24 TCP/UDP COMBINED CANDIDATE; 14 RTT REGRESSIONS VERIFIED
+
+This goal turn PROGRESS: durable regressions verified, actual unchanged TCP pause-clearing failure retained, combined candidate execution and conditional adoption queued. No canonical runtime mutation yet.
+
+2026-09-24 更新：私有候选 runtime A 的双构建 UDP 真实会话通过；窗口第 0、2 轮通过，第 1 轮在尚未替换的 TCP 路径失败（暂停后 315.8～385.9 ms 仍有方向/冲刺，411.7 ms 起清空）。所有 9 份命令日志已核对；采纳 A 因依赖失败在修改正式源码前终止。该 TCP 症状保留为未关闭证据，不能据此声称 UDP 已覆盖所有产品场景。
+
+永久回归候选现保留原 12 项并新增 2 项（旧时钟提前量漂移反例、25 种权威节奏/预算组合的连续帧约束）。regressions A 因驱动错误地将动态 status.json 纳入固定输入而失败；新建 regressions B 只固定真正输入，Release/full Debug 下 25 个独立模型及全部 14 项 RTT 测试通过，8 份日志已核对。框架最低计数候选为 773，原断言均保留。runtime B 在依赖检查失败，未编译；已执行输入未修改。
+
+当前 runtime C（PID 2902866 / start_ticks 70362401）编译私有 TCP 候选并复用已固定的 runtime A UDP 候选，验证双构建 TCP 真实会话和三轮 TCP/UDP 都使用候选的原窗口套件。adoption B（PID 2902867 / start_ticks 70362401）仅排队，要求 runtime C、regressions B 全通过且日志哈希吻合后，才采纳时钟、测试、冻结反例夹具、框架计数 4 文件，串行重验 quality/input/framework/tactical/AI/boundary/ports 七项正式门禁。当前正式源码仍 1137 项且冻结；原 UDP 持续输入空帧、架构 RSS 和其余产品缺口仍未关闭。
+
+## 2026-09-24 AUTHORITY CLOCK DRIFT MODEL FIX; ACTUAL CLIENT CANDIDATE RUNNING
+
+This turn PROGRESS. Last pushed revision 349ad6f remains canonical. Allocator-regions B complete; 12 command log hashes verified, 48 exact ASan data mappings at each sampled cycle. Original RSS failure remains unexplained.
+
+Wire diagnosis B terminal exit0, 3 serial original-window replicates. No held gaps reproduced; first two UDP cases failed fresh resume-repress timing, third passed. 6 command log hashes verified. Capture0 publishes changed frame444 at +30.831ms but authority observed +297.392ms; relative relay authority lead12-13. Exact proof retained in native-input-failure-review-20260924-b/rearm-wire-proof.json. Relay time is not client receipt time; no exact RTT inference or original neutral failure closure.
+
+Private native-input-authority-resync-20260924-a passed 25 controlled cadence models plus original12RTT tests EACH Release/fullDebugSAN; 8 command logs verified. Canonical Next only resets deadline on fresh authority when lead==1; candidate removes that mode restriction. At21ms authority cadence and desiredlead2, original grows to15, candidate<=3 with1905continuousframes/40s. No canonical runtime changes yet.
+
+Only live queue now native-input-authority-resync-runtime-20260924-a PID2890695/start70333395. Compile private actualUDPclients in Release/fullDebug from canonical recipes; headless realport sessions bothbuilds then3 serial original no-relay GUI suites. Source1137 remains frozen through terminal. Driver/results/inputs immutable; do not restart due observation timeout. Original held-neutral failure and all product gaps remain open. GoalACTIVE.
+
+## 2026-09-24 UDP 输入失败进一步定位；内存分配区诊断完成
+
+本轮 PROGRESS：上一轮提交 349ad6f 已推送并核对 origin/master。本轮新增独立失败证据和诊断结果，没有把未通过门禁标为完成。
+
+2026-09-24 当前版本输入验收仍失败：自动端口 adoption B 的 input_contract 在 UDP 持续按住方向和冲刺期间，服务端 68 个检查区间步骤中有 1 个中立步骤（trace index 163）；客户端同时记录该步骤。trace index 不当作网络帧号。原始 actions、两端 trace 和 replay 的哈希及精确时间见 native-input-failure-review-20260924-b/failure-proof.json。新诊断 native-input-wire-diagnosis-20260924-b 已串行启动三轮真实窗口场景，保留原动作和全部断言，额外记录本机 UDP 原消息与持续按住区间的网络空帧邻居，用于区分漏发、迟到与中立值。观察器增加本机转发开销，不用于延迟验收；正式失败未关闭。
+
+2026-09-24 allocator-regions B 已终止且 exit 0；12 份命令日志哈希已独立核对。1 次原测试和 3 次插桩测试均保持 12 次重启、cycle 3 预热、16 MiB 上限及 167 个断言，RSS 增量分别为 -643072、-86016、-4403200、-577536 字节。三个插桩运行的 cycle 3/11 各有 48 个 ASan 分配类，全部与内核 rw-p 映射起点和大小精确匹配；类 RSS 与内核对应数据 RSS 一致。由此能将这些复测中的部分匿名 RSS 波动归到 ASan 分配器区域，但没有复现原始超限，不能据此断言原失败原因或内存泄漏已修复。详细证据见 native-lifetime-allocator-regions-20260924-b/independent-verification.json；architecture_accepted 保持 false。
+
+新的唯一运行队列：native-input-wire-diagnosis-20260924-b，PID 2888854 / start_ticks 70304535。先确认 allocator-regions B 已终态，再开始三轮串行诊断。执行期间继续冻结正式源码 1137 项及已固定二进制，不修改已执行输入。原生暂停完整接入及其余产品门禁仍待完成；目标 ACTIVE。
+
 ## 2026-09-24 提交时验证快照
 
 自动端口 adoption B 已结束（exit 1）：7 项正式检查中 6 项通过，input_contract 失败。已通过 quality_selftest、native_session_ports、native_boundary、tactical_integration、framework_regression、ai_decisions；7 份正式日志的 SHA-256 已核对。输入失败来自 actual-input-windows 内的 windows 子命令，尚未确定根因；此前版本通过的输入验收不能代替当前版本结果。失败日志：.project/optimization/evidence/input_contract-1790218989295654624.log。

@@ -1,3 +1,5 @@
+2026-09-24 allocator-regions B 已终止且 exit 0；12 份命令日志哈希已独立核对。1 次原测试和 3 次插桩测试均保持 12 次重启、cycle 3 预热、16 MiB 上限及 167 个断言，RSS 增量分别为 -643072、-86016、-4403200、-577536 字节。三个插桩运行的 cycle 3/11 各有 48 个 ASan 分配类，全部与内核 rw-p 映射起点和大小精确匹配；类 RSS 与内核对应数据 RSS 一致。由此能将这些复测中的部分匿名 RSS 波动归到 ASan 分配器区域，但没有复现原始超限，不能据此断言原失败原因或内存泄漏已修复。详细证据见 native-lifetime-allocator-regions-20260924-b/independent-verification.json；architecture_accepted 保持 false。
+
 # 重启 RSS：分配区与内核映射对照诊断
 
 归属 ms-20.1 → plan-20.1.2 → task-20.1.2.2。状态为串行排队，尚未执行本轮采集；原正式 16MiB RSS 失败仍未关闭。

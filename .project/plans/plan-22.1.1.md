@@ -1,3 +1,15 @@
+2026-09-24 提交快照：权威时钟校正 adoption B 已终止且七项正式门禁全部通过，七份日志哈希已复核；详细结果见 optimization-native-authority-resync-2026-09-24.md。原生控制会话私有集成 A 正在串行验证，未采纳为正式暂停功能。原 UDP 中立帧根因及整体产品缺口仍未关闭。以下保留历史阶段记录。
+
+2026-09-24 已正式采纳权威时钟校正：runtime C 三轮原始窗口套件全部通过，共 9 个 standalone/TCP/UDP 场景；持续输入、释放、失焦、控制暂停及重新按键断言全部保留，私有 X11 均回收。TCP 候选双构建共 4 个真实客户端通过；复用的 UDP 候选此前双构建共 4 个真实客户端通过。每个会话 100 个确认帧、10 次哈希核验；窗口产品场景为 Release，键盘采样器另覆盖完整 Debug Sanitizer。runtime C 的 9 份命令日志已核对。
+
+adoption B 已接入 4 文件：NativePublicationClock 校正适用于多帧提前、原 RTT 测试增至 14 项、冻结旧实现反例夹具、框架最低计数升至 773。当前源码清单 1138 项，sources-after.json 及 adopted-files.json 在 native-input-authority-resync-adoption-20260924-b；正式 quality_selftest 已通过，input_contract 正在执行，随后串行 framework_regression、tactical_integration、ai_decisions、native_boundary、native_session_ports。执行期间冻结当前源码及程序配置。正式门禁尚未全部完成；原始 UDP 中立帧未在三轮抓取复现，根因仍未证实，不能仅靠本次候选窗口通过关闭该问题。
+
+2026-09-24 更新：私有候选 runtime A 的双构建 UDP 真实会话通过；窗口第 0、2 轮通过，第 1 轮在尚未替换的 TCP 路径失败（暂停后 315.8～385.9 ms 仍有方向/冲刺，411.7 ms 起清空）。所有 9 份命令日志已核对；采纳 A 因依赖失败在修改正式源码前终止。该 TCP 症状保留为未关闭证据，不能据此声称 UDP 已覆盖所有产品场景。
+
+永久回归候选现保留原 12 项并新增 2 项（旧时钟提前量漂移反例、25 种权威节奏/预算组合的连续帧约束）。regressions A 因驱动错误地将动态 status.json 纳入固定输入而失败；新建 regressions B 只固定真正输入，Release/full Debug 下 25 个独立模型及全部 14 项 RTT 测试通过，8 份日志已核对。框架最低计数候选为 773，原断言均保留。runtime B 在依赖检查失败，未编译；已执行输入未修改。
+
+当前 runtime C（PID 2902866 / start_ticks 70362401）编译私有 TCP 候选并复用已固定的 runtime A UDP 候选，验证双构建 TCP 真实会话和三轮 TCP/UDP 都使用候选的原窗口套件。adoption B（PID 2902867 / start_ticks 70362401）仅排队，要求 runtime C、regressions B 全通过且日志哈希吻合后，才采纳时钟、测试、冻结反例夹具、框架计数 4 文件，串行重验 quality/input/framework/tactical/AI/boundary/ports 七项正式门禁。当前正式源码仍 1137 项且冻结；原 UDP 持续输入空帧、架构 RSS 和其余产品缺口仍未关闭。
+
 2026-09-24 更新：连续输入修复正式门禁已通过 42 项结果、3070762 个断言，TCP/UDP 共 1030 个记录帧在两种构建独立回放。证据来自 native-input-contiguous-adoption-20260924-a。之后战术检查器源码发生变更，native-control-fragment-adoption-20260924-a 已排新一轮完整 input_contract；此前通过不自动覆盖新清单。以下为历史记录。
 
 # plan-22.1.1 — 输入闭环

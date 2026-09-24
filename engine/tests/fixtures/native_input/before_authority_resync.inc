@@ -9,15 +9,15 @@
 #include <optional>
 #include <stdexcept>
 namespace frame_sync {
-class NativePublicationClock {
+class BeforeAuthorityResyncClock {
  public:
   static constexpr std::int64_t kPeriod = 1000000000LL / NativeMatchContract::kHz;
-  NativePublicationClock() = default;
-  ~NativePublicationClock() = default;
-  NativePublicationClock(const NativePublicationClock&) = default;
-  NativePublicationClock& operator=(const NativePublicationClock&) = default;
-  NativePublicationClock(NativePublicationClock&&) = default;
-  NativePublicationClock& operator=(NativePublicationClock&&) = default;
+  BeforeAuthorityResyncClock() = default;
+  ~BeforeAuthorityResyncClock() = default;
+  BeforeAuthorityResyncClock(const BeforeAuthorityResyncClock&) = default;
+  BeforeAuthorityResyncClock& operator=(const BeforeAuthorityResyncClock&) = default;
+  BeforeAuthorityResyncClock(BeforeAuthorityResyncClock&&) = default;
+  BeforeAuthorityResyncClock& operator=(BeforeAuthorityResyncClock&&) = default;
 
   // Authority is already one receive trip old. Budget the complete measured
   // round trip (including its variation) before assigning immutable input.
@@ -50,7 +50,7 @@ class NativePublicationClock {
     if (floor >= UINT32_MAX) throw std::overflow_error("Native publication frame exhausted");
     // 2026-09-13: fresh authority corrects speculative wall-clock lead after slow
     // authority work. Existing future publications remain immutable while it catches up.
-    if (published_ && known > authority_ && floor <= last_frame_)
+    if (lead_frames == 1 && published_ && known > authority_ && floor <= last_frame_)
       deadline_ = now + kPeriod;
     authority_ = known; observed_ = true; observed_time_ = now;
     // Do not consume device edges if prediction or a stalled authority leaves no slot.

@@ -1,3 +1,9 @@
+2026-09-24 提交快照：权威时钟校正 adoption B 已终止且七项正式门禁全部通过，七份日志哈希已复核；详细结果见 optimization-native-authority-resync-2026-09-24.md。原生控制会话私有集成 A 正在串行验证，未采纳为正式暂停功能。原 UDP 中立帧根因及整体产品缺口仍未关闭。以下保留历史阶段记录。
+
+2026-09-24 原生暂停前置路径已形成私有集成候选 native-control-session-integration-20260924-a：修改真实 integrated_client、BasicEngineSessionServer、恢复 wire/transfer，并接入已验证控制/周期输入头文件。LoadHello 显式协商控制能力，Session、Snapshot、Ready 增加可选 epoch/phase，服务端按协商状态拒绝旧格式绕过、未来周期及不匹配 Ready；恢复连接继承原会话能力，快照保留周期，客户端实际发送周期输入。旧报文默认布局保留。该候选尚未编译，不是完整暂停实现：全局暂停帧线程、ACK 屏障、Host 入口和完整恢复竞争处理仍待接入。
+
+队列 PID 2925787 / start_ticks 70449082，只在权威时钟正式验收 owner 终止后开始：每种构建 10 项 wire/真实 TCP 新测试和原 13 项席位服务端测试，随后编译真实 TCP/UDP/public UDP 服务与客户端，执行 6 对服务、12 个实际客户端会话，并检查协商遥测。使用完整 Debug ASan/UBSan、原时限与固定源码；不并行构建或测试。此阶段只用于验证实际协议接入，control_pause_implemented 和 product_acceptance 均为 false，禁止据此宣称产品暂停完成。
+
 # 原生暂停恢复：接入顺序与验收要求
 
 归属 ms-23.1 → plan-23.1.1 → task-23.1.1.2，并与 ms-22.1 输入隔离、ms-25.1 接管行为共同验收。状态为接入设计，未宣称实现完成。当前 28/7449 控制协议及 30/7020 输入周期候选通过只是组件证据。
