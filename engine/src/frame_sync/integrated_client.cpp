@@ -1268,10 +1268,18 @@ class BasicIntegratedFrameSyncClient {
     }
     if (type == frame_sync::MessageType::TakeoverNotify || type == frame_sync::MessageType::HandbackNotify) {
       if (recv_buf_.size() < frame_sync::TAKEOVER_NOTIFY_BYTES) return false;
-      uint16_t slot; std::memcpy(&slot, recv_buf_.data() + 1, 2);
-      if (slot >= left_agents_ + right_agents_) return invalid_message();
+      uint16_t slot;
+      frame_sync::frame_id_t frame;
+      const auto used = type == frame_sync::MessageType::TakeoverNotify
+          ? frame_sync::UnpackTakeoverNotify(recv_buf_.data(), recv_buf_.size(), &slot, &frame)
+          : frame_sync::UnpackHandbackNotify(recv_buf_.data(), recv_buf_.size(), &slot, &frame);
+      // Notices precede the authority frame where ownership changes, including
+      // after snapshot recovery. Validate against received, not simulated, frames.
+      if (!used || slot >= left_agents_ + right_agents_ ||
+          (config_.native_product && frame != received_authority_count_))
+        return invalid_message();
       bot_slots_[slot] = type == frame_sync::MessageType::TakeoverNotify;
-      recv_buf_.erase(recv_buf_.begin(), recv_buf_.begin() + frame_sync::TAKEOVER_NOTIFY_BYTES); return true;
+      recv_buf_.erase(recv_buf_.begin(), recv_buf_.begin() + used); return true;
     }
     // This initial-connect client has not requested a snapshot or negotiated a
     // delta stream. Unexpected message types are a protocol failure.

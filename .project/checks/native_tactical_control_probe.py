@@ -2,8 +2,9 @@
 from pathlib import Path
 import argparse,os,socket,struct,subprocess,time,re,json,sys
 R=Path(__file__).resolve().parents[2]
-sys.path.insert(0,str(R/".project/checks"))
+sys.path.insert(0,str(Path(__file__).resolve().parent))
 import native_product_protocol_probe as wire
+from native_product_udp_fixture import Fixture,packet
 assertions=0
 def require(value,reason):
  global assertions
@@ -18,38 +19,46 @@ def case(binary,label,kind,env,root):
     client=subprocess.Popen([str(binary),"127.0.0.1",str(peer.getsockname()[1]),"1","2","42","--headless","--frames","3"],cwd=output,env=env,stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT)
    # 2026-09-14: the old 15s total included real asset loading before Ready.
    # address=None;sequence=0;ready=False;parts=[];due=0;step=0;until=time.monotonic()+15
-   address=None;sequence=0;ready=False;parts=[];due=0;step=0
+   fixture=Fixture(peer);ready=False;parts=[];due=0;step=0
+   session_sent=False;receipt=False;loaded=False
+   grant=os.urandom(16)+struct.pack("<H",0)+os.urandom(32)+struct.pack("<Q",1)
+   descriptor=bytes([66])+wire.HELLO[1:]+struct.pack("<IBBII",42,1,2,1,15000)
    started=time.monotonic();until=started+40;ready_at=None;first_control_at=None
-   def send(payload):
-    nonlocal sequence
-    peer.sendto(struct.pack("<BIH",0,sequence,len(payload))+payload,address);sequence+=1
+   def send(payload):fixture.send(payload)
    def auth(frame):return struct.pack("<BIH",3,frame,3)+bytes(30)
    while client.poll() is None and time.monotonic()<until:
+    fixture.retransmit()
     try:data,source=peer.recvfrom(4096)
     except socket.timeout:data=None
-    if data is not None:
-     if address is None:
-      require(data==wire.HELLO,"Actual client did not send native hello");address=source
-      session=bytes([66])+wire.HELLO[1:]+struct.pack("<IBBII",42,1,2,1,15000)
-      send(session);send(struct.pack("<BHH",7,1,0));continue
-     require(source==address,"Unexpected peer")
-     if len(data)==5 and data[0]==255:continue
-     require(len(data)>=7 and data[0]==0,"Malformed actual client reliable data")
-     _,seq,length=struct.unpack_from("<BIH",data);require(length==len(data)-7,"Invalid client length")
-     peer.sendto(struct.pack("<BI",255,seq),address)
-     if data[7]==65 and not ready:
-      ready=True;ready_at=time.monotonic();until=ready_at+15;send(auth(0))
+    for record in fixture.receive(data,source) if data is not None else []:
+     tag=record[0]
+     if tag==88:
+      require(not session_sent and record[10:28]==wire.HELLO and
+              (len(record)==28 or record[28:]==struct.pack("<I",1)),"Invalid actual loading hello")
+      session_sent=True;send(packet(81,descriptor+grant+b"\x02"+struct.pack("<I",1)))
+     elif tag in (89,90):
+      require(session_sent and record[10:]==grant,"Loading proof mismatch")
+      if tag==90:require(not receipt,"Duplicate loading receipt");receipt=True
+      else:require(receipt and not loaded,"Loading completion order");loaded=True
+     elif tag==85:
+      require(loaded and not ready and record[10:68]==grant and
+              struct.unpack_from("<I",record,68)[0]==0,"Invalid actual Ready")
+      ready=True;ready_at=time.monotonic();until=ready_at+15
+      send(packet(86,struct.pack("<QI",1,0)));send(auth(0))
       control=struct.pack("<BHI",10,3 if kind=="invalid_slot" else 1,2 if kind=="invalid_frame" else 1)
       control+=struct.pack("<BHI",11,1,1)
       parts=[control[:3],control[3:10],control[10:]];due=time.monotonic()+.075
+     elif tag==8:send(record)
+     else:require(tag==2 and ready,"Input escaped Ready barrier")
     if ready and step<len(parts) and time.monotonic()>=due:
      if first_control_at is None:first_control_at=time.monotonic()
      send(parts[step]);step+=1;due=time.monotonic()+.075
      if step==len(parts):send(auth(1));send(auth(2))
-   result.update(ready=ready,bootstrap_ms=None if ready_at is None else (ready_at-started)*1000,
+   result.update(ready=ready,loading_receipt=receipt,loading_complete=loaded,current_udp_transport=fixture.established,bootstrap_ms=None if ready_at is None else (ready_at-started)*1000,
                  control_ms=None if ready_at is None else (time.monotonic()-ready_at)*1000,
                  first_control_ms=None if first_control_at is None else (first_control_at-ready_at)*1000,
                  bootstrap_budget_seconds=40,control_budget_seconds=15)
+   require(receipt and loaded and ready,"Current native loading barrier was not exercised")
    require(client.poll() is not None,"Control parser stalled after Ready" if ready else "Native client bootstrap timed out before Ready")
   text=(output/"client.log").read_text()
   row=re.search(r"UDP session confirmed=(\d+) verified_hashes=(\d+) failed=(\d+)",text)

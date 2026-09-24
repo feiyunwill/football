@@ -4,6 +4,7 @@ import argparse,json,os,socket,struct,subprocess,sys,time,traceback
 R=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(R/".project/checks"))
 import native_product_protocol_probe as wire
+from native_product_udp_peer import NativeProductUDPPeer
 
 def match(kind,build,output,seed,depart):
  directory=output/f"{kind}-{seed}-{depart}";directory.mkdir(parents=True)
@@ -25,7 +26,7 @@ def match(kind,build,output,seed,depart):
   else:raise RuntimeError("Server bind timeout")
   phase="two player bootstrap"
   for slot in range(2):
-   peer=wire.Peer(kind,port);peers.append(peer)
+   peer=NativeProductUDPPeer(port) if kind=="udp" else wire.Peer(kind,port);peers.append(peer)
    wire.require(peer.bootstrap()==slot,"Assigned slot differs")
    peer.socket.settimeout(.002)
   def packet(slot,frame):

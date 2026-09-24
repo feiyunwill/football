@@ -4,6 +4,8 @@ import argparse,json,os,re,socket,struct,subprocess,sys,time,traceback
 R=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(R/".project/checks"))
 import native_product_protocol_probe as wire
+from native_product_udp_peer import NativeProductUDPPeer
+from native_product_records import records
 
 def case(server_binary,client_binary,directory,seed,depart):
  directory.mkdir(parents=True);client_dir=directory/"client";client_dir.mkdir()
@@ -21,14 +23,14 @@ def case(server_binary,client_binary,directory,seed,depart):
    time.sleep(.02)
   else:raise RuntimeError("Native server bind timeout")
   def make_fake():
-   peer=wire.Peer("udp",port);wire.require(peer.bootstrap()==depart,"Fake peer assignment differs");peer.socket.settimeout(.001);return peer
+   peer=NativeProductUDPPeer(port);wire.require(peer.bootstrap()==depart,"Fake peer assignment differs");peer.socket.settimeout(.001);return peer
   if depart==0:fake=make_fake()
   with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as proxy:
    proxy.bind(("127.0.0.1",0));proxy.settimeout(.002);remote=("127.0.0.1",port);native_endpoint=None
    with (directory/"client.log").open("w") as log:
     client=subprocess.Popen([str(client_binary),"127.0.0.1",str(proxy.getsockname()[1]),"1","2",str(seed),"--headless","--frames","260"],
       cwd=client_dir,env=os.environ,stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT)
-   rx=0;ordered={};buffer=bytearray();native_slot=None;fake_ready=False;dropped=False;last_sent=-1;heartbeat=time.monotonic()
+   rx=0;identity=None;ordered={};buffer=bytearray();native_slot=None;fake_ready=False;dropped=False;last_sent=-1;heartbeat=time.monotonic()
    until=time.monotonic()+40;phase="native client bootstrap and real authority"
    def packet(frame):
     return struct.pack("<BIHHffH",2,frame,1,depart,1. if depart==0 else -1.,0.,512)
@@ -38,16 +40,26 @@ def case(server_binary,client_binary,directory,seed,depart):
     if data is not None:
      if address==remote:
       wire.require(native_endpoint is not None,"Server response before native client")
-      if len(data)>=7 and data[0]==0:
-       _,seq,length=struct.unpack_from("<BIH",data)
-       wire.require(length==len(data)-7,"Malformed reliable server payload")
+      if data[0]==1:
+       wire.require(23<=len(data)<=1200,"Malformed scoped reliable server datagram")
+       current_identity=data[1:17]
+       if identity is None:identity=current_identity
+       wire.require(identity==current_identity and any(identity),"Unexpected native client transport generation")
+       seq,length=struct.unpack_from("<IH",data,17)
+       wire.require(length==len(data)-23,"Malformed reliable server payload")
        if seq>=rx:
-        wire.require(seq-rx<64,"Unbounded server sequence gap");ordered.setdefault(seq,data[7:])
+        wire.require(seq-rx<64,"Unbounded server sequence gap")
+        prior=ordered.get(seq);wire.require(prior is None or prior==data[23:],"Server retransmission changed payload")
+        ordered.setdefault(seq,data[23:])
        while rx in ordered:buffer.extend(ordered.pop(rx));rx+=1
-       for row in wire.messages(buffer):
-        if row[0]==7:
-         wire.require(struct.unpack_from("<H",row,1)[0]==1,"Actual client expected exactly one slot")
-         native_slot=struct.unpack_from("<H",row,3)[0];wire.require(native_slot==1-depart,"Native client assignment differs")
+       wire.require(len(buffer)<=8192,"Unbounded native client application buffer")
+       for row in records(buffer):
+        if row[0]==81:
+         wire.require(len(row)==105 and row[10:42]==wire.SESSION,"Actual native session descriptor differs")
+         native_slot=struct.unpack_from("<H",row,58)[0]
+         wire.require(native_slot==1-depart and struct.unpack_from("<I",row,101)[0]==1<<native_slot,
+                      "Native client must own its one assigned seat")
+         wire.require(row[100]==2,"Actual client did not use bounded loading reservation")
          if fake is None:fake=make_fake()
         elif row[0]==3:
          fid,count=struct.unpack_from("<IH",row,1);wire.require(count==3 and fid not in frames,"Duplicate actual authority");frames[fid]=row

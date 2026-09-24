@@ -1,3 +1,33 @@
+## 2026-09-24 提交检查点：输入修复通过，框架与战术验收仍待完成
+
+本次按用户要求提交并推送当前已落地代码、测试和验收证据。输入连续性修复的正式 input_contract 已通过：42 项结果、3,070,762 个断言，TCP/UDP 共 1030 个记录帧分别完成两种构建的独立回放。ai_decisions 和 native_boundary 也通过。
+
+同轮 framework_regression 的 771 项 C++ 测试通过，但验收器自测仍期待旧总数 767，完整框架门禁失败；计数修复与重验由原串行队列继续执行。tactical_integration 在 Sanitizer 分片通知场景失败：夹具可能在一个尚未发送完整的通知记录中间插入心跳回复。修复候选已准备，尚未完成正式重新验收。此前旧源版本的战术验收通过不代表本次完整验收通过。
+
+RSS 映射诊断采集完成，原架构 RSS 失败仍未关闭。私有控制协议候选通过两种构建各 28 项 C++ 测试及 7449 个 Python 对照用例；输入周期候选在 Release 构建阶段退出失败；自动端口私有候选通过。上述私有候选不等于产品集成完成，也未作为正式实现纳入本次代码提交。后台阶段可能继续更新工作区；提交只代表 Git 索引记录的快照。以下保留历史记录。
+
+## 2026-09-24 INPUT GAP REPRODUCED ON WIRE; CONTIGUOUS FUTURE PUBLICATION ADOPTED
+
+This turn PROGRESS. Tactical boundary adoptionA TERMINALPASS exit0: fulltactical32results161819assertions+19checker tests,8takeover4nativeclient6controlcases and24independent replays; native_boundary passed; fullDebugrecipes verified. source1134. Graph bidirectional parser trace confirmed do_read inbound; heuristic extra edges not trusted.
+
+Wire diagnosisA TERMINAL exit0:3serialized fullwindow rounds, allsamplers/X11cleanup/relayjoined. Round1(index1) UDP continuousheldinput FAILED; rounds0/2 passed. Directwireframe206 absentfromclientpublish stream, authorityneutralbothslots, frame205and207heldbothslots. Entire545client+614serverreliable stream reassembled. Traceordinal offset NOTverified, do not use it asframeidentity. Currentstage wire-gap-proof.json archives timing/hashes. Original input failure retained.
+
+Candidate native-input-contiguous-horizon-20260924-a TERMINALPASS: actualfrozenoldclock reproduces205→207afterauthoritybatch; newclock206then207. RTTgrowth/jitter futureholes fixed whileoneframebehavior/reanchorretained. Actualhistoryshotedgeexactonce. Release/fullDebugSAN each11011assertions+12Gtests includingoriginal8;1999batchframes;5000oneframecomparisons. Logs/inputhashes verified.
+
+Canonical4files adopted undergate lock, source1135 nowfrozen: native_publication_clock.hpp,native_input_rtt_test.cpp,fixtures/native_input/before_contiguous_horizon.inc,framework_regression.py(min771,RTT12). Current authoritative manifest native-input-contiguous-adoption-20260924-a/sources-after.json +adopted-files.json. DriverLIVE PID2777326/start69902606 launched1790215941.8033159. Serial input_contract→framework_regression(privateX11)→tactical_integration→ai_decisions→native_boundary,fullDebugrecipes. Executed/queuedinputsimmutable;fixinNEWstage. Observe liveowner,neverrestartonpolltimeout. No newcommit/push after2afc5d6.
+
+RSSdiagnosisA/B8runs completed, originalformalarchitecturefailure stillopen. Productscope unchanged; menu/pause/weaknet/capacity/p95/render/hardware/RLtools/training/packaging/baselinepending. GoalACTIVE. Read newreport optimization-native-input-continuity-2026-09-24.md. Updated full documentmanifest in currentstage; originals archived beforeedits.
+
+## 2026-09-24 SHARED CLIENT NOTICE BOUNDARY FIX ADOPTED; FORMAL TACTICAL GATE RUNNING
+
+This turn PROGRESS: prior commit/push 2afc5d6 verified. All earlier owners terminal. Verified UDP migration19commands and nativeclient migration11commands, immutable input/log hashes. Control fixture migrationA ran5counterexamples and actualRelease controls; fragmented and invalidslot passed, invalidframe exposed REAL sharedclient missingboundarycheck (confirmed3 failed0 exit0). Original red evidence retained.
+
+Adopted11canonical files under gate lock: integrated_client parser complete notice decode + native received-authority boundary check; currentUDPpeer/passiveparser/fixture +3counterexample files +3migrated probes +formal tactical checker. Sources now1134, authoritative manifest native-tactical-boundary-adoption-20260924-a/sources-after.json,11pins adopted-files.json. Freeze while its driver live PID2771110/start69825202. Serial full tactical_integration then native_boundary, independently verify fullDebug recipes. No newcommit/push authorized since2afc5d6.
+
+Memory diagnosisA/B all8runs passed original167assertions, hasheschecked, originalRSSfailure remainsopen. Bwarm/final preciseRSS matches statm, so accountingerror notsupported. UDP input traceordinal442 neutral betweenheldsteps confirmedbothserver/client; input-gap-evidence.json records exacttiming/hash. Traceordinal is not assumed wireframe. Need actualpublication/arrivaldiagnosis; do not loosenholdwindow.
+
+Report optimization-native-tactical-boundary-2026-09-24.md corrects AI task to25.1.1.1 (tacticalintegration); privatefrozen plan earlytask25.1.1.2 retainedasprovenance. GoalACTIVE; productandallremaininggapsnotcomplete. Last documentation manifest now thisstage/documents-after.json; beforeedits archived here.
+
 ## 2026-09-24 COMMIT CHECKPOINT: FORMAL FAILURES RETAINED; PRIVATE DIAGNOSTICS COMPLETE
 
 2026-09-24 提交前状态更新：正式 B 已结束，AI 决策通过，架构、输入和战术集成失败，本轮公共 UDP 完整运行未执行。控制记录和输入周期候选均因前置依赖失败结束，未执行测试。内存诊断 A、B 已完成采集，未关闭原架构失败。独立 UDP 探针迁移报告通过 8 场对局和 16 次独立回放；真实客户端探针迁移报告通过 4 场对局和 8 次独立回放。上述探针仍在私有候选目录，尚未接入正式检查器，不能视为完整战术门禁或产品验收通过。以下保留阶段历史记录。

@@ -1,6 +1,7 @@
 #include "frame_sync/native_input_publication.hpp"
 #include "fixtures/native_input/original_clock.inc"
 #include "fixtures/native_input/unpaced_lead_clock.inc"
+#include "fixtures/native_input/before_contiguous_horizon.inc"
 #include <gtest/gtest.h>
 #include <cmath>
 #include <limits>
@@ -96,6 +97,40 @@ TEST(NativeInputRTT,LargeAuthorityJumpReanchorsTheMeasuredHorizon) {
   EXPECT_EQ(clock.Next(100,0,2000000000,5),105u);
   EXPECT_FALSE(clock.Next(100,0,2000000000,5));
   EXPECT_EQ(clock.Next(101,0,2020000000,5),106u);
+}
+
+TEST(NativeInputRTT,AuthorityBatchKeepsStillAdmissibleFrameAtMeasuredHorizon) {
+  fs::BeforeContiguousHorizonClock before;fs::NativePublicationClock current;
+  ASSERT_EQ(before.Next(203,0,0,2),205u);ASSERT_EQ(current.Next(203,0,0,2),205u);
+  EXPECT_EQ(before.Next(205,0,14000000,2),207u);
+  EXPECT_EQ(current.Next(205,0,14000000,2),206u);
+  EXPECT_EQ(current.Next(205,0,18000000,2),207u);
+  EXPECT_FALSE(current.Next(205,0,18000000,2));
+}
+TEST(NativeInputRTT,GrowingRTTHorizonPublishesIntermediateFutureFrames) {
+  fs::NativePublicationClock current;
+  ASSERT_EQ(current.Next(200,0,0,2),202u);
+  EXPECT_EQ(current.Next(201,0,20000000,4),203u);
+  EXPECT_EQ(current.Next(201,0,24000000,4),204u);
+  EXPECT_EQ(current.Next(201,0,28000000,4),205u);
+}
+TEST(NativeInputRTT,DelayedLocalTickRetainsFutureFrameWithMeasuredLead) {
+  fs::BeforeContiguousHorizonClock before;fs::NativePublicationClock current;
+  ASSERT_EQ(before.Next(200,0,0,5),205u);ASSERT_EQ(current.Next(200,0,0,5),205u);
+  EXPECT_EQ(before.Next(200,0,60000000,5),208u);
+  EXPECT_EQ(current.Next(200,0,60000000,5),206u);
+}
+TEST(NativeInputRTT,HorizonCatchupSamplesAnEdgeOnceAndKeepsPublishedBytes) {
+  fs::LocalInputHistory history;fs::NativePublishedHistory pub(history,Clock);
+  std::vector<std::pair<fs::frame_id_t,fs::SlotInput>> sent;size_t samples=0;
+  auto sample=[&](auto){++samples;return fs::SlotInput{1,0,uint16_t(512|(samples==2?8:0))};};
+  auto send=[&](auto frame,const auto& input){sent.emplace_back(frame,input);return true;};
+  now=0;EXPECT_EQ(pub.PublishTimed(203,sample,send,40),205u);
+  now=14000000;EXPECT_EQ(pub.PublishTimed(205,sample,send,40),206u);
+  now=18000000;EXPECT_EQ(pub.PublishTimed(205,sample,send,40),207u);
+  EXPECT_FALSE(pub.PublishTimed(205,sample,send,40));EXPECT_EQ(samples,3u);
+  ASSERT_EQ(sent.size(),3u);EXPECT_EQ(sent[1].second.buttons,520);EXPECT_EQ(sent[2].second.buttons,512);
+  EXPECT_EQ(pub.Read(206,0).buttons,520);
 }
 
 }

@@ -84,6 +84,16 @@ def main():
             return runner.run_command(argv, label, output=output, commands=commands,
                                       environment=child, timeout=timeout)
 
+        if args.suite == "integration":
+            for module, count in (("native_product_udp_peer_test", 9),
+                                  ("native_product_records_test", 5),
+                                  ("native_product_udp_fixture_test", 5)):
+                raw = run([sys.executable, "-m", "unittest", "discover",
+                           "-s", ROOT / ".project/checks", "-p", module + ".py", "-v"],
+                          module, timeout=60)
+                require(f"Ran {count} tests" in raw and "\nOK\n" in raw,
+                        "Incomplete independent transport fixture self-tests")
+
         for label, build in builds.items():
             sanitized = label == "sanitized"
             run(["cmake", "-S", ROOT / "engine", "-B", build,

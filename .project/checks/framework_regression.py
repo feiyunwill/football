@@ -25,7 +25,7 @@ NATIVE_UDP_SUITES = {
 
 
 REQUIRED_CPP_SUITES = {**NATIVE_UDP_SUITES, "rl_observation_contract": 1,
-                       "native_input_rtt_test.": 8, "native_slot_groups_test.": 16,
+                       "native_input_rtt_test.": 12, "native_slot_groups_test.": 16,
                        "native_slot_group_wire_test.": 16, "native_slot_group_server_test.": 13,
                        "native_authority_recording_test.": 11}
 
@@ -70,8 +70,8 @@ def main():
     reports.mkdir(parents=True, exist_ok=True)
     cpp_report = reports / "framework-ctest.xml"
     run(["ctest", "--test-dir", tests, "--output-on-failure", "--output-junit", cpp_report])
-    # Preserve 711 existing cases and require all 56 multi-seat/recording contracts.
-    cpp_count = junit_count(cpp_report, 767, REQUIRED_CPP_SUITES)
+    # Preserve the 767 existing cases and require all four input-horizon regressions.
+    cpp_count = junit_count(cpp_report, 771, REQUIRED_CPP_SUITES)
     # 2026-09-22: permanently run the actual shared-engine asset parser contracts.
     run(["cmake", "--build", native, "--target", "engine_ase_parser_contract", "-j", "1"])
     asset_parser = json.loads(run([native / "bin/engine_ase_parser_contract"], capture=True))

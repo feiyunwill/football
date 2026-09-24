@@ -9,15 +9,15 @@
 #include <optional>
 #include <stdexcept>
 namespace frame_sync {
-class NativePublicationClock {
+class BeforeContiguousHorizonClock {
  public:
   static constexpr std::int64_t kPeriod = 1000000000LL / NativeMatchContract::kHz;
-  NativePublicationClock() = default;
-  ~NativePublicationClock() = default;
-  NativePublicationClock(const NativePublicationClock&) = default;
-  NativePublicationClock& operator=(const NativePublicationClock&) = default;
-  NativePublicationClock(NativePublicationClock&&) = default;
-  NativePublicationClock& operator=(NativePublicationClock&&) = default;
+  BeforeContiguousHorizonClock() = default;
+  ~BeforeContiguousHorizonClock() = default;
+  BeforeContiguousHorizonClock(const BeforeContiguousHorizonClock&) = default;
+  BeforeContiguousHorizonClock& operator=(const BeforeContiguousHorizonClock&) = default;
+  BeforeContiguousHorizonClock(BeforeContiguousHorizonClock&&) = default;
+  BeforeContiguousHorizonClock& operator=(BeforeContiguousHorizonClock&&) = default;
 
   // Authority is already one receive trip old. Budget the complete measured
   // round trip (including its variation) before assigning immutable input.
@@ -38,13 +38,10 @@ class NativePublicationClock {
       throw std::overflow_error("Native publication time exhausted");
     const auto known = std::max(authority_, authority);
     const auto minimum = std::max(std::uint64_t(known) + 1, std::uint64_t(simulation));
-    // An updated authority batch or RTT budget may move the desired horizon.
-    // Fill still-admissible unpublished frames before extending that horizon;
-    // otherwise a held control can become a neutral authority frame.
-    const auto horizon = std::max(std::uint64_t(known) + lead_frames, std::uint64_t(simulation));
-    const auto floor = published_ && lead_frames > 1 &&
-        minimum <= std::uint64_t(last_frame_) + 1
-        ? std::min(horizon, std::uint64_t(last_frame_) + 1) : horizon;
+    // Establish a new horizon when its measured budget changes. Otherwise keep
+    // the independent cadence: receipt batches must not jump over future frames.
+    const auto floor = published_ && lead_frames > 1 && lead_frames == lead_frames_ && minimum <= last_frame_
+        ? minimum : std::max(std::uint64_t(known) + lead_frames, std::uint64_t(simulation));
     const auto ceiling = std::min(std::uint64_t(known) + ServerInputWindow::kFrames - 1,
                                   std::uint64_t(UINT32_MAX) - 1);
     if (floor >= UINT32_MAX) throw std::overflow_error("Native publication frame exhausted");
@@ -52,7 +49,7 @@ class NativePublicationClock {
     // authority work. Existing future publications remain immutable while it catches up.
     if (lead_frames == 1 && published_ && known > authority_ && floor <= last_frame_)
       deadline_ = now + kPeriod;
-    authority_ = known; observed_ = true; observed_time_ = now;
+    authority_ = known; observed_ = true; observed_time_ = now;lead_frames_ = lead_frames;
     // Do not consume device edges if prediction or a stalled authority leaves no slot.
     if (floor > ceiling) {
       if (lead_frames > 1) capacity_limited_ = true;
@@ -74,17 +71,15 @@ class NativePublicationClock {
       capacity_limited_ = false;
     }
     if (now < deadline_ || last_frame_ >= ceiling) return std::nullopt;
-    // With an RTT lead, a missed local tick can still refer to a future server
-    // frame. Preserve that frame instead of creating a hole in held input.
-    // The one-frame schedule retains its original expired-opportunity behavior.
-    const auto count = lead_frames > 1 ? std::uint64_t{1}
-        : std::uint64_t(1 + (now - deadline_) / kPeriod);
+    // Expired local publication opportunities cannot be filled with newly observed
+    // input. Send only the current opportunity; the authority owns missing old slots.
+    const auto count = std::uint64_t(1 + (now - deadline_) / kPeriod);
     last_frame_ = static_cast<frame_id_t>(std::min(std::uint64_t(last_frame_) + count, ceiling));
     deadline_ = now + kPeriod - (now - deadline_) % kPeriod;
     return last_frame_;
   }
  private:
-  frame_id_t authority_ = 0, last_frame_ = 0;
+  frame_id_t authority_ = 0, last_frame_ = 0, lead_frames_ = 1;
   std::int64_t observed_time_ = 0, deadline_ = 0;
   bool observed_ = false, published_ = false, capacity_limited_ = false;
 };
