@@ -1,3 +1,33 @@
+## 2026-09-24 RELEASE OBSOLETE-SNAPSHOT RECOVERY PASSED; FULL DEBUG RUNNING
+
+Current sole live owner: native-control-recovery-refresh-20260924-b PID2974812/start70664009. A TERMINAL exit1 at independent checkpoint replay link, noactualcases; original22commandhashes verified. B adds existing pinned recovery archive+crypto to replay link only, fullRelease37commands passed/hashverified:51unitcases,6normalactualclients plus3realstream-close/staleReady recoveryclients andallindependentreplays. FullDebug nowrunning. Keep1138canonical source+4adoptedpins/program frozen throughBterminal. Nevereditqueued/executedinputs; correction=newstage; serialize allbuild/test/measurement.
+
+PreparedONLY native-control-adoption-preparation-20260924-a contains15candidatefiles:9productionheaders/clientchanges,4permanenttests(28control+30epoch+27session+5simulation=90),CMake registration andframeworkmin773→863. Fixed component include paths forcanonical ENGINE_SRC. Notqueued, notcompiled withfinalheaders, notadopted. Requires complete recoveryB, physicalGUI/1000frame/input-reset/exit gates and permanent actual-control/recovery gate beforeadoption. RelevantGUI groundwork: canonical native_input_window_cases.py usesKeyboard XTEST/events/independentdecode, native_input_x11.py usesauthorizedprivate namespace helper; library /tmp/football-optimization-native/input-tests/libengine_native_window_trace.so andfulloriginalsamplers. NoGUIstagecreatedyet.
+
+2026-09-24 后续：refresh A 在独立检查点回放工具链接时失败（缺少 recovery_snapshot_digest 所在摘要库），51 项 Release 回归已通过，实际场景未运行；22 份命令日志已核验并保留。新 refresh B 只补齐该工具的固定恢复库与 libcrypto 依赖。B 的 Release 已完成全部 51 项测试、6 个普通客户端、3 个真实故障注入恢复客户端及全部独立回放，37 份 Release 命令日志哈希已复核。完整 Debug 尚在执行，不作为两种构建全部通过。正式源码仍未改变。
+
+## 2026-09-24 ACTUAL CLIENT CONTROL PASSED; OBSOLETE SNAPSHOT REFRESH RUNNING
+
+This goal turn PROGRESS: client-owner A completed both builds 48tests each, 12 actual sessions/24pause cycles and12 independent replays/1200frames. All1578inputs and54commandlogs verified. Added private specific ControlChanged retry response, original lease/deadline retention and obsolete snapshot stream epoch filtering; wrong proof remains terminal.
+
+Current sole owner: native-control-recovery-refresh-20260924-a PID2973468/start70638113. It requires client-owner A pass; currently serial build/test. Perbuild27control+13legacy+11simulation tests,12normalactualclients plus6 separate fault-injected actual clients across3serveraliases×2builds. Private fault fixture closes real stream then waits for Host epoch change before old Ready; productioncandidate hasnohooks. Independent replay supports all actual checkpoints and everyframehash. Fullmatrix/GUI/Hostmenu/performance remain incomplete.
+
+Canonical1138 sources and4authority-resync pins/program.json frozen until refresh owner terminal. Queued/executedinputs immutable; corrections requireNEWstage. Allbuild/test/measurement serialized. Lastpushed44f3ad7; newwork isprivate anddocsuncommitted. GoalACTIVE. OriginalUDPneutralframecause/RSS/protectedbaseline/renderhardware/WAN/capacity/p95/RLtools/training/packaging remainopen.
+
+2026-09-24 更新：client-owner A 已全部通过，两种构建各 48 项回归、12 个实际客户端、24 次暂停/恢复及 12 次独立回放（1200 帧）；1578 项输入和 54 份命令日志哈希已复核。当前继续 native-control-recovery-refresh-20260924-a：补齐真实断线后旧快照跨周期的有界自动重试与旧流隔离，尚未取得完整结果。正式源码未变，详见 optimization-native-control-recovery-refresh-2026-09-24.md。以下为历史记录。
+
+2026-09-24 后续核验：frame-owner B 已终止，exit 0；Release/full Debug 各 24 项控制测试、13 项旧服务端测试及共 12 个实际客户端会话全部通过，34 份命令日志和全部固定输入哈希已核对。client-owner A 已开始，当前正在执行原服务端/模拟回归及实际客户端编译，尚无完整暂停闭环结论。正式 1138 项源码仍与固定清单一致。下方运行状态为历史记录。
+
+## 2026-09-24 CONTROL SESSION VERIFIED; FRAME AND CLIENT OWNERS QUEUED
+
+This goal turn PROGRESS: implemented private frame-owner pause/ACK/recovery sequencing, 24 actual-server tests, actual-client owner processing, prediction rewind/input reset and independent replay fixture. Control session B passed both builds and actual sessions, 34 command log hashes verified. Prior user commit/push 44f3ad7 was independently verified; newer work remains private/uncommitted docs.
+
+Live queue: frame-owner B PID2958839/start70559939, then client-owner A PID2959847/start70579003 only after full predecessor pass. Check actual handles and terminal exit, never restart from observation timeout. Canonical 1138 source manifest remains authority-resync-adoption B/sources-after.json; retain 4 adopted pins/program freeze until both owners terminal. All queued/executed stage inputs immutable. No parallel build/test/measurement.
+
+Session A sanitizer failure was packed-float reference in EXPECT_EQ; B copies values and all10+13 tests perbuild/12actualclients passed. Frame A 23/24 passed; stale Ready rejection arrived before asynchronous connection close. Frame B waits for bounded terminal close without changing predicates/timeouts; actual implementation unchanged. Client A adds full actual receive/owner ACK path, control-aware prediction and device reset; serverfixture drives2cycles perclient and independent replay compares everyhash. Its full recovery retry, GUI control and Host menu remain unverified/incomplete. GoalACTIVE, originalneutralframe/RSS/protectedbaseline and allremainingproductgaps open.
+
+2026-09-24 控制接入更新：integration B 的两种构建各 10+13 项测试与 12 个实际客户端会话通过，34 份命令日志哈希已核对。服务端帧线程屏障、ACK 超时和快照竞争实现正在 frame-owner B 验证；客户端实际边界校验、预测回退、输入重置和 ACK 已进入 client-owner A 私有队列，依赖前者完整通过。尚未采纳正式源码或完成产品暂停，详见 optimization-native-control-owner-2026-09-24.md。以下为历史记录。
+
 ## 2026-09-24 提交快照：权威时钟校正的七项正式验收通过
 
 native-input-authority-resync-adoption-20260924-b 已终止，exit 0。当前 1138 项源码清单及 4 个采纳文件哈希均已复核一致。quality_selftest、input_contract、framework_regression、tactical_integration、ai_decisions、native_boundary、native_session_ports 全部通过，七份正式日志的 SHA-256 已逐一复核。本次提交包含时钟修复、两个永久回归测试、旧实现反例夹具、框架计数及对应文档与验收证据。

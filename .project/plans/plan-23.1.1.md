@@ -1,3 +1,11 @@
+2026-09-24 后续：refresh A 在独立检查点回放工具链接时失败（缺少 recovery_snapshot_digest 所在摘要库），51 项 Release 回归已通过，实际场景未运行；22 份命令日志已核验并保留。新 refresh B 只补齐该工具的固定恢复库与 libcrypto 依赖。B 的 Release 已完成全部 51 项测试、6 个普通客户端、3 个真实故障注入恢复客户端及全部独立回放，37 份 Release 命令日志哈希已复核。完整 Debug 尚在执行，不作为两种构建全部通过。正式源码仍未改变。
+
+2026-09-24 更新：client-owner A 已全部通过，两种构建各 48 项回归、12 个实际客户端、24 次暂停/恢复及 12 次独立回放（1200 帧）；1578 项输入和 54 份命令日志哈希已复核。当前继续 native-control-recovery-refresh-20260924-a：补齐真实断线后旧快照跨周期的有界自动重试与旧流隔离，尚未取得完整结果。正式源码未变，详见 optimization-native-control-recovery-refresh-2026-09-24.md。以下为历史记录。
+
+2026-09-24 后续核验：frame-owner B 已终止，exit 0；Release/full Debug 各 24 项控制测试、13 项旧服务端测试及共 12 个实际客户端会话全部通过，34 份命令日志和全部固定输入哈希已核对。client-owner A 已开始，当前正在执行原服务端/模拟回归及实际客户端编译，尚无完整暂停闭环结论。正式 1138 项源码仍与固定清单一致。下方运行状态为历史记录。
+
+2026-09-24 控制接入更新：integration B 的两种构建各 10+13 项测试与 12 个实际客户端会话通过，34 份命令日志哈希已核对。服务端帧线程屏障、ACK 超时和快照竞争实现正在 frame-owner B 验证；客户端实际边界校验、预测回退、输入重置和 ACK 已进入 client-owner A 私有队列，依赖前者完整通过。尚未采纳正式源码或完成产品暂停，详见 optimization-native-control-owner-2026-09-24.md。以下为历史记录。
+
 2026-09-24 提交快照：权威时钟校正 adoption B 已终止且七项正式门禁全部通过，七份日志哈希已复核；详细结果见 optimization-native-authority-resync-2026-09-24.md。原生控制会话私有集成 A 正在串行验证，未采纳为正式暂停功能。原 UDP 中立帧根因及整体产品缺口仍未关闭。以下保留历史阶段记录。
 
 2026-09-24 原生暂停前置路径已形成私有集成候选 native-control-session-integration-20260924-a：修改真实 integrated_client、BasicEngineSessionServer、恢复 wire/transfer，并接入已验证控制/周期输入头文件。LoadHello 显式协商控制能力，Session、Snapshot、Ready 增加可选 epoch/phase，服务端按协商状态拒绝旧格式绕过、未来周期及不匹配 Ready；恢复连接继承原会话能力，快照保留周期，客户端实际发送周期输入。旧报文默认布局保留。该候选尚未编译，不是完整暂停实现：全局暂停帧线程、ACK 屏障、Host 入口和完整恢复竞争处理仍待接入。
