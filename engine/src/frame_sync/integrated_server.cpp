@@ -657,7 +657,7 @@ int main(int argc, char* argv[]) {
     const auto slots_per_client = static_cast<uint16_t>(
         argc >= 6 ? number(argv[5],22) : default_slots_per_client);
     config.is_server = true; config.render = false;
-    if (config.port == 0) throw std::invalid_argument("port must be positive");
+    // Port zero requests an atomic ephemeral bind; advertise server.port() below.
     std::setvbuf(stdout, nullptr, _IONBF, 0); std::setvbuf(stderr, nullptr, _IONBF, 0);
     GameEnv env;
     frame_sync::StartTCPGame(env, config);

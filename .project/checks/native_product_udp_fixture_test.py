@@ -41,4 +41,18 @@ class Tests(unittest.TestCase):
    self.assertEqual(rows,[hello,control]);self.assertFalse(b)
   for record in [b"\x58X",packet(88,bytes(19)),packet(91,bytes(58))]:
    with self.assertRaises(RuntimeError):client_records(bytearray(record))
+ def test_heartbeat_cannot_split_a_logical_control_record(self):
+  f,s,a=self.fixture()
+  control=struct.pack("<BHI",10,1,1)+struct.pack("<BHI",11,1,1)
+  heartbeat=struct.pack("<BII",8,0,1234)
+  # The prior send order changes the frame field even though every UDP packet is reliable.
+  broken=control[:3]+heartbeat+control[3:]
+  self.assertNotEqual(struct.unpack_from("<I",broken,3)[0],1)
+  f.begin_fragments();f.send(control[:3]);f.send_heartbeat(heartbeat)
+  f.send(control[3:10]);f.send(control[10:]);f.end_fragments()
+  received=b"".join(data[23:] for data,_ in s.sent if data[0]==1)
+  self.assertEqual(received,control+heartbeat)
+  self.assertEqual(struct.unpack_from("<BHI",received),(10,1,1))
+  self.assertEqual(struct.unpack_from("<BHI",received,7),(11,1,1))
+  self.assertFalse(f.fragmenting);self.assertEqual(f.deferred_heartbeats,[])
 if __name__=="__main__":unittest.main()

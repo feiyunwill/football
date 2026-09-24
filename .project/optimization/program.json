@@ -446,7 +446,8 @@
         "task-23.1.1.1"
       ],
       "checks": [
-        "network_reconnect"
+        "network_reconnect",
+        "native_session_ports"
       ]
     },
     {
@@ -462,7 +463,8 @@
       ],
       "checks": [
         "network_input_window",
-        "network_reconnect"
+        "network_reconnect",
+        "native_session_ports"
       ]
     },
     {
@@ -524,7 +526,8 @@
         "ms-22.1"
       ],
       "checks": [
-        "network_regression"
+        "network_regression",
+        "native_session_ports"
       ]
     },
     {
@@ -1812,6 +1815,63 @@
       "ready": false,
       "acceptance": [
         "七个领域当前源码验收全部有效；已知严重缺陷为零；产物与运行证据可复现"
+      ]
+    },
+    {
+      "id": "native_session_ports",
+      "ready": true,
+      "acceptance": [
+        "原生 public UDP/TCP/UDP 在 Release/full Debug Sanitizer 支持端口0；双服务端口不同、实际持有且双客户端完成会话"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/native_automatic_port_contract.py"
+      ],
+      "kind": "json",
+      "min_assertions": 200,
+      "timeout": 3600,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "setup.py",
+        ".project/checks/*.py",
+        ".project/checks/requirements.txt",
+        "engine/tests/*.cpp",
+        "engine/tests/fixtures/**/*.inc",
+        "engine/tests/*.py",
+        "engine/tests/CMakeLists.txt",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/__init__.py",
+        "engine/__init__.py",
+        "gfootball/**/*.py",
+        "requirements.txt",
+        "pyproject.toml",
+        ".project/tests/acceptance_inputs_test.py",
+        ".project/tests/loading_acceptance_test.py"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "GFOOTBALL_USE_PBR"
       ]
     }
   ]

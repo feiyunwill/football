@@ -1,3 +1,7 @@
+2026-09-24 正式更新：端口 0 支持及 native_session_ports 已采纳，Release/full Debug 的三入口共 6 组双服务、12 个真实客户端通过（1924 个断言）。既有重连和网络回归要求保留；菜单/暂停/存档和完整网络里程碑未完成。关联门禁在 native-automatic-port-adoption-20260924-b 串行重验，详见 optimization-native-automatic-port-2026-09-24.md。以下为历史记录。
+
+2026-09-24 更新：控制协议候选 28/7449、输入周期候选 30/7020 均在 Release/full Debug 两种构建通过；自动端口候选 6 组、12 个真实客户端通过。三者均为私有候选，未据此宣布正式网络或菜单完成。战术检查器修复已采纳并串行重验，详见新增分片报告、控制/周期报告及 optimization-native-automatic-port-2026-09-24.md。以下为历史记录。
+
 ## 2026-09-24 提交前验证状态
 
 2026-09-24 UDP 输入缺口已取得发送端证据并修复调度：真实抓包中输入帧 205 后直接出现 207，206 为权威空帧；旧算法对照复现，连续未来帧发布修复在两种构建中各通过 11,011 条断言及 12 项 RTT 测试。正式源码现为 1135 项，完整输入、框架、战术、AI 和原生边界门禁串行重验中。见[实现与证据](../reports/optimization-native-input-continuity-2026-09-24.md)，状态未提升。
@@ -159,7 +163,7 @@
 
 执行顺序：无
 
-验收检查：network_reconnect
+验收检查：network_reconnect、native_session_ports
 
 执行：`python3 .project/quality.py run task-23.1.1.2`
 

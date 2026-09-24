@@ -87,7 +87,7 @@ def main():
         if args.suite == "integration":
             for module, count in (("native_product_udp_peer_test", 9),
                                   ("native_product_records_test", 5),
-                                  ("native_product_udp_fixture_test", 5)):
+                                  ("native_product_udp_fixture_test", 6)):
                 raw = run([sys.executable, "-m", "unittest", "discover",
                            "-s", ROOT / ".project/checks", "-p", module + ".py", "-v"],
                           module, timeout=60)

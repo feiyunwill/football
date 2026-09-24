@@ -1,0 +1,15 @@
+{
+  "check": "native_session_ports",
+  "fingerprint": "142fb1f1950cbb31121a31fb7fa13436a349c021a2aa2fee4a01c285b17cc721",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1790218548.9663289,
+  "duration_seconds": 166.397,
+  "argv": [
+    "python3",
+    ".project/checks/native_automatic_port_contract.py"
+  ],
+  "log": "native_session_ports-1790218548966388991.log",
+  "log_sha256": "25a1474a92eaa71b11b66e487f717ffcc9751dcc406eebaee06b83a8cfb1066e"
+}

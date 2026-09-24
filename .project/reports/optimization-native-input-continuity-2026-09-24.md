@@ -1,3 +1,7 @@
+2026-09-24 完整阶段结果：native-control-fragment-adoption-20260924-a 已全部通过 quality_selftest、tactical_integration、input_contract、framework_regression、ai_decisions、native_boundary；日志及私有 X11 回收已核对。输入为 42 项结果、3098318 个断言、两种构建各 1031 帧独立回放，战术为 32 项结果、163494 个断言及 24 次回放。之后自动端口采纳改变源码，新版相关门禁另行执行；此记录只覆盖分片采纳的 1135 项清单。
+
+2026-09-24 更新：连续输入修复正式门禁已通过 42 项结果、3070762 个断言，TCP/UDP 共 1030 个记录帧在两种构建独立回放。证据来自 native-input-contiguous-adoption-20260924-a。之后战术检查器源码发生变更，native-control-fragment-adoption-20260924-a 已排新一轮完整 input_contract；此前通过不自动覆盖新清单。以下为历史记录。
+
 # UDP 持续输入空帧：发送证据、调度修复与验收
 
 归属：ms-22.1 → plan-22.1.1 → task-22.1.1.1；关联 ms-23.1。正式修复已接入，完整门禁正在重新执行；输入和产品完成状态尚未提升。

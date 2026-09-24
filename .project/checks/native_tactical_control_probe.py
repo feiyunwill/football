@@ -47,13 +47,13 @@ def case(binary,label,kind,env,root):
       send(packet(86,struct.pack("<QI",1,0)));send(auth(0))
       control=struct.pack("<BHI",10,3 if kind=="invalid_slot" else 1,2 if kind=="invalid_frame" else 1)
       control+=struct.pack("<BHI",11,1,1)
-      parts=[control[:3],control[3:10],control[10:]];due=time.monotonic()+.075
-     elif tag==8:send(record)
+      parts=[control[:3],control[3:10],control[10:]];fixture.begin_fragments();due=time.monotonic()+.075
+     elif tag==8:fixture.send_heartbeat(record)
      else:require(tag==2 and ready,"Input escaped Ready barrier")
     if ready and step<len(parts) and time.monotonic()>=due:
      if first_control_at is None:first_control_at=time.monotonic()
      send(parts[step]);step+=1;due=time.monotonic()+.075
-     if step==len(parts):send(auth(1));send(auth(2))
+     if step==len(parts):fixture.end_fragments();send(auth(1));send(auth(2))
    result.update(ready=ready,loading_receipt=receipt,loading_complete=loaded,current_udp_transport=fixture.established,bootstrap_ms=None if ready_at is None else (ready_at-started)*1000,
                  control_ms=None if ready_at is None else (time.monotonic()-ready_at)*1000,
                  first_control_ms=None if first_control_at is None else (first_control_at-ready_at)*1000,

@@ -1,0 +1,183 @@
+Running: cmake -S engine -B /tmp/football-optimization-native -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.6s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: cmake --build /tmp/football-optimization-native -j 1 --target football_server football_client football_server_tcp football_client_tcp football_server_udp football_client_udp football_lobby headless_match standalone_game
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 14%] Built target scenelib
+[ 20%] Built target utilslib
+[ 27%] Built target gui2lib
+[ 38%] Built target baselib
+[ 47%] Built target systemsgraphicslib
+[ 49%] Built target loaderslib
+[ 52%] Built target typeslib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target football_server
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 14%] Built target scenelib
+[ 20%] Built target utilslib
+[ 27%] Built target gui2lib
+[ 38%] Built target baselib
+[ 47%] Built target systemsgraphicslib
+[ 49%] Built target loaderslib
+[ 52%] Built target typeslib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target football_client
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 14%] Built target scenelib
+[ 20%] Built target utilslib
+[ 27%] Built target gui2lib
+[ 38%] Built target baselib
+[ 48%] Built target systemsgraphicslib
+[ 50%] Built target loaderslib
+[ 53%] Built target typeslib
+[ 53%] Built target blunted2
+[ 79%] Built target gamelib
+[ 88%] Built target menulib
+[100%] Built target football_engine
+[100%] Built target football_server_tcp
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 14%] Built target scenelib
+[ 20%] Built target utilslib
+[ 27%] Built target gui2lib
+[ 38%] Built target baselib
+[ 47%] Built target systemsgraphicslib
+[ 49%] Built target loaderslib
+[ 52%] Built target typeslib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target football_client_tcp
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 14%] Built target scenelib
+[ 20%] Built target utilslib
+[ 27%] Built target gui2lib
+[ 38%] Built target baselib
+[ 47%] Built target systemsgraphicslib
+[ 49%] Built target loaderslib
+[ 52%] Built target typeslib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target football_server_udp
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 14%] Built target scenelib
+[ 20%] Built target utilslib
+[ 27%] Built target gui2lib
+[ 38%] Built target baselib
+[ 47%] Built target systemsgraphicslib
+[ 49%] Built target loaderslib
+[ 52%] Built target typeslib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target football_client_udp
+[100%] Built target football_lobby
+[  3%] Built target datalib
+[ 13%] Built target scenelib
+[ 18%] Built target utilslib
+[ 26%] Built target gui2lib
+[ 37%] Built target baselib
+[ 47%] Built target systemsgraphicslib
+[ 49%] Built target loaderslib
+[ 52%] Built target typeslib
+[ 52%] Built target blunted2
+[ 79%] Built target gamelib
+[ 88%] Built target menulib
+[100%] Built target football_engine
+[100%] Built target headless_match
+[  3%] Built target datalib
+[ 12%] Built target scenelib
+[ 18%] Built target utilslib
+[ 25%] Built target gui2lib
+[ 37%] Built target baselib
+[ 46%] Built target systemsgraphicslib
+[ 48%] Built target loaderslib
+[ 51%] Built target typeslib
+[ 51%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target standalone_game
+Running: readelf -d /tmp/football-optimization-native/bin/football_server
+Running: readelf -d /tmp/football-optimization-native/bin/football_client
+Running: readelf -d /tmp/football-optimization-native/bin/football_server_tcp
+Running: readelf -d /tmp/football-optimization-native/bin/football_client_tcp
+Running: readelf -d /tmp/football-optimization-native/bin/football_server_udp
+Running: readelf -d /tmp/football-optimization-native/bin/football_client_udp
+Running: readelf -d /tmp/football-optimization-native/bin/football_lobby
+Running: readelf -d /tmp/football-optimization-native/bin/headless_match
+Running: readelf -d /tmp/football-optimization-native/bin/standalone_game
+Running: readelf -d /tmp/football-optimization-native/libfootball_engine.so
+Running: nm -D --undefined-only /tmp/football-optimization-native/libfootball_engine.so
+Running: cmake -S engine -B /tmp/football-optimization-native -DBUILD_PYTHON_BINDINGS=ON -DPython_EXECUTABLE=/root/.cache/football-quality-20260910/venv/bin/python3 -DPython_ROOT_DIR=/root/.cache/football-quality-20260910/venv -Dpybind11_DIR=/root/.cache/football-quality-20260910/venv/lib/python3.14/site-packages/pybind11/share/cmake/pybind11
+Using Python: 3.14
+Using pybind11 for Python bindings
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.4s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: cmake --build /tmp/football-optimization-native -j 1 --target game
+[  3%] Built target datalib
+[ 11%] Built target gui2lib
+[ 21%] Built target baselib
+[ 30%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 76%] Built target gamelib
+[ 86%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target game
+Running: /root/.cache/football-quality-20260910/venv/bin/python3 -I -c 
+import importlib, json, pathlib, pickle, sys
+root = pathlib.Path(sys.argv[1]).resolve()
+sys.path.insert(0, str(root))
+before = list(sys.path)
+import gfootball_engine
+module = importlib.import_module('gfootball_engine._gameplayfootball')
+assert pathlib.Path(module.__file__).resolve().parent == root/'gfootball_engine'
+assert sys.path == before
+assert sys.modules['_gameplayfootball'] is module
+assert gfootball_engine.GameEnv is module.GameEnv
+role = module.e_PlayerRole.e_PlayerRole_GK
+assert pickle.loads(pickle.dumps(role)) == role
+env = module.GameEnv()
+assert callable(env.step)
+mapped = {pathlib.Path(line.split()[-1]).resolve()
+          for line in pathlib.Path('/proc/self/maps').read_text().splitlines()
+          if line.split()[-1].endswith('/libfootball_engine.so')}
+assert mapped == {root/'gfootball_engine/libfootball_engine.so'}, mapped
+print(json.dumps(dict(passed=True, assertions=7, mapped_engine=[str(p) for p in mapped])))
+ /tmp/football-relocated-binding-d_6mi5iz/relocated
+{"passed": true, "assertions": 14, "skipped": 0, "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.44", "dependencies": {"football_server": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_client": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_server_tcp": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_client_tcp": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_server_udp": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_client_udp": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_lobby": ["libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "headless_match": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "standalone_game": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "libfootball_engine.so": ["libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6", "ld-linux-x86-64.so.2"]}, "relocated_python_import": true, "relocated_package": {"passed": true, "assertions": 7, "mapped_engine": ["/tmp/football-relocated-binding-d_6mi5iz/relocated/gfootball_engine/libfootball_engine.so"]}, "binding_python": "/root/.cache/football-quality-20260910/venv/bin/python3", "pybind11": "3.1.0", "packaging_scope": "native relocation; actual wheel installation has a separate probe", "build": "/tmp/football-optimization-native"}

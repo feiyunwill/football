@@ -37,6 +37,7 @@ class Fixture:
         self.socket=socket;self.address=None;self.nonce=None;self.challenge=None
         self.identity=None;self.established=False;self.tx=0;self.rx=0
         self.pending={};self.ordered={};self.recent={};self.buffer=bytearray()
+        self.fragmenting=False;self.deferred_heartbeats=[]
     def raw(self,data):
         self.socket.sendto(data,self.address)
     def send(self,payload):
@@ -45,6 +46,20 @@ class Fixture:
                      (not self.pending or self.tx-min(self.pending)<64),"Fixture send window exhausted")
         data=b"\x01"+self.identity+struct.pack("<IH",self.tx,len(payload))+payload
         self.pending[self.tx]=(data,time.monotonic());self.tx+=1;self.raw(data)
+    def begin_fragments(self):
+        wire.require(not self.fragmenting and not self.deferred_heartbeats,"Nested fragment transaction")
+        self.fragmenting=True
+    def send_heartbeat(self,record):
+        wire.require(len(record)==9 and record[0]==8,"Invalid heartbeat record")
+        if self.fragmenting:
+            wire.require(len(self.deferred_heartbeats)<16,"Unbounded deferred heartbeat queue")
+            self.deferred_heartbeats.append(record)
+        else:self.send(record)
+    def end_fragments(self):
+        wire.require(self.fragmenting,"No active fragment transaction")
+        self.fragmenting=False
+        pending=self.deferred_heartbeats;self.deferred_heartbeats=[]
+        for record in pending:self.send(record)
     def retransmit(self):
         now=time.monotonic()
         for seq,(data,sent) in list(self.pending.items()):
