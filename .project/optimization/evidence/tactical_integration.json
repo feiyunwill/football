@@ -1,17 +1,17 @@
 {
   "check": "tactical_integration",
-  "fingerprint": "3f8e337d662038a6d93e276309e57c537c72ef7673714b416616092d2624a1e3",
-  "passed": true,
-  "reason": "Structured assertions evaluated",
-  "returncode": 0,
-  "started": 1790196751.1375937,
-  "duration_seconds": 265.025,
+  "fingerprint": "d364c009af5bfff898abce0fb96eeb62eb32bb71b3231db602a494dba5d55806",
+  "passed": false,
+  "reason": "Command exited with 1",
+  "returncode": 1,
+  "started": 1790213882.5735695,
+  "duration_seconds": 29.115,
   "argv": [
     "python3",
     ".project/checks/ai_tactics_contract.py",
     "--suite",
     "integration"
   ],
-  "log": "tactical_integration-1790196751137650076.log",
-  "log_sha256": "76497b643f3381e720a1308f8d4c45230918b50da1487bfcefd935a696729dd6"
+  "log": "tactical_integration-1790213882573630646.log",
+  "log_sha256": "5bcee335f8f7e5f4977afc22460abeee2183afbd196708dd4701a7f6b057403b"
 }

@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "/root/work_space/football/.project/checks/ai_tactics_contract.py", line 206, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/root/work_space/football/.project/checks/ai_tactics_contract.py", line 116, in main
+    run([sys.executable, ROOT / ".project/checks/native_tactics_probe.py",
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         "--build", build, "--output", destination],
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        label + "-actual-takeover", child, timeout=180)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/ai_tactics_contract.py", line 84, in run
+    return runner.run_command(argv, label, output=output, commands=commands,
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                              environment=child, timeout=timeout)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/performance_regression.py", line 118, in run_command
+    require(process.returncode == 0, f'Long-match command failed: {log}')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/native_boundary.py", line 34, in require
+    raise RuntimeError(message)
+RuntimeError: Long-match command failed: /root/work_space/football/.project/optimization/benchmarks/ai-tactics-integration-1790213882631298409/release-actual-takeover.log

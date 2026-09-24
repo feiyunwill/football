@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/root/work_space/football/.project/checks/input_contract.py", line 245, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/root/work_space/football/.project/checks/input_contract.py", line 194, in main
+    run(['unshare','--mount','--propagation','private',sys.executable,
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         ROOT/'.project/checks/native_input_x11.py','--parent-mount-namespace',before['namespace'],
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+    #              '--sanitized-build',builds['sanitized']],'actual-input-windows',timeout=360)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         '--sanitized-build',builds['sanitized']],'actual-input-windows',timeout=600)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/input_contract.py", line 82, in run
+    return runner.run_command(argv,label,output=output,commands=commands,
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                              environment=env,timeout=timeout)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/performance_regression.py", line 118, in run_command
+    require(process.returncode == 0, f'Long-match command failed: {log}')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/native_boundary.py", line 34, in require
+    raise RuntimeError(message)
+RuntimeError: Long-match command failed: /root/work_space/football/.project/optimization/benchmarks/input-contract-1790213518202746609/actual-input-windows.log

@@ -1,3 +1,31 @@
+## 2026-09-24 COMMIT CHECKPOINT: FORMAL FAILURES RETAINED; PRIVATE DIAGNOSTICS COMPLETE
+
+2026-09-24 提交前状态更新：正式 B 已结束，AI 决策通过，架构、输入和战术集成失败，本轮公共 UDP 完整运行未执行。控制记录和输入周期候选均因前置依赖失败结束，未执行测试。内存诊断 A、B 已完成采集，未关闭原架构失败。独立 UDP 探针迁移报告通过 8 场对局和 16 次独立回放；真实客户端探针迁移报告通过 4 场对局和 8 次独立回放。上述探针仍在私有候选目录，尚未接入正式检查器，不能视为完整战术门禁或产品验收通过。以下保留阶段历史记录。
+
+## 2026-09-24 CANONICAL ARCHITECTURE FAILED RSS LIMIT; SERIAL DIAGNOSIS QUEUED
+
+This turn: PROGRESS. Fresh full architecture gate ended exit1 after911.18s at engine_lifetime_contract original restart RSS assertion (cycle3 warm,cycle11 final,16MiB limit). Failure record/log retained SHA06623a4e0fe545d9117c64803029430ae68bc4dfd3f92e69cec5ff69cfa79118. Not a cybersecurity/approval/environment block. Do not mark architecture/product passed or goal blocked; root cause not yet known.
+
+AdoptionB PID2671829/start69514044 remains live, nowinput_contract; driver deliberately collects input/tactical/AI then exits1 and SKIPS publicUDP runtime. ControlA PID2703091/start69582583 and epochA PID2729246/start69648415 remain queued and will dependency-fail without testing afterBterminalfailure. Do not restart them or rewrite their frozen inputs. New diagnosisA PID2734622/start69675587 launched1790213671.616475 waits allthree owners terminal before any compile/test.
+
+New native-lifetime-rss-diagnosis-20260924-a preserves original test source + diagnostic-only telemetry copy, original fullDebug compile/link commands, exact failing gate/log, planned1128manifest and pinned canonical binary/core hashes. Schedule2original+3instrumented serial runs; original12cycles/cycle3/16MiB thresholds andASAN_OPTIONS halt_on_error=1:detect_leaks=1:quarantine_size_mb=16 retained. Per-cycle allocated/heap/free/unmapped/RSS distinguishes hypotheses; no forcedpurge,suppression,thresholdrelaxation. No diagnostic run yet. Output diagnostic_execution_complete is not acceptance.
+
+Private epoch implementation prepared thisturn remains unvalidated30GTests+actualPythonoracle (not executed). No canonical source changes beyond already-pushed1891478. All1128source+17adopted bytes frozen until allfour stages terminal. Then diagnose/fix inNEWstage and rerunfullappropriategates; later requeue both pause prerequisites against verifiedinputs.
+
+Latest37doc manifest native-slot-group-evidence-20260924-p/documents-after.json, originals archived first, failure and verifiedliveowner proofs. Read optimization-lifetime-rss-2026-09-24.md for scope. Graph Verify gen2026-09-24T01:31:09Z/metadata01:32:09Z; lifetime/GameEnvclose exact snippets checked, graphheuristic callmismatches not trusted. Remaining menu/pause/checkpoint/weaknet/capacity/inputp95/render/fullRLtools/training/packaging/hardware/performance still pending. Goal ACTIVE, not complete.
+
+## 2026-09-24 COMMIT PUSH VERIFIED; EPOCH INPUT CANDIDATE QUEUED AFTER EXISTING CHAIN
+
+Previous goal turn: PROGRESS, committed37files as1891478a10ae75adeeb5a701c1bb35ddc92adbf3 and independently verified origin/master sameSHA. Current turn: PROGRESS, prepared strict epoch codec + native fixed-window adapter +30 GTests + actual-Python codec/ownership oracle, launched immutable queue after existing control candidate. Canonical source remains1128manifest+17adoptedfiles, unchanged by commit/preparation. No new production adoption or product-completion claim.
+
+Three owners verified live by /proc identity: adoptionB2671829/start69514044 (architecture_regression); controlA2703091/start69582583 (waits entireBformal+runtime); epochA2729246/start69648415 launched1790213399.8928022 (waitscontrolAterminalsuccess). Do not restart any owner on observation timeout. Keep builds/tests/measurements serial. Epoch inputs frozen; fix any issue in a NEW stage.
+
+Architecture current progress includes passed loading/TCP/UDP cancellation, tactical/touch/reachability, headless/render engine and seed42 simulation checks; entire architecture gate still pending. Current formal results already passed: native boundary,767C++,783Python305subtests,207sanitizedcomponents. Need remaining architecture/input/tactical/AI and four publicUDP GUI+independentreplay, then both private candidates.
+
+Epoch private stage native-epoch-input-contract-20260924-a:30GTests planned, independent canonicalPython packet/ownership oracle planned, Release/fullDebugSAN. Only syntax checked so far. No capability/hostcommand/frameowner/ACKbarrier/menu/checkpoint integration acceptance. Float32 threshold discrepancy explicitly covered; no claim allPython/nativewindow semantics equivalent. See new optimization-native-epoch-input-2026-09-24.md.
+
+Graph Verify gen2026-09-24T01:24:18Z, exact sources and coverage checked; serverpartial1049directread. Latest36doc manifest native-slot-group-evidence-20260924-o/documents-after.json; originals archived before edit, source snapshots and live owner proofs retained. Lastpush1891478. Goal active; all product gaps previously listed remain.
+
 ## 2026-09-24 POST-ADOPTION FRAMEWORK AND 207 SANITIZED COMPONENTS PASSED; ARCHITECTURE LIVE
 
 2026-09-24 正式接入后的完整框架已通过：767 项 C++、783 项 Python 及 305 个子测试，双种子各 1000 帧的独立进程与快照回放通过，私有 X11 已回收。另有 207 项完整 Debug ASan/UBSan 组件测试全部通过，正式日志、XML 及已结束命令哈希已复核。B 驱动继续执行架构、输入、战术、AI 与四场公共 UDP 实测；整体验收尚未完成。下一暂停边界/确认记录 C++ 候选已按成功依赖排在其后，28 项测试及每配置 7449 个跨语言样例尚未执行。
