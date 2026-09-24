@@ -959,7 +959,9 @@
         "engine/__init__.py",
         "gfootball/**/*.py",
         "requirements.txt",
-        "pyproject.toml"
+        "pyproject.toml",
+        ".project/tests/acceptance_inputs_test.py",
+        ".project/tests/loading_acceptance_test.py"
       ],
       "tools": [
         "python3",

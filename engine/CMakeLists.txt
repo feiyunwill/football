@@ -251,7 +251,9 @@ endif()
 set(FOOTBALL_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/../bin" CACHE PATH "Native executable directory")
 set(BIN_DIR "${FOOTBALL_RUNTIME_OUTPUT_DIRECTORY}")
 
-add_executable(football_server src/frame_sync/asio_server_engine.cpp)
+# Public UDP entrypoint shares the recoverable native session implementation.
+add_executable(football_server src/frame_sync/integrated_server.cpp)
+target_compile_definitions(football_server PRIVATE FOOTBALL_NATIVE_UDP_SERVER=1 FOOTBALL_NATIVE_DEFAULT_SERVER=1)
 target_include_directories(football_server PRIVATE ${PROJECT_SOURCE_DIR}/src)
 # 2026-09-09: native programs link one engine, without Python or duplicated static libraries.
 # target_link_libraries(football_server PRIVATE
@@ -266,7 +268,8 @@ target_include_directories(football_server PRIVATE ${PROJECT_SOURCE_DIR}/src)
 target_link_libraries(football_server PRIVATE football_engine Boost::system)
 set_target_properties(football_server PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
-add_executable(football_client src/frame_sync/integrated_client_udp.cpp)
+add_executable(football_client src/frame_sync/integrated_client.cpp)
+target_compile_definitions(football_client PRIVATE FOOTBALL_NATIVE_UDP_CLIENT=1)
 target_include_directories(football_client PRIVATE ${PROJECT_SOURCE_DIR}/src)
 # 2026-09-09: native programs link one engine, without Python or duplicated static libraries.
 # target_link_libraries(football_client PRIVATE
@@ -490,7 +493,7 @@ target_include_directories(football_native_recovery PUBLIC ${PROJECT_SOURCE_DIR}
 set_target_properties(football_native_recovery PROPERTIES POSITION_INDEPENDENT_CODE ON)
 # 2026-09-15: the actual recoverable TCP client also owns checkpoint journal digests.
 # foreach(target football_server_tcp engine_tcp_contract engine_tcp_client_contract)
-foreach(target football_server_tcp football_client_tcp engine_tcp_contract engine_tcp_client_contract)
+foreach(target football_server football_client football_server_tcp football_client_tcp engine_tcp_contract engine_tcp_client_contract)
   target_link_libraries(${target} PRIVATE football_native_recovery)
 endforeach()
 add_executable(engine_native_recovery_tcp_contract EXCLUDE_FROM_ALL ${ENGINE_NATIVE_RECOVERY_TCP_CONTRACT_SOURCES})

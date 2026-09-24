@@ -253,6 +253,16 @@ if(UNIX)
   endforeach()
 endif()
 
+# Permanent multi-seat ownership, negotiation, server-boundary and trace contracts.
+if(UNIX)
+  foreach(target native_slot_groups_test native_slot_group_wire_test native_slot_group_server_test native_authority_recording_test)
+    add_executable(${target} ${target}.cpp)
+    configure_test_target(${target})
+    target_link_libraries(${target} PRIVATE football_test_native_recovery Threads::Threads)
+    gtest_discover_tests(${target} TEST_PREFIX "${target}." PROPERTIES TIMEOUT 30)
+  endforeach()
+endif()
+
 # Measured transport lead and cadence contracts retain regression witnesses.
 add_executable(native_input_rtt_test native_input_rtt_test.cpp)
 configure_test_target(native_input_rtt_test)

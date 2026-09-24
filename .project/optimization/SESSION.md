@@ -1,3 +1,73 @@
+## 2026-09-24 POST-ADOPTION FRAMEWORK AND 207 SANITIZED COMPONENTS PASSED; ARCHITECTURE LIVE
+
+2026-09-24 正式接入后的完整框架已通过：767 项 C++、783 项 Python 及 305 个子测试，双种子各 1000 帧的独立进程与快照回放通过，私有 X11 已回收。另有 207 项完整 Debug ASan/UBSan 组件测试全部通过，正式日志、XML 及已结束命令哈希已复核。B 驱动继续执行架构、输入、战术、AI 与四场公共 UDP 实测；整体验收尚未完成。下一暂停边界/确认记录 C++ 候选已按成功依赖排在其后，28 项测试及每配置 7449 个跨语言样例尚未执行。
+
+This turn: PROGRESS. B Linux owner PID2671829/start_ticks69514044 remains live; current phase architecture_regression. Framework started1790212180.171256,duration267.144,logSHA69cdf3bc4179bf7f10bffe02a0206e71f6a518f734031074d2f5fa595aa8c657. Native boundary121.12s passed. C++767 and sanitized207 XMLs +finished command hashes verified, privateX11reaped. Current canonical authority remains1128 sources-after and17 adopted-files in native-multiseat-adoption-20260924-b; freeze through ALL live/queued stages.
+
+New control candidate owner PID2703091/start_ticks69582583, launched1790212741.5728183, actual phase queued-after-canonical-adoption-and-runtime. It waits for same B terminal exit0 and reportpassed, then runs isolated28 GTests and7449 actual-Python oracle cases in Release/fullDebug. Canonical source remains untouched. Inputs frozen once queued; fix any failure in a NEW stage. The codec is only first required part of host pause; capability negotiation/host command ownership/input epochs/frame barriers/UI/recovery/menu/archive remain unimplemented and unaccepted.
+
+Graph Tier2 gen2026-09-24T01:07:47Z, metadata01:14:14Z. Native server public run_frame_loop→Impl.Run template edge is absent from graph; exact snippets show the call, so no negative-call claim. Partial server1049 read directly; existing Python match_control and codec tests read as independent reference. Native pending-input discovery had no positive name match and was NOT used as absence evidence. All new candidate files excluded from graph and accessed directly.
+
+Latest35-doc manifest native-slot-group-evidence-20260924-n/documents-after.json; all previous34+SESSION archived, completed formal/component evidence copied. Native execution helper remains system-distro root +nsenter target2 into existing archlinux namespaces, no service reset/global change. Next pollsame B owner through remaining gates/runtime, then same queued control owner; do not run concurrent builds. Goal active, full product incomplete, lastpush5580b79 unchanged.
+
+## 2026-09-24 NATIVE EXECUTION RESTORED WITHOUT RESTART; MULTISEAT B ADOPTED, FORMAL GATES LIVE
+
+Previous goal turn: PROGRESS, menu parity audit and terminal WSL block evidence; goal was blocked. This resumed turn: PROGRESS, found/verified non-disruptive execution through system distro into EXISTING archlinux namespaces, revalidated full1120 source identity and19 frozen orchestration inputs, launched preserved B native driver once, adopted17 files and passed21 permanent checker tests. Goal is active, not complete; prior blocker audit resets after resume and environment recovery.
+
+2026-09-24 执行路径恢复并正式接入：常规 archlinux 启动入口仍超时，但系统发行版可执行命令；以 root 进入现有 archlinux 命名空间后，发行版、UID、工作目录、字体链接、原 1120 项源码及 19 个驱动输入均核验一致，未重启服务或改动系统配置。B 原生驱动已启动（PID 2671829 / start_ticks 69514044），完成前置证据核验并接入 17 个文件，正式源码清单为 1128 项，21 项验收器自测通过，完整门禁正在串行执行。环境阻塞已解除；正式验收及产品级状态仍待后续检查与实际对局结果。
+
+AUTHORITATIVE SOURCE: native-multiseat-adoption-20260924-b/sources-after.json (1128 entries), plus adopted-files.json for all17 patches including separately pinned program/tests. Do NOT use old1120 as current source. Freeze canonical source and all queued/executed inputs through full gate/runtime chain. Current Linux owner PID2671829/start_ticks69514044 (process.json). Poll this owner; never restart merely on observation timeout. Native queue is actual driver, NOT expired Windows readiness PID12796. Old A orchestration remains withdrawn.
+
+Execution route: wsl.exe --system --user root --exec /usr/bin/nsenter --target 2 --mount --uts --ipc --net --pid --root --wd -- /usr/bin/python3 (wrapper chdir /root/work_space/football). Native identity proof: wsl-system-resume-check-20260924-a/native-identity.json, confirms Arch/root/systemd and original font link. Default system-distro user wslg initially lacked permissions; explicit root is the existing ordinary WSL root selection. No service/distro restart, global configuration, or persistent mount change. Normal archlinux CLI launch still fails; keep evidence. Native namespace mount mnt:[4026532221], pid:[4026532223].
+
+B executes native_boundary→full framework/privateX11→207 fullDebug sanitized component cases→architecture→input→tactical→AI→canonical four-case UDP runtime. Permanent C++ floor767 and21 checker tests. FullDebug keeps-g, ASan/UBSan,no recovery,frame pointers,no-O1. Public runtime remains1000frames/case,300s independent replay; no original scope/budget reduction. Keep menu parity gaps (K local input vs authoritative pause, P replay vs checkpoint, ephemeral port/scenario/archive/actual menu routing), weaknet/capacity/inputp95/render/fullRLtools/training/packaging/hardware/performance pending.
+
+Latest34-doc manifest native-slot-group-evidence-20260924-m/documents-after.json; all34+SESSION archived first. Prior block/queue notes below are historical. Last pushed5580b79; no new commit/push. Next pollsame Linux driver and archive fresh formal results; fix any new failure in NEW immutable stage. Do not treat canonical adoption as passed gates or overall product completion.
+
+## 2026-09-24 B READINESS QUEUE TERMINAL FAILURE; BLOCKED AUDIT SATISFIED
+
+2026-09-24 最新终态：B 就绪队列已在 600 秒后失败退出，15 次 Linux 只读启动尝试全部超时，原生接入驱动未启动，正式源码未修改。相同 WSL 执行阻塞已连续三个回合出现，后续接入与原生验收依赖执行环境恢复；不能标记完成。详见[环境阻塞证据](../reports/optimization-environment-blocker-2026-09-24.md)。下方排队状态保留为历史。
+
+B readiness owner PID12796/start UTC2026-09-23T22:07:45.9200692Z is absent; authoritative readiness-exit exit1 finished1790201868.334633,15/15 read-only probes timed out. Native process.json/adopted.json do not exist. Same blocking condition observed in commit/push turn and both subsequent goal continuations. All safe preparatory work completed; actual Linux builds, ownership/runtime verification and canonical adoption cannot proceed without execution-environment restoration. blocked-audit.json records the three-turn evidence; request goal status blocked, not complete/paused.
+
+Current canonical source remains loading-transport-gate-adoption-20260924-b baseline1120. Latest candidate/drivers: native-multiseat-adoption-20260924-b and native-multiseat-canonical-runtime-20260924-b. Preserve all frozen input hashes; do not repeat withdrawn A orchestration or replay the expired readiness queue. After explicit goal resume/environment restoration, restart blocked audit counting, verify source/inputs/owners, and launch B native driver once; all formal and runtime gates remain mandatory.
+
+Latest34-document manifest native-slot-group-evidence-20260924-l/documents-after.json; previous33+SESSION archived, terminal queue proof and hashes retained. Last pushed commit5580b79c571eab974d9fa9e39a788ad98363899f; subsequent documents/reports uncommitted, private candidates ignored. No new commit/push, no WSL service/distro reset, no global settings changes. Full product acceptance remains false; menu parity source audit is not runtime acceptance.
+
+## 2026-09-24 B QUEUE VERIFIED LIVE; MENU PARITY GAPS NOW SOURCE-VERIFIED
+
+Previous goal turn: PROGRESS, predecessor identities verified and B adoption queue launched. Current turn: PROGRESS, bounded menu call/source audit identified five concrete integration gaps and retained eight source snapshots; verified wait on the SAME B Windows owner PID12796/start UTC2026-09-23T22:07:45.9200692Z. Do not replace or relaunch it while live.
+
+2026-09-24 菜单功能对齐审查完成（源码证据，非运行验收）：原生 K 键仅暂停本地输入，而现有 Host 菜单暂停服务器；原生 P 键保存回放，而菜单保存可恢复检查点。另确认端口 0、场景/档案选项和实际 Host/Join 路由需要显式接入，不能将公共二进制通过视为菜单通过。后续实现与端到端验收见[菜单功能对齐审查](../reports/optimization-native-menu-parity-2026-09-24.md)。正式接入仍由 B 就绪队列管理，不改动冻结源码。
+
+Read-only Linux /proc evidence shows low load, roughly 14GB available memory and 35 processes; no evidence of memory/task exhaustion, not a diagnosis of WSL root cause. Official WslLaunch API probe in wsl-launch-api-diagnostic-20260924-a returned HRESULT S_OK but the read-only native command produced no output or exit within20s; only that owned probe was terminated. API acceptance is NOT Linux execution success. No system settings/services/distro restart, and no canonical source changes.
+
+New report .project/reports/optimization-native-menu-parity-2026-09-24.md links ms23.1→plan23.1.1→task23.1.1.2. Audit graph Tier2 generation2026-09-23T22:06:24Z: complete one-hop Host/Join outgoing paths, exact graphical worker and host methods, NativeClientOptions/RunNativeClient and candidate mains; partial C++ ranges and excluded candidates read directly. K/P semantics and port0 constraints are concrete source findings; runtime/menu acceptance remains false.
+
+Latest33-document manifest native-slot-group-evidence-20260924-k/documents-after.json; previous32+SESSION archived. Canonical source still loading-adoption-B baseline1120 unless native-multiseat-adoption-20260924-b/adopted.json appears. Next inspect B readiness/native PID identities and terminal records; continue same native driver if launched. If queue expires, preserve terminal failure and reassess WSL launch blocker, never silently substitute Windows checks. Full product scope remains incomplete; no new commit/push after5580b79.
+
+## 2026-09-24 ADOPTION QUEUE B: CMAKE/CTEST IDENTITIES CORRECTED BEFORE NATIVE LAUNCH
+
+2026-09-24 接入队列更新：静态复核发现 rl_observation_contract 是 CTest 注册名，实际 CMake 构建目标为 engine_rl_observation_contract。A 队列已在原生驱动启动和源码修改前终止，完整保留其输入与撤回原因；新 B 驱动分开使用构建目标名和测试名，并额外将每个候选文件逐项比对已通过的 A 预检输入哈希。B 环境就绪队列已启动（Windows PID 12796，UTC 2026-09-23T22:07:45.9200692Z），最长等待 600 秒。当前仍为待正式接入，未将排队或静态检查算作门禁通过。
+
+AUTHORITATIVE NEXT OWNER: native-multiseat-adoption-20260924-b/readiness-process.json; Windows PID 12796/start UTC 2026-09-23T22:07:45.9200692Z. Actual runtime stage native-multiseat-canonical-runtime-20260924-b. A readiness owner 6896 and its own Windows descendants were terminated after checking no native process.json/adopted.json and no launch-native phase; withdrawn-before-native-launch.json preserves reason. A candidate tree remains the immutable preflight reference. Never execute the withdrawn A orchestration. All B candidate bytes equal the preflighted A candidate; native driver verifies this again.
+
+This turn is PROGRESS (full input/product identity evidence, real orchestration defect caught and corrected before mutation, automatic bounded readiness queue launched). WSL readiness uses only owned read-only /usr/bin/true clients, no distro/service reset. Linux driver has NOT yet launched at this checkpoint. Inspect live Windows process identity and queue terminal state; if native process.json appears, inspect PID/start_ticks and follow that owner. Do not re-launch after ambiguous acknowledgements. Canonical source remains baseline1120 until adopted.json proves mutation; then use B sources-after/adopted-files. Full product scope remains incomplete; no new commit/push after 5580b79.
+
+Latest 32-document manifest native-slot-group-evidence-20260924-j/documents-after.json; all prior32+SESSION archived. Earlier running/queued statuses below are historical. If the readiness queue expires, preserve failure evidence and reassess the same WSL launch condition; do not call this product validation or silently substitute Windows tests for Linux/GUI gates.
+
+## 2026-09-24 VERIFIED PREDECESSORS; CANONICAL ADOPTION CHAIN PREPARED; LINUX LAUNCH QUEUE LIVE
+
+Previous goal turn: PROGRESS, commit 5580b79c571eab974d9fa9e39a788ad98363899f pushed and independently verified at origin/master. This turn: PROGRESS, full predecessor input/product hashes verified and concrete canonical adoption/runtime drivers created. No new commit or push.
+
+2026-09-24 正式接入准备：四个前置阶段的输入与产物哈希均已复核（929/1518/917/25 项映射），正式源码 1119 个可直接读取文件保持原哈希，字体目标内容一致，符号链接拓扑仍需 Linux 原生复核。已生成接入驱动及公共入口运行驱动：归档原文件、逐项核验、接入已通过的候选后，串行执行 21 项验收器自测、完整框架、207 项完整 Debug ASan/UBSan 组件测试、架构、输入、战术、AI 门禁及四场公共 UDP 实测，保留 1000 帧与 300 秒独立回放预算。当前 WSL 新命令启动无响应；600 秒环境就绪队列已实际启动，恢复后仍须重新核验全部前置证据才允许改动正式源码。准备/排队不代表正式接入或验收通过。
+
+Stages: native-multiseat-adoption-20260924-a and native-multiseat-canonical-runtime-20260924-a. Adoption candidate files remain byte-identical to the passed 56-case preflight. prepared-driver-inputs.json pins 19 orchestration inputs. Queue owner: Windows PID 6896, StartTime UTC 2026-09-23T22:05:41.7356135Z, readiness-process.json; inspect actual process identity and readiness-status/attempts/exit before any follow-up. Do not relaunch a live owner. Initial Windows launcher path-format failure exited before script execution and is retained in readiness-launch-attempt-1.json. Queue only terminates its own timed-out Windows probe tree; never restarts WSL or changes system settings. It makes at most one native-driver launch attempt; ambiguous acknowledgement requires inspecting native process.json before retry.
+
+Canonical currently remains unadopted; do not change frozen inputs while queue is live. Linux driver verifies original 1120 source manifest and predecessors before mutation, archives originals, records each applied file, then rechecks every formal gate. If native process.json/adopted.json appears, source authority moves to sources-after.json/adopted-files.json; continue that owner. Runtime begins only after gates-ready.json. Windows pre-audit is evidence, not a substitute for native symlink/source checks. Overall product acceptance remains false.
+
+Latest document archive native-slot-group-evidence-20260924-i contains all 32 prior docs plus SESSION; graph Tier2 generation 2026-09-23T21:58:07Z, indexed checker symbols read via graph; excluded private driver sources read directly. Next: inspect queue/native handles, then formal/runtime results; preserve every failed stage and original budgets. Remaining menu/full weaknet/capacity/input latency/render/full RL-tools/training/packaging/hardware/performance scope is unchanged.
+
 ## 2026-09-24 COMMIT SNAPSHOT: PRIVATE CANDIDATES PASSED; CANONICAL ADOPTION PENDING
 
 2026-09-24 提交前核验：正式框架与架构检查均已通过；多席位运行 C 的 Release/完整 Debug 四场合计 4007 个权威帧、6 个恢复快照、4859 个保存段回放帧，全部 AI 指令与独立重建一致。默认 UDP 候选构建及 28 项非法参数拒绝检查通过，四场实际运行合计 4004 个权威帧、6 个恢复快照、4845 个保存段回放帧。新增永久测试候选在 Release/完整 Debug 各通过 56 项 C++ 测试，验收器自测 21 项通过。本次复核终态、执行日志哈希和两份 56 项 CTest XML；候选尚未接入正式源码，菜单、完整弱网矩阵、资源容量、延迟及整体产品验收仍未完成。以下排队/运行中描述为历史记录。

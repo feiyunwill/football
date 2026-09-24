@@ -1398,7 +1398,7 @@ class BasicIntegratedFrameSyncClient {
 //             recovery_phase_ = RecoveryPhase::AwaitSession;
 //             recovery_phase_since_ = recovery_last_activity_ = RecoveryClock::now();
 //             const auto hello = recovery_grant_ ? frame_sync::pack_recovery_resume(*recovery_grant_)
-//                                               : frame_sync::pack_recovery_load_hello();
+//                                               : frame_sync::pack_recovery_load_hello(true);
 //             if (!writer_->TrySend(hello.bytes.data(),hello.size)) {
 //               transport_lost_locked("session request send failed");return;
 //             }
@@ -1412,7 +1412,7 @@ class BasicIntegratedFrameSyncClient {
     recovery_phase_ = RecoveryPhase::AwaitSession;
     recovery_phase_since_ = recovery_last_activity_ = RecoveryClock::now();
     const auto hello = recovery_grant_ ? frame_sync::pack_recovery_resume(*recovery_grant_)
-                                      : frame_sync::pack_recovery_load_hello();
+                                      : frame_sync::pack_recovery_load_hello(true);
     if (!writer_->TrySend(hello.bytes.data(),hello.size)) {
       transport_lost_locked("session request send failed");return;
     }
@@ -1550,13 +1550,20 @@ class BasicIntegratedFrameSyncClient {
     if (kind == Kind::Session) {
       const auto session = frame_sync::decode_recovery_session(bytes);
       if (!session || recovery_phase_ != RecoveryPhase::AwaitSession) return invalid_message();
+      const auto slots = session->slot_mask ? session->slot_mask : uint32_t{1} << session->grant.slot;
       if (recovery_grant_) {
+        uint32_t prior_slots = 0;
+        for (const auto slot : my_slots_) prior_slots |= uint32_t{1} << slot;
+        if (slots != prior_slots) return invalid_message();
         if (session->match != frame_sync::NativeMatchContract(seed_,left_agents_,right_agents_) ||
             session->grant.match != recovery_grant_->match || session->grant.slot != recovery_grant_->slot ||
             session->grant.generation <= recovery_grant_->generation) return invalid_message();
       } else {
         seed_ = session->match.seed;left_agents_ = session->match.left;right_agents_ = session->match.right;
-        my_slots_ = {session->grant.slot};my_slot_index_ = session->grant.slot;
+        my_slots_.clear();
+        for (uint16_t slot = 0; slot < left_agents_ + right_agents_; ++slot)
+          if (slots & (uint32_t{1} << slot)) my_slots_.push_back(slot);
+        my_slot_index_ = session->grant.slot;
       }
       recovery_grant_ = session->grant;
       // 2026-09-14: an opening lease never becomes live input ownership.

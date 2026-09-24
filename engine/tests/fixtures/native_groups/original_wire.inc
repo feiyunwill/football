@@ -10,7 +10,8 @@
 #include <span>
 #include <stdexcept>
 #include <utility>
-namespace frame_sync {
+namespace original_wire {
+using namespace frame_sync;
 enum class NativeRecoveryKind : uint8_t {
   Hello = 80, Session = 81, Resume = 82, Snapshot = 83,
   // 2026-09-14: explicit initial-loading records keep existing values stable.
@@ -52,8 +53,6 @@ struct NativeRecoverySession {
   bool restoring = false;
   // 2026-09-14: an opening reservation has no simulation control.
   bool loading = false;
-  // Zero preserves the original single-seat session representation.
-  uint32_t slot_mask = 0;
   NativeRecoverySession() = default;
   ~NativeRecoverySession() = default;
   NativeRecoverySession(const NativeRecoverySession&) = default;
@@ -144,13 +143,12 @@ inline int record_size(std::span<const uint8_t> bytes) {
   const size_t fixed =
       // 2026-09-14: fixed bounds for initial-loading messages.
       // kind == NativeRecoveryKind::Hello ? 18 :
-      kind == NativeRecoveryKind::Hello ? 18 :
-      kind == NativeRecoveryKind::LoadHello ? (payload == 22 ? 22 : 18) :
+      kind == NativeRecoveryKind::Hello || kind == NativeRecoveryKind::LoadHello ? 18 :
 // 2026-09-15: cancellation proofs use the same complete grant, including its generation.
 //       kind == NativeRecoveryKind::LoadComplete || kind == NativeRecoveryKind::LoadReceipt ? 58 :
       kind == NativeRecoveryKind::LoadComplete || kind == NativeRecoveryKind::LoadReceipt ||
       kind == NativeRecoveryKind::LoadCancel || kind == NativeRecoveryKind::LoadCancelled ? 58 :
-      kind == NativeRecoveryKind::Session ? (payload == 95 ? 95 : 91) :
+      kind == NativeRecoveryKind::Session ? 91 :
       kind == NativeRecoveryKind::Resume ? 50 :
       kind == NativeRecoveryKind::Snapshot ? 56 :
       kind == NativeRecoveryKind::Ready ? 70 :
@@ -198,27 +196,15 @@ inline bool is_recovery_hello(std::span<const uint8_t> bytes) {
 }
 // 2026-09-14: initial resources have one absolute, nonrenewable budget.
 inline constexpr auto kNativeInitialLoadingTimeout = std::chrono::seconds(120);
-inline NativeRecoveryPacket pack_recovery_load_hello(bool slot_groups = false) {
-  auto result = native_recovery_wire::packet(NativeRecoveryKind::LoadHello,slot_groups ? 22 : 18);
+inline NativeRecoveryPacket pack_recovery_load_hello() {
+  auto result = native_recovery_wire::packet(NativeRecoveryKind::LoadHello,18);
   const auto inner = NativeMatchContract::Header();
   std::copy(inner.begin(),inner.end(),result.bytes.begin()+10);
-  if (slot_groups) native_recovery_wire::put(result.bytes,28,1,4);
   return result;
 }
 inline bool is_recovery_load_hello(std::span<const uint8_t> bytes) {
   return native_recovery_wire::complete(bytes,NativeRecoveryKind::LoadHello) &&
-         NativeMatchContract::IsHello(bytes.subspan(10,18)) &&
-         (bytes.size() == 28 || native_recovery_wire::get(bytes,28,4) == 1);
-}
-inline bool recovery_supports_slot_groups(std::span<const uint8_t> bytes) {
-  return is_recovery_load_hello(bytes) && bytes.size() == 32;
-}
-inline bool valid_recovery_slot_mask(const NativeRecoverySession& session) {
-  const auto count = session.match.left + session.match.right;
-  if (!count || count > 22 || session.grant.slot >= count) return false;
-  return !session.slot_mask ||
-      (!(session.slot_mask & ~((uint32_t{1} << count) - 1)) &&
-       (session.slot_mask & (uint32_t{1} << session.grant.slot)));
+         NativeMatchContract::IsHello(bytes.subspan(10));
 }
 // 2026-09-15: cancellation and its receipt share the existing fixed grant codec.
 inline NativeRecoveryPacket pack_recovery_load_control(
@@ -248,16 +234,15 @@ inline NativeRecoveryPacket pack_recovery_session(const NativeRecoverySession& s
   session.match.Validate();
   if (session.loading && session.restoring) throw std::invalid_argument("Loading cannot restore a live match");
   if (!native_recovery_wire::valid_grant(session.grant) ||
-      !valid_recovery_slot_mask(session))
+      session.grant.slot >= session.match.left + session.match.right)
     throw std::invalid_argument("Recovery session ownership is invalid");
-  auto result = native_recovery_wire::packet(NativeRecoveryKind::Session, session.slot_mask ? 95 : 91);
+  auto result = native_recovery_wire::packet(NativeRecoveryKind::Session, 91);
   const auto inner = session.match.Packet();
   std::copy(inner.begin(), inner.end(), result.bytes.begin() + 10);
   native_recovery_wire::put_grant(result.bytes, 42, session.grant, true);
   // 2026-09-14: flag 2 is only sent after the explicit loading hello.
   // result.bytes[100] = session.restoring ? 1 : 0;
   result.bytes[100] = session.loading ? 2 : session.restoring ? 1 : 0;
-  if (session.slot_mask) native_recovery_wire::put(result.bytes,101,session.slot_mask,4);
   return result;
 }
 inline std::optional<NativeRecoverySession> decode_recovery_session(
@@ -269,12 +254,8 @@ inline std::optional<NativeRecoverySession> decode_recovery_session(
           NativeMatchContract::kSession, result.match) || bytes[100] > 2)
     return std::nullopt;
   result.grant = native_recovery_wire::get_grant(bytes, 42, true);
-  if (bytes.size() == 105) {
-    result.slot_mask = static_cast<uint32_t>(native_recovery_wire::get(bytes,101,4));
-    if (!result.slot_mask) return std::nullopt;
-  }
   if (!native_recovery_wire::valid_grant(result.grant) ||
-      !valid_recovery_slot_mask(result)) return std::nullopt;
+      result.grant.slot >= result.match.left + result.match.right) return std::nullopt;
   // 2026-09-14: loading carries no authoritative snapshot.
   // result.restoring = bytes[100] != 0;
   result.restoring = bytes[100] == 1;

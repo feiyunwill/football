@@ -1,3 +1,6 @@
+#include <charconv>
+#include "frame_sync/native_authority_recording.hpp"
+#include <cstdlib>
 #include "frame_sync/default_scenario.hpp"  // 2026-09-09: common deterministic initial state.
 // Copyright 2019 Google LLC & Contributors
 // Integrated frame sync server: runs GameEnv headless, collects inputs,
@@ -628,15 +631,15 @@ using tcp = asio::ip::tcp;
 // }
 int main(int argc, char* argv[]) {
   try {
-    auto number = [](const char* text, uint64_t maximum) {
-      const std::string value(text); size_t used = 0;
-      if (value.empty() || value[0] == '-') throw std::invalid_argument("negative or empty argument");
-      const auto result = std::stoull(value, &used);
-      if (used != value.size() || result > maximum) throw std::invalid_argument("argument out of range");
-      return result;
+    auto number = [](const char* raw, uint64_t maximum) {
+      const std::string_view value(raw);uint64_t parsed=0;
+      const auto result=std::from_chars(value.data(),value.data()+value.size(),parsed);
+      if(result.ec!=std::errc{} || result.ptr!=value.data()+value.size() || parsed>maximum)
+        throw std::invalid_argument("Invalid numeric argument");
+      return parsed;
     };
-    if (argc != 1 && argc != 2 && argc != 4 && argc != 5)
-      throw std::invalid_argument("usage: football_server_tcp [port [left right [seed]]]");
+    if (argc != 1 && argc != 2 && argc != 4 && argc != 5 && argc != 6)
+      throw std::invalid_argument("usage: football_server [port [left right [seed [slots_per_client]]]]");
     // 2026-09-13: the product server executable uses the explicit native contract.
     // frame_sync::MultiplayerConfig config;
     frame_sync::MultiplayerConfig config;
@@ -646,12 +649,23 @@ int main(int argc, char* argv[]) {
     config.left_agents = static_cast<uint16_t>(argc >= 4 ? number(argv[2], 11) : 1);
     config.right_agents = static_cast<uint16_t>(argc >= 4 ? number(argv[3], 11) : 1);
     config.seed = static_cast<uint32_t>(argc >= 5 ? number(argv[4], UINT32_MAX) : 42);
+#if defined(FOOTBALL_NATIVE_DEFAULT_SERVER)
+    constexpr uint16_t default_slots_per_client=0;
+#else
+    constexpr uint16_t default_slots_per_client=1;
+#endif
+    const auto slots_per_client = static_cast<uint16_t>(
+        argc >= 6 ? number(argv[5],22) : default_slots_per_client);
     config.is_server = true; config.render = false;
     if (config.port == 0) throw std::invalid_argument("port must be positive");
     std::setvbuf(stdout, nullptr, _IONBF, 0); std::setvbuf(stderr, nullptr, _IONBF, 0);
     GameEnv env;
     frame_sync::StartTCPGame(env, config);
     asio::io_context io;
+    frame_sync::EngineTCPServerLimits session_limits;
+    if (const char* recording = std::getenv("FOOTBALL_AUTHORITY_RECORD"); recording && *recording)
+      session_limits.authority_observer = frame_sync::OpenNativeAuthorityRecording(
+          recording, frame_sync::NativeMatchContract(config.seed,config.left_agents,config.right_agents));
 // 2026-09-21: share the product session state across TCP and reliable UDP.
 //     frame_sync::EngineTCPServer server(io, config.port, config,
 #if defined(FOOTBALL_NATIVE_UDP_SERVER)
@@ -660,7 +674,7 @@ int main(int argc, char* argv[]) {
     frame_sync::EngineTCPServer server(io, config.port, config,
 #endif
         frame_sync::MakeGameEnvCallbacks(&env),
-        frame_sync::MakeGameEnvBotObserver(&env, config.left_agents, config.right_agents));
+        frame_sync::MakeGameEnvBotObserver(&env, config.left_agents, config.right_agents), std::move(session_limits), slots_per_client);
     asio::signal_set signals(io, SIGINT, SIGTERM);
     signals.async_wait([&](boost::system::error_code ec, int) { if (!ec) server.stop(); });
     std::exception_ptr network_error;

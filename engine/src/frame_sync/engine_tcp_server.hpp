@@ -1,3 +1,5 @@
+#include "frame_sync/native_recovery_groups.hpp"
+#include <bit>
 // Copyright 2026 Google LLC & Contributors
 // 2026-09-09: bounded TCP session transport with engine work at frame boundaries.
 #ifndef GFOOTBALL_FRAME_SYNC_ENGINE_TCP_SERVER_HPP
@@ -16,6 +18,7 @@
 
 namespace frame_sync {
 struct EngineTCPServerLimits {
+  std::function<void(std::span<const uint8_t>)> authority_observer;
   size_t connections = 128;
   StreamBudget send{256, 2 * 1024 * 1024};
   size_t snapshot_bytes = 1024 * 1024;
@@ -109,6 +112,8 @@ class BasicEngineSessionServer {
     BasicBoundedStreamWriter<Socket> writer;
     std::vector<uint8_t> receive;
     std::optional<uint16_t> slot;
+    uint32_t slots = 0;
+    bool slot_groups = false;
     session_token_t token = 0;
     uint32_t session_id = 0;
     Phase phase = Phase::Identify;
@@ -139,7 +144,7 @@ class BasicEngineSessionServer {
   struct Impl : std::enable_shared_from_this<Impl> {
     Impl(boost::asio::io_context& io, unsigned short port, MultiplayerConfig config,
          EngineCallbacks engine, std::function<BotGameSnapshot()> observe,
-         EngineTCPServerLimits limits)
+         EngineTCPServerLimits limits, uint16_t slots_per_client)
 // 2026-09-15: private transport-policy extraction; original lines:
 //         : io(io), acceptor(io, {tcp::v4(), port}), timer(io), config(std::move(config)),
         : io(io), acceptor(io, Transport::BindEndpoint(port)), timer(io), config(std::move(config)),
@@ -149,14 +154,16 @@ class BasicEngineSessionServer {
 // 2026-09-13: apply the native match cadence to disconnected-player AI.
 //           pending_inputs(this->config.left_agents + this->config.right_agents) {
           pending_inputs(this->config.left_agents + this->config.right_agents),
-          bots(this->config.native_product ? NativeMatchContract::kHz : 10) {
+          bots(this->config.native_product ? NativeMatchContract::kHz : 10),
+          slots_per_client(slots_per_client) {
+      if (slots_per_client > 22) throw std::invalid_argument("Invalid slots per client");
       this->limits.Validate(this->config);
       if (!this->engine.step_frame || !this->engine.save_state ||
           !this->engine.compute_hash || !this->observe)
         throw std::invalid_argument("integrated TCP server needs engine and bot observation callbacks");
       inputs.assign(this->config.left_agents + this->config.right_agents, SlotInput::Default());
       if (this->config.native_product)
-        credentials = std::make_unique<NativeRecoveryCredentials>(inputs.size(), this->limits.recovery_grace);
+        credentials = std::make_unique<NativeRecoveryGroups>(inputs.size(), this->limits.recovery_grace);
     }
 // 2026-09-15: private transport-policy extraction; original lines:
     Impl() = delete;
@@ -193,7 +200,7 @@ class BasicEngineSessionServer {
 //       if (client->slot) pending_inputs.RemoveSlot(*client->slot);
       const auto now = std::chrono::steady_clock::now();
       if (client->slot && (!client->recovery || OwnsRecoveryLocked(client, now))) {
-        pending_inputs.RemoveSlot(*client->slot);
+        RemoveOwnedInputs(client);
         if (client->recovery) {
           if (!client->reservation_until) client->reservation_until = now + limits.recovery_grace;
           credentials->detach(*client->slot, client->grant->generation, now);
@@ -215,12 +222,12 @@ class BasicEngineSessionServer {
         if (!started && client->disconnected && client->loading_until &&
             now >= *client->loading_until && client->grant) {
           credentials->release_admission(client->grant->slot,client->grant->generation,now);
-          client->slot.reset();client->grant.reset();
+          client->slot.reset();client->slots = 0;client->grant.reset();
         }
         if (!started && client->disconnected && client->recovery && client->grant &&
             client->reservation_until && now >= *client->reservation_until) {
           credentials->release_admission(client->grant->slot, client->grant->generation, now);
-          client->slot.reset();
+          client->slot.reset();client->slots = 0;
           client->grant.reset();
         }
       }
@@ -242,12 +249,12 @@ class BasicEngineSessionServer {
       ++counters.invalid_messages;
       if (client->recovery && client->grant) {
         const auto now = std::chrono::steady_clock::now();
-        if (OwnsRecoveryLocked(client, now)) pending_inputs.RemoveSlot(*client->slot);
+        if (OwnsRecoveryLocked(client, now)) RemoveOwnedInputs(client);
         credentials->revoke(client->grant->slot, client->grant->generation, now);
         if (!started) {
           credentials->release_admission(client->grant->slot, client->grant->generation, now);
-          if (client->slot) pending_inputs.RemoveSlot(*client->slot);
-          client->slot.reset();
+          if (client->slot) RemoveOwnedInputs(client);
+          client->slot.reset();client->slots = 0;
         }
       }
       CloseLocked(client); return false;
@@ -340,13 +347,24 @@ class BasicEngineSessionServer {
         client->read_pending = false; CloseLocked(client);
       }
     }
+    uint32_t AvailableSlotsLocked() const {
+      uint32_t used = credentials ? credentials->reserved() : 0;
+      for (const auto& owner : clients) used |= owner->slots;
+      uint32_t selected = 0;
+      const auto limit = slots_per_client ? slots_per_client : inputs.size();
+      for (uint16_t slot = 0; slot < inputs.size() && std::popcount(selected) < limit; ++slot)
+        if (!(used & (uint32_t{1} << slot))) selected |= uint32_t{1} << slot;
+      return selected;
+    }
+    void RemoveOwnedInputs(const std::shared_ptr<Session>& client) {
+      for (uint16_t slot = 0; slot < inputs.size(); ++slot)
+        if (client->slots & (uint32_t{1} << slot)) pending_inputs.RemoveSlot(slot);
+    }
     void AssignLocked(const std::shared_ptr<Session>& client) {
-      std::array<bool, 22> used{};
-      for (const auto& owner : clients) if (owner->slot) used[*owner->slot] = true;
-      size_t slot = 0;
-      while (slot < inputs.size() && used[slot]) ++slot;
-      if (slot == inputs.size() || started || next_session == 0) { CloseLocked(client); return; }
-      client->slot = static_cast<uint16_t>(slot);
+      const auto slots = AvailableSlotsLocked();
+      if (!slots || started || next_session == 0) { CloseLocked(client); return; }
+      client->slots = slots;
+      client->slot = static_cast<uint16_t>(std::countr_zero(slots));
       client->session_id = next_session++;
       // Preserve the existing token convention here; secure token issuance and
       // protocol capability negotiation remain a separate network contract.
@@ -355,8 +373,11 @@ class BasicEngineSessionServer {
       SendAssignmentLocked(client);
     }
     void SendAssignmentLocked(const std::shared_ptr<Session>& client) {
-      std::array<uint8_t, 5> bytes;
-      const auto length = PackSlotAssignment(&*client->slot, 1, bytes.data(), bytes.size());
+      std::array<uint16_t, 22> slots{};uint16_t count = 0;
+      for (uint16_t slot = 0; slot < inputs.size(); ++slot)
+        if (client->slots & (uint32_t{1} << slot)) slots[count++] = slot;
+      std::array<uint8_t, 3 + 2 * 22> bytes{};
+      const auto length = PackSlotAssignment(slots.data(), count, bytes.data(), bytes.size());
       SendLocked(client, bytes.data(), length);
     }
     bool ReconnectLocked(const std::shared_ptr<Session>& client, session_token_t token) {
@@ -367,7 +388,7 @@ class BasicEngineSessionServer {
           owner = candidate; break;
         }
       if (!owner) return InvalidLocked(client);
-      client->slot = owner->slot; owner->slot.reset();
+      client->slot = owner->slot;client->slots = std::exchange(owner->slots,0);owner->slot.reset();
       client->token = std::exchange(owner->token, 0);
       client->session_id = owner->session_id;
       client->resume_pending = true;
@@ -443,13 +464,20 @@ class BasicEngineSessionServer {
           client->phase != Phase::Streaming || !client->slot) return InvalidLocked(client);
       if (bytes.size() < 7) return false;
       uint16_t count; std::memcpy(&count, bytes.data() + 5, 2);
-      if (count != 1) return InvalidLocked(client);
-      const auto need = 7 + 2 + SLOT_INPUT_BYTES;
+      if (!client->slots || count != std::popcount(client->slots)) return InvalidLocked(client);
+      const auto need = 7 + count * (2 + SLOT_INPUT_BYTES);
       if (bytes.size() < need) return false;
       frame_id_t fid; std::vector<std::pair<uint16_t, SlotInput>> entries;
       const auto consumed = UnpackClientFrameInput(bytes.data(), bytes.size(), &fid, &entries);
-      if (!consumed || entries[0].first != *client->slot || !IsValidSlotInput(entries[0].second))
-        return InvalidLocked(client);
+      if (!consumed) return InvalidLocked(client);
+      uint32_t supplied = 0;
+      for (const auto& [slot,input] : entries) {
+        if (slot >= inputs.size() || !(client->slots & (uint32_t{1} << slot)) ||
+            (supplied & (uint32_t{1} << slot)) || !IsValidSlotInput(input))
+          return InvalidLocked(client);
+        supplied |= uint32_t{1} << slot;
+      }
+      if (supplied != client->slots) return InvalidLocked(client);
       client->last_activity = std::chrono::steady_clock::now();
       if (client->recovery && !OwnsRecoveryLocked(client, client->last_activity))
         return InvalidLocked(client);
@@ -471,12 +499,14 @@ class BasicEngineSessionServer {
              (client->phase == Phase::Streaming || client->snapshot_sent);
     }
     void BroadcastLocked(const uint8_t* bytes, size_t length) {
+      if (limits.authority_observer) limits.authority_observer({bytes,length});
       for (auto& client : clients) if (StreamsLocked(client)) SendLocked(client, bytes, length);
     }
     void ReconcileBotsLocked() {
       for (auto& client : clients) {
         if (!client->slot) continue;
-        const auto slot = *client->slot;
+        for (uint16_t slot = 0; slot < inputs.size(); ++slot) {
+          if (!(client->slots & (uint32_t{1} << slot))) continue;
 // 2026-09-14: rejected recovered sessions lose control on the same frame boundary.
 //         const bool unavailable = client->disconnected || client->phase != Phase::Streaming;
         const bool unavailable = client->disconnected || client->rejecting || client->phase != Phase::Streaming;
@@ -491,6 +521,7 @@ class BasicEngineSessionServer {
           client->resume_pending = false;
         }
         if (length) BroadcastLocked(bytes.data(), length);
+        }
       }
     }
     bool HasSnapshotsLocked() const {
@@ -549,6 +580,7 @@ class BasicEngineSessionServer {
                             NativeRecoveryCredentials::Time now) {
       return credentials && client->grant && client->slot &&
           *client->slot == client->grant->slot &&
+          client->slots == credentials->members(*client->slot) &&
           credentials->owns(*client->slot, client->grant->generation, now);
     }
     bool SendRecoveryLocked(const std::shared_ptr<Session>& client,
@@ -561,11 +593,11 @@ class BasicEngineSessionServer {
       ++counters.invalid_messages;
       const auto now = std::chrono::steady_clock::now();
       if (invalidate && OwnsRecoveryLocked(client, now)) {
-        pending_inputs.RemoveSlot(*client->slot);
+        RemoveOwnedInputs(client);
         credentials->revoke(*client->slot, client->grant->generation, now);
         if (!started) {
           credentials->release_admission(*client->slot, client->grant->generation, now);
-          client->slot.reset();
+          client->slot.reset();client->slots = 0;
         }
       }
       SendRecoveryLocked(client, pack_recovery_rejected(reason));
@@ -580,22 +612,22 @@ class BasicEngineSessionServer {
       session.grant = *client->grant;
       session.restoring = restoring;
       session.loading = client->phase == Phase::Loading;
+      session.slot_mask = client->slot_groups ? client->slots : 0;
       return SendRecoveryLocked(client, pack_recovery_session(session));
     }
     // 2026-09-14: only the new hello requests resource-loading admission.
     // bool AssignRecoveryLocked(const std::shared_ptr<Session>& client) {
-    bool AssignRecoveryLocked(const std::shared_ptr<Session>& client, bool loading = false) {
+    bool AssignRecoveryLocked(const std::shared_ptr<Session>& client, bool loading = false, bool slot_groups = false) {
       if (started) return RejectRecoveryLocked(client, NativeRecoveryReject::Busy);
-      std::array<bool, 22> used{};
-      for (const auto& owner : clients) if (owner->slot) used[*owner->slot] = true;
-      size_t slot = 0;
-      while (slot < inputs.size() && used[slot]) ++slot;
-      if (slot == inputs.size()) return RejectRecoveryLocked(client, NativeRecoveryReject::Busy);
-      const auto grant = credentials->issue(static_cast<uint16_t>(slot), std::chrono::steady_clock::now());
+      const auto slots = AvailableSlotsLocked();
+      if (!slots) return RejectRecoveryLocked(client, NativeRecoveryReject::Busy);
+      if (std::popcount(slots) > 1 && !slot_groups)
+        return RejectRecoveryLocked(client, NativeRecoveryReject::Incompatible);
+      const auto grant = credentials->issue(slots, std::chrono::steady_clock::now());
       if (!grant) return RejectRecoveryLocked(client, NativeRecoveryReject::SnapshotUnavailable);
-      client->recovery = true;
-      client->grant = grant;
-      client->slot = grant->slot;
+      client->recovery = true;client->slot_groups = slot_groups;
+      client->grant = grant->lease;
+      client->slot = grant->lease.slot;client->slots = grant->slots;
       // 2026-09-14: LoadComplete is required before Ready.
       // client->phase = Phase::AwaitReady;
       client->phase = loading ? Phase::Loading : Phase::AwaitReady;
@@ -620,12 +652,13 @@ class BasicEngineSessionServer {
       if (!grant) return RejectRecoveryLocked(client, NativeRecoveryReject::Unauthorized);
       // begin installs a fresh generation before an old socket can complete its close.
       CloseLocked(owner);
-      pending_inputs.RemoveSlot(request.slot);
+      RemoveOwnedInputs(owner);
       client->recovery = true;
-      client->grant = grant;
-      client->slot = grant->slot;
+      client->grant = grant->lease;
+      client->slot = grant->lease.slot;client->slots = grant->slots;
+      client->slot_groups = owner->slot_groups;
       client->reservation_until = owner->reservation_until.value_or(now + limits.recovery_grace);
-      owner->slot.reset();
+      owner->slot.reset();owner->slots = 0;
       owner->grant.reset();
       // 2026-09-14: an unstarted loader resumes the original lease without a match snapshot.
       // client->resume_pending = true;
@@ -660,8 +693,8 @@ class BasicEngineSessionServer {
       if (started || !credentials->release_admission(proof->slot, proof->generation, now))
         return RejectRecoveryLocked(client, NativeRecoveryReject::InvalidState);
       const auto receipt = pack_recovery_load_control(NativeRecoveryKind::LoadCancelled, *proof);
-      pending_inputs.RemoveSlot(proof->slot);
-      client->slot.reset();
+      RemoveOwnedInputs(client);
+      client->slot.reset();client->slots = 0;
       client->grant.reset();
       client->ready_proof.reset();
       client->accepted_frame.reset();
@@ -692,7 +725,7 @@ class BasicEngineSessionServer {
       if (client->phase == Phase::Identify && kind == NativeRecoveryKind::LoadHello) {
         if (!is_recovery_load_hello(packet))
           return RejectRecoveryLocked(client, NativeRecoveryReject::Incompatible);
-        accepted = AssignRecoveryLocked(client,true);
+        accepted = AssignRecoveryLocked(client,true,recovery_supports_slot_groups(packet));
       } else if (client->recovery &&
                  (kind == NativeRecoveryKind::LoadReceipt || kind == NativeRecoveryKind::LoadComplete)) {
         const auto proof=decode_recovery_load_control(packet,kind);
@@ -927,8 +960,10 @@ class BasicEngineSessionServer {
         else input_cv.wait_for(lock, limits.input_timeout, [this] {
           if (!running) return true;
           for (const auto& client : clients)
-            if (!client->disconnected && client->slot && client->phase == Phase::Streaming &&
-                !bots.IsBotControlled(*client->slot) && !pending_inputs.Has(*client->slot)) return false;
+            if (!client->disconnected && client->slot && client->phase == Phase::Streaming)
+              for (uint16_t slot = 0; slot < inputs.size(); ++slot)
+                if ((client->slots & (uint32_t{1} << slot)) &&
+                    !bots.IsBotControlled(slot) && !pending_inputs.Has(slot)) return false;
           return true;
         });
         accepting_inputs = false;
@@ -999,7 +1034,8 @@ class BasicEngineSessionServer {
     bool started = false, accepting_inputs = false;
     std::atomic<bool> running{true}, loop_running{false};
     EngineTCPServerStats counters;
-    std::unique_ptr<NativeRecoveryCredentials> credentials;
+    std::unique_ptr<NativeRecoveryGroups> credentials;
+    const uint16_t slots_per_client;
     std::optional<uint64_t> initial_hash;
   };
  public:
@@ -1010,9 +1046,9 @@ class BasicEngineSessionServer {
 //   EngineTCPServer(boost::asio::io_context& io, unsigned short port, MultiplayerConfig config,
   BasicEngineSessionServer(boost::asio::io_context& io, unsigned short port, MultiplayerConfig config,
                   EngineCallbacks engine, std::function<BotGameSnapshot()> observe,
-                  EngineTCPServerLimits limits = {})
+                  EngineTCPServerLimits limits = {}, uint16_t slots_per_client = 1)
       : impl_(std::make_shared<Impl>(io, port, std::move(config), std::move(engine),
-                                     std::move(observe), std::move(limits))) { impl_->Start(); }
+                                     std::move(observe), std::move(limits), slots_per_client)) { impl_->Start(); }
 // 2026-09-15: private transport-policy extraction; original lines:
 //   ~EngineTCPServer() { stop(); }
 //   EngineTCPServer(const EngineTCPServer&) = delete;

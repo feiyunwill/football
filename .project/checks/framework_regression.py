@@ -25,7 +25,9 @@ NATIVE_UDP_SUITES = {
 
 
 REQUIRED_CPP_SUITES = {**NATIVE_UDP_SUITES, "rl_observation_contract": 1,
-                       "native_input_rtt_test.": 8}
+                       "native_input_rtt_test.": 8, "native_slot_groups_test.": 16,
+                       "native_slot_group_wire_test.": 16, "native_slot_group_server_test.": 13,
+                       "native_authority_recording_test.": 11}
 
 # Previous implementation preserved in native-udp-acceptance-inputs-20260924-a/originals.
 def junit_count(path, minimum, required_suites=None):
@@ -68,8 +70,8 @@ def main():
     reports.mkdir(parents=True, exist_ok=True)
     cpp_report = reports / "framework-ctest.xml"
     run(["ctest", "--test-dir", tests, "--output-on-failure", "--output-junit", cpp_report])
-    # 560 existing + 142 UDP + observation layout + 8 input lead/cadence contracts.
-    cpp_count = junit_count(cpp_report, 711, REQUIRED_CPP_SUITES)
+    # Preserve 711 existing cases and require all 56 multi-seat/recording contracts.
+    cpp_count = junit_count(cpp_report, 767, REQUIRED_CPP_SUITES)
     # 2026-09-22: permanently run the actual shared-engine asset parser contracts.
     run(["cmake", "--build", native, "--target", "engine_ase_parser_contract", "-j", "1"])
     asset_parser = json.loads(run([native / "bin/engine_ase_parser_contract"], capture=True))
@@ -96,6 +98,12 @@ def main():
     # else:
     # python = environment / "bin/python"
     python = args.python.absolute() if args.python else Path(sys.executable)
+    acceptance_self_tests = json.loads(run(
+        [python, ROOT / ".project/checks/acceptance_selftest.py"], capture=True))
+    require(acceptance_self_tests.get("passed") is True
+            and acceptance_self_tests.get("skipped") == 0
+            and acceptance_self_tests.get("checks", 0) >= 21,
+            "Permanent acceptance checker regressions incomplete")
     python_report = reports / "framework-pytest.xml"
     # 2026-09-10: use the binding built for this source revision, not an older installed wheel.
     # run([python, "-m", "pytest", "gfootball/frame_sync", "-q",
@@ -144,7 +152,8 @@ print(json.dumps({key:dict(path=str(path),sha256=hashlib.sha256(path.read_bytes(
     # print(json.dumps({"passed": True, "assertions": cpp_count + python_count + 3, "skipped": 0,
     # 2026-09-22: retain prior accounting and include file-read contracts.
     # print(json.dumps({"passed": True, "assertions": cpp_count + python_count + 3 + asset_parser["assertions"], "skipped": 0,
-    print(json.dumps({"passed": True, "assertions": cpp_count + python_count + 3 + asset_parser["assertions"] + file_reader["assertions"], "skipped": 0,
+    print(json.dumps({"passed": True, "assertions": cpp_count + python_count + 3 + asset_parser["assertions"] + file_reader["assertions"] + acceptance_self_tests["assertions"], "skipped": 0,
+                      "acceptance_self_tests": acceptance_self_tests,
                       "native_file_reader": file_reader,
                       "native_asset_parser": asset_parser,
                       "cpp_tests": cpp_count, "python_tests": python_count,
