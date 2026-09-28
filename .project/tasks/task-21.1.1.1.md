@@ -1,5 +1,7 @@
 # task-21.1.1.1 — 真实比赛基准
 
+2026-09-28 当前源码正式重验：两种子各五个独立进程、各 10,000 个稳态帧通过，p99 为 5.079/5.532ms，状态哈希一致，启动和 RSS 独立记录。质量状态机判为 verified；原始样本及硬件/编译身份见[当前性能复核](../reports/optimization-ecs-reference-recovery-2026-09-28.md)。后续 ECS 优化任务仍未通过。
+
 类型：task
 
 状态由 `python3 .project/quality.py status` 根据当前源码和验收证据计算。
