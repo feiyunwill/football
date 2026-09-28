@@ -19,10 +19,13 @@
 
 in vec2 position;
 in vec2 texCoord;
+uniform mat4 orthoViewMatrix;
+uniform mat4 orthoProjectionMatrix;
 
 out vec2 TexCoords;
 
 void main() {
     TexCoords = texCoord;
-    gl_Position = vec4(position, 0.0, 1.0);
+    gl_Position = orthoProjectionMatrix * orthoViewMatrix *
+                  vec4(position, 0.0, 1.0);
 }

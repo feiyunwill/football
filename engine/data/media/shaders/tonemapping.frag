@@ -21,6 +21,7 @@
 uniform sampler2D map_hdr;          // HDR 颜色缓冲
 uniform sampler2D map_bloom;        // 泛光纹理（可选）
 uniform sampler2D map_depth;        // 深度纹理
+uniform sampler2D map_exposure;     // 自动曝光 1x1 历史纹理
 
 uniform float contextWidth;
 uniform float contextHeight;
@@ -28,6 +29,7 @@ uniform float contextX;
 uniform float contextY;
 
 uniform float exposure;             // 曝光值
+uniform int useAutoExposure;
 uniform float bloomStrength;        // 泛光强度
 uniform int toneMappingOperator;    // 色调映射算子 (0=Reinhard, 1=ACES, 2=Uncharted2, 3=Filmic)
 
@@ -69,7 +71,7 @@ vec3 Uncharted2Partial(vec3 x) {
 
 vec3 Uncharted2ToneMapping(vec3 color) {
     float W = 11.2;
-    vec3 curr = Uncharted2Partial(color * exposure);
+    vec3 curr = Uncharted2Partial(color);
     vec3 whiteScale = vec3(1.0) / Uncharted2Partial(vec3(W));
     return curr * whiteScale;
 }
@@ -106,14 +108,18 @@ void main() {
     // 采样 HDR 颜色
     vec3 hdrColor = texture(map_hdr, texCoord).rgb;
     
-    // 应用曝光
-    vec3 color = hdrColor * exposure;
+    vec3 color = hdrColor;
     
     // 添加泛光（如果有）
     if (bloomStrength > 0.0) {
         vec3 bloom = texture(map_bloom, texCoord).rgb;
         color += bloom * bloomStrength;
     }
+    float appliedExposure = exposure;
+    if (useAutoExposure != 0) {
+        appliedExposure = texture(map_exposure, vec2(0.5)).r;
+    }
+    color *= appliedExposure;
     
     // 色调映射
     switch (toneMappingOperator) {

@@ -31,20 +31,23 @@ extern "C" void ProbeDeleteView(void *renderer, int viewID) {
   const blunted::View view = getView(renderer, viewID);
   const GLuint textures[] = {
       GLuint(view.postBloomTextureID[0]), GLuint(view.postBloomTextureID[1]),
-      GLuint(view.postToneTextureID)};
+      GLuint(view.postToneTextureID), GLuint(view.postExposureTextureID[0]),
+      GLuint(view.postExposureTextureID[1])};
   const GLuint framebuffers[] = {
       GLuint(view.postBloomFrameBufferID[0]),
       GLuint(view.postBloomFrameBufferID[1]),
-      GLuint(view.postToneFrameBufferID)};
-  int beforeTextures[3]{}, beforeFramebuffers[3]{};
-  for (int i = 0; i < 3; ++i) {
+      GLuint(view.postToneFrameBufferID),
+      GLuint(view.postExposureFrameBufferID[0]),
+      GLuint(view.postExposureFrameBufferID[1])};
+  int beforeTextures[5]{}, beforeFramebuffers[5]{};
+  for (int i = 0; i < 5; ++i) {
     beforeTextures[i] = textures[i] ? int(isTexture(textures[i])) : 0;
     beforeFramebuffers[i] =
         framebuffers[i] ? int(isFramebuffer(framebuffers[i])) : 0;
   }
   next(renderer, viewID);
-  int afterTextures[3]{}, afterFramebuffers[3]{};
-  for (int i = 0; i < 3; ++i) {
+  int afterTextures[5]{}, afterFramebuffers[5]{};
+  for (int i = 0; i < 5; ++i) {
     afterTextures[i] = textures[i] ? int(isTexture(textures[i])) : 0;
     afterFramebuffers[i] =
         framebuffers[i] ? int(isFramebuffer(framebuffers[i])) : 0;
@@ -53,18 +56,25 @@ extern "C" void ProbeDeleteView(void *renderer, int viewID) {
   if (!path) std::abort();
   FILE *out = std::fopen(path, "a");
   if (!out) std::abort();
-  std::fprintf(out,
-      "{\"view\":%d,\"textures\":[%u,%u,%u],"
-      "\"framebuffers\":[%u,%u,%u],"
-      "\"before_textures\":[%d,%d,%d],"
-      "\"after_textures\":[%d,%d,%d],"
-      "\"before_framebuffers\":[%d,%d,%d],"
-      "\"after_framebuffers\":[%d,%d,%d]}\n",
-      viewID, textures[0], textures[1], textures[2],
-      framebuffers[0], framebuffers[1], framebuffers[2],
-      beforeTextures[0], beforeTextures[1], beforeTextures[2],
-      afterTextures[0], afterTextures[1], afterTextures[2],
-      beforeFramebuffers[0], beforeFramebuffers[1], beforeFramebuffers[2],
-      afterFramebuffers[0], afterFramebuffers[1], afterFramebuffers[2]);
+  std::fprintf(out, "{\"view\":%d", viewID);
+  auto printIDs = [&](const char *name, const GLuint *values) {
+    std::fprintf(out, ",\"%s\":[", name);
+    for (int i = 0; i < 5; ++i)
+      std::fprintf(out, "%s%u", i ? "," : "", values[i]);
+    std::fputc(']', out);
+  };
+  auto printStates = [&](const char *name, const int *values) {
+    std::fprintf(out, ",\"%s\":[", name);
+    for (int i = 0; i < 5; ++i)
+      std::fprintf(out, "%s%d", i ? "," : "", values[i]);
+    std::fputc(']', out);
+  };
+  printIDs("textures", textures);
+  printIDs("framebuffers", framebuffers);
+  printStates("before_textures", beforeTextures);
+  printStates("after_textures", afterTextures);
+  printStates("before_framebuffers", beforeFramebuffers);
+  printStates("after_framebuffers", afterFramebuffers);
+  std::fputs("}\n", out);
   if (std::fclose(out)) std::abort();
 }

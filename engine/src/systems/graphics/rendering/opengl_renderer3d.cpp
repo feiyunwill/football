@@ -82,8 +82,11 @@ OpenGLRenderer3D::OpenGLRenderer3D() : functions_(std::make_unique<GLfunctions>(
   overallBrightness = 128;
   const char *bloom = std::getenv("GFOOTBALL_PBR_BLOOM");
   const char *fxaa = std::getenv("GFOOTBALL_PBR_FXAA");
+  const char *autoExposure = std::getenv("GFOOTBALL_PBR_AUTO_EXPOSURE");
   pbrBloomEnabled_ = bloom && bloom[0] == '1' && bloom[1] == '\0';
   pbrFXAAEnabled_ = fxaa && fxaa[0] == '1' && fxaa[1] == '\0';
+  pbrAutoExposureEnabled_ = autoExposure && autoExposure[0] == '1' &&
+                            autoExposure[1] == '\0';
   if (const char *setting = std::getenv("GFOOTBALL_PBR_EXPOSURE")) {
     char *end = nullptr;
     const float value = std::strtof(setting, &end);
@@ -1139,6 +1142,16 @@ void OpenGLRenderer3D::DeleteView(int viewID) {
     DeleteTexture(view->postToneTextureID);
     view->postToneFrameBufferID = 0;
     view->postToneTextureID = 0;
+  }
+  for (int i = 0; i < 2; ++i) {
+    if (view->postExposureFrameBufferID[i]) {
+      BindFrameBuffer(view->postExposureFrameBufferID[i]);
+      SetFrameBufferTexture2D(e_TargetAttachment_Color0, 0);
+      DeleteFrameBuffer(view->postExposureFrameBufferID[i]);
+      DeleteTexture(view->postExposureTextureID[i]);
+      view->postExposureFrameBufferID[i] = 0;
+      view->postExposureTextureID[i] = 0;
+    }
   }
   BindFrameBuffer(0);
 }
@@ -2958,6 +2971,8 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
     SetUniformInt("tonemapping", "map_hdr", 0);
     SetUniformInt("tonemapping", "map_bloom", 1);
     SetUniformInt("tonemapping", "map_depth", 2);
+    SetUniformInt("tonemapping", "map_exposure", 3);
+    SetUniformInt("tonemapping", "useAutoExposure", 0);
     SetUniformFloat("tonemapping", "contextX", (float)0.0);
     SetUniformFloat("tonemapping", "contextY", (float)0.0);
     SetUniformFloat("tonemapping", "contextWidth", (float)context_width);
@@ -2969,14 +2984,10 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
   if (name == "auto_exposure") {
     DO_VALIDATION;
     SetUniformInt("auto_exposure", "map_hdr", 0);
-    SetUniformFloat("auto_exposure", "contextX", (float)0.0);
-    SetUniformFloat("auto_exposure", "contextY", (float)0.0);
-    SetUniformFloat("auto_exposure", "contextWidth", (float)context_width);
-    SetUniformFloat("auto_exposure", "contextHeight", (float)context_height);
+    SetUniformInt("auto_exposure", "map_previousExposure", 1);
     SetUniformFloat("auto_exposure", "minExposure", 0.1f);
-    SetUniformFloat("auto_exposure", "maxExposure", 10.0f);
-    // 2026-09-09: inactive in this shader; setting it never affected output.
-    // SetUniformFloat("auto_exposure", "adaptationSpeed", 1.0f);
+    SetUniformFloat("auto_exposure", "maxExposure", 8.0f);
+    SetUniformFloat("auto_exposure", "adaptationFactor", 0.125f);
   }
   if (name == "csm_depth") {
     DO_VALIDATION;
@@ -3489,6 +3500,29 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
       Log(e_FatalError, "OpenGLRenderer3D", "RenderViewPBR",
           "Could not create tone-mapping framebuffer");
   }
+  if (pbrAutoExposureEnabled_ && !view.postExposureFrameBufferID[0]) {
+    for (int i = 0; i < 2; ++i) {
+      view.postExposureFrameBufferID[i] = CreateFrameBuffer();
+      BindFrameBuffer(view.postExposureFrameBufferID[i]);
+      view.postExposureTextureID[i] = CreateTexture(
+          e_InternalPixelFormat_RGBA16F, e_PixelFormat_RGBA,
+          1, 1, false, false, false, false, false);
+      SetFrameBufferTexture2D(e_TargetAttachment_Color0,
+                              view.postExposureTextureID[i]);
+      SetRenderTargets({e_TargetAttachment_Color0});
+      if (!CheckFrameBufferStatus())
+        Log(e_FatalError, "OpenGLRenderer3D", "RenderViewPBR",
+            "Could not create exposure framebuffer");
+      const GLfloat initial[4] = {1.0f, 1.0f, 1.0f, 1.0f};
+      SetTextureUnit(0);
+      BindTexture(view.postExposureTextureID[i]);
+      mapping.glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1,
+                              GL_RGBA, GL_FLOAT, initial);
+      BindTexture(0);
+    }
+    view.postExposureIndex = 0;
+    view.postExposureInitialized = false;
+  }
 
   SetDepthTesting(false);
   SetDepthMask(false);
@@ -3522,6 +3556,32 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
     SetTextureUnit(0);
     BindTexture(0);
   }
+  // A capture toggle or repeated presentation of the same simulation state
+  // must not advance eye adaptation. Actual match time is snapshot-owned.
+  const unsigned long presentationTimeMs =
+      pbrAutoExposureEnabled_
+          ? GetGameTask()->GetMatch()->GetActualTime_ms() : 0;
+  if (pbrAutoExposureEnabled_ &&
+      (!view.postExposureInitialized ||
+       view.postExposureTimeMs != presentationTimeMs)) {
+    const int next = 1 - view.postExposureIndex;
+    BindFrameBuffer(view.postExposureFrameBufferID[next]);
+    SetRenderTargets({e_TargetAttachment_Color0});
+    SetViewport(0, 0, 1, 1);
+    UseShader("auto_exposure");
+    SetTextureUnit(1);
+    BindTexture(view.postExposureTextureID[view.postExposureIndex]);
+    SetTextureUnit(0);
+    BindTexture(view.accumBuffer_AccumTexID);
+    RenderOverlay2D();
+    SetTextureUnit(1);
+    BindTexture(0);
+    SetTextureUnit(0);
+    BindTexture(0);
+    view.postExposureIndex = next;
+    view.postExposureTimeMs = presentationTimeMs;
+    view.postExposureInitialized = true;
+  }
 
   int width, height, bpp;
   GetContextSize(width, height, bpp);
@@ -3544,17 +3604,24 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
   SetUniformFloat("tonemapping", "contextY",
                   pbrFXAAEnabled_ ? 0.0f : (float)targetY);
   SetUniformFloat("tonemapping", "exposure", pbrExposure_);
+  SetUniformInt("tonemapping", "useAutoExposure",
+                pbrAutoExposureEnabled_ ? 1 : 0);
   SetUniformFloat("tonemapping", "bloomStrength",
                   pbrBloomEnabled_ ? 0.3f : 0.0f);
 
   SetTextureUnit(2);
   BindTexture(view.gBuffer_DepthTexID);
+  SetTextureUnit(3);
+  BindTexture(pbrAutoExposureEnabled_
+                  ? view.postExposureTextureID[view.postExposureIndex] : 0);
   SetTextureUnit(1);
   BindTexture(pbrBloomEnabled_ ? view.postBloomTextureID[0] : 0);
   SetTextureUnit(0);
   BindTexture(view.accumBuffer_AccumTexID);
   RenderOverlay2D();
   SetTextureUnit(2);
+  BindTexture(0);
+  SetTextureUnit(3);
   BindTexture(0);
   SetTextureUnit(1);
   BindTexture(0);

@@ -162,6 +162,7 @@ namespace blunted {
       bool iblReady_ = false;
       bool pbrBloomEnabled_ = false;
       bool pbrFXAAEnabled_ = false;
+      bool pbrAutoExposureEnabled_ = false;
       float pbrExposure_ = 1.0f;
       void CreateIBLResources(const std::deque<LightQueueEntry> &lights);
       void DestroyIBLResources();

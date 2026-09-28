@@ -1668,6 +1668,10 @@
         "DISPLAY",
         "GFOOTBALL_DATA_DIR",
         "GFOOTBALL_USE_PBR",
+        "GFOOTBALL_PBR_BLOOM",
+        "GFOOTBALL_PBR_FXAA",
+        "GFOOTBALL_PBR_EXPOSURE",
+        "GFOOTBALL_PBR_AUTO_EXPOSURE",
         "ASAN_OPTIONS",
         "UBSAN_OPTIONS",
         "LSAN_OPTIONS",
@@ -1676,9 +1680,58 @@
     },
     {
       "id": "postprocessing",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "曝光、Bloom、抗锯齿等启用效果有真实纹理输入、正确顺序与可关闭对照"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/postprocessing.py"
+      ],
+      "kind": "json",
+      "min_assertions": 4524,
+      "timeout": 3600,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/tests/engine_frame_capture_contract.cpp",
+        "engine/data/**/*",
+        ".project/checks/postprocessing.py",
+        ".project/checks/pbr_pipeline.py",
+        ".project/checks/native_pbr_pipeline/binding_probe.cpp",
+        ".project/checks/native_postprocessing/*.cpp",
+        ".project/checks/performance_regression.py",
+        ".project/checks/input_contract.py",
+        ".project/checks/native_boundary.py"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "DISPLAY",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_USE_PBR",
+        "GFOOTBALL_PBR_BLOOM",
+        "GFOOTBALL_PBR_FXAA",
+        "GFOOTBALL_PBR_EXPOSURE",
+        "GFOOTBALL_PBR_AUTO_EXPOSURE",
+        "ASAN_OPTIONS",
+        "UBSAN_OPTIONS",
+        "LSAN_OPTIONS",
+        "PYTHONOPTIMIZE"
       ]
     },
     {

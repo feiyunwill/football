@@ -111,6 +111,11 @@ namespace blunted {
     int postBloomTextureID[2] = {};
     int postToneFrameBufferID = 0;
     int postToneTextureID = 0;
+    int postExposureFrameBufferID[2] = {};
+    int postExposureTextureID[2] = {};
+    int postExposureIndex = 0;
+    unsigned long postExposureTimeMs = 0;
+    bool postExposureInitialized = false;
   };
 
   struct LightQueueEntry {
