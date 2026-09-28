@@ -1,15 +1,15 @@
 {
   "check": "simulation_contract",
-  "fingerprint": "95fbb7d2a16cf779cbb2c894241a964ed0414f16b75ea744297d2e5d7101d43b",
+  "fingerprint": "d3dbd276008a33eb0784a6e192aacb2aa01a056f33cde982412375a0c32c4c75",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1789449609.6147034,
-  "duration_seconds": 65.979,
+  "started": 1790583701.6238012,
+  "duration_seconds": 22.93,
   "argv": [
     "python3",
     ".project/checks/simulation_contract.py"
   ],
-  "log": "simulation_contract-1789449609614784367.log",
-  "log_sha256": "522580bb3f3db30941153a649ee9f7bca9e4b5a55e419d512d2bc7e57d542f20"
+  "log": "simulation_contract-1790583701623821340.log",
+  "log_sha256": "196319eee33616b46f59bba440bc1202ec3c40f3cef69743245904a673f63ebc"
 }

@@ -1,0 +1,771 @@
+Running: cmake -S engine -B /tmp/football-optimization-sanitized -DCMAKE_BUILD_TYPE=Debug -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_ENABLE_SANITIZERS=ON -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-sanitized/bin
+-- The C compiler identification is GNU 16.2.1
+-- The CXX compiler identification is GNU 16.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/sbin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/sbin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found OpenGL: /usr/lib/libOpenGL.so
+-- Found EGL: /usr/lib/libEGL.so
+-- Found SDL2_image: /usr/lib/libSDL2_image.so
+-- Found SDL2_ttf: /usr/lib/libSDL2_ttf.so
+-- Found SDL2_gfx: /usr/lib/libSDL2_gfx.so (found version "1.0.4")
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Found Boost: /usr/lib/cmake/Boost-1.92.0/BoostConfig.cmake (found version "1.92.0") found components: system
+-- Found OpenSSL: /usr/lib/libcrypto.so (found suitable version "3.6.4", minimum required is "3.0") found components: Crypto
+-- Configuring done (4.7s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-sanitized
+Running: cmake --build /tmp/football-optimization-sanitized -j 1 --target engine_architecture_contract engine_lifetime_contract engine_simulation_contract standalone_game engine_animation_query_contract engine_ai_reachability_contract engine_ai_touch_contract engine_ai_tactical_state_contract engine_ai_tactics_contract engine_ai_tactics_roles_contract football_server football_client football_server_tcp football_client_tcp football_server_udp football_client_udp football_lobby headless_match standalone_game engine_prepared_lifecycle_contract engine_tracker_owner_contract engine_loading_cancellation_contract engine_loading_seat_contract engine_loading_tcp_contract engine_loading_client_drain_contract engine_loading_udp_client_drain_contract
+[  1%] Building CXX object CMakeFiles/datalib.dir/src/data/matchdata.cpp.o
+[  1%] Building CXX object CMakeFiles/datalib.dir/src/data/playerdata.cpp.o
+[  3%] Building CXX object CMakeFiles/datalib.dir/src/data/teamdata.cpp.o
+[  3%] Linking CXX static library libdatalib.a
+[  3%] Built target datalib
+[  3%] Building CXX object CMakeFiles/utilslib.dir/src/utils/orbitcamera.cpp.o
+[  5%] Building CXX object CMakeFiles/utilslib.dir/src/utils/animation.cpp.o
+[  5%] Building CXX object CMakeFiles/utilslib.dir/src/utils/splitgeometry.cpp.o
+[  7%] Building CXX object CMakeFiles/utilslib.dir/src/utils/objectloader.cpp.o
+[  7%] Building CXX object CMakeFiles/utilslib.dir/src/utils/xmlloader.cpp.o
+[  9%] Building CXX object CMakeFiles/utilslib.dir/src/utils/animationextensions/footballanimationextension.cpp.o
+[  9%] Built target utilslib
+[  9%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/style.cpp.o
+[ 11%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/caption.cpp.o
+[ 11%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/image.cpp.o
+[ 11%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/root.cpp.o
+[ 12%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/frame.cpp.o
+[ 12%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/view.cpp.o
+[ 14%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/windowmanager.cpp.o
+[ 14%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/guitask.cpp.o
+[ 16%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/page.cpp.o
+[ 16%] Built target gui2lib
+[ 16%] Building CXX object CMakeFiles/baselib.dir/src/base/sdl_surface.cpp.o
+[ 16%] Building CXX object CMakeFiles/baselib.dir/src/base/utils.cpp.o
+[ 18%] Building CXX object CMakeFiles/baselib.dir/src/base/properties.cpp.o
+[ 18%] Building CXX object CMakeFiles/baselib.dir/src/base/log.cpp.o
+[ 20%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/triangle.cpp.o
+[ 20%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/line.cpp.o
+[ 22%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/trianglemeshutils.cpp.o
+[ 22%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/aabb.cpp.o
+[ 22%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/plane.cpp.o
+[ 24%] Building CXX object CMakeFiles/baselib.dir/src/base/math/vector3.cpp.o
+[ 24%] Building CXX object CMakeFiles/baselib.dir/src/base/math/matrix3.cpp.o
+[ 25%] Building CXX object CMakeFiles/baselib.dir/src/base/math/bluntmath.cpp.o
+[ 25%] Building CXX object CMakeFiles/baselib.dir/src/base/math/quaternion.cpp.o
+[ 27%] Building CXX object CMakeFiles/baselib.dir/src/base/math/matrix4.cpp.o
+[ 27%] Built target baselib
+[ 27%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/render_service.cpp.o
+[ 29%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_object.cpp.o
+[ 29%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_task.cpp.o
+[ 31%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_geometry.cpp.o
+[ 31%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_camera.cpp.o
+[ 33%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_light.cpp.o
+[ 33%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_overlay2d.cpp.o
+[ 33%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_scene.cpp.o
+[ 35%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/resources/vertexbuffer.cpp.o
+[ 35%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/resources/texture.cpp.o
+[ 37%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/rendering/opengl_renderer3d.cpp.o
+[ 37%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_system.cpp.o
+[ 37%] Built target systemsgraphicslib
+[ 38%] Building CXX object CMakeFiles/loaderslib.dir/src/loaders/imageloader.cpp.o
+[ 38%] Building CXX object CMakeFiles/loaderslib.dir/src/loaders/aseloader.cpp.o
+[ 38%] Built target loaderslib
+[ 40%] Building CXX object CMakeFiles/typeslib.dir/src/types/spatial.cpp.o
+[ 40%] Building CXX object CMakeFiles/typeslib.dir/src/types/refcounted.cpp.o
+[ 40%] Building CXX object CMakeFiles/typeslib.dir/src/types/observer.cpp.o
+[ 42%] Building CXX object CMakeFiles/typeslib.dir/src/types/command.cpp.o
+[ 42%] Built target typeslib
+[ 42%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objectfactory.cpp.o
+[ 42%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene2d/scene2d.cpp.o
+[ 44%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene.cpp.o
+[ 44%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/image2d.cpp.o
+[ 46%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/light.cpp.o
+[ 46%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/geometry.cpp.o
+[ 48%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/skybox.cpp.o
+[ 48%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/camera.cpp.o
+[ 48%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene3d/scene3d.cpp.o
+[ 50%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene3d/node.cpp.o
+[ 50%] Building CXX object CMakeFiles/scenelib.dir/src/scene/object.cpp.o
+[ 51%] Building CXX object CMakeFiles/scenelib.dir/src/scene/resources/surface.cpp.o
+[ 51%] Building CXX object CMakeFiles/scenelib.dir/src/scene/resources/geometrydata.cpp.o
+[ 51%] Built target scenelib
+[ 51%] Building CXX object CMakeFiles/blunted2.dir/src/blunted.cpp.o
+[ 51%] Linking CXX static library libblunted2.a
+[ 51%] Built target blunted2
+[ 53%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ecs_systems.cpp.o
+[ 53%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ecs_direct_systems.cpp.o
+[ 55%] Building CXX object CMakeFiles/gamelib.dir/src/ecs/system_batch.cpp.o
+[ 55%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/officials.cpp.o
+[ 55%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid_utils.cpp.o
+[ 57%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/animcollection.cpp.o
+/root/work_space/football/engine/src/onthepitch/player/humanoid/animcollection.cpp: In member function ‘void AnimCollection::CrudeSelection(DataSet&, const CrudeSelectionQuery&)’:
+/root/work_space/football/engine/src/onthepitch/player/humanoid/animcollection.cpp:666:122: warning: arithmetic between enumeration type ‘e_Side’ and floating-point type ‘blunted::real’ {aka ‘float’} is deprecated [-Wdeprecated-enum-float-conversion]
+  666 |         if (queryIncomingToFenceSide == animSide && fenceToAnimOutgoingSide == animSide && fabs(queryIncomingToFenceSide + fenceToOutgoingAngle) < pi) continue;
+      |                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+[ 57%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoidbase.cpp.o
+[ 59%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid.cpp.o
+[ 59%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/playerofficial.cpp.o
+[ 61%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/player.cpp.o
+[ 61%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/playerbase.cpp.o
+[ 61%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/playercontroller.cpp.o
+[ 62%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/humancontroller.cpp.o
+[ 62%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/icontroller.cpp.o
+[ 64%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/refereecontroller.cpp.o
+[ 64%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/elizacontroller.cpp.o
+[ 66%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/strategy.cpp.o
+[ 66%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_mid.cpp.o
+[ 66%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_off.cpp.o
+[ 68%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_def.cpp.o
+[ 68%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/goalie_default.cpp.o
+[ 70%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/humangamer.cpp.o
+[ 70%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ball.cpp.o
+[ 72%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/match.cpp.o
+[ 72%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/referee.cpp.o
+[ 72%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/mentalimage.cpp.o
+[ 74%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/AIfunctions.cpp.o
+[ 74%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/proceduralpitch.cpp.o
+[ 75%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/team.cpp.o
+[ 75%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/teamAIcontroller.cpp.o
+[ 77%] Linking CXX static library libgamelib.a
+[ 77%] Built target gamelib
+[ 79%] Building CXX object CMakeFiles/menulib.dir/src/menu/startmatch/loadingmatch.cpp.o
+[ 79%] Building CXX object CMakeFiles/menulib.dir/src/menu/pagefactory.cpp.o
+[ 81%] Building CXX object CMakeFiles/menulib.dir/src/menu/menutask.cpp.o
+[ 81%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/radar.cpp.o
+[ 81%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/gamepage.cpp.o
+[ 83%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/scoreboard.cpp.o
+[ 83%] Building CXX object CMakeFiles/menulib.dir/src/menu/mainmenu.cpp.o
+[ 85%] Building CXX object CMakeFiles/menulib.dir/src/menu/settings.cpp.o
+[ 85%] Building CXX object CMakeFiles/menulib.dir/src/menu/pausemenu.cpp.o
+[ 87%] Linking CXX static library libmenulib.a
+[ 87%] Built target menulib
+[ 87%] Building CXX object CMakeFiles/football_engine.dir/src/cmake/backtrace.cpp.o
+[ 87%] Building CXX object CMakeFiles/football_engine.dir/src/cmake/file.cpp.o
+[ 88%] Building CXX object CMakeFiles/football_engine.dir/src/misc/perlin.cpp.o
+[ 88%] Building CXX object CMakeFiles/football_engine.dir/src/misc/hungarian.cpp.o
+[ 90%] Building CXX object CMakeFiles/football_engine.dir/src/gametask.cpp.o
+[ 90%] Building CXX object CMakeFiles/football_engine.dir/src/utils.cpp.o
+[ 92%] Building CXX object CMakeFiles/football_engine.dir/src/main.cpp.o
+[ 92%] Building CXX object CMakeFiles/football_engine.dir/src/gamedefines.cpp.o
+[ 92%] Building CXX object CMakeFiles/football_engine.dir/src/defines.cpp.o
+[ 94%] Building CXX object CMakeFiles/football_engine.dir/src/frame_sync/input_codec.cpp.o
+[ 94%] Building CXX object CMakeFiles/football_engine.dir/src/game_load.cpp.o
+[ 96%] Building CXX object CMakeFiles/football_engine.dir/src/ai/ai_keyboard.cpp.o
+[ 96%] Building CXX object CMakeFiles/football_engine.dir/src/ai/ai_tactics.cpp.o
+[ 98%] Building CXX object CMakeFiles/football_engine.dir/src/game_env.cpp.o
+[ 98%] Linking CXX shared library libfootball_engine.so
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_architecture_contract.dir/tests/engine_architecture_contract.cpp.o
+[100%] Linking CXX executable bin/engine_architecture_contract
+[100%] Built target engine_architecture_contract
+[  3%] Built target datalib
+[  9%] Built target utilslib
+[ 16%] Built target gui2lib
+[ 28%] Built target baselib
+[ 37%] Built target systemsgraphicslib
+[ 39%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 79%] Built target gamelib
+[ 88%] Built target menulib
+[100%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_lifetime_contract.dir/tests/engine_lifetime_contract.cpp.o
+[100%] Linking CXX executable bin/engine_lifetime_contract
+[100%] Built target engine_lifetime_contract
+[  3%] Built target datalib
+[  9%] Built target utilslib
+[ 16%] Built target gui2lib
+[ 27%] Built target baselib
+[ 37%] Built target systemsgraphicslib
+[ 38%] Built target loaderslib
+[ 42%] Built target typeslib
+[ 51%] Built target scenelib
+[ 51%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/engine_simulation_contract.dir/tests/engine_simulation_contract.cpp.o
+[100%] Linking CXX executable bin/engine_simulation_contract
+[100%] Built target engine_simulation_contract
+[  3%] Built target datalib
+[  9%] Built target utilslib
+[ 16%] Built target gui2lib
+[ 27%] Built target baselib
+[ 37%] Built target systemsgraphicslib
+[ 38%] Built target loaderslib
+[ 42%] Built target typeslib
+[ 51%] Built target scenelib
+[ 51%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/standalone_game.dir/src/frame_sync/standalone_game.cpp.o
+[100%] Linking CXX executable bin/standalone_game
+[100%] Built target standalone_game
+[  3%] Built target datalib
+[  9%] Built target utilslib
+[ 16%] Built target gui2lib
+[ 27%] Built target baselib
+[ 37%] Built target systemsgraphicslib
+[ 38%] Built target loaderslib
+[ 42%] Built target typeslib
+[ 51%] Built target scenelib
+[ 51%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_animation_query_contract.dir/tests/engine_animation_query_contract.cpp.o
+[100%] Linking CXX executable bin/engine_animation_query_contract
+[100%] Built target engine_animation_query_contract
+[  3%] Built target datalib
+[  9%] Built target utilslib
+[ 16%] Built target gui2lib
+[ 27%] Built target baselib
+[ 37%] Built target systemsgraphicslib
+[ 38%] Built target loaderslib
+[ 42%] Built target typeslib
+[ 51%] Built target scenelib
+[ 51%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_ai_reachability_contract.dir/tests/engine_ai_reachability_contract.cpp.o
+[100%] Linking CXX executable bin/engine_ai_reachability_contract
+[100%] Built target engine_ai_reachability_contract
+[  3%] Built target datalib
+[  9%] Built target utilslib
+[ 16%] Built target gui2lib
+[ 28%] Built target baselib
+[ 37%] Built target systemsgraphicslib
+[ 39%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 79%] Built target gamelib
+[ 88%] Built target menulib
+[100%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_ai_touch_contract.dir/tests/engine_ai_touch_contract.cpp.o
+[100%] Linking CXX executable bin/engine_ai_touch_contract
+[100%] Built target engine_ai_touch_contract
+[  3%] Built target datalib
+[  9%] Built target utilslib
+[ 16%] Built target gui2lib
+[ 27%] Built target baselib
+[ 37%] Built target systemsgraphicslib
+[ 38%] Built target loaderslib
+[ 42%] Built target typeslib
+[ 51%] Built target scenelib
+[ 51%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/engine_ai_tactical_state_contract.dir/tests/engine_ai_tactical_state_contract.cpp.o
+[100%] Linking CXX executable bin/engine_ai_tactical_state_contract
+[100%] Built target engine_ai_tactical_state_contract
+[  3%] Built target datalib
+[  9%] Built target utilslib
+[ 16%] Built target gui2lib
+[ 27%] Built target baselib
+[ 37%] Built target systemsgraphicslib
+[ 38%] Built target loaderslib
+[ 42%] Built target typeslib
+[ 51%] Built target scenelib
+[ 51%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/engine_ai_tactics_contract.dir/tests/engine_ai_tactics_contract.cpp.o
+[100%] Linking CXX executable bin/engine_ai_tactics_contract
+[100%] Built target engine_ai_tactics_contract
+[  3%] Built target datalib
+[  9%] Built target utilslib
+[ 16%] Built target gui2lib
+[ 27%] Built target baselib
+[ 37%] Built target systemsgraphicslib
+[ 38%] Built target loaderslib
+[ 42%] Built target typeslib
+[ 51%] Built target scenelib
+[ 51%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/engine_ai_tactics_roles_contract.dir/tests/engine_ai_tactics_roles_contract.cpp.o
+[100%] Linking CXX executable bin/engine_ai_tactics_roles_contract
+[100%] Built target engine_ai_tactics_roles_contract
+[  0%] Building CXX object CMakeFiles/football_native_recovery.dir/src/frame_sync/native_recovery_digest.cpp.o
+[  1%] Linking CXX static library libfootball_native_recovery.a
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/football_server.dir/src/frame_sync/integrated_server.cpp.o
+[100%] Linking CXX executable bin/football_server
+[100%] Built target football_server
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/football_client.dir/src/frame_sync/integrated_client.cpp.o
+[100%] Linking CXX executable bin/football_client
+[100%] Built target football_client
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 11%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 44%] Built target typeslib
+[ 53%] Built target scenelib
+[ 53%] Built target blunted2
+[ 79%] Built target gamelib
+[ 88%] Built target menulib
+[100%] Built target football_engine
+[100%] Building CXX object CMakeFiles/football_server_tcp.dir/src/frame_sync/integrated_server.cpp.o
+[100%] Linking CXX executable bin/football_server_tcp
+[100%] Built target football_server_tcp
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/football_client_tcp.dir/src/frame_sync/integrated_client.cpp.o
+[100%] Linking CXX executable bin/football_client_tcp
+[100%] Built target football_client_tcp
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/football_server_udp.dir/src/frame_sync/integrated_server.cpp.o
+[100%] Linking CXX executable bin/football_server_udp
+[100%] Built target football_server_udp
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/football_client_udp.dir/src/frame_sync/integrated_client.cpp.o
+[100%] Linking CXX executable bin/football_client_udp
+[100%] Built target football_client_udp
+[  0%] Building CXX object CMakeFiles/football_lobby.dir/src/frame_sync/lobby_server.cpp.o
+[100%] Linking CXX executable bin/football_lobby
+[100%] Built target football_lobby
+[  3%] Built target datalib
+[  9%] Built target utilslib
+[ 16%] Built target gui2lib
+[ 28%] Built target baselib
+[ 37%] Built target systemsgraphicslib
+[ 39%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 79%] Built target gamelib
+[ 88%] Built target menulib
+[100%] Built target football_engine
+[100%] Building CXX object CMakeFiles/headless_match.dir/src/frame_sync/headless_match.cpp.o
+[100%] Linking CXX executable bin/headless_match
+[100%] Built target headless_match
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_prepared_lifecycle_contract.dir/tests/engine_prepared_lifecycle_contract.cpp.o
+[100%] Linking CXX executable bin/engine_prepared_lifecycle_contract
+[100%] Built target engine_prepared_lifecycle_contract
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/engine_tracker_owner_contract.dir/tests/engine_tracker_owner_contract.cpp.o
+[100%] Linking CXX executable bin/engine_tracker_owner_contract
+[100%] Built target engine_tracker_owner_contract
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_loading_cancellation_contract.dir/tests/engine_loading_cancellation_contract.cpp.o
+[100%] Linking CXX executable bin/engine_loading_cancellation_contract
+[100%] Built target engine_loading_cancellation_contract
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_loading_seat_contract.dir/tests/engine_loading_seat_contract.cpp.o
+[100%] Linking CXX executable bin/engine_loading_seat_contract
+[100%] Built target engine_loading_seat_contract
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/engine_loading_tcp_contract.dir/tests/engine_loading_tcp_contract.cpp.o
+[100%] Linking CXX executable bin/engine_loading_tcp_contract
+[100%] Built target engine_loading_tcp_contract
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_loading_client_drain_contract.dir/tests/engine_loading_client_drain_contract.cpp.o
+[100%] Linking CXX executable bin/engine_loading_client_drain_contract
+[100%] Built target engine_loading_client_drain_contract
+[  1%] Built target football_native_recovery
+[  5%] Built target datalib
+[ 10%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 29%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 43%] Built target typeslib
+[ 52%] Built target scenelib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/engine_loading_udp_client_drain_contract.dir/tests/engine_loading_client_drain_contract.cpp.o
+[100%] Linking CXX executable bin/engine_loading_udp_client_drain_contract
+[100%] Built target engine_loading_udp_client_drain_contract
+Running: readelf -d /tmp/football-optimization-sanitized/libfootball_engine.so
+Running: nm -D /tmp/football-optimization-sanitized/libfootball_engine.so
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_prepared_lifecycle_contract contract
+Actual engine mapping verified
+{"passed":true,"assertions":123,"prepared_operations":19,"frames":20,"skipped":0,"actual_gameenv":true}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_tracker_owner_contract
+TRACKER_RENDEZVOUS_ENTER
+{"passed":true,"paired_tracker":true,"workers":2,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.begin 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract match.begin 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract animations.template 2
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract animations.generate 17
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract animations.prepare-generated 5
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract animations.file 3
+{"passed":true,"assertions":19,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract animations.cache 4
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract team.player 2
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract match.players 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract match.stadium 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract match.finalized 1
+{"passed":true,"assertions":19,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.controllers 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.cache 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.pages 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.match-data 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract reset.loading-page 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.background.create 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.background.load 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.background.ready 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.caption.left 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.logo.left.create 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.logo.left.load 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.caption.right 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.logo.right.create 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.logo.right.load 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_cancellation_contract loading.finalize 1
+{"passed":true,"assertions":17,"actual_gameenv":true,"cancelled":true,"skipped":0}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_seat_contract
+{"passed":true,"checks":14,"ownership_checks":12,"stream_terminal_checks":2,"assertions":1033,"skipped":0,"real_tcp":true,"frame_owner_checked":true,"actual_gameenv":false}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_tcp_contract
+CASE loading_wire_bounds
+PASS loading_wire_bounds
+CASE loading_barrier_and_ready
+PASS loading_barrier_and_ready
+CASE loading_requires_completion
+PASS loading_requires_completion
+CASE loading_does_not_extend_on_resume
+PASS loading_does_not_extend_on_resume
+CASE loading_idle_and_offline_barrier
+PASS loading_idle_and_offline_barrier
+CASE loading_complete_starts_ready_budget
+PASS loading_complete_starts_ready_budget
+CASE pregame_expiry
+PASS pregame_expiry
+CASE invalid_ready_release
+PASS invalid_ready_release
+CASE sealed_expiry
+PASS sealed_expiry
+CASE retries_do_not_extend_grace
+PASS retries_do_not_extend_grace
+CASE snapshot_rejection_is_local
+PASS snapshot_rejection_is_local
+{"passed":true,"checks":11,"assertions":507,"skipped":0,"real_tcp":true,"frame_owner_checked":true,"actual_gameenv":false}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_client_drain_contract
+GameEnv runtime prepared: 1v2, seed=42
+TCP loading cancel: sent=1 acknowledged=1 rejected=0
+GameEnv runtime prepared: 1v2, seed=42
+TCP invalid message: type=92 phase=10 buffered=68 transport=1
+TCP connection stopped: invalid or unexpected message
+GameEnv runtime prepared: 1v2, seed=42
+TCP invalid message: type=92 phase=10 buffered=68 transport=1
+TCP connection stopped: invalid or unexpected message
+GameEnv runtime prepared: 1v2, seed=42
+TCP loading cancel: sent=1 acknowledged=0 rejected=0
+GameEnv runtime prepared: 1v2, seed=42
+TCP loading cancel: sent=1 acknowledged=0 rejected=0
+{"passed":true,"checks":5,"assertions":35,"skipped":0,"actual_gameenv":true,"actual_client":true,"transport":"TCP","maximum_cancel_seconds":0.10040911499999999}
+
+Running loading contract: /tmp/football-optimization-sanitized/bin/engine_loading_udp_client_drain_contract
+GameEnv runtime prepared: 1v2, seed=42
+UDP loading cancel: sent=1 acknowledged=1 rejected=0
+GameEnv runtime prepared: 1v2, seed=42
+UDP invalid message: type=92 phase=10 buffered=68 transport=1
+UDP connection stopped: invalid or unexpected message
+GameEnv runtime prepared: 1v2, seed=42
+UDP invalid message: type=92 phase=10 buffered=68 transport=1
+UDP connection stopped: invalid or unexpected message
+GameEnv runtime prepared: 1v2, seed=42
+UDP loading cancel: sent=1 acknowledged=0 rejected=0
+GameEnv runtime prepared: 1v2, seed=42
+UDP loading cancel: sent=1 acknowledged=0 rejected=0
+{"passed":true,"checks":5,"assertions":35,"skipped":0,"actual_gameenv":true,"actual_client":true,"transport":"UDP","maximum_cancel_seconds":0.101255174}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_ai_tactical_state_contract
+{"seed":42,"physics":2,"actual_frames":240}
+{"seed":42,"physics":10,"actual_frames":240}
+{"seed":43,"physics":2,"actual_frames":240}
+{"seed":43,"physics":10,"actual_frames":240}
+{"passed":true,"assertions":27618,"skipped":0,"actual_gameenv":true,"frames":960,"nonzero_actors":3513,"restarts":331}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_ai_tactics_contract
+{"passed":true,"assertions":7288,"skipped":0,"symmetry_cases":600}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_ai_tactics_roles_contract
+{"passed":true,"assertions":3601,"failed":0,"skipped":0,"role_mirror_cases":1800}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_ai_touch_contract
+{"assets":1452,"quiet_idle":8,"categories":[28,26,18,18],"needed":[20,26,18,18],"missed":[0,0,0,0]}
+{"assets":1452,"quiet_idle":8,"categories":[28,26,18,18],"needed":[20,26,18,18],"missed":[0,0,0,0]}
+{"assets":1452,"quiet_idle":8,"categories":[28,26,18,18],"needed":[20,26,18,18],"missed":[0,0,0,0]}
+{"passed":true,"assertions":586,"skipped":0,"actual_gameenv":true,"seeds":3,"ball_control_assets":270,"quiet_idle":24}
+
+Running arrival-time differential contract: /tmp/football-optimization-sanitized/bin/engine_ai_reachability_contract
+{"passed":true,"skipped":0,"assertions":1555846,"cached_cases":561280,"trajectory_bytes":1460,"cases":216640,"zero_results":11664,"fast_distance_cases":46855,"finite_timeout_cases":204535}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_animation_query_contract
+vectorfromstring warning, no value
+{"passed":true,"assertions":30079,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract headless 42
+{"passed":true,"assertions":296,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract render 42
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":51,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42
+{"passed":true,"assertions":946,"skipped":0,"snapshot_bytes":87132,"collision_workspace":true,"seed":42,"reverse":false}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42 --reverse
+{"passed":true,"assertions":954,"skipped":0,"snapshot_bytes":89124,"collision_workspace":true,"seed":42,"reverse":true}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 42 --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":92,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract headless 43
+{"passed":true,"assertions":296,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract render 43
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":51,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43
+{"passed":true,"assertions":942,"skipped":0,"snapshot_bytes":86124,"collision_workspace":true,"seed":43,"reverse":false}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43 --reverse
+{"passed":true,"assertions":950,"skipped":0,"snapshot_bytes":88116,"collision_workspace":true,"seed":43,"reverse":true}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_simulation_contract 43 --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":92,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_lifetime_contract
+{"passed":true,"assertions":167,"skipped":0,"warm_rss_bytes":337358848,"final_rss_bytes":325390336}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_lifetime_contract --render
+No DISPLAY defined, doing off-screen rendering
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+No DISPLAY defined, doing off-screen rendering
+{"passed":true,"assertions":19,"skipped":0,"renderer":"llvmpipe (LLVM 22.1.8, 256 bits)"}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract sdl
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
+{"passed":true,"assertions":20,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract sdl-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract font-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+Running instrumented probe: /tmp/football-optimization-sanitized/bin/engine_architecture_contract font-failure
+{"passed":true,"assertions":5,"skipped":0}
+
+{"passed": true, "assertions": 1632088, "skipped": 0, "results": {"loading": {"passed": true, "assertions": 2179, "checks": 32, "skipped": 0, "cancellation_checkpoints": 26, "prepared_operations": 19, "actual_client_drain_cases": 10, "socket_ownership_cases": 12, "legacy_loading_cases": 11, "stream_terminal_cases": 2, "results": {"prepared": {"passed": true, "assertions": 123, "prepared_operations": 19, "frames": 20, "skipped": 0, "actual_gameenv": true}, "tracker": {"passed": true, "paired_tracker": true, "workers": 2, "skipped": 0}, "reset.begin": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "match.begin": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "animations.template": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "animations.generate": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "animations.prepare-generated": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "animations.file": {"passed": true, "assertions": 19, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "animations.cache": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "team.player": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "match.players": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "match.stadium": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "match.finalized": {"passed": true, "assertions": 19, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "reset.controllers": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "reset.cache": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "reset.pages": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "reset.match-data": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "reset.loading-page": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.background.create": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.background.load": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.background.ready": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.caption.left": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.logo.left.create": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.logo.left.load": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.caption.right": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.logo.right.create": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.logo.right.load": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "loading.finalize": {"passed": true, "assertions": 17, "actual_gameenv": true, "cancelled": true, "skipped": 0}, "seat": {"passed": true, "checks": 14, "ownership_checks": 12, "stream_terminal_checks": 2, "assertions": 1033, "skipped": 0, "real_tcp": true, "frame_owner_checked": true, "actual_gameenv": false}, "legacy_loading": {"passed": true, "checks": 11, "assertions": 507, "skipped": 0, "real_tcp": true, "frame_owner_checked": true, "actual_gameenv": false}, "client_drain": {"passed": true, "checks": 5, "assertions": 35, "skipped": 0, "actual_gameenv": true, "actual_client": true, "transport": "TCP", "maximum_cancel_seconds": 0.100409115}, "udp_client_drain": {"passed": true, "checks": 5, "assertions": 35, "skipped": 0, "actual_gameenv": true, "actual_client": true, "transport": "UDP", "maximum_cancel_seconds": 0.101255174}}}, "engine_ai_tactical_state_contract": {"passed": true, "assertions": 27618, "skipped": 0, "actual_gameenv": true, "frames": 960, "nonzero_actors": 3513, "restarts": 331}, "engine_ai_tactics_contract": {"passed": true, "assertions": 7288, "skipped": 0, "symmetry_cases": 600}, "engine_ai_tactics_roles_contract": {"passed": true, "assertions": 3601, "failed": 0, "skipped": 0, "role_mirror_cases": 1800}, "ai_touch": {"passed": true, "assertions": 586, "skipped": 0, "actual_gameenv": true, "seeds": 3, "ball_control_assets": 270, "quiet_idle": 24}, "ai_reachability": {"passed": true, "skipped": 0, "assertions": 1555846, "cached_cases": 561280, "trajectory_bytes": 1460, "cases": 216640, "zero_results": 11664, "fast_distance_cases": 46855, "finite_timeout_cases": 204535, "reference_sha256": "b3cae7d462cf8e894ba12c9e5ccf04f22e69b8b4a2c5c7e6227a901a3aafb923"}, "animation_metadata": {"passed": true, "assertions": 30079, "skipped": 0}, "lifecycle_42": {"passed": true, "assertions": 296, "skipped": 0}, "egl_lifecycle_42": {"passed": true, "assertions": 51, "skipped": 0}, "snapshot_42_normal": {"passed": true, "assertions": 946, "skipped": 0, "snapshot_bytes": 87132, "collision_workspace": true, "seed": 42, "reverse": false}, "snapshot_42_reverse": {"passed": true, "assertions": 954, "skipped": 0, "snapshot_bytes": 89124, "collision_workspace": true, "seed": 42, "reverse": true}, "snapshot_42_render": {"passed": true, "assertions": 92, "skipped": 0}, "lifecycle_43": {"passed": true, "assertions": 296, "skipped": 0}, "egl_lifecycle_43": {"passed": true, "assertions": 51, "skipped": 0}, "snapshot_43_normal": {"passed": true, "assertions": 942, "skipped": 0, "snapshot_bytes": 86124, "collision_workspace": true, "seed": 43, "reverse": false}, "snapshot_43_reverse": {"passed": true, "assertions": 950, "skipped": 0, "snapshot_bytes": 88116, "collision_workspace": true, "seed": 43, "reverse": true}, "snapshot_43_render": {"passed": true, "assertions": 92, "skipped": 0}, "repeated_and_concurrent_instances": {"passed": true, "assertions": 167, "skipped": 0, "warm_rss_bytes": 337358848, "final_rss_bytes": 325390336}, "two_egl_contexts": {"passed": true, "assertions": 19, "skipped": 0, "renderer": "llvmpipe (LLVM 22.1.8, 256 bits)"}, "sdl_events": {"passed": true, "assertions": 20, "skipped": 0}, "sdl_context_failure": {"passed": true, "assertions": 5, "skipped": 0}, "invalid_font_failure": {"passed": true, "assertions": 5, "skipped": 0}, "missing_font_failure": {"passed": true, "assertions": 5, "skipped": 0}}, "instrumented_translation_units": 172, "instrumentation": "complete engine ASan/UBSan, leak detection enabled, no suppressions", "asan_runtime_in_engine": true, "sdl_driver": "offscreen (real SDL GL window and event queue)"}

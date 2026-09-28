@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Configuration contracts, complete local unit suites, and native determinism."""
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -47,6 +48,25 @@ def junit_count(path, minimum, required_suites=None):
     return len(cases)
 
 
+def acceptance_python(override):
+    if override is not None:
+        python = override.absolute()
+        require(python.is_file(), f"Acceptance Python does not exist: {python}")
+        return python
+
+    requirements = ROOT / ".project/checks/requirements.txt"
+    identity = hashlib.sha256(requirements.read_bytes() +
+                              sys.implementation.cache_tag.encode()).hexdigest()[:16]
+    environment = Path(tempfile.gettempdir()) / f"football-framework-python-{identity}"
+    python = environment / "bin/python"
+    if not python.is_file():
+        run([sys.executable, "-m", "venv", environment])
+    run([python, "-m", "pip", "install", "--disable-pip-version-check",
+         "-r", requirements])
+    run([python, "-m", "pip", "check"])
+    return python
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--native-build", type=Path, default=Path("/tmp/football-optimization-native"))
@@ -84,20 +104,7 @@ def main():
     require(file_reader.get("passed") is True and file_reader.get("checks") == 14
             and file_reader.get("skipped") == 0 and file_reader.get("assertions", 0) > 0,
             "Incomplete native file reader coverage")
-    # 2026-09-10: use the current installed gate environment, without mutating an old Gym venv.
-    # python = args.python
-    # if python is None:
-    # environment = Path("/tmp/football-optimization-python")
-    # python = environment / "bin/python"
-    # if not python.exists():
-    # run([sys.executable, "-m", "venv", environment])
-    # run([python, "-m", "pip", "install", "-r", ".project/checks/requirements.txt"])
-    # # Do not resolve a venv Python symlink: that would select the system prefix.
-    # if args.python:
-    # python = args.python.absolute()
-    # else:
-    # python = environment / "bin/python"
-    python = args.python.absolute() if args.python else Path(sys.executable)
+    python = acceptance_python(args.python)
     acceptance_self_tests = json.loads(run(
         [python, ROOT / ".project/checks/acceptance_selftest.py"], capture=True))
     require(acceptance_self_tests.get("passed") is True
@@ -105,9 +112,7 @@ def main():
             and acceptance_self_tests.get("checks", 0) >= 21,
             "Permanent acceptance checker regressions incomplete")
     python_report = reports / "framework-pytest.xml"
-    # 2026-09-10: use the binding built for this source revision, not an older installed wheel.
-    # run([python, "-m", "pytest", "gfootball/frame_sync", "-q",
-    #      "--ignore=gfootball/frame_sync/legacy_network_test.py", f"--junitxml={python_report}"])
+    # Use the binding built for this source revision, not an older installed wheel.
     with tempfile.TemporaryDirectory(prefix="football-framework-python-") as directory:
         staging = Path(directory)
         package = staging / "gfootball_engine"
@@ -160,7 +165,10 @@ print(json.dumps({key:dict(path=str(path),sha256=hashlib.sha256(path.read_bytes(
                       "native_udp_required_suites": NATIVE_UDP_SUITES,
                       "required_cpp_suites": REQUIRED_CPP_SUITES,
                       "debug_compilation_units": len(commands), "native_determinism": results,
-                      "python_executable": str(python), "python_native_runtime": native_identity,
+                      "python_executable": str(python),
+                      "python_packages": json.loads(run(
+                          [python, "-m", "pip", "list", "--format=json"], capture=True)),
+                      "python_native_runtime": native_identity,
                       "network_integration": "separate required milestone ms-23.1"}))
 
 

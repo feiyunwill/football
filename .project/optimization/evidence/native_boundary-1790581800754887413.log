@@ -1,0 +1,356 @@
+Running: cmake -S engine -B /tmp/football-optimization-native -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin
+-- The C compiler identification is GNU 16.2.1
+-- The CXX compiler identification is GNU 16.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/sbin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/sbin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found OpenGL: /usr/lib/libOpenGL.so
+-- Found EGL: /usr/lib/libEGL.so
+-- Found SDL2_image: /usr/lib/libSDL2_image.so
+-- Found SDL2_ttf: /usr/lib/libSDL2_ttf.so
+-- Found SDL2_gfx: /usr/lib/libSDL2_gfx.so (found version "1.0.4")
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Found Boost: /usr/lib/cmake/Boost-1.92.0/BoostConfig.cmake (found version "1.92.0") found components: system
+-- Found OpenSSL: /usr/lib/libcrypto.so (found suitable version "3.6.4", minimum required is "3.0") found components: Crypto
+-- Configuring done (4.7s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: cmake --build /tmp/football-optimization-native -j 1 --target football_server football_client football_server_tcp football_client_tcp football_server_udp football_client_udp football_lobby headless_match standalone_game
+[  0%] Building CXX object CMakeFiles/football_native_recovery.dir/src/frame_sync/native_recovery_digest.cpp.o
+[  1%] Linking CXX static library libfootball_native_recovery.a
+[  1%] Built target football_native_recovery
+[  1%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/style.cpp.o
+[  3%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/caption.cpp.o
+[  3%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/image.cpp.o
+[  3%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/root.cpp.o
+[  5%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/frame.cpp.o
+[  5%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/view.cpp.o
+[  7%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/windowmanager.cpp.o
+[  7%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/guitask.cpp.o
+[  9%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/page.cpp.o
+[  9%] Built target gui2lib
+[  9%] Building CXX object CMakeFiles/baselib.dir/src/base/sdl_surface.cpp.o
+[  9%] Building CXX object CMakeFiles/baselib.dir/src/base/utils.cpp.o
+[ 10%] Building CXX object CMakeFiles/baselib.dir/src/base/properties.cpp.o
+[ 10%] Building CXX object CMakeFiles/baselib.dir/src/base/log.cpp.o
+[ 12%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/triangle.cpp.o
+[ 12%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/line.cpp.o
+[ 14%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/trianglemeshutils.cpp.o
+[ 14%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/aabb.cpp.o
+[ 14%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/plane.cpp.o
+[ 16%] Building CXX object CMakeFiles/baselib.dir/src/base/math/vector3.cpp.o
+[ 16%] Building CXX object CMakeFiles/baselib.dir/src/base/math/matrix3.cpp.o
+[ 18%] Building CXX object CMakeFiles/baselib.dir/src/base/math/bluntmath.cpp.o
+[ 18%] Building CXX object CMakeFiles/baselib.dir/src/base/math/quaternion.cpp.o
+[ 20%] Building CXX object CMakeFiles/baselib.dir/src/base/math/matrix4.cpp.o
+[ 20%] Built target baselib
+[ 20%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/render_service.cpp.o
+[ 21%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_object.cpp.o
+[ 21%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_task.cpp.o
+[ 23%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_geometry.cpp.o
+[ 23%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_camera.cpp.o
+[ 25%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_light.cpp.o
+[ 25%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_overlay2d.cpp.o
+[ 25%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_scene.cpp.o
+[ 27%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/resources/vertexbuffer.cpp.o
+[ 27%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/resources/texture.cpp.o
+[ 29%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/rendering/opengl_renderer3d.cpp.o
+[ 29%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_system.cpp.o
+[ 29%] Built target systemsgraphicslib
+[ 30%] Building CXX object CMakeFiles/loaderslib.dir/src/loaders/imageloader.cpp.o
+[ 30%] Building CXX object CMakeFiles/loaderslib.dir/src/loaders/aseloader.cpp.o
+[ 30%] Built target loaderslib
+[ 32%] Building CXX object CMakeFiles/typeslib.dir/src/types/spatial.cpp.o
+[ 32%] Building CXX object CMakeFiles/typeslib.dir/src/types/refcounted.cpp.o
+[ 32%] Building CXX object CMakeFiles/typeslib.dir/src/types/observer.cpp.o
+[ 34%] Building CXX object CMakeFiles/typeslib.dir/src/types/command.cpp.o
+[ 34%] Built target typeslib
+[ 34%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objectfactory.cpp.o
+[ 34%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene2d/scene2d.cpp.o
+[ 36%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene.cpp.o
+[ 36%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/image2d.cpp.o
+[ 38%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/light.cpp.o
+[ 38%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/geometry.cpp.o
+[ 40%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/skybox.cpp.o
+[ 40%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/camera.cpp.o
+[ 40%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene3d/scene3d.cpp.o
+[ 41%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene3d/node.cpp.o
+[ 41%] Building CXX object CMakeFiles/scenelib.dir/src/scene/object.cpp.o
+[ 43%] Building CXX object CMakeFiles/scenelib.dir/src/scene/resources/surface.cpp.o
+[ 43%] Building CXX object CMakeFiles/scenelib.dir/src/scene/resources/geometrydata.cpp.o
+[ 43%] Built target scenelib
+[ 43%] Building CXX object CMakeFiles/utilslib.dir/src/utils/orbitcamera.cpp.o
+[ 45%] Building CXX object CMakeFiles/utilslib.dir/src/utils/animation.cpp.o
+[ 45%] Building CXX object CMakeFiles/utilslib.dir/src/utils/splitgeometry.cpp.o
+[ 47%] Building CXX object CMakeFiles/utilslib.dir/src/utils/objectloader.cpp.o
+[ 47%] Building CXX object CMakeFiles/utilslib.dir/src/utils/xmlloader.cpp.o
+[ 49%] Building CXX object CMakeFiles/utilslib.dir/src/utils/animationextensions/footballanimationextension.cpp.o
+[ 49%] Built target utilslib
+[ 49%] Building CXX object CMakeFiles/blunted2.dir/src/blunted.cpp.o
+[ 49%] Linking CXX static library libblunted2.a
+[ 49%] Built target blunted2
+[ 50%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ecs_systems.cpp.o
+[ 50%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ecs_direct_systems.cpp.o
+[ 52%] Building CXX object CMakeFiles/gamelib.dir/src/ecs/system_batch.cpp.o
+[ 52%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/officials.cpp.o
+[ 52%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid_utils.cpp.o
+[ 54%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/animcollection.cpp.o
+/root/work_space/football/engine/src/onthepitch/player/humanoid/animcollection.cpp: In member function ‘void AnimCollection::CrudeSelection(DataSet&, const CrudeSelectionQuery&)’:
+/root/work_space/football/engine/src/onthepitch/player/humanoid/animcollection.cpp:666:122: warning: arithmetic between enumeration type ‘e_Side’ and floating-point type ‘blunted::real’ {aka ‘float’} is deprecated [-Wdeprecated-enum-float-conversion]
+  666 |         if (queryIncomingToFenceSide == animSide && fenceToAnimOutgoingSide == animSide && fabs(queryIncomingToFenceSide + fenceToOutgoingAngle) < pi) continue;
+      |                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+[ 54%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoidbase.cpp.o
+[ 56%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid.cpp.o
+[ 56%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/playerofficial.cpp.o
+[ 58%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/player.cpp.o
+[ 58%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/playerbase.cpp.o
+[ 58%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/playercontroller.cpp.o
+[ 60%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/humancontroller.cpp.o
+[ 60%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/icontroller.cpp.o
+[ 61%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/refereecontroller.cpp.o
+[ 61%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/elizacontroller.cpp.o
+[ 63%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/strategy.cpp.o
+[ 63%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_mid.cpp.o
+[ 63%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_off.cpp.o
+[ 65%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_def.cpp.o
+[ 65%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/goalie_default.cpp.o
+[ 67%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/humangamer.cpp.o
+[ 67%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ball.cpp.o
+[ 69%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/match.cpp.o
+[ 69%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/referee.cpp.o
+[ 69%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/mentalimage.cpp.o
+[ 70%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/AIfunctions.cpp.o
+[ 70%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/proceduralpitch.cpp.o
+[ 72%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/team.cpp.o
+[ 72%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/teamAIcontroller.cpp.o
+[ 74%] Linking CXX static library libgamelib.a
+[ 74%] Built target gamelib
+[ 76%] Building CXX object CMakeFiles/menulib.dir/src/menu/startmatch/loadingmatch.cpp.o
+[ 76%] Building CXX object CMakeFiles/menulib.dir/src/menu/pagefactory.cpp.o
+[ 78%] Building CXX object CMakeFiles/menulib.dir/src/menu/menutask.cpp.o
+[ 78%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/radar.cpp.o
+[ 78%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/gamepage.cpp.o
+[ 80%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/scoreboard.cpp.o
+[ 80%] Building CXX object CMakeFiles/menulib.dir/src/menu/mainmenu.cpp.o
+[ 81%] Building CXX object CMakeFiles/menulib.dir/src/menu/settings.cpp.o
+[ 81%] Building CXX object CMakeFiles/menulib.dir/src/menu/pausemenu.cpp.o
+[ 83%] Linking CXX static library libmenulib.a
+[ 83%] Built target menulib
+[ 85%] Building CXX object CMakeFiles/datalib.dir/src/data/matchdata.cpp.o
+[ 85%] Building CXX object CMakeFiles/datalib.dir/src/data/playerdata.cpp.o
+[ 87%] Building CXX object CMakeFiles/datalib.dir/src/data/teamdata.cpp.o
+[ 87%] Linking CXX static library libdatalib.a
+[ 87%] Built target datalib
+[ 87%] Building CXX object CMakeFiles/football_engine.dir/src/cmake/backtrace.cpp.o
+[ 87%] Building CXX object CMakeFiles/football_engine.dir/src/cmake/file.cpp.o
+[ 89%] Building CXX object CMakeFiles/football_engine.dir/src/misc/perlin.cpp.o
+[ 89%] Building CXX object CMakeFiles/football_engine.dir/src/misc/hungarian.cpp.o
+[ 90%] Building CXX object CMakeFiles/football_engine.dir/src/gametask.cpp.o
+[ 90%] Building CXX object CMakeFiles/football_engine.dir/src/utils.cpp.o
+[ 92%] Building CXX object CMakeFiles/football_engine.dir/src/main.cpp.o
+[ 92%] Building CXX object CMakeFiles/football_engine.dir/src/gamedefines.cpp.o
+[ 92%] Building CXX object CMakeFiles/football_engine.dir/src/defines.cpp.o
+[ 94%] Building CXX object CMakeFiles/football_engine.dir/src/frame_sync/input_codec.cpp.o
+[ 94%] Building CXX object CMakeFiles/football_engine.dir/src/game_load.cpp.o
+[ 96%] Building CXX object CMakeFiles/football_engine.dir/src/ai/ai_keyboard.cpp.o
+[ 96%] Building CXX object CMakeFiles/football_engine.dir/src/ai/ai_tactics.cpp.o
+[ 98%] Building CXX object CMakeFiles/football_engine.dir/src/game_env.cpp.o
+[ 98%] Linking CXX shared library libfootball_engine.so
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/football_server.dir/src/frame_sync/integrated_server.cpp.o
+[100%] Linking CXX executable bin/football_server
+[100%] Built target football_server
+[  1%] Built target football_native_recovery
+[  9%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 49%] Built target blunted2
+[ 74%] Built target gamelib
+[ 83%] Built target menulib
+[ 87%] Built target datalib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/football_client.dir/src/frame_sync/integrated_client.cpp.o
+[100%] Linking CXX executable bin/football_client
+[100%] Built target football_client
+[  1%] Built target football_native_recovery
+[  9%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 35%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 50%] Built target blunted2
+[ 75%] Built target gamelib
+[ 85%] Built target menulib
+[ 88%] Built target datalib
+[100%] Built target football_engine
+[100%] Building CXX object CMakeFiles/football_server_tcp.dir/src/frame_sync/integrated_server.cpp.o
+[100%] Linking CXX executable bin/football_server_tcp
+[100%] Built target football_server_tcp
+[  1%] Built target football_native_recovery
+[  9%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 49%] Built target blunted2
+[ 74%] Built target gamelib
+[ 83%] Built target menulib
+[ 87%] Built target datalib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/football_client_tcp.dir/src/frame_sync/integrated_client.cpp.o
+[100%] Linking CXX executable bin/football_client_tcp
+[100%] Built target football_client_tcp
+[  1%] Built target football_native_recovery
+[  9%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 49%] Built target blunted2
+[ 74%] Built target gamelib
+[ 83%] Built target menulib
+[ 87%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/football_server_udp.dir/src/frame_sync/integrated_server.cpp.o
+[100%] Linking CXX executable bin/football_server_udp
+[100%] Built target football_server_udp
+[  1%] Built target football_native_recovery
+[  9%] Built target gui2lib
+[ 20%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 49%] Built target blunted2
+[ 74%] Built target gamelib
+[ 83%] Built target menulib
+[ 87%] Built target datalib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/football_client_udp.dir/src/frame_sync/integrated_client.cpp.o
+[100%] Linking CXX executable bin/football_client_udp
+[100%] Built target football_client_udp
+[  0%] Building CXX object CMakeFiles/football_lobby.dir/src/frame_sync/lobby_server.cpp.o
+[100%] Linking CXX executable bin/football_lobby
+[100%] Built target football_lobby
+[  7%] Built target gui2lib
+[ 18%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 49%] Built target blunted2
+[ 75%] Built target gamelib
+[ 84%] Built target menulib
+[ 88%] Built target datalib
+[100%] Built target football_engine
+[100%] Building CXX object CMakeFiles/headless_match.dir/src/frame_sync/headless_match.cpp.o
+[100%] Linking CXX executable bin/headless_match
+[100%] Built target headless_match
+[  7%] Built target gui2lib
+[ 18%] Built target baselib
+[ 27%] Built target systemsgraphicslib
+[ 29%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 42%] Built target scenelib
+[ 48%] Built target utilslib
+[ 48%] Built target blunted2
+[ 74%] Built target gamelib
+[ 83%] Built target menulib
+[ 87%] Built target datalib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/standalone_game.dir/src/frame_sync/standalone_game.cpp.o
+[100%] Linking CXX executable bin/standalone_game
+[100%] Built target standalone_game
+Running: readelf -d /tmp/football-optimization-native/bin/football_server
+Running: readelf -d /tmp/football-optimization-native/bin/football_client
+Running: readelf -d /tmp/football-optimization-native/bin/football_server_tcp
+Running: readelf -d /tmp/football-optimization-native/bin/football_client_tcp
+Running: readelf -d /tmp/football-optimization-native/bin/football_server_udp
+Running: readelf -d /tmp/football-optimization-native/bin/football_client_udp
+Running: readelf -d /tmp/football-optimization-native/bin/football_lobby
+Running: readelf -d /tmp/football-optimization-native/bin/headless_match
+Running: readelf -d /tmp/football-optimization-native/bin/standalone_game
+Running: readelf -d /tmp/football-optimization-native/libfootball_engine.so
+Running: nm -D --undefined-only /tmp/football-optimization-native/libfootball_engine.so
+Running: cmake -S engine -B /tmp/football-optimization-native -DBUILD_PYTHON_BINDINGS=ON -DPython_EXECUTABLE=/usr/sbin/python3 -DPython_ROOT_DIR=/usr -Dpybind11_DIR=/usr/lib/python3.14/site-packages/pybind11/share/cmake/pybind11
+-- Found Python: /usr/sbin/python3 (found version "3.14.7") found components: Development Interpreter Development.Module Development.Embed
+Using Python: 3.14
+-- Performing Test HAS_FLTO_AUTO
+-- Performing Test HAS_FLTO_AUTO - Success
+Using pybind11 for Python bindings
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.9s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: cmake --build /tmp/football-optimization-native -j 1 --target game
+[  3%] Built target datalib
+[ 11%] Built target gui2lib
+[ 21%] Built target baselib
+[ 30%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 50%] Built target utilslib
+[ 51%] Built target blunted2
+[ 76%] Built target gamelib
+[ 86%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/game.dir/ai.cpp.o
+[100%] Linking CXX shared library libgame.so
+[100%] Built target game
+Running: /usr/sbin/python3 -I -c 
+import importlib, json, pathlib, pickle, sys
+root = pathlib.Path(sys.argv[1]).resolve()
+sys.path.insert(0, str(root))
+before = list(sys.path)
+import gfootball_engine
+module = importlib.import_module('gfootball_engine._gameplayfootball')
+assert pathlib.Path(module.__file__).resolve().parent == root/'gfootball_engine'
+assert sys.path == before
+assert sys.modules['_gameplayfootball'] is module
+assert gfootball_engine.GameEnv is module.GameEnv
+role = module.e_PlayerRole.e_PlayerRole_GK
+assert pickle.loads(pickle.dumps(role)) == role
+env = module.GameEnv()
+assert callable(env.step)
+mapped = {pathlib.Path(line.split()[-1]).resolve()
+          for line in pathlib.Path('/proc/self/maps').read_text().splitlines()
+          if line.split()[-1].endswith('/libfootball_engine.so')}
+assert mapped == {root/'gfootball_engine/libfootball_engine.so'}, mapped
+print(json.dumps(dict(passed=True, assertions=7, mapped_engine=[str(p) for p in mapped])))
+ /tmp/football-relocated-binding-k0uy9692/relocated
+{"passed": true, "assertions": 14, "skipped": 0, "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.44", "dependencies": {"football_server": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_client": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_server_tcp": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_client_tcp": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_server_udp": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_client_udp": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libcrypto.so.3", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "football_lobby": ["libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "headless_match": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "standalone_game": ["libfootball_engine.so", "libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6"], "libfootball_engine.so": ["libSDL2_image-2.0.so.0", "libSDL2_ttf-2.0.so.0", "libSDL2_gfx-1.0.so.0", "libSDL2-2.0.so.0", "libEGL.so.1", "libOpenGL.so.0", "libGLX.so.0", "libstdc++.so.6", "libm.so.6", "libgcc_s.so.1", "libc.so.6", "ld-linux-x86-64.so.2"]}, "relocated_python_import": true, "relocated_package": {"passed": true, "assertions": 7, "mapped_engine": ["/tmp/football-relocated-binding-k0uy9692/relocated/gfootball_engine/libfootball_engine.so"]}, "binding_python": "/usr/sbin/python3", "pybind11": "3.1.0", "packaging_scope": "native relocation; actual wheel installation has a separate probe", "build": "/tmp/football-optimization-native"}
