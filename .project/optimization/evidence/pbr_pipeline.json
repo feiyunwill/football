@@ -1,0 +1,15 @@
+{
+  "check": "pbr_pipeline",
+  "fingerprint": "3c4923d46166a04d2eca2c31610d7fad5efcc7bbd91cb5bcb731d6c8a8cc94ee",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1790570687.547387,
+  "duration_seconds": 958.678,
+  "argv": [
+    "python3",
+    ".project/checks/pbr_pipeline.py"
+  ],
+  "log": "pbr_pipeline-1790570687547427621.log",
+  "log_sha256": "9f8a54e31176b853ef258aaeff3f329c4451bd14c8eb9ecfa0dedd7691a5f46a"
+}

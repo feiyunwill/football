@@ -1626,9 +1626,52 @@
     },
     {
       "id": "pbr_pipeline",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "环境开关正确；有效材质与 IBL 数据；着色器链接/FBO 完整；资源可重建"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/pbr_pipeline.py"
+      ],
+      "kind": "json",
+      "min_assertions": 3828,
+      "timeout": 3600,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/tests/engine_frame_capture_contract.cpp",
+        "engine/data/**/*",
+        ".project/checks/pbr_pipeline.py",
+        ".project/checks/native_pbr_pipeline/*.cpp",
+        ".project/checks/performance_regression.py",
+        ".project/checks/input_contract.py",
+        ".project/checks/native_boundary.py"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "CMAKE_PREFIX_PATH",
+        "LD_LIBRARY_PATH",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "DISPLAY",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_USE_PBR",
+        "ASAN_OPTIONS",
+        "UBSAN_OPTIONS",
+        "LSAN_OPTIONS",
+        "PYTHONOPTIMIZE"
       ]
     },
     {
