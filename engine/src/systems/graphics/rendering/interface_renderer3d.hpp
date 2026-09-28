@@ -105,6 +105,12 @@ namespace blunted {
     int accumBufferID = 0;
     int accumBuffer_AccumTexID = 0;
     int accumBuffer_ModifierTexID = 0;
+
+    // Owned per-view postprocess targets, allocated only when enabled.
+    int postBloomFrameBufferID[2] = {};
+    int postBloomTextureID[2] = {};
+    int postToneFrameBufferID = 0;
+    int postToneTextureID = 0;
   };
 
   struct LightQueueEntry {

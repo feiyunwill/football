@@ -41,6 +41,7 @@
 #endif
 
 #include <cmath>
+#include <cstdlib>
 #include <algorithm>
 #include <mutex>
 #include <stdexcept>
@@ -79,6 +80,17 @@ OpenGLRenderer3D::OpenGLRenderer3D() : functions_(std::make_unique<GLfunctions>(
   DO_VALIDATION;
   FOV = 45;
   overallBrightness = 128;
+  const char *bloom = std::getenv("GFOOTBALL_PBR_BLOOM");
+  const char *fxaa = std::getenv("GFOOTBALL_PBR_FXAA");
+  pbrBloomEnabled_ = bloom && bloom[0] == '1' && bloom[1] == '\0';
+  pbrFXAAEnabled_ = fxaa && fxaa[0] == '1' && fxaa[1] == '\0';
+  if (const char *setting = std::getenv("GFOOTBALL_PBR_EXPOSURE")) {
+    char *end = nullptr;
+    const float value = std::strtof(setting, &end);
+    if (end != setting && *end == '\0' && std::isfinite(value) &&
+        value >= 0.1f && value <= 8.0f)
+      pbrExposure_ = value;
+  }
 
   _cache_activeTextureUnit = -1;
 
@@ -1110,6 +1122,25 @@ void OpenGLRenderer3D::DeleteView(int viewID) {
 
   DeleteTexture(view->accumBuffer_AccumTexID);
   DeleteTexture(view->accumBuffer_ModifierTexID);
+  for (int i = 0; i < 2; ++i) {
+    if (view->postBloomFrameBufferID[i]) {
+      BindFrameBuffer(view->postBloomFrameBufferID[i]);
+      SetFrameBufferTexture2D(e_TargetAttachment_Color0, 0);
+      DeleteFrameBuffer(view->postBloomFrameBufferID[i]);
+      DeleteTexture(view->postBloomTextureID[i]);
+      view->postBloomFrameBufferID[i] = 0;
+      view->postBloomTextureID[i] = 0;
+    }
+  }
+  if (view->postToneFrameBufferID) {
+    BindFrameBuffer(view->postToneFrameBufferID);
+    SetFrameBufferTexture2D(e_TargetAttachment_Color0, 0);
+    DeleteFrameBuffer(view->postToneFrameBufferID);
+    DeleteTexture(view->postToneTextureID);
+    view->postToneFrameBufferID = 0;
+    view->postToneTextureID = 0;
+  }
+  BindFrameBuffer(0);
 }
 
   // general
@@ -2989,11 +3020,9 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
   if (name == "bloom") {
     DO_VALIDATION;
     SetUniformInt("bloom", "map_hdr", 0);
-    SetUniformInt("bloom", "map_bloom", 1);
-    SetUniformFloat("bloom", "bloomStrength", 0.3f);
-    // 2026-09-09: inactive in this shader; setting it never affected output.
-    // SetUniformFloat("bloom", "bloomThreshold", 0.8f);
-    SetUniformFloat("bloom", "bloomClamp", 1.0f);
+    SetUniformFloat2("bloom", "outputSize", (float)context_width,
+                     (float)context_height);
+    SetUniformFloat("bloom", "bloomThreshold", 0.5f);
   }
   if (name == "ssr") {
     DO_VALIDATION;
@@ -3429,55 +3458,126 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
   
   // ============================================
   // 4. 后处理阶段 (Tone Mapping + Bloom + FXAA)
-  // ============================================
-  BindFrameBuffer(0);
-  
-  targets.push_back(e_TargetAttachment_Back);
-  SetRenderTargets(targets);
-  targets.clear();
-  
-  // 色调映射
-  UseShader("tonemapping");
-  
-  SetUniformFloat("tonemapping", "contextWidth", (float)view.width);
-  SetUniformFloat("tonemapping", "contextHeight", (float)view.height);
-  SetUniformFloat("tonemapping", "contextX", (float)view.x);
-  SetUniformFloat("tonemapping", "contextY", (float)(context_height - (view.y + view.height)));
-  
+  // Bloom works in linear HDR at half resolution before display transfer.
+  const int bloomWidth = std::max(1, view.width / 2);
+  const int bloomHeight = std::max(1, view.height / 2);
+  if (pbrBloomEnabled_ && !view.postBloomFrameBufferID[0]) {
+    for (int i = 0; i < 2; ++i) {
+      view.postBloomFrameBufferID[i] = CreateFrameBuffer();
+      BindFrameBuffer(view.postBloomFrameBufferID[i]);
+      view.postBloomTextureID[i] = CreateTexture(
+          e_InternalPixelFormat_RGBA16F, e_PixelFormat_RGBA,
+          bloomWidth, bloomHeight, false, false, false, true, false);
+      SetFrameBufferTexture2D(e_TargetAttachment_Color0,
+                              view.postBloomTextureID[i]);
+      SetRenderTargets({e_TargetAttachment_Color0});
+      if (!CheckFrameBufferStatus())
+        Log(e_FatalError, "OpenGLRenderer3D", "RenderViewPBR",
+            "Could not create Bloom framebuffer");
+    }
+  }
+  if (pbrFXAAEnabled_ && !view.postToneFrameBufferID) {
+    view.postToneFrameBufferID = CreateFrameBuffer();
+    BindFrameBuffer(view.postToneFrameBufferID);
+    view.postToneTextureID = CreateTexture(
+        e_InternalPixelFormat_RGBA8, e_PixelFormat_RGBA,
+        view.width, view.height, false, false, false, true, false);
+    SetFrameBufferTexture2D(e_TargetAttachment_Color0,
+                            view.postToneTextureID);
+    SetRenderTargets({e_TargetAttachment_Color0});
+    if (!CheckFrameBufferStatus())
+      Log(e_FatalError, "OpenGLRenderer3D", "RenderViewPBR",
+          "Could not create tone-mapping framebuffer");
+  }
+
+  SetDepthTesting(false);
+  SetDepthMask(false);
+  SetFramebufferGammaCorrection(false);
+  if (pbrBloomEnabled_) {
+    BindFrameBuffer(view.postBloomFrameBufferID[0]);
+    SetRenderTargets({e_TargetAttachment_Color0});
+    SetViewport(0, 0, bloomWidth, bloomHeight);
+    UseShader("bloom");
+    SetUniformFloat2("bloom", "outputSize", (float)bloomWidth,
+                     (float)bloomHeight);
+    SetTextureUnit(0);
+    BindTexture(view.accumBuffer_AccumTexID);
+    RenderOverlay2D();
+
+    UseShader("blur");
+    SetUniformFloat2("blur", "textureSize", (float)bloomWidth,
+                     (float)bloomHeight);
+    SetUniformFloat2("blur", "direction", 1.0f, 0.0f);
+    BindFrameBuffer(view.postBloomFrameBufferID[1]);
+    SetRenderTargets({e_TargetAttachment_Color0});
+    SetTextureUnit(0);
+    BindTexture(view.postBloomTextureID[0]);
+    RenderOverlay2D();
+    SetUniformFloat2("blur", "direction", 0.0f, 1.0f);
+    BindFrameBuffer(view.postBloomFrameBufferID[0]);
+    SetRenderTargets({e_TargetAttachment_Color0});
+    SetTextureUnit(0);
+    BindTexture(view.postBloomTextureID[1]);
+    RenderOverlay2D();
+    SetTextureUnit(0);
+    BindTexture(0);
+  }
+
   int width, height, bpp;
   GetContextSize(width, height, bpp);
-  SetViewport(view.x, height - (view.y + view.height), view.width, view.height);
-  
+  const int targetY = height - (view.y + view.height);
+  if (pbrFXAAEnabled_) {
+    BindFrameBuffer(view.postToneFrameBufferID);
+    SetRenderTargets({e_TargetAttachment_Color0});
+    SetViewport(0, 0, view.width, view.height);
+  } else {
+    BindFrameBuffer(0);
+    SetRenderTargets({e_TargetAttachment_Back});
+    SetViewport(view.x, targetY, view.width, view.height);
+  }
+
+  UseShader("tonemapping");
+  SetUniformFloat("tonemapping", "contextWidth", (float)view.width);
+  SetUniformFloat("tonemapping", "contextHeight", (float)view.height);
+  SetUniformFloat("tonemapping", "contextX",
+                  pbrFXAAEnabled_ ? 0.0f : (float)view.x);
+  SetUniformFloat("tonemapping", "contextY",
+                  pbrFXAAEnabled_ ? 0.0f : (float)targetY);
+  SetUniformFloat("tonemapping", "exposure", pbrExposure_);
+  SetUniformFloat("tonemapping", "bloomStrength",
+                  pbrBloomEnabled_ ? 0.3f : 0.0f);
+
   SetTextureUnit(2);
   BindTexture(view.gBuffer_DepthTexID);
   SetTextureUnit(1);
-  BindTexture(0); // Bloom 纹理（暂无）
+  BindTexture(pbrBloomEnabled_ ? view.postBloomTextureID[0] : 0);
   SetTextureUnit(0);
   BindTexture(view.accumBuffer_AccumTexID);
-  
-  SetDepthTesting(false);
-  SetDepthMask(false);
-  
-  // Tone mapping currently performs the display transfer in its shader.
-  SetFramebufferGammaCorrection(false);
   RenderOverlay2D();
-  SetFramebufferGammaCorrection(false);
-  
-  // 清理纹理绑定
   SetTextureUnit(2);
   BindTexture(0);
   SetTextureUnit(1);
   BindTexture(0);
   SetTextureUnit(0);
   BindTexture(0);
-  
-  // 恢复默认着色器
+
+  if (pbrFXAAEnabled_) {
+    BindFrameBuffer(0);
+    SetRenderTargets({e_TargetAttachment_Back});
+    SetViewport(view.x, targetY, view.width, view.height);
+    UseShader("fxaa");
+    SetUniformFloat2("fxaa", "textureSize",
+                     (float)view.width, (float)view.height);
+    SetUniformFloat2("fxaa", "contextOrigin",
+                     (float)view.x, (float)targetY);
+    BindTexture(view.postToneTextureID);
+    RenderOverlay2D();
+    SetTextureUnit(0);
+    BindTexture(0);
+  }
+  SetFramebufferGammaCorrection(false);
   UseShader("");
-  
-  targets.push_back(e_TargetAttachment_Back);
-  SetRenderTargets(targets);
-  targets.clear();
-  
+  SetRenderTargets({e_TargetAttachment_Back});
   SetViewport(0, 0, width, height);
 }
 }

@@ -20,6 +20,7 @@
 
 uniform sampler2D map_texture;
 uniform vec2 textureSize;
+uniform vec2 contextOrigin;
 
 // FXAA 参数
 uniform float fxaaReduceMin;        // 最小减少量
@@ -34,7 +35,7 @@ float Luminance(vec3 color) {
 }
 
 void main() {
-    vec2 texCoord = gl_FragCoord.xy / textureSize;
+    vec2 texCoord = (gl_FragCoord.xy - contextOrigin) / textureSize;
     vec2 texelSize = 1.0 / textureSize;
     
     // 采样 3x3 邻域

@@ -160,6 +160,9 @@ namespace blunted {
       std::array<unsigned int, 4> iblTextures_{};
       std::array<float, 6> iblLightParameters_{};
       bool iblReady_ = false;
+      bool pbrBloomEnabled_ = false;
+      bool pbrFXAAEnabled_ = false;
+      float pbrExposure_ = 1.0f;
       void CreateIBLResources(const std::deque<LightQueueEntry> &lights);
       void DestroyIBLResources();
 
