@@ -1,3 +1,4 @@
+#include <array>
 // Copyright 2019 Google LLC & Bastiaan Konings
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,6 +41,7 @@
 #endif
 
 #include <cmath>
+#include <algorithm>
 #include <mutex>
 #include <stdexcept>
 #include "wrap_SDL.h"
@@ -89,6 +91,13 @@ OpenGLRenderer3D::OpenGLRenderer3D() : functions_(std::make_unique<GLfunctions>(
 // OpenGLRenderer3D::~OpenGLRenderer3D() { DO_VALIDATION; };
 OpenGLRenderer3D::~OpenGLRenderer3D() {
   DO_VALIDATION;
+  if (iblTextures_[0] || iblTextures_[1] ||
+      iblTextures_[2] || iblTextures_[3]) {
+    // GameEnv normally deletes the renderer without calling Exit().
+    // Release owned textures while its GL context is still available.
+    SetContext();
+    DestroyIBLResources();
+  }
   if (context) {
     SDL_GL_MakeCurrent(window, nullptr);
     SDL_GL_DeleteContext(context);
@@ -699,6 +708,183 @@ void OpenGLRenderer3D::CreateContextEgl() {
 }
 #endif
 
+void OpenGLRenderer3D::DestroyIBLResources() {
+  if (iblTextures_[0] || iblTextures_[1] ||
+      iblTextures_[2] || iblTextures_[3]) {
+    mapping.glDeleteTextures(4, iblTextures_.data());
+  }
+  iblTextures_.fill(0);
+  iblReady_ = false;
+}
+
+void OpenGLRenderer3D::CreateIBLResources(
+    const std::deque<LightQueueEntry> &lights) {
+  std::array<float, 6> lightParameters{0.38f, 0.24f, 0.89f,
+                                       1.0f, 0.94f, 0.82f};
+  float brightest = -1.0f;
+  for (const LightQueueEntry &light : lights) {
+    if (light.type != 0) continue;
+    const float power = light.color.coords[0] + light.color.coords[1] +
+                        light.color.coords[2];
+    const float x = light.position.coords[0];
+    const float y = light.position.coords[1];
+    const float z = light.position.coords[2];
+    const float distance = std::sqrt(x*x + y*y + z*z);
+    if (power <= brightest || distance < 1e-4f) continue;
+    brightest = power;
+    lightParameters = {x/distance, y/distance, z/distance,
+                       std::clamp(light.color.coords[0], 0.0f, 4.0f),
+                       std::clamp(light.color.coords[1], 0.0f, 4.0f),
+                       std::clamp(light.color.coords[2], 0.0f, 4.0f)};
+  }
+  if (iblReady_) {
+    bool same = true;
+    for (size_t i = 0; i < lightParameters.size(); ++i)
+      same &= std::abs(iblLightParameters_[i] - lightParameters[i]) < 1e-3f;
+    if (same) return;
+    DestroyIBLResources();
+  }
+
+  constexpr int environmentSize = 128;
+  constexpr int irradianceSize = 32;
+  constexpr int prefilterSize = 128;
+  constexpr int prefilterLevels = 5;
+  constexpr int lutSize = 128;
+  GLint previousFramebuffer = 0;
+  GLint previousViewport[4]{};
+  GLint previousActiveTexture = GL_TEXTURE0;
+  GLint previousVAO = 0;
+  mapping.glGetIntegerv(GL_FRAMEBUFFER_BINDING, &previousFramebuffer);
+  mapping.glGetIntegerv(GL_VIEWPORT, previousViewport);
+  mapping.glGetIntegerv(GL_ACTIVE_TEXTURE, &previousActiveTexture);
+  mapping.glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &previousVAO);
+  const GLboolean srgbWasEnabled = mapping.glIsEnabled(GL_FRAMEBUFFER_SRGB);
+  GLuint captureFramebuffer = 0;
+  auto restore = [&] {
+    mapping.glBindVertexArray(static_cast<GLuint>(previousVAO));
+    BindFrameBuffer(previousFramebuffer);
+    SetViewport(previousViewport[0], previousViewport[1],
+                previousViewport[2], previousViewport[3]);
+    SetTextureUnit(previousActiveTexture - GL_TEXTURE0);
+    SetFramebufferGammaCorrection(srgbWasEnabled == GL_TRUE);
+  };
+  try {
+    if (mapping.glGetError() != GL_NO_ERROR)
+      throw std::runtime_error("OpenGL error before IBL preprocessing");
+    SetTextureUnit(0);
+    mapping.glGenTextures(4, iblTextures_.data());
+    auto setupCube = [&](GLuint texture, int size, int levels,
+                         bool mipFilter) {
+      mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+      mapping.glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
+                             GL_CLAMP_TO_EDGE);
+      mapping.glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
+                             GL_CLAMP_TO_EDGE);
+      mapping.glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
+                             GL_CLAMP_TO_EDGE);
+      mapping.glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER,
+                             mipFilter ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
+      mapping.glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER,
+                             GL_LINEAR);
+      mapping.glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL,
+                             levels - 1);
+      for (int level = 0; level < levels; ++level)
+        for (int face = 0; face < 6; ++face)
+          mapping.glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+              level, GL_RGBA16F, std::max(size >> level, 1),
+              std::max(size >> level, 1), 0, GL_RGBA, GL_FLOAT, nullptr);
+    };
+    setupCube(iblTextures_[0], environmentSize, 8, true);
+    setupCube(iblTextures_[1], irradianceSize, 1, false);
+    setupCube(iblTextures_[2], prefilterSize, prefilterLevels, true);
+    mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+    BindTexture(iblTextures_[3]);
+    mapping.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    mapping.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    mapping.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    mapping.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    mapping.glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, lutSize, lutSize,
+                         0, GL_RG, GL_FLOAT, nullptr);
+    BindTexture(0);
+
+    mapping.glGenFramebuffers(1, &captureFramebuffer);
+    BindFrameBuffer(captureFramebuffer);
+    const GLenum attachment = GL_COLOR_ATTACHMENT0;
+    mapping.glDrawBuffers(1, &attachment);
+    SetFramebufferGammaCorrection(false);
+    SetDepthTesting(false);
+    SetDepthMask(false);
+    SetCullingMode(e_CullingMode_Off);
+    SetBlendingMode(e_BlendingMode_Off);
+
+    auto drawFace = [&](const std::string &shader, GLuint texture,
+                        int face, int level, int size) {
+      mapping.glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+          GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, texture, level);
+      if (mapping.glCheckFramebufferStatus(GL_FRAMEBUFFER) !=
+          GL_FRAMEBUFFER_COMPLETE)
+        throw std::runtime_error("IBL cubemap framebuffer incomplete");
+      SetViewport(0, 0, size, size);
+      SetUniformInt(shader, "faceIndex", face);
+      mapping.glBindVertexArray(quadBuffer.vertexArrayID);
+      mapping.glDrawArrays(GL_TRIANGLES, 0, 6);
+      mapping.glBindVertexArray(0);
+    };
+
+    UseShader("ibl_environment");
+    SetUniformFloat3("ibl_environment", "sunDirection", lightParameters[0],
+                     lightParameters[1], lightParameters[2]);
+    SetUniformFloat3("ibl_environment", "sunColor", lightParameters[3],
+                     lightParameters[4], lightParameters[5]);
+    for (int face = 0; face < 6; ++face)
+      drawFace("ibl_environment", iblTextures_[0], face, 0, environmentSize);
+    mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, iblTextures_[0]);
+    mapping.glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+    UseShader("ibl_irradiance");
+    for (int face = 0; face < 6; ++face)
+      drawFace("ibl_irradiance", iblTextures_[1], face, 0, irradianceSize);
+
+    UseShader("ibl_prefilter");
+    SetUniformFloat("ibl_prefilter", "resolution", environmentSize);
+    for (int level = 0; level < prefilterLevels; ++level) {
+      SetUniformFloat("ibl_prefilter", "roughness",
+                      float(level) / float(prefilterLevels - 1));
+      for (int face = 0; face < 6; ++face)
+        drawFace("ibl_prefilter", iblTextures_[2], face, level,
+                 std::max(prefilterSize >> level, 1));
+    }
+    mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+
+    UseShader("ibl_brdf_lut");
+    mapping.glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                   GL_TEXTURE_2D, iblTextures_[3], 0);
+    if (mapping.glCheckFramebufferStatus(GL_FRAMEBUFFER) !=
+        GL_FRAMEBUFFER_COMPLETE)
+      throw std::runtime_error("IBL BRDF framebuffer incomplete");
+    SetViewport(0, 0, lutSize, lutSize);
+    mapping.glBindVertexArray(quadBuffer.vertexArrayID);
+    mapping.glDrawArrays(GL_TRIANGLES, 0, 6);
+    mapping.glBindVertexArray(0);
+    if (mapping.glGetError() != GL_NO_ERROR)
+      throw std::runtime_error("OpenGL error during IBL preprocessing");
+
+    mapping.glDeleteFramebuffers(1, &captureFramebuffer);
+    captureFramebuffer = 0;
+    UseShader("");
+    restore();
+    iblLightParameters_ = lightParameters;
+    iblReady_ = true;
+  } catch (...) {
+    if (captureFramebuffer)
+      mapping.glDeleteFramebuffers(1, &captureFramebuffer);
+    UseShader("");
+    restore();
+    DestroyIBLResources();
+    throw;
+  }
+}
+
 bool OpenGLRenderer3D::CreateContext(int width, int height, int bpp,
                                      bool fullscreen) {
   this->context_width = width;
@@ -727,6 +913,7 @@ bool OpenGLRenderer3D::CreateContext(int width, int height, int bpp,
 
   // shaders
   LoadShader("simple", "media/shaders/simple");
+  LoadShader("pbr_geometry", "media/shaders/pbr_geometry");
   LoadShader("lighting", "media/shaders/lighting");
   LoadShader("ambient", "media/shaders/ambient");
   LoadShader("zphase", "media/shaders/zphase");
@@ -735,6 +922,7 @@ bool OpenGLRenderer3D::CreateContext(int width, int height, int bpp,
   
   // 2026-09-03 Phase 12-15: 新渲染管线着色器
   LoadShader("pbr", "media/shaders/pbr");
+  LoadShader("ibl_environment", "media/shaders/ibl_environment");
   LoadShader("ibl_irradiance", "media/shaders/ibl_irradiance");
   LoadShader("ibl_prefilter", "media/shaders/ibl_prefilter");
   LoadShader("ibl_brdf_lut", "media/shaders/ibl_brdf_lut");
@@ -773,6 +961,7 @@ bool OpenGLRenderer3D::CreateContext(int width, int height, int bpp,
 
 void OpenGLRenderer3D::Exit() {
   DO_VALIDATION;
+  DestroyIBLResources();
   DeleteTexture(noiseTexID);
 
   std::map<std::string, Shader>::iterator shaderIter = shaders.begin();
@@ -864,8 +1053,10 @@ int OpenGLRenderer3D::CreateView(float x_percent, float y_percent,
   SetFrameBufferTexture2D(e_TargetAttachment_Color0,
                           view.accumBuffer_AccumTexID);
 
+  // Modifier shaders preserve only edge strength (R) and SSAO (G).
+  // Retain their half-float representation without allocating unused B/A.
   view.accumBuffer_ModifierTexID = CreateTexture(
-      e_InternalPixelFormat_RGBA16F, e_PixelFormat_RGBA, accumBufWidth,
+      e_InternalPixelFormat_RG16F, e_PixelFormat_RG, accumBufWidth,
       accumBufHeight, false, false, false, false, false);
   SetFrameBufferTexture2D(e_TargetAttachment_Color1,
                           view.accumBuffer_ModifierTexID);
@@ -1461,6 +1652,11 @@ void OpenGLRenderer3D::RenderVertexBuffer(
     e_RenderMode renderMode) {
   DO_VALIDATION;
   VertexBuffer *vertexBuffer;
+  const bool pbrGeometry = currentShader != shaders.end() &&
+                           currentShader->first == "pbr_geometry";
+  const std::string materialShader = pbrGeometry ? "pbr_geometry" : "simple";
+  std::array<float, 6> previousMaterial{};
+  bool materialInitialized = false;
 
 // Deprecated
 //  if (renderMode != e_RenderMode_GeometryOnly) {
@@ -1599,10 +1795,17 @@ void OpenGLRenderer3D::RenderVertexBuffer(
           }
         }
 
+        const std::array<float, 6> materialKey{
+          vbIndex->material.shininess, vbIndex->material.specular_amount,
+          vbIndex->material.self_illumination.coords[0],
+          vbIndex->material.metallic, vbIndex->material.roughness, vbIndex->material.ao};
+        const bool changedPBRMaterial = pbrGeometry &&
+            (!materialInitialized || previousMaterial != materialKey);
         if (diffuseTextureID != currentDiffuseTextureID ||
             normalTextureID != currentNormalTextureID ||
             specularTextureID != currentSpecularTextureID ||
-            illuminationTextureID != currentIlluminationTextureID) {
+            illuminationTextureID != currentIlluminationTextureID ||
+            changedPBRMaterial) {
           DO_VALIDATION;
 
           if (sequential) {
@@ -1648,11 +1851,11 @@ void OpenGLRenderer3D::RenderVertexBuffer(
             // "specular", vbIndex->material.specular_amount);
             // SetUniformFloat("simple", "self_illumination",
             // vbIndex->material.self_illumination.coords[0]);
-            // SetUniformFloat3("simple", "materialparams",
+            // SetUniformFloat3(materialShader, "materialparams",
             // vbIndex->material.shininess * 60 + 1,
             // vbIndex->material.specular_amount,
             // vbIndex->material.self_illumination.coords[0]);
-            SetUniformFloat3("simple", "materialparams",
+            SetUniformFloat3(materialShader, "materialparams",
                              vbIndex->material.shininess,
                              vbIndex->material.specular_amount,
                              vbIndex->material.self_illumination.coords[0]);
@@ -1661,10 +1864,16 @@ void OpenGLRenderer3D::RenderVertexBuffer(
             // SetUniformInt("simple", "has_specular", (int)has_specular);
             // SetUniformInt("simple", "has_illumination",
             // (int)has_illumination);
-            SetUniformFloat3("simple", "materialbools", (int)has_normal,
+            SetUniformFloat3(materialShader, "materialbools", (int)has_normal,
                              (int)has_specular, (int)has_illumination);
           }
 
+          if (pbrGeometry) {
+            SetUniformFloat3("pbr_geometry", "materialPBR", materialKey[3],
+                             materialKey[4], materialKey[5]);
+            previousMaterial = materialKey;
+            materialInitialized = true;
+          }
           currentDiffuseTextureID = diffuseTextureID;
           currentNormalTextureID = normalTextureID;
           currentSpecularTextureID = specularTextureID;
@@ -1777,6 +1986,9 @@ GLenum GetGLPixelFormat(e_PixelFormat pixelFormat) {
     case e_PixelFormat_RGBA:
       format = GL_RGBA;
       break;
+    case e_PixelFormat_RG:
+      format = GL_RG;
+      break;
     case e_PixelFormat_DepthComponent:
       format = GL_DEPTH_COMPONENT;
       break;
@@ -1819,6 +2031,9 @@ GLenum GetGLInternalPixelFormat(e_InternalPixelFormat pixelFormat) {
       break;
     case e_InternalPixelFormat_RGBA16F:
       format = GL_RGBA16F;
+      break;
+    case e_InternalPixelFormat_RG16F:
+      format = GL_RG16F;
       break;
     case e_InternalPixelFormat_RGBA32F:
       format = GL_RGBA32F;
@@ -2477,7 +2692,7 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
     mapping.glBindAttribLocation(shader.programID, 0, "position");
     mapping.glBindFragDataLocation(shader.programID, 0, "stdout");
   }
-  if (name == "simple") {
+  if (name == "simple" || name == "pbr_geometry") {
     DO_VALIDATION;
     mapping.glBindAttribLocation(shader.programID, 0, "position");
     mapping.glBindAttribLocation(shader.programID, 1, "normal");
@@ -2513,26 +2728,13 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
   if (name == "pbr") {
     DO_VALIDATION;
     mapping.glBindAttribLocation(shader.programID, 0, "position");
-    mapping.glBindAttribLocation(shader.programID, 1, "normal");
-    mapping.glBindAttribLocation(shader.programID, 2, "texCoord");
-    mapping.glBindFragDataLocation(shader.programID, 0, "FragColor");
+    mapping.glBindFragDataLocation(shader.programID, 0, "stdout0");
+    mapping.glBindFragDataLocation(shader.programID, 1, "stdout1");
   }
-  if (name == "ibl_irradiance") {
+  if (name == "ibl_environment" || name == "ibl_irradiance" ||
+      name == "ibl_prefilter" || name == "ibl_brdf_lut") {
     DO_VALIDATION;
     mapping.glBindAttribLocation(shader.programID, 0, "position");
-    mapping.glBindAttribLocation(shader.programID, 1, "normal");
-    mapping.glBindFragDataLocation(shader.programID, 0, "FragColor");
-  }
-  if (name == "ibl_prefilter") {
-    DO_VALIDATION;
-    mapping.glBindAttribLocation(shader.programID, 0, "position");
-    mapping.glBindAttribLocation(shader.programID, 1, "normal");
-    mapping.glBindFragDataLocation(shader.programID, 0, "FragColor");
-  }
-  if (name == "ibl_brdf_lut") {
-    DO_VALIDATION;
-    mapping.glBindAttribLocation(shader.programID, 0, "position");
-    mapping.glBindAttribLocation(shader.programID, 1, "texCoord");
     mapping.glBindFragDataLocation(shader.programID, 0, "FragColor");
   }
   if (name == "ibl_composition") {
@@ -2625,12 +2827,12 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
   UseShader(name);
 
   GLint location = 0;
-  if (name == "simple") {
+  if (name == "simple" || name == "pbr_geometry") {
     DO_VALIDATION;
-    SetUniformInt("simple", "map_albedo", 0);
-    SetUniformInt("simple", "map_normal", 1);
-    SetUniformInt("simple", "map_specular", 2);
-    SetUniformInt("simple", "map_illumination", 3);
+    SetUniformInt(name, "map_albedo", 0);
+    SetUniformInt(name, "map_normal", 1);
+    SetUniformInt(name, "map_specular", 2);
+    SetUniformInt(name, "map_illumination", 3);
   }
   if (name == "ambient") {
     DO_VALIDATION;
@@ -2688,9 +2890,9 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
     DO_VALIDATION;
     SetUniformInt("pbr", "map_albedo", 0);
     SetUniformInt("pbr", "map_normal", 1);
-    SetUniformInt("pbr", "map_metallic", 2);
-    SetUniformInt("pbr", "map_roughness", 3);
-    SetUniformInt("pbr", "map_ao", 4);
+    SetUniformInt("pbr", "map_depth", 2);
+    SetUniformInt("pbr", "map_aux", 3);
+    SetUniformInt("pbr", "map_shadow", 7);
   }
   if (name == "ibl_irradiance") {
     DO_VALIDATION;
@@ -2710,14 +2912,15 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
   }
   if (name == "ibl_composition") {
     DO_VALIDATION;
-    SetUniformInt("ibl_composition", "irradianceMap", 0);
-    SetUniformInt("ibl_composition", "prefilterMap", 1);
-    SetUniformInt("ibl_composition", "brdfLUT", 2);
-    SetUniformInt("ibl_composition", "map_albedo", 3);
-    SetUniformInt("ibl_composition", "map_normal", 4);
-    SetUniformInt("ibl_composition", "map_metallic", 5);
-    SetUniformInt("ibl_composition", "map_roughness", 6);
-    SetUniformInt("ibl_composition", "map_ao", 7);
+    // The deferred pass reads the four existing G-buffer attachments first.
+    // IBL resources occupy separate units once their lifecycle is implemented.
+    SetUniformInt("ibl_composition", "map_albedo", 0);
+    SetUniformInt("ibl_composition", "map_normal", 1);
+    SetUniformInt("ibl_composition", "map_depth", 2);
+    SetUniformInt("ibl_composition", "map_aux", 3);
+    SetUniformInt("ibl_composition", "irradianceMap", 4);
+    SetUniformInt("ibl_composition", "prefilterMap", 5);
+    SetUniformInt("ibl_composition", "brdfLUT", 6);
   }
   if (name == "tonemapping") {
     DO_VALIDATION;
@@ -3086,6 +3289,7 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
                                      std::deque<LightQueueEntry> &visibleLights,
                                      std::deque<VertexBufferQueueEntry> &skyboxes) {
   DO_VALIDATION;
+  CreateIBLResources(visibleLights);
   
   std::vector<e_TargetAttachment> targets;
   
@@ -3113,7 +3317,7 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
   // ============================================
   // 2. 几何阶段 (G-Buffer)
   // ============================================
-  UseShader("simple");
+  UseShader("pbr_geometry");
   
   BindFrameBuffer(view.gBufferID);
   
@@ -3145,6 +3349,8 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
   targets.push_back(e_TargetAttachment_Color1);
   SetRenderTargets(targets);
   targets.clear();
+  // Each HDR light accumulation pass starts from defined contents.
+  ClearBuffer(Vector3(0, 0, 0), false, true);
   
   // 绑定 G-Buffer 纹理
   SetTextureUnit(1);
@@ -3157,19 +3363,36 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
   BindTexture(view.gBuffer_AlbedoTexID);
   
   // 环境光 (IBL)
+  SetTextureUnit(4);
+  mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, iblTextures_[1]);
+  SetTextureUnit(5);
+  mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, iblTextures_[2]);
+  SetTextureUnit(6);
+  BindTexture(iblTextures_[3]);
+  SetTextureUnit(0);
   UseShader("ibl_composition");
   
   SetUniformFloat("ibl_composition", "contextWidth", (float)view.width);
   SetUniformFloat("ibl_composition", "contextHeight", (float)view.height);
   SetUniformFloat("ibl_composition", "contextX", (float)0);
   SetUniformFloat("ibl_composition", "contextY", (float)0);
-  SetUniformMatrix4("ibl_composition", "projectionMatrix", projectionMatrix);
-  SetUniformMatrix4("ibl_composition", "viewMatrix", viewMatrix);
+  SetUniformMatrix4("ibl_composition", "inverseProjectionViewMatrix",
+                    inverseProjectionViewMatrix);
+  const Vector3 iblCamera = viewMatrix.GetInverse().GetTranslation();
+  SetUniformFloat3("ibl_composition", "cameraPosition", iblCamera.coords[0],
+                   iblCamera.coords[1], iblCamera.coords[2]);
   
   SetDepthTesting(false);
   SetDepthMask(false);
   
   RenderOverlay2D();
+  SetTextureUnit(4);
+  mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  SetTextureUnit(5);
+  mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+  SetTextureUnit(6);
+  BindTexture(0);
+  SetTextureUnit(0);
   
   // 直接光照 (PBR)
   UseShader("pbr");
@@ -3235,7 +3458,8 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
   SetDepthTesting(false);
   SetDepthMask(false);
   
-  SetFramebufferGammaCorrection(true);
+  // Tone mapping currently performs the display transfer in its shader.
+  SetFramebufferGammaCorrection(false);
   RenderOverlay2D();
   SetFramebufferGammaCorrection(false);
   

@@ -11,120 +11,67 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// 2026-09-03 Phase 12: BRDF LUT 片段着色器
-// 用于预计算 BRDF 查找表（分割求和方法）
-// 基于 Epic 的方法：https://learnopengl.com/IBL/Specular-IBL
+// 2026-09-03 Phase 12: 辐照度贴图片段着色器
+// 用于将 HDR 环境贴图卷积为漫反射辐照度贴图
+// 基于 Importon 的方法：https://learnopengl.com/IBL/Diffuse-irradiance
 
 #version 150
-
-#pragma optimize(on)
-
-const float PI = 3.14159265359;
-
 in vec2 TexCoords;
 out vec2 FragColor;
-
-// Van der Corput 序列
-float RadicalInverse_VdC(uint bits) {
+float radicalInverse(uint bits) {
     bits = (bits << 16u) | (bits >> 16u);
-    // 2026-09-09: GLSL integer masks require their hexadecimal prefix.
-    // bits = ((bits & 0x55555555u) << 1u) | ((bits & AAAAAAAAu) >> 1u);
     bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
-    // 2026-09-09: GLSL integer masks require their hexadecimal prefix.
-    // bits = ((bits & 0x33333333u) << 2u) | ((bits & CCCCCCCCu) >> 2u);
     bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
-    // 2026-09-09: GLSL integer masks require their hexadecimal prefix.
-    // bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & F0F0F0F0u) >> 4u);
     bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
-    // 2026-09-09: GLSL integer masks require their hexadecimal prefix.
-    // bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & FF00FF00u) >> 8u);
     bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
     return float(bits) * 2.3283064365386963e-10;
 }
-
-// Hammersley 序列
-vec2 Hammersley(uint i, uint N) {
-    return vec2(float(i) / float(N), RadicalInverse_VdC(i));
+vec2 hammersley(uint i, uint count) {
+    return vec2(float(i) / float(count), radicalInverse(i));
 }
-
-// GGX 重要性采样
-vec3 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness) {
+vec3 importanceSampleGGX(vec2 xi, vec3 N, float roughness) {
     float a = roughness * roughness;
-    
-    float phi = 2.0 * PI * Xi.x;
-    float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (a * a - 1.0) * Xi.y));
-    float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
-    
-    vec3 H;
-    H.x = cos(phi) * sinTheta;
-    H.y = sin(phi) * sinTheta;
-    H.z = cosTheta;
-    
-    vec3 up = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
-    vec3 tangent = normalize(cross(up, N));
-    vec3 bitangent = cross(N, tangent);
-    
-    vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
-    return normalize(sampleVec);
+    float phi = 6.28318530718 * xi.x;
+    float cosTheta = sqrt((1.0 - xi.y) / max(1.0 + (a*a - 1.0)*xi.y, 1e-6));
+    float sinTheta = sqrt(max(1.0 - cosTheta*cosTheta, 0.0));
+    vec3 H = vec3(cos(phi)*sinTheta, sin(phi)*sinTheta, cosTheta);
+    vec3 up = abs(N.z) < 0.999 ? vec3(0,0,1) : vec3(1,0,0);
+    vec3 T = normalize(cross(up, N));
+    vec3 B = cross(N, T);
+    return normalize(T*H.x + B*H.y + N*H.z);
+}
+float distributionGGX(float NdotH, float roughness) {
+    float a = max(roughness*roughness, 0.001);
+    float a2 = a*a;
+    float d = NdotH*NdotH*(a2-1.0)+1.0;
+    return a2 / max(3.14159265359*d*d, 1e-7);
 }
 
-float GeometrySchlickGGX(float NdotV, float roughness) {
-    float r = (roughness + 1.0);
-    float k = (r * r) / 8.0;
-    
-    float num = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
-    
-    return num / denom;
+float geometrySchlickGGX(float value, float roughness) {
+    float k = (roughness+1.0)*(roughness+1.0)/8.0;
+    return value/max(value*(1.0-k)+k,1e-6);
 }
-
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotL = max(dot(N, L), 0.0);
-    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
-    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
-    
-    return ggx1 * ggx2;
-}
-
-vec2 IntegrateBRDF(float NdotV, float roughness) {
-    vec3 V;
-    V.x = sqrt(1.0 - NdotV * NdotV);
-    V.y = 0.0;
-    V.z = NdotV;
-    
+void main() {
+    float NdotV = clamp(TexCoords.x,1e-4,1.0);
+    float roughness = clamp(TexCoords.y,0.045,1.0);
+    vec3 N = vec3(0,0,1);
+    vec3 V = vec3(sqrt(max(1.0-NdotV*NdotV,0.0)),0,NdotV);
     float A = 0.0;
     float B = 0.0;
-    
-    vec3 N = vec3(0.0, 0.0, 1.0);
-    
-    const uint SAMPLE_COUNT = 1024u;
-    for (uint i = 0u; i < SAMPLE_COUNT; ++i) {
-        vec2 Xi = Hammersley(i, SAMPLE_COUNT);
-        vec3 H = ImportanceSampleGGX(Xi, N, roughness);
-        vec3 L = normalize(2.0 * dot(V, H) * H - V);
-        
-        float NdotL = max(L.z, 0.0);
-        float NdotH = max(H.z, 0.0);
-        float VdotH = max(dot(V, H), 0.0);
-        
-        if (NdotL > 0.0) {
-            float G = GeometrySmith(N, V, L, roughness);
-            float G_Vis = (G * VdotH) / (NdotH * NdotV);
-            float Fc = pow(1.0 - VdotH, 5.0);
-            
-            A += (1.0 - Fc) * G_Vis;
-            B += Fc * G_Vis;
-        }
+    const uint count = 256u;
+    for (uint i=0u;i<count;++i) {
+        vec3 H = importanceSampleGGX(hammersley(i,count),N,roughness);
+        vec3 L = normalize(2.0*dot(V,H)*H-V);
+        float NdotL = max(L.z,0.0);
+        if (NdotL <= 0.0) continue;
+        float NdotH = max(H.z,0.0);
+        float VdotH = max(dot(V,H),0.0);
+        float G = geometrySchlickGGX(NdotL,roughness)*
+                  geometrySchlickGGX(NdotV,roughness);
+        float visibility = (G*VdotH)/max(NdotH*NdotV,1e-5);
+        float fresnel = pow(1.0-VdotH,5.0);
+        A += (1.0-fresnel)*visibility;
+        B += fresnel*visibility;
     }
-    
-    A /= float(SAMPLE_COUNT);
-    B /= float(SAMPLE_COUNT);
-    
-    return vec2(A, B);
-}
-
-void main() {
-    vec2 integratedBRDF = IntegrateBRDF(TexCoords.x, TexCoords.y);
-    FragColor = integratedBRDF;
+    FragColor = vec2(A,B)/float(count);
 }

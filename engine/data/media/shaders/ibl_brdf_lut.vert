@@ -11,19 +11,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// 2026-09-03 Phase 12: BRDF LUT 顶点着色器
-// 用于预计算 BRDF 查找表
+// 2026-09-03 Phase 12: 辐照度贴图片段着色器
+// 用于将 HDR 环境贴图卷积为漫反射辐照度贴图
+// 基于 Importon 的方法：https://learnopengl.com/IBL/Diffuse-irradiance
 
 #version 150
-
-#pragma optimize(on)
-
-in vec2 position;
-in vec2 texCoord;
-
+in vec4 position;
 out vec2 TexCoords;
-
 void main() {
-    TexCoords = texCoord;
-    gl_Position = vec4(position, 0.0, 1.0);
+    TexCoords = position.xy*0.5+0.5;
+    gl_Position = vec4(position.xy,0.0,1.0);
 }

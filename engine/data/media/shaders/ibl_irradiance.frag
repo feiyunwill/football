@@ -16,51 +16,45 @@
 // 基于 Importon 的方法：https://learnopengl.com/IBL/Diffuse-irradiance
 
 #version 150
-
-#pragma optimize(on)
-
-const float PI = 3.14159265359;
-
 uniform samplerCube environmentMap;
-uniform float sampleDelta;
-
-in vec3 WorldPos;
+uniform int faceIndex;
+in vec2 faceUV;
 out vec4 FragColor;
+vec3 faceDirection(int face, vec2 uv) {
+    vec2 st = uv;
+    if (face == 0) return normalize(vec3( 1.0, -st.y, -st.x));
+    if (face == 1) return normalize(vec3(-1.0, -st.y,  st.x));
+    if (face == 2) return normalize(vec3( st.x,  1.0,  st.y));
+    if (face == 3) return normalize(vec3( st.x, -1.0, -st.y));
+    if (face == 4) return normalize(vec3( st.x, -st.y,  1.0));
+    return normalize(vec3(-st.x, -st.y, -1.0));
+}
+float radicalInverse(uint bits) {
+    bits = (bits << 16u) | (bits >> 16u);
+    bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
+    bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
+    bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
+    bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
+    return float(bits) * 2.3283064365386963e-10;
+}
+vec2 hammersley(uint i, uint count) {
+    return vec2(float(i) / float(count), radicalInverse(i));
+}
 
 void main() {
-    // 法线方向（从立方体贴图坐标获取）
-    vec3 N = normalize(WorldPos);
-    
-    // 创建切线空间基向量
-    vec3 up = vec3(0.0, 1.0, 0.0);
-    vec3 right = normalize(cross(up, N));
-    up = normalize(cross(N, right));
-    
-    float sampleCount = 0.0;
-    vec3 irradiance = vec3(0.0);
-    
-    // 半球积分（漫反射辐照度）
-    // 使用球面坐标采样
-    for (float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta) {
-        for (float theta = 0.0; theta < 0.5 * PI; theta += sampleDelta) {
-            // 球面坐标转笛卡尔坐标
-            vec3 tangentSample = vec3(
-                sin(theta) * cos(phi),
-                sin(theta) * sin(phi),
-                cos(theta)
-            );
-            
-            // 切线空间转世界空间
-            vec3 sampleVec = tangentSample.x * right + tangentSample.y * up + tangentSample.z * N;
-            
-            // 从环境贴图采样
-            irradiance += texture(environmentMap, sampleVec).rgb * cos(theta) * sin(theta);
-            sampleCount += 1.0;
-        }
+    vec3 N = faceDirection(faceIndex, faceUV);
+    vec3 up = abs(N.z) < 0.999 ? vec3(0,0,1) : vec3(1,0,0);
+    vec3 T = normalize(cross(up, N));
+    vec3 B = cross(N, T);
+    vec3 sum = vec3(0.0);
+    const uint count = 128u;
+    for (uint i = 0u; i < count; ++i) {
+        vec2 xi = hammersley(i, count);
+        float r = sqrt(xi.x);
+        float phi = 6.28318530718 * xi.y;
+        vec3 local = vec3(r*cos(phi), r*sin(phi), sqrt(max(1.0-xi.x,0.0)));
+        vec3 L = normalize(T*local.x + B*local.y + N*local.z);
+        sum += texture(environmentMap, L).rgb;
     }
-    
-    // 归一化
-    irradiance = PI * irradiance * (1.0 / float(sampleCount));
-    
-    FragColor = vec4(irradiance, 1.0);
+    FragColor = vec4(3.14159265359 * sum / float(count), 1.0);
 }

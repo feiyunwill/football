@@ -195,7 +195,8 @@ namespace blunted {
     e_PixelFormat_RGB,
     e_PixelFormat_RGBA,
     e_PixelFormat_DepthComponent,
-    e_PixelFormat_Luminance
+    e_PixelFormat_Luminance,
+    e_PixelFormat_RG
   };
   constexpr std::strong_ordering operator<=>(e_PixelFormat a, e_PixelFormat b) {
     return std::to_underlying(a) <=> std::to_underlying(b);
@@ -220,7 +221,8 @@ namespace blunted {
 		e_InternalPixelFormat_DepthComponent24,
 		e_InternalPixelFormat_DepthComponent32,
 		e_InternalPixelFormat_DepthComponent32F,
-		e_InternalPixelFormat_StencilIndex8
+		e_InternalPixelFormat_StencilIndex8,
+    e_InternalPixelFormat_RG16F
   };
   constexpr std::strong_ordering operator<=>(e_InternalPixelFormat a, e_InternalPixelFormat b) {
     return std::to_underlying(a) <=> std::to_underlying(b);

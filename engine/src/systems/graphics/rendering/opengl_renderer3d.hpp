@@ -23,6 +23,7 @@
 
 #include "interface_renderer3d.hpp"
 #include <memory>
+#include <array>
 
 namespace blunted {
 
@@ -155,6 +156,12 @@ namespace blunted {
       float cameraFar = 0.0f;
 
       int noiseTexID = 0;
+      // Context-local IBL textures: environment, irradiance, prefilter, BRDF LUT.
+      std::array<unsigned int, 4> iblTextures_{};
+      std::array<float, 6> iblLightParameters_{};
+      bool iblReady_ = false;
+      void CreateIBLResources(const std::deque<LightQueueEntry> &lights);
+      void DestroyIBLResources();
 
       float FOV = 0.0f;
 

@@ -1,180 +1,79 @@
-// Copyright 2019 Google LLC & Bastiaan Konings
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// 2026-09-03 Phase 12: PBR 片段着色器
-// Cook-Torrance BRDF 实现
-
 #version 150
-
-#pragma optimize(on)
-
-// PBR 材质参数
-uniform sampler2D map_albedo;      // 反照率
-uniform sampler2D map_normal;      // 法线
-uniform sampler2D map_metallic;    // 金属度
-uniform sampler2D map_roughness;   // 粗糙度
-uniform sampler2D map_ao;          // 环境光遮蔽
-
-// 光照参数
+// Deferred Cook-Torrance direct lighting. Geometry textures contain world-space
+// normals, linear albedo (decoded by sRGB texture sampling), and material M/R/AO.
+uniform sampler2D map_albedo;
+uniform sampler2D map_normal;
+uniform sampler2D map_depth;
+uniform sampler2D map_aux;
+uniform sampler2DShadow map_shadow;
+uniform mat4 inverseProjectionViewMatrix;
+uniform mat4 lightViewProjectionMatrix;
+uniform float contextWidth;
+uniform float contextHeight;
+uniform float contextX;
+uniform float contextY;
+uniform bool has_shadow;
+uniform vec3 cameraPosition;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
 uniform float lightRadius;
-uniform vec3 cameraPosition;
-
-// 常量
+out vec4 stdout0;
+out vec4 stdout1;
 const float PI = 3.14159265359;
 
-// 输入
-in vec3 WorldPos;
-in vec3 Normal;
-in vec2 TexCoords;
-
-// 输出
-out vec4 FragColor;
-
-// ============================================
-// 法线分布函数 (GGX/Trowbridge-Reitz)
-// ============================================
-float DistributionGGX(vec3 N, vec3 H, float roughness) {
-    float a = roughness * roughness;
-    float a2 = a * a;
-    float NdotH = max(dot(N, H), 0.0);
-    float NdotH2 = NdotH * NdotH;
-    
-    float num = a2;
-    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
-    denom = PI * denom * denom;
-    
-    return num / denom;
+vec3 safeDirection(vec3 value, vec3 fallback) {
+    float squaredLength = dot(value, value);
+    return squaredLength > 1e-12 ? value * inversesqrt(squaredLength) : fallback;
 }
-
-// ============================================
-// 几何函数 (Schlick-GGX)
-// ============================================
-float GeometrySchlickGGX(float NdotV, float roughness) {
-    float r = (roughness + 1.0);
-    float k = (r * r) / 8.0;
-    
-    float num = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
-    
-    return num / denom;
+float distributionGGX(float NdotH, float roughness) {
+    float alpha = roughness * roughness;
+    float alphaSquared = alpha * alpha;
+    float d = NdotH * NdotH * (alphaSquared - 1.0) + 1.0;
+    return alphaSquared / max(PI * d * d, 1e-8);
 }
-
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotL = max(dot(N, L), 0.0);
-    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
-    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
-    
-    return ggx1 * ggx2;
+float geometrySchlickGGX(float NdotDirection, float roughness) {
+    float r = roughness + 1.0;
+    float k = r * r / 8.0;
+    return NdotDirection / max(NdotDirection * (1.0 - k) + k, 1e-8);
 }
-
-// ============================================
-// 菲涅尔方程 (Schlick approximation)
-// ============================================
-vec3 fresnelSchlick(float cosTheta, vec3 F0) {
-    return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
+float shadowVisibility(vec3 worldPosition) {
+    if (!has_shadow) return 1.0;
+    vec2 offsets[9] = vec2[9](
+        vec2(0.5,0.5),vec2(-0.5,0.5),vec2(0.5,-0.5),vec2(-0.5,-0.5),
+        vec2(1,0),vec2(0,1),vec2(-1,0),vec2(0,-1),vec2(0,0));
+    vec4 projected = lightViewProjectionMatrix * vec4(worldPosition,1.0);
+    float visibility = 0.0;
+    for (int i=0;i<9;++i)
+        visibility += textureProj(map_shadow,projected+
+            vec4(offsets[i],0,0)/1500.0+vec4(0,0,-0.0002,0));
+    return clamp(visibility/9.0,0.0,1.0);
 }
-
-// ============================================
-// 法线贴图
-// ============================================
-vec3 GetNormalFromMap() {
-    vec3 normal = texture(map_normal, TexCoords).rgb;
-    normal = normalize(normal * 2.0 - 1.0);
-    
-    vec3 Q1 = dFdx(WorldPos);
-    vec3 Q2 = dFdy(WorldPos);
-    vec2 st1 = dFdx(TexCoords);
-    vec2 st2 = dFdy(TexCoords);
-    
-    vec3 N = normalize(Normal);
-    vec3 T = normalize(Q1 * st2.t - Q2 * st1.t);
-    vec3 B = -normalize(cross(N, T));
-    mat3 TBN = mat3(T, B, N);
-    
-    return normalize(TBN * normal);
-}
-
 void main() {
-    // 采样材质参数
-    vec3 albedo = pow(texture(map_albedo, TexCoords).rgb, vec3(2.2)); // sRGB -> Linear
-    float metallic = texture(map_metallic, TexCoords).r;
-    float roughness = texture(map_roughness, TexCoords).r;
-    float ao = texture(map_ao, TexCoords).r;
-    
-    // 法线
-    vec3 N = GetNormalFromMap();
-    
-    // 视线方向
-    vec3 V = normalize(cameraPosition - WorldPos);
-    
-    // ============================================
-    // 计算直接光照 (Cook-Torrance BRDF)
-    // ============================================
-    
-    // 光源方向
-    vec3 L = normalize(lightPosition - WorldPos);
-    
-    // 半程向量
-    vec3 H = normalize(V + L);
-    
-    // 光源衰减
-    float distance = length(lightPosition - WorldPos);
-    float attenuation = max(0.0, lightRadius - distance) / lightRadius;
-    attenuation = attenuation * attenuation;
-    vec3 radiance = lightColor * attenuation;
-    
-    // 菲涅尔系数（非金属基础反射率）
-    vec3 F0 = vec3(0.04);
-    F0 = mix(F0, albedo, metallic);
-    
-    // Cook-Torrance BRDF
-    float NDF = DistributionGGX(N, H, roughness);
-    float G = GeometrySmith(N, V, L, roughness);
-    vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
-    
-    // 镜面反射
-    vec3 numerator = NDF * G * F;
-    float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
-    vec3 specular = numerator / denominator;
-    
-    // 能量守恒
-    vec3 kS = F;
-    vec3 kD = vec3(1.0) - kS;
-    kD *= 1.0 - metallic;
-    
-    // 漫反射
-    float NdotL = max(dot(N, L), 0.0);
-    vec3 diffuse = kD * albedo / PI;
-    
-    // 直接光照贡献
-    vec3 Lo = (diffuse + specular) * radiance * NdotL;
-    
-    // ============================================
-    // 环境光照（简化版）
-    // ============================================
-    vec3 ambient = vec3(0.03) * albedo * ao;
-    
-    // 总颜色
-    vec3 color = ambient + Lo;
-    
-    // HDR 色调映射（Reinhard）
-    color = color / (color + vec3(1.0));
-    
-    // Gamma 校正
-    color = pow(color, vec3(1.0 / 2.2));
-    
-    FragColor = vec4(color, 1.0);
+    vec2 uv = (gl_FragCoord.xy-vec2(contextX,contextY))/
+              vec2(contextWidth,contextHeight);
+    float depth = texture(map_depth,uv).r;
+    if (depth >= 1.0) discard;
+    vec4 world = inverseProjectionViewMatrix*vec4(uv*2.0-1.0,depth*2.0-1.0,1.0);
+    vec3 worldPosition = world.xyz/world.w;
+    vec3 albedo = max(texture(map_albedo,uv).rgb,vec3(0.0));
+    vec3 parameters = clamp(texture(map_aux,uv).rgb,vec3(0.0),vec3(1.0));
+    float metallic = parameters.r;
+    float roughness = max(parameters.g,0.045);
+    vec3 N = safeDirection(texture(map_normal,uv).xyz,vec3(0,0,1));
+    vec3 V = safeDirection(cameraPosition-worldPosition,N);
+    vec3 toLight = lightPosition-worldPosition;
+    vec3 L = safeDirection(toLight,N);
+    vec3 H = safeDirection(V+L,N);
+    float NdotL=max(dot(N,L),0.0),NdotV=max(dot(N,V),0.0);
+    vec3 F0=mix(vec3(0.04),albedo,metallic);
+    vec3 F=F0+(1.0-F0)*pow(1.0-clamp(dot(H,V),0.0,1.0),5.0);
+    float D=distributionGGX(max(dot(N,H),0.0),roughness);
+    float G=geometrySchlickGGX(NdotV,roughness)*geometrySchlickGGX(NdotL,roughness);
+    vec3 specular=D*G*F/max(4.0*NdotV*NdotL,1e-5);
+    vec3 diffuse=(1.0-F)*(1.0-metallic)*albedo/PI;
+    float attenuation=clamp(1.0-length(toLight)/max(lightRadius,1e-6),0.0,1.0);
+    vec3 radiance=lightColor*attenuation*attenuation;
+    // Keep lighting linear HDR; the later tone-map pass owns display encoding.
+    stdout0=vec4((diffuse+specular)*radiance*NdotL*shadowVisibility(worldPosition),0.0);
+    stdout1=vec4(0.0);
 }

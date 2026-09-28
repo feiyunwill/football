@@ -11,135 +11,76 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// 2026-09-03 Phase 12: 预滤波贴图片段着色器
-// 用于将 HDR 环境贴图预滤波为不同粗糙度级别的镜面反射贴图
-// 基于 Epic 的分割求和方法：https://learnopengl.com/IBL/Specular-IBL
+// 2026-09-03 Phase 12: 辐照度贴图片段着色器
+// 用于将 HDR 环境贴图卷积为漫反射辐照度贴图
+// 基于 Importon 的方法：https://learnopengl.com/IBL/Diffuse-irradiance
 
 #version 150
-
-#pragma optimize(on)
-
-const float PI = 3.14159265359;
-
 uniform samplerCube environmentMap;
+uniform int faceIndex;
 uniform float roughness;
 uniform float resolution;
-
-in vec3 WorldPos;
+in vec2 faceUV;
 out vec4 FragColor;
-
-// 净切线分布函数（GGX）
-float DistributionGGX(vec3 N, vec3 H, float roughness) {
-    float a = roughness * roughness;
-    float a2 = a * a;
-    float NdotH = max(dot(N, H), 0.0);
-    float NdotH2 = NdotH * NdotH;
-    
-    float num = a2;
-    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
-    denom = PI * denom * denom;
-    
-    return num / denom;
+vec3 faceDirection(int face, vec2 uv) {
+    vec2 st = uv;
+    if (face == 0) return normalize(vec3( 1.0, -st.y, -st.x));
+    if (face == 1) return normalize(vec3(-1.0, -st.y,  st.x));
+    if (face == 2) return normalize(vec3( st.x,  1.0,  st.y));
+    if (face == 3) return normalize(vec3( st.x, -1.0, -st.y));
+    if (face == 4) return normalize(vec3( st.x, -st.y,  1.0));
+    return normalize(vec3(-st.x, -st.y, -1.0));
 }
-
-// Van der Corput 序列（用于低差异序列采样）
-float RadicalInverse_VdC(uint bits) {
+float radicalInverse(uint bits) {
     bits = (bits << 16u) | (bits >> 16u);
-    // 2026-09-09: GLSL integer masks require their hexadecimal prefix.
-    // bits = ((bits & 0x55555555u) << 1u) | ((bits & AAAAAAAAu) >> 1u);
     bits = ((bits & 0x55555555u) << 1u) | ((bits & 0xAAAAAAAAu) >> 1u);
-    // 2026-09-09: GLSL integer masks require their hexadecimal prefix.
-    // bits = ((bits & 0x33333333u) << 2u) | ((bits & CCCCCCCCu) >> 2u);
     bits = ((bits & 0x33333333u) << 2u) | ((bits & 0xCCCCCCCCu) >> 2u);
-    // 2026-09-09: GLSL integer masks require their hexadecimal prefix.
-    // bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & F0F0F0F0u) >> 4u);
     bits = ((bits & 0x0F0F0F0Fu) << 4u) | ((bits & 0xF0F0F0F0u) >> 4u);
-    // 2026-09-09: GLSL integer masks require their hexadecimal prefix.
-    // bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & FF00FF00u) >> 8u);
     bits = ((bits & 0x00FF00FFu) << 8u) | ((bits & 0xFF00FF00u) >> 8u);
     return float(bits) * 2.3283064365386963e-10;
 }
-
-// Hammersley 序列
-vec2 Hammersley(uint i, uint N) {
-    return vec2(float(i) / float(N), RadicalInverse_VdC(i));
+vec2 hammersley(uint i, uint count) {
+    return vec2(float(i) / float(count), radicalInverse(i));
 }
-
-// GGX 重要性采样
-vec3 ImportanceSampleGGX(vec2 Xi, vec3 N, float roughness) {
+vec3 importanceSampleGGX(vec2 xi, vec3 N, float roughness) {
     float a = roughness * roughness;
-    
-    float phi = 2.0 * PI * Xi.x;
-    float cosTheta = sqrt((1.0 - Xi.y) / (1.0 + (a * a - 1.0) * Xi.y));
-    float sinTheta = sqrt(1.0 - cosTheta * cosTheta);
-    
-    // 从球面坐标转切线空间
-    vec3 H;
-    H.x = cos(phi) * sinTheta;
-    H.y = sin(phi) * sinTheta;
-    H.z = cosTheta;
-    
-    // 切线空间基向量
-    vec3 up = abs(N.z) < 0.999 ? vec3(0.0, 0.0, 1.0) : vec3(1.0, 0.0, 0.0);
-    vec3 tangent = normalize(cross(up, N));
-    vec3 bitangent = cross(N, tangent);
-    
-    vec3 sampleVec = tangent * H.x + bitangent * H.y + N * H.z;
-    return normalize(sampleVec);
+    float phi = 6.28318530718 * xi.x;
+    float cosTheta = sqrt((1.0 - xi.y) / max(1.0 + (a*a - 1.0)*xi.y, 1e-6));
+    float sinTheta = sqrt(max(1.0 - cosTheta*cosTheta, 0.0));
+    vec3 H = vec3(cos(phi)*sinTheta, sin(phi)*sinTheta, cosTheta);
+    vec3 up = abs(N.z) < 0.999 ? vec3(0,0,1) : vec3(1,0,0);
+    vec3 T = normalize(cross(up, N));
+    vec3 B = cross(N, T);
+    return normalize(T*H.x + B*H.y + N*H.z);
 }
-
-float GeometrySchlickGGX(float NdotV, float roughness) {
-    float r = (roughness + 1.0);
-    float k = (r * r) / 8.0;
-    
-    float num = NdotV;
-    float denom = NdotV * (1.0 - k) + k;
-    
-    return num / denom;
-}
-
-float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
-    float NdotV = max(dot(N, V), 0.0);
-    float NdotL = max(dot(N, L), 0.0);
-    float ggx2 = GeometrySchlickGGX(NdotV, roughness);
-    float ggx1 = GeometrySchlickGGX(NdotL, roughness);
-    
-    return ggx1 * ggx2;
+float distributionGGX(float NdotH, float roughness) {
+    float a = max(roughness*roughness, 0.001);
+    float a2 = a*a;
+    float d = NdotH*NdotH*(a2-1.0)+1.0;
+    return a2 / max(3.14159265359*d*d, 1e-7);
 }
 
 void main() {
-    vec3 N = normalize(WorldPos);
-    vec3 R = N;
-    vec3 V = R;
-    
-    const uint SAMPLE_COUNT = 1024u;
-    float totalWeight = 0.0;
-    vec3 prefilteredColor = vec3(0.0);
-    
-    for (uint i = 0u; i < SAMPLE_COUNT; ++i) {
-        vec2 Xi = Hammersley(i, SAMPLE_COUNT);
-        vec3 H = ImportanceSampleGGX(Xi, N, roughness);
-        vec3 L = normalize(2.0 * dot(V, H) * H - V);
-        
-        float NdotL = max(dot(N, L), 0.0);
-        if (NdotL > 0.0) {
-            float D = DistributionGGX(N, H, roughness);
-            float NdotH = max(dot(N, H), 0.0);
-            float HdotV = max(dot(H, V), 0.0);
-            
-            float pdf = D * NdotH / (4.0 * HdotV) + 0.0001;
-            
-            float saTexel = 4.0 * PI / (6.0 * resolution * resolution);
-            float saSample = 1.0 / (float(SAMPLE_COUNT) * pdf + 0.0001);
-            
-            float mipLevel = roughness == 0.0 ? 0.0 : 0.5 * log2(saSample / saTexel);
-            
-            prefilteredColor += textureLod(environmentMap, L, mipLevel).rgb * NdotL;
-            totalWeight += NdotL;
-        }
+    vec3 N = faceDirection(faceIndex, faceUV);
+    vec3 V = N;
+    vec3 sum = vec3(0.0);
+    float weight = 0.0;
+    const uint count = 128u;
+    for (uint i = 0u; i < count; ++i) {
+        vec3 H = importanceSampleGGX(hammersley(i, count), N, roughness);
+        vec3 L = normalize(2.0*dot(V,H)*H-V);
+        float NdotL = max(dot(N,L),0.0);
+        if (NdotL <= 0.0) continue;
+        float NdotH = max(dot(N,H),0.0);
+        float HdotV = max(dot(H,V),1e-4);
+        float pdf = distributionGGX(NdotH,roughness)*NdotH/
+                    (4.0*HdotV)+1e-4;
+        float texelSolidAngle = 4.0*3.14159265359/(6.0*resolution*resolution);
+        float sampleSolidAngle = 1.0/(float(count)*pdf+1e-4);
+        float lod = roughness < 1e-4 ? 0.0 :
+                    max(0.5*log2(sampleSolidAngle/texelSolidAngle),0.0);
+        sum += textureLod(environmentMap,L,lod).rgb*NdotL;
+        weight += NdotL;
     }
-    
-    prefilteredColor = prefilteredColor / totalWeight;
-    
-    FragColor = vec4(prefilteredColor, 1.0);
+    FragColor = vec4(sum/max(weight,1e-5),1.0);
 }
