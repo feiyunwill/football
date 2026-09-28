@@ -1,0 +1,836 @@
+{
+  "kind": "ecs_selection_scratch_diagnostic",
+  "product_acceptance": false,
+  "quality_gate": "task-21.1.1.2 remains unverified",
+  "baseline_commit": "24b09cf8f998ccd56680b0457c7c45a496aa90d5",
+  "binary_hashes": {
+    "baseline": {
+      "engine": "f225d3aebe1315c6479f82ad834e86842e17db0aeab0fa2f7410ae222f68e1f1",
+      "benchmark": "8317094db9866a14ac8b51f0c3b9fd2e5ca1871de839cf74c038439d11c8099b"
+    },
+    "candidate": {
+      "engine": "1928c2ed2558d569df5498bfea482ba4b2e39169cee122fd8e0c26286fe57b8c",
+      "benchmark": "8317094db9866a14ac8b51f0c3b9fd2e5ca1871de839cf74c038439d11c8099b"
+    }
+  },
+  "source_hashes": {
+    "engine/src/onthepitch/player/humanoid/humanoid.cpp": {
+      "baseline_sha256": "e440d47f54ace57a5a125ac287f7ba612237115ac2e92ac6379966df0462d747",
+      "candidate_sha256": "85d54f931ffeb6e6abdfb4a36468c04d42d12cacbf9a9d237c753a6e51086cd8"
+    },
+    "engine/src/onthepitch/player/humanoid/humanoidbase.cpp": {
+      "baseline_sha256": "c66a383404ab9bf941d681c18f3ac34da143cb4654db0372426d60329437bc16",
+      "candidate_sha256": "14e6044a2ab8b0b88ba4c520c8658d0858d011742b2b36de1f75a9b0dc06ac36"
+    },
+    "engine/src/onthepitch/player/humanoid/humanoidbase.hpp": {
+      "baseline_sha256": "d4e5a3f5600b3fc282e1472eb012ce5035edbd15a727afe38af6cc8df5b79996",
+      "candidate_sha256": "a3495294ae68a9e15506d7126672949d56312e520cc5e99a2a2528d4a2369b49"
+    }
+  },
+  "probe_sha256": "ea07a57091f63a3b5e277c7addaec82787af1de32cc5e37086cdd7e54bff9709",
+  "archives": {
+    "paired": {
+      "path": ".project/optimization/evidence/ecs_selection_scratch_20260928_paired.json.gz",
+      "sha256": "9fe82c64e591240e6632f62a2e9b9e33b271e1ec9a99d0e49681b01d008dea93",
+      "uncompressed_sha256": "25157b318c29fca48e9e632a58db5f675b578d3e4e7fda923ed3f04f1e63df99",
+      "compressed_bytes": 1101833,
+      "uncompressed_bytes": 5789111
+    },
+    "profile": {
+      "path": ".project/optimization/evidence/ecs_selection_scratch_20260928_profile.json.gz",
+      "sha256": "996d67e1a88d9639b9001c0a8b8f4ac9b99e14dad776e9c03b83e89527b58de5",
+      "uncompressed_sha256": "816dce14be31ea5d630fc6146649bf807735e58efd04bcf5f147eb8bd3557804",
+      "compressed_bytes": 80993,
+      "uncompressed_bytes": 479313
+    },
+    "current_match": {
+      "path": ".project/optimization/evidence/ecs_selection_scratch_20260928_current_match.json.gz",
+      "sha256": "b0656a6443895babc4905fcae3e55d7a4a5e3ee20c822312cb11547b915e9405",
+      "uncompressed_sha256": "7ac5caa673173436a36184ceb4b2a45764e69a6522d4cab1d6051436a8d9f821",
+      "compressed_bytes": 247933,
+      "uncompressed_bytes": 1231791
+    }
+  },
+  "profile_scope": "separate full-match instrumented runs; stable interval only",
+  "profile_runs": [
+    {
+      "seed": 42,
+      "role": "baseline",
+      "buckets": [
+        {
+          "name": "frame",
+          "calls": 2000,
+          "ns": 5259435891,
+          "allocations": 656253,
+          "bytes": 68421236
+        },
+        {
+          "name": "players",
+          "calls": 20000,
+          "ns": 1037822535,
+          "allocations": 451939,
+          "bytes": 43290476
+        },
+        {
+          "name": "physics_sync",
+          "calls": 40000,
+          "ns": 20571162,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "collisions_cache",
+          "calls": 40000,
+          "ns": 15498391,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "full_cache",
+          "calls": 20000,
+          "ns": 95132720,
+          "allocations": 0,
+          "bytes": 0
+        }
+      ],
+      "top_operator_new_callers": [
+        {
+          "symbol": "_ZN14AnimCollection14CrudeSelectionERSt6vectorIiSaIiEERK19CrudeSelectionQuery",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1621060,
+          "calls": 174199,
+          "bytes": 21290708,
+          "player_calls": 154199
+        },
+        {
+          "symbol": "_ZnwmRKSt9nothrow_t",
+          "object": "/usr/lib/libstdc++.so.6",
+          "offset": 745534,
+          "calls": 170871,
+          "bytes": 6334056,
+          "player_calls": 155871
+        },
+        {
+          "symbol": "_ZN4Team16GetActivePlayersERSt6vectorIP6PlayerSaIS2_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1388270,
+          "calls": 45668,
+          "bytes": 6028176,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN7blunted13VariableCache3setERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES8_",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 966610,
+          "calls": 25423,
+          "bytes": 2440608,
+          "player_calls": 22923
+        },
+        {
+          "symbol": "_ZNK12HumanoidBase22CalculatePhysicsVectorEPN7blunted9AnimationEbRKNS0_7Vector3EbS5_RSt6vectorIS3_SaIS3_EERNS0_6radianE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 840945,
+          "calls": 25423,
+          "bytes": 9743232,
+          "player_calls": 22923
+        },
+        {
+          "symbol": "_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE12_M_constructILb1EEEvPKcm",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 778132,
+          "calls": 25423,
+          "bytes": 584729,
+          "player_calls": 22923
+        },
+        {
+          "symbol": "_ZN8Humanoid10SelectAnimERK13PlayerCommand15e_InterruptAnimb",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1757339,
+          "calls": 22923,
+          "bytes": 527229,
+          "player_calls": 22923
+        },
+        {
+          "symbol": "_ZN4Ball7ProcessEv",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1132823,
+          "calls": 20000,
+          "bytes": 640000,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1563596,
+          "calls": 20000,
+          "bytes": 160000,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1563852,
+          "calls": 20000,
+          "bytes": 320000,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1564103,
+          "calls": 20000,
+          "bytes": 640000,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN5Match7ProcessEv",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1242996,
+          "calls": 20000,
+          "bytes": 480000,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN15ElizaController14RequestCommandERSt6vectorI13PlayerCommandSaIS1_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1093151,
+          "calls": 17499,
+          "bytes": 2659848,
+          "player_calls": 17499
+        },
+        {
+          "symbol": "_ZN16PlayerController16_SetPieceCommandERSt6vectorI13PlayerCommandSaIS1_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1032378,
+          "calls": 10169,
+          "bytes": 1571224,
+          "player_calls": 10169
+        },
+        {
+          "symbol": "_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1IS3_EEPKcRKS3_",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 672921,
+          "calls": 4602,
+          "bytes": 128856,
+          "player_calls": 4602
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "role": "candidate",
+      "buckets": [
+        {
+          "name": "frame",
+          "calls": 2000,
+          "ns": 5478799620,
+          "allocations": 482054,
+          "bytes": 47130528
+        },
+        {
+          "name": "players",
+          "calls": 20000,
+          "ns": 1092029262,
+          "allocations": 297740,
+          "bytes": 24549768
+        },
+        {
+          "name": "physics_sync",
+          "calls": 40000,
+          "ns": 22014404,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "collisions_cache",
+          "calls": 40000,
+          "ns": 16128454,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "full_cache",
+          "calls": 20000,
+          "ns": 94771581,
+          "allocations": 0,
+          "bytes": 0
+        }
+      ],
+      "top_operator_new_callers": [
+        {
+          "symbol": "_ZnwmRKSt9nothrow_t",
+          "object": "/usr/lib/libstdc++.so.6",
+          "offset": 745534,
+          "calls": 170871,
+          "bytes": 6334056,
+          "player_calls": 155871
+        },
+        {
+          "symbol": "_ZN4Team16GetActivePlayersERSt6vectorIP6PlayerSaIS2_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1388398,
+          "calls": 45668,
+          "bytes": 6028176,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN7blunted13VariableCache3setERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES8_",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 966786,
+          "calls": 25423,
+          "bytes": 2440608,
+          "player_calls": 22923
+        },
+        {
+          "symbol": "_ZNK12HumanoidBase22CalculatePhysicsVectorEPN7blunted9AnimationEbRKNS0_7Vector3EbS5_RSt6vectorIS3_SaIS3_EERNS0_6radianE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 840945,
+          "calls": 25423,
+          "bytes": 9743232,
+          "player_calls": 22923
+        },
+        {
+          "symbol": "_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE12_M_constructILb1EEEvPKcm",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 778132,
+          "calls": 25423,
+          "bytes": 584729,
+          "player_calls": 22923
+        },
+        {
+          "symbol": "_ZN8Humanoid10SelectAnimERK13PlayerCommand15e_InterruptAnimb",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1757531,
+          "calls": 22923,
+          "bytes": 527229,
+          "player_calls": 22923
+        },
+        {
+          "symbol": "_ZN4Ball7ProcessEv",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1132951,
+          "calls": 20000,
+          "bytes": 640000,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1563724,
+          "calls": 20000,
+          "bytes": 160000,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1563980,
+          "calls": 20000,
+          "bytes": 320000,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1564231,
+          "calls": 20000,
+          "bytes": 640000,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN5Match7ProcessEv",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1243124,
+          "calls": 20000,
+          "bytes": 480000,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN15ElizaController14RequestCommandERSt6vectorI13PlayerCommandSaIS1_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1093311,
+          "calls": 17499,
+          "bytes": 2659848,
+          "player_calls": 17499
+        },
+        {
+          "symbol": "_ZN16PlayerController16_SetPieceCommandERSt6vectorI13PlayerCommandSaIS1_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1032538,
+          "calls": 10169,
+          "bytes": 1571224,
+          "player_calls": 10169
+        },
+        {
+          "symbol": "_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1IS3_EEPKcRKS3_",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 672921,
+          "calls": 4602,
+          "bytes": 128856,
+          "player_calls": 4602
+        },
+        {
+          "symbol": "_ZN15HumanController14RequestCommandERSt6vectorI13PlayerCommandSaIS1_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1796913,
+          "calls": 4602,
+          "bytes": 699504,
+          "player_calls": 4602
+        }
+      ]
+    },
+    {
+      "seed": 43,
+      "role": "baseline",
+      "buckets": [
+        {
+          "name": "frame",
+          "calls": 2000,
+          "ns": 6082321101,
+          "allocations": 674471,
+          "bytes": 75299113
+        },
+        {
+          "name": "players",
+          "calls": 19943,
+          "ns": 1410834789,
+          "allocations": 470361,
+          "bytes": 50236805
+        },
+        {
+          "name": "physics_sync",
+          "calls": 39886,
+          "ns": 20986296,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "collisions_cache",
+          "calls": 39943,
+          "ns": 14945704,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "full_cache",
+          "calls": 20000,
+          "ns": 93829768,
+          "allocations": 0,
+          "bytes": 0
+        }
+      ],
+      "top_operator_new_callers": [
+        {
+          "symbol": "_ZN14AnimCollection14CrudeSelectionERSt6vectorIiSaIiEERK19CrudeSelectionQuery",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1621060,
+          "calls": 181864,
+          "bytes": 21394520,
+          "player_calls": 161928
+        },
+        {
+          "symbol": "_ZnwmRKSt9nothrow_t",
+          "object": "/usr/lib/libstdc++.so.6",
+          "offset": 745534,
+          "calls": 169014,
+          "bytes": 6493920,
+          "player_calls": 154062
+        },
+        {
+          "symbol": "_ZN4Team16GetActivePlayersERSt6vectorIP6PlayerSaIS2_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1388270,
+          "calls": 49911,
+          "bytes": 6395664,
+          "player_calls": 4377
+        },
+        {
+          "symbol": "_ZNK12HumanoidBase22CalculatePhysicsVectorEPN7blunted9AnimationEbRKNS0_7Vector3EbS5_RSt6vectorIS3_SaIS3_EERNS0_6radianE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 840945,
+          "calls": 31509,
+          "bytes": 16057368,
+          "player_calls": 29017
+        },
+        {
+          "symbol": "_ZN7blunted13VariableCache3setERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES8_",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 966610,
+          "calls": 25122,
+          "bytes": 2411712,
+          "player_calls": 22630
+        },
+        {
+          "symbol": "_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE12_M_constructILb1EEEvPKcm",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 778132,
+          "calls": 25122,
+          "bytes": 577806,
+          "player_calls": 22630
+        },
+        {
+          "symbol": "_ZN8Humanoid10SelectAnimERK13PlayerCommand15e_InterruptAnimb",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1757339,
+          "calls": 22630,
+          "bytes": 520490,
+          "player_calls": 22630
+        },
+        {
+          "symbol": "_ZN4Ball7ProcessEv",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1132823,
+          "calls": 19943,
+          "bytes": 638176,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1563596,
+          "calls": 19943,
+          "bytes": 159544,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1563852,
+          "calls": 19943,
+          "bytes": 319088,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1564103,
+          "calls": 19943,
+          "bytes": 638176,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN5Match7ProcessEv",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1242996,
+          "calls": 19943,
+          "bytes": 478632,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN15ElizaController14RequestCommandERSt6vectorI13PlayerCommandSaIS1_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1093151,
+          "calls": 17450,
+          "bytes": 2652400,
+          "player_calls": 17450
+        },
+        {
+          "symbol": "_ZN16PlayerController16_SetPieceCommandERSt6vectorI13PlayerCommandSaIS1_EE",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 1032378,
+          "calls": 10305,
+          "bytes": 1613480,
+          "player_calls": 10305
+        },
+        {
+          "symbol": "_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1IS3_EEPKcRKS3_",
+          "object": "/root/work_space/football-ecs-scratch-baseline-20260928-a/libfootball_engine.so",
+          "offset": 672921,
+          "calls": 8754,
+          "bytes": 271374,
+          "player_calls": 8754
+        }
+      ]
+    },
+    {
+      "seed": 43,
+      "role": "candidate",
+      "buckets": [
+        {
+          "name": "frame",
+          "calls": 2000,
+          "ns": 5931307619,
+          "allocations": 492607,
+          "bytes": 53904593
+        },
+        {
+          "name": "players",
+          "calls": 19943,
+          "ns": 1359458136,
+          "allocations": 308433,
+          "bytes": 31384125
+        },
+        {
+          "name": "physics_sync",
+          "calls": 39886,
+          "ns": 21099205,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "collisions_cache",
+          "calls": 39943,
+          "ns": 16613067,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "full_cache",
+          "calls": 20000,
+          "ns": 90741951,
+          "allocations": 0,
+          "bytes": 0
+        }
+      ],
+      "top_operator_new_callers": [
+        {
+          "symbol": "_ZnwmRKSt9nothrow_t",
+          "object": "/usr/lib/libstdc++.so.6",
+          "offset": 745534,
+          "calls": 169014,
+          "bytes": 6493920,
+          "player_calls": 154062
+        },
+        {
+          "symbol": "_ZN4Team16GetActivePlayersERSt6vectorIP6PlayerSaIS2_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1388398,
+          "calls": 49911,
+          "bytes": 6395664,
+          "player_calls": 4377
+        },
+        {
+          "symbol": "_ZNK12HumanoidBase22CalculatePhysicsVectorEPN7blunted9AnimationEbRKNS0_7Vector3EbS5_RSt6vectorIS3_SaIS3_EERNS0_6radianE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 840945,
+          "calls": 31509,
+          "bytes": 16057368,
+          "player_calls": 29017
+        },
+        {
+          "symbol": "_ZN7blunted13VariableCache3setERKNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEES8_",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 966786,
+          "calls": 25122,
+          "bytes": 2411712,
+          "player_calls": 22630
+        },
+        {
+          "symbol": "_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE12_M_constructILb1EEEvPKcm",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 778132,
+          "calls": 25122,
+          "bytes": 577806,
+          "player_calls": 22630
+        },
+        {
+          "symbol": "_ZN8Humanoid10SelectAnimERK13PlayerCommand15e_InterruptAnimb",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1757531,
+          "calls": 22630,
+          "bytes": 520490,
+          "player_calls": 22630
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1563724,
+          "calls": 19943,
+          "bytes": 159544,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1563980,
+          "calls": 19943,
+          "bytes": 319088,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN9Officials10GetPlayersERSt6vectorIP10PlayerBaseSaIS2_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1564231,
+          "calls": 19943,
+          "bytes": 638176,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN5Match7ProcessEv",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1243124,
+          "calls": 19943,
+          "bytes": 478632,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN4Ball7ProcessEv",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1132951,
+          "calls": 19943,
+          "bytes": 638176,
+          "player_calls": 0
+        },
+        {
+          "symbol": "_ZN15ElizaController14RequestCommandERSt6vectorI13PlayerCommandSaIS1_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1093311,
+          "calls": 17450,
+          "bytes": 2652400,
+          "player_calls": 17450
+        },
+        {
+          "symbol": "_ZN16PlayerController16_SetPieceCommandERSt6vectorI13PlayerCommandSaIS1_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1032538,
+          "calls": 10305,
+          "bytes": 1613480,
+          "player_calls": 10305
+        },
+        {
+          "symbol": "_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1IS3_EEPKcRKS3_",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 672921,
+          "calls": 8754,
+          "bytes": 271374,
+          "player_calls": 8754
+        },
+        {
+          "symbol": "_ZN15HumanController14RequestCommandERSt6vectorI13PlayerCommandSaIS1_EE",
+          "object": "/tmp/football-optimization-native/libfootball_engine.so",
+          "offset": 1795486,
+          "calls": 4377,
+          "bytes": 665304,
+          "player_calls": 4377
+        }
+      ]
+    }
+  ],
+  "trajectory_pairs_verified": 30,
+  "paired_runs": 60,
+  "comparisons": [
+    {
+      "seed": 42,
+      "cpu": {
+        "pairs": 15,
+        "ratios": [
+          1.032280429491473,
+          0.9835787931269915,
+          0.9952706656179432,
+          0.9998139575952976,
+          1.0022334453676747,
+          1.01334933798342,
+          0.9164949292158893,
+          1.0140602081182593,
+          0.9184931251445244,
+          0.9633054005273842,
+          0.943846693003637,
+          0.9958937399445109,
+          1.0315489170076506,
+          1.0189845137876763,
+          1.0023480250374097
+        ],
+        "geometric_ratio": 0.9881009045423497,
+        "bootstrap_95_lower": 0.9687766960074764,
+        "bootstrap_95_upper": 1.0052395314225806
+      },
+      "wall": {
+        "pairs": 15,
+        "ratios": [
+          1.0324712875203825,
+          0.9836756479331297,
+          0.9953138208635954,
+          0.9999109670879001,
+          1.0021888506432464,
+          1.013244989900796,
+          0.9165741066926032,
+          1.0141033521210052,
+          0.9184371149984738,
+          0.9633658181915256,
+          0.9437957065756147,
+          0.9960176539313167,
+          1.0315571784943696,
+          1.0190033641518765,
+          1.002398155934747
+        ],
+        "geometric_ratio": 0.9881373878904218,
+        "bootstrap_95_lower": 0.9687984735598983,
+        "bootstrap_95_upper": 1.005285844659989
+      },
+      "p99_ratio": 0.9966922507290487
+    },
+    {
+      "seed": 43,
+      "cpu": {
+        "pairs": 15,
+        "ratios": [
+          0.9906532462446171,
+          0.9240787802671117,
+          1.0260798023490536,
+          1.0087105496596427,
+          0.9986129497128937,
+          0.8607666458101477,
+          1.0843447376391004,
+          0.9199078205851505,
+          0.9222565597482701,
+          1.04350045030435,
+          1.008860545727662,
+          1.0121255626471268,
+          0.980355419144049,
+          1.0084799783257363,
+          1.8523251866990722
+        ],
+        "geometric_ratio": 1.0256441594486745,
+        "bootstrap_95_lower": 0.9606184635934969,
+        "bootstrap_95_upper": 1.130028123082371
+      },
+      "wall": {
+        "pairs": 15,
+        "ratios": [
+          0.9906862929351594,
+          0.924220656938777,
+          1.0261569222587814,
+          1.0086359621500018,
+          0.9986256893543703,
+          0.8608144358689979,
+          1.0843681402044334,
+          0.9198440016316238,
+          0.9222343187030084,
+          1.0434414149379987,
+          1.0090267014757208,
+          1.0121842115581123,
+          0.9803305141217622,
+          1.0085111543579477,
+          1.850358595429374
+        ],
+        "geometric_ratio": 1.0255958707087756,
+        "bootstrap_95_lower": 0.9606331118655025,
+        "bootstrap_95_upper": 1.1298559744595988
+      },
+      "p99_ratio": 0.9933644146637394
+    }
+  ],
+  "last_pair_43": [
+    {
+      "role": "candidate",
+      "cpu_sum_ns": 10910257999,
+      "wall_sum_ns": 10897303139,
+      "p99_ns": 16737665
+    },
+    {
+      "role": "baseline",
+      "cpu_sum_ns": 5890033822,
+      "wall_sum_ns": 5889292576,
+      "p99_ns": 5399361
+    }
+  ],
+  "conclusion": "Steady allocation reduction is proven. Full-match CPU improvement is not established for both seeds; retain task as unverified.",
+  "formal_quality": {
+    "framework": "verified",
+    "architecture": "verified",
+    "match_benchmark": "verified",
+    "ecs_performance": "failed",
+    "ecs_performance_reason": "historical /tmp baseline engine binary missing",
+    "current_match_artifact_sha256": "7ac5caa673173436a36184ceb4b2a45764e69a6522d4cab1d6051436a8d9f821"
+  }
+}

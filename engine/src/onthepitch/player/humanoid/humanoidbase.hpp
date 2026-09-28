@@ -399,6 +399,11 @@ class HumanoidBase {
     PlayerBase *player;
     // Shared between all players, no need to snapshot.
     std::shared_ptr<AnimCollection> anims;
+    // Selection scratch belongs to this humanoid and is cleared before use.
+    // Idle selection has a separate buffer because it can be called as a
+    // fallback while SelectAnim is still using the main buffer.
+    DataSet selectionDataSet_;
+    DataSet idleSelectionDataSet_;
     // Pointers from elements in humanoidNode to Nodes.
     NodeMap nodeMap;
     // Seems to contain current animation context.

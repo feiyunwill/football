@@ -890,7 +890,8 @@ int HumanoidBase::GetIdleMovementAnimID() {
   query.byOutgoingVelocity = true;
   query.outgoingVelocity = e_Velocity_Idle;
 
-  DataSet dataSet;
+  DataSet &dataSet = idleSelectionDataSet_;
+  dataSet.clear();
   anims->CrudeSelection(dataSet, query);
 
   SetIdlePredicate(1);
@@ -1257,7 +1258,8 @@ bool HumanoidBase::SelectAnim(const PlayerCommand &command,
 
   if (!currentAnim.anim->GetVariableCache().outgoing_special_state().empty()) query.incomingVelocity = e_Velocity_Idle; // standing up anims always start out idle
 
-  DataSet dataSet;
+  DataSet &dataSet = selectionDataSet_;
+  dataSet.clear();
   anims->CrudeSelection(dataSet, query);
   if (dataSet.size() == 0) {
     DO_VALIDATION;
