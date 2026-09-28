@@ -22,3 +22,12 @@
 四个阶段的原始 40 样本数组、实际身份、图像对照、报告 SHA 和终态核验已汇入[机器可读证据](../optimization/evidence/native_current_gpu_1080_20260928.json)。本地完整脚本、命令日志、原始 1080p RGB 和失败记录保留于忽略的 `native-current-gpu-1080-20260928-a`、`native-current-gpu-window-20260928-a`、`native-current-gpu-window-profile-20260928-a`、`native-current-gpu-window-egl-20260928-a` 阶段；逐阶段独立核验 827 份源码哈希、104/127/134/127 份固定输入、9/10/11/10 份命令日志、进程终态、私有服务器回收与父命名空间。正式 `render_regression` 仍为 `ready:false`，未把诊断当成产品级通过。
 
 范围限制：这些是固定状态、私有驱动和私有 Xvfb 的 GPU/窗口预检，不是连续比赛、正式打包驱动或物理显示延迟验收；未在 1080p 执行 ASan/UBSan。窗口 p95 超过 16.67ms，Legacy 色彩差异未定位，故 task-24.1.2.2 与 ms-24.1 继续未通过。下一轮应在同一窗口把交换内等待与 GPU 着色器/通道成本关联，针对真实瓶颈优化并完成连续比赛及正式运行时复验。
+
+随后在同一 1080p 私有 D3D12 窗口使用 `GL_TIMESTAMP` 在指定着色器的 `glDrawArrays` 前后取样。独立成功阶段 `native-current-gpu-pass-query-20260928-e` 分别运行 Legacy/PBR 完整效果的无探针与查询探针对照；每组 161 个逻辑帧、62 个比赛中帧、40 个计时样本，探针共记录 65 个绘制帧。五个固定状态的 RGB 与模拟状态在同路径对照中逐字节相同，实际驱动和引擎身份均已核对。独立终态核验通过 827 份源码、80 份固定输入、7 份命令日志的哈希及返回码；私有 Xvfb 已回收，父挂载命名空间保持不变。
+
+| 查询路径 | 着色器绘制 GPU 均值（ms/次） | 无探针 / 有探针帧 p95（ms） |
+| --- | --- | ---: |
+| Legacy | ambient 9.143；lighting 2.254；postprocess 1.741 | 27.86 / 63.60 |
+| PBR 完整效果 | ibl_composition 1.486；fxaa 1.292；tonemapping 0.821；blur 0.330 | 24.94 / 65.25 |
+
+Legacy 环境光绘制是所测 Legacy 通道中最大的单项，适合作为下一轮着色器优化的首选诊断对象。PBR 测量仅覆盖指定的 `glDrawArrays` 着色器，不代表全部 GPU 工作，也不能把未捕获的绘制归为零成本。查询插桩让帧 p95 明显恶化，因此查询数据只用于定位，正式性能验收必须用无探针运行；D3D12 时间戳粒度使许多极短的 overlay 绘制读数为零。先前两个失败的独立探针阶段分别记录了过严的正值校验和截图帧/探针帧编号混淆，未纳入成功结果。[机器可读查询证据](../optimization/evidence/native_current_gpu_pass_query_20260928.json)包含样本、通道汇总、原始追踪哈希和终态核验；完整追踪保留于本地忽略阶段。`render_regression` 仍为 `ready:false`，窗口 p95 超出 16.67ms，任务与里程碑继续未通过。
