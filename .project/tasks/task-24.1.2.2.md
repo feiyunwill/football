@@ -1,5 +1,8 @@
 # task-24.1.2.2 — 渲染性能验收
 
+2026-09-28 当前源码 1080p GPU 预检：实际 Intel Arc 140T/D3D12 私有修复驱动上，关闭未消费 RGB 回读的离屏 Legacy 两轮 p95 为 14.98/13.85ms、PBR 完整效果为 11.11/10.64ms；相同源码的真实 SDL 窗口分别为 31.88/28.84ms 和 23.76/24.01ms，均未达到 16.67ms。交换入口占带探针整帧平均约 81%–86%，但包含已排队 GPU 工作；GLX/EGL 请求对照没有稳定收益，不采纳。PBR 离屏/窗口五帧 RGB 相同，Legacy 存在明显亮度差异待定位。四阶段原始样本与终态核验已存档，`render_regression` 保持 `ready:false`，任务和里程碑不提升。见 [当前硬件预检报告](../reports/optimization-current-gpu-1080-2026-09-28.md)。
+
+
 类型：task
 
 状态由 `python3 .project/quality.py status` 根据当前源码和验收证据计算。

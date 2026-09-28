@@ -1,7 +1,9 @@
 # 优化阶段当前检查点（2026-09-28）
 
-目标 ACTIVE。本轮 PROGRESS：新增可复跑的固定 OpenGL 图像门禁 `render_images`，版本化 30 帧 RGB/状态哈希与两张审阅样例，覆盖 Legacy、PBR、Bloom、FXAA、自动曝光及组合模式。全新 Release/完整 Debug ASan/UBSan 的 12 个真实 GameEnv 软件 EGL 案例共 2,088 断言通过、跳过 0 项；两构建的图像和状态逐字节一致。独立终态复核 160 输入、827 源码、16 命令日志，质量状态 `verified`。报告：[固定图像门禁](../reports/optimization-native-render-images-2026-09-28.md)。
+目标 ACTIVE。本轮 PROGRESS：基于当前已验证的正式引擎 Release 核心，在 Intel Arc 140T/D3D12 私有修复版 Mesa 下完成四个独立 1080p 诊断阶段：离屏捕获开/关对照、真实 SDL 窗口对照、窗口交换/完成分段、GLX/EGL 请求成对对照。40 样本/进程，五个固定比赛状态；图像、状态、引擎/驱动身份、私有 Xvfb 回收及父命名空间均经终态核验。原始计时和报告哈希见[机器证据](evidence/native_current_gpu_1080_20260928.json)，分析见[当前硬件预检](../reports/optimization-current-gpu-1080-2026-09-28.md)。
 
-先前的正式 `pbr_pipeline` 与 `postprocessing` 检查保持 `verified`；本轮没有修改引擎渲染源码。`render_images` 基线限定 llvmpipe LLVM 22.1.8 和 321×181 捕获。实际窗口、1080p 硬件 p95≤16.67ms、`render_regression`、外部 HDR 产品资源、依赖 ms-23.1，以及网络/状态/输入、AI、发布门禁仍待验收。八个优化里程碑保持 `stale`，不能标为完成。
+关闭未消费回读的离屏 Legacy 与 PBR 完整效果 p95 分别为 13.85–14.98ms、10.64–11.11ms；真实 SDL 窗口分别为 28.84–31.88ms、23.76–24.01ms，超过 16.67ms。交换间隔为 0，带探针窗口内 `SDL_GL_SwapWindow` 平均占整帧约 81%–86%，但此调用包含队列中的 GPU 工作；EGL 请求没有稳定改善。PBR 离屏/窗口 RGB 相同，Legacy 亮度差异待定位。没有修改产品源码或放宽阈值。
 
-约束继续有效：构建、测试和测量串行；执行阶段输入冻结，修正另建阶段；不放宽原窗口、退出、状态、回放与 RSS 阈值；不安装依赖、不重置服务/WSL、不更改主机挂载。后续推进实际硬件渲染性能与其他产品门禁。
+正式 `pbr_pipeline`、`postprocessing`、`render_images` 维持 `verified`；`render_regression` 仍为 `ready:false`。私有驱动尚未打包，缺少连续比赛与物理显示验收，其他网络/状态/输入、AI、发布门禁仍待完成。八个优化里程碑保持 `stale`，不能标为完成。
+
+约束继续有效：构建、测试和测量串行；执行阶段输入冻结，修正另建阶段；不放宽窗口、退出、状态、回放、RSS 和 16.67ms 阈值；不安装依赖、不重置服务/WSL、不更改主机挂载。下一步在同一实际 D3D12 窗口分离 GPU 通道成本与交换内等待，选择源码优化，再复跑 1080p 连续比赛和正式门禁。
