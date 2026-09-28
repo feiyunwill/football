@@ -1334,7 +1334,8 @@
         ".project/tests/match_benchmark_test.py",
         ".project/tests/ecs_performance_test.py",
         ".project/optimization/ecs-performance.md",
-        ".project/optimization/benchmarks/baseline.json"
+        ".project/optimization/baselines/ecs_v2*",
+        ".project/optimization/evidence/ecs_query_legacy_reference_20260928_current_match.json.gz"
       ],
       "tools": [
         "python3",

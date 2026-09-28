@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Interleave immutable baseline and candidate matches; reject drift and unproven gains."""
 import argparse
+import gzip
 import hashlib
 import json
 import math
@@ -9,6 +10,7 @@ from pathlib import Path
 import random
 import statistics
 import subprocess
+import tempfile
 import time
 
 import match_benchmark as benchmark
@@ -56,6 +58,58 @@ def same_trajectory(left, right):
     return 6
 
 
+def load_repository_baseline():
+    """Verify and relocate the versioned, repository-owned reference build."""
+    manifest_path = ROOT / ".project/optimization/baselines/ecs_v2.json"
+    manifest = json.loads(manifest_path.read_text())
+    require(manifest["format"] == 2 and manifest["id"] ==
+            "ecs-post-cache-pre-selection-scratch-20260928", "Wrong ECS baseline version")
+    require(manifest["measurement_contract"] == {
+        "seeds": list(benchmark.SEEDS), "warmup_steps": 200, "steady_steps": 2000,
+        "process_pairs_per_seed": PROCESS_PAIRS,
+        "cpu_bootstrap_95_upper_below": 1.0,
+        "wall_geometric_ratio_below": 1.0,
+        "median_p99_ratio_max": 1.05,
+        "full_cache_allocations_each": 0,
+        "frame_allocation_count_must_decrease": True,
+        "frame_allocation_bytes_must_decrease": True,
+    }, "ECS baseline acceptance contract changed")
+
+    def source_path(relative):
+        path = (ROOT / relative).resolve()
+        require(path.is_relative_to(ROOT.resolve()), "ECS baseline path escapes repository")
+        return path
+
+    artifact_path = source_path(manifest["source_artifact"])
+    require(benchmark.file_hash(artifact_path) == manifest["artifact_sha256"],
+            "Baseline evidence changed")
+    artifact_bytes = gzip.decompress(artifact_path.read_bytes())
+    require(hashlib.sha256(artifact_bytes).hexdigest() == manifest["artifact_uncompressed_sha256"],
+            "Baseline evidence decompression changed")
+    baseline = json.loads(artifact_bytes)
+    require(baseline["source_identity"] == manifest["source_identity"] and
+            hashlib.sha256(json.dumps(baseline["sources"], sort_keys=True).encode()).hexdigest() ==
+            manifest["source_identity"], "Baseline source identity changed")
+
+    temporary = tempfile.TemporaryDirectory(prefix="football-ecs-baseline-v2-")
+    archive = Path(temporary.name)
+    for role, destination in (("engine", archive / "libfootball_engine.so"),
+                              ("benchmark", archive / "bin/engine_match_benchmark")):
+        entry = manifest["binaries"][role]
+        source = source_path(entry["path"])
+        require(benchmark.file_hash(source) == entry["compressed_sha256"],
+                f"Compressed baseline {role} changed")
+        binary = gzip.decompress(source.read_bytes())
+        require(len(binary) == entry["bytes"] and
+                hashlib.sha256(binary).hexdigest() == entry["sha256"] and
+                baseline["binaries"][role] == entry["sha256"],
+                f"Immutable baseline {role} changed")
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        destination.write_bytes(binary)
+        destination.chmod(0o755)
+    return manifest, baseline, temporary, archive
+
+
 def profile_failures(pair):
     failures = []
     expected_names = {"frame", "players", "physics_sync", "collisions_cache", "full_cache"}
@@ -74,8 +128,8 @@ def profile_failures(pair):
     old, new = buckets["baseline"], buckets["candidate"]
     if any(old[name]["calls"] != new[name]["calls"] for name in expected_names):
         failures.append(f"seed {pair['seed']}: function coverage changed")
-    if old["full_cache"]["allocations"] != 40000 or new["full_cache"]["allocations"] != 0:
-        failures.append(f"seed {pair['seed']}: steady derived-cache allocations remain")
+    if old["full_cache"]["allocations"] != 0 or new["full_cache"]["allocations"] != 0:
+        failures.append(f"seed {pair['seed']}: steady derived-cache allocations regressed")
     if (new["frame"]["allocations"] >= old["frame"]["allocations"] or
             new["frame"]["bytes"] >= old["frame"]["bytes"]):
         failures.append(f"seed {pair['seed']}: real-match allocation cost did not decrease")
@@ -87,21 +141,45 @@ def main():
     parser.add_argument("--build", type=Path, default=Path("/tmp/football-optimization-native"))
     parser.add_argument("--cpu", type=int, default=min(os.sched_getaffinity(0)))
     parser.add_argument("--tests-build", type=Path, default=Path("/tmp/football-optimization-query-tests"))
+    parser.add_argument("--baseline-preflight", action="store_true",
+                        help="verify the repository baseline and trajectory without accepting performance")
     args = parser.parse_args()
     require(args.cpu in os.sched_getaffinity(0), "Unavailable benchmark CPU")
     build = args.build.resolve()
-    pointer_path = ROOT / ".project/optimization/benchmarks/baseline.json"
-    pointer = json.loads(pointer_path.read_text())
-    baseline_path = ROOT / pointer["source_artifact"]
-    require(benchmark.file_hash(baseline_path) == pointer["artifact_sha256"], "Baseline evidence changed")
-    baseline = json.loads(baseline_path.read_text())
-    archive = Path(pointer["archive"])
-    for role, path in (("engine", archive / "libfootball_engine.so"), ("benchmark", archive / "bin/engine_match_benchmark")):
-        require(benchmark.file_hash(path) == pointer["binaries"][role], f"Immutable baseline {role} changed")
+    pointer, baseline, baseline_temporary, archive = load_repository_baseline()
     for path, expected in baseline["sources"].items():
         if path.startswith(("engine/data/", "engine/fonts/")) or path in (
                 "engine/tests/engine_match_benchmark.cpp", "engine/src/frame_sync/default_scenario.hpp"):
             require(benchmark.file_hash(ROOT / path) == expected, f"Comparison fixture changed: {path}")
+
+    if args.baseline_preflight:
+        loader_environment = dict(os.environ, LD_LIBRARY_PATH=str(archive))
+        loader_environment.pop("LD_PRELOAD", None)
+        linkage = subprocess.check_output(["ldd", str(archive / "bin/engine_match_benchmark")],
+                                          env=loader_environment, text=True)
+        require(str(archive / "libfootball_engine.so") in linkage,
+                "Relocated baseline loads an unexpected engine")
+        results = []
+        assertions = 0
+        for seed in benchmark.SEEDS:
+            result, profile, checks = sample(archive / "bin/engine_match_benchmark",
+                                             archive, seed, args.cpu)
+            require(profile is None and checks > 0, "Baseline preflight skipped checks")
+            previous = next(item for item in baseline["runs"] if item["seed"] == seed)
+            assertions += checks + same_trajectory(previous, result)
+            results.append(result)
+        artifact = ROOT / ".project/optimization/benchmarks" / f"ecs-v2-preflight-{time.time_ns()}.json"
+        artifact.write_text(json.dumps({"format": 2, "baseline_preflight": True,
+            "passed": True, "skipped": 0, "assertions": assertions,
+            "baseline_manifest_sha256": benchmark.file_hash(
+                ROOT / ".project/optimization/baselines/ecs_v2.json"),
+            "source_commit": pointer["source_commit"], "binaries": pointer["binaries"],
+            "machine": benchmark.machine_identity(args.cpu), "results": results}, indent=2) + "\n")
+        print(json.dumps({"baseline_preflight": True, "passed": True, "skipped": 0,
+                          "assertions": assertions, "source_commit": pointer["source_commit"],
+                          "seeds": list(benchmark.SEEDS), "artifact": str(artifact.relative_to(ROOT)),
+                          "artifact_sha256": benchmark.file_hash(artifact)}))
+        return
 
     run(["cmake", "-S", "engine", "-B", build, "-DCMAKE_BUILD_TYPE=Release",
          "-DBUILD_PYTHON_BINDINGS=OFF", "-DFOOTBALL_ENABLE_SANITIZERS=OFF",

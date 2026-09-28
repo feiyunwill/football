@@ -1,15 +1,15 @@
 {
   "check": "ecs_performance",
-  "fingerprint": "d9ad962bed966426c2fd62e152fdc763f19494a7952f7668eebefc5cf5f636f7",
+  "fingerprint": "3cb70491fd5d848c34c008ae1b1c5dde78a25b49e558a59967701b0434929532",
   "passed": false,
   "reason": "Command exited with 1",
   "returncode": 1,
-  "started": 1790590603.3839862,
-  "duration_seconds": 0.171,
+  "started": 1790592331.8705826,
+  "duration_seconds": 818.016,
   "argv": [
     "python3",
     ".project/checks/ecs_performance.py"
   ],
-  "log": "ecs_performance-1790590603384028262.log",
-  "log_sha256": "bd77141865f20314b83c02af0a5a2ad2263108e8023113ab11d005a7104f6c46"
+  "log": "ecs_performance-1790592331870610863.log",
+  "log_sha256": "fc3bdd781c0b39f6dfbdb4007735eb2b43ec3d3591eb30d15c1e2978833c0971"
 }

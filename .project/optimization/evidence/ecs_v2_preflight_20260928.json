@@ -1,0 +1,25 @@
+{
+  "kind": "ecs_v2_baseline_preflight",
+  "product_acceptance": false,
+  "preflight_passed": true,
+  "assertions": 122,
+  "source_commit": "739d767d84c788b93481522e7106298b6d818efd",
+  "manifest_sha256": "9acd57793a97447f9944dbc41ff3a94593a74098c0b58c2bba5d5ef6dd54bb50",
+  "checker_sha256": "5be642ccfc552ceee58784ee8816bb6bc64eb4f96797d791a56c1e35abe77f41",
+  "artifact": {
+    "path": ".project/optimization/evidence/ecs_v2_preflight_20260928.json.gz",
+    "sha256": "f1406614d10d6799c2ac936cb6be743946705bba9c42764d94c6484b795d43d8",
+    "uncompressed_sha256": "a17fb0e0e0d60847c8b251fa8367103c95625a3787f86b06cda0c002e0b9691d",
+    "compressed_bytes": 39924,
+    "uncompressed_bytes": 219097
+  },
+  "seeds": [
+    42,
+    43
+  ],
+  "final_hashes": {
+    "42": "177cf7205a3272f3",
+    "43": "39ceb7b90729ca35"
+  },
+  "next_gate": "15 pairs per seed formal ecs_performance comparison still required"
+}

@@ -1,0 +1,301 @@
+{
+  "kind": "ecs_v2_formal_comparison",
+  "product_acceptance": false,
+  "formal_gate_passed": false,
+  "quality_gate_log": "ecs_performance-1790592331870610863.log",
+  "quality_gate_log_sha256": "fc3bdd781c0b39f6dfbdb4007735eb2b43ec3d3591eb30d15c1e2978833c0971",
+  "baseline_manifest_sha256": "9acd57793a97447f9944dbc41ff3a94593a74098c0b58c2bba5d5ef6dd54bb50",
+  "baseline_id": "ecs-post-cache-pre-selection-scratch-20260928",
+  "baseline_source_commit": "739d767d84c788b93481522e7106298b6d818efd",
+  "candidate_source_identity": "6700e17259e1c1bd2569f12ff4ef7c239a6eddce2b1dd946daa913f8453ed0ac",
+  "candidate_binaries": {
+    "engine": "1928c2ed2558d569df5498bfea482ba4b2e39169cee122fd8e0c26286fe57b8c",
+    "benchmark": "8317094db9866a14ac8b51f0c3b9fd2e5ca1871de839cf74c038439d11c8099b",
+    "profiler": "770a07cc19d2d8a288238f73692f79073438994a605ed00e9ce89ca69b0155ab"
+  },
+  "assertions": 1590027,
+  "skipped": 0,
+  "pairs_per_seed": 15,
+  "runs": 60,
+  "all_trajectories_equal": true,
+  "profile_failures": [],
+  "failures": [
+    "seed 42: CPU improvement not established",
+    "seed 43: CPU improvement not established"
+  ],
+  "comparisons": [
+    {
+      "seed": 42,
+      "cpu": {
+        "pairs": 15,
+        "ratios": [
+          0.9826487847308583,
+          0.9838964568775199,
+          1.1397574100492522,
+          1.1541006421448343,
+          0.9711600272807469,
+          1.0316059532726252,
+          0.9899996189034603,
+          1.024383287313761,
+          0.9669257104545964,
+          1.0133001357445794,
+          0.9777249351446363,
+          0.9471751125154253,
+          0.9872225930040536,
+          1.0100043157438718,
+          0.8308210974164724
+        ],
+        "geometric_ratio": 0.9980569710124254,
+        "bootstrap_95_lower": 0.9620220848211747,
+        "bootstrap_95_upper": 1.0358965649852103
+      },
+      "wall": {
+        "pairs": 15,
+        "ratios": [
+          0.9850050361555865,
+          0.983834746140797,
+          1.1398393218939389,
+          1.1541381166409417,
+          0.9696320433246537,
+          1.0312021066632726,
+          0.9899546814487109,
+          1.0242538545591775,
+          0.966823980435064,
+          1.0133170692490996,
+          0.9798179319570842,
+          0.947124730785614,
+          0.9875762295003369,
+          1.0100009199520206,
+          0.8300352635629958
+        ],
+        "geometric_ratio": 0.9981703488265665,
+        "bootstrap_95_lower": 0.961998211089427,
+        "bootstrap_95_upper": 1.0360253318810033
+      },
+      "p99_ratio": 0.9917021695994364
+    },
+    {
+      "seed": 43,
+      "cpu": {
+        "pairs": 15,
+        "ratios": [
+          0.9956984492284682,
+          0.9628678899393918,
+          0.7722209893422813,
+          0.841256938407725,
+          0.9658552398084129,
+          0.995545470750292,
+          1.0734304419799874,
+          0.7742119232510003,
+          1.023339679469206,
+          1.000397179393031,
+          1.0167378789846464,
+          1.0299167789887005,
+          0.9937642284250501,
+          1.0358351264458214,
+          0.95015860657028
+        ],
+        "geometric_ratio": 0.9575681241062324,
+        "bootstrap_95_lower": 0.9067436162330154,
+        "bootstrap_95_upper": 1.0028341312615288
+      },
+      "wall": {
+        "pairs": 15,
+        "ratios": [
+          0.9956454721428006,
+          0.9619341252228889,
+          0.7722397286888179,
+          0.8413059072997315,
+          0.965956048255422,
+          0.9958122609739448,
+          1.0729776629084349,
+          0.7741220083330121,
+          1.0232850993958884,
+          1.000554076378823,
+          1.0166789227507018,
+          1.029355802876324,
+          0.993816800514449,
+          1.0352238367116398,
+          0.9500337452948588
+        ],
+        "geometric_ratio": 0.9574229123465701,
+        "bootstrap_95_lower": 0.9066275318779123,
+        "bootstrap_95_upper": 1.0027490890969972
+      },
+      "p99_ratio": 0.9893314703885164
+    }
+  ],
+  "profile_buckets": [
+    {
+      "seed": 42,
+      "baseline": [
+        {
+          "name": "frame",
+          "calls": 2000,
+          "ns": 5412533219,
+          "allocations": 656253,
+          "bytes": 68421236
+        },
+        {
+          "name": "players",
+          "calls": 20000,
+          "ns": 1065166151,
+          "allocations": 451939,
+          "bytes": 43290476
+        },
+        {
+          "name": "physics_sync",
+          "calls": 40000,
+          "ns": 23086703,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "collisions_cache",
+          "calls": 40000,
+          "ns": 14808544,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "full_cache",
+          "calls": 20000,
+          "ns": 97002154,
+          "allocations": 0,
+          "bytes": 0
+        }
+      ],
+      "candidate": [
+        {
+          "name": "frame",
+          "calls": 2000,
+          "ns": 5485894801,
+          "allocations": 482054,
+          "bytes": 47130528
+        },
+        {
+          "name": "players",
+          "calls": 20000,
+          "ns": 1082116112,
+          "allocations": 297740,
+          "bytes": 24549768
+        },
+        {
+          "name": "physics_sync",
+          "calls": 40000,
+          "ns": 22003933,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "collisions_cache",
+          "calls": 40000,
+          "ns": 16024390,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "full_cache",
+          "calls": 20000,
+          "ns": 95883988,
+          "allocations": 0,
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "seed": 43,
+      "baseline": [
+        {
+          "name": "frame",
+          "calls": 2000,
+          "ns": 5929252482,
+          "allocations": 674471,
+          "bytes": 75299113
+        },
+        {
+          "name": "players",
+          "calls": 19943,
+          "ns": 1366565065,
+          "allocations": 470361,
+          "bytes": 50236805
+        },
+        {
+          "name": "physics_sync",
+          "calls": 39886,
+          "ns": 20713266,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "collisions_cache",
+          "calls": 39943,
+          "ns": 14431997,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "full_cache",
+          "calls": 20000,
+          "ns": 92857885,
+          "allocations": 0,
+          "bytes": 0
+        }
+      ],
+      "candidate": [
+        {
+          "name": "frame",
+          "calls": 2000,
+          "ns": 6044076863,
+          "allocations": 492607,
+          "bytes": 53904593
+        },
+        {
+          "name": "players",
+          "calls": 19943,
+          "ns": 1391423469,
+          "allocations": 308433,
+          "bytes": 31384125
+        },
+        {
+          "name": "physics_sync",
+          "calls": 39886,
+          "ns": 22181857,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "collisions_cache",
+          "calls": 39943,
+          "ns": 15768655,
+          "allocations": 0,
+          "bytes": 0
+        },
+        {
+          "name": "full_cache",
+          "calls": 20000,
+          "ns": 93270281,
+          "allocations": 0,
+          "bytes": 0
+        }
+      ]
+    }
+  ],
+  "archives": {
+    "comparison": {
+      "path": ".project/optimization/evidence/ecs_v2_formal_20260928_comparison.json.gz",
+      "sha256": "534f5dd997bec37059a00d2c185c86a9d0ee5422712bc4ffe05c5045ee57aa82",
+      "uncompressed_sha256": "e420a57fbc907c728e836067d794eae817f5e3955e673acf09f179aeb64d842f",
+      "compressed_bytes": 1168028,
+      "uncompressed_bytes": 6098317
+    },
+    "current_match": {
+      "path": ".project/optimization/evidence/ecs_v2_formal_20260928_current_match.json.gz",
+      "sha256": "82bc6429ce24aa31dac13919390a93d9353e63babf9fd14c6f4f023ea377c2e3",
+      "uncompressed_sha256": "7c64ca6025a829e9bcbaf312eddb6e13e5d31b7306001541a04b4bb910e7c4f6",
+      "compressed_bytes": 247246,
+      "uncompressed_bytes": 1231721
+    }
+  },
+  "preflight_summary": ".project/optimization/evidence/ecs_v2_preflight_20260928.json"
+}

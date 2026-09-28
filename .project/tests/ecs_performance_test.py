@@ -5,22 +5,54 @@ import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "checks"))
 # 2026-09-09: also validate instrumentation coverage, not just zero counters.
 # from ecs_performance import paired_summary, same_trajectory
-from ecs_performance import paired_summary, same_trajectory, profile_failures
+from ecs_performance import paired_summary, same_trajectory, profile_failures, load_repository_baseline
+import ecs_performance
 import copy
+import hashlib
+import json
+import tempfile
+from unittest import mock
 
 class PairedPerformanceTest(unittest.TestCase):
     def test_zero_allocations_do_not_hide_missing_instrumentation(self):
         old = dict(hotspot_profile=True, steps_seen=4200, buckets=[
             dict(name=name, calls=2000 if name == "frame" else 20000, ns=100, allocations=50000, bytes=1000000)
             for name in ("frame", "players", "physics_sync", "collisions_cache", "full_cache")])
-        old["buckets"][-1]["allocations"] = 40000
+        old["buckets"][-1]["allocations"] = 0
         new = copy.deepcopy(old)
         new["buckets"][0].update(allocations=10000, bytes=360000)
         new["buckets"][-1].update(allocations=0, bytes=0)
         pair = dict(seed=42, baseline=old, candidate=new)
         self.assertFalse(profile_failures(pair))
+        new["buckets"][-1]["allocations"] = 1
+        self.assertTrue(profile_failures(pair))
+        new["buckets"][-1]["allocations"] = 0
         new["buckets"][-1].update(calls=0, ns=0)
         self.assertTrue(profile_failures(pair))
+
+    def test_repository_baseline_matches_its_source_and_binaries(self):
+        manifest, artifact, temporary, directory = load_repository_baseline()
+        try:
+            self.assertEqual(artifact["source_identity"], manifest["source_identity"])
+            for role, path in (("engine", directory / "libfootball_engine.so"),
+                               ("benchmark", directory / "bin/engine_match_benchmark")):
+                self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(),
+                                 manifest["binaries"][role]["sha256"])
+        finally:
+            temporary.cleanup()
+
+    def test_repository_baseline_rejects_relaxed_cpu_threshold(self):
+        source = Path(__file__).resolve().parents[1] / "optimization/baselines/ecs_v2.json"
+        manifest = json.loads(source.read_text())
+        manifest["measurement_contract"]["cpu_bootstrap_95_upper_below"] = 1.01
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            destination = root / ".project/optimization/baselines/ecs_v2.json"
+            destination.parent.mkdir(parents=True)
+            destination.write_text(json.dumps(manifest))
+            with mock.patch.object(ecs_performance, "ROOT", root):
+                with self.assertRaisesRegex(RuntimeError, "acceptance contract changed"):
+                    load_repository_baseline()
 
     def test_equal_measurements_do_not_prove_a_gain(self):
         result = paired_summary([(100, 100)] * 5)
