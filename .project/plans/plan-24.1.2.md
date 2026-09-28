@@ -1,5 +1,8 @@
 # plan-24.1.2 — 画质与帧预算
 
+2026-09-28 固定图像验收增量：正式 `render_images` 对 llvmpipe 321×181 的 Legacy/PBR、Bloom、FXAA、自动曝光及组合模式建立 30 帧固定 RGB/状态基线，全新 Release/完整 Debug ASan/UBSan 的 12 个真实 GameEnv 案例共 2,088 断言通过、跳过 0 项。两构建全部图像/状态逐字节一致；同时验证非空、亮度/色彩、中央与边界梯度、四边覆盖和开关响应。独立终态核验 160 输入、827 源码、16 日志，单项检查为 `verified`。实际窗口、硬件 1080p p95、`render_regression` 和 ms-23.1 仍待验收。参见 [固定图像门禁](../reports/optimization-native-render-images-2026-09-28.md)。
+
+
 类型：plan
 
 状态由 `python3 .project/quality.py status` 根据当前源码和验收证据计算。

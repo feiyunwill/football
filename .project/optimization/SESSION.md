@@ -1,9 +1,7 @@
 # 优化阶段当前检查点（2026-09-28）
 
-目标 ACTIVE。本轮 PROGRESS：正式 PBR 后处理新增 GPU 自动曝光和 `postprocessing` 可复跑门禁。自动曝光以 16×16 HDR 分层采样的几何平均亮度求目标，双 1×1 纹理保存历史，按模拟时间而非呈现次数推进。初版重复呈现改变像素的失败证据保留；修正后同状态呈现稳定，默认关闭时原 PBR 基线五帧 RGB/状态不变。报告：[自动曝光与正式门禁](../reports/optimization-native-auto-exposure-2026-09-28.md)。
+目标 ACTIVE。本轮 PROGRESS：新增可复跑的固定 OpenGL 图像门禁 `render_images`，版本化 30 帧 RGB/状态哈希与两张审阅样例，覆盖 Legacy、PBR、Bloom、FXAA、自动曝光及组合模式。全新 Release/完整 Debug ASan/UBSan 的 12 个真实 GameEnv 软件 EGL 案例共 2,088 断言通过、跳过 0 项；两构建的图像和状态逐字节一致。独立终态复核 160 输入、827 源码、16 命令日志，质量状态 `verified`。报告：[固定图像门禁](../reports/optimization-native-render-images-2026-09-28.md)。
 
-正式 `postprocessing` 在全新 Release/完整 Debug ASan/UBSan 的 26 个真实 GameEnv 软件 EGL 案例中通过 4,524 断言、跳过 0 项，跨配置 RGB/状态逐字节一致；独立终态核验 346 输入、829 源码、36 命令日志，质量状态 `verified`。实际 GL 跟踪确认组合后处理 15 轮、自动曝光 5 次更新对应 15 次色调映射，新增资源在视图删除后释放。
+先前的正式 `pbr_pipeline` 与 `postprocessing` 检查保持 `verified`；本轮没有修改引擎渲染源码。`render_images` 基线限定 llvmpipe LLVM 22.1.8 和 321×181 捕获。实际窗口、1080p 硬件 p95≤16.67ms、`render_regression`、外部 HDR 产品资源、依赖 ms-23.1，以及网络/状态/输入、AI、发布门禁仍待验收。八个优化里程碑保持 `stale`，不能标为完成。
 
-既有 `pbr_pipeline` 已针对当前源码全新复跑：22 例、3,828 断言通过，独立终态复核 318 输入、829 源码、34 日志，质量状态 `verified`。实际窗口、1080p 硬件 p95、`render_regression`、外部 HDR 资源、依赖 ms-23.1，以及网络/状态/输入、AI、发布门禁仍待验收。八个优化里程碑尚未完成，状态以质量工具实时输出为准。
-
-约束继续有效：构建、测试和测量串行；执行阶段输入冻结，修正另建阶段；不放宽原窗口、退出、状态、回放与 RSS 阈值；不安装依赖、不重置服务/WSL、不更改主机挂载。后续完成当前 PBR 回归，继续硬件和其他产品门禁。
+约束继续有效：构建、测试和测量串行；执行阶段输入冻结，修正另建阶段；不放宽原窗口、退出、状态、回放与 RSS 阈值；不安装依赖、不重置服务/WSL、不更改主机挂载。后续推进实际硬件渲染性能与其他产品门禁。
