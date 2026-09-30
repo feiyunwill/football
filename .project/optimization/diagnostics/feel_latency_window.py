@@ -57,9 +57,15 @@ def analyze(output, actions):
             samples.append({"index": action["index"], "direction": direction,
                             "status": "match_not_in_play_at_press"})
             continue
+        if timing[baseline["index"]].get("game_mode") != 0:
+            samples.append({"index": action["index"], "direction": direction,
+                            "status": "set_piece_at_press",
+                            "game_mode": timing[baseline["index"]].get("game_mode")})
+            continue
         initial_vx = timing[baseline["index"]]["vx"]
         admitted = next((row for row in active if row["x"] == direction and
-                         row["owned"] == baseline["owned"]), None)
+                         row["owned"] == baseline["owned"] and
+                         timing[row["index"]].get("game_mode") == 0), None)
         if admitted is None:
             samples.append({"index": action["index"], "direction": direction,
                             "status": "no_admitted_step_for_same_player"})
@@ -67,6 +73,7 @@ def analyze(output, actions):
         responded = next((row for row in active if row["index"] >= admitted["index"] and
                           row["owned"] == baseline["owned"] and
                           timing[row["index"]]["in_play"] and
+                          timing[row["index"]].get("game_mode") == 0 and
                           direction * (timing[row["index"]]["vx"] - initial_vx) >= .1), None)
         following_admission = next((row for row in swaps if row["time"] >= admitted["time"]), None)
         following_response = (next((row for row in swaps if row["time"] >= responded["time"]), None)
@@ -118,19 +125,33 @@ def analyze(output, actions):
                                             if len(responses) >= 20 else None)}
 
 
-def product(output, build, library, cycles):
+def product(output, build, library, cycles, gpu_driver_root, seed):
     trace = output / "trace"
     trace.mkdir()
     tools = Path(os.environ["FOOTBALL_TEST_X11_ROOT"])
     runtime = dict(os.environ, LD_LIBRARY_PATH=str(build) + ":" + str(tools / "usr/lib"),
                    LD_PRELOAD=str(library), FOOTBALL_NATIVE_TRACE=str(trace),
-                   GFOOTBALL_DATA_DIR=str(ROOT / "engine/data"), LIBGL_ALWAYS_SOFTWARE="1")
+                   GFOOTBALL_DATA_DIR=str(ROOT / "engine/data"))
+    for key in ("LIBGL_ALWAYS_SOFTWARE", "GALLIUM_DRIVER", "MESA_LOADER_DRIVER_OVERRIDE",
+                "LIBGL_DRIVERS_PATH"):
+        runtime.pop(key, None)
+    driver = None
+    if gpu_driver_root:
+        driver_lib = gpu_driver_root / "lib"
+        driver = driver_lib / "libgallium-26.2.2.so"
+        require(driver.is_file() and (driver_lib / "dri/d3d12_dri.so").exists(),
+                "Private D3D12 driver is incomplete")
+        runtime.update(LD_LIBRARY_PATH=str(build) + ":" + str(driver_lib) + ":" +
+                       str(tools / "usr/lib"), LIBGL_DRIVERS_PATH=str(driver_lib / "dri"),
+                       GALLIUM_DRIVER="d3d12", MESA_LOADER_DRIVER_OVERRIDE="d3d12")
+    else:
+        runtime["LIBGL_ALWAYS_SOFTWARE"] = "1"
     log = (output / "product.log").open("w")
     client = None
     keyboard = None
     actions = []
     try:
-        client = subprocess.Popen([str(build / "bin/standalone_game"), "--seed", "42"],
+        client = subprocess.Popen([str(build / "bin/standalone_game"), "--seed", str(seed)],
                                   cwd=output, env=runtime, stdout=log, stderr=subprocess.STDOUT)
         deadline = time.monotonic() + 60
         while True:
@@ -146,10 +167,21 @@ def product(output, build, library, cycles):
             time.sleep(.02)
         keyboard = Keyboard()
         keyboard.focus(ready["xid"])
+        mapped_driver = (str(driver.resolve()) in (Path(f"/proc/{client.pid}/maps").read_text())
+                         if driver else False)
+        require(not driver or mapped_driver, "Actual product did not load the requested GPU driver")
         time.sleep(.25)
         for index in range(cycles):
             require(client.poll() is None, "Actual product exited during input samples")
-            direction = 1 if index % 2 == 0 else -1
+            observed = events(trace)
+            prior_step = next((row for row in reversed(observed) if row["kind"] == "step"), None)
+            prior_timing = (next((row for row in reversed(observed)
+                                  if row["kind"] == "step_timing" and
+                                  prior_step and row["index"] == prior_step["index"]), None))
+            require(prior_step and prior_timing, "Missing current player motion before XTEST")
+            prior_vx = prior_timing["vx"]
+            direction = (-1 if prior_vx > .2 else 1 if prior_vx < -.2
+                         else 1 if index % 2 == 0 else -1)
             key = "d" if direction > 0 else "a"
             start = time.monotonic_ns()
             keyboard.key(key, True)
@@ -157,6 +189,9 @@ def product(output, build, library, cycles):
             end = time.monotonic_ns()
             keyboard.key(key, False)
             actions.append({"index": index, "direction": direction,
+                            "selection_vx": prior_vx,
+                            "selection_game_mode": prior_timing.get("game_mode"),
+                            "selection_owned_player": prior_step["owned"],
                             "start_ns": start, "end_ns": end})
             time.sleep(.34)
         keyboard.tap("q")
@@ -171,6 +206,10 @@ def product(output, build, library, cycles):
                       trace_source_sha256=sha(ROOT / "engine/tests/engine_native_window_trace.cpp"),
                       product_sha256=sha(build / "bin/standalone_game"),
                       trace_library_sha256=sha(library), cycles=cycles,
+                      seed=seed,
+                      render_backend="private_d3d12" if driver else "llvmpipe",
+                      driver_sha256=sha(driver) if driver else None,
+                      product_mapped_private_driver=mapped_driver,
                       acceptance_passed=(result["response_count"] == cycles and
                                          result["admitted_count"] == result["response_count"] and
                                          result["velocity_response_p95_ms"] is not None and
@@ -191,7 +230,7 @@ def product(output, build, library, cycles):
         log.close()
 
 
-def private_x11(output, build, library, cycles, parent_namespace):
+def private_x11(output, build, library, cycles, parent_namespace, gpu_driver_root, seed):
     require(os.readlink("/proc/self/ns/mnt") != parent_namespace,
             "A private mount namespace is required")
     tools = Path(os.environ["FOOTBALL_TEST_X11_ROOT"])
@@ -233,7 +272,7 @@ def private_x11(output, build, library, cycles, parent_namespace):
             require(reply.strip().isdigit() and server.poll() is None, "Xvfb startup failed")
             env["DISPLAY"] = ":" + reply.strip().decode()
             os.environ.update(env)
-            product(output, build, library, cycles)
+            product(output, build, library, cycles, gpu_driver_root, seed)
     finally:
         os.close(read_fd)
         if write_fd != -1:
@@ -252,17 +291,22 @@ def main():
     parser.add_argument("--build", type=Path, default=Path("/tmp/football-optimization-native"))
     parser.add_argument("--output", type=Path)
     parser.add_argument("--cycles", type=int, default=30)
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--gpu-driver-root", type=Path)
     parser.add_argument("--child", action="store_true")
     parser.add_argument("--parent-namespace")
     args = parser.parse_args()
-    require(20 <= args.cycles <= 100, "At least 20 bounded samples are required")
+    require(4 <= args.cycles <= 100 and 0 <= args.seed < 2**32,
+            "Sample count or seed is outside the bounded diagnostic range")
     output = (args.output or ROOT / ".project/optimization/benchmarks" /
               f"feel-latency-{time.time_ns()}").resolve()
     build = args.build.resolve()
     library = build / "input-tests/libengine_native_window_trace.so"
     require(build.is_dir() and library.is_file(), "Current native input build is missing")
     if args.child:
-        private_x11(output, build, library, args.cycles, args.parent_namespace)
+        private_x11(output, build, library, args.cycles, args.parent_namespace,
+                    args.gpu_driver_root.resolve() if args.gpu_driver_root else None,
+                    args.seed)
         return
     require(output.is_relative_to(ROOT / ".project/optimization/benchmarks") and
             not output.exists(), "Use a fresh workspace evidence directory")
@@ -275,7 +319,10 @@ def main():
     namespace = os.readlink("/proc/self/ns/mnt")
     argv = ["unshare", "--mount", "--propagation", "private", sys.executable,
             __file__, "--child", "--parent-namespace", namespace,
-            "--build", str(build), "--output", str(output), "--cycles", str(args.cycles)]
+            "--build", str(build), "--output", str(output), "--cycles", str(args.cycles),
+            "--seed", str(args.seed)]
+    if args.gpu_driver_root:
+        argv += ["--gpu-driver-root", str(args.gpu_driver_root.resolve())]
     with (output / "probe.log").open("w") as log:
         done = subprocess.run(argv, env=environment, stdout=log,
                               stderr=subprocess.STDOUT, timeout=180)
@@ -284,6 +331,9 @@ def main():
     print(json.dumps({"passed": result["passed"],
                       "acceptance_passed": result["acceptance_passed"],
                       "cycles": result["cycles"],
+                      "seed": result["seed"],
+                      "render_backend": result["render_backend"],
+                      "product_mapped_private_driver": result["product_mapped_private_driver"],
                       "input_admission_p95_ms": result["input_admission_p95_ms"],
                       "render_blocked_admissions": result["render_blocked_admissions"],
                       "render_blocking_p95_ms": result["render_blocking_p95_ms"],

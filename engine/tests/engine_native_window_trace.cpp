@@ -123,7 +123,7 @@ extern "C" void ObserveStep(GameEnv* env, const void* bytes, size_t size) {
   }
   const double vx = owned >= 0 && owned < int(info.left_team.size()) ? info.left_team[owned].player_direction[0] : 0;
   const double vy = owned >= 0 && owned < int(info.left_team.size()) ? info.left_team[owned].player_direction[1] : 0;
-  std::fprintf(Log(), "{\"kind\":\"step_timing\",\"index\":%llu,\"start\":%lld,\"end\":%lld,\"step_ns\":%lld,\"sim_step\":%d,\"in_play\":%s,\"vx\":%.9g,\"vy\":%.9g}\n",steps+1,step_start,step_end,step_end-step_start,info.step,info.is_in_play?"true":"false",vx,vy);
+  std::fprintf(Log(), "{\"kind\":\"step_timing\",\"index\":%llu,\"start\":%lld,\"end\":%lld,\"step_ns\":%lld,\"sim_step\":%d,\"in_play\":%s,\"game_mode\":%d,\"vx\":%.9g,\"vy\":%.9g}\n",steps+1,step_start,step_end,step_end-step_start,info.step,info.is_in_play?"true":"false",static_cast<int>(info.game_mode),vx,vy);
   int controllable = 0;
   for (const auto& entry : env->scenario_config.left_team) controllable += entry.controllable;
   std::fprintf(Log(), "{\"kind\":\"step\",\"time\":%lld,\"index\":%llu,\"x\":%.9g,\"y\":%.9g,"
