@@ -28,13 +28,28 @@ def read_replay(path, *, maximum=False):
             value = stream.read(count)
             require(len(value) == count, "Truncated native replay file")
             return value
+        prefix = exact(8)
+        header_bytes = 0
+        descriptor = None
+        if prefix == b"FNRPLY1\0":
+            descriptor = exact(32)
+            require(descriptor[0] == 66 and descriptor[1:5] == b"FNAT",
+                    "Invalid product replay descriptor")
+            header_bytes = 40
+        else:
+            stream.seek(0)
         seed, scenario_length = struct.unpack("<II", exact(8))
         require(scenario_length <= 1024, "Unbounded replay scenario")
         scenario = exact(scenario_length).decode("utf-8")
         count, slots, final_hash, repeated_count = struct.unpack("<IIQI", exact(20))
         require(count == repeated_count and 0 < count <= 100000 and 1 <= slots <= 22,
                 "Invalid replay shape")
-        require(size == 28 + scenario_length + count * (12 + slots * 10), "Trailing or missing replay bytes")
+        require(size == header_bytes + 28 + scenario_length + count * (12 + slots * 10),
+                "Trailing or missing replay bytes")
+        if descriptor is not None:
+            require(struct.unpack_from('<I', descriptor, 18)[0] == seed and
+                    descriptor[22] + descriptor[23] == slots,
+                    "Product replay descriptor differs from saved match")
         if maximum:
             require((seed, scenario, count, slots) == (42, "streamed_native_replay", 100000, 22),
                     "Maximum replay fixture changed")
@@ -63,6 +78,7 @@ def read_replay(path, *, maximum=False):
                 require(state_hash == final_hash, "Replay final hash differs")
         require(not stream.read(1), "Unexpected replay suffix")
     return dict(seed=seed, scenario=scenario, frames=count, slots=slots, bytes=size,
+                header_bytes=header_bytes,
                 final_hash=final_hash, sha256=sha(path))
 
 
@@ -75,7 +91,8 @@ def compare_confirmed_prefix(paths, decoded):
     require(count > 0, "Empty confirmed prefix")
     length = 12 + left['slots'] * 10
     digest = hashlib.sha256()
-    offset = 28 + len(left['scenario'].encode('utf-8'))
+    require(left['header_bytes'] == right['header_bytes'], "Replay envelope differs")
+    offset = left['header_bytes'] + 28 + len(left['scenario'].encode('utf-8'))
     with paths[0].open('rb') as first, paths[1].open('rb') as second:
         first.seek(offset); second.seek(offset)
         for frame in range(count):
@@ -95,7 +112,7 @@ def verify_actual_wire(path, decoded, directory):
     require(authority == (directory / 'authority2.bin').read_bytes() and
             hashes == (directory / 'hashes2.bin').read_bytes(), "Actual server streams differ")
     with path.open('rb') as replay:
-        replay.seek(28 + len(decoded['scenario'].encode('utf-8')))
+        replay.seek(decoded['header_bytes'] + 28 + len(decoded['scenario'].encode('utf-8')))
         for frame in range(21):
             record = replay.read(32)
             require(len(record) == 32, "Missing saved fixed frame")
@@ -214,10 +231,8 @@ def main():
         require(len(clients) == 2, "Missing actual client telemetry")
         require(all(row["frames"] == client["confirmed"] and row["slots"] == 2 for row, client in zip(decoded, clients)),
                 "Saved frame count differs from actual client confirmations")
-        # 2026-09-13: SIGTERM during a broadcast does not establish a common
-        # terminal frame. Preserve the abrupt-disconnect case and require every
-        # shared input/hash to agree; full-file equality is enforced separately
-        # below with an explicit, real-server fixed boundary.
+        # Product clients finish a requested frame count. Compare every shared
+        # record and then enforce exact 21-frame equality against captured wire.
         # require(decoded[0] == decoded[1], "Actual clients saved different replay bytes")
         paths = [pair / "two_actual_players" / f"player{number}" / "replay_42.bin" for number in (1, 2)]
         shared = compare_confirmed_prefix(paths, decoded)

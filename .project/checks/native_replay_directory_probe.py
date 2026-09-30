@@ -33,47 +33,49 @@ def identity(path):
 
 
 def native_session(build, working, log, env):
-    """Send valid authority; await outbound progress before orderly peer closure."""
+    """Run the current two-client product session through a real server."""
     details = dict(passed=False)
-    with socket.socket() as listener, log.open("w") as stream:
-        listener.bind(("127.0.0.1", 0))
-        listener.listen()
-        listener.settimeout(25)
-        argv = [str(build / "bin/football_client_tcp"), "127.0.0.1",
-                str(listener.getsockname()[1]), "1", "1", "42", "--headless"]
-        process = subprocess.Popen(argv, cwd=working, env=env, stdout=stream, stderr=subprocess.STDOUT)
-        details["argv"] = argv
+    partner = log.parent / (log.stem + "-partner")
+    partner.mkdir()
+    server_log = log.with_name(log.stem + "-server.log")
+    partner_log = log.with_name(log.stem + "-partner.log")
+    processes = []
+    with socket.socket() as reserve:
+        reserve.bind(("127.0.0.1", 0))
+        port = reserve.getsockname()[1]
+    with log.open("w") as stream, server_log.open("w") as server_stream, partner_log.open("w") as partner_stream:
         try:
-            with listener.accept()[0] as peer:
-                peer.settimeout(25)
-                peer.sendall(struct.pack("<BIHH", 5, 42, 1, 1))
-                require(exact(peer, 1) == b"\x00", "Missing connection response")
-                peer.sendall(struct.pack("<BHH", 7, 1, 0))
-                require(exact(peer, 1) == b"\x06", "Missing Ready after GameEnv initialization")
-                neutral = struct.pack("<ffH", 0, 0, 0) * 2
-                peer.sendall(b"".join(struct.pack("<BIH", 3, frame, 2) + neutral for frame in range(8)))
-                # The input frame is the client's actual simulation cursor.
-                # A cursor beyond the prediction cap requires processed authority.
-                deadline = time.monotonic() + 20
-                while True:
-                    require(time.monotonic() < deadline, "No simulation progress before deadline")
-                    kind, frame, slots = struct.unpack("<BIH", exact(peer, 7))
-                    require(kind == 2 and slots == 1, "Unexpected client input framing")
-                    slot, x, y, buttons = struct.unpack("<HffH", exact(peer, 12))
-                    require((slot, x, y, buttons) == (0, 0, 0, 0), "Unexpected headless input")
-                    if frame >= 8:
-                        details["observed_input_frame"] = frame
-                        break
-                peer.shutdown(socket.SHUT_RDWR)
-            details["exit_code"] = process.wait(timeout=25)
+            server = subprocess.Popen([str(build / "bin/football_server_tcp"), str(port), "1", "1", "42"],
+                                      cwd=ROOT, env=env, stdout=server_stream, stderr=subprocess.STDOUT)
+            processes.append(server)
+            deadline = time.monotonic() + 30
+            while "Integrated TCP server listening on port" not in server_log.read_text():
+                require(server.poll() is None and time.monotonic() < deadline, "Product server did not start")
+                time.sleep(.02)
+            argv = [str(build / "bin/football_client_tcp"), "127.0.0.1", str(port),
+                    "1", "1", "42", "--headless", "--frames", "21"]
+            details["argv"] = argv
+            target = subprocess.Popen(argv, cwd=working, env=env, stdout=stream, stderr=subprocess.STDOUT)
+            peer = subprocess.Popen(argv, cwd=partner, env=env, stdout=partner_stream, stderr=subprocess.STDOUT)
+            processes.extend((target, peer))
+            deadline = time.monotonic() + 60
+            while target.poll() is None or peer.poll() is None:
+                require(server.poll() is None and time.monotonic() < deadline,
+                        "Actual product clients failed to complete 21 frames")
+                time.sleep(.02)
+            server.terminate()
+            details["exit_code"] = target.wait(timeout=5)
+            require(peer.wait(timeout=5) == 0 and server.wait(timeout=5) == 0,
+                    "Partner or server did not complete normally")
             text = log.read_text()
             details.update(telemetry=telemetry(text), sanitizers_clean=clean(text),
                            saved="Replay saved: replay_42.bin" in text,
                            save_failed="Replay save failed: replay_42.bin" in text)
-            require(process.returncode == 1 and clean(text), "Wrong client exit/detector result")
-            require(details["telemetry"].get("confirmed", 0) >= 1,
+            require(details["exit_code"] == (0 if details["saved"] else 1) and clean(text),
+                    "Wrong client exit/detector result")
+            require(details["telemetry"].get("confirmed", 0) >= 21 and
+                    details["telemetry"].get("verified_hashes", 0) >= 3,
                     "Client saved no actual confirmed authority")
-            require("connection closed or stream read failed" in text, "Unexpected shutdown cause")
             require(details["saved"] != details["save_failed"], "Missing/unreliable save outcome")
             require((working / TEMPORARY).is_dir(), "Managed storage path was not exercised")
             details["pending"] = sorted(path.name for path in (working / TEMPORARY).glob(".football-replay-*.tmp"))
@@ -86,10 +88,10 @@ def native_session(build, working, log, env):
         except Exception as error:
             details["error"] = str(error)
         finally:
-            if process.poll() is None:
-                process.kill()
-                process.wait(timeout=5)
-                details.update(forced_cleanup=True, passed=False)
+            for process in processes:
+                if process.poll() is None:
+                    process.kill(); process.wait(timeout=5)
+                    details.update(forced_cleanup=True, passed=False)
     details["log"] = str(log)
     details["log_sha256"] = sha(log)
     return details
@@ -106,7 +108,8 @@ def main():
     extra = [".project/checks/native_replay_directory_probe.py",
              ".project/checks/replay_persistence.py", ".project/checks/integrated_tcp_probe.py"]
     sources.update({path: sha(ROOT / path) for path in extra})
-    binaries = {name: sha(build / name) for name in ("bin/football_client_tcp", "libfootball_engine.so")}
+    binaries = {name: sha(build / name) for name in
+                ("bin/football_client_tcp", "bin/football_server_tcp", "libfootball_engine.so")}
     env = environment(build)
     cases = []
 
@@ -176,4 +179,3 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

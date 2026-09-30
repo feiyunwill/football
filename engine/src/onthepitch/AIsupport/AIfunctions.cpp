@@ -426,7 +426,16 @@ TimeNeeded AIReachabilityTrajectory::EstimateImpl(
   float optimizeDist = 16.0f;
   if (precise) optimizeDist = 48.0f;
 
-  float initialDist = (playerPos - targetPos).GetLength();
+  const Vector3 separation = playerPos - targetPos;
+  // Most ball predictions are clearly inside or outside the reachability
+  // search radius. Avoid a square root there, but retain the original length
+  // comparison close to the boundary where float rounding can change it.
+  const float radiusSquared = optimizeDist * optimizeDist;
+  const float separationSquared = separation.GetSquaredLength();
+  const bool outsideSearchRadius =
+      separationSquared > radiusSquared + 0.01f ||
+      (!(separationSquared < radiusSquared - 0.01f) &&
+       separation.GetLength() > optimizeDist);
   // 2026-09-13: the drift position is identical for this immutable snapshot.
   // Previous expression: targetPos - (playerPos + playerMovement * 0.2f).
   const Vector3 drift = [&]() {
@@ -435,8 +444,8 @@ TimeNeeded AIReachabilityTrajectory::EstimateImpl(
   }();
   unsigned int defaultOptimizedTime_ms = int(
       std::round((targetPos - drift).GetLength() /
-                 (maxVelocity * 0.75f) * 1000));
-  if (initialDist > optimizeDist) {
+                  (maxVelocity * 0.75f) * 1000));
+  if (outsideSearchRadius) {
     DO_VALIDATION;
     result.usual_ms = defaultOptimizedTime_ms;
     result.optimistic_ms = result.usual_ms - 200;

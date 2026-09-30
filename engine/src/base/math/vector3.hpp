@@ -255,8 +255,13 @@ namespace blunted {
 
   inline
   real Vector3::GetLength() const {
-    float length = sqrt(std::pow(coords[0], 2) + std::pow(coords[1], 2) +
-                        std::pow(coords[2], 2));
+    // Float coordinates have at most 24 significant bits, so their squares
+    // are exact in double. This preserves pow(x, 2)'s sum and sqrt rounding
+    // without three library calls on every distance query.
+    const double x = coords[0];
+    const double y = coords[1];
+    const double z = coords[2];
+    float length = sqrt(x * x + y * y + z * z);
 
     if (length < 0.000001) length = 0;
     return length;

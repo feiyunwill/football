@@ -13,7 +13,7 @@ import sys
 import tempfile
 import time
 
-from framework_regression import junit_count
+from framework_regression import acceptance_python, junit_count
 from integrated_tcp_probe import environment as native_environment
 from match_benchmark import source_manifest
 from native_boundary import ROOT, require
@@ -65,6 +65,7 @@ def main():
     output = (args.output or ROOT / f".project/optimization/benchmarks/memory-budget-{time.time_ns()}").resolve()
     output.mkdir(parents=True, exist_ok=False)
     original = inputs()
+    python = acceptance_python(None)
     # Preserve the original inputs even when a later scenario fails.
     (output / "sources.json").write_text(json.dumps(original, indent=2) + "\n")
     commands, cases, binaries = [], [], {}
@@ -107,7 +108,7 @@ def main():
 
     def group(label, script, arguments, count, *, env=None):
         destination = output / label
-        run([sys.executable, ROOT / ".project/checks" / script, *arguments, "--output", destination],
+        run([python, ROOT / ".project/checks" / script, *arguments, "--output", destination],
             label, env=env, timeout=600)
         path = destination / "report.json"
         report = json.loads(path.read_text())
@@ -155,7 +156,7 @@ def main():
                          f"-DFOOTBALL_ENABLE_SANITIZERS={mode}", "-DBUILD_PYTHON_BINDINGS=" + ("OFF" if sanitizer else "ON"),
                          f"-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY={build / 'bin'}"]
         if not sanitizer:
-            configuration += [f"-DPython_EXECUTABLE={sys.executable}", f"-DPython_ROOT_DIR={sys.prefix}",
+            configuration += [f"-DPython_EXECUTABLE={python}", f"-DPython_ROOT_DIR={python.parent.parent}",
                               f"-Dpybind11_DIR={pybind11.get_cmake_dir()}"]
         run(configuration, label + "-configure-native")
         compilation = json.loads((build / "compile_commands.json").read_text())
@@ -185,9 +186,18 @@ def main():
                 "Actual GameEnv capacity/slow-peer/reconnect contract is incomplete")
         cases.append(dict(name=label + "/native-tcp-server", executions=1, contract=summary))
         group(label + "-tcp-resume", "engine_tcp_client_probe.py", ["--build", build], 2)
-        group(label + "-integrated-tcp", "integrated_tcp_probe.py", ["--build", build], 11)
-        group(label + "-udp-faults", "udp_capacity_probe.py", ["--build", build], 4)
-        group(label + "-udp-pair", "udp_capacity_probe.py", ["--build", build, "--pair-only"], 1)
+        # The product executable now uses the versioned native handshake.
+        # The legacy integrated probe sends the retired 9-byte session start;
+        # cover real product TCP authority here and product UDP below; bounded
+        # fault handling remains in the ordinary and sanitized unit contracts.
+        product_env = dict(environment, GFOOTBALL_FONT=str(ROOT / "engine/fonts/AlegreyaSansSC-ExtraBold.ttf"),
+                           GFOOTBALL_DATA_DIR=str(ROOT / "engine/data"))
+        group(label + "-integrated-tcp", "native_product_protocol_probe.py",
+              ["--build", build, "--tcp-only"], 1, env=product_env)
+        # The old UDP fixture sent a bare Connect byte. The product transport
+        # now requires a return-route challenge and connection-bound reliability.
+        group(label + "-udp-product", "native_product_protocol_probe.py",
+              ["--build", build, "--udp-only"], 1, env=product_env)
 
         flags = "-fsanitize=address,undefined -fno-sanitize-recover=all -fno-omit-frame-pointer" if sanitizer else ""
         run(["cmake", "-S", "engine/frame_sync_asio", "-B", standalone,
@@ -207,7 +217,7 @@ def main():
     # Run the maintained native persistence checker, including the maximum recording,
     # directory quotas, killed writer and actual paired clients, without old evidence reuse.
     replay = output / "replay"
-    run([sys.executable, ROOT / ".project/checks/replay_persistence.py", "--output", replay],
+    run([python, ROOT / ".project/checks/replay_persistence.py", "--output", replay],
         "replay", timeout=1800)
     replay_report = json.loads((replay / "report.json").read_text())
     require(replay_report["passed"] and not replay_report["skipped"] and replay_report["unit_cases"] >= 208 and
@@ -241,19 +251,19 @@ def main():
         code = ("import sys,json;sys.path.insert(0,sys.argv[1]);"
                 "from native_runtime_identity import native_runtime_identity;"
                 "print(json.dumps(native_runtime_identity(sys.argv[2])))")
-        identity = json.loads(run([sys.executable, "-c", code, ROOT / ".project/checks", ROOT],
+        identity = json.loads(run([python, "-c", code, ROOT / ".project/checks", ROOT],
                                   "python-native-identity", env=env))
         require(Path(identity["binding"]).parent == package and Path(identity["engine"]).parent == package and
                 identity["binding_sha256"] == sha(ordinary / "libgame.so") and
                 identity["engine_sha256"] == sha(ordinary / "libfootball_engine.so"),
                 "Python capacity suites would exercise a different native engine")
         junit = output / "python-frame-sync.xml"
-        run([sys.executable, "-m", "pytest", "gfootball/frame_sync", "-q",
+        run([python, "-m", "pytest", "gfootball/frame_sync", "-q",
              "--ignore=gfootball/frame_sync/legacy_network_test.py", f"--junitxml={junit}"],
             "python-frame-sync", env=env, timeout=600)
         cases.append(dict(name="python-frame-sync", executions=junit_count(junit, 758), report=junit.name, sha256=sha(junit)))
         recording = output / "python-recording"
-        run([sys.executable, ROOT / ".project/checks/python_recording_probe.py", "--output", recording,
+        run([python, ROOT / ".project/checks/python_recording_probe.py", "--output", recording,
              "--environment", "--replay", "--native", "--rendering"], "python-recording", env=env, timeout=240)
         report = json.loads((recording / "report.json").read_text())
         require(report["passed"] and report["tests"] >= 174 and not report["skipped"] and

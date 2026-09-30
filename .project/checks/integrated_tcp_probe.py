@@ -12,7 +12,7 @@ import struct
 import subprocess
 import time
 
-from fixed_frame_relay import FixedFrameRelay
+from fixed_frame_relay import FixedFrameRelay, ProductWireRelay
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -43,10 +43,12 @@ def telemetry(text):
 
 def environment(build):
     env = os.environ.copy()
-    for key in ('DISPLAY', 'LD_PRELOAD', 'SDL_VIDEODRIVER', 'GFOOTBALL_FONT'):
+    for key in ('DISPLAY', 'LD_PRELOAD'):
         env.pop(key, None)
     env.update(LD_LIBRARY_PATH=str(build), LIBGL_ALWAYS_SOFTWARE='1',
-               GFOOTBALL_DATA_DIR=str(ROOT / 'engine/data'),
+                GFOOTBALL_DATA_DIR=str(ROOT / 'engine/data'),
+                GFOOTBALL_FONT=str(ROOT / 'engine/fonts/AlegreyaSansSC-ExtraBold.ttf'),
+                SDL_VIDEODRIVER='offscreen',
                ASAN_OPTIONS='halt_on_error=1:detect_leaks=1:quarantine_size_mb=16',
                UBSAN_OPTIONS='halt_on_error=1:print_stacktrace=1', LSAN_OPTIONS='exitcode=23')
     return env
@@ -230,6 +232,90 @@ def pair_case(build, output, env, *, fixed=False):
     return details
 
 
+def product_pair_case(build, output, env, *, fixed=False):
+    """Run two current product clients and verify their saved match prefix."""
+    directory = output / 'two_actual_players'; directory.mkdir()
+    paths = [directory / name for name in ('server.log', 'left.log', 'right.log')]
+    streams = [path.open('w') for path in paths]
+    processes = []
+    relays = []
+    frames = ProductWireRelay.FRAMES if fixed else 50
+    details = dict(case='two_actual_players_fixed_boundary' if fixed else 'two_actual_players',
+                   passed=False)
+    try:
+        with socket.socket() as reserve:
+            reserve.bind(('127.0.0.1', 0)); port = reserve.getsockname()[1]
+        server = subprocess.Popen([str(build / 'bin/football_server_tcp'), str(port), '1', '1', '42'],
+                                  cwd=ROOT, env=env, stdout=streams[0], stderr=subprocess.STDOUT)
+        processes.append(server)
+        deadline = time.monotonic() + 30
+        while 'Integrated TCP server listening on port' not in paths[0].read_text():
+            if server.poll() is not None or time.monotonic() > deadline:
+                raise AssertionError('Product server failed to start')
+            time.sleep(.02)
+        for index in (1, 2):
+            working = directory / f'player{index}'; working.mkdir()
+            client_port = port
+            if fixed:
+                relay = ProductWireRelay(port)
+                relays.append(relay)
+                client_port = relay.port
+            process = subprocess.Popen([str(build / 'bin/football_client_tcp'), '127.0.0.1',
+                                        str(client_port), '1', '1', '42', '--headless',
+                                        '--frames', str(frames)],
+                                       cwd=working, env=env, stdout=streams[index],
+                                       stderr=subprocess.STDOUT)
+            processes.append(process)
+        deadline = time.monotonic() + 60
+        while any(process.poll() is None for process in processes[1:]):
+            if server.poll() is not None or time.monotonic() > deadline:
+                raise AssertionError('Product clients failed to finish fixed frame count')
+            time.sleep(.02)
+        server.send_signal(signal.SIGTERM)
+        codes = [process.wait(timeout=5) for process in processes]
+        for index, relay in enumerate(relays, 1):
+            relay.close()
+            (directory / f'authority{index}.bin').write_bytes(relay.authority)
+            (directory / f'hashes{index}.bin').write_bytes(relay.hash_packets)
+        logs = [path.read_text() for path in paths]
+        states = [telemetry(log) for log in logs[1:]]
+        replays = []
+        for index in (1, 2):
+            path = directory / f'player{index}' / 'replay_42.bin'
+            size = path.stat().st_size if path.exists() else 0
+            replays.append(dict(size=size, sha256=sha(path) if size else None))
+        details.update(exit_codes=codes, clients=states,
+                       sanitizers_clean=all(clean(log) for log in logs),
+                       replay_prefixes=replays)
+        details['passed'] = (codes == [0, 0, 0] and details['sanitizers_clean'] and
+                             # The frame-limit exit can precede processing the
+                             # final arriving hash; saved bytes are checked
+                             # against the captured server packet below.
+                             all(state.get('confirmed') == frames and
+                                 state.get('verified_hashes', 0) >= (frames - 1) // 10
+                                 for state in states) and
+                             all(0 < row['size'] <= 32 * 1024 * 1024 for row in replays) and
+                             replays[0] == replays[1])
+        if fixed:
+            details['fixed_frames'] = frames
+            details['wire'] = {path.name: sha(path) for path in directory.glob('*.bin')}
+            details['passed'] &= (relays[0].authority == relays[1].authority and
+                                  relays[0].hash_packets == relays[1].hash_packets)
+    except Exception as error:
+        details['error'] = str(error)
+    finally:
+        for relay in relays:
+            if relay.thread.is_alive():
+                relay.close()
+        for process in processes:
+            if process.poll() is None:
+                process.kill(); process.wait(timeout=5); details['forced_cleanup'] = True
+        for stream in streams:
+            stream.close()
+    details['logs'] = {path.name: sha(path) for path in paths}
+    return details
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build', required=True, type=Path)
@@ -242,12 +328,12 @@ def main():
     output.mkdir(parents=True, exist_ok=False)
     env = environment(build)
     cases = []
-    if not (args.pair_only or args.fixed_pair_only):
-        for name in ('partial_handshake', 'invalid_dimensions', 'duplicate_assignment',
-                     'invalid_authority_count', 'invalid_authority_input', 'authority_queue_full',
-                     'authority_window', 'hash_queue_full', 'hash_mismatch', 'control_framing'):
-            row = fake_case(build, output, name, env); cases.append(row); print(json.dumps(row), flush=True)
-    row = pair_case(build, output, env, fixed=args.fixed_pair_only); cases.append(row); print(json.dumps(row), flush=True)
+    modes = ((True,) if args.fixed_pair_only else (False,)) if args.pair_only or args.fixed_pair_only else (False, True)
+    for fixed in modes:
+        destination = output if len(modes) == 1 else output / ('fixed' if fixed else 'normal')
+        destination.mkdir(exist_ok=True)
+        row = product_pair_case(build, destination, env, fixed=fixed)
+        cases.append(row); print(json.dumps(row), flush=True)
     paths = ['engine/src/frame_sync/integrated_client.cpp', 'engine/src/frame_sync/integrated_server.cpp',
              'engine/src/frame_sync/engine_tcp_server.hpp', 'engine/src/frame_sync/engine_tcp_bridge.hpp',
              'engine/src/frame_sync/bounded_tcp_writer.hpp', '.project/checks/integrated_tcp_probe.py',

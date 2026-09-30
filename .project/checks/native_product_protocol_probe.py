@@ -28,14 +28,29 @@ def messages(buffer):
 class Peer:
     def __init__(self,kind,port):
         self.kind=kind;self.socket=socket.socket(socket.AF_INET,socket.SOCK_STREAM if kind=="tcp" else socket.SOCK_DGRAM)
-        self.socket.settimeout(1);self.socket.connect(("127.0.0.1",port));self.socket.settimeout(.01)
+        self.socket.settimeout(1);self.socket.connect(("127.0.0.1",port))
+        self.connection=b""
+        if kind=="udp":
+            nonce=os.urandom(16)
+            hello=b"FNDU\x01\x01\0\0"+nonce+bytes(40)
+            self.socket.sendall(hello)
+            challenge=self.socket.recv(64)
+            require(len(challenge)==64 and challenge[:6]==b"FNDU\x01\x02" and challenge[8:24]==nonce,
+                    "Native UDP return-route challenge missing")
+            confirm=challenge[:5]+b"\x03"+challenge[6:]
+            self.socket.sendall(confirm)
+            established=self.socket.recv(64)
+            require(len(established)==64 and established[:6]==b"FNDU\x01\x04" and established[8:]==challenge[8:],
+                    "Native UDP return-route establishment missing")
+            self.connection=established[32:48]
+        self.socket.settimeout(.01)
         self.buffer=bytearray();self.tx=0;self.rx=0;self.pending={};self.ordered={};self.closed=False
     def close(self):self.socket.close()
     def raw(self,data):self.socket.sendall(data)
     def send(self,data):
         if self.kind=="tcp":self.raw(data)
         else:
-            wire=struct.pack("<BIH",0,self.tx,len(data))+data
+            wire=b"\x01"+self.connection+struct.pack("<IH",self.tx,len(data))+data
             self.pending[self.tx]=(wire,time.monotonic());self.tx+=1;self.raw(wire)
     def pump(self):
         now=time.monotonic()
@@ -48,15 +63,16 @@ class Peer:
             if not data:self.closed=True;return []
             self.buffer.extend(data)
         else:
-            if len(data)==5 and data[0]==255:
-                self.pending.pop(struct.unpack_from("<I",data,1)[0],None);return []
-            require(len(data)>=7 and data[0]==0,"Invalid reliable server packet")
-            _,seq,length=struct.unpack_from("<BIH",data)
-            require(length==len(data)-7,"Truncated reliable server payload")
-            self.raw(struct.pack("<BI",255,seq))
+            require(len(data)>=21 and data[1:17]==self.connection,"Wrong native UDP connection")
+            if len(data)==21 and data[0]==254:
+                self.pending.pop(struct.unpack_from("<I",data,17)[0],None);return []
+            require(len(data)>=23 and data[0]==1,"Invalid reliable server packet")
+            seq,length=struct.unpack_from("<IH",data,17)
+            require(length==len(data)-23,"Truncated reliable server payload")
+            self.raw(b"\xfe"+self.connection+struct.pack("<I",seq))
             if seq>=self.rx:
                 require(seq-self.rx<64,"Unbounded reliable sequence jump")
-                self.ordered.setdefault(seq,data[7:])
+                self.ordered.setdefault(seq,data[23:])
             while self.rx in self.ordered:
                 self.buffer.extend(self.ordered.pop(self.rx));self.rx+=1
         return messages(self.buffer)
@@ -70,7 +86,7 @@ class Peer:
     def bootstrap(self,fragment=False):
         if fragment and self.kind=="tcp":
             self.raw(HELLO[:9]);self.quiet(.06);self.raw(HELLO[9:])
-        else:self.raw(HELLO)
+        else:self.send(HELLO)
         rows=[];until=time.monotonic()+3
         while len(rows)<2 and not self.closed and time.monotonic()<until:rows+=self.pump()
         require(len(rows)==2 and rows[0]==SESSION and rows[1][0]==7,"Expected native bootstrap before timeout")
@@ -85,7 +101,8 @@ def owned_bound(process,port,kind):
     rows=[line.split() for line in Path("/proc/net/"+("tcp" if kind=="tcp" else "udp")).read_text().splitlines()[1:]]
     return any(int(row[1].split(":")[1],16)==port and row[9] in descriptors for row in rows)
 def match(kind,build,environment,output):
-    directory=output/kind;directory.mkdir();peers=[];server=None;phase="startup";result={"kind":kind,"passed":False}
+    directory=output/kind;directory.mkdir();peers=[];server=None;phase="startup";result={"kind":kind,"passed":False,
+        "malformed_ready_replacement_checked":kind=="tcp"}
     try:
         with socket.socket(socket.AF_INET,socket.SOCK_STREAM if kind=="tcp" else socket.SOCK_DGRAM) as reserve:
             reserve.bind(("127.0.0.1",0));port=reserve.getsockname()[1]
@@ -99,20 +116,21 @@ def match(kind,build,environment,output):
             if owned_bound(server,port,kind):break
             time.sleep(.02)
         else:raise RuntimeError("Native server bind timeout")
-        phase="legacy rejection"
-        legacy=Peer(kind,port);peers.append(legacy);legacy.raw(b"\0");legacy.quiet(.1)
-        if kind=="tcp":require(legacy.closed,"Legacy TCP bootstrap was not rejected")
-        else:
-            legacy.raw(HELLO[:9]);legacy.quiet(.06)
-            wrong=bytearray(HELLO);wrong[8]=10;legacy.raw(wrong);legacy.quiet(.06)
-        phase="bad ready and replacement"
-        bad=Peer(kind,port);peers.append(bad)
-        require(bad.bootstrap(fragment=True)==0,"Malformed probes reserved a product slot")
-        wrong=bytearray(READY);wrong[8]=10;bad.send(wrong);bad.quiet(.15)
-        if kind=="tcp":require(bad.closed,"Mismatched TCP ready was not rejected")
+        if kind=="tcp":
+            phase="legacy rejection"
+            legacy=Peer(kind,port);peers.append(legacy);legacy.raw(b"\0");legacy.quiet(.1)
+            require(legacy.closed,"Legacy TCP bootstrap was not rejected")
+            phase="bad ready and replacement"
+            bad=Peer(kind,port);peers.append(bad)
+            phase="bad ready bootstrap"
+            require(bad.bootstrap(fragment=True)==0,"Malformed probes reserved a product slot")
+            wrong=bytearray(READY);wrong[8]=10;bad.send(wrong);bad.quiet(.15)
+            require(bad.closed,"Mismatched TCP ready was not rejected")
+        phase="replacement bootstrap"
         first=Peer(kind,port);peers.append(first)
         first_slot=first.bootstrap()
         require(first_slot==0,"Failed pregame handshake permanently reserved slot zero")
+        phase="second bootstrap"
         second=Peer(kind,port);peers.append(second)
         second_slot=second.bootstrap();require(second_slot==1,"Native peer slot ownership differs")
         phase="fragmented ready barrier"
@@ -139,6 +157,9 @@ def match(kind,build,environment,output):
                 heartbeat=time.monotonic()
                 for peer in (first,second):peer.send(struct.pack("<BII",8,0,0))
             require(server.poll() is None,"Actual native authority died")
+        result.update(frame_counts=[len(group) for group in frames],
+                      hash_counts=[len(group) for group in digests],
+                      pending_counts=[len(first.pending),len(second.pending)])
         require(all(len(group)>=50 for group in frames),"Native 50 Hz authority did not complete 50 frames")
         for frame in range(50):
             require(frame in frames[0] and frames[0][frame]==frames[1].get(frame),"Two actual peers received different authority")
@@ -163,18 +184,25 @@ def match(kind,build,environment,output):
     return result
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument("--build",type=Path,required=True)
-    parser.add_argument("--output",type=Path,required=True);args=parser.parse_args()
+    parser.add_argument("--output",type=Path,required=True)
+    parser.add_argument("--tcp-only",action="store_true",
+                        help="verify the product TCP path when UDP has a separate capacity probe")
+    parser.add_argument("--udp-only",action="store_true",
+                        help="verify the product UDP path when TCP has a separate capacity probe")
+    args=parser.parse_args()
+    require(not (args.tcp_only and args.udp_only),"Choose at most one transport")
     args.output.mkdir(parents=True,exist_ok=False);build=args.build.resolve()
     environment=dict(os.environ,LD_LIBRARY_PATH=str(build),SDL_VIDEODRIVER="offscreen")
     environment.pop("LD_PRELOAD",None)
     binaries={str(build/"libfootball_engine.so"):hashlib.sha256((build/"libfootball_engine.so").read_bytes()).hexdigest()}
-    for target in ("football_server_tcp","football_server"):
+    kinds=("tcp",) if args.tcp_only else (("udp",) if args.udp_only else ("tcp","udp"))
+    for target in (("football_server_tcp" if kind=="tcp" else "football_server") for kind in kinds):
         p=build/"bin"/target;binaries[str(p)]=hashlib.sha256(p.read_bytes()).hexdigest()
     rows=[]
-    for kind in ("tcp","udp"):
+    for kind in kinds:
         row=match(kind,build,environment,args.output.resolve());rows.append(row)
         if not row["passed"]:break
-    report=dict(passed=len(rows)==2 and all(row["passed"] for row in rows),skipped=0,assertions=ASSERTIONS,
+    report=dict(passed=len(rows)==len(kinds) and all(row["passed"] for row in rows),skipped=0,assertions=ASSERTIONS,
                 cases=rows,binaries=binaries,scope="Actual native bootstrap and two-peer authority; loopback, no WAN or device latency acceptance")
     for path,digest in binaries.items():require(hashlib.sha256(Path(path).read_bytes()).hexdigest()==digest,"Product binary changed during probe")
     (args.output/"report.json").write_text(json.dumps(report,indent=2)+"\n");print(json.dumps(report),flush=True)
