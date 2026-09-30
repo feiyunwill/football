@@ -1578,10 +1578,24 @@
     },
     {
       "id": "fixed_timestep",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "输入采样、网络帧率和物理步数协商一致；忙闲帧不丢边沿"
-      ]
+      ],
+      "argv": ["python3", ".project/gates/fixed_timestep.py"],
+      "kind": "json",
+      "min_assertions": 50,
+      "timeout": 600,
+      "sources": [
+        ".project/gates/fixed_timestep.py",
+        ".project/quality.py",
+        ".project/optimization/program.json",
+        "engine/src/frame_sync/native_match_contract.hpp",
+        "engine/src/frame_sync/native_publication_clock.hpp",
+        "gfootball/frame_sync/frame_pacing.py",
+        "gfootball/frame_sync/match_cadence.py"
+      ],
+      "tools": ["python3"]
     },
     {
       "id": "presentation_smoothing",

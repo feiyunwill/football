@@ -1,15 +1,15 @@
 {
   "check": "input_contract",
-  "fingerprint": "21b07a1eafc2f0958345d53afe9c7643dcd2eac0808219621359abfae228d7c0",
+  "fingerprint": "fcf3d61114815de2158d3b7cfd1f91d9b83843128d962be6bfcbdf0eebe6fc96",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1790220748.9202268,
-  "duration_seconds": 480.597,
+  "started": 1790785761.9562721,
+  "duration_seconds": 1511.856,
   "argv": [
     "python3",
     ".project/checks/input_contract.py"
   ],
-  "log": "input_contract-1790220748920262743.log",
-  "log_sha256": "8537235b8202af88f993081e1d3676ace309836c24b8f04b34fef65058ba875e"
+  "log": "input_contract-1790785761956293929.log",
+  "log_sha256": "0c3f77b5994369190c2893a3d350b03c790d40b30e133b9c5758f5754d2dcb69"
 }
