@@ -38,6 +38,7 @@ def analyze(output, actions):
     rows = events(trace)
     steps = [row for row in rows if row["kind"] == "step"]
     timing = {row["index"]: row for row in rows if row["kind"] == "step_timing"}
+    rendering = [row for row in rows if row["kind"] == "render_timing"]
     swaps = [row for row in rows if row["kind"] == "swap" and row["render_owner"]]
     require(len(timing) == len(steps) and swaps, "Missing actual player steps or product swaps")
     samples = []
@@ -72,10 +73,13 @@ def analyze(output, actions):
                               if responded else None)
         require(following_admission is not None and (not responded or following_response),
                 "No product swap after player step")
+        render_blocking_ms = sum(max(0, min(row["end"], admitted["time"]) -
+                                     max(row["start"], start)) for row in rendering) / 1e6
         samples.append({"index": action["index"], "direction": direction,
                         "status": "admitted" if responded else "no_velocity_response",
                         "owned_player": baseline["owned"],
                         "input_admission_ms": round((admitted["time"] - start) / 1e6, 3),
+                        "render_blocking_before_admission_ms": round(render_blocking_ms, 3),
                         "velocity_response_ms": (round((responded["time"] - start) / 1e6, 3)
                                                  if responded else None),
                         "first_swap_after_admission_ms": round((following_admission["time"] - start) / 1e6, 3),
@@ -94,8 +98,14 @@ def analyze(output, actions):
     responses = [row["velocity_response_ms"] for row in samples
                  if row.get("velocity_response_ms") is not None]
     return {"samples": samples, "step_count": len(steps), "swap_count": len(swaps),
+            "render_count": len(rendering),
             "admitted_count": len(admitted_samples),
             "response_count": len(responses),
+            "render_blocked_admissions": sum(row["render_blocking_before_admission_ms"] > 0
+                                             for row in admitted_samples),
+            "render_blocking_p95_ms": (percentile([row["render_blocking_before_admission_ms"]
+                                                  for row in admitted_samples], .95)
+                                       if len(admitted_samples) >= 20 else None),
             "input_admission_p95_ms": (percentile([row["input_admission_ms"] for row in admitted_samples], .95)
                                        if len(admitted_samples) >= 20 else None),
             "observed_admission_p95_ms": percentile([row["input_admission_ms"] for row in admitted_samples], .95),
@@ -275,6 +285,8 @@ def main():
                       "acceptance_passed": result["acceptance_passed"],
                       "cycles": result["cycles"],
                       "input_admission_p95_ms": result["input_admission_p95_ms"],
+                      "render_blocked_admissions": result["render_blocked_admissions"],
+                      "render_blocking_p95_ms": result["render_blocking_p95_ms"],
                       "velocity_response_p95_ms": result["velocity_response_p95_ms"],
                       "swap_after_admission_p95_ms": result["swap_after_admission_p95_ms"],
                       "swap_after_response_p95_ms": result["swap_after_response_p95_ms"],
