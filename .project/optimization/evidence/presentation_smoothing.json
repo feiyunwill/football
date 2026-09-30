@@ -1,0 +1,15 @@
+{
+  "check": "presentation_smoothing",
+  "fingerprint": "707da9e73de26a9c28f1768e3858f3a210d8590a4fda842e3807056539640253",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1790789715.3920264,
+  "duration_seconds": 19.596,
+  "argv": [
+    "python3",
+    ".project/gates/presentation_smoothing.py"
+  ],
+  "log": "presentation_smoothing-1790789715392057092.log",
+  "log_sha256": "4dafdad78f7687d256cd0220091a3aedbd8415ee3390fc54da66d4ea0286b908"
+}

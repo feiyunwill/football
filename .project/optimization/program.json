@@ -1599,9 +1599,35 @@
     },
     {
       "id": "presentation_smoothing",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "插值使用最后逻辑时刻；回滚无跳变；暂停恢复无大步长或粘键"
+      ],
+      "argv": ["python3", ".project/gates/presentation_smoothing.py"],
+      "kind": "json",
+      "min_assertions": 500,
+      "timeout": 1800,
+      "sources": [
+        ".project/gates/presentation_smoothing.py",
+        ".project/checks/render_pose_contract.py",
+        ".project/checks/requirements.txt",
+        ".project/optimization/program.json",
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/ai.cpp",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/tests/*.cpp",
+        "engine/data/**/*",
+        "gfootball/frame_sync/*.py"
+      ],
+      "tools": ["python3", "cmake", "c++"],
+      "environment": [
+        "CC", "CXX", "CFLAGS", "CXXFLAGS", "LDFLAGS",
+        "DISPLAY", "SDL_VIDEODRIVER", "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR", "GFOOTBALL_FONT", "LIBGL_ALWAYS_SOFTWARE", "PYTHONOPTIMIZE"
       ]
     },
     {
