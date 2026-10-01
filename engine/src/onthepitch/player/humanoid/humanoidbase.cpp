@@ -2109,6 +2109,17 @@ Vector3 HumanoidBase::CalculatePhysicsVector(Animation *anim, bool useDesiredMov
 
     resultingPhysicsMovement = resultingPhysicsMovement * physicsBias + animMovement * (1.0f - physicsBias);
 
+    // Give an urgent opposite manual turn a short physics lead while the
+    // selected animation catches up. The existing acceleration cap below
+    // still bounds the displacement of each simulation frame.
+    if (animType == e_DefString_Movement && useDesiredMovement &&
+        player->ExternalControllerActive() && match->IsInPlay() &&
+        !match->IsInSetPiece() && time_ms < 120 &&
+        adaptedCurrentMovement.GetDotProduct(adaptedDesiredMovement) < -0.1f) {
+      const float manualBias = 0.6f * (1.0f - time_ms / 120.0f);
+      resultingPhysicsMovement = resultingPhysicsMovement * (1.0f - manualBias) +
+                                 adaptedDesiredMovement * manualBias;
+    }
 
     // that's it, we now know where we want to go in life
 
