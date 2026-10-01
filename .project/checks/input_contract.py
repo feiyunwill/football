@@ -16,7 +16,7 @@ CONTRACTS={
  # 2026-09-14: real tactical state, actor identity, role symmetry and fresh actions are mandatory.
  'engine_ai_tactics_contract':(7288,{'symmetry_cases':600}),
  'engine_ai_tactics_roles_contract':(3601,{'role_mirror_cases':1800,'failed':0}),
- 'engine_ai_tactical_state_contract':(27618,{'frames':960,'actual_gameenv':True,'nonzero_actors':3513,'restarts':330}),
+ 'engine_ai_tactical_state_contract':(27602,{'frames':960,'actual_gameenv':True,'nonzero_actors':3505,'restarts':326}),
  # 2026-09-14: native controls must retain moving touches and stationary ball handling.
  'engine_ai_touch_contract':(586,{'seeds':3,'ball_control_assets':270,'quiet_idle':24,'actual_gameenv':True}),
  # 2026-09-13: native display-only capture keeps default RGB and logical state.
@@ -24,7 +24,7 @@ CONTRACTS={
  # 2026-09-13: slow authority lead and real unavailable-player AI recovery are mandatory.
  #     'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6}),
  'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6,'resync_frames':572,'resync_max_lead':2}),
- 'engine_native_bot_selection_contract':(1317,{'prefix_frames':512,'recorded_tail_frames':91,'unavailable_frames':13,'recovered_frames':1,'actual_gameenv':True}),
+ 'engine_native_bot_selection_contract':(1830,{'prefix_frames':512,'recorded_tail_frames':245,'unavailable_frames':30,'recovered_frames':1,'actual_gameenv':True}),
  'engine_native_match_contract':(44000,{'clock_events':10000,'engine_frames':600,'actual_gameenv':True,'native_contract':1}),
  # 2026-09-13: shared history and joined transport ownership are mandatory input contracts.
  'engine_native_transport_pump_contract':(20333,{'ledger_frames':4000,'concurrent_frames':128,'joined_lifetimes':64}),
@@ -92,9 +92,10 @@ def verify_bot_selection_reference():
                 'Archived bot-selection oracle no longer reproduces')
     requeue=verify_bot_selection_requeue()
     momentum=verify_bot_selection_momentum()
+    assist=verify_bot_selection_assist()
     return {'manifest_sha256':benchmark.file_hash(base/'bot_selection_v2.json'),
              'oracle_output_sha256':manifest['oracle_output']['sha256'],
-             'prefix_frames':512,'aligned_tail_frames':91,**requeue,**momentum}
+             'prefix_frames':512,'aligned_tail_frames':91,**requeue,**momentum,**assist}
 
 def verify_bot_selection_requeue():
     """Keep the archived old oracle while validating a separately versioned turn."""
@@ -253,6 +254,110 @@ def verify_bot_selection_momentum():
             'manual_momentum_archive_sha256':archive['sha256'],
             'manual_momentum_first_changed_frame':134,
             'manual_momentum_changed_hashes':378}
+
+def verify_bot_selection_assist():
+    """Check the reviewed manual-assist replay and its extended selection tail."""
+    base=ROOT/'.project/optimization/baselines'
+    path=base/'bot_selection_assist_20261001.json'
+    manifest=json.loads(path.read_text())
+    require(manifest['format']==1 and
+            manifest['id']=='bot-selection-manual-assist-20261001' and
+            manifest['historical_reference']=='.project/optimization/baselines/bot_selection_momentum_20261001.json' and
+            manifest['raw_oracles']['independent_runs']==2 and
+            manifest['contract']=={'prefix_frames':512,'tail_frames':245,
+                                   'prior_tail_frames':91,'additional_neutral_frames':154,
+                                   'first_changed_frame_vs_prior':138,
+                                   'changed_prefix_hashes_vs_prior':374,
+                                   'unavailable_frames':30,'recovered_frames':1},
+            'Manual assist replay reference changed')
+    sources=manifest['candidate_sources']
+    controller='engine/src/onthepitch/player/controller/playercontroller.cpp'
+    humanoid='engine/src/onthepitch/player/humanoid/humanoid.cpp'
+    previous=json.loads((base/'bot_selection_momentum_20261001.json').read_text())
+    require(set(sources)=={controller,humanoid} and
+            all(benchmark.file_hash(ROOT/relative)==digest
+                for relative,digest in sources.items()) and
+            sources[humanoid]==previous['candidate_source']['sha256'],
+            'Manual assist engine source differs from reviewed oracle')
+    snapshot=manifest['historical_source_snapshot']
+    snapshot_path=(ROOT/snapshot['path']).resolve()
+    require(snapshot['path']=='.project/optimization/baselines/bot_selection_momentum_20261001_playercontroller.cpp.gz' and
+            snapshot_path.is_relative_to(ROOT) and
+            benchmark.file_hash(snapshot_path)==snapshot['sha256'] and
+            hashlib.sha256(gzip.decompress(snapshot_path.read_bytes())).hexdigest()==
+            snapshot['decompressed_sha256']==
+            'b429890cacf04e4fea43a9d3d5bb465a326fc0031f1d7f2ac17199ccea4e9064',
+            'Archived pre-assist controller source changed')
+    archive=manifest['archive']
+    archive_path=(ROOT/archive['path']).resolve()
+    require(archive['path']=='.project/optimization/baselines/bot_selection_assist_20261001.tar.gz' and
+            archive_path.is_relative_to(ROOT) and
+            benchmark.file_hash(archive_path)==archive['sha256'],
+            'Manual assist oracle archive changed')
+    expected_members={'generator.cpp','candidate.patch',
+                      'hashes-run1.inc','hashes-run2.inc','tail-run1.inc','tail-run2.inc',
+                      'run1.log','run2.log'}
+    with tarfile.open(archive_path,'r:gz') as package:
+        recorded=json.load(package.extractfile('manifest.json'))
+        require(recorded['format']=='bot-selection-assist-oracle-v1' and
+                set(recorded['files'])==expected_members and
+                set(package.getnames())==expected_members|{'manifest.json'},
+                'Manual assist archive has unexpected members')
+        raw={name:package.extractfile(name).read() for name in expected_members}
+    require(all(hashlib.sha256(data).hexdigest()==recorded['files'][name]
+                for name,data in raw.items()) and
+            recorded['files']['generator.cpp']==archive['generator_sha256'] and
+            recorded['files']['candidate.patch']==archive['candidate_patch_sha256'],
+            'Manual assist generator, patch or replay member changed')
+    for kind,frames in (('hashes',512),('tail',245)):
+        first=raw[f'{kind}-run1.inc']
+        require(first==raw[f'{kind}-run2.inc'] and
+                hashlib.sha256(first).hexdigest()==manifest['raw_oracles'][f'{kind}_sha256'] and
+                len(first.splitlines())==frames,
+                'Manual assist independent replays differ')
+    expected_fixtures={f'engine/tests/fixtures/native_bot_transition_{kind}_assist_20261001.inc'
+                       for kind in ('hashes','tail')}
+    require(set(manifest['fixtures'])==expected_fixtures,
+            'Manual assist fixture paths changed')
+    for relative,expected in manifest['fixtures'].items():
+        fixture=(ROOT/relative).resolve()
+        kind='hashes' if 'hashes_' in relative else 'tail'
+        require(fixture.is_relative_to(ROOT) and
+                benchmark.file_hash(fixture)==expected and
+                fixture.read_bytes().partition(b'\n')[2]==raw[f'{kind}-run1.inc'],
+                'Manual assist fixture differs from replay: '+relative)
+    prior=(ROOT/'engine/tests/fixtures/native_bot_transition_hashes_momentum_20261001.inc').read_text().splitlines()[1:]
+    current=raw['hashes-run1.inc'].decode().splitlines()
+    changed=[i for i,(a,b) in enumerate(zip(prior,current)) if a!=b]
+    require(len(prior)==len(current)==512 and changed[0]==138 and len(changed)==374,
+            'Manual assist semantic divergence moved')
+    def fields(line):
+        return line.strip().rstrip(',').strip('{}').split(',')
+    def tail_input(line):
+        values=fields(line)
+        return (float.fromhex(values[0].removesuffix('f')),
+                float.fromhex(values[1].removesuffix('f')),int(values[2]))
+    previous_tail=(ROOT/'engine/tests/fixtures/native_bot_transition_tail_momentum_20261001.inc').read_text().splitlines()[1:]
+    new_tail=raw['tail-run1.inc'].decode().splitlines()
+    require(len(previous_tail)==91 and len(new_tail)==245 and
+            all(tail_input(a)==tail_input(b)
+                for a,b in zip(previous_tail,new_tail[:91])) and
+            all(tail_input(line)==(0.0,0.0,0) for line in new_tail[91:]) and
+            int(fields(new_tail[-1])[3])==-1,
+            'Manual assist extended tail inputs or selection changed')
+    for run in (1,2):
+        log=raw[f'run{run}.log'].decode()
+        require(log.startswith('exit=0\n') and
+                '"recorded_tail_frames":245' in log and
+                'additional_tail_frames=154' in log and
+                '"unavailable_frames":30' in log and
+                '"recovered_frames":1' in log,
+                'Manual assist replay run did not complete')
+    return {'manual_assist_manifest_sha256':benchmark.file_hash(path),
+            'manual_assist_archive_sha256':archive['sha256'],
+            'manual_assist_first_changed_frame':138,
+            'manual_assist_changed_hashes':374,
+            'manual_assist_tail_frames':245}
 
 def observation():
     socket=Path('/tmp/.X11-unix')

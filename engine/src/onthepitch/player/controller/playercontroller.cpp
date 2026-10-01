@@ -722,12 +722,24 @@ void PlayerController::_MovementCommand(PlayerCommandQueue &commandQueue,
   }
 
   {
-    // A strong manual turn must not be cancelled by ball-assist movement.
-    // Explicit pressure and buffered touch actions still request the magnet.
+    // Keep deliberate manual movement effective when ball assist heads across
+    // or against it. Explicit pressure and buffered touch actions still request
+    // the full magnet.
     if (!forceMagnet && player->ExternalControllerActive() &&
-        manualVelocityFloat >= idleDribbleSwitch &&
-        manualDirection.GetDotProduct(autoDirection) < -0.866f)
-      autoBias = 0.0f;
+        manualVelocityFloat >= idleDribbleSwitch) {
+      float assistProjection =
+          autoDirection.GetDotProduct(manualDirection) * autoVelocityFloat;
+      if (manualDirection.GetDotProduct(autoDirection) < -0.866f) {
+        autoBias = 0.0f;
+      } else {
+        float minimumManualProjection = manualVelocityFloat * 0.5f;
+        if (assistProjection < minimumManualProjection) {
+          autoBias = std::min(autoBias,
+                              (manualVelocityFloat - minimumManualProjection) /
+                                  (manualVelocityFloat - assistProjection));
+        }
+      }
+    }
 
     Vector3 autoMovement = autoDirection * autoVelocityFloat;
     Vector3 manualMovement = manualDirection * manualVelocityFloat;

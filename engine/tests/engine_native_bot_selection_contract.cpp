@@ -10,10 +10,10 @@ unsigned assertions=0,unavailable=0,recovered=0;
 void Require(bool v,const char*m){++assertions;if(!v)throw std::runtime_error(m);}
 using Recorded = std::tuple<float,float,unsigned,int,float,float>;
 const Recorded tail[]={
-#include "fixtures/native_bot_transition_tail_momentum_20261001.inc"
+#include "fixtures/native_bot_transition_tail_assist_20261001.inc"
 };
 const std::uint64_t semantic_hashes[]={
-#include "fixtures/native_bot_transition_hashes_momentum_20261001.inc"
+#include "fixtures/native_bot_transition_hashes_assist_20261001.inc"
 };
 const char replay_bytes[] =
 #include "fixtures/native_bot_transition_replay_20260913.inc"
