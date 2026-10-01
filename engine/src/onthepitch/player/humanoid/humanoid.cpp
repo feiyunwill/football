@@ -141,7 +141,7 @@ void Humanoid::Process() {
           .GetLength() > 0.7f;
   const bool manualInputEdgeTurn = CastPlayer()->ExternalControllerActive() &&
       currentAnim.functionType == e_FunctionType_Movement &&
-      currentAnim.touchFrame == -1 && currentAnim.frameNum >= 5 &&
+      currentAnim.touchFrame == -1 && currentAnim.frameNum >= 1 &&
       match->IsInPlay() && !match->IsInSetPiece() &&
       CastPlayer()->GetController()->HasFreshManualMovementInput() &&
       CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
@@ -1302,7 +1302,7 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
         (match->GetBall()->Predict(100).Get2D() - spatialState.position)
             .GetLength() > 1.0f;
     manualFreshMovementInput = manualMovementContext &&
-        currentAnim.frameNum >= 5 &&
+        currentAnim.frameNum >= 1 &&
         CastPlayer()->GetController()->HasFreshManualMovementInput() &&
         CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
         command.desiredVelocityFloat > 0.5f &&
