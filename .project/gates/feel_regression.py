@@ -217,7 +217,8 @@ def classify_delays(output):
                                  event.get("command_type") == 1 and
                                  aligned and event["time"] >= aligned[0]["time"] and
                                  event.get("desired_x", 0) * direction > 0.1]
-            touch_pending = any(event.get("touch_pending") is True
+            touch_pending = any(event.get("touch_pending_before",
+                                          event.get("touch_pending")) is True
                                 for event in selected)
             response = sample.get("velocity_response_ms")
             raw_response = sample.get("raw_velocity_change_ms")
