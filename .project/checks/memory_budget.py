@@ -119,7 +119,6 @@ def main():
         cases.append(dict(name=label, executions=count, report=str(path.relative_to(output)), sha256=sha(path)))
 
     cached = Path("/tmp/football-review-20260909-tests/_deps/googletest-src")
-    require(cached.is_dir(), "Documented local GoogleTest source is required")
     ordinary = Path("/tmp/football-optimization-native")
     native_targets = ("football_client", "football_server", "football_client_tcp", "football_server_tcp",
                       "engine_runtime_contract", "engine_tcp_contract", "engine_tcp_client_contract", "engine_memory_contract")
@@ -130,10 +129,13 @@ def main():
             ("sanitized", Path("/tmp/football-optimization-query-tests"), Path("/tmp/football-optimization-sanitized"),
              Path("/tmp/football-optimization-memory-asio"), True)):
         mode = "ON" if sanitizer else "OFF"
-        run(["cmake", "-S", "engine/tests", "-B", tests, "-DCMAKE_BUILD_TYPE=Debug", "-DENABLE_PCH=OFF",
-             f"-DENABLE_ASAN={mode}", f"-DENABLE_UBSAN={mode}", "-DENABLE_TSAN=OFF",
-             "-DENABLE_PERFORMANCE_TESTS=OFF", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-             f"-DFETCHCONTENT_SOURCE_DIR_GOOGLETEST={cached}"], label + "-configure-tests")
+        test_configuration = ["cmake", "-S", "engine/tests", "-B", tests,
+                              "-DCMAKE_BUILD_TYPE=Debug", "-DENABLE_PCH=OFF",
+                              f"-DENABLE_ASAN={mode}", f"-DENABLE_UBSAN={mode}", "-DENABLE_TSAN=OFF",
+                              "-DENABLE_PERFORMANCE_TESTS=OFF", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"]
+        if cached.is_dir():
+            test_configuration.append(f"-DFETCHCONTENT_SOURCE_DIR_GOOGLETEST={cached}")
+        run(test_configuration, label + "-configure-tests")
         run(["cmake", "--build", tests, "-j", "1", "--target", *UNIT_TARGETS], label + "-build-tests", timeout=1200)
         for target, minimum in UNIT_TARGETS.items():
             dynamic = run(["readelf", "-d", tests / target], label + "-" + target + "-dependencies")

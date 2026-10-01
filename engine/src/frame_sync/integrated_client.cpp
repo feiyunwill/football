@@ -482,7 +482,7 @@ class BasicIntegratedFrameSyncClient {
 // 2026-09-13: accept existing single-owner buffers and the synchronized window buffer.
 //   StepResult tick_buffered(frame_sync::NativeInputBuffer& buffer) {
   template<class InputBuffer>
-  StepResult tick_buffered(InputBuffer& buffer) {
+  StepResult tick_buffered(InputBuffer& buffer, uint32_t frame_limit = 0) {
     try {
 // 2026-09-13: share publication with the worker; prediction only reads the exact sent value.
 //       if (config_.native_product) {
@@ -513,7 +513,7 @@ class BasicIntegratedFrameSyncClient {
         if (!is_running() || my_slots_.empty()) return StepResult::kWaitForAuthority;
         return tick_with_input_provider([&](frame_sync::frame_id_t frame) {
           return native_publication_.Read(frame,simulation_->confirmed_count());
-        });
+        }, frame_limit);
       }
       return tick_with_input_provider([&](frame_sync::frame_id_t frame) {
         local_input_history_.Confirm(simulation_->confirmed_count());
@@ -589,7 +589,7 @@ class BasicIntegratedFrameSyncClient {
   }
 
   template<class InputProvider>
-  StepResult tick_with_input_provider(InputProvider&& provider) {
+  StepResult tick_with_input_provider(InputProvider&& provider, uint32_t frame_limit = 0) {
     if (!running_) return StepResult::kWaitForAuthority;
     // 2026-09-13: initialize before constructing callbacks owned by reconciliation.
     if (config_.native_product) {
@@ -619,7 +619,8 @@ class BasicIntegratedFrameSyncClient {
     }
     // 2026-09-13: previous Tick(my_input, ...) sampled before authority catchup.
     presentation_->BeginTick(frame_sync::NativeNow());
-    auto tick = simulation_->TickWithInputProvider(provider, my_slots_, adaptive_cap_.GetMaxPredictAhead());
+    auto tick = simulation_->TickWithInputProvider(provider, my_slots_, adaptive_cap_.GetMaxPredictAhead(),
+        frame_limit ? frame_limit : std::numeric_limits<frame_sync::frame_id_t>::max());
     presentation_->CommitTick(frame_sync::NativeNow());
 // 2026-09-13: share simulation progress through the synchronized history boundary.
 //     current_frame_id_ = simulation_->next_frame();

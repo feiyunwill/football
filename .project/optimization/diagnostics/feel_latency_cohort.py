@@ -35,6 +35,7 @@ def main():
     parser.add_argument("--cycles-per-run", type=int, default=6)
     parser.add_argument("--first-seed", type=int, default=42)
     parser.add_argument("--gpu-driver-root", type=Path, required=True)
+    parser.add_argument("--trace-commands", action="store_true")
     parser.add_argument("--build", type=Path, default=Path("/tmp/football-optimization-native"))
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
@@ -48,6 +49,7 @@ def main():
     source_sha = sha(WINDOW)
     reports = []
     samples = []
+    core_sha = None
     try:
         for offset in range(args.runs):
             seed = args.first_seed + offset
@@ -56,6 +58,8 @@ def main():
                     "--seed", str(seed), "--build", str(args.build),
                     "--gpu-driver-root", str(args.gpu_driver_root),
                     "--output", str(directory)]
+            if args.trace_commands:
+                argv.append("--trace-commands")
             log = output / f"seed-{seed}.log"
             with log.open("w") as stream:
                 completed = subprocess.run(argv, cwd=ROOT, stdout=stream,
@@ -65,8 +69,13 @@ def main():
             report = json.loads(report_path.read_text())
             require(report["seed"] == seed and report["source_sha256"] == source_sha and
                     report["actual_product_main"] and report["actual_xtest"] and
-                    report["product_mapped_private_driver"],
+                    report["product_mapped_private_driver"] and
+                    report["product_mapped_engine_core"] and
+                    report["command_trace_enabled"] == args.trace_commands,
                     f"Actual product identity failed in match {seed}")
+            core_sha = core_sha or report["engine_core_sha256"]
+            require(report["engine_core_sha256"] == core_sha,
+                    "Product engine core changed during cohort")
             reports.append({"seed": seed, "path": str(report_path.relative_to(output)),
                             "sha256": sha(report_path),
                             "admitted_count": report["admitted_count"],
@@ -80,6 +89,8 @@ def main():
         report = {"diagnostic_complete": True, "formal_product_acceptance": False,
                   "acceptance_passed": False, "actual_product_main": True,
                   "actual_xtest": True, "render_backend": "private_d3d12",
+                  "engine_core_sha256": core_sha,
+                  "command_trace_enabled": args.trace_commands,
                   "source_sha256": sha(__file__), "window_source_sha256": source_sha,
                   "matches": reports, "total_presses": len(samples),
                   "admitted_count": len(admitted), "response_count": len(responded),

@@ -297,9 +297,11 @@ class BasicEngineSessionServer {
       timer.async_wait([self = this->shared_from_this(), this](boost::system::error_code ec) {
         std::lock_guard lock(mutex);
         if (ec || !running) return;
-        const auto now = std::chrono::steady_clock::now();
         for (auto& client : clients) {
           if (client->disconnected) continue;
+          // Closing an earlier peer can advance credential time; never reuse an
+          // older timestamp to validate a later peer in this same sweep.
+          const auto now = std::chrono::steady_clock::now();
 // 2026-09-14: expire the recovery lease and drain explicit rejections.
 //           if (client->writer.is_closed()) CloseLocked(client);
 // 2026-09-21: reliable UDP must retain terminal data until its transport ACK arrives.

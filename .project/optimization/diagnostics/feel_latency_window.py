@@ -125,7 +125,7 @@ def analyze(output, actions):
                                             if len(responses) >= 20 else None)}
 
 
-def product(output, build, library, cycles, gpu_driver_root, seed):
+def product(output, build, library, cycles, gpu_driver_root, seed, trace_commands):
     trace = output / "trace"
     trace.mkdir()
     tools = Path(os.environ["FOOTBALL_TEST_X11_ROOT"])
@@ -133,8 +133,10 @@ def product(output, build, library, cycles, gpu_driver_root, seed):
                    LD_PRELOAD=str(library), FOOTBALL_NATIVE_TRACE=str(trace),
                    GFOOTBALL_DATA_DIR=str(ROOT / "engine/data"))
     for key in ("LIBGL_ALWAYS_SOFTWARE", "GALLIUM_DRIVER", "MESA_LOADER_DRIVER_OVERRIDE",
-                "LIBGL_DRIVERS_PATH"):
+                "LIBGL_DRIVERS_PATH", "FOOTBALL_FEEL_COMMAND_TRACE"):
         runtime.pop(key, None)
+    if trace_commands:
+        runtime["FOOTBALL_FEEL_COMMAND_TRACE"] = "1"
     driver = None
     if gpu_driver_root:
         driver_lib = gpu_driver_root / "lib"
@@ -167,8 +169,11 @@ def product(output, build, library, cycles, gpu_driver_root, seed):
             time.sleep(.02)
         keyboard = Keyboard()
         keyboard.focus(ready["xid"])
-        mapped_driver = (str(driver.resolve()) in (Path(f"/proc/{client.pid}/maps").read_text())
-                         if driver else False)
+        mappings = Path(f"/proc/{client.pid}/maps").read_text()
+        engine_binary = build / "libfootball_engine.so"
+        mapped_engine = str(engine_binary.resolve()) in mappings
+        require(mapped_engine, "Actual product did not load the measured engine core")
+        mapped_driver = str(driver.resolve()) in mappings if driver else False
         require(not driver or mapped_driver, "Actual product did not load the requested GPU driver")
         time.sleep(.25)
         for index in range(cycles):
@@ -205,8 +210,11 @@ def product(output, build, library, cycles, gpu_driver_root, seed):
                       keyboard_source_sha256=sha(CHECKS / "native_input_window_cases.py"),
                       trace_source_sha256=sha(ROOT / "engine/tests/engine_native_window_trace.cpp"),
                       product_sha256=sha(build / "bin/standalone_game"),
+                      engine_core_sha256=sha(engine_binary),
+                      product_mapped_engine_core=mapped_engine,
                       trace_library_sha256=sha(library), cycles=cycles,
                       seed=seed,
+                      command_trace_enabled=trace_commands,
                       render_backend="private_d3d12" if driver else "llvmpipe",
                       driver_sha256=sha(driver) if driver else None,
                       product_mapped_private_driver=mapped_driver,
@@ -230,7 +238,8 @@ def product(output, build, library, cycles, gpu_driver_root, seed):
         log.close()
 
 
-def private_x11(output, build, library, cycles, parent_namespace, gpu_driver_root, seed):
+def private_x11(output, build, library, cycles, parent_namespace, gpu_driver_root, seed,
+                trace_commands):
     require(os.readlink("/proc/self/ns/mnt") != parent_namespace,
             "A private mount namespace is required")
     tools = Path(os.environ["FOOTBALL_TEST_X11_ROOT"])
@@ -272,7 +281,7 @@ def private_x11(output, build, library, cycles, parent_namespace, gpu_driver_roo
             require(reply.strip().isdigit() and server.poll() is None, "Xvfb startup failed")
             env["DISPLAY"] = ":" + reply.strip().decode()
             os.environ.update(env)
-            product(output, build, library, cycles, gpu_driver_root, seed)
+            product(output, build, library, cycles, gpu_driver_root, seed, trace_commands)
     finally:
         os.close(read_fd)
         if write_fd != -1:
@@ -293,6 +302,7 @@ def main():
     parser.add_argument("--cycles", type=int, default=30)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--gpu-driver-root", type=Path)
+    parser.add_argument("--trace-commands", action="store_true")
     parser.add_argument("--child", action="store_true")
     parser.add_argument("--parent-namespace")
     args = parser.parse_args()
@@ -306,7 +316,7 @@ def main():
     if args.child:
         private_x11(output, build, library, args.cycles, args.parent_namespace,
                     args.gpu_driver_root.resolve() if args.gpu_driver_root else None,
-                    args.seed)
+                    args.seed, args.trace_commands)
         return
     require(output.is_relative_to(ROOT / ".project/optimization/benchmarks") and
             not output.exists(), "Use a fresh workspace evidence directory")
@@ -323,6 +333,8 @@ def main():
             "--seed", str(args.seed)]
     if args.gpu_driver_root:
         argv += ["--gpu-driver-root", str(args.gpu_driver_root.resolve())]
+    if args.trace_commands:
+        argv.append("--trace-commands")
     with (output / "probe.log").open("w") as log:
         done = subprocess.run(argv, env=environment, stdout=log,
                               stderr=subprocess.STDOUT, timeout=180)

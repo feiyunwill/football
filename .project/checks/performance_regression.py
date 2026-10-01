@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Verify native long-match trajectories, step budgets and stable process RSS."""
 import argparse
+import gzip
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -18,6 +20,7 @@ from soak_analysis import assess
 
 REFERENCE = 'native-soak-20260910-a/evidence/report.json'
 REFERENCE_SHA = '0c49ddcb78c44208a2d5ea488d2fea7deee920ea890509706cd847b899f56f90'
+REFERENCE_MANIFEST = '.project/optimization/baselines/soak_v2.json'
 SEEDS = (42, 43)
 COMMAND_LAUNCHER = Path('/usr/bin/env')
 
@@ -41,24 +44,68 @@ def source_manifest(program):
 
 
 def reference_runs():
-    """Use prior successful native trajectories, retaining their RSS failures."""
-    path = ROOT / '.project/optimization/benchmarks' / REFERENCE
-    require(benchmark.file_hash(path) == REFERENCE_SHA, 'Long-match reference changed')
-    report = json.loads(path.read_text())
-    runs, files = {}, {str(path): REFERENCE_SHA}
-    for row in report['runs']:
-        seed = row['seed']
-        require(seed in SEEDS and seed not in runs and row['returncode'] == 0,
-                'Missing, repeated or failed reference process')
-        log = path.parent / row['log']
-        require(log.resolve().is_relative_to(path.parent), 'Reference log escaped its directory')
-        require(benchmark.file_hash(log) == row['log_sha256'], 'Reference raw samples changed')
-        values = [json.loads(line) for line in log.read_text().splitlines() if line.startswith('{')]
-        require(len(values) == 1, 'Ambiguous reference native report')
-        benchmark.validate_run(values[0], seed, 1000, 36000, values[0]['cpu'])
-        runs[seed] = values[0]
-        files[str(log)] = row['log_sha256']
-    require(set(runs) == set(SEEDS), 'Incomplete reference seed coverage')
+    """Verify the archived pre-optimization build and its semantic-aligned runs."""
+    def source_path(relative):
+        path = (ROOT / relative).resolve()
+        require(path.is_relative_to(ROOT.resolve()), 'Long-match reference escapes checkout')
+        return path
+
+    manifest_path = source_path(REFERENCE_MANIFEST)
+    manifest = json.loads(manifest_path.read_text())
+    require(manifest['format'] == 2 and manifest['id'] ==
+            'soak-pre-ecs-query-manual-turn-20261001', 'Wrong long-match reference version')
+    require(manifest['measurement_contract'] == {
+        'seeds': list(SEEDS), 'warmup_frames': 1000, 'measured_frames': 36000,
+        'logical_p99_ns_below': 50000000, 'rss_growth_bytes_max': 4194304,
+        'rss_quarter_drift_bytes_max': 262144, 'rss_late_plateau_bytes_max': 262144,
+    }, 'Long-match acceptance contract changed')
+    original = source_path('.project/optimization/benchmarks/' + REFERENCE)
+    require(benchmark.file_hash(original) == REFERENCE_SHA ==
+            manifest['derived_from_reference_sha256'], 'Original long-match reference changed')
+    patch = source_path(manifest['semantic_patch'])
+    require(benchmark.file_hash(patch) == manifest['semantic_patch_sha256'],
+            'Long-match semantic patch changed')
+    ecs = json.loads(source_path('.project/optimization/baselines/ecs_v3.json').read_text())
+    require(manifest['source_commit'] == ecs['source_commit'] and
+            manifest['source_identity'] == ecs['source_identity'] and
+            manifest['semantic_patch_sha256'] == ecs['semantic_patch_sha256'],
+            'Long-match reference source differs from ECS reference')
+    files = {str(manifest_path): benchmark.file_hash(manifest_path),
+             str(original): REFERENCE_SHA, str(patch): manifest['semantic_patch_sha256']}
+    for role in ('engine', 'benchmark'):
+        entry = manifest['binaries'][role]
+        path = source_path(entry['path'])
+        require(benchmark.file_hash(path) == entry['compressed_sha256'],
+                f'Archived long-match {role} changed')
+        binary = gzip.decompress(path.read_bytes())
+        require(len(binary) == entry['bytes'] and
+                hashlib.sha256(binary).hexdigest() == entry['sha256'],
+                f'Archived long-match {role} decompressed differently')
+        files[str(path)] = entry['compressed_sha256']
+    require(manifest['binaries']['engine'] == ecs['binaries']['engine'],
+            'Long-match reference engine differs from ECS reference')
+    artifact_path = source_path(manifest['reference_artifact'])
+    require(benchmark.file_hash(artifact_path) == manifest['artifact_sha256'],
+            'Long-match raw reference changed')
+    artifact_bytes = gzip.decompress(artifact_path.read_bytes())
+    require(hashlib.sha256(artifact_bytes).hexdigest() ==
+            manifest['artifact_uncompressed_sha256'], 'Long-match raw reference decompressed differently')
+    artifact = json.loads(artifact_bytes)
+    require(artifact['source_identity'] == manifest['source_identity'] and
+            artifact['binaries'] == {role: manifest['binaries'][role]['sha256']
+                                     for role in ('engine', 'benchmark')},
+            'Long-match raw reference identity changed')
+    runs = {}
+    for result in artifact['runs']:
+        seed = result['seed']
+        require(seed in SEEDS and seed not in runs and result.get('passed') is True and
+                result.get('measurement_storage_prefaulted') is True and
+                result.get('workload') == 'headless-11v11-long-v1',
+                'Missing, repeated or invalid long-match reference process')
+        benchmark.validate_run(result, seed, 1000, 36000, result['cpu'])
+        runs[seed] = result
+    require(set(runs) == set(SEEDS), 'Incomplete long-match reference seed coverage')
+    files[str(artifact_path)] = manifest['artifact_sha256']
     return runs, files
 
 

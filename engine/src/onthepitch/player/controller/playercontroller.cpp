@@ -722,6 +722,13 @@ void PlayerController::_MovementCommand(PlayerCommandQueue &commandQueue,
   }
 
   {
+    // A strong manual turn must not be cancelled by ball-assist movement.
+    // Explicit pressure and buffered touch actions still request the magnet.
+    if (!forceMagnet && player->ExternalControllerActive() &&
+        manualVelocityFloat >= idleDribbleSwitch &&
+        manualDirection.GetDotProduct(autoDirection) < -0.866f)
+      autoBias = 0.0f;
+
     Vector3 autoMovement = autoDirection * autoVelocityFloat;
     Vector3 manualMovement = manualDirection * manualVelocityFloat;
     Vector3 resultingMovement = manualMovement * (1.0 - autoBias) + autoMovement * autoBias;

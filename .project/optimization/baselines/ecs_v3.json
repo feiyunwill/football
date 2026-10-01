@@ -1,0 +1,43 @@
+{
+  "format": 3,
+  "id": "ecs-post-cache-pre-selection-scratch-manual-turn-20261001",
+  "source_commit": "739d767d84c788b93481522e7106298b6d818efd",
+  "semantic_patch": ".project/optimization/baselines/ecs_v3_manual_turn.patch",
+  "semantic_patch_sha256": "c731ab9eec57568ac54a89462e558ed6a317a70403098285021d115ee5d15ac7",
+  "source_identity": "7375145bf92fd03789ff8489c9e51881ca366544c7ea5bccfbe9d03759ecc514",
+  "source_artifact": ".project/optimization/evidence/ecs_query_manual_turn_reference_20261001.json.gz",
+  "artifact_sha256": "0b8babd11de1540e31d02ab3f24f4f935e96fd90983b1fb58366404b713c96f0",
+  "artifact_uncompressed_sha256": "94a320dcc19ab678f14501e406b57812690cbdbfde91599b8bd716a45ca6916d",
+  "measurement_contract": {
+    "seeds": [
+      42,
+      43
+    ],
+    "warmup_steps": 200,
+    "steady_steps": 2000,
+    "process_pairs_per_seed": 15,
+    "cpu_bootstrap_95_upper_below": 1.0,
+    "wall_geometric_ratio_below": 1.0,
+    "median_p99_ratio_max": 1.05,
+    "full_cache_allocations_each": 0,
+    "frame_allocation_count_must_decrease": true,
+    "frame_allocation_bytes_must_decrease": true
+  },
+  "binaries": {
+    "engine": {
+      "path": ".project/optimization/baselines/ecs_v3_engine.so.gz",
+      "compressed_sha256": "4f59fb212fe7c0b6632ea94f4ccfb58c2df0fc5f184a5f1fa26c4383fe38b2aa",
+      "sha256": "c5bcac0e569d2f4ab09fc670f8e3ea59d37f4b78954ab011a58e9ca5f5ced689",
+      "compressed_bytes": 1156169,
+      "bytes": 3079112
+    },
+    "benchmark": {
+      "path": ".project/optimization/baselines/ecs_v3_match_benchmark.gz",
+      "compressed_sha256": "07b659706333c85ddd05a9b936f01ebad19266559e327e6b9763fab173114586",
+      "sha256": "8317094db9866a14ac8b51f0c3b9fd2e5ca1871de839cf74c038439d11c8099b",
+      "compressed_bytes": 88720,
+      "bytes": 205504
+    }
+  },
+  "derived_from_baseline_v2_sha256": "9acd57793a97447f9944dbc41ff3a94593a74098c0b58c2bba5d5ef6dd54bb50"
+}

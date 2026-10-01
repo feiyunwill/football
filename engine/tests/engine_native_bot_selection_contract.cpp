@@ -10,7 +10,10 @@ unsigned assertions=0,unavailable=0,recovered=0;
 void Require(bool v,const char*m){++assertions;if(!v)throw std::runtime_error(m);}
 using Recorded = std::tuple<float,float,unsigned,int,float,float>;
 const Recorded tail[]={
-#include "fixtures/native_bot_transition_tail_20260913.inc"
+#include "fixtures/native_bot_transition_tail_20261001.inc"
+};
+const std::uint64_t semantic_hashes[]={
+#include "fixtures/native_bot_transition_hashes_20261001.inc"
 };
 const char replay_bytes[] =
 #include "fixtures/native_bot_transition_replay_20260913.inc"
@@ -22,13 +25,14 @@ int main(int, char**){
   const std::string bytes(replay_bytes,sizeof(replay_bytes)-1);
   fs::NativeReplayPlayer replay;Require(replay.LoadReplay(bytes),"Native replay rejected");
   Require(replay.GetTotalFrames()==512,"Actual prefix changed");
+  Require(std::size(semantic_hashes)==replay.GetTotalFrames(),"Semantic prefix oracle incomplete");
   Require(replay.contract()==fs::NativeMatchContract(42,1,1),"Native failure scenario changed");
   GameEnv env;env.game_config.render=false;env.game_config.physics_steps_per_frame=fs::NativeMatchContract::kPhysicsSteps;
   auto scenario=fs::MakeNativeMatchScenario(replay.contract());env.start_game(*scenario);env.state=game_running;
   auto engine=fs::MakeGameEnvCallbacks(&env);auto observe=fs::MakeGameEnvBotObserver(&env,1,1);
   for(unsigned i=0;i<replay.GetTotalFrames();++i){
    auto frame=replay.GetFrameAt(i);Require(frame.has_value(),"Prefix frame missing");
-   engine.step_frame(frame->inputs);Require(engine.compute_hash()==frame->state_hash,"Saved authority diverged");
+   engine.step_frame(frame->inputs);Require(engine.compute_hash()==semantic_hashes[i],"Semantic authority diverged");
   }
   fs::BotTakeoverManager bots(fs::NativeMatchContract::kHz);bots.Takeover(0,0);
   for(const auto&[x,y,buttons,owned,px,py]:tail){

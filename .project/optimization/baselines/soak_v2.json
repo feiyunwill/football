@@ -1,0 +1,40 @@
+{
+  "format": 2,
+  "id": "soak-pre-ecs-query-manual-turn-20261001",
+  "source_commit": "739d767d84c788b93481522e7106298b6d818efd",
+  "semantic_patch": ".project/optimization/baselines/ecs_v3_manual_turn.patch",
+  "semantic_patch_sha256": "c731ab9eec57568ac54a89462e558ed6a317a70403098285021d115ee5d15ac7",
+  "source_identity": "7375145bf92fd03789ff8489c9e51881ca366544c7ea5bccfbe9d03759ecc514",
+  "reference_artifact": ".project/optimization/baselines/soak_v2_reference.json.gz",
+  "artifact_sha256": "9c17071c95362845daa9c420d24271b3ae640f46361254f183a9cb46a94d591d",
+  "artifact_uncompressed_sha256": "0b6adc694c2035435fd5bc121951613fa41d0fb1753ad54354f776f5ba38d2a3",
+  "measurement_contract": {
+    "seeds": [
+      42,
+      43
+    ],
+    "warmup_frames": 1000,
+    "measured_frames": 36000,
+    "logical_p99_ns_below": 50000000,
+    "rss_growth_bytes_max": 4194304,
+    "rss_quarter_drift_bytes_max": 262144,
+    "rss_late_plateau_bytes_max": 262144
+  },
+  "binaries": {
+    "engine": {
+      "path": ".project/optimization/baselines/ecs_v3_engine.so.gz",
+      "compressed_sha256": "4f59fb212fe7c0b6632ea94f4ccfb58c2df0fc5f184a5f1fa26c4383fe38b2aa",
+      "sha256": "c5bcac0e569d2f4ab09fc670f8e3ea59d37f4b78954ab011a58e9ca5f5ced689",
+      "compressed_bytes": 1156169,
+      "bytes": 3079112
+    },
+    "benchmark": {
+      "path": ".project/optimization/baselines/soak_v2_benchmark.gz",
+      "compressed_sha256": "1dea510145e189168e307d4e9431d43f4ed37f5bd7c0f3d04631473c111bda40",
+      "sha256": "39fd6ad932508c0dd795651588838a2adf674a43991ad752d9ea012f4ae5f5e7",
+      "compressed_bytes": 90614,
+      "bytes": 209624
+    }
+  },
+  "derived_from_reference_sha256": "0c49ddcb78c44208a2d5ea488d2fea7deee920ea890509706cd847b899f56f90"
+}

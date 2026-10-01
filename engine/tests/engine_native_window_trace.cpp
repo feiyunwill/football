@@ -8,6 +8,8 @@
 #include "main.hpp"
 #include "frame_sync/protocol.hpp"
 #include "frame_sync/input_codec.hpp"
+#include "onthepitch/player/controller/humancontroller.hpp"
+#include "onthepitch/player/player.hpp"
 #include <SDL.h>
 #include <SDL_syswm.h>
 #include <dlfcn.h>
@@ -145,4 +147,67 @@ extern "C" void ObserveResume(GameEnv* env) {
   static const auto next = Next<void(*)(GameEnv*)>("_ZN7GameEnv6resumeEv");
   next(env);
   std::fprintf(Log(), "{\"kind\":\"resume\",\"time\":%lld}\n", Now()); std::fflush(Log());
+}
+
+extern "C" void ObserveHumanCommand(HumanController*, PlayerCommandQueue&)
+    asm("_ZN15HumanController14RequestCommandERSt6vectorI13PlayerCommandSaIS1_EE");
+extern "C" void ObserveHumanCommand(HumanController* controller,
+                                    PlayerCommandQueue& commands) {
+  static const auto next = Next<void(*)(HumanController*, PlayerCommandQueue&)>(
+      "_ZN15HumanController14RequestCommandERSt6vectorI13PlayerCommandSaIS1_EE");
+  if (!std::getenv("FOOTBALL_FEEL_COMMAND_TRACE")) {
+    next(controller, commands);
+    return;
+  }
+  const Vector3 hid = controller->GetHIDevice()->GetDirection();
+  const auto before = commands.size();
+  next(controller, commands);
+  const auto* player = controller->CastPlayer();
+  const PlayerCommand* movement = nullptr;
+  for (size_t i = before; i < commands.size(); ++i)
+    if (commands[i].desiredFunctionType == e_FunctionType_Movement)
+      movement = &commands[i];
+  const auto position = player->GetPosition();
+  const auto actual = player->GetMovement();
+  std::fprintf(Log(),
+      "{\"kind\":\"human_command\",\"time\":%lld,\"player\":\"%p\",\"player_x\":%.9g,\"player_y\":%.9g,"
+      "\"hid_x\":%.9g,\"hid_y\":%.9g,\"actual_vx\":%.9g,\"actual_vy\":%.9g,"
+      "\"movement\":%s,\"desired_x\":%.9g,\"desired_y\":%.9g,\"desired_speed\":%.9g}\n",
+      Now(), static_cast<const void*>(player), position.coords[0], position.coords[1],
+      hid.coords[0], hid.coords[1],
+      actual.coords[0], actual.coords[1], movement ? "true" : "false",
+      movement ? movement->desiredDirection.coords[0] : 0,
+      movement ? movement->desiredDirection.coords[1] : 0,
+      movement ? movement->desiredVelocityFloat : 0);
+}
+
+extern "C" bool ObserveAnimSelection(Humanoid*, const PlayerCommand&,
+                                      e_InterruptAnim, bool)
+    asm("_ZN8Humanoid10SelectAnimERK13PlayerCommand15e_InterruptAnimb");
+extern "C" bool ObserveAnimSelection(Humanoid* humanoid,
+                                      const PlayerCommand& command,
+                                      e_InterruptAnim interrupt, bool prefer_pass) {
+  static const auto next = Next<bool(*)(Humanoid*, const PlayerCommand&,
+                                        e_InterruptAnim, bool)>(
+      "_ZN8Humanoid10SelectAnimERK13PlayerCommand15e_InterruptAnimb");
+  if (!std::getenv("FOOTBALL_FEEL_COMMAND_TRACE"))
+    return next(humanoid, command, interrupt, prefer_pass);
+  const int before = humanoid->GetCurrentFrame();
+  const auto position = humanoid->CastPlayer()->GetPosition();
+  const bool selected = next(humanoid, command, interrupt, prefer_pass);
+  std::fprintf(Log(),
+      "{\"kind\":\"anim_select\",\"time\":%lld,\"player\":\"%p\",\"player_x\":%.9g,\"player_y\":%.9g,"
+      "\"interrupt\":%d,\"current_type\":%d,\"has_possession\":%s,"
+      "\"touch_pending\":%s,\"touch_frame\":%d,"
+      "\"command_type\":%d,\"desired_x\":%.9g,"
+      "\"desired_speed\":%.9g,\"accepted\":%s,\"frame_before\":%d,\"frame_after\":%d}\n",
+      Now(), static_cast<const void*>(humanoid->CastPlayer()), position.coords[0],
+      position.coords[1], static_cast<int>(interrupt),
+      static_cast<int>(humanoid->CastPlayer()->GetCurrentFunctionType()),
+      humanoid->CastPlayer()->HasPossession() ? "true" : "false",
+      humanoid->TouchPending() ? "true" : "false", humanoid->GetTouchFrame(),
+      static_cast<int>(command.desiredFunctionType), command.desiredDirection.coords[0],
+      command.desiredVelocityFloat, selected ? "true" : "false", before,
+      humanoid->GetCurrentFrame());
+  return selected;
 }

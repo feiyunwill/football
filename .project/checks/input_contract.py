@@ -3,7 +3,7 @@
 No old stage receipt substitutes for execution. No device latency acceptance.
 """
 from pathlib import Path
-import argparse,json,os,platform,signal,sys,time,shlex
+import argparse,gzip,hashlib,json,os,platform,signal,sys,time,shlex,subprocess,tempfile
 # 2026-09-14: both build modes must contain the actual product entry points.
 # from native_boundary import ROOT,require
 from native_boundary import ROOT,TARGETS,require
@@ -24,7 +24,7 @@ CONTRACTS={
  # 2026-09-13: slow authority lead and real unavailable-player AI recovery are mandatory.
  #     'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6}),
  'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6,'resync_frames':572,'resync_max_lead':2}),
- 'engine_native_bot_selection_contract':(1262,{'prefix_frames':512,'recorded_tail_frames':57,'unavailable_frames':30,'recovered_frames':1,'actual_gameenv':True}),
+ 'engine_native_bot_selection_contract':(1365,{'prefix_frames':512,'recorded_tail_frames':91,'unavailable_frames':30,'recovered_frames':1,'actual_gameenv':True}),
  'engine_native_match_contract':(44000,{'clock_events':10000,'engine_frames':600,'actual_gameenv':True,'native_contract':1}),
  # 2026-09-13: shared history and joined transport ownership are mandatory input contracts.
  'engine_native_transport_pump_contract':(20333,{'ledger_frames':4000,'concurrent_frames':128,'joined_lifetimes':64}),
@@ -40,6 +40,60 @@ CONTRACTS={
  'engine_server_input_window_contract':(552018,{'frames':18000,'fixed_bytes':3728}),
  'engine_native_input_gameenv_contract':(3901,{'actual_gameenv':True,'confirmed_frames':82}),
 }
+
+def verify_bot_selection_reference():
+    """Replay the archived independent semantic oracle before trusting its fixtures."""
+    base=ROOT/'.project/optimization/baselines'
+    manifest=json.loads((base/'bot_selection_v2.json').read_text())
+    ecs=json.loads((base/'ecs_v3.json').read_text())
+    require(manifest['format']==2 and manifest['id']=='bot-selection-manual-turn-semantic-20261001' and
+            manifest['source_commit']==ecs['source_commit'] and
+            manifest['semantic_patch_sha256']==ecs['semantic_patch_sha256'] and
+            manifest['engine_sha256']==ecs['binaries']['engine']['sha256'],
+            'Bot-selection semantic reference source changed')
+    require(benchmark.file_hash(ROOT/'.project/optimization/baselines/ecs_v3_manual_turn.patch')==
+            manifest['semantic_patch_sha256'], 'Bot-selection semantic patch changed')
+    for relative,expected in (manifest['source_fixture_sha256'] |
+                              manifest['aligned_fixture_sha256']).items():
+        require(benchmark.file_hash(ROOT/relative)==expected,
+                'Bot-selection replay or aligned fixture changed: '+relative)
+    patch=manifest['oracle_patch']
+    require(benchmark.file_hash(ROOT/patch['path'])==patch['sha256'],
+            'Bot-selection oracle source changed')
+    def archived(entry):
+        path=(ROOT/entry['path']).resolve()
+        require(path.is_relative_to(ROOT), 'Bot-selection archive escapes checkout')
+        require(benchmark.file_hash(path)==entry['compressed_sha256'],
+                'Bot-selection compressed archive changed')
+        raw=gzip.decompress(path.read_bytes())
+        require(hashlib.sha256(raw).hexdigest()==entry['sha256'],
+                'Bot-selection archive decompressed differently')
+        return raw
+    engine=archived(ecs['binaries']['engine'])
+    binary=archived(manifest['oracle_binary'])
+    expected=archived(manifest['oracle_output'])
+    require(len(expected.splitlines())==manifest['oracle_output']['lines']==603 and
+            manifest['contract']=={'prefix_frames':512,'original_tail_frames':57,
+                                    'neutral_tail_frames':34,'aligned_tail_frames':91,
+                                    'unavailable_frames':30,'recovered_frames':1},
+            'Bot-selection reference coverage changed')
+    with tempfile.TemporaryDirectory(prefix='football-bot-semantic-oracle-') as directory:
+        temporary=Path(directory)
+        (temporary/'libfootball_engine.so').write_bytes(engine)
+        executable=temporary/'engine_native_bot_selection_contract'
+        executable.write_bytes(binary)
+        executable.chmod(0o755)
+        environment=dict(os.environ,LD_LIBRARY_PATH=str(temporary),
+                         GFOOTBALL_DATA_DIR=str(ROOT/'engine/data'))
+        environment.pop('LD_PRELOAD',None)
+        completed=subprocess.run([str(executable)],cwd=ROOT,env=environment,
+                                 stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=30)
+        require(completed.returncode==0 and completed.stdout==expected,
+                'Archived bot-selection oracle no longer reproduces')
+    return {'manifest_sha256':benchmark.file_hash(base/'bot_selection_v2.json'),
+            'oracle_output_sha256':manifest['oracle_output']['sha256'],
+            'prefix_frames':512,'aligned_tail_frames':91}
+
 def observation():
     socket=Path('/tmp/.X11-unix')
     return dict(namespace=os.readlink('/proc/self/ns/mnt'),
@@ -61,6 +115,10 @@ def main():
     sources=benchmark.source_manifest()
     for path in (ROOT/'engine/tests').glob('engine_native_*'):
         sources[path.relative_to(ROOT).as_posix()]=benchmark.file_hash(path)
+    for path in [*(ROOT/'.project/optimization/baselines').glob('bot_selection_v2*'),
+                 ROOT/'.project/reports/optimization-bot-selection-semantic-reference-2026-10-01.md']:
+        sources[path.relative_to(ROOT).as_posix()]=benchmark.file_hash(path)
+    bot_reference=verify_bot_selection_reference()
     fixture=ROOT/'engine/tests/fixtures/frame_simulation_before_input_20260913.inc'
     require(benchmark.file_hash(fixture)=='78adff3d69ab0d8a133a545495aeeec0a04d9a8194ee90e80b6f36b929d1f590',
             'Frozen pre-provider algorithm changed')
@@ -228,6 +286,7 @@ def main():
                    for p in output.rglob('*') if p.is_file()}
         assertions=sum(row['assertions'] for row in results.values())
         report=dict(passed=True,skipped=0,assertions=assertions,sources=sources,binaries=binaries,
+                    bot_selection_reference=bot_reference,
                     dependencies=dependencies,artifacts=artifacts,results=results,windows=windows,
                     actual_gameenv=True,actual_x11=True,actual_xtest=True,actual_native_mains=True,
                     latency_acceptance=False,scope='Current shared Python/native input, real device sampler, '

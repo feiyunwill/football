@@ -113,7 +113,7 @@ int RunNativeClient(GameEnv& env, Client& client, const MultiplayerConfig& confi
 // 2026-09-13: immediately process another bounded authority batch after slow rendering.
 //     if (clock.LogicDue(NativeNow())) {
     if (clock.LogicDue(NativeNow()) || client.has_pending_authority()) {
-      client.tick_buffered(window.buffer());
+      client.tick_buffered(window.buffer(), frame_limit);
       client.poll();  // publish this tick's enqueued input without waiting for another display tick
       if (!client.is_running()) break;
       if (frame_limit && client.confirmed_count() >= frame_limit) break;

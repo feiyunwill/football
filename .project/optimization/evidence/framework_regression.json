@@ -1,17 +1,17 @@
 {
   "check": "framework_regression",
-  "fingerprint": "158a4aad54150abf9ab4a3ed85bb53a8966cb3427c0f356ef43fa588b9d83a5f",
+  "fingerprint": "fd964c1410a667bfd1554c932c32e29540201c80a688944964f1e11173813bde",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1790602585.254289,
-  "duration_seconds": 218.344,
+  "started": 1790812141.741639,
+  "duration_seconds": 225.158,
   "argv": [
     "python3",
     ".project/checks/framework_regression.py",
     "--tests-build",
     "/tmp/football-review-20260909-tests"
   ],
-  "log": "framework_regression-1790602585254309645.log",
-  "log_sha256": "4df40893c4ea32f0d160f602f9af30b32ca966191a129b3a23ad7703250350f6"
+  "log": "framework_regression-1790812141741669966.log",
+  "log_sha256": "739786bc8eb4010611e781a116a5ed11d3c8ce869ca1a0f813886cf9e9b80de3"
 }

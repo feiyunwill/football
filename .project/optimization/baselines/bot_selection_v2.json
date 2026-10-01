@@ -1,0 +1,38 @@
+{
+  "format": 2,
+  "id": "bot-selection-manual-turn-semantic-20261001",
+  "source_commit": "739d767d84c788b93481522e7106298b6d818efd",
+  "semantic_patch_sha256": "c731ab9eec57568ac54a89462e558ed6a317a70403098285021d115ee5d15ac7",
+  "engine_sha256": "c5bcac0e569d2f4ab09fc670f8e3ea59d37f4b78954ab011a58e9ca5f5ced689",
+  "oracle_patch": {
+    "path": ".project/optimization/baselines/bot_selection_v2_oracle.patch",
+    "sha256": "3d6a7bf5372b4ce5d575209d5afb651047a645b9c8713b1aaaa1fcbe17e891b9"
+  },
+  "oracle_output": {
+    "path": ".project/optimization/baselines/bot_selection_v2_oracle.txt.gz",
+    "compressed_sha256": "86760f8189ffe03a4e90af8dc1d2cca97b2b4dccefddf6460b45cc61077a3897",
+    "sha256": "706c3b403a800543e97ff5df8a94b9c9abb7528d91c57b4634ef051d2a9bf613",
+    "lines": 603
+  },
+  "oracle_binary": {
+    "path": ".project/optimization/baselines/bot_selection_v2_binary.gz",
+    "compressed_sha256": "f15a66fb7bb16f424be07781fae049c7943a556364aab6fbb0fca84dff2ec28c",
+    "sha256": "19d0c929c99b2aae937188b27dcdd0a7457346a20008ce84ac75dd95cffa9d47"
+  },
+  "source_fixture_sha256": {
+    "engine/tests/fixtures/native_bot_transition_replay_20260913.inc": "96427ecc517437c2636a45b122b4b7f4427c9b37529d05cc9ac91839530e857a",
+    "engine/tests/fixtures/native_bot_transition_tail_20260913.inc": "068a204b274a1738818587c1d1864b7e8fe5403f7ab3a193a2836d09befe30ed"
+  },
+  "aligned_fixture_sha256": {
+    "engine/tests/fixtures/native_bot_transition_hashes_20261001.inc": "285960d3733dae4ad0e94957cdf6a9c46194567ea47c004ccd5e7e64de3e1ad2",
+    "engine/tests/fixtures/native_bot_transition_tail_20261001.inc": "38b3d38d97badfc502549340da00be83566af296e6ff5136df4982cb23244239"
+  },
+  "contract": {
+    "prefix_frames": 512,
+    "original_tail_frames": 57,
+    "neutral_tail_frames": 34,
+    "aligned_tail_frames": 91,
+    "unavailable_frames": 30,
+    "recovered_frames": 1
+  }
+}

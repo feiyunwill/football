@@ -1335,7 +1335,9 @@
         ".project/tests/ecs_performance_test.py",
         ".project/optimization/ecs-performance.md",
         ".project/optimization/baselines/ecs_v2*",
-        ".project/optimization/evidence/ecs_query_legacy_reference_20260928_current_match.json.gz"
+        ".project/optimization/baselines/ecs_v3*",
+        ".project/optimization/evidence/ecs_query_legacy_reference_20260928_current_match.json.gz",
+        ".project/optimization/evidence/ecs_query_manual_turn_reference_20261001.json.gz"
       ],
       "tools": [
         "python3",
@@ -1491,7 +1493,13 @@
         ".project/tests/soak_analysis_test.py",
         ".project/tests/soak_command_test.py",
         ".project/optimization/benchmarks/native-soak-20260910-a/evidence/report.json",
-        ".project/optimization/benchmarks/native-soak-20260910-a/evidence/seed-*.log"
+        ".project/optimization/benchmarks/native-soak-20260910-a/evidence/seed-*.log",
+        ".project/optimization/baselines/soak_v2.json",
+        ".project/optimization/baselines/soak_v2_benchmark.gz",
+        ".project/optimization/baselines/soak_v2_reference.json.gz",
+        ".project/optimization/baselines/ecs_v3.json",
+        ".project/optimization/baselines/ecs_v3_engine.so.gz",
+        ".project/optimization/baselines/ecs_v3_manual_turn.patch"
       ],
       "tools": [
         "python3",
@@ -1552,7 +1560,9 @@
         "gfootball/frame_sync/*.py",
         "gfootball/__init__.py",
         ".project/checks/*.py",
-        ".project/checks/requirements.txt"
+        ".project/checks/requirements.txt",
+        ".project/optimization/baselines/bot_selection_v2*",
+        ".project/reports/optimization-bot-selection-semantic-reference-2026-10-01.md"
       ],
       "tools": [
         "python3",

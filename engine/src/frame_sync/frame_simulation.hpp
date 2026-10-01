@@ -5,6 +5,7 @@
 
 #include "frame_sync/engine_integration.hpp"
 #include <algorithm>
+#include <limits>
 #include <map>
 #include <optional>
 #include <stdexcept>
@@ -87,11 +88,13 @@ class FrameSimulation {
   //   TickResult result;
   template<class InputProvider>
   TickResult TickWithInputProvider(InputProvider&& provide, std::span<const uint16_t> local_slots,
-                                  int max_predict = MAX_PREDICT_AHEAD_FRAMES) {
+                                   int max_predict = MAX_PREDICT_AHEAD_FRAMES,
+                                   frame_id_t confirmation_limit = std::numeric_limits<frame_id_t>::max()) {
     if (providing_input_) throw std::logic_error("Input provider must not reenter simulation");
     TickResult result;
     // Authority must always be consumed, including when prediction is suspended.
     for (int count = 0; count < kMaxCatchupFramesPerTick; ++count) {
+      if (confirmed_count_ >= confirmation_limit) break;
       auto incoming = pending_.find(confirmed_count_);
       if (incoming == pending_.end()) break;
       const auto frame = confirmed_count_;

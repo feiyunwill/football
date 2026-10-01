@@ -73,6 +73,17 @@ TEST(TCPFrameServer, FullConnectionsRejectAndRecoverBeforeMatchStarts) {
   Harness h;
   auto first = h.Connect(), second = h.Connect();
   ASSERT_TRUE(Until([&] { return h.server.stats().connections == 2; }));
+  std::vector<uint8_t> first_handshake, second_handshake;
+  ASSERT_TRUE(Read(*first, first_handshake, 14));
+  ASSERT_TRUE(Read(*second, second_handshake, 14));
+  ASSERT_EQ(first_handshake.size(), 14u);
+  ASSERT_EQ(second_handshake.size(), 14u);
+  std::vector<uint16_t> first_slots, second_slots;
+  ASSERT_EQ(fs::UnpackSlotAssignment(first_handshake.data() + 9, 5, &first_slots), 5u);
+  ASSERT_EQ(fs::UnpackSlotAssignment(second_handshake.data() + 9, 5, &second_slots), 5u);
+  ASSERT_EQ(first_slots.size(), 1u);
+  ASSERT_EQ(second_slots.size(), 1u);
+  EXPECT_NE(first_slots[0], second_slots[0]);
   auto excess = h.Connect(); ASSERT_TRUE(Closed(*excess));
   EXPECT_EQ(h.server.stats().rejected_connections, 1u);
   first->close();
@@ -86,7 +97,7 @@ TEST(TCPFrameServer, FullConnectionsRejectAndRecoverBeforeMatchStarts) {
   EXPECT_EQ(seed, 42u); EXPECT_EQ(left, 1); EXPECT_EQ(right, 1);
   std::vector<uint16_t> slots;
   ASSERT_EQ(fs::UnpackSlotAssignment(handshake.data() + 9, 5, &slots), 5u);
-  ASSERT_EQ(slots.size(), 1u); EXPECT_EQ(slots[0], 0);
+  ASSERT_EQ(slots.size(), 1u); EXPECT_EQ(slots[0], first_slots[0]);
 }
 TEST(TCPFrameServer, UnreadyConnectionsExpireAndReleaseReservation) {
   fs::TCPFrameServerOptions options; options.ready_timeout = 100ms;

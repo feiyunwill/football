@@ -178,13 +178,16 @@ def main():
                "phase16_integration_test": 20, "frame_sync_test": 18, "engine_integration_test": 15}
     targets["replay_directory_test"] = 16
     cached_gtest = Path("/tmp/football-review-20260909-tests/_deps/googletest-src")
-    require(cached_gtest.is_dir(), "Configure the documented local GoogleTest source before this native check")
     for label, tests, native, sanitize in (
             ("ordinary", Path("/tmp/football-optimization-tests"), Path("/tmp/football-optimization-native"), "OFF"),
             ("sanitized", Path("/tmp/football-optimization-query-tests"), Path("/tmp/football-optimization-sanitized"), "ON")):
-        run(["cmake", "-S", "engine/tests", "-B", tests, "-DCMAKE_BUILD_TYPE=Debug", "-DENABLE_PCH=OFF",
-             f"-DENABLE_ASAN={sanitize}", f"-DENABLE_UBSAN={sanitize}", "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
-             f"-DFETCHCONTENT_SOURCE_DIR_GOOGLETEST={cached_gtest}"], label + "-configure")
+        test_configuration = ["cmake", "-S", "engine/tests", "-B", tests,
+                              "-DCMAKE_BUILD_TYPE=Debug", "-DENABLE_PCH=OFF",
+                              f"-DENABLE_ASAN={sanitize}", f"-DENABLE_UBSAN={sanitize}",
+                              "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"]
+        if cached_gtest.is_dir():
+            test_configuration.append(f"-DFETCHCONTENT_SOURCE_DIR_GOOGLETEST={cached_gtest}")
+        run(test_configuration, label + "-configure")
         run(["cmake", "--build", tests, "-j", "1", "--target", *targets], label + "-build-tests")
         dynamic = run(["readelf", "-d", tests / "replay_file_test"], label + "-dependencies")
         require(("libasan" in dynamic) == (sanitize == "ON") and
