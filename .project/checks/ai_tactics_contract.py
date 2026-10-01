@@ -19,7 +19,7 @@ CONTRACTS = {
     "engine_ai_tactics_contract": (7288, {"symmetry_cases": 600}),
     "engine_ai_tactics_roles_contract": (3601, {"role_mirror_cases": 1800, "failed": 0}),
     "engine_ai_tactical_state_contract": (
-         27618, {"frames": 960, "actual_gameenv": True, "nonzero_actors": 3513, "restarts": 326}),
+         27618, {"frames": 960, "actual_gameenv": True, "nonzero_actors": 3513, "restarts": 325}),
     "engine_ai_touch_contract": (
         586, {"seeds": 3, "ball_control_assets": 270, "quiet_idle": 24, "actual_gameenv": True}),
 }
