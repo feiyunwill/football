@@ -1,0 +1,40 @@
+{
+  "archive": {
+    "generator_sha256": "5d4a9c8b44288840262f96efe5db44d6a3773da4fa7f341aebe156201e7ec1a9",
+    "path": ".project/optimization/baselines/bot_selection_response_20261002.tar.gz",
+    "sha256": "b7af466ea86c4e8dadec7d0d1db7dd7921e7759ae1815acf4cc34bf1cdf28c30"
+  },
+  "candidate_sources": {
+    "engine/src/onthepitch/player/controller/playercontroller.cpp": "931c36452a428c67e8f2e37adcb094b156924f05e20c6bd6f2b1dc514f9863c9",
+    "engine/src/onthepitch/player/humanoid/humanoid.cpp": "1669a4374c092c803dfb5160cf4c5c7a1eff5dbec4b1acfae8f4c846c0e32bdb",
+    "engine/src/onthepitch/player/humanoid/humanoidbase.cpp": "e2c2afcef7fa826c59ec7135f8e05aaa189effb576bdefa7e7d6d9d80ff7082e"
+  },
+  "contract": {
+    "changed_prefix_hashes_vs_prior": 389,
+    "first_changed_frame_vs_prior": 123,
+    "first_unavailable_tail_frame": 73,
+    "opponent_restart_wait_frames": 66,
+    "prefix_frames": 512,
+    "recovered_frames": 66,
+    "tail_frames": 245,
+    "unavailable_frames": 105
+  },
+  "fixtures": {
+    "engine/tests/fixtures/native_bot_transition_hashes_response_20261002.inc": "2989b5384ce3f382543f36d8cb08c027dd17bfe76c241d51ef6a41c926d9056c",
+    "engine/tests/fixtures/native_bot_transition_tail_response_20261002.inc": "17bfff5c7e928ad4f73faa30deba69b677b2e84a078bf4fc61f6e6e878fb2e43"
+  },
+  "format": 1,
+  "historical_physics_snapshot": {
+    "decompressed_sha256": "71cbf13098097fcbbceb1270d23d9eb636a16eafc31916827a962ccabb05f7ae",
+    "path": ".project/optimization/baselines/bot_selection_response_20261002_historical_humanoidbase.cpp.gz",
+    "sha256": "ee582191c2c246ec0171c67d0bbfad75faec0b15080757c404eac30f7860a3cc"
+  },
+  "historical_reference": ".project/optimization/baselines/bot_selection_handfeel_20261002.json",
+  "historical_reference_sha256": "d65e9af1c2d747f337b4c3654cd7061599eeaa46076e53d5b95ae01354c76dd3",
+  "id": "bot-selection-manual-response-20261002",
+  "raw_oracles": {
+    "hashes_sha256": "6013528f2b2891a9568ad5d9dd7cc71b7a292d88dbbf40f59407679f4957eb08",
+    "independent_runs": 2,
+    "tail_sha256": "5532882dbde3043db2a7b977f02e5233d2be6c06805dd8a0ce2fb10db6ef5066"
+  }
+}

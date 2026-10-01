@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "change": "Bounded manual start/turn acceleration in newly selected movement animation",
+  "before": {
+    "stage": "feel-regression-1790890756359018082",
+    "report_sha256": "4d5a77cb21a33c7d6be5af35db9d41349199b72dde57e9ec72bdcb654ee53fd5",
+    "passed": false,
+    "response_p95_ms": 51.481,
+    "visible_p95_ms": 57.118,
+    "triage_causes": {
+      "movement_physics_delay": 3,
+      "touch_pending": 1
+    }
+  },
+  "after": [
+    {
+      "stage": "feel-regression-1790891132648829286",
+      "report_sha256": "4b5e906088d0b03e04db8abc987743e7717f310e658ab9bc1bd52d7d4ba309ab",
+      "assertions": 449,
+      "presses": 60,
+      "response_p95_ms": 35.633,
+      "visible_p95_ms": 37.638,
+      "triage_causes": {
+        "touch_pending": 1
+      }
+    },
+    {
+      "stage": "feel-regression-1790891325943661504",
+      "report_sha256": "75ab713cbffcea7913dea295074efacec05fd81b9febb9576b9d1455160fc99a",
+      "assertions": 449,
+      "presses": 60,
+      "response_p95_ms": 36.526,
+      "visible_p95_ms": 39.016,
+      "triage_causes": {
+        "touch_pending": 1
+      }
+    }
+  ],
+  "input_contract": {
+    "stage": "input-contract-1790891986128752269",
+    "report_sha256": "d2e09a93c1ae90e3136f531be6010f5946db433b0b005d5adce11b0d4262005b",
+    "assertions": 3061979,
+    "passed": true
+  },
+  "historical_oracle": {
+    "manifest": ".project/optimization/baselines/bot_selection_handfeel_20261002.json",
+    "manifest_sha256": "d65e9af1c2d747f337b4c3654cd7061599eeaa46076e53d5b95ae01354c76dd3",
+    "archive_sha256": "96308ead1a5383357512e21fcb43b602764a8eefa4522fc412bf5b1cdd645b95",
+    "contract": {
+      "changed_prefix_hashes_vs_prior": 512,
+      "first_changed_frame_vs_prior": 0,
+      "first_unavailable_tail_frame": 77,
+      "opponent_restart_wait_frames": 62,
+      "prefix_frames": 512,
+      "recovered_frames": 62,
+      "tail_frames": 245,
+      "unavailable_frames": 105
+    }
+  },
+  "current_oracle": {
+    "manifest": ".project/optimization/baselines/bot_selection_response_20261002.json",
+    "manifest_sha256": "82806a597fe08c60e5843d2bcbd1ae3819a6c14a913279998c39976fd07a71f2",
+    "archive_sha256": "b7af466ea86c4e8dadec7d0d1db7dd7921e7759ae1815acf4cc34bf1cdf28c30",
+    "contract": {
+      "changed_prefix_hashes_vs_prior": 389,
+      "first_changed_frame_vs_prior": 123,
+      "first_unavailable_tail_frame": 73,
+      "opponent_restart_wait_frames": 66,
+      "prefix_frames": 512,
+      "recovered_frames": 66,
+      "tail_frames": 245,
+      "unavailable_frames": 105
+    }
+  },
+  "feel_archive": {
+    "path": ".project/optimization/evidence/manual_response_feel_compact_20261002.tar.gz",
+    "sha256": "c6e916361c55b7b8404e794dddffdca50ec76b357be9b2d70f6d1edae472ffd8"
+  },
+  "input_archive": {
+    "path": ".project/optimization/evidence/manual_response_input_contract_20261002.tar.gz",
+    "sha256": "4b6de6714a1d2cde911476a7b96779b6659d6cc1a35fc9ee746f6b23eed20868"
+  }
+}

@@ -2109,10 +2109,9 @@ Vector3 HumanoidBase::CalculatePhysicsVector(Animation *anim, bool useDesiredMov
 
     resultingPhysicsMovement = resultingPhysicsMovement * physicsBias + animMovement * (1.0f - physicsBias);
 
-    // Give an urgent opposite manual turn a short physics lead while the
-    // selected animation catches up. The existing acceleration cap below
-    // still bounds the displacement of each simulation frame.
-    const bool urgentManualTurn =
+    // Give a newly selected manual start or turn a short physics lead while
+    // the animation catches up. Keep the per-substep acceleration cap below.
+    const bool urgentManualResponse =
         animType == e_DefString_Movement && useDesiredMovement &&
         player->ExternalControllerActive() && match->IsInPlay() &&
         !match->IsInSetPiece() && time_ms < 120 &&
@@ -2120,8 +2119,9 @@ Vector3 HumanoidBase::CalculatePhysicsVector(Animation *anim, bool useDesiredMov
         adaptedDesiredMovement.GetDotProduct(
             player->GetController()->GetDirection()) > 0.5f &&
         spatialState.movement.GetDotProduct(
-            player->GetController()->GetDirection()) < -0.1f;
-    if (urgentManualTurn) {
+            player->GetController()->GetDirection()) <
+            player->GetController()->GetFloatVelocity() * 0.5f;
+    if (urgentManualResponse) {
       const float manualBias = 1.0f - time_ms / 120.0f;
       resultingPhysicsMovement = resultingPhysicsMovement * (1.0f - manualBias) +
                                  adaptedDesiredMovement * manualBias;
@@ -2243,10 +2243,10 @@ Vector3 HumanoidBase::CalculatePhysicsVector(Animation *anim, bool useDesiredMov
       // }
 
       maxChange *= powerFactor;
-      // Let a newly selected manual reversal brake in its first few frames;
-      // retain the bounded per-substep change used for every other action.
-      if (urgentManualTurn && time_ms < 60)
-        maxChange = std::max(maxChange, 0.04f);
+      // Let a newly selected manual start or turn respond within the first
+      // few frames, while retaining a bounded per-substep change.
+      if (urgentManualResponse && time_ms < 60)
+        maxChange = std::max(maxChange, 0.06f);
 
       float desiredLength = toDesired.GetLength();
       float maxAddition = maxChange * timeStep_ms;

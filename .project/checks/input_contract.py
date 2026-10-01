@@ -16,7 +16,7 @@ CONTRACTS={
  # 2026-09-14: real tactical state, actor identity, role symmetry and fresh actions are mandatory.
  'engine_ai_tactics_contract':(7288,{'symmetry_cases':600}),
  'engine_ai_tactics_roles_contract':(3601,{'role_mirror_cases':1800,'failed':0}),
- 'engine_ai_tactical_state_contract':(27618,{'frames':960,'actual_gameenv':True,'nonzero_actors':3513,'restarts':326}),
+  'engine_ai_tactical_state_contract':(27618,{'frames':960,'actual_gameenv':True,'nonzero_actors':3513,'restarts':325}),
  # 2026-09-14: native controls must retain moving touches and stationary ball handling.
  'engine_ai_touch_contract':(586,{'seeds':3,'ball_control_assets':270,'quiet_idle':24,'actual_gameenv':True}),
  # 2026-09-13: native display-only capture keeps default RGB and logical state.
@@ -24,7 +24,7 @@ CONTRACTS={
  # 2026-09-13: slow authority lead and real unavailable-player AI recovery are mandatory.
  #     'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6}),
  'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6,'resync_frames':572,'resync_max_lead':2}),
- 'engine_native_bot_selection_contract':(2137,{'prefix_frames':512,'recorded_tail_frames':245,'unavailable_frames':105,'recovered_frames':62,'opponent_restart_wait_frames':62,'actual_gameenv':True}),
+  'engine_native_bot_selection_contract':(2145,{'prefix_frames':512,'recorded_tail_frames':245,'unavailable_frames':105,'recovered_frames':66,'opponent_restart_wait_frames':66,'actual_gameenv':True}),
  'engine_native_match_contract':(44000,{'clock_events':10000,'engine_frames':600,'actual_gameenv':True,'native_contract':1}),
  # 2026-09-13: shared history and joined transport ownership are mandatory input contracts.
  'engine_native_transport_pump_contract':(20333,{'ledger_frames':4000,'concurrent_frames':128,'joined_lifetimes':64}),
@@ -93,7 +93,7 @@ def verify_bot_selection_reference():
     requeue=verify_bot_selection_requeue()
     momentum=verify_bot_selection_momentum()
     assist=verify_bot_selection_assist()
-    handfeel=verify_bot_selection_handfeel()
+    handfeel=verify_bot_selection_response()
     return {'manifest_sha256':benchmark.file_hash(base/'bot_selection_v2.json'),
               'oracle_output_sha256':manifest['oracle_output']['sha256'],
               'prefix_frames':512,'aligned_tail_frames':91,**requeue,**momentum,**assist,**handfeel}
@@ -366,7 +366,7 @@ def verify_bot_selection_assist():
             'manual_assist_tail_frames':245}
 
 def verify_bot_selection_handfeel():
-    """Pin the current product replay while keeping all four historical versions intact."""
+    """Keep the previous handfeel oracle independently reviewable."""
     base=ROOT/'.project/optimization/baselines'
     path=base/'bot_selection_handfeel_20261002.json'
     manifest=json.loads(path.read_text())
@@ -392,10 +392,6 @@ def verify_bot_selection_handfeel():
                 hashlib.sha256(gzip.decompress(snapshot.read_bytes())).hexdigest()==
                 item['decompressed_sha256']==expected,
                 'Historical handfeel source snapshot changed: '+key)
-    for relative,expected in manifest['candidate_sources'].items():
-        source=(ROOT/relative).resolve()
-        require(source.is_relative_to(ROOT) and benchmark.file_hash(source)==expected,
-                'Current handfeel source changed: '+relative)
     archive=manifest['archive']
     archive_path=(ROOT/archive['path']).resolve()
     require(archive_path.is_relative_to(ROOT) and
@@ -412,9 +408,8 @@ def verify_bot_selection_handfeel():
         raw={name:package.extractfile(name).read() for name in expected_members}
     require(all(hashlib.sha256(data).hexdigest()==recorded['files'][name]
                 for name,data in raw.items()) and
-            recorded['files']['generator.cpp']==archive['generator_sha256']==
-            benchmark.file_hash(ROOT/'engine/tests/engine_native_bot_selection_contract.cpp'),
-            'Current handfeel generator or archive member changed')
+            recorded['files']['generator.cpp']==archive['generator_sha256'],
+            'Historical handfeel generator or archive member changed')
     for kind,frames in (('hashes',512),('tail',245)):
         first=raw[f'{kind}-run1.inc']
         require(first==raw[f'{kind}-run2.inc'] and
@@ -462,6 +457,111 @@ def verify_bot_selection_handfeel():
             'manual_handfeel_archive_sha256':archive['sha256'],
             'manual_handfeel_unavailable_frames':105,
             'manual_handfeel_recovered_frames':62}
+
+def verify_bot_selection_response():
+    """Pin the manual-response replay and retain its handfeel predecessor."""
+    historical=verify_bot_selection_handfeel()
+    base=ROOT/'.project/optimization/baselines'
+    path=base/'bot_selection_response_20261002.json'
+    manifest=json.loads(path.read_text())
+    contract={'prefix_frames':512,'tail_frames':245,
+              'first_changed_frame_vs_prior':123,
+              'changed_prefix_hashes_vs_prior':389,
+              'first_unavailable_tail_frame':73,'unavailable_frames':105,
+              'recovered_frames':66,'opponent_restart_wait_frames':66}
+    prior=base/'bot_selection_handfeel_20261002.json'
+    require(manifest['format']==1 and
+            manifest['id']=='bot-selection-manual-response-20261002' and
+            manifest['historical_reference']==str(prior.relative_to(ROOT)) and
+            manifest['historical_reference_sha256']==benchmark.file_hash(prior) and
+            manifest['contract']==contract and
+            manifest['raw_oracles']['independent_runs']==2,
+            'Manual-response reference contract changed')
+    snapshot=manifest['historical_physics_snapshot']
+    snapshot_path=(ROOT/snapshot['path']).resolve()
+    require(snapshot_path.is_relative_to(ROOT) and
+            benchmark.file_hash(snapshot_path)==snapshot['sha256'] and
+            hashlib.sha256(gzip.decompress(snapshot_path.read_bytes())).hexdigest()==
+            snapshot['decompressed_sha256']==
+            '71cbf13098097fcbbceb1270d23d9eb636a16eafc31916827a962ccabb05f7ae',
+            'Pre-response physics source snapshot changed')
+    expected_sources={
+        'engine/src/onthepitch/player/controller/playercontroller.cpp',
+        'engine/src/onthepitch/player/humanoid/humanoid.cpp',
+        'engine/src/onthepitch/player/humanoid/humanoidbase.cpp'}
+    require(set(manifest['candidate_sources'])==expected_sources,
+            'Manual-response source scope changed')
+    for relative,expected in manifest['candidate_sources'].items():
+        source=(ROOT/relative).resolve()
+        require(source.is_relative_to(ROOT) and benchmark.file_hash(source)==expected,
+                'Manual-response source changed: '+relative)
+    archive=manifest['archive']
+    archive_path=(ROOT/archive['path']).resolve()
+    require(archive_path.is_relative_to(ROOT) and
+            benchmark.file_hash(archive_path)==archive['sha256'],
+            'Manual-response oracle archive changed')
+    expected_members={'generator.cpp','hashes-run1.inc','hashes-run2.inc',
+                      'tail-run1.inc','tail-run2.inc','run1.log','run2.log'}
+    with tarfile.open(archive_path,'r:gz') as package:
+        recorded=json.load(package.extractfile('manifest.json'))
+        require(recorded['format']=='bot-selection-response-oracle-v1' and
+                set(recorded['files'])==expected_members and
+                set(package.getnames())==expected_members|{'manifest.json'},
+                'Manual-response oracle archive members changed')
+        raw={name:package.extractfile(name).read() for name in expected_members}
+    require(all(hashlib.sha256(data).hexdigest()==recorded['files'][name]
+                for name,data in raw.items()) and
+            recorded['files']['generator.cpp']==archive['generator_sha256']==
+            benchmark.file_hash(ROOT/'engine/tests/engine_native_bot_selection_contract.cpp'),
+            'Manual-response generator or archive member changed')
+    fixture_names={
+        kind:f'engine/tests/fixtures/native_bot_transition_{kind}_response_20261002.inc'
+        for kind in ('hashes','tail')}
+    require(set(manifest['fixtures'])==set(fixture_names.values()),
+            'Manual-response fixture scope changed')
+    for kind,frames in (('hashes',512),('tail',245)):
+        first=raw[f'{kind}-run1.inc']
+        require(first==raw[f'{kind}-run2.inc'] and
+                hashlib.sha256(first).hexdigest()==manifest['raw_oracles'][f'{kind}_sha256'] and
+                len(first.splitlines())==frames,
+                'Manual-response independent replays differ')
+        relative=fixture_names[kind]
+        fixture=(ROOT/relative).resolve()
+        require(fixture.is_relative_to(ROOT) and
+                benchmark.file_hash(fixture)==manifest['fixtures'][relative] and
+                fixture.read_bytes().partition(b'\n')[2]==first,
+                'Manual-response fixture differs from recorded replay: '+kind)
+    previous=(ROOT/'engine/tests/fixtures/native_bot_transition_hashes_handfeel_20261002.inc').read_text().splitlines()[1:]
+    current=raw['hashes-run1.inc'].decode().splitlines()
+    changed=[i for i,(a,b) in enumerate(zip(previous,current)) if a!=b]
+    require(len(previous)==len(current)==512 and changed[0]==123 and
+            len(changed)==389 and changed==list(range(123,512)),
+            'Manual-response semantic divergence changed')
+    def fields(line):
+        return line.strip().rstrip(',').strip('{}').split(',')
+    prior_tail=(ROOT/'engine/tests/fixtures/native_bot_transition_tail_handfeel_20261002.inc').read_text().splitlines()[1:]
+    current_tail=raw['tail-run1.inc'].decode().splitlines()
+    selected=[int(fields(line)[3]) for line in current_tail]
+    require(len(prior_tail)==len(current_tail)==245 and
+            all(fields(a)[:3]==fields(b)[:3]
+                for a,b in zip(prior_tail,current_tail)) and
+            selected[:73]==[8]*73 and selected[73:178]==[-1]*105 and
+            selected[178:]==[9]*67,
+            'Manual-response fixed inputs or selection transition changed')
+    for run in (1,2):
+        log=raw[f'run{run}.log'].decode()
+        require(log.startswith('exit=0\n') and
+                json.loads(log.split('\n',1)[1])=={
+                    'passed':True,'assertions':1249,'prefix_frames':512,
+                    'recorded_tail_frames':245,'unavailable_frames':105,
+                    'skipped':0,'actual_gameenv':True,'recovered_frames':66,
+                    'opponent_restart_wait_frames':66},
+                'Manual-response archived replay did not complete')
+    return {**historical,
+            'manual_response_manifest_sha256':benchmark.file_hash(path),
+            'manual_response_archive_sha256':archive['sha256'],
+            'manual_response_unavailable_frames':105,
+            'manual_response_recovered_frames':66}
 
 def observation():
     socket=Path('/tmp/.X11-unix')
