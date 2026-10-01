@@ -3,7 +3,7 @@
 No old stage receipt substitutes for execution. No device latency acceptance.
 """
 from pathlib import Path
-import argparse,gzip,hashlib,json,os,platform,signal,sys,time,shlex,subprocess,tempfile
+import argparse,gzip,hashlib,json,os,platform,signal,sys,time,shlex,subprocess,tarfile,tempfile
 # 2026-09-14: both build modes must contain the actual product entry points.
 # from native_boundary import ROOT,require
 from native_boundary import ROOT,TARGETS,require
@@ -24,7 +24,7 @@ CONTRACTS={
  # 2026-09-13: slow authority lead and real unavailable-player AI recovery are mandatory.
  #     'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6}),
  'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6,'resync_frames':572,'resync_max_lead':2}),
- 'engine_native_bot_selection_contract':(1365,{'prefix_frames':512,'recorded_tail_frames':91,'unavailable_frames':30,'recovered_frames':1,'actual_gameenv':True}),
+ 'engine_native_bot_selection_contract':(1332,{'prefix_frames':512,'recorded_tail_frames':91,'unavailable_frames':18,'recovered_frames':1,'actual_gameenv':True}),
  'engine_native_match_contract':(44000,{'clock_events':10000,'engine_frames':600,'actual_gameenv':True,'native_contract':1}),
  # 2026-09-13: shared history and joined transport ownership are mandatory input contracts.
  'engine_native_transport_pump_contract':(20333,{'ledger_frames':4000,'concurrent_frames':128,'joined_lifetimes':64}),
@@ -90,9 +90,86 @@ def verify_bot_selection_reference():
                                  stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=30)
         require(completed.returncode==0 and completed.stdout==expected,
                 'Archived bot-selection oracle no longer reproduces')
+    requeue=verify_bot_selection_requeue()
     return {'manifest_sha256':benchmark.file_hash(base/'bot_selection_v2.json'),
             'oracle_output_sha256':manifest['oracle_output']['sha256'],
-            'prefix_frames':512,'aligned_tail_frames':91}
+            'prefix_frames':512,'aligned_tail_frames':91,**requeue}
+
+def verify_bot_selection_requeue():
+    """Keep the archived old oracle while validating a separately versioned turn."""
+    base=ROOT/'.project/optimization/baselines'
+    path=base/'bot_selection_requeue_20261001.json'
+    manifest=json.loads(path.read_text())
+    require(manifest['format']==1 and
+            manifest['id']=='bot-selection-manual-requeue-20261001' and
+            manifest['historical_reference']=='.project/optimization/baselines/bot_selection_v2.json' and
+            manifest['raw_oracles']['independent_runs']==2 and
+            manifest['contract']=={'prefix_frames':512,'tail_frames':91,
+                                   'first_changed_frame':123,'changed_prefix_hashes':389,
+                                   'unavailable_frames':18,'recovered_frames':1},
+            'Manual-turn replay reference changed')
+    source=manifest['candidate_source']
+    require(source['path']=='engine/src/onthepitch/player/humanoid/humanoid.cpp' and
+            benchmark.file_hash(ROOT/source['path'])==source['sha256'],
+            'Manual-turn engine source differs from reviewed oracle')
+    archive=manifest['archive']
+    archive_path=(ROOT/archive['path']).resolve()
+    require(archive_path.is_relative_to(ROOT) and
+            benchmark.file_hash(archive_path)==archive['sha256'],
+            'Manual-turn oracle archive changed')
+    with tarfile.open(archive_path,'r:gz') as package:
+        recorded=json.load(package.extractfile('manifest.json'))
+        require(recorded['format']=='bot-selection-requeue-oracle-v1' and
+                set(package.getnames())==set(recorded['files'])|{'manifest.json'},
+                'Manual-turn oracle archive has unexpected members')
+        raw={name:package.extractfile(name).read() for name in recorded['files']}
+    require(all(hashlib.sha256(data).hexdigest()==recorded['files'][name]
+                for name,data in raw.items()),'Manual-turn oracle member changed')
+    require(recorded['files']['generator.cpp']==archive['generator_sha256'] and
+            recorded['files']['candidate.patch']==archive['candidate_patch_sha256'],
+            'Manual-turn generator or candidate patch changed')
+    for kind in ('hashes','tail'):
+        first=raw[f'{kind}-run1.inc']
+        require(first==raw[f'{kind}-run2.inc'] and
+                hashlib.sha256(first).hexdigest()==
+                manifest['raw_oracles'][f'{kind}_sha256'],
+                'Manual-turn oracle runs differ')
+        require(len(first.splitlines())==(512 if kind=='hashes' else 91),
+                'Manual-turn replay coverage changed')
+    for relative,expected in manifest['fixtures'].items():
+        fixture=(ROOT/relative).resolve()
+        require(fixture.is_relative_to(ROOT) and
+                benchmark.file_hash(fixture)==expected,
+                'Manual-turn fixture changed: '+relative)
+        kind='hashes' if 'hashes_' in relative else 'tail'
+        require(fixture.read_bytes().partition(b'\n')[2]==raw[f'{kind}-run1.inc'],
+                'Manual-turn fixture differs from recorded replay: '+relative)
+    old=(ROOT/'engine/tests/fixtures/native_bot_transition_hashes_20261001.inc').read_text().splitlines()[1:]
+    new=raw['hashes-run1.inc'].decode().splitlines()
+    changed=[i for i,(a,b) in enumerate(zip(old,new)) if a!=b]
+    require(len(old)==len(new)==512 and changed and changed[0]==123 and
+            len(changed)==389,
+            'Manual-turn semantic divergence moved')
+    def tail_input(line):
+        values=line.strip().rstrip(',').strip('{}').split(',')
+        return (float.fromhex(values[0].removesuffix('f')),
+                float.fromhex(values[1].removesuffix('f')),int(values[2]))
+    old_tail=(ROOT/'engine/tests/fixtures/native_bot_transition_tail_20261001.inc').read_text().splitlines()[1:]
+    new_tail=raw['tail-run1.inc'].decode().splitlines()
+    require(len(old_tail)==len(new_tail)==91 and
+            all(tail_input(a)==tail_input(b) for a,b in zip(old_tail,new_tail)),
+            'Manual-turn tail input sequence changed')
+    for run in (1,2):
+        log=raw[f'run{run}.log'].decode()
+        require(log.startswith('exit=0\n') and
+                'hash_mismatches=389 / 512' in log and
+                '"unavailable_frames":18' in log and
+                '"recovered_frames":1' in log,
+                'Manual-turn replay run did not complete')
+    return {'manual_turn_manifest_sha256':benchmark.file_hash(path),
+            'manual_turn_archive_sha256':archive['sha256'],
+            'manual_turn_first_changed_frame':123,
+            'manual_turn_changed_hashes':389}
 
 def observation():
     socket=Path('/tmp/.X11-unix')

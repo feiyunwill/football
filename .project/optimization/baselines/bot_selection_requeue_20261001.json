@@ -1,0 +1,32 @@
+{
+  "format": 1,
+  "id": "bot-selection-manual-requeue-20261001",
+  "historical_reference": ".project/optimization/baselines/bot_selection_v2.json",
+  "candidate_source": {
+    "path": "engine/src/onthepitch/player/humanoid/humanoid.cpp",
+    "sha256": "3bf1e36af576bad7d93b4776687ef5c833de4741fdc0937afe994444bf25a1fa"
+  },
+  "archive": {
+    "path": ".project/optimization/baselines/bot_selection_requeue_20261001.tar.gz",
+    "sha256": "02821dec7295674da46ba5ff25ccda3c69bb0905b0a214bdbc3a194731fcdf66",
+    "generator_sha256": "976e6b2d3b1efc5a5ba597dd80213115fe93f0867502a231fe1175af29282e40",
+    "candidate_patch_sha256": "579b20e4ce83631ead9e7f3f2e392c7e0f50b780e1287c14dba156bffef4c4e8"
+  },
+  "fixtures": {
+    "engine/tests/fixtures/native_bot_transition_hashes_requeue_20261001.inc": "476bfb8f8cf49deef4f100bd5230b6c7086e50781ffd68830feae066c5a573e8",
+    "engine/tests/fixtures/native_bot_transition_tail_requeue_20261001.inc": "35e97e2a99496c902a47d51d7f261910f76315bd08636e661ce05a989bcbc3d4"
+  },
+  "raw_oracles": {
+    "hashes_sha256": "0a5ae38124a4f2b7310f07940dfc259b5ed8265feff43f17c9c35d5e62ab4e92",
+    "tail_sha256": "4e425dcaa1fe3bad70c3fe8466001e9571d06b47338312752527b9e0985f27a6",
+    "independent_runs": 2
+  },
+  "contract": {
+    "prefix_frames": 512,
+    "tail_frames": 91,
+    "first_changed_frame": 123,
+    "changed_prefix_hashes": 389,
+    "unavailable_frames": 18,
+    "recovered_frames": 1
+  }
+}

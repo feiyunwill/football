@@ -119,6 +119,15 @@ void Humanoid::Process() {
   }
 
   bool mayReQueue = allowReQueue;
+  const bool manualMovementTurn = CastPlayer()->ExternalControllerActive() &&
+      currentAnim.functionType == e_FunctionType_Movement &&
+      currentAnim.touchFrame == -1 && match->IsInPlay() &&
+      !match->IsInSetPiece() &&
+      CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
+      (CastPlayer()->GetController()->GetDirection().GetDotProduct(
+           currentAnim.originatingCommand.desiredDirection) < 0.5f ||
+       CastPlayer()->GetController()->GetFloatVelocity() -
+           currentAnim.originatingCommand.desiredVelocityFloat > 1.0f);
 
 
   // already some anim interrupt waiting?
@@ -146,7 +155,9 @@ void Humanoid::Process() {
     float actionDistance = ((spatialState.position + spatialState.movement * 0.1f) - match->GetBall()->Predict(100).Get2D()).GetLength();
 
     int team_id = team->GetID() == match->SecondTeam() ? 1 : 0;
-    if (match->GetDesignatedPossessionPlayer() == player &&
+    if (manualMovementTurn) {
+      frameNumPredicate = true;
+    } else if (match->GetDesignatedPossessionPlayer() == player &&
         actionDistance < 3.0f) {
       DO_VALIDATION;
       frameNumPredicate = ((match->GetActualTime_ms() + team_id * 10) % 20) ==
@@ -182,7 +193,8 @@ void Humanoid::Process() {
     DO_VALIDATION;
 
     float ballDistance = (currentMentalImage->GetBallPrediction(500).Get2D() - spatialState.position).GetLength();
-    if (((currentAnim.functionType == e_FunctionType_Movement &&
+    if ((manualMovementTurn ||
+         (currentAnim.functionType == e_FunctionType_Movement &&
           !CastPlayer()->HasPossession() && ballDistance < 16.0f) ||
          (currentAnim.functionType == e_FunctionType_Movement &&
           CastPlayer()->HasPossession()) ||  // passes / shot
@@ -1191,9 +1203,23 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
     float focusDistance = (match->GetDesignatedPossessionPlayer()->GetPosition() - spatialState.position).GetLength();
 
     if (currentAnim.functionType != e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement) return false;
-    if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && (CastPlayer()->HasPossession()/* || team->GetTeamPossessionAmount() >= 1.0f*/ || focusDistance > 12.0f)) return false;
-    if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && currentAnim.frameNum + minRemainingMovementReQueueFrames > currentAnim.anim->GetEffectiveFrameCount()) return false;
-    if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && (!allowMovementReQueue || reQueueDelayFrames > 0)) return false;
+    const bool manualMovementTurn = CastPlayer()->ExternalControllerActive() &&
+        currentAnim.functionType == e_FunctionType_Movement &&
+        command.desiredFunctionType == e_FunctionType_Movement &&
+        currentAnim.touchFrame == -1 && match->IsInPlay() &&
+        !match->IsInSetPiece() &&
+        CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
+        (CastPlayer()->GetController()->GetDirection().GetDotProduct(
+             currentAnim.originatingCommand.desiredDirection) < 0.5f ||
+         CastPlayer()->GetController()->GetFloatVelocity() -
+             currentAnim.originatingCommand.desiredVelocityFloat > 1.0f) &&
+        (command.desiredDirection.GetDotProduct(
+             currentAnim.originatingCommand.desiredDirection) < 0.5f ||
+         command.desiredVelocityFloat -
+             currentAnim.originatingCommand.desiredVelocityFloat > 1.0f);
+    if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && !manualMovementTurn && (CastPlayer()->HasPossession()/* || team->GetTeamPossessionAmount() >= 1.0f*/ || focusDistance > 12.0f)) return false;
+    if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && !manualMovementTurn && currentAnim.frameNum + minRemainingMovementReQueueFrames > currentAnim.anim->GetEffectiveFrameCount()) return false;
+    if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && (!allowMovementReQueue || (!manualMovementTurn && reQueueDelayFrames > 0))) return false;
     if (currentAnim.functionType == e_FunctionType_BallControl && command.desiredFunctionType == e_FunctionType_BallControl && (!allowBallControlReQueue || currentAnim.frameNum > maxBallControlReQueueFrame || reQueueDelayFrames > 0)) return false;
     if (currentAnim.functionType == e_FunctionType_BallControl && command.desiredFunctionType == e_FunctionType_Trap) return false;
     if (currentAnim.functionType == e_FunctionType_Trap && command.desiredFunctionType == e_FunctionType_Trap && (!allowTrapReQueue || currentAnim.frameNum + minRemainingTrapReQueueFrames > currentAnim.touchFrame || reQueueDelayFrames > 0)) return false;

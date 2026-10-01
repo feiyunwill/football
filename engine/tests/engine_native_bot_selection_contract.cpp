@@ -10,10 +10,10 @@ unsigned assertions=0,unavailable=0,recovered=0;
 void Require(bool v,const char*m){++assertions;if(!v)throw std::runtime_error(m);}
 using Recorded = std::tuple<float,float,unsigned,int,float,float>;
 const Recorded tail[]={
-#include "fixtures/native_bot_transition_tail_20261001.inc"
+#include "fixtures/native_bot_transition_tail_requeue_20261001.inc"
 };
 const std::uint64_t semantic_hashes[]={
-#include "fixtures/native_bot_transition_hashes_20261001.inc"
+#include "fixtures/native_bot_transition_hashes_requeue_20261001.inc"
 };
 const char replay_bytes[] =
 #include "fixtures/native_bot_transition_replay_20260913.inc"
@@ -32,7 +32,23 @@ int main(int, char**){
   auto engine=fs::MakeGameEnvCallbacks(&env);auto observe=fs::MakeGameEnvBotObserver(&env,1,1);
   for(unsigned i=0;i<replay.GetTotalFrames();++i){
    auto frame=replay.GetFrameAt(i);Require(frame.has_value(),"Prefix frame missing");
-   engine.step_frame(frame->inputs);Require(engine.compute_hash()==semantic_hashes[i],"Semantic authority diverged");
+   // The first recorded manual turn must reach the same player within this step.
+   int manual_player=-1;
+   float manual_vx_before=0.f;
+   if(i==123){
+    auto before=env.get_info();
+    manual_player=before.left_controllers[0].controlled_player;
+    Require(frame->inputs[0].dir_x>.9f && manual_player>=0,"First manual turn changed");
+    manual_vx_before=before.left_team[manual_player].player_direction[0];
+   }
+   engine.step_frame(frame->inputs);
+   if(i==123){
+    auto after=env.get_info();
+    Require(after.left_controllers[0].controlled_player==manual_player,"Manual turn changed selected player");
+    Require(after.left_team[manual_player].player_direction[0]-manual_vx_before>=.1f,
+            "Manual turn waited for the previous animation");
+   }
+   Require(engine.compute_hash()==semantic_hashes[i],"Semantic authority diverged");
   }
   fs::BotTakeoverManager bots(fs::NativeMatchContract::kHz);bots.Takeover(0,0);
   for(const auto&[x,y,buttons,owned,px,py]:tail){
