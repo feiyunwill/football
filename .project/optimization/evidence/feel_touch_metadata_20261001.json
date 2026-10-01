@@ -1,0 +1,445 @@
+{
+  "format": 1,
+  "frame_duration_ms": 10,
+  "trap": {
+    "assets": 40,
+    "earliest_frame": 9,
+    "at_most_5_frames": 0,
+    "at_most_8_frames": 0,
+    "records": [
+      {
+        "path": "engine/data/media/animations/trap/idle/000_IB000.anim",
+        "sha256": "7bb28508dbade5a7f0376739439b766b93bc00653fc85b099c55e04f1cf15a9c",
+        "earliest_touch_frame": 20
+      },
+      {
+        "path": "engine/data/media/animations/trap/idle/090_IB000_accel_optional.anim",
+        "sha256": "df2497f063d936d7b44f50a9b16310eb8d1815126559dfd00c27b3ac830fac6c",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/trap/idle/135_IB000.anim",
+        "sha256": "164f1c85f27bd4f72d9908d7eac6fff494e65df589cebce6e34938cf7bf47607",
+        "earliest_touch_frame": 24
+      },
+      {
+        "path": "engine/data/media/animations/trap/idle/135_IB000_accel_left_shallowangle.anim",
+        "sha256": "51240c636df7992ad7851145bdacae30505a19dfbaa4524c3098c39a54c120ce",
+        "earliest_touch_frame": 18
+      },
+      {
+        "path": "engine/data/media/animations/trap/idle/135_IB000_accel_right.anim",
+        "sha256": "2dabdef4e338a70fdadd76e846688f345ee136ba332c6369bd5f7ed83495dcd9",
+        "earliest_touch_frame": 14
+      },
+      {
+        "path": "engine/data/media/animations/trap/idle/highballs/000_chest.anim",
+        "sha256": "2d1ec4dde010e2e364a5d45ef1df13d098d5844366900e8ae830a6c271057666",
+        "earliest_touch_frame": 39
+      },
+      {
+        "path": "engine/data/media/animations/trap/idle/highballs/000_chest_jump.anim",
+        "sha256": "0c2badcf9d76f8d399ddc65e0580f4bef8d0740e9fc4eafdb828678f3a092ece",
+        "earliest_touch_frame": 51
+      },
+      {
+        "path": "engine/data/media/animations/trap/idle/highballs/000_crotch.anim",
+        "sha256": "ebbffe760ccca28d9c534896341dab7417d17ed0cf4154fed0b3bfab08928296",
+        "earliest_touch_frame": 15
+      },
+      {
+        "path": "engine/data/media/animations/trap/idle/highballs/000_knee.anim",
+        "sha256": "29a600bf5bfbc454267347775b2916346654fe9ede1caacae7f50ae9dce62f77",
+        "earliest_touch_frame": 11
+      },
+      {
+        "path": "engine/data/media/animations/trap/idle/highballs/020_chest_fromabove.anim",
+        "sha256": "ccfbe66fa556a3e455e35835908e6857cbd596a13f34e0b08a9f5ad219962af1",
+        "earliest_touch_frame": 39
+      },
+      {
+        "path": "engine/data/media/animations/trap/idle/highballs/135_chest.anim",
+        "sha256": "c46e701862cf15047d7e0ae4eefb5e63c1fdb07caca25358b584b8ae988f2d3d",
+        "earliest_touch_frame": 24
+      },
+      {
+        "path": "engine/data/media/animations/trap/sprint/000_D000_IB090_decel.anim",
+        "sha256": "d64bf49a275eadc8e44f43cf3aa5203d57ea4f76f5f4e45f827fd80ad5c10965",
+        "earliest_touch_frame": 14
+      },
+      {
+        "path": "engine/data/media/animations/trap/sprint/highballs/000_chest.anim",
+        "sha256": "ceb4624fe25f62fa2ca98dfd10daf0486e3045a2fe59643d167f48d0c1a54868",
+        "earliest_touch_frame": 35
+      },
+      {
+        "path": "engine/data/media/animations/trap/sprint/highballs/000_fromside_kneeheight.anim",
+        "sha256": "32088bb178b6a46067257b1c45a03925a33d4b934c4cdc938b9d0107d39df863",
+        "earliest_touch_frame": 17
+      },
+      {
+        "path": "engine/data/media/animations/trap/sprint/lastditch/000_decel_decel_decel_stretch.anim",
+        "sha256": "35403aa86a8da4c4536890994bdaaa56a1b6ac5eaf352ac29d17a92540d1f0e4",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/trap/sprint/lastditch/000_decel_decel_stretch.anim",
+        "sha256": "207bd48cdd14d86bd0c60d579c02720f2a4ad6a81b748e82d2b4cacfb9ef2412",
+        "earliest_touch_frame": 13
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/000_D000_IB000_decel_decel.anim",
+        "sha256": "d49dd43fd70f5bea7dcf9ffa4964036073c51d4653106200b06fe0f58f3e1b82",
+        "earliest_touch_frame": 28
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/000_D000_IB000_short.anim",
+        "sha256": "b1ba422b2989be34e60bab9c6be53a5fb92830a29f88ad74582b4e4c36a4393e",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/000_D000_IB090.anim",
+        "sha256": "77bbe4654e03b4336ecc85cd0c785782b12bbbefb4754b0db2089def3e06e335",
+        "earliest_touch_frame": 33
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/000_D000_IB090_decel_decel.anim",
+        "sha256": "b5d8034617a972e4016669e3e3a4c639bc90c16d67166ba31acf9909bf89d341",
+        "earliest_touch_frame": 33
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/000_D045_IB090.anim",
+        "sha256": "c48160f1ae1f246e5a47bf8015d04f2a7edcf89c2bdcd3af7bc356e1f7a4b666",
+        "earliest_touch_frame": 24
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/000_D045_IB090_decel_decel.anim",
+        "sha256": "7f98aa69a828722c4928f7f2aa65ba7e590ad97b7febe55c908d830a0f43869f",
+        "earliest_touch_frame": 34
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/000_D045_IB135.anim",
+        "sha256": "dcfa7f7202e9ee1e89c5d75f9167d8d144070cd2fa20661e393e635d85baa655",
+        "earliest_touch_frame": 44
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/000_D135_IB135_decel_decel.anim",
+        "sha256": "1f963741b97024ff23e6e7b6f11e9981b41e3695cc70da5b948d2a8d2d1f3b75",
+        "earliest_touch_frame": 36
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/135_D000_IB000_decel_decel.anim",
+        "sha256": "03714c1fac91cd19b5c9735e3f77ba1d88ee3641817e45d34453fa983df3c8b8",
+        "earliest_touch_frame": 29
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/135_D045_IB090_decel_decel.anim",
+        "sha256": "958f94f44447751436f5acaebd2b2a788e8fc6847d498804c6f1d7190424f482",
+        "earliest_touch_frame": 34
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/135_D045_IB135_decel_decel.anim",
+        "sha256": "7365594dfde0ca2da9fa7633b9d8db191d1bf6b13a92a5115d336d8d344c3aab",
+        "earliest_touch_frame": 44
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/135_D135_IB135_decel_decel.anim",
+        "sha256": "2014a3c7cb46d9c47ccf4b905a32bde82d342451c5c24e67b9281d06c2b52ad4",
+        "earliest_touch_frame": 36
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/highballs/000_chest_ballfrombelow.anim",
+        "sha256": "5c22bd55a61fb9d619d51f7ce2276a77d2eb8afff1ac4d127d62a69aa7ac4fed",
+        "earliest_touch_frame": 25
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/highballs/000_chest_jump_decel.anim",
+        "sha256": "2bc8bbe2244a78b7fd129ea153dc13af9d778c231b33fc909361483f3feac9a0",
+        "earliest_touch_frame": 19
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/highballs/000_control_highball_decel.anim",
+        "sha256": "e7816cb93b447a9210f8d7ef1ff279100537baef7ebf4af30b8a6e0c2f98e71f",
+        "earliest_touch_frame": 30
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/highballs/000_knee.anim",
+        "sha256": "05563d44b21ea431b16bf89e3801eebb172fc7346e15bb36bb24c5086c23a219",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/highballs/135_chest.anim",
+        "sha256": "ebe465aef82688142ee6985fce04464bea82f8bb4ba29bfca441e23898537dbc",
+        "earliest_touch_frame": 27
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/highballs/D045_chest.anim",
+        "sha256": "02626cc9f0bf81a9a1943a9f822dc75b1845d8903b454c7e5beb659d2b779640",
+        "earliest_touch_frame": 24
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/highballs/D045_to_D000_decel_chest.anim",
+        "sha256": "23edf9769ed4fac8851b939784665e96f2d0c603dc976eb8e00348067f6de7b7",
+        "earliest_touch_frame": 47
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/highballs/D135_chest_jump_180.anim",
+        "sha256": "25479d618db7f601c8b5025b3b13be9b861d6cbfecee92f18032057b49d5cf3d",
+        "earliest_touch_frame": 40
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/highballs/D135_chest_jump_decel.anim",
+        "sha256": "945abbd2fe7ae387942375e72f2514c5abea9758cad6a0c9acb1625fbdcc273c",
+        "earliest_touch_frame": 44
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/lastditch/000_D000_IB090_decel_decel_lastditch.anim",
+        "sha256": "450c6697c21a31978f6f6439383eb8ec362a7672ebd44d6857c47426e7ef98a3",
+        "earliest_touch_frame": 19
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/lastditch/000_D000_IB090_decel_short_lastditch.anim",
+        "sha256": "4b147ce78a7aeac2727f950430c1ce62e09af14647610705b0ee9a5f21d2c229",
+        "earliest_touch_frame": 9
+      },
+      {
+        "path": "engine/data/media/animations/trap/walk/lastditch/000_frombehind_decel.anim",
+        "sha256": "72012a9718d44472bac63b584648f8c9d9604d7a74db75ffc802916892002de1",
+        "earliest_touch_frame": 40
+      }
+    ]
+  },
+  "ballcontrol": {
+    "assets": 45,
+    "earliest_frame": 6,
+    "at_most_5_frames": 0,
+    "at_most_8_frames": 8,
+    "records": [
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/000.anim",
+        "sha256": "b2c366bd52d18002bcc5608af62e9326b9fe2f75eeea79aa3a23f54487899db4",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/000_accel.anim",
+        "sha256": "99eb87e0e00fda7aac7b30b174ecf1d42e6f7109022d9a28104b1a8347c99966",
+        "earliest_touch_frame": 8
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/000_accel_close.anim",
+        "sha256": "d7baac918e12ee86bdf1c2dbb62fe643a6b7daee9656d79204faaaaf88228147",
+        "earliest_touch_frame": 8
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/000_accel_far.anim",
+        "sha256": "5230f7192cfad0ffccbe835a57d495ec82ce4f4517d1006891f8d363ab34457d",
+        "earliest_touch_frame": 8
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/020.anim",
+        "sha256": "a87210f26963cb5fe424b17f6e1fd8c39bf3cca6f259cca63401d1175998d335",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/020_accel_far.anim",
+        "sha256": "10eb95a46a52e962233e6b860a4ce59c91eee87b231d284283cf24dd86c3d628",
+        "earliest_touch_frame": 8
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/045.anim",
+        "sha256": "fa7f7223721441d09614fdfed06303003b9dde8b237b1998f8cd693a14610dec",
+        "earliest_touch_frame": 14
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/045_accel.anim",
+        "sha256": "c2a149b9f8fa52b537852124ebc8caafec4d1587f397ea3e38b2647dd501115f",
+        "earliest_touch_frame": 7
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/090.anim",
+        "sha256": "5e265e3b8d3f38c8963e707e10ad2b909f9edd257b72817ab1d87c61a44fe8b0",
+        "earliest_touch_frame": 14
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/090_accel.anim",
+        "sha256": "6f70e76ca19dba6838959c28604d0704f4b35676cdad42659d9f3dfd23830b05",
+        "earliest_touch_frame": 8
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/090_accel_far.anim",
+        "sha256": "95c4e5d537bcc171994fdf7d65b740a03d5138b64f80e49ce25e171130c92c96",
+        "earliest_touch_frame": 14
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/135.anim",
+        "sha256": "052e3ab5591a8ea6b7657143d862cbf54972b3a6f6d8f653e95f305a7067b575",
+        "earliest_touch_frame": 14
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/135_accel.anim",
+        "sha256": "0a6a4c247d7ea64db1cb2ae1c7f820015ab530da8676f632f5448efb806e35e8",
+        "earliest_touch_frame": 13
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/180.anim",
+        "sha256": "207e9f80943a6b9b348c7514bf4024c779b20ac17618645ea0b210a20b52f0f3",
+        "earliest_touch_frame": 14
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/idle/180_accel.anim",
+        "sha256": "2d0dacfd3e586c02173f0094388d22ff54d8210ee648522157fa3064da52de2a",
+        "earliest_touch_frame": 13
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/sprint/000.anim",
+        "sha256": "903374f406ab0cf496705fb44a9828b4b0e83a13ad34a5e7e017194bdc2a877c",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/sprint/000_close.anim",
+        "sha256": "f3092588d4352f00b2bb833ba7d1a6278a4fda60ff13d313915b52eefa23f9aa",
+        "earliest_touch_frame": 6
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/sprint/000_decel.anim",
+        "sha256": "bd1b572d07d35b05e523bf60cfe0345875900795b4e1fe660b7f0add87a2519d",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/sprint/020_decel.anim",
+        "sha256": "0f47d3802df7ceb0e284dddea87e4c2aaa0752bad0726570ee3af546dad2f228",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/sprint/020_right_nondecel_stretch.anim",
+        "sha256": "f256f46d1215555efbf356c311b97898cc9595c53e0d2b7206f967abb57e2f9a",
+        "earliest_touch_frame": 14
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/sprint/045_decel.anim",
+        "sha256": "cc12cd7fd0a668a765d7030cb274c9397b1156492e625edf23663fdc6fe9842a",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/sprint/090_decel_decel.anim",
+        "sha256": "041ee42cd37973c9a38e70a41633d8c746d6cef639acb5d8dfa3e0f0e8e8d558",
+        "earliest_touch_frame": 19
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/sprint/135_decel_decel_decel.anim",
+        "sha256": "8cbe6359817695952a7c88d9a235c09b8c0424ae8fc1009c8dff03abe41c6225",
+        "earliest_touch_frame": 22
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/sprint/180_decel_decel_decel.anim",
+        "sha256": "135ae5e02230a4e3783afb9ee984f8c23aa60daf092cc2b7d2d3c8548ed09d97",
+        "earliest_touch_frame": 22
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/sprint/lastditch/020_decel_stretch.anim",
+        "sha256": "13e1d778431153b22fa29a3c34e7fc92bb2c8e18c1121fd7328565d0f09cd8b9",
+        "earliest_touch_frame": 13
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/000.anim",
+        "sha256": "2dea6a1fde46341e60c7356b1f359426dcfbb1caa10d16d2899d2971581851f6",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/000_accel.anim",
+        "sha256": "c83b0d82d724dac306c16255d110c0b00eb3e5c8c1f95798ded3ee4c9fdf9e4e",
+        "earliest_touch_frame": 15
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/000_accel_ballright.anim",
+        "sha256": "33e07ebc1e3a862ff2696ec352c668aad0d9d788570a8ad9de48ac1a2d1f9043",
+        "earliest_touch_frame": 15
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/000_accel_close.anim",
+        "sha256": "f788a7af80942a55b2d1062e2f3606e9516b25359e3a37af438c90cc8407d1ed",
+        "earliest_touch_frame": 6
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/000_close.anim",
+        "sha256": "aaa0d0353c80aa26a15e4e4571ebf28b0c37a04d2a276c306db7d3c6fdb87750",
+        "earliest_touch_frame": 9
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/000_decel_decel.anim",
+        "sha256": "bd00c1e2c6fb8170ee6fe53ed62b0e865f8b37c66daebe8bab7656eda256bc0a",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/020_accel.anim",
+        "sha256": "722ce9beba8c0ad3ac9b93c5e90daab9160002d2f6813ee7c6c02e5c3287fe36",
+        "earliest_touch_frame": 16
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/020_accel_close.anim",
+        "sha256": "7e2d1c6b8c804b80cb3756711a2271478844d65999a4a2bb63aa0f201d13d9f6",
+        "earliest_touch_frame": 10
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/020_decel_decel.anim",
+        "sha256": "fd59c4fcca7770387bfedc216a5836a8692d943269096634119af2ffa9c8b1a0",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/020_left.anim",
+        "sha256": "421ec5a833ec210be984cf8b531c9d54a68459f7ec4bfefe40398410ac38bdb1",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/020_left_close.anim",
+        "sha256": "22db5fc3ea9b49700413ad89e9eb92c5ffeceed1cffc1ba4b5de99cb5ff29f07",
+        "earliest_touch_frame": 10
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/045.anim",
+        "sha256": "ed89d687cb4a3f10b8e9df46e6265a804fd7d779eebe14c2719409a13375dc73",
+        "earliest_touch_frame": 10
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/045_accel_2step.anim",
+        "sha256": "a5e1e51f6bfc956f7cb6627ab794b245781f4004e5541098e60862685a9895e3",
+        "earliest_touch_frame": 27
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/045_decel_decel.anim",
+        "sha256": "5add808880a53bd296f95631c8bc1d86e86065a8937835f4180aa530a4092013",
+        "earliest_touch_frame": 16
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/090_decel_decel.anim",
+        "sha256": "e71fae9aa95629ffe2016c4b3e6da2c30539af647c8ed4b637af9f867753c6c3",
+        "earliest_touch_frame": 16
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/090_strongfoot.anim",
+        "sha256": "4ada3789e008894e007d6c2f8fc41c1e2163dafb1d95570ed70ad16b70a4e33b",
+        "earliest_touch_frame": 19
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/135_decel_decel.anim",
+        "sha256": "18b36102d589999713d8ce978154cf32eb4e38293c3008636f0fb1ce50f650f6",
+        "earliest_touch_frame": 20
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/180_decel.anim",
+        "sha256": "f426d02f62fa30ac3cdac49dd3048377ac15a5a01f5cc60f7b8472ab93c75e9e",
+        "earliest_touch_frame": 12
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/180_decel_decel.anim",
+        "sha256": "11b17935e209bc44a9a57bed03422c47599c7afe4e85918976e76e5dfb33921c",
+        "earliest_touch_frame": 14
+      },
+      {
+        "path": "engine/data/media/animations/ballcontrol/walk/lastditch/045_left_decel_far.anim",
+        "sha256": "0227bdd93f1dfcbea3ad0db4bf24df660a45fb970a607dc2cee214a06375ef16",
+        "earliest_touch_frame": 14
+      }
+    ]
+  }
+}
