@@ -2,6 +2,7 @@
 """Accept real-window input only when the controlled player responds within 50 ms."""
 
 import argparse
+from collections import Counter
 import hashlib
 import json
 import math
@@ -166,6 +167,97 @@ def evaluate(cohort, output, binaries, sources):
             "input_admission_p95_ms": p95(admissions)}
 
 
+def classify_delays(output):
+    """Explain failed presses from raw commands without changing acceptance."""
+    cases = []
+    causes = Counter()
+    for seed in SEEDS:
+        directory = output / "cohort" / f"seed-{seed}"
+        actions = json.loads((directory / "actions.json").read_text())
+        report = json.loads((directory / "report.json").read_text())
+        relevant = []
+        with (directory / "trace/events.jsonl").open() as stream:
+            for line in stream:
+                event = json.loads(line)
+                if event.get("kind") in ("human_command", "anim_select"):
+                    relevant.append(event)
+        require(len(actions) == len(report["samples"]) == CYCLES,
+                f"Incomplete triage workload for seed {seed}")
+        for action, sample in zip(actions, report["samples"]):
+            require(action["index"] == sample["index"] and
+                    action["direction"] == sample["direction"],
+                    f"Triage press identity differs for seed {seed}")
+            start, end = action["start_ns"], action["end_ns"]
+            direction = action["direction"]
+            human = [event for event in relevant
+                     if event["kind"] == "human_command" and
+                     start <= event["time"] < end and
+                     event.get("hid_x") == direction]
+            players = {event["player"] for event in human}
+            selected = [event for event in relevant
+                        if event["kind"] == "anim_select" and
+                        start <= event["time"] < end and
+                        event.get("player") in players]
+            opposing = [event for event in human
+                        if event.get("desired_x", 0) * direction < -0.1]
+            aligned = [event for event in human
+                       if event.get("desired_x", 0) * direction > 0.1]
+            accepted_movement = [event for event in selected
+                                 if event.get("accepted") is True and
+                                 event.get("command_type") == 1 and
+                                 aligned and event["time"] >= aligned[0]["time"] and
+                                 event.get("desired_x", 0) * direction > 0.1]
+            touch_pending = any(event.get("touch_pending") is True
+                                for event in selected)
+            response = sample.get("velocity_response_ms")
+            visible = sample.get("first_swap_after_response_ms")
+            violation = response is None or visible is None or max(response, visible) > BUDGET_MS
+            first_human = (round((human[0]["time"] - start) / 1e6, 3)
+                           if human else None)
+            first_aligned = (round((aligned[0]["time"] - start) / 1e6, 3)
+                             if aligned else None)
+            first_accepted = (round((accepted_movement[0]["time"] - start) / 1e6, 3)
+                              if accepted_movement else None)
+            if not violation:
+                cause = "within_budget"
+            elif len(players) > 1:
+                cause = "controlled_player_changed"
+            elif not human:
+                cause = "no_human_command_in_window"
+            elif opposing and (not aligned or first_aligned > BUDGET_MS):
+                cause = "assist_direction_conflict"
+            elif touch_pending:
+                cause = "touch_pending"
+            elif first_human is not None and first_human > BUDGET_MS:
+                cause = "late_command_sampling"
+            elif first_accepted is None or first_accepted > BUDGET_MS:
+                cause = "animation_selection_delay"
+            elif response is None or response > BUDGET_MS:
+                cause = "movement_physics_delay"
+            else:
+                cause = "presentation_delay"
+            if violation:
+                causes[cause] += 1
+            cases.append({"seed": seed, "index": sample["index"],
+                          "direction": direction, "owned_player": sample.get("owned_player"),
+                          "violation": violation, "diagnostic_cause": cause,
+                          "human_commands": len(human), "distinct_human_players": len(players),
+                          "opposing_commands": len(opposing), "aligned_commands": len(aligned),
+                          "touch_pending_observed": touch_pending,
+                          "first_human_command_ms": first_human,
+                          "first_aligned_command_ms": first_aligned,
+                          "first_accepted_aligned_movement_ms": first_accepted,
+                          "input_admission_ms": sample.get("input_admission_ms"),
+                          "velocity_response_ms": response,
+                          "first_swap_after_response_ms": visible})
+    require(len(cases) == SAMPLES and
+            sum(case["violation"] for case in cases) == sum(causes.values()),
+            "Triage did not account for all product presses")
+    return {"diagnostic_only": True, "classification_is_inference": True,
+            "presses": len(cases), "violations": sum(causes.values()),
+            "violation_causes": dict(sorted(causes.items())), "cases": cases}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--build", type=Path, default=Path("/tmp/football-optimization-native"))
@@ -219,12 +311,18 @@ def main():
                 "product-cohort", timeout=1800)
         cohort = json.loads((output / "cohort/report.json").read_text())
         result = evaluate(cohort, output, binaries, sources)
+        triage = classify_delays(output)
+        triage_path = output / "triage.json"
+        triage_path.write_text(json.dumps(triage, indent=2) + "\n")
         result.update(scope="15 independent real standalone-game windows, 4 XTEST presses each; "
                             "actual controlled-player velocity and following product swap",
                       seeds=list(SEEDS), budget_ms=BUDGET_MS,
                       source_sha256=sha(__file__), binaries=binaries,
                       driver_root=str(args.gpu_driver_root.resolve()),
-                      x11_root=str(tools), cohort_sha256=sha(output / "cohort/report.json"))
+                      x11_root=str(tools), cohort_sha256=sha(output / "cohort/report.json"),
+                      triage_sha256=sha(triage_path),
+                      triage_violations=triage["violations"],
+                      triage_causes=triage["violation_causes"])
         require(source_manifest() == sources, "Feel acceptance sources changed during measurement")
         require(all(sha(path) == value for path, value in ((
             build / "libfootball_engine.so", binaries["engine"]),
@@ -247,6 +345,8 @@ def main():
                       "skipped": 0, "failures": result["failures"],
                       "artifact": str(output / "report.json"),
                       "artifact_sha256": sha(output / "report.json"),
+                      "triage_sha256": result["triage_sha256"],
+                      "triage_causes": result["triage_causes"],
                       "raw_archive": str(archive),
                       "raw_archive_sha256": sha(archive)}), flush=True)
     return 0 if result["passed"] else 1
