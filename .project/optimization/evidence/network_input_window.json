@@ -1,0 +1,15 @@
+{
+  "check": "network_input_window",
+  "fingerprint": "02c7460256d8ad9aba20a952b8df16c6b2b2aee00cef5359287700fefaae5b24",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1790883409.8331032,
+  "duration_seconds": 42.846,
+  "argv": [
+    "python3",
+    ".project/checks/network_input_window.py"
+  ],
+  "log": "network_input_window-1790883409833119842.log",
+  "log_sha256": "33fd17c7cfac8de5e79b417125c956f4bec4b47529e178384459ef0cfddf1d7e"
+}

@@ -1,0 +1,15 @@
+{
+  "check": "lobby_lifecycle",
+  "fingerprint": "0082bfb226b84ebb8efc58c661c5a220c6e1487beb7fbde1a712940e5292101b",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1790883699.365492,
+  "duration_seconds": 52.522,
+  "argv": [
+    "python3",
+    ".project/checks/lobby_lifecycle.py"
+  ],
+  "log": "lobby_lifecycle-1790883699365503707.log",
+  "log_sha256": "69ea671edc11254965dac45c20f7b53ff13d7b805f336d96a949c6dcb327358b"
+}

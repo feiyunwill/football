@@ -1,0 +1,15 @@
+{
+  "check": "network_regression",
+  "fingerprint": "a8636652df5bfad950b87cc505a6721abb19b10cefcc6f2b15765c0c9b312685",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1790883751.987496,
+  "duration_seconds": 13.12,
+  "argv": [
+    "python3",
+    ".project/checks/network_regression.py"
+  ],
+  "log": "network_regression-1790883751987520477.log",
+  "log_sha256": "450b03f7c19ad4c018bba137adbfec483cd7f96c7443457e10e9b962ffa0d62c"
+}
