@@ -1598,7 +1598,10 @@
       "acceptance": [
         "输入采样、网络帧率和物理步数协商一致；忙闲帧不丢边沿"
       ],
-      "argv": ["python3", ".project/gates/fixed_timestep.py"],
+      "argv": [
+        "python3",
+        ".project/gates/fixed_timestep.py"
+      ],
       "kind": "json",
       "min_assertions": 50,
       "timeout": 600,
@@ -1611,7 +1614,9 @@
         "gfootball/frame_sync/frame_pacing.py",
         "gfootball/frame_sync/match_cadence.py"
       ],
-      "tools": ["python3"]
+      "tools": [
+        "python3"
+      ]
     },
     {
       "id": "presentation_smoothing",
@@ -1619,7 +1624,10 @@
       "acceptance": [
         "插值使用最后逻辑时刻；回滚无跳变；暂停恢复无大步长或粘键"
       ],
-      "argv": ["python3", ".project/gates/presentation_smoothing.py"],
+      "argv": [
+        "python3",
+        ".project/gates/presentation_smoothing.py"
+      ],
       "kind": "json",
       "min_assertions": 500,
       "timeout": 1800,
@@ -1639,11 +1647,24 @@
         "engine/data/**/*",
         "gfootball/frame_sync/*.py"
       ],
-      "tools": ["python3", "cmake", "c++"],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++"
+      ],
       "environment": [
-        "CC", "CXX", "CFLAGS", "CXXFLAGS", "LDFLAGS",
-        "DISPLAY", "SDL_VIDEODRIVER", "LD_LIBRARY_PATH",
-        "GFOOTBALL_DATA_DIR", "GFOOTBALL_FONT", "LIBGL_ALWAYS_SOFTWARE", "PYTHONOPTIMIZE"
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "DISPLAY",
+        "SDL_VIDEODRIVER",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "PYTHONOPTIMIZE"
       ]
     },
     {
@@ -1652,7 +1673,10 @@
       "acceptance": [
         "脚本输入到实际球员响应可测量；本机动作生效 p95 不超过 50ms；输出回放证据"
       ],
-      "argv": ["python3", ".project/gates/feel_regression.py"],
+      "argv": [
+        "python3",
+        ".project/gates/feel_regression.py"
+      ],
       "kind": "json",
       "min_assertions": 300,
       "timeout": 3600,
@@ -1672,21 +1696,77 @@
         "engine/data/**/*",
         "engine/fonts/*.ttf"
       ],
-      "tools": ["python3", "cmake", "c++", "unshare", "mount"],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "unshare",
+        "mount"
+      ],
       "environment": [
-        "CC", "CXX", "CFLAGS", "CXXFLAGS", "LDFLAGS",
-        "FOOTBALL_TEST_X11_ROOT", "FOOTBALL_FEEL_GPU_DRIVER_ROOT",
-        "DISPLAY", "SDL_VIDEODRIVER", "LD_LIBRARY_PATH", "LD_PRELOAD",
-        "GFOOTBALL_DATA_DIR", "GFOOTBALL_FONT", "LIBGL_ALWAYS_SOFTWARE",
-        "GALLIUM_DRIVER", "MESA_LOADER_DRIVER_OVERRIDE", "LIBGL_DRIVERS_PATH",
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "FOOTBALL_TEST_X11_ROOT",
+        "FOOTBALL_FEEL_GPU_DRIVER_ROOT",
+        "DISPLAY",
+        "SDL_VIDEODRIVER",
+        "LD_LIBRARY_PATH",
+        "LD_PRELOAD",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "GALLIUM_DRIVER",
+        "MESA_LOADER_DRIVER_OVERRIDE",
+        "LIBGL_DRIVERS_PATH",
         "PYTHONOPTIMIZE"
       ]
     },
     {
       "id": "network_input_window",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "未来输入有界缓存；重复、乱序与非法输入有确定规则；慢客户端不阻塞整局"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/network_input_window.py"
+      ],
+      "kind": "json",
+      "min_assertions": 552114,
+      "timeout": 1800,
+      "sources": [
+        ".project/checks/network_input_window.py",
+        ".project/optimization/program.json",
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/tests/CMakeLists.txt",
+        "engine/tests/engine_server_input_window_contract.cpp",
+        "engine/tests/tcp_frame_server_test.cpp",
+        "engine/tests/native_udp_window_test.cpp",
+        "engine/tests/bounded_tcp_writer_test.cpp",
+        "engine/tests/reliable_udp_budget_test.cpp",
+        "engine/src/frame_sync/*.hpp",
+        "engine/src/frame_sync/*.cpp",
+        "gfootball/frame_sync/*.py",
+        ".project/optimization/network-input-window.md"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "ctest",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "LD_LIBRARY_PATH",
+        "PYTHONOPTIMIZE"
       ]
     },
     {
