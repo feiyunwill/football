@@ -517,6 +517,24 @@ class LobbyServer {
       return true;
     }
 
+    if (type == std::to_underlying(LobbyMessageType::EndGame)) {
+      if (client->recv_buf.size() < 1 + ROOM_ID_BYTES) return false;
+      uint32_t room_id;
+      UnpackUint32(client->recv_buf.data() + 1, ROOM_ID_BYTES, &room_id);
+      if (client->current_room == room_id &&
+          room_mgr_.FinishGame(room_id, client->player_name)) {
+        broadcast_game_ended(room_id);
+        for (auto& peer : clients_)
+          if (peer->current_room == room_id) peer->current_room = 0;
+        room_mgr_.Cleanup();
+      } else {
+        send_error(client, 6, "Cannot finish game: not the active room host");
+      }
+      client->recv_buf.erase(client->recv_buf.begin(),
+                             client->recv_buf.begin() + 1 + ROOM_ID_BYTES);
+      return true;
+    }
+
     // NameSet: type(1) + name_len(2) + name — custom extension for lobby
     // Using MessageType 0xFF as a private lobby message
     if (type == 0xFF) {
@@ -723,6 +741,13 @@ class LobbyServer {
     PackUint16(buf.data() + offset, port);
     offset += sizeof(uint16_t);
     broadcast_to_room(room_id, buf.data(), offset);
+  }
+
+  void broadcast_game_ended(uint32_t room_id) {
+    uint8_t buf[1 + ROOM_ID_BYTES]{};
+    buf[0] = std::to_underlying(LobbyMessageType::GameEnded);
+    PackUint32(buf + 1, room_id);
+    broadcast_to_room(room_id, buf, sizeof(buf));
   }
 
   asio::io_context& io_;

@@ -1826,9 +1826,61 @@
     },
     {
       "id": "lobby_lifecycle",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "协议显式字节序；建房/准备/开局/比赛地址/结束回收与重进闭环"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/lobby_lifecycle.py"
+      ],
+      "kind": "json",
+      "min_assertions": 132,
+      "timeout": 1800,
+      "sources": [
+        ".project/checks/lobby_lifecycle.py",
+        ".project/checks/network_reconnect.py",
+        ".project/checks/requirements.txt",
+        ".project/optimization/program.json",
+        ".project/optimization/lobby-lifecycle.md",
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/tests/CMakeLists.txt",
+        "engine/tests/lobby_protocol_test.cpp",
+        "engine/tests/room_manager_test.cpp",
+        "engine/tests/lobby_e2e_test.cpp",
+        "engine/tests/lobby_capacity_test.cpp",
+        "engine/tests/lobby_client_capacity_test.cpp",
+        "engine/src/frame_sync/lobby_*.hpp",
+        "engine/src/frame_sync/room_manager.hpp",
+        "engine/src/frame_sync/bounded_tcp_writer.hpp",
+        "engine/__init__.py",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/owned_engine.py",
+        "gfootball/engine_pool.py",
+        "gfootball/env/*.py",
+        "gfootball/__init__.py",
+        "setup.py"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "ctest",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "LD_LIBRARY_PATH",
+        "PYTHONPATH",
+        "PYTHONOPTIMIZE",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT"
       ]
     },
     {

@@ -453,6 +453,64 @@ TEST(LobbyE2ETest, CreateJoinChatAndStartProductionRoom) {
   ASSERT_TRUE(h.Until([&] { return started; }, alice, &bob));
 }
 
+TEST(LobbyE2ETest, FinishedRoomIsRetiredAndSamePeersCanEnterAnotherMatch) {
+  LobbyHarness h;
+  LobbyClient alice(h.client_io), bob(h.client_io);
+  ASSERT_TRUE(alice.connect("127.0.0.1", h.server.port()));
+  ASSERT_TRUE(bob.connect("127.0.0.1", h.server.port()));
+  ASSERT_TRUE(alice.set_name("Alice"));
+  ASSERT_TRUE(bob.set_name("Bob"));
+  int started = 0;
+  int ended = 0;
+  int errors = 0;
+  int lists = 0;
+  bob.on_message([&](LobbyMessageType type, const uint8_t*, size_t) {
+    if (type == LobbyMessageType::GameStarted) ++started;
+    if (type == LobbyMessageType::GameEnded) ++ended;
+    if (type == LobbyMessageType::Error) ++errors;
+  });
+  alice.on_message([&](LobbyMessageType type, const uint8_t*, size_t) {
+    if (type == LobbyMessageType::RoomListResponse) ++lists;
+  });
+
+  ASSERT_TRUE(alice.create_room("First", "academy_empty_goal_close"));
+  ASSERT_TRUE(alice.request_room_list());
+  ASSERT_TRUE(h.Until([&] { return lists == 1 && alice.get_rooms().size() == 1; }, alice, &bob));
+  const uint32_t first = alice.get_rooms().front().room_id;
+  ASSERT_TRUE(bob.join_room(first));
+  ASSERT_TRUE(h.Until([&] { return bob.get_current_room().player_count == 2; }, alice, &bob));
+  ASSERT_TRUE(bob.set_ready(first));
+  ASSERT_TRUE(bob.request_room_list());
+  ASSERT_TRUE(h.Until([&] { return bob.get_rooms().size() == 1; }, alice, &bob));
+  ASSERT_TRUE(alice.start_game(first, "127.0.0.1:13330"));
+  ASSERT_TRUE(h.Until([&] { return started == 1; }, alice, &bob));
+  EXPECT_EQ(bob.get_current_room().status, RoomStatus::kPlaying);
+  EXPECT_EQ(bob.get_current_room().game_port, 13330);
+  ASSERT_TRUE(bob.end_game(first));
+  ASSERT_TRUE(h.Until([&] { return errors == 1; }, alice, &bob));
+  EXPECT_EQ(ended, 0);
+  ASSERT_TRUE(alice.end_game(first));
+  ASSERT_TRUE(h.Until([&] { return ended == 1; }, alice, &bob));
+  EXPECT_EQ(bob.get_current_room().room_id, 0u);
+  ASSERT_TRUE(alice.request_room_list());
+  ASSERT_TRUE(h.Until([&] { return lists == 2; }, alice, &bob));
+  EXPECT_TRUE(alice.get_rooms().empty());
+
+  ASSERT_TRUE(alice.create_room("Second", "academy_empty_goal_close"));
+  ASSERT_TRUE(alice.request_room_list());
+  ASSERT_TRUE(h.Until([&] { return lists == 3 && alice.get_rooms().size() == 1; }, alice, &bob));
+  const uint32_t second = alice.get_rooms().front().room_id;
+  EXPECT_NE(second, first);
+  ASSERT_TRUE(bob.join_room(second));
+  ASSERT_TRUE(h.Until([&] { return bob.get_current_room().room_id == second; }, alice, &bob));
+  ASSERT_TRUE(bob.set_ready(second));
+  ASSERT_TRUE(bob.request_room_list());
+  ASSERT_TRUE(h.Until([&] { return bob.get_rooms().size() == 1; }, alice, &bob));
+  ASSERT_TRUE(alice.start_game(second, "127.0.0.1:13331"));
+  ASSERT_TRUE(h.Until([&] { return started == 2; }, alice, &bob));
+  EXPECT_EQ(bob.get_current_room().game_port, 13331);
+}
+
 TEST(LobbyE2ETest, RejectsDuplicateNamesAndForeignChat) {
   LobbyHarness h;
   LobbyClient alice(h.client_io), bob(h.client_io);

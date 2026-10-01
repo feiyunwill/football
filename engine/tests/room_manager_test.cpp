@@ -184,12 +184,16 @@ TEST(RoomManagerTest, Cleanup) {
   mgr.SetReady(id, "Bob", true);
   mgr.StartGame(id, "Alice", "127.0.0.1", 12345);
 
-  // Mark as finished
-  auto* room = const_cast<RoomState*>(mgr.GetRoom(id));
-  room->meta.status = RoomStatus::kFinished;
+  EXPECT_FALSE(mgr.FinishGame(id, "Bob"));
+  ASSERT_NE(mgr.GetRoomMetadata(id), nullptr);
+  EXPECT_EQ(mgr.GetRoomMetadata(id)->status, RoomStatus::kPlaying);
+  ASSERT_TRUE(mgr.FinishGame(id, "Alice"));
+  EXPECT_FALSE(mgr.FinishGame(id, "Alice"));
 
   mgr.Cleanup();
   EXPECT_EQ(mgr.RoomCount(), 0u);
+  EXPECT_EQ(mgr.FindRoomByPlayer("Alice"), 0u);
+  EXPECT_NE(mgr.CreateRoom(MakeConfig(), "Alice"), 0u);
 }
 
 }  // namespace

@@ -196,6 +196,18 @@ class RoomManager {
     return true;
   }
 
+  /// @brief Finish a started match; only its current host can retire the room.
+  bool FinishGame(uint32_t room_id, const std::string& host_name) {
+    auto it = rooms_.find(room_id);
+    if (it == rooms_.end() || it->second.meta.status != RoomStatus::kPlaying)
+      return false;
+    const PlayerSession* host = it->second.GetHost();
+    if (!host || host->name != host_name) return false;
+    it->second.meta.status = RoomStatus::kFinished;
+    NotifyChange(room_id);
+    return true;
+  }
+
   /// @brief Get room metadata
   [[nodiscard]] const RoomMetadata* GetRoomMetadata(uint32_t room_id) const {
     auto it = rooms_.find(room_id);

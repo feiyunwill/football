@@ -88,9 +88,6 @@ def prepare_package():
         target = PACKAGE / name
         if not target.exists():
             target.symlink_to(ROOT / "engine" / name, target_is_directory=True)
-    binding = PACKAGE / "_gameplayfootball.so"
-    if not binding.exists():
-        binding.symlink_to("libgame.so")
 
 
 def acceptance_python(output, commands):
@@ -137,6 +134,10 @@ def main():
     require((PACKAGE / "libgame.so").is_file() and
             (PACKAGE / "libfootball_engine.so").is_file(),
             "Native Python engine and its core library are missing")
+    binding = PACKAGE / "_gameplayfootball.so"
+    if binding.is_symlink():
+        binding.unlink()
+    shutil.copy2(PACKAGE / "libgame.so", binding)
     native_env = os.environ.copy()
     native_env["PYTHONPATH"] = os.pathsep.join((str(NATIVE_BUILD / "package"),
                                                 str(ROOT), native_env.get("PYTHONPATH", "")))

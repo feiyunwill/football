@@ -19,6 +19,7 @@
 #include <utility>
 #include <boost/asio.hpp>
 #include <functional>
+#include <algorithm>
 #include <array>
 #include <string>
 #include <vector>
@@ -446,6 +447,7 @@ class LobbyClient {
     PackString(bytes.data() + 5, bytes.size() - 5, address);
     return Send(bytes.data(), 7 + address.size());
   }
+  bool end_game(uint32_t room) { return SendRoom(LobbyMessageType::EndGame, room); }
 
   void poll() {
     if (polling_) return;
@@ -595,7 +597,25 @@ class LobbyClient {
     if (type == LobbyMessageType::GameStarted) {
       if (recv_buf_.size() < 39) return false;
       if (!std::memchr(recv_buf_.data() + 5, 0, 32)) return Invalid();
+      uint32_t room_id;
+      UnpackUint32(recv_buf_.data() + 1, ROOM_ID_BYTES, &room_id);
+      if (current_room_.room_id == room_id) {
+        current_room_.status = RoomStatus::kPlaying;
+        std::memset(current_room_.game_address, 0, sizeof(current_room_.game_address));
+        std::memcpy(current_room_.game_address, recv_buf_.data() + 5, 32);
+        UnpackUint16(recv_buf_.data() + 37, 2, &current_room_.game_port);
+      }
       return Dispatch(type, 39);
+    }
+    if (type == LobbyMessageType::GameEnded) {
+      if (recv_buf_.size() < 1 + ROOM_ID_BYTES) return false;
+      uint32_t room_id;
+      UnpackUint32(recv_buf_.data() + 1, ROOM_ID_BYTES, &room_id);
+      if (current_room_.room_id == room_id) current_room_ = {};
+      std::erase_if(rooms_, [room_id](const RoomMetadata& room) {
+        return room.room_id == room_id;
+      });
+      return Dispatch(type, 1 + ROOM_ID_BYTES);
     }
     if (type == LobbyMessageType::Error) {
       if (recv_buf_.size() < 5) return false;
