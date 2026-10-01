@@ -34,21 +34,22 @@
 #include <rl_tools/rl/algorithms/ppo/loop/core/persist.h>
 #include <rl_tools/rl/loop/steps/timing/persist.h>
 
-#include <fstream>
+#include "checkpoint_file.hpp"
+#include "checkpoint_archive.hpp"
+#include <limits>
+#include <algorithm>
+#include <exception>
 #include <vector>
 #include <cstdio>  // 2026-08-30: printf instead of std::println
 
 RL_TOOLS_NAMESPACE_WRAPPER_START
 namespace rl_tools::checkpoint {
 
-// ===== Save checkpoint =====
 template <typename DEVICE, typename T_CONFIG>
-bool save_checkpoint(DEVICE& device,
-                     rl::algorithms::ppo::loop::core::State<T_CONFIG>& ts,
-                     const char* path) {
+bool serialize_core(DEVICE& device,
+                    rl::algorithms::ppo::loop::core::State<T_CONFIG>& ts,
+                    std::vector<char>& bytes) {
   using TI = typename DEVICE::index_t;
-
-  // Create TAR writer in memory
   persist::backends::tar::Writer writer;
   using WriterSpec = persist::backends::tar::WriterGroupSpecification<TI, persist::backends::tar::Writer>;
   persist::backends::tar::WriterGroup<WriterSpec> root_group;
@@ -58,23 +59,38 @@ bool save_checkpoint(DEVICE& device,
   root_group.meta_position = 0;
   root_group.success = true;
 
-  // Save the full PPO loop state
   save(device, ts, root_group);
-
-  // Finalize TAR
   persist::backends::tar::finalize(device, writer);
-
-  // Write buffer to file
-  std::ofstream ofs(path, std::ios::binary);
-  if (!ofs.is_open()) {
-    fprintf(stderr, "checkpoint: failed to open %s for writing\n", path);
-    return false;
-  }
-  ofs.write(writer.buffer.data(), static_cast<std::streamsize>(writer.buffer.size()));
-  ofs.close();
-
-  printf("checkpoint: saved %zu bytes to %s\n", writer.buffer.size(), path);
+  if (!root_group.success) return false;
+  bytes = std::move(writer.buffer);
   return true;
+}
+
+// ===== Save checkpoint =====
+template <typename DEVICE, typename T_CONFIG>
+bool save_checkpoint(DEVICE& device,
+                     rl::algorithms::ppo::loop::core::State<T_CONFIG>& ts,
+                     const char* path) {
+  try {
+    if (!path) return false;
+    std::vector<char> tar;
+    if (!serialize_core(device, ts, tar)) {
+      fprintf(stderr, "checkpoint: serialization failed\n");
+      return false;
+    }
+    auto sealed = ::football::training::SealArchive(std::move(tar));
+    const auto result = ::football::training::SaveCheckpointFile(
+        std::span<const char>(sealed.data(), sealed.size()), path);
+    if (!result) {
+      fprintf(stderr, "checkpoint: %s failed (committed=%d, error=%d, cleanup=%d)\n",
+              result.stage, result.committed, result.error.value(), result.cleanup_error.value());
+      return false;
+    }
+    printf("checkpoint: saved %zu bytes to %s\n", result.bytes, path);
+    return true;
+  } catch (const std::exception& error) {
+    fprintf(stderr, "checkpoint: save failed: %s\n", error.what()); return false;
+  }
 }
 
 // ===== Load checkpoint =====
@@ -84,26 +100,35 @@ bool load_checkpoint(DEVICE& device,
                      const char* path) {
   using TI = typename DEVICE::index_t;
 
-  // Read entire TAR file into memory
-  std::ifstream ifs(path, std::ios::binary | std::ios::ate);
-  if (!ifs.is_open()) {
-    fprintf(stderr, "checkpoint: failed to open %s for reading\n", path);
+  ::football::training::CheckpointFileRead file;
+  try {
+    if (!path) return false;
+    const auto maximum = std::min<uintmax_t>(
+        ::football::training::kMaxCheckpointFileBytes, std::numeric_limits<TI>::max());
+    file = ::football::training::ReadCheckpointFile(path, static_cast<size_t>(maximum));
+    if (!file) {
+      fprintf(stderr, "checkpoint: %s failed (error=%d)\n", file.stage, file.error.value());
+      return false;
+    }
+  } catch (const std::exception& error) {
+    fprintf(stderr, "checkpoint: read failed: %s\n", error.what()); return false;
+  }
+  std::vector<char> expected;
+  if (!serialize_core(device, ts, expected)) {
+    fprintf(stderr, "checkpoint: failed to construct expected schema\n");
     return false;
   }
-  auto file_size = ifs.tellg();
-  ifs.seekg(0, std::ios::beg);
-
-  std::vector<char> buffer(file_size);
-  if (!ifs.read(buffer.data(), file_size)) {
-    fprintf(stderr, "checkpoint: failed to read %s\n", path);
+  std::string diagnostic;
+  const auto tar = ::football::training::OpenArchive(file.bytes, expected, diagnostic);
+  if (tar.empty()) {
+    fprintf(stderr, "checkpoint: %s\n", diagnostic.c_str());
     return false;
   }
-  ifs.close();
 
   // Create TAR reader from in-memory buffer
   persist::backends::tar::BufferData<TI> data_backend;
-  data_backend.data = buffer.data();
-  data_backend.size = static_cast<TI>(file_size);
+  data_backend.data = file.bytes.data();
+  data_backend.size = static_cast<TI>(tar.size());
 
   using ReaderSpec = persist::backends::tar::ReaderGroupSpecification<TI, persist::backends::tar::BufferData<TI>>;
   persist::backends::tar::ReaderGroup<ReaderSpec> root_group;

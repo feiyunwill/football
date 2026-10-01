@@ -88,6 +88,8 @@ using TI = typename DEVICE::index_t;
 static constexpr bool DYNAMIC_ALLOCATION = true;
 
 using CONFIG = ConfigFactory<DEVICE, TYPE_POLICY, DYNAMIC_ALLOCATION>;
+static_assert(CONFIG::LOOP_CORE_CONFIG::CORE_PARAMETERS::N_ENVIRONMENTS == 1,
+              "GameEnvWrapper shares one GameEnv and cannot run parallel environments");
 using LOOP_CONFIG = CONFIG::LOOP_TIMING_CONFIG;
 using LOOP_STATE = typename LOOP_CONFIG::template State<LOOP_CONFIG>;
 
@@ -109,16 +111,16 @@ void init_game_env() {
   // Standard 4-4-2 formation for 11 players
   scenario.left_team = {
     FormationEntry(0.0f,   0.0f,  e_PlayerRole_GK, false, true),
-    FormationEntry(-0.4f, -0.3f,  e_PlayerRole_LB, false, false),
-    FormationEntry(-0.15f,-0.3f,  e_PlayerRole_CB, false, false),
-    FormationEntry(0.15f, -0.3f,  e_PlayerRole_CB, false, false),
-    FormationEntry(0.4f,  -0.3f,  e_PlayerRole_RB, false, false),
-    FormationEntry(-0.4f, 0.0f,  e_PlayerRole_LM, false, false),
-    FormationEntry(-0.15f,0.0f,  e_PlayerRole_CM, false, false),
-    FormationEntry(0.15f, 0.0f,  e_PlayerRole_CM, false, false),
-    FormationEntry(0.4f,  0.0f,  e_PlayerRole_RM, false, false),
-    FormationEntry(-0.15f,0.3f,  e_PlayerRole_CF, false, false),
-    FormationEntry(0.15f, 0.3f,  e_PlayerRole_CF, false, false),
+    FormationEntry(-0.4f, -0.3f,  e_PlayerRole_LB, false, true),
+    FormationEntry(-0.15f,-0.3f,  e_PlayerRole_CB, false, true),
+    FormationEntry(0.15f, -0.3f,  e_PlayerRole_CB, false, true),
+    FormationEntry(0.4f,  -0.3f,  e_PlayerRole_RB, false, true),
+    FormationEntry(-0.4f, 0.0f,  e_PlayerRole_LM, false, true),
+    FormationEntry(-0.15f,0.0f,  e_PlayerRole_CM, false, true),
+    FormationEntry(0.15f, 0.0f,  e_PlayerRole_CM, false, true),
+    FormationEntry(0.4f,  0.0f,  e_PlayerRole_RM, false, true),
+    FormationEntry(-0.15f,0.3f,  e_PlayerRole_CF, false, true),
+    FormationEntry(0.15f, 0.3f,  e_PlayerRole_CF, false, true),
   };
   scenario.right_team = {
     FormationEntry(0.0f,   0.0f,  e_PlayerRole_GK, false, false),
@@ -145,7 +147,8 @@ void init_game_env() {
 auto run(TI seed, bool eval_mode = false,
          const std::string& load_path = "",
          const std::string& save_prefix = "",
-         TI save_interval = 10000) {
+         TI save_interval = 10000,
+         TI max_loop_steps = 0) {
   DEVICE device;
   printf("=== Football PPO %s (Real Engine) ===\n", eval_mode ? "Evaluation" : "Training");
   printf("Seed: %lu\n", static_cast<unsigned long>(seed));
@@ -155,16 +158,18 @@ auto run(TI seed, bool eval_mode = false,
 
   LOOP_STATE ts;
   rlt::malloc(device, ts);
+  // Checkpoints contain the PPO core but not the timing wrapper's clocks or
+  // the live GameEnv owner. Initialize those before restoring the core state.
+  rlt::init(device, ts, seed);
 
   // Load checkpoint if specified
   if (!load_path.empty()) {
     printf("Loading checkpoint: %s\n", load_path.c_str());
     if (!rl_tools::checkpoint::load_checkpoint(device, ts, load_path.c_str())) {
-      fprintf(stderr, "Failed to load checkpoint, starting from scratch\n");
-      rlt::init(device, ts, seed);
+      fprintf(stderr, "Failed to load checkpoint; refusing to start with a new policy\n");
+      rlt::free(device, ts);
+      return 1;
     }
-  } else {
-    rlt::init(device, ts, seed);
   }
 
   // ---- Play mode ----
@@ -181,6 +186,7 @@ auto run(TI seed, bool eval_mode = false,
           info.left_goals, info.right_goals,
           info.ball_owned_team == 0 ? "yes" : "no");
       }
+      if (max_loop_steps && step_count >= max_loop_steps) break;
     }
     printf("Play complete! Final score: %d/%d\n",
       g_rl_env->get_info().left_goals, g_rl_env->get_info().right_goals);
@@ -204,17 +210,22 @@ auto run(TI seed, bool eval_mode = false,
              static_cast<unsigned long>(step_count),
              static_cast<unsigned long>(total_env_steps), sps, wall_sec);
     }
-
     // Auto-save checkpoint
     if (!save_prefix.empty() && ts.step > 0 && (ts.step % save_interval == 0)) {
       std::string ckpt_path = save_prefix + "_step" + std::to_string(ts.step) + ".tar";
-      rl_tools::checkpoint::save_checkpoint(device, ts, ckpt_path.c_str());
+      if (!rl_tools::checkpoint::save_checkpoint(device, ts, ckpt_path.c_str())) {
+        fprintf(stderr, "Failed to save checkpoint: %s\n", ckpt_path.c_str());
+        rlt::free(device, ts);
+        return 1;
+      }
     }
+    if (max_loop_steps && step_count >= max_loop_steps) break;
   }
 
   auto wall_end = std::chrono::steady_clock::now();
   float total_wall = std::chrono::duration<float>(wall_end - wall_start).count();
-  printf("Training complete! Steps: %lu, Wall: %.1fs, SPS: %.1f\n",
+  printf("Training %s. Steps: %lu, Wall: %.1fs, SPS: %.1f\n",
+         max_loop_steps ? "stopped at requested limit" : "complete",
          static_cast<unsigned long>(ts.step), total_wall,
          static_cast<float>(ts.step) / total_wall);
   rl_tools::print_action_stats();
@@ -222,7 +233,11 @@ auto run(TI seed, bool eval_mode = false,
   // Save final checkpoint
   if (!save_prefix.empty()) {
     std::string final_path = save_prefix + "_final.tar";
-    rl_tools::checkpoint::save_checkpoint(device, ts, final_path.c_str());
+    if (!rl_tools::checkpoint::save_checkpoint(device, ts, final_path.c_str())) {
+      fprintf(stderr, "Failed to save final checkpoint: %s\n", final_path.c_str());
+      rlt::free(device, ts);
+      return 1;
+    }
   }
 
   rlt::free(device, ts);
@@ -235,31 +250,40 @@ int main(int argc, char** argv) {
   std::string load_path;
   std::string save_prefix;
   TI save_interval = 10000;
-
-  for (int i = 1; i < argc; i++) {
-    std::string arg = argv[i];
-    if (arg == "--eval") {
-      eval_mode = true;
-    } else if (arg == "--load" && i + 1 < argc) {
-      load_path = argv[++i];
-    } else if (arg == "--save" && i + 1 < argc) {
-      save_prefix = argv[++i];
-    } else if (arg == "--save-interval" && i + 1 < argc) {
-      save_interval = static_cast<TI>(std::stoul(argv[++i]));
-    } else if (arg == "--help" || arg == "-h") {
-      printf("Usage: %s [options] [seed]\n", argv[0]);
-      printf("  --eval                Run evaluation mode\n");
-      printf("  --load <path.tar>     Load checkpoint before training\n");
-      printf("  --save <prefix>       Save checkpoints with prefix\n");
-      printf("  --save-interval <N>   Save every N steps (default: 10000)\n");
-      return 0;
-    } else {
-      seed = static_cast<TI>(std::stoul(arg));
-    }
-  }
+  TI max_loop_steps = 0;
 
   try {
-    return run(seed, eval_mode, load_path, save_prefix, save_interval);
+    for (int i = 1; i < argc; i++) {
+      std::string arg = argv[i];
+      if (arg == "--eval") {
+        eval_mode = true;
+      } else if (arg == "--load" && i + 1 < argc) {
+        load_path = argv[++i];
+      } else if (arg == "--save" && i + 1 < argc) {
+        save_prefix = argv[++i];
+      } else if (arg == "--save-interval" && i + 1 < argc) {
+        save_interval = static_cast<TI>(std::stoul(argv[++i]));
+      } else if (arg == "--max-loop-steps" && i + 1 < argc) {
+        max_loop_steps = static_cast<TI>(std::stoul(argv[++i]));
+      } else if (arg == "--help" || arg == "-h") {
+        printf("Usage: %s [options] [seed]\n", argv[0]);
+        printf("  --eval                Run evaluation mode\n");
+        printf("  --load <path.tar>     Load checkpoint before training\n");
+        printf("  --save <prefix>       Save checkpoints with prefix\n");
+        printf("  --save-interval <N>   Save every N steps (default: 10000)\n");
+        printf("  --max-loop-steps <N> Stop after N PPO loop steps (0: full run)\n");
+        return 0;
+      } else {
+        seed = static_cast<TI>(std::stoul(arg));
+      }
+    }
+
+    if (save_interval == 0) {
+      fprintf(stderr, "Save interval must be positive\n");
+      return 1;
+    }
+    return run(seed, eval_mode, load_path, save_prefix, save_interval,
+               max_loop_steps);
   } catch (const std::exception& e) {
     fprintf(stderr, "Error: %s\n", e.what());
     return 1;

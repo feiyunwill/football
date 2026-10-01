@@ -402,7 +402,8 @@ if(BUILD_RL_TRAINING)
   # stdc++fs quadmath
   # )
   target_link_libraries(rl_football_training PRIVATE football_engine Boost::system)
-  target_compile_options(rl_football_training PRIVATE -O3 -ffast-math)
+  # Respect the selected build type; Debug and sanitizer builds must remain
+  # debuggable and must not silently enable unsafe floating-point transforms.
   message(STATUS "RLtools PPO training with real engine enabled")
 endif()
 

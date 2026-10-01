@@ -226,6 +226,7 @@ add_frame_sync_test(frame_simulation_test frame_simulation_test.cpp)
 add_frame_sync_test(memory_budget_test memory_budget_test.cpp)
 # 2026-09-10: native Linux filesystem publication and maximum replay contract.
 add_frame_sync_test(replay_file_test replay_file_test.cpp)
+add_frame_sync_test(checkpoint_file_test checkpoint_file_test.cpp)
 # 2026-09-13: actual filesystem quotas, processes and crash recovery.
 add_frame_sync_test(replay_directory_test replay_directory_test.cpp)
 add_frame_sync_test(reliable_udp_budget_test reliable_udp_budget_test.cpp)

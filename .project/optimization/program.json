@@ -2231,9 +2231,31 @@
     },
     {
       "id": "training_reliability",
-      "ready": false,
+      "ready": true,
       "acceptance": [
-        "检查点写入原子化、损坏/维度不匹配可诊断；环境实例限制明确并受测试约束"
+        "???????????/???????????????????????"
+      ],
+      "argv": ["python3", ".project/checks/training_reliability.py"],
+      "kind": "json",
+      "min_assertions": 51,
+      "timeout": 3600,
+      "sources": [
+        ".gitmodules",
+        "engine/CMakeLists.txt",
+        "engine/src/frame_sync/atomic_file.hpp",
+        "engine/src/frame_sync/replay_file.hpp",
+        "engine/src/frame_sync/rl_training/*.hpp",
+        "engine/src/frame_sync/rl_training/*.cpp",
+        "engine/tests/CMakeLists.txt",
+        "engine/tests/checkpoint_file_test.cpp",
+        "engine/tests/replay_file_test.cpp",
+        "engine/tests/replay_directory_test.cpp",
+        ".project/checks/training_reliability.py"
+      ],
+      "tools": ["python3", "cmake", "c++", "ctest"],
+      "environment": [
+        "CC", "CXX", "CFLAGS", "CXXFLAGS", "LDFLAGS",
+        "GFOOTBALL_DATA_DIR", "SDL_VIDEODRIVER"
       ]
     },
     {
