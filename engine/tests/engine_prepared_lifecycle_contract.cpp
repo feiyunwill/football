@@ -76,7 +76,12 @@ int main(int argc, char** argv) {
     other.state = game_running;
     auto reference = fs::MakeGameEnvCallbacks(&other);
     const auto initial_hash = reference.compute_hash();
-    Require(initial_hash == 1086847095508428874ULL, "Legacy initial hash changed");
+    // HumanController now serializes the pending manual input edge so restored
+    // sessions preserve the same animation choice as uninterrupted sessions.
+    if (initial_hash != 16928600586297136224ULL)
+      throw std::runtime_error("Legacy initial hash changed: " +
+                               std::to_string(initial_hash));
+    ++assertions;
     {
       ContextHolder holder(&other);
       Rejected(env,[&]{ env.get_info(); });

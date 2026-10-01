@@ -20,7 +20,7 @@ from soak_analysis import assess
 
 REFERENCE = 'native-soak-20260910-a/evidence/report.json'
 REFERENCE_SHA = '0c49ddcb78c44208a2d5ea488d2fea7deee920ea890509706cd847b899f56f90'
-REFERENCE_MANIFEST = '.project/optimization/baselines/soak_v3.json'
+REFERENCE_MANIFEST = '.project/optimization/baselines/soak_v4.json'
 SEEDS = (42, 43)
 COMMAND_LAUNCHER = Path('/usr/bin/env')
 
@@ -52,8 +52,8 @@ def reference_runs():
 
     manifest_path = source_path(REFERENCE_MANIFEST)
     manifest = json.loads(manifest_path.read_text())
-    require(manifest['format'] == 3 and manifest['id'] ==
-            'soak-current-gameplay-pre-ecs-query-20261001',
+    require(manifest['format'] == 4 and manifest['id'] ==
+            'soak-handfeel-gameplay-pre-ecs-query-20261002',
             'Wrong long-match reference version')
     require(manifest['measurement_contract'] == {
         'seeds': list(SEEDS), 'warmup_frames': 1000, 'measured_frames': 36000,
@@ -66,7 +66,10 @@ def reference_runs():
     patch = source_path(manifest['semantic_patch'])
     require(benchmark.file_hash(patch) == manifest['semantic_patch_sha256'],
             'Long-match semantic patch changed')
-    ecs_path = source_path('.project/optimization/baselines/ecs_v5.json')
+    parent_path = source_path('.project/optimization/baselines/soak_v3.json')
+    require(benchmark.file_hash(parent_path) == manifest['derived_from_soak_v3_sha256'],
+            'Parent long-match reference changed')
+    ecs_path = source_path('.project/optimization/baselines/ecs_v6.json')
     require(benchmark.file_hash(ecs_path) == manifest['ecs_reference_sha256'],
             'Current-gameplay ECS reference changed')
     ecs = json.loads(ecs_path.read_text())
@@ -75,6 +78,7 @@ def reference_runs():
             manifest['semantic_patch_sha256'] == ecs['semantic_patch_sha256'],
             'Long-match reference source differs from ECS reference')
     files = {str(manifest_path): benchmark.file_hash(manifest_path),
+             str(parent_path): manifest['derived_from_soak_v3_sha256'],
              str(ecs_path): manifest['ecs_reference_sha256'],
              str(original): REFERENCE_SHA, str(patch): manifest['semantic_patch_sha256']}
     for role in ('engine', 'benchmark'):
@@ -94,7 +98,7 @@ def reference_runs():
     require(manifest['binaries']['benchmark'] == previous['binaries']['benchmark'],
             'Long-match workload binary changed during reference refresh')
     files[str(previous_path)] = benchmark.file_hash(previous_path)
-    generator = source_path('.project/optimization/diagnostics/soak_reference_refresh.py')
+    generator = source_path('.project/optimization/diagnostics/soak_reference_refresh_v4.py')
     require(benchmark.file_hash(generator) == manifest['generator_sha256'],
             'Long-match reference generator changed')
     files[str(generator)] = manifest['generator_sha256']

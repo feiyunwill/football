@@ -51,9 +51,17 @@ int main(int argc,char** argv) {
   if(target=="animations.file" || target=="match.finalized"){
    env.reset(*scenario,false);env.state=game_running;
    auto engine=fs::MakeGameEnvCallbacks(&env);
-   Require(engine.compute_hash()==1086847095508428874ULL,"Retry after cancellation changed initial state");
+   const auto initial_hash = engine.compute_hash();
+   if (initial_hash != 16928600586297136224ULL)
+     throw std::runtime_error("Retry after cancellation changed initial state: " +
+                              std::to_string(initial_hash));
+   ++assertions;
    engine.step_frame(std::vector<fs::SlotInput>(3,fs::SlotInput::Default()));
-   Require(engine.compute_hash()==12693704928474537033ULL,"Retry after cancellation changed first frame");
+   const auto first_frame_hash = engine.compute_hash();
+   if (first_frame_hash != 5389848347737004989ULL)
+     throw std::runtime_error("Retry after cancellation changed first frame: " +
+                              std::to_string(first_frame_hash));
+   ++assertions;
   }
   env.close();env.close();Require(!env.context && GetGame()==nullptr,"Cancelled close did not finish");
   std::cout<<"{\"passed\":true,\"assertions\":"<<assertions<<",\"actual_gameenv\":true,\"cancelled\":true,\"skipped\":0}\n";

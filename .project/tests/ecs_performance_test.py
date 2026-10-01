@@ -42,12 +42,12 @@ class PairedPerformanceTest(unittest.TestCase):
             temporary.cleanup()
 
     def test_repository_baseline_rejects_relaxed_cpu_threshold(self):
-        source = Path(__file__).resolve().parents[1] / "optimization/baselines/ecs_v5.json"
+        source = Path(__file__).resolve().parents[1] / "optimization/baselines/ecs_v6.json"
         manifest = json.loads(source.read_text())
         manifest["measurement_contract"]["cpu_bootstrap_95_upper_below"] = 1.01
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            destination = root / ".project/optimization/baselines/ecs_v5.json"
+            destination = root / ".project/optimization/baselines/ecs_v6.json"
             destination.parent.mkdir(parents=True)
             destination.write_text(json.dumps(manifest))
             with mock.patch.object(ecs_performance, "ROOT", root):

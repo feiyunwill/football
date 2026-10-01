@@ -1,0 +1,43 @@
+{
+  "archive": {
+    "generator_sha256": "392e0fb5466c8dcfc53e1e86546c30632e5966fe3f5c0f8ea31efc5376c6d7fc",
+    "path": ".project/optimization/baselines/bot_selection_handfeel_20261002.tar.gz",
+    "sha256": "96308ead1a5383357512e21fcb43b602764a8eefa4522fc412bf5b1cdd645b95"
+  },
+  "candidate_sources": {
+    "engine/src/onthepitch/player/controller/playercontroller.cpp": "931c36452a428c67e8f2e37adcb094b156924f05e20c6bd6f2b1dc514f9863c9",
+    "engine/src/onthepitch/player/humanoid/humanoid.cpp": "1669a4374c092c803dfb5160cf4c5c7a1eff5dbec4b1acfae8f4c846c0e32bdb"
+  },
+  "contract": {
+    "changed_prefix_hashes_vs_prior": 512,
+    "first_changed_frame_vs_prior": 0,
+    "first_unavailable_tail_frame": 77,
+    "opponent_restart_wait_frames": 62,
+    "prefix_frames": 512,
+    "recovered_frames": 62,
+    "tail_frames": 245,
+    "unavailable_frames": 105
+  },
+  "fixtures": {
+    "engine/tests/fixtures/native_bot_transition_hashes_handfeel_20261002.inc": "6521dce658c142c153bf1f8ec844767e7875c03b84d86fe04e085afdb33134df",
+    "engine/tests/fixtures/native_bot_transition_tail_handfeel_20261002.inc": "d7e737d475d4d5a608d2666ac4f8603e02869fbcf322bcf1e4dea1ae582e0d60"
+  },
+  "format": 1,
+  "historical_controller_snapshot": {
+    "decompressed_sha256": "931c36452a428c67e8f2e37adcb094b156924f05e20c6bd6f2b1dc514f9863c9",
+    "path": ".project/optimization/baselines/bot_selection_handfeel_20261002_historical_playercontroller.cpp.gz",
+    "sha256": "328a0f0e3bd0a10d9e64f23181233d859c5586133f2d32eefe683f7a92a75f76"
+  },
+  "historical_reference": ".project/optimization/baselines/bot_selection_assist_20261001.json",
+  "historical_source_snapshot": {
+    "decompressed_sha256": "11c2db820ad36644c1c5d5827778ef4ed0b3907c952d168e330cca54852e0699",
+    "path": ".project/optimization/baselines/bot_selection_handfeel_20261002_historical_humanoid.cpp.gz",
+    "sha256": "4b5002335f4370cc088233dad84cce4f334dd6c5b30856d89570394d0fda663f"
+  },
+  "id": "bot-selection-current-handfeel-20261002",
+  "raw_oracles": {
+    "hashes_sha256": "f7959ffb288c2aa6a183d3eb5631f1a0b0365efb0ce947bc0b10efcb77973c74",
+    "independent_runs": 2,
+    "tail_sha256": "70238197cdefedc2d3fc3ba12b8b15bb53b04f606963421a7d3b3315624eb146"
+  }
+}

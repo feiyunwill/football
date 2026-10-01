@@ -1338,12 +1338,16 @@
         ".project/optimization/baselines/ecs_v3*",
         ".project/optimization/baselines/ecs_v4*",
         ".project/optimization/baselines/ecs_v5*",
+        ".project/optimization/baselines/ecs_v6*",
+        ".project/optimization/diagnostics/ecs_reference_refresh.py",
         ".project/optimization/evidence/ecs_query_legacy_reference_20260928_current_match.json.gz",
         ".project/optimization/evidence/ecs_query_manual_turn_reference_20261001.json.gz",
         ".project/optimization/evidence/ecs_query_assist_reference_20261001.json.gz",
         ".project/optimization/evidence/ecs_query_assist_preperf_reference_20261001.json.gz",
         ".project/optimization/evidence/ecs_v4_failed_formal_20261001.json.gz",
-        ".project/optimization/evidence/ecs_v5_passed_formal_20261001.json.gz"
+        ".project/optimization/evidence/ecs_v5_passed_formal_20261001.json.gz",
+        ".project/optimization/evidence/ecs_handfeel_preperf_reference_20261002.json.gz",
+        ".project/optimization/evidence/ecs_v6_preflight_20261002.json.gz"
       ],
       "tools": [
         "python3",
@@ -1503,6 +1507,13 @@
         ".project/optimization/baselines/soak_v2.json",
         ".project/optimization/baselines/soak_v2_benchmark.gz",
         ".project/optimization/baselines/soak_v2_reference.json.gz",
+        ".project/optimization/baselines/soak_v3.json",
+        ".project/optimization/baselines/soak_v4*",
+        ".project/optimization/baselines/ecs_v6*",
+        ".project/optimization/diagnostics/soak_reference_refresh_v4.py",
+        ".project/optimization/evidence/soak_v4_validation_20261002.tar.gz",
+        ".project/optimization/evidence/ecs_handfeel_preperf_reference_20261002.json.gz",
+        ".project/optimization/evidence/ecs_v6_preflight_20261002.json.gz",
         ".project/optimization/baselines/ecs_v3.json",
         ".project/optimization/baselines/ecs_v3_engine.so.gz",
         ".project/optimization/baselines/ecs_v3_manual_turn.patch"
@@ -1568,6 +1579,10 @@
         ".project/checks/*.py",
         ".project/checks/requirements.txt",
         ".project/optimization/baselines/bot_selection_v2*",
+        ".project/optimization/baselines/bot_selection_*.json",
+        ".project/optimization/baselines/bot_selection_*.tar.gz",
+        ".project/optimization/baselines/bot_selection_*.cpp.gz",
+        ".project/optimization/diagnostics/bot_selection_handfeel_reference.py",
         ".project/reports/optimization-bot-selection-semantic-reference-2026-10-01.md"
       ],
       "tools": [
@@ -2235,7 +2250,10 @@
       "acceptance": [
         "???????????/???????????????????????"
       ],
-      "argv": ["python3", ".project/checks/training_reliability.py"],
+      "argv": [
+        "python3",
+        ".project/checks/training_reliability.py"
+      ],
       "kind": "json",
       "min_assertions": 51,
       "timeout": 3600,
@@ -2252,10 +2270,20 @@
         "engine/tests/replay_directory_test.cpp",
         ".project/checks/training_reliability.py"
       ],
-      "tools": ["python3", "cmake", "c++", "ctest"],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "ctest"
+      ],
       "environment": [
-        "CC", "CXX", "CFLAGS", "CXXFLAGS", "LDFLAGS",
-        "GFOOTBALL_DATA_DIR", "SDL_VIDEODRIVER"
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "GFOOTBALL_DATA_DIR",
+        "SDL_VIDEODRIVER"
       ]
     },
     {

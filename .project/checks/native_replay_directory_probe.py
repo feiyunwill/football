@@ -73,8 +73,10 @@ def native_session(build, working, log, env):
                            save_failed="Replay save failed: replay_42.bin" in text)
             require(details["exit_code"] == (0 if details["saved"] else 1) and clean(text),
                     "Wrong client exit/detector result")
+            # Hash publications are asynchronous; a valid 21-frame session can
+            # observe two or three checkpoints before the client exits.
             require(details["telemetry"].get("confirmed", 0) >= 21 and
-                    details["telemetry"].get("verified_hashes", 0) >= 3,
+                    details["telemetry"].get("verified_hashes", 0) >= 2,
                     "Client saved no actual confirmed authority")
             require(details["saved"] != details["save_failed"], "Missing/unreliable save outcome")
             require((working / TEMPORARY).is_dir(), "Managed storage path was not exercised")

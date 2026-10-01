@@ -1,0 +1,46 @@
+{
+  "format": 6,
+  "id": "ecs-handfeel-gameplay-pre-selection-scratch-and-vector-length-20261002",
+  "source_commit": "308abe6006c3e3d7a7051096abe8fa1461888380",
+  "semantic_patch": ".project/optimization/baselines/ecs_v5_perf_rollback.patch",
+  "semantic_patch_sha256": "814b8d908df94136c89ad08c1b1a731b4d3a6f481a148e28d1c299eb842c7ed9",
+  "source_identity": "9d5d31bfdb782055d3e22533b1761d480d0eb249eb725848419c6c9fd4f059b3",
+  "source_artifact": ".project/optimization/evidence/ecs_handfeel_preperf_reference_20261002.json.gz",
+  "artifact_sha256": "bc2c41c3221512c0e2dbc9c3a7866d796491a823f35a8a58ac23e44a48921387",
+  "artifact_uncompressed_sha256": "5579a4dfb81a3a5bb72b4f7a2238692d68f7ca679b42a641873945f162727866",
+  "validation_artifact": ".project/optimization/evidence/ecs_v6_preflight_20261002.json.gz",
+  "validation_artifact_sha256": "4267abff20f9d74f7e44bd18b28acd772f9447311877c99c88362125d5c6c16c",
+  "measurement_contract": {
+    "seeds": [
+      42,
+      43
+    ],
+    "warmup_steps": 200,
+    "steady_steps": 2000,
+    "process_pairs_per_seed": 15,
+    "cpu_bootstrap_95_upper_below": 1.0,
+    "wall_geometric_ratio_below": 1.0,
+    "median_p99_ratio_max": 1.05,
+    "full_cache_allocations_each": 0,
+    "frame_allocation_count_must_decrease": true,
+    "frame_allocation_bytes_must_decrease": true
+  },
+  "binaries": {
+    "engine": {
+      "path": ".project/optimization/baselines/ecs_v6_engine.so.gz",
+      "compressed_sha256": "af2cee8654d41c9f11998a9c393f3c16e335dc2e1d9e40026c0f43c0e9fd1cb5",
+      "sha256": "bfda26cb28a13bd5c89650c6e9be9df4e2ce9b3435911e43a9593f189685141e",
+      "compressed_bytes": 1158705,
+      "bytes": 3087608
+    },
+    "benchmark": {
+      "path": ".project/optimization/baselines/ecs_v6_match_benchmark.gz",
+      "compressed_sha256": "07b659706333c85ddd05a9b936f01ebad19266559e327e6b9763fab173114586",
+      "sha256": "8317094db9866a14ac8b51f0c3b9fd2e5ca1871de839cf74c038439d11c8099b",
+      "compressed_bytes": 88720,
+      "bytes": 205504
+    }
+  },
+  "derived_from_baseline_v5_sha256": "26f3bfaf7afdb1583151271dcfb90eaa196fc15ada0b6609a0d7188eb43dea7b",
+  "generator_sha256": "921f0dec6e2cbfd3d9d3b1da4027789c762261212e2b677d2b5bcdfba980d2ed"
+}
