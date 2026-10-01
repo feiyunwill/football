@@ -1885,9 +1885,53 @@
     },
     {
       "id": "network_regression",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "两客户端非零变化输入、逐帧哈希；延迟/抖动/丢包/乱序/断线矩阵自动注入并验证"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/network_regression.py"
+      ],
+      "kind": "json",
+      "min_assertions": 242,
+      "timeout": 1800,
+      "sources": [
+        ".project/checks/network_regression.py",
+        ".project/checks/network_reconnect.py",
+        ".project/checks/requirements.txt",
+        ".project/optimization/program.json",
+        ".project/optimization/network-regression.md",
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/__init__.py",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/owned_engine.py",
+        "gfootball/engine_pool.py",
+        "gfootball/env/*.py",
+        "gfootball/__init__.py",
+        "setup.py"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "LD_LIBRARY_PATH",
+        "PYTHONPATH",
+        "PYTHONOPTIMIZE",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT"
       ]
     },
     {
