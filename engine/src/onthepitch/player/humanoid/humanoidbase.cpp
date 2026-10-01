@@ -2115,7 +2115,11 @@ Vector3 HumanoidBase::CalculatePhysicsVector(Animation *anim, bool useDesiredMov
     if (animType == e_DefString_Movement && useDesiredMovement &&
         player->ExternalControllerActive() && match->IsInPlay() &&
         !match->IsInSetPiece() && time_ms < 120 &&
-        adaptedCurrentMovement.GetDotProduct(adaptedDesiredMovement) < -0.1f) {
+        player->GetController()->GetFloatVelocity() >= walkVelocity &&
+        adaptedDesiredMovement.GetDotProduct(
+            player->GetController()->GetDirection()) > 0.5f &&
+        spatialState.movement.GetDotProduct(
+            player->GetController()->GetDirection()) < -0.1f) {
       const float manualBias = 0.6f * (1.0f - time_ms / 120.0f);
       resultingPhysicsMovement = resultingPhysicsMovement * (1.0f - manualBias) +
                                  adaptedDesiredMovement * manualBias;

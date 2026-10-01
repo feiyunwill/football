@@ -39,6 +39,12 @@ class HumanController : public PlayerController {
     virtual void Process();
     virtual Vector3 GetDirection();
     virtual float GetFloatVelocity();
+    bool HasFreshManualMovementInput() const override {
+      return pendingManualMovementInput;
+    }
+    void AcknowledgeManualMovementInput() override {
+      pendingManualMovementInput = false;
+    }
 
     void PreProcess(Match *match, AIControlledKeyboard *hid) {
       this->match = match;
@@ -53,6 +59,8 @@ class HumanController : public PlayerController {
       state->process(actionBufferTime_ms);
       state->process(gauge_ms);
       state->process(previousDirection);
+      state->process(previousManualDirection);
+      state->process(pendingManualMovementInput);
       state->process(steadyDirection);
       state->process(lastSteadyDirectionSnapshotTime_ms);
     }
@@ -81,6 +89,8 @@ class HumanController : public PlayerController {
 
     // stuff to keep track of analog stick (or keys even) so that we can use a direction once it's been pointed in for a while, instead of directly
     Vector3 previousDirection;
+    Vector3 previousManualDirection;
+    bool pendingManualMovementInput = false;
     Vector3 steadyDirection;
     int lastSteadyDirectionSnapshotTime_ms = 0;
     float mirror = 1.0;

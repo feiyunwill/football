@@ -139,6 +139,15 @@ void Humanoid::Process() {
           CastPlayer()->GetController()->GetDirection()) < -0.1f &&
       (match->GetBall()->Predict(100).Get2D() - spatialState.position)
           .GetLength() > 0.7f;
+  const bool manualInputEdgeTurn = CastPlayer()->ExternalControllerActive() &&
+      currentAnim.functionType == e_FunctionType_Movement &&
+      currentAnim.touchFrame == -1 && currentAnim.frameNum >= 5 &&
+      match->IsInPlay() && !match->IsInSetPiece() &&
+      CastPlayer()->GetController()->HasFreshManualMovementInput() &&
+      CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
+      spatialState.movement.GetDotProduct(
+          CastPlayer()->GetController()->GetDirection()) <
+          CastPlayer()->GetController()->GetFloatVelocity() * 0.5f;
   const bool manualMovementTurn = CastPlayer()->ExternalControllerActive() &&
       currentAnim.functionType == e_FunctionType_Movement &&
       currentAnim.touchFrame == -1 && match->IsInPlay() &&
@@ -175,7 +184,8 @@ void Humanoid::Process() {
     float actionDistance = ((spatialState.position + spatialState.movement * 0.1f) - match->GetBall()->Predict(100).Get2D()).GetLength();
 
     int team_id = team->GetID() == match->SecondTeam() ? 1 : 0;
-    if (manualMovementTurn || manualPostTouchTurn || manualFarBallTurn) {
+    if (manualMovementTurn || manualInputEdgeTurn ||
+        manualPostTouchTurn || manualFarBallTurn) {
       frameNumPredicate = true;
     } else if (match->GetDesignatedPossessionPlayer() == player &&
         actionDistance < 3.0f) {
@@ -213,7 +223,8 @@ void Humanoid::Process() {
     DO_VALIDATION;
 
     float ballDistance = (currentMentalImage->GetBallPrediction(500).Get2D() - spatialState.position).GetLength();
-    if ((manualMovementTurn || manualPostTouchTurn || manualFarBallTurn ||
+    if ((manualMovementTurn || manualInputEdgeTurn ||
+         manualPostTouchTurn || manualFarBallTurn ||
          (currentAnim.functionType == e_FunctionType_Movement &&
           !CastPlayer()->HasPossession() && ballDistance < 16.0f) ||
          (currentAnim.functionType == e_FunctionType_Movement &&
@@ -280,6 +291,11 @@ void Humanoid::Process() {
         preferPassAndShot = true;
       }
       found = SelectAnim(command, interruptAnim, preferPassAndShot);
+      if (found && command.desiredFunctionType == e_FunctionType_Movement &&
+          command.desiredDirection.GetDotProduct(
+              CastPlayer()->GetController()->GetDirection()) > 0.5f) {
+        CastPlayer()->GetController()->AcknowledgeManualMovementInput();
+      }
       if (found) break;
     }
 
@@ -1225,6 +1241,7 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
 
   bool manualMomentumRecovery = false;
   bool manualAssistedTurn = false;
+  bool manualFreshMovementInput = false;
   if (localInterruptAnim == e_InterruptAnim_ReQueue) {
     DO_VALIDATION;
 
@@ -1284,8 +1301,18 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
         match->GetBallRetainer() == 0 &&
         (match->GetBall()->Predict(100).Get2D() - spatialState.position)
             .GetLength() > 1.0f;
+    manualFreshMovementInput = manualMovementContext &&
+        currentAnim.frameNum >= 5 &&
+        CastPlayer()->GetController()->HasFreshManualMovementInput() &&
+        CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
+        command.desiredVelocityFloat > 0.5f &&
+        command.desiredDirection.GetDotProduct(
+            CastPlayer()->GetController()->GetDirection()) > 0.5f &&
+        spatialState.movement.GetDotProduct(
+            CastPlayer()->GetController()->GetDirection()) <
+            CastPlayer()->GetController()->GetFloatVelocity() * 0.5f;
     const bool manualMovementTurn = manualMomentumRecovery ||
-        manualAssistedTurn ||
+        manualAssistedTurn || manualFreshMovementInput ||
         (manualMovementContext &&
          CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
          (CastPlayer()->GetController()->GetDirection().GetDotProduct(
@@ -1307,7 +1334,8 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
     // too similar to what we are already trying to accomplish
     if (currentAnim.originatingCommand.desiredFunctionType ==
             command.desiredFunctionType && !manualMomentumRecovery &&
-        !manualAssistedTurn && commandChangeMagnitude < 1.5f) {
+        !manualAssistedTurn && !manualFreshMovementInput &&
+        commandChangeMagnitude < 1.5f) {
       DO_VALIDATION;
       return false;
     }
@@ -1714,6 +1742,7 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
     // don't requeue to same quadrant
     if (currentAnim.functionType == command.desiredFunctionType &&
         !manualMomentumRecovery && !manualAssistedTurn &&
+        !manualFreshMovementInput &&
 
         ((FloatToEnumVelocity(currentAnim.anim->GetOutgoingVelocity()) !=
               e_Velocity_Idle &&

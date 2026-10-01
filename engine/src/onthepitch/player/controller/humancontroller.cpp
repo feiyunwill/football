@@ -399,6 +399,18 @@ void HumanController::Process() {
   Vector3 currentDirection;
   float dud = 0.0f;
   _GetHidInput(currentDirection, dud);
+  // Keep a new physical direction pending until the movement animation accepts
+  // it. Ball assistance can make the previous animation direction look similar
+  // even though the player just pressed a key after releasing it.
+  const Vector3 manualDirection = hid->GetDirection();
+  if (manualDirection.GetLength() < analogStickDeadzone) {
+    pendingManualMovementInput = false;
+  } else if (previousManualDirection.GetLength() < analogStickDeadzone ||
+             manualDirection.GetNormalized().GetDotProduct(
+                 previousManualDirection.GetNormalized()) < 0.5f) {
+    pendingManualMovementInput = true;
+  }
+  previousManualDirection = manualDirection;
   radian angle = fabs(currentDirection.GetAngle2D(previousDirection));
   previousDirection = currentDirection;
   DO_VALIDATION;
@@ -589,6 +601,8 @@ void HumanController::Reset() {
   lastSteadyDirectionSnapshotTime_ms = 0;
   steadyDirection = Vector3(0, -1, 0);
   previousDirection = Vector3(0, -1, 0);
+  previousManualDirection = Vector3();
+  pendingManualMovementInput = false;
 
   fadingTeamPossessionAmount = 1.0;
   hid->ResetNotSticky();

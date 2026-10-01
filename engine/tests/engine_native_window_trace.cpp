@@ -197,7 +197,7 @@ extern "C" void ObserveHumanCommand(HumanController* controller,
       "\"steer_x\":%.9g,\"steer_y\":%.9g,\"steer_vx\":%.9g,\"steer_vy\":%.9g,"
       "\"origin_x\":%.9g,\"origin_y\":%.9g,\"origin_speed\":%.9g,"
       "\"controller_x\":%.9g,\"controller_y\":%.9g,\"controller_speed\":%.9g,"
-      "\"has_possession\":%s}\n",
+      "\"has_possession\":%s,\"ball_retainer\":%s}\n",
       Now(), static_cast<const void*>(player), player->GetTeam()->GetID(),
       team_index, position.coords[0], position.coords[1],
       hid.coords[0], hid.coords[1],
@@ -215,7 +215,8 @@ extern "C" void ObserveHumanCommand(HumanController* controller,
       active_anim->originatingCommand.desiredVelocityFloat,
       controller_direction.coords[0], controller_direction.coords[1],
       controller->GetFloatVelocity(),
-      player->HasPossession() ? "true" : "false");
+      player->HasPossession() ? "true" : "false",
+      controller->GetMatch()->GetBallRetainer() == player ? "true" : "false");
 }
 
 extern "C" bool ObserveAnimSelection(Humanoid*, const PlayerCommand&,
