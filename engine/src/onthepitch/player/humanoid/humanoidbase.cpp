@@ -2109,6 +2109,23 @@ Vector3 HumanoidBase::CalculatePhysicsVector(Animation *anim, bool useDesiredMov
 
     resultingPhysicsMovement = resultingPhysicsMovement * physicsBias + animMovement * (1.0f - physicsBias);
 
+    // Give an urgent opposite manual turn a short physics lead while the
+    // selected animation catches up. The existing acceleration cap below
+    // still bounds the displacement of each simulation frame.
+    const bool urgentManualTurn =
+        animType == e_DefString_Movement && useDesiredMovement &&
+        player->ExternalControllerActive() && match->IsInPlay() &&
+        !match->IsInSetPiece() && time_ms < 120 &&
+        player->GetController()->GetFloatVelocity() >= walkVelocity &&
+        adaptedDesiredMovement.GetDotProduct(
+            player->GetController()->GetDirection()) > 0.5f &&
+        spatialState.movement.GetDotProduct(
+            player->GetController()->GetDirection()) < -0.1f;
+    if (urgentManualTurn) {
+      const float manualBias = 1.0f - time_ms / 120.0f;
+      resultingPhysicsMovement = resultingPhysicsMovement * (1.0f - manualBias) +
+                                 adaptedDesiredMovement * manualBias;
+    }
 
     // that's it, we now know where we want to go in life
 
@@ -2226,6 +2243,10 @@ Vector3 HumanoidBase::CalculatePhysicsVector(Animation *anim, bool useDesiredMov
       // }
 
       maxChange *= powerFactor;
+      // Let a newly selected manual reversal brake in its first few frames;
+      // retain the bounded per-substep change used for every other action.
+      if (urgentManualTurn && time_ms < 60)
+        maxChange = std::max(maxChange, 0.04f);
 
       float desiredLength = toDesired.GetLength();
       float maxAddition = maxChange * timeStep_ms;

@@ -1,0 +1,41 @@
+{
+  "kind": "isolated_handfeel_candidate_trace",
+  "base_commit": "a7d49b8621df9bf3a9b728547c1b13d662f9a112",
+  "candidate_source_sha256": {
+    "engine/src/onthepitch/player/controller/humancontroller.cpp": "1c9a856b1640613c93011d82313d4cf9e456901cddf35d6f3ea5e2a2c1318d83",
+    "engine/src/onthepitch/player/controller/humancontroller.hpp": "207bc515f280c84d187d2a8e3badc3cdf96c3b20131524cc5192a3f2fa7aa986",
+    "engine/src/onthepitch/player/controller/icontroller.hpp": "cba66753dcb86dfc72e494c5d6374b4760e60a8e4b03712da4970f50db1d5aac",
+    "engine/src/onthepitch/player/humanoid/humanoid.cpp": "1669a4374c092c803dfb5160cf4c5c7a1eff5dbec4b1acfae8f4c846c0e32bdb",
+    "engine/src/onthepitch/player/humanoid/humanoidbase.cpp": "71cbf13098097fcbbceb1270d23d9eb636a16eafc31916827a962ccabb05f7ae"
+  },
+  "full_archives_location": "/tmp/football-feel-product-candidate-20261001/.project/optimization/evidence",
+  "compact_archives_omit": "PPM framebuffer captures; all JSON/JSONL/log/action/authority artifacts retained",
+  "runs": [
+    {
+      "full_archive": "feel_regression-1790866826565882788.tar.gz",
+      "full_sha256": "6d03b4c505c8f764d870317bff4094d5f7239bc16d84840220b6d378ce002b62",
+      "compact_archive": "feel_candidate_trace-1790866826565882788.tar.gz",
+      "compact_sha256": "4313860994aba71ba5deefe9d5566483c2cc217d4d8c2e5befd02e5cde4b6269",
+      "compact_bytes": 1199550,
+      "passed": true,
+      "presses": 60,
+      "responded": 60,
+      "response_p95_ms": 45.032,
+      "visible_p95_ms": 48.207,
+      "engine_core_sha256": "44f8200ce5ef5fee974f9339adb8887ba885e7dee5f9e14ad694f9e6df71178d"
+    },
+    {
+      "full_archive": "feel_regression-1790867004209587892.tar.gz",
+      "full_sha256": "5d7bd683a09453d62c38709829282b4022f58e769df0648595c85ea5774558c1",
+      "compact_archive": "feel_candidate_trace-1790867004209587892.tar.gz",
+      "compact_sha256": "5dd3eb6fc040a897498fff06a5b532d313ed2f1cf53e0ebb979b74e69d5cc4d4",
+      "compact_bytes": 1196135,
+      "passed": true,
+      "presses": 60,
+      "responded": 60,
+      "response_p95_ms": 43.167,
+      "visible_p95_ms": 45.437,
+      "engine_core_sha256": "44f8200ce5ef5fee974f9339adb8887ba885e7dee5f9e14ad694f9e6df71178d"
+    }
+  ]
+}

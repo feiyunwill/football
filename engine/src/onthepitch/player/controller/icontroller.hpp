@@ -36,6 +36,8 @@ class IController {
     virtual Vector3 GetDirection() = 0;
     virtual void ProcessState(EnvState* state) = 0;
     virtual float GetFloatVelocity() = 0;
+    virtual bool HasFreshManualMovementInput() const { return false; }
+    virtual void AcknowledgeManualMovementInput() {}
     virtual void SetPlayer(PlayerBase *player);
 
     // for convenience
