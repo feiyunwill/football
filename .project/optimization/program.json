@@ -1771,9 +1771,57 @@
     },
     {
       "id": "network_reconnect",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "连接和握手超时、心跳 RTT、全量快照恢复、重新追帧与过期会话清理"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/network_reconnect.py"
+      ],
+      "kind": "json",
+      "min_assertions": 163,
+      "timeout": 1800,
+      "sources": [
+        ".project/checks/network_reconnect.py",
+        ".project/checks/requirements.txt",
+        ".project/optimization/program.json",
+        ".project/optimization/network-reconnect.md",
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/tests/CMakeLists.txt",
+        "engine/tests/tcp_client_capacity_test.cpp",
+        "engine/src/frame_sync/*.hpp",
+        "engine/src/frame_sync/*.cpp",
+        "engine/src/game_env.cpp",
+        "engine/src/game_env.hpp",
+        "engine/__init__.py",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/frame_sync/*.py",
+        "gfootball/owned_engine.py",
+        "gfootball/engine_pool.py",
+        "gfootball/env/*.py",
+        "gfootball/__init__.py",
+        "setup.py"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "ctest",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "LD_LIBRARY_PATH",
+        "PYTHONPATH",
+        "PYTHONOPTIMIZE",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT"
       ]
     },
     {
