@@ -33,13 +33,15 @@ def percentile(values, fraction):
     return ordered[math.ceil(fraction * len(ordered)) - 1]
 
 
-def analyze(output, actions):
+def analyze(output, actions, require_causal=False):
     trace = output / "trace"
     rows = events(trace)
     steps = [row for row in rows if row["kind"] == "step"]
     timing = {row["index"]: row for row in rows if row["kind"] == "step_timing"}
     rendering = [row for row in rows if row["kind"] == "render_timing"]
     swaps = [row for row in rows if row["kind"] == "swap" and row["render_owner"]]
+    human_commands = [row for row in rows if row["kind"] == "human_command"]
+    animation_choices = [row for row in rows if row["kind"] == "anim_select"]
     require(len(timing) == len(steps) and swaps, "Missing actual player steps or product swaps")
     samples = []
     for action in actions:
@@ -70,11 +72,42 @@ def analyze(output, actions):
             samples.append({"index": action["index"], "direction": direction,
                             "status": "no_admitted_step_for_same_player"})
             continue
-        responded = next((row for row in active if row["index"] >= admitted["index"] and
+        raw_response = next((row for row in active if row["index"] >= admitted["index"] and
                           row["owned"] == baseline["owned"] and
                           timing[row["index"]]["in_play"] and
                           timing[row["index"]].get("game_mode") == 0 and
                           direction * (timing[row["index"]]["vx"] - initial_vx) >= .1), None)
+        aligned_commands = [row for row in human_commands
+                            if start <= row["time"] < end and
+                            row.get("team_id") == 0 and
+                            row.get("team_index") == baseline["owned"] and
+                            row.get("hid_x") == direction and
+                            row.get("desired_x", 0) * direction > .1 and
+                            row.get("desired_speed", 0) > 0]
+        accepted_movement = next((choice for choice in animation_choices
+                                  if start <= choice["time"] < end and
+                                  choice["command_type"] == 1 and
+                                  choice["accepted"] is True and
+                                  choice.get("desired_x", 0) * direction > .1 and
+                                  any(command["player"] == choice["player"] and
+                                      command["time"] <= choice["time"]
+                                      for command in aligned_commands)), None)
+        causal_start = accepted_movement["time"] if accepted_movement else None
+        pre_selection = next((row for row in reversed(steps)
+                              if causal_start is not None and row["time"] < causal_start and
+                              row["owned"] == baseline["owned"]), baseline)
+        pre_selection_vx = timing[pre_selection["index"]]["vx"]
+        responded = raw_response
+        if require_causal:
+            responded = (next((row for row in active
+                               if row["index"] >= admitted["index"] and
+                               row["owned"] == baseline["owned"] and
+                               row["time"] >= causal_start and
+                               timing[row["index"]]["in_play"] and
+                               timing[row["index"]].get("game_mode") == 0 and
+                               direction * (timing[row["index"]]["vx"] - initial_vx) >= .1 and
+                               direction * (timing[row["index"]]["vx"] - pre_selection_vx) >= .1), None)
+                         if causal_start is not None else None)
         following_admission = next((row for row in swaps if row["time"] >= admitted["time"]), None)
         following_response = (next((row for row in swaps if row["time"] >= responded["time"]), None)
                               if responded else None)
@@ -87,6 +120,13 @@ def analyze(output, actions):
                         "owned_player": baseline["owned"],
                         "input_admission_ms": round((admitted["time"] - start) / 1e6, 3),
                         "render_blocking_before_admission_ms": round(render_blocking_ms, 3),
+                        "raw_velocity_change_ms": (round((raw_response["time"] - start) / 1e6, 3)
+                                                   if raw_response else None),
+                        "first_aligned_command_ms": (round((aligned_commands[0]["time"] - start) / 1e6, 3)
+                                                     if aligned_commands else None),
+                        "first_accepted_aligned_movement_ms": (round((causal_start - start) / 1e6, 3)
+                                                               if causal_start is not None else None),
+                        "pre_selection_vx": pre_selection_vx if causal_start is not None else None,
                         "velocity_response_ms": (round((responded["time"] - start) / 1e6, 3)
                                                  if responded else None),
                         "first_swap_after_admission_ms": round((following_admission["time"] - start) / 1e6, 3),
@@ -105,6 +145,7 @@ def analyze(output, actions):
     responses = [row["velocity_response_ms"] for row in samples
                  if row.get("velocity_response_ms") is not None]
     return {"samples": samples, "step_count": len(steps), "swap_count": len(swaps),
+            "causal_trace_required": require_causal,
             "render_count": len(rendering),
             "admitted_count": len(admitted_samples),
             "response_count": len(responses),
@@ -202,7 +243,7 @@ def product(output, build, library, cycles, gpu_driver_root, seed, trace_command
         keyboard.tap("q")
         require(client.wait(timeout=15) == 0, "Actual product exit failed")
         (output / "actions.json").write_text(json.dumps(actions, indent=2) + "\n")
-        result = analyze(output, actions)
+        result = analyze(output, actions, require_causal=trace_commands)
         result.update(actual_product_main=True, actual_xtest=True,
                       actual_player_velocity=True, passed=True,
                       source_sha256=sha(__file__), trace_sha256=sha(trace / "events.jsonl"),

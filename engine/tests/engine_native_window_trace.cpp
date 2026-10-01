@@ -10,6 +10,7 @@
 #include "frame_sync/input_codec.hpp"
 #include "onthepitch/player/controller/humancontroller.hpp"
 #include "onthepitch/player/player.hpp"
+#include "onthepitch/team.hpp"
 #include <SDL.h>
 #include <SDL_syswm.h>
 #include <dlfcn.h>
@@ -162,7 +163,17 @@ extern "C" void ObserveHumanCommand(HumanController* controller,
   const Vector3 hid = controller->GetHIDevice()->GetDirection();
   const auto before = commands.size();
   next(controller, commands);
-  const auto* player = controller->CastPlayer();
+  auto* player = controller->CastPlayer();
+  int team_index = 0;
+  bool found_player = false;
+  for (auto* teammate : player->GetTeam()->GetAllPlayers()) {
+    if (teammate == player) {
+      found_player = true;
+      break;
+    }
+    if (teammate->CastHumanoid()) ++team_index;
+  }
+  if (!found_player) team_index = -1;
   const PlayerCommand* movement = nullptr;
   for (size_t i = before; i < commands.size(); ++i)
     if (commands[i].desiredFunctionType == e_FunctionType_Movement)
@@ -170,10 +181,11 @@ extern "C" void ObserveHumanCommand(HumanController* controller,
   const auto position = player->GetPosition();
   const auto actual = player->GetMovement();
   std::fprintf(Log(),
-      "{\"kind\":\"human_command\",\"time\":%lld,\"player\":\"%p\",\"player_x\":%.9g,\"player_y\":%.9g,"
+      "{\"kind\":\"human_command\",\"time\":%lld,\"player\":\"%p\",\"team_id\":%d,\"team_index\":%d,\"player_x\":%.9g,\"player_y\":%.9g,"
       "\"hid_x\":%.9g,\"hid_y\":%.9g,\"actual_vx\":%.9g,\"actual_vy\":%.9g,"
       "\"movement\":%s,\"desired_x\":%.9g,\"desired_y\":%.9g,\"desired_speed\":%.9g}\n",
-      Now(), static_cast<const void*>(player), position.coords[0], position.coords[1],
+      Now(), static_cast<const void*>(player), player->GetTeam()->GetID(),
+      team_index, position.coords[0], position.coords[1],
       hid.coords[0], hid.coords[1],
       actual.coords[0], actual.coords[1], movement ? "true" : "false",
       movement ? movement->desiredDirection.coords[0] : 0,

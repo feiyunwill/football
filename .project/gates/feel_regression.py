@@ -122,6 +122,8 @@ def evaluate(cohort, output, binaries, sources):
         check(report.get("trace_sha256") == sha(directory / "trace/events.jsonl") and
               report.get("actions_sha256") == sha(directory / "actions.json"),
               f"Raw replay evidence changed for seed {seed}")
+        check(report.get("causal_trace_required") is True,
+              f"Command-to-animation attribution missing for seed {seed}")
         check(report.get("source_sha256") == sources[
               ".project/optimization/diagnostics/feel_latency_window.py"] and
               report.get("trace_source_sha256") == sources[
@@ -140,6 +142,12 @@ def evaluate(cohort, output, binaries, sources):
                   f"No real player velocity response: seed {seed}, press {index}")
             check(sample.get("first_swap_after_response_ms") is not None,
                   f"No product display after response: seed {seed}, press {index}")
+            check(sample.get("velocity_response_ms") is None or
+                  (sample.get("first_aligned_command_ms") is not None and
+                   sample.get("first_accepted_aligned_movement_ms") is not None and
+                   sample["velocity_response_ms"] >=
+                   sample["first_accepted_aligned_movement_ms"]),
+                  f"Velocity changed before accepted input animation: seed {seed}, press {index}")
             all_samples.append(dict(sample, seed=seed))
     check(all_samples == samples, "Cohort samples differ from per-match raw reports")
     responses = [row["velocity_response_ms"] for row in all_samples
@@ -192,6 +200,8 @@ def classify_delays(output):
             human = [event for event in relevant
                      if event["kind"] == "human_command" and
                      start <= event["time"] < end and
+                     event.get("team_id") == 0 and
+                     event.get("team_index") == sample.get("owned_player") and
                      event.get("hid_x") == direction]
             players = {event["player"] for event in human}
             selected = [event for event in relevant
@@ -210,6 +220,7 @@ def classify_delays(output):
             touch_pending = any(event.get("touch_pending") is True
                                 for event in selected)
             response = sample.get("velocity_response_ms")
+            raw_response = sample.get("raw_velocity_change_ms")
             visible = sample.get("first_swap_after_response_ms")
             violation = response is None or visible is None or max(response, visible) > BUDGET_MS
             first_human = (round((human[0]["time"] - start) / 1e6, 3)
@@ -224,6 +235,9 @@ def classify_delays(output):
                 cause = "controlled_player_changed"
             elif not human:
                 cause = "no_human_command_in_window"
+            elif (raw_response is not None and response is None and
+                  first_human is not None and raw_response < first_human):
+                cause = "motion_before_human_command"
             elif opposing and (not aligned or first_aligned > BUDGET_MS):
                 cause = "assist_direction_conflict"
             elif touch_pending:
@@ -232,6 +246,8 @@ def classify_delays(output):
                 cause = "late_command_sampling"
             elif first_accepted is None or first_accepted > BUDGET_MS:
                 cause = "animation_selection_delay"
+            elif raw_response is not None and response is None:
+                cause = "motion_without_causal_acceleration"
             elif response is None or response > BUDGET_MS:
                 cause = "movement_physics_delay"
             else:
@@ -248,6 +264,7 @@ def classify_delays(output):
                           "first_aligned_command_ms": first_aligned,
                           "first_accepted_aligned_movement_ms": first_accepted,
                           "input_admission_ms": sample.get("input_admission_ms"),
+                          "raw_velocity_change_ms": raw_response,
                           "velocity_response_ms": response,
                           "first_swap_after_response_ms": visible})
     require(len(cases) == SAMPLES and
