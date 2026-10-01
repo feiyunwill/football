@@ -1,0 +1,37 @@
+{
+  "format": 1,
+  "id": "bot-selection-manual-momentum-20261001",
+  "historical_reference": ".project/optimization/baselines/bot_selection_requeue_20261001.json",
+  "historical_source_snapshot": {
+    "path": ".project/optimization/baselines/bot_selection_requeue_20261001_source.cpp.gz",
+    "sha256": "b836b6c9a49843d95f48329338a79410ad5d4c2d2f368a27083012b2967b58b4",
+    "decompressed_sha256": "3bf1e36af576bad7d93b4776687ef5c833de4741fdc0937afe994444bf25a1fa"
+  },
+  "candidate_source": {
+    "path": "engine/src/onthepitch/player/humanoid/humanoid.cpp",
+    "sha256": "11c2db820ad36644c1c5d5827778ef4ed0b3907c952d168e330cca54852e0699"
+  },
+  "archive": {
+    "path": ".project/optimization/baselines/bot_selection_momentum_20261001.tar.gz",
+    "sha256": "70e1b28236781d417b6d56630ff3fde9f796255f614257f39a9091dc9da12f0e",
+    "generator_sha256": "976e6b2d3b1efc5a5ba597dd80213115fe93f0867502a231fe1175af29282e40",
+    "candidate_patch_sha256": "adcb6a1ba8ca4a67d3fbac4f247906627f110f206c8cb56ce83957066246b929"
+  },
+  "fixtures": {
+    "engine/tests/fixtures/native_bot_transition_hashes_momentum_20261001.inc": "49ecb22d4bbde9948fb404b49a0aa46a60b2e5bba4a01e22501d7fdc3b84d35f",
+    "engine/tests/fixtures/native_bot_transition_tail_momentum_20261001.inc": "de6f17b42f9f2815e66a9fca8f9159eb71d656ff66191eb9c7ba0e7334373b0c"
+  },
+  "raw_oracles": {
+    "hashes_sha256": "79b642667a7e03edfa96027c974de3e9845fe5d85704e634a9e59aff53ee0452",
+    "tail_sha256": "bcbbc93a2c31647bd7511c95b7e424c862ccd56cf6a68248efc0d6d82b39ec38",
+    "independent_runs": 2
+  },
+  "contract": {
+    "prefix_frames": 512,
+    "tail_frames": 91,
+    "first_changed_frame_vs_prior": 134,
+    "changed_prefix_hashes_vs_prior": 378,
+    "unavailable_frames": 13,
+    "recovered_frames": 1
+  }
+}

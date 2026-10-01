@@ -1216,7 +1216,7 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
         (command.desiredDirection.GetDotProduct(
              currentAnim.originatingCommand.desiredDirection) < 0.5f ||
          command.desiredVelocityFloat -
-             currentAnim.originatingCommand.desiredVelocityFloat > 1.0f);
+              currentAnim.originatingCommand.desiredVelocityFloat > 1.0f);
     if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && !manualMovementTurn && (CastPlayer()->HasPossession()/* || team->GetTeamPossessionAmount() >= 1.0f*/ || focusDistance > 12.0f)) return false;
     if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && !manualMovementTurn && currentAnim.frameNum + minRemainingMovementReQueueFrames > currentAnim.anim->GetEffectiveFrameCount()) return false;
     if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && (!allowMovementReQueue || (!manualMovementTurn && reQueueDelayFrames > 0))) return false;
@@ -1231,7 +1231,7 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
         ((currentAnim.originatingCommand.desiredDirection *
           currentAnim.originatingCommand.desiredVelocityFloat) -
          (command.desiredDirection * command.desiredVelocityFloat))
-                .GetLength() < 1.5f) {
+                 .GetLength() < 1.5f) {
       DO_VALIDATION;
       return false;
     }
@@ -1251,10 +1251,14 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
       Vector3 plannedMomentumChange = currentAnim.outgoingMovement - currentAnim.incomingMovement;
       Vector3 desiredMomentumChange = (command.desiredDirection * command.desiredVelocityFloat) - spatialState.movement;
 
-      if ((desiredMomentumChange.GetDotProduct(plannedMomentumChange) > 0.0f &&
-           desiredMomentumChange.GetDistance(plannedMomentumChange) < 4.0f) ||
-          desiredMomentumChange.GetDotProduct(plannedMomentumChange) > 0.8f ||
-          desiredMomentumChange.GetDistance(plannedMomentumChange) < 2.0f) {
+      // A deliberate manual turn already passed the command-change checks above.
+      // This legacy dot-product test uses velocity magnitudes, so it can reject
+      // a much stronger requested turn even when the animation cannot deliver it.
+      if (!manualMovementTurn &&
+          ((desiredMomentumChange.GetDotProduct(plannedMomentumChange) > 0.0f &&
+            desiredMomentumChange.GetDistance(plannedMomentumChange) < 4.0f) ||
+           desiredMomentumChange.GetDotProduct(plannedMomentumChange) > 0.8f ||
+           desiredMomentumChange.GetDistance(plannedMomentumChange) < 2.0f)) {
         DO_VALIDATION;
         return false;
       }
