@@ -1642,9 +1642,38 @@
     },
     {
       "id": "feel_regression",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "脚本输入到实际球员响应可测量；本机动作生效 p95 不超过 50ms；输出回放证据"
+      ],
+      "argv": ["python3", ".project/gates/feel_regression.py"],
+      "kind": "json",
+      "min_assertions": 300,
+      "timeout": 3600,
+      "sources": [
+        ".project/gates/feel_regression.py",
+        ".project/optimization/diagnostics/feel_latency_*.py",
+        ".project/checks/native_input_window_cases.py",
+        ".project/optimization/program.json",
+        ".project/optimization/feel-acceptance.md",
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/tests/engine_native_window_trace.cpp",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf"
+      ],
+      "tools": ["python3", "cmake", "c++", "unshare", "mount"],
+      "environment": [
+        "CC", "CXX", "CFLAGS", "CXXFLAGS", "LDFLAGS",
+        "FOOTBALL_TEST_X11_ROOT", "FOOTBALL_FEEL_GPU_DRIVER_ROOT",
+        "DISPLAY", "SDL_VIDEODRIVER", "LD_LIBRARY_PATH", "LD_PRELOAD",
+        "GFOOTBALL_DATA_DIR", "GFOOTBALL_FONT", "LIBGL_ALWAYS_SOFTWARE",
+        "GALLIUM_DRIVER", "MESA_LOADER_DRIVER_OVERRIDE", "LIBGL_DRIVERS_PATH",
+        "PYTHONOPTIMIZE"
       ]
     },
     {
