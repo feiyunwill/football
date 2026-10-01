@@ -1,0 +1,44 @@
+{
+  "format": 3,
+  "id": "soak-current-gameplay-pre-ecs-query-20261001",
+  "source_commit": "7243fcfae56e98f0f9c0b0d71f6a51c0b993b0e7",
+  "source_identity": "4f078c5ce08151400907c1e56b1e38c617660d65974069fb134993cff994c582",
+  "semantic_patch": ".project/optimization/baselines/ecs_v5_perf_rollback.patch",
+  "semantic_patch_sha256": "814b8d908df94136c89ad08c1b1a731b4d3a6f481a148e28d1c299eb842c7ed9",
+  "ecs_reference_sha256": "26f3bfaf7afdb1583151271dcfb90eaa196fc15ada0b6609a0d7188eb43dea7b",
+  "derived_from_reference_sha256": "0c49ddcb78c44208a2d5ea488d2fea7deee920ea890509706cd847b899f56f90",
+  "measurement_contract": {
+    "seeds": [
+      42,
+      43
+    ],
+    "warmup_frames": 1000,
+    "measured_frames": 36000,
+    "logical_p99_ns_below": 50000000,
+    "rss_growth_bytes_max": 4194304,
+    "rss_quarter_drift_bytes_max": 262144,
+    "rss_late_plateau_bytes_max": 262144
+  },
+  "reference_artifact": ".project/optimization/baselines/soak_v3_reference.json.gz",
+  "artifact_sha256": "9ac9a61fc8511eb01a8919856702384aa654a382386fa7e9e53bbeca9fb5e4b9",
+  "artifact_uncompressed_sha256": "2d15d0fb78816ec8fdeb5bb828e6fd93e4138b6cb4cbd3f74e01d161f11cc511",
+  "validation_artifact": ".project/optimization/evidence/soak_v3_validation_20261001.tar.gz",
+  "validation_artifact_sha256": "58ca49dd77ad4d30493f65744f170682fe34da06f2e381f9eca2d191ea50e2ad",
+  "generator_sha256": "85c5bdaa56a3d65006395d7eb76aacd27a9ddc48d3266d6c4c1ac4b4dec64d41",
+  "binaries": {
+    "engine": {
+      "path": ".project/optimization/baselines/ecs_v5_engine.so.gz",
+      "compressed_sha256": "20c7703676d955ba45c9affd3cf104c2abd5027be07c8513d5125e69e79192bf",
+      "sha256": "a02e1db4cff483d7edd2f52dba8749e4cefddadc701c50066ccfad8947779597",
+      "compressed_bytes": 1156612,
+      "bytes": 3079064
+    },
+    "benchmark": {
+      "path": ".project/optimization/baselines/soak_v2_benchmark.gz",
+      "compressed_sha256": "1dea510145e189168e307d4e9431d43f4ed37f5bd7c0f3d04631473c111bda40",
+      "sha256": "39fd6ad932508c0dd795651588838a2adf674a43991ad752d9ea012f4ae5f5e7",
+      "compressed_bytes": 90614,
+      "bytes": 209624
+    }
+  }
+}
