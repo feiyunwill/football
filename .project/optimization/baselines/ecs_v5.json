@@ -1,0 +1,43 @@
+{
+  "format": 5,
+  "id": "ecs-current-gameplay-pre-selection-scratch-and-vector-length-20261001",
+  "source_commit": "7243fcfae56e98f0f9c0b0d71f6a51c0b993b0e7",
+  "semantic_patch": ".project/optimization/baselines/ecs_v5_perf_rollback.patch",
+  "semantic_patch_sha256": "814b8d908df94136c89ad08c1b1a731b4d3a6f481a148e28d1c299eb842c7ed9",
+  "source_identity": "4f078c5ce08151400907c1e56b1e38c617660d65974069fb134993cff994c582",
+  "source_artifact": ".project/optimization/evidence/ecs_query_assist_preperf_reference_20261001.json.gz",
+  "artifact_sha256": "34b0e5de7240e53893230086e9e0185d0b63860fd31d17c6f5edb5ec55dc9dd2",
+  "artifact_uncompressed_sha256": "b4d1aeb888bdb6f6832f6ac71267ce26151bc9ec968fae163da8498af89c2134",
+  "measurement_contract": {
+    "seeds": [
+      42,
+      43
+    ],
+    "warmup_steps": 200,
+    "steady_steps": 2000,
+    "process_pairs_per_seed": 15,
+    "cpu_bootstrap_95_upper_below": 1.0,
+    "wall_geometric_ratio_below": 1.0,
+    "median_p99_ratio_max": 1.05,
+    "full_cache_allocations_each": 0,
+    "frame_allocation_count_must_decrease": true,
+    "frame_allocation_bytes_must_decrease": true
+  },
+  "binaries": {
+    "engine": {
+      "path": ".project/optimization/baselines/ecs_v5_engine.so.gz",
+      "compressed_sha256": "20c7703676d955ba45c9affd3cf104c2abd5027be07c8513d5125e69e79192bf",
+      "sha256": "a02e1db4cff483d7edd2f52dba8749e4cefddadc701c50066ccfad8947779597",
+      "compressed_bytes": 1156612,
+      "bytes": 3079064
+    },
+    "benchmark": {
+      "path": ".project/optimization/baselines/ecs_v5_match_benchmark.gz",
+      "compressed_sha256": "07b659706333c85ddd05a9b936f01ebad19266559e327e6b9763fab173114586",
+      "sha256": "8317094db9866a14ac8b51f0c3b9fd2e5ca1871de839cf74c038439d11c8099b",
+      "compressed_bytes": 88720,
+      "bytes": 205504
+    }
+  },
+  "derived_from_baseline_v4_sha256": "3cfed62b74ef52d1e76925c761126856484f63b152024eda1cc32c9b56cc2d8f"
+}

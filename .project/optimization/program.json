@@ -1336,8 +1336,14 @@
         ".project/optimization/ecs-performance.md",
         ".project/optimization/baselines/ecs_v2*",
         ".project/optimization/baselines/ecs_v3*",
+        ".project/optimization/baselines/ecs_v4*",
+        ".project/optimization/baselines/ecs_v5*",
         ".project/optimization/evidence/ecs_query_legacy_reference_20260928_current_match.json.gz",
-        ".project/optimization/evidence/ecs_query_manual_turn_reference_20261001.json.gz"
+        ".project/optimization/evidence/ecs_query_manual_turn_reference_20261001.json.gz",
+        ".project/optimization/evidence/ecs_query_assist_reference_20261001.json.gz",
+        ".project/optimization/evidence/ecs_query_assist_preperf_reference_20261001.json.gz",
+        ".project/optimization/evidence/ecs_v4_failed_formal_20261001.json.gz",
+        ".project/optimization/evidence/ecs_v5_passed_formal_20261001.json.gz"
       ],
       "tools": [
         "python3",
