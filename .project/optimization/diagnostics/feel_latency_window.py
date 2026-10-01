@@ -42,14 +42,25 @@ def analyze(output, actions, require_causal=False):
     swaps = [row for row in rows if row["kind"] == "swap" and row["render_owner"]]
     human_commands = [row for row in rows if row["kind"] == "human_command"]
     animation_choices = [row for row in rows if row["kind"] == "anim_select"]
+    ball_touches = [row for row in rows if row["kind"] == "ball_touch"]
     require(len(timing) == len(steps) and swaps, "Missing actual player steps or product swaps")
     samples = []
     for action in actions:
         start, end, direction = action["start_ns"], action["end_ns"], action["direction"]
         before = [row for row in steps if row["time"] < start]
         active = [row for row in steps if start <= row["time"] < end]
-        require(before and active, f"Missing player window for press {action['index']}")
+        require(before, f"Missing pre-press player state for press {action['index']}")
         baseline = before[-1]
+        if not active:
+            blocked_ms = sum(max(0, min(row["end"], end) -
+                                 max(row["start"], start)) for row in rendering) / 1e6
+            samples.append({"index": action["index"], "direction": direction,
+                            "status": "no_simulation_step_during_press",
+                            "owned_player": baseline["owned"],
+                            "render_blocking_during_press_ms": round(blocked_ms, 3),
+                            "input_admission_ms": None,
+                            "velocity_response_ms": None})
+            continue
         if baseline["owned"] < 0:
             samples.append({"index": action["index"], "direction": direction,
                             "status": "no_controlled_player_at_press"})
@@ -92,7 +103,25 @@ def analyze(output, actions, require_causal=False):
                                   any(command["player"] == choice["player"] and
                                       command["time"] <= choice["time"]
                                       for command in aligned_commands)), None)
-        causal_start = accepted_movement["time"] if accepted_movement else None
+        # A newly selected BallControl/Trap animation can also move the player.
+        # Count it only when the same player later makes intentional contact;
+        # an old pending touch or an uncommitted animation is not input causality.
+        accepted_touch = next((choice for choice in animation_choices
+                               if start <= choice["time"] < end and
+                               choice["command_type"] in (2, 3) and
+                               choice["accepted"] is True and
+                               choice.get("desired_x", 0) * direction > .1 and
+                               any(command["player"] == choice["player"] and
+                                   command["time"] <= choice["time"]
+                                   for command in aligned_commands) and
+                               any(touch.get("player") == choice["player"] and
+                                   touch.get("touch_type") == 0 and
+                                   choice["time"] <= touch["time"] <= end + 100_000_000
+                                   for touch in ball_touches)), None)
+        accepted_action = min((choice for choice in (accepted_movement, accepted_touch)
+                               if choice is not None),
+                              key=lambda choice: choice["time"], default=None)
+        causal_start = accepted_action["time"] if accepted_action else None
         pre_selection = next((row for row in reversed(steps)
                               if causal_start is not None and row["time"] < causal_start and
                               row["owned"] == baseline["owned"]), baseline)
@@ -124,8 +153,14 @@ def analyze(output, actions, require_causal=False):
                                                    if raw_response else None),
                         "first_aligned_command_ms": (round((aligned_commands[0]["time"] - start) / 1e6, 3)
                                                      if aligned_commands else None),
-                        "first_accepted_aligned_movement_ms": (round((causal_start - start) / 1e6, 3)
-                                                               if causal_start is not None else None),
+                        "first_accepted_aligned_movement_ms": (round((accepted_movement["time"] - start) / 1e6, 3)
+                                                               if accepted_movement else None),
+                        "first_accepted_aligned_touch_ms": (round((accepted_touch["time"] - start) / 1e6, 3)
+                                                            if accepted_touch else None),
+                        "first_accepted_aligned_action_ms": (round((causal_start - start) / 1e6, 3)
+                                                             if causal_start is not None else None),
+                        "causal_action_type": (accepted_action["command_type"]
+                                               if accepted_action else None),
                         "pre_selection_vx": pre_selection_vx if causal_start is not None else None,
                         "velocity_response_ms": (round((responded["time"] - start) / 1e6, 3)
                                                  if responded else None),
@@ -141,7 +176,6 @@ def analyze(output, actions, require_causal=False):
                         "admission_swap_index": following_admission["index"],
                         "response_swap_index": following_response["index"] if following_response else None})
     admitted_samples = [row for row in samples if row.get("input_admission_ms") is not None]
-    require(admitted_samples, "No controlled-player inputs reached simulation")
     responses = [row["velocity_response_ms"] for row in samples
                  if row.get("velocity_response_ms") is not None]
     return {"samples": samples, "step_count": len(steps), "swap_count": len(swaps),
@@ -156,7 +190,8 @@ def analyze(output, actions, require_causal=False):
                                        if len(admitted_samples) >= 20 else None),
             "input_admission_p95_ms": (percentile([row["input_admission_ms"] for row in admitted_samples], .95)
                                        if len(admitted_samples) >= 20 else None),
-            "observed_admission_p95_ms": percentile([row["input_admission_ms"] for row in admitted_samples], .95),
+            "observed_admission_p95_ms": (percentile([row["input_admission_ms"] for row in admitted_samples], .95)
+                                           if admitted_samples else None),
             "velocity_response_p95_ms": percentile(responses, .95) if len(responses) >= 20 else None,
             "observed_response_p95_ms": percentile(responses, .95) if responses else None,
             "swap_after_admission_p95_ms": (percentile([row["first_swap_after_admission_ms"] for row in admitted_samples], .95)

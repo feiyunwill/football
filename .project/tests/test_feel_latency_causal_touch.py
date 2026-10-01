@@ -1,0 +1,91 @@
+"""Accepted touch animations count only after real, same-player contact."""
+
+import importlib.util
+from pathlib import Path
+from tempfile import TemporaryDirectory
+import unittest
+from unittest.mock import patch
+
+
+SCRIPT = Path(__file__).resolve().parents[1] / "optimization/diagnostics/feel_latency_window.py"
+spec = importlib.util.spec_from_file_location("feel_latency_window", SCRIPT)
+feel_window = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(feel_window)
+
+
+def fixture_rows(touch_player="controlled", touch_time_ms=80, include_selection=True):
+    start = 1_000_000_000
+    ms = 1_000_000
+    rows = [
+        {"kind": "step", "time": start - 10 * ms, "index": 0, "x": 0,
+         "owned": 7, "player_x": 0.0},
+        {"kind": "step_timing", "index": 0, "vx": 0.0,
+         "in_play": True, "game_mode": 0},
+        {"kind": "human_command", "time": start + 5 * ms,
+         "player": "controlled", "team_id": 0, "team_index": 7,
+         "hid_x": 1, "desired_x": 1, "desired_speed": 5},
+        {"kind": "step", "time": start + 10 * ms, "index": 1, "x": 1,
+         "owned": 7, "player_x": 0.01},
+        {"kind": "step_timing", "index": 1, "vx": 0.0,
+         "in_play": True, "game_mode": 0},
+        {"kind": "swap", "time": start + 15 * ms, "index": 1,
+         "render_owner": True},
+        {"kind": "step", "time": start + 30 * ms, "index": 2, "x": 1,
+         "owned": 7, "player_x": 0.02},
+        {"kind": "step_timing", "index": 2, "vx": 0.2,
+         "in_play": True, "game_mode": 0},
+        {"kind": "swap", "time": start + 35 * ms, "index": 2,
+         "render_owner": True},
+        {"kind": "ball_touch", "time": start + touch_time_ms * ms,
+         "player": touch_player, "touch_type": 0},
+    ]
+    if include_selection:
+        rows.append({"kind": "anim_select", "time": start + 6 * ms,
+                     "player": "controlled", "command_type": 2,
+                     "desired_x": 1, "accepted": True})
+    return rows, [{"index": 0, "start_ns": start,
+                   "end_ns": start + 100 * ms, "direction": 1}]
+
+
+def analyze_case(**kwargs):
+    rows, actions = fixture_rows(**kwargs)
+    with TemporaryDirectory() as directory, patch.object(feel_window, "events", return_value=rows):
+        return feel_window.analyze(Path(directory), actions, require_causal=True)["samples"][0]
+
+
+class CausalTouchTests(unittest.TestCase):
+    def test_new_touch_with_same_player_contact_is_causal(self):
+        sample = analyze_case()
+        self.assertEqual(sample["velocity_response_ms"], 30)
+        self.assertIsNone(sample["first_accepted_aligned_movement_ms"])
+        self.assertEqual(sample["first_accepted_aligned_touch_ms"], 6)
+        self.assertEqual(sample["causal_action_type"], 2)
+
+    def test_render_stall_is_recorded_as_failed_press(self):
+        rows, actions = fixture_rows()
+        rows = [row for row in rows
+                if not (row["kind"] in ("step", "step_timing") and row["index"] > 0)]
+        start = actions[0]["start_ns"]
+        rows.append({"kind": "render_timing", "start": start - 20_000_000,
+                     "end": start + 120_000_000})
+        with TemporaryDirectory() as directory, patch.object(feel_window, "events", return_value=rows):
+            report = feel_window.analyze(Path(directory), actions, require_causal=True)
+        sample = report["samples"][0]
+        self.assertEqual(sample["status"], "no_simulation_step_during_press")
+        self.assertEqual(sample["render_blocking_during_press_ms"], 100)
+        self.assertEqual(report["admitted_count"], 0)
+        self.assertIsNone(report["observed_admission_p95_ms"])
+
+    def test_unconfirmed_or_preexisting_touch_cannot_claim_response(self):
+        for case in ({"touch_player": "another-player"},
+                     {"touch_time_ms": 201},
+                     {"include_selection": False}):
+            with self.subTest(case=case):
+                sample = analyze_case(**case)
+                self.assertEqual(sample["raw_velocity_change_ms"], 30)
+                self.assertIsNone(sample["velocity_response_ms"])
+                self.assertIsNone(sample["first_accepted_aligned_touch_ms"])
+
+
+if __name__ == "__main__":
+    unittest.main()

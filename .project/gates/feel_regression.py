@@ -144,9 +144,9 @@ def evaluate(cohort, output, binaries, sources):
                   f"No product display after response: seed {seed}, press {index}")
             check(sample.get("velocity_response_ms") is None or
                   (sample.get("first_aligned_command_ms") is not None and
-                   sample.get("first_accepted_aligned_movement_ms") is not None and
+                   sample.get("first_accepted_aligned_action_ms") is not None and
                    sample["velocity_response_ms"] >=
-                   sample["first_accepted_aligned_movement_ms"]),
+                   sample["first_accepted_aligned_action_ms"]),
                   f"Velocity changed before accepted input animation: seed {seed}, press {index}")
             all_samples.append(dict(sample, seed=seed))
     check(all_samples == samples, "Cohort samples differ from per-match raw reports")
@@ -232,6 +232,8 @@ def classify_delays(output):
                               if accepted_movement else None)
             if not violation:
                 cause = "within_budget"
+            elif sample.get("status") == "no_simulation_step_during_press":
+                cause = "render_stalled_during_press"
             elif len(players) > 1:
                 cause = "controlled_player_changed"
             elif not human:
