@@ -2116,9 +2116,52 @@
     },
     {
       "id": "render_regression",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "明确 GPU/分辨率/画质设置下 1080p 帧时间 p95≤16.67ms；缺少测量不得通过"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/render_regression.py"
+      ],
+      "kind": "json",
+      "min_assertions": 256,
+      "timeout": 1800,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/tests/engine_render_budget_benchmark.cpp",
+        "engine/data/**/*",
+        ".project/checks/render_regression.py",
+        ".project/checks/pbr_pipeline.py",
+        ".project/checks/postprocessing.py",
+        ".project/checks/render_images.py"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "DISPLAY",
+        "LIBGL_ALWAYS_SOFTWARE",
+        "MESA_LOADER_DRIVER_OVERRIDE",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_USE_PBR",
+        "GFOOTBALL_PBR_BLOOM",
+        "GFOOTBALL_PBR_FXAA",
+        "GFOOTBALL_PBR_AUTO_EXPOSURE",
+        "PYTHONOPTIMIZE"
       ]
     },
     {

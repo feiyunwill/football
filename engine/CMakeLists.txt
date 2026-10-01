@@ -427,6 +427,11 @@ add_executable(engine_frame_capture_contract EXCLUDE_FROM_ALL ${ENGINE_FRAME_CAP
 target_link_libraries(engine_frame_capture_contract PRIVATE football_engine)
 set_target_properties(engine_frame_capture_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
+# Product-resolution render timing is a separate benchmark from small image fixtures.
+add_executable(engine_render_budget_benchmark EXCLUDE_FROM_ALL tests/engine_render_budget_benchmark.cpp)
+target_link_libraries(engine_render_budget_benchmark PRIVATE football_engine)
+set_target_properties(engine_render_budget_benchmark PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+
 # 2026-09-09: shared TCP client resumes a real GameEnv server.
 add_executable(engine_tcp_client_contract EXCLUDE_FROM_ALL ${ENGINE_TCP_CLIENT_CONTRACT_SOURCES})
 target_link_libraries(engine_tcp_client_contract PRIVATE football_engine Boost::system)

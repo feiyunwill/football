@@ -64,10 +64,13 @@
     }
   },
   "states": {
-    "0": "7f97f4714ee10fc9f9fe85261ac20f874229c8916293d3b7a26a7c6e773b18f7",
-    "40": "71e0b02d49c194c1e28847d6e00a8974fb8c39d0c482f896c17b930cac6d38b0",
-    "80": "d676a2e1045b6e6bbf0080e6bfa4c4978f4d3b55b276339f021ecf93e42614e6",
-    "120": "fdaf370ec9167cca47a1154bd7cea720bdcc6cb0181d7ff0e5983377db315627",
-    "160": "cbc49eb19098fd68a219d8056c95ce19b163fe579796aebcfd10406062d8059c"
-  }
+    "0": "afa2ed3c74415ee612062048ae2030d2eb971959c7bd93cbf9bb0f4919e9fb28",
+    "40": "fc1b83065eee5b7f96b88cbc5e36bf42ac11a88a2c215cff43974be409af8555",
+    "80": "ef0d78778ab470c0ca71eba006fc261431ae1fd9b5dca2bc50df6caeb6fe7f87",
+    "120": "2bf4b5402f6a9dd3ce36e061aa6cb43ef6f61549348c25df29fac9626d43ac2d",
+    "160": "8862e9db2c43e3fd616ec713ab8eefcfdf55c2b2c6bff2a6766b50b7b5585635"
+  },
+  "state_reference_stage": "render-images-1790886319818945451",
+  "state_reference_commit": "4fb9c526bc8620b6034af2374fced8013c5fe833",
+  "state_reference_note": "HumanController manual-input state added 12-byte direction and 1-byte pending flag; image reference is byte-identical."
 }
