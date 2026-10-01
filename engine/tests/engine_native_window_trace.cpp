@@ -75,17 +75,53 @@ void Picture(SDL_Window* window) {
   if (std::fclose(file) != 0) std::abort();
 }
 }
+// Observe whether the UI owner misses polls or SDL blocks it while GL presents.
+// Only slow/gapped polls and keyboard events are logged to limit observer cost.
+extern "C" int SDL_PollEvent(SDL_Event* event) {
+  static const auto next = Next<int(*)(SDL_Event*)>("SDL_PollEvent");
+  static thread_local long long previous_end = 0;
+  const auto start = Now();
+  const int result = next(event);
+  const auto end = Now();
+  const auto gap = previous_end ? start - previous_end : 0;
+  previous_end = end;
+  const bool keyboard = result && event &&
+      (event->type == SDL_KEYDOWN || event->type == SDL_KEYUP);
+  if (gap > 10000000 || end - start > 2000000 || keyboard) {
+    const unsigned event_type = result && event ? event->type : 0;
+    const int key = keyboard ? event->key.keysym.scancode : -1;
+    std::fprintf(Log(),
+        "{\"kind\":\"sdl_poll\",\"start\":%lld,\"end\":%lld,"
+        "\"gap_ns\":%lld,\"duration_ns\":%lld,\"event_type\":%u,"
+        "\"scancode\":%d}\n",
+        start, end, gap, end - start, event_type, key);
+    std::fflush(Log());
+  }
+  return result;
+}
 extern "C" void SDL_GL_SwapWindow(SDL_Window* window) {
   static const auto next = Next<void(*)(SDL_Window*)>("SDL_GL_SwapWindow");
   ++swaps;
+  if (swaps == 1) {
+    std::fprintf(Log(), "{\"kind\":\"swap_interval\",\"time\":%lld,\"value\":%d}\n",
+                 Now(), SDL_GL_GetSwapInterval());
+    std::fflush(Log());
+  }
   SDL_SysWMinfo info{};
   SDL_VERSION(&info.version);
   const auto xid = SDL_GetWindowWMInfo(window, &info) && info.subsystem == SDL_SYSWM_X11
       ? static_cast<unsigned long>(info.info.x11.window) : 0;
+  const auto picture_start = Now();
   Picture(window);
-  std::fprintf(Log(), "{\"kind\":\"swap\",\"time\":%lld,\"index\":%llu,\"xid\":%lu,\"render_owner\":%s}\n", Now(), swaps, xid, rendering ? "true" : "false");
+  const auto before_swap = Now();
+  std::fprintf(Log(), "{\"kind\":\"swap\",\"time\":%lld,\"index\":%llu,\"xid\":%lu,\"render_owner\":%s}\n", before_swap, swaps, xid, rendering ? "true" : "false");
   std::fflush(Log());
   next(window);
+  const auto after_swap = Now();
+  std::fprintf(Log(), "{\"kind\":\"swap_timing\",\"index\":%llu,\"start\":%lld,\"end\":%lld,\"picture_ns\":%lld,\"swap_ns\":%lld}\n",
+               swaps, before_swap, after_swap, before_swap - picture_start,
+               after_swap - before_swap);
+  std::fflush(Log());
 }
 extern "C" void ObserveRender(GameEnv*, float, bool) asm("_ZN7GameEnv19render_interpolatedEfb");
 extern "C" void ObserveRender(GameEnv* env, float alpha, bool swap) {

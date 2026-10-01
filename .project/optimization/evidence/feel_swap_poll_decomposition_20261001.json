@@ -1,0 +1,46 @@
+{
+  "scope": "15 standalone product windows, four XTEST presses each, private D3D12 renderer; diagnostic only",
+  "formal_acceptance": false,
+  "base_commit": "9bcfa795bb52d3d6fb498fed7ac12846f8024e90",
+  "engine_sha256": "d4942513a1d27949d91c659a46dc7270535b0e13c2da89cefe58f4f4893f179b",
+  "trace_sha256": "b793b0411e2c50563cb22511fd3541e07491369900fd7f79610a149a5e3d191c",
+  "driver_sha256": "46e392bcd6aafc9abeeb1aed1874fa47cb60e1b30665d5da818c14fc5e35f998",
+  "cohort_report_sha256": "70836578427e04f597053dd4de1f7d94a34b386441df7e9ef097b5c0cda7c9a4",
+  "presses": 60,
+  "responded": 60,
+  "input_keydown_observation_ms": {
+    "count": 60,
+    "p50": 2.086,
+    "p95": 4.923,
+    "max": 5.436
+  },
+  "input_admission_p95_ms": 36.43,
+  "velocity_response_p95_ms": 65.508,
+  "visible_response_p95_ms": 68.605,
+  "response_over_50_ms": 11,
+  "paired_frames": 4358,
+  "render_ms": {
+    "count": 4358,
+    "p50": 14.911,
+    "p95": 22.718,
+    "max": 182.334
+  },
+  "swap_ms": {
+    "count": 4358,
+    "p50": 12.048,
+    "p95": 19.489,
+    "max": 47.302
+  },
+  "paired_swap_fraction": {
+    "count": 4358,
+    "p50": 0.819,
+    "p95": 0.885,
+    "max": 0.944
+  },
+  "swap_interval": 0,
+  "limitations": [
+    "WSL private D3D12 path is not a substitute for target GPU acceptance",
+    "Trace interposition adds small measurement overhead",
+    "135 framebuffer PPMs are kept in the local raw directory and listed by hash in the compact archive"
+  ]
+}
