@@ -1,0 +1,77 @@
+diff --git a/engine/src/onthepitch/player/humanoid/humanoid.cpp b/engine/src/onthepitch/player/humanoid/humanoid.cpp
+index 4f41252..2a53fa9 100755
+--- a/engine/src/onthepitch/player/humanoid/humanoid.cpp
++++ b/engine/src/onthepitch/player/humanoid/humanoid.cpp
+@@ -1197,26 +1197,41 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
+ 
+   // /optimizations
+ 
++  bool manualMomentumRecovery = false;
+   if (localInterruptAnim == e_InterruptAnim_ReQueue) {
+     DO_VALIDATION;
+ 
+     float focusDistance = (match->GetDesignatedPossessionPlayer()->GetPosition() - spatialState.position).GetLength();
+ 
+     if (currentAnim.functionType != e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement) return false;
+-    const bool manualMovementTurn = CastPlayer()->ExternalControllerActive() &&
++    const bool manualMovementContext = CastPlayer()->ExternalControllerActive() &&
+         currentAnim.functionType == e_FunctionType_Movement &&
+         command.desiredFunctionType == e_FunctionType_Movement &&
+         currentAnim.touchFrame == -1 && match->IsInPlay() &&
+-        !match->IsInSetPiece() &&
+-        CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
+-        (CastPlayer()->GetController()->GetDirection().GetDotProduct(
+-             currentAnim.originatingCommand.desiredDirection) < 0.5f ||
+-         CastPlayer()->GetController()->GetFloatVelocity() -
+-             currentAnim.originatingCommand.desiredVelocityFloat > 1.0f) &&
+-        (command.desiredDirection.GetDotProduct(
+-             currentAnim.originatingCommand.desiredDirection) < 0.5f ||
+-         command.desiredVelocityFloat -
+-              currentAnim.originatingCommand.desiredVelocityFloat > 1.0f);
++        !match->IsInSetPiece();
++    const float commandChangeMagnitude =
++        ((currentAnim.originatingCommand.desiredDirection *
++          currentAnim.originatingCommand.desiredVelocityFloat) -
++         (command.desiredDirection * command.desiredVelocityFloat)).GetLength();
++    manualMomentumRecovery = manualMovementContext &&
++        CastPlayer()->GetController()->GetFloatVelocity() > 0.5f &&
++        command.desiredVelocityFloat > 0.5f &&
++        commandChangeMagnitude >= 1.5f &&
++        command.desiredDirection.GetDotProduct(
++            CastPlayer()->GetController()->GetDirection()) > 0.5f &&
++        spatialState.movement.GetDotProduct(
++            CastPlayer()->GetController()->GetDirection()) < -0.1f;
++    const bool manualMovementTurn = manualMomentumRecovery ||
++        (manualMovementContext &&
++         CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
++         (CastPlayer()->GetController()->GetDirection().GetDotProduct(
++                currentAnim.originatingCommand.desiredDirection) < 0.5f ||
++          CastPlayer()->GetController()->GetFloatVelocity() -
++               currentAnim.originatingCommand.desiredVelocityFloat > 1.0f) &&
++         (command.desiredDirection.GetDotProduct(
++               currentAnim.originatingCommand.desiredDirection) < 0.5f ||
++          command.desiredVelocityFloat -
++              currentAnim.originatingCommand.desiredVelocityFloat > 1.0f));
+     if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && !manualMovementTurn && (CastPlayer()->HasPossession()/* || team->GetTeamPossessionAmount() >= 1.0f*/ || focusDistance > 12.0f)) return false;
+     if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && !manualMovementTurn && currentAnim.frameNum + minRemainingMovementReQueueFrames > currentAnim.anim->GetEffectiveFrameCount()) return false;
+     if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && (!allowMovementReQueue || (!manualMovementTurn && reQueueDelayFrames > 0))) return false;
+@@ -1228,10 +1243,7 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
+     // too similar to what we are already trying to accomplish
+     if (currentAnim.originatingCommand.desiredFunctionType ==
+             command.desiredFunctionType &&
+-        ((currentAnim.originatingCommand.desiredDirection *
+-          currentAnim.originatingCommand.desiredVelocityFloat) -
+-         (command.desiredDirection * command.desiredVelocityFloat))
+-                 .GetLength() < 1.5f) {
++        commandChangeMagnitude < 1.5f) {
+       DO_VALIDATION;
+       return false;
+     }
+@@ -1637,6 +1649,7 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
+ 
+     // don't requeue to same quadrant
+     if (currentAnim.functionType == command.desiredFunctionType &&
++        !manualMomentumRecovery &&
+ 
+         ((FloatToEnumVelocity(currentAnim.anim->GetOutgoingVelocity()) !=
+               e_Velocity_Idle &&
