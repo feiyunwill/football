@@ -131,8 +131,15 @@ extern "C" void ObserveStep(GameEnv* env, const void* bytes, size_t size) {
   for (const auto& entry : env->scenario_config.left_team) controllable += entry.controllable;
   std::fprintf(Log(), "{\"kind\":\"step\",\"time\":%lld,\"index\":%llu,\"x\":%.9g,\"y\":%.9g,"
                       "\"buttons\":%u,\"owned\":%d,\"player_x\":%.9g,\"player_y\":%.9g,"
+                      "\"ball_x\":%.9g,\"ball_y\":%.9g,\"ball_z\":%.9g,"
+                      "\"ball_vx\":%.9g,\"ball_vy\":%.9g,\"ball_vz\":%.9g,"
+                      "\"ball_owned_team\":%d,\"ball_owned_player\":%d,"
                       "\"controllable\":%d,\"state\":%d,\"slots\":%zu}\n",
                Now(), ++steps, input.dir_x, input.dir_y, input.buttons, owned, x, y,
+               info.ball_position[0], info.ball_position[1],
+               info.ball_position[2], info.ball_direction[0],
+               info.ball_direction[1], info.ball_direction[2],
+               info.ball_owned_team, info.ball_owned_player,
                controllable, static_cast<int>(env->state), size / sizeof(input));
   std::fflush(Log());
 }
@@ -180,17 +187,35 @@ extern "C" void ObserveHumanCommand(HumanController* controller,
       movement = &commands[i];
   const auto position = player->GetPosition();
   const auto actual = player->GetMovement();
+  const auto controller_direction = controller->GetDirection();
+  const auto* active_anim = player->CastHumanoid()->GetCurrentAnim();
   std::fprintf(Log(),
       "{\"kind\":\"human_command\",\"time\":%lld,\"player\":\"%p\",\"team_id\":%d,\"team_index\":%d,\"player_x\":%.9g,\"player_y\":%.9g,"
       "\"hid_x\":%.9g,\"hid_y\":%.9g,\"actual_vx\":%.9g,\"actual_vy\":%.9g,"
-      "\"movement\":%s,\"desired_x\":%.9g,\"desired_y\":%.9g,\"desired_speed\":%.9g}\n",
+      "\"movement\":%s,\"desired_x\":%.9g,\"desired_y\":%.9g,\"desired_speed\":%.9g,"
+      "\"anim_type\":%d,\"anim_frame\":%d,\"anim_touch\":%d,"
+      "\"steer_x\":%.9g,\"steer_y\":%.9g,\"steer_vx\":%.9g,\"steer_vy\":%.9g,"
+      "\"origin_x\":%.9g,\"origin_y\":%.9g,\"origin_speed\":%.9g,"
+      "\"controller_x\":%.9g,\"controller_y\":%.9g,\"controller_speed\":%.9g,"
+      "\"has_possession\":%s}\n",
       Now(), static_cast<const void*>(player), player->GetTeam()->GetID(),
       team_index, position.coords[0], position.coords[1],
       hid.coords[0], hid.coords[1],
       actual.coords[0], actual.coords[1], movement ? "true" : "false",
       movement ? movement->desiredDirection.coords[0] : 0,
       movement ? movement->desiredDirection.coords[1] : 0,
-      movement ? movement->desiredVelocityFloat : 0);
+      movement ? movement->desiredVelocityFloat : 0,
+      static_cast<int>(active_anim->functionType), active_anim->frameNum,
+      active_anim->touchFrame, active_anim->movementSmuggleOffset.coords[0],
+      active_anim->movementSmuggleOffset.coords[1],
+      active_anim->movementSmuggle.coords[0],
+      active_anim->movementSmuggle.coords[1],
+      active_anim->originatingCommand.desiredDirection.coords[0],
+      active_anim->originatingCommand.desiredDirection.coords[1],
+      active_anim->originatingCommand.desiredVelocityFloat,
+      controller_direction.coords[0], controller_direction.coords[1],
+      controller->GetFloatVelocity(),
+      player->HasPossession() ? "true" : "false");
 }
 
 extern "C" bool ObserveAnimSelection(Humanoid*, const PlayerCommand&,
@@ -205,6 +230,10 @@ extern "C" bool ObserveAnimSelection(Humanoid* humanoid,
   if (!std::getenv("FOOTBALL_FEEL_COMMAND_TRACE"))
     return next(humanoid, command, interrupt, prefer_pass);
   const int before = humanoid->GetCurrentFrame();
+  const int type_before = static_cast<int>(
+      humanoid->CastPlayer()->GetCurrentFunctionType());
+  const bool touch_pending_before = humanoid->TouchPending();
+  const int touch_frame_before = humanoid->GetTouchFrame();
   const auto position = humanoid->CastPlayer()->GetPosition();
   const bool selected = next(humanoid, command, interrupt, prefer_pass);
   std::fprintf(Log(),
@@ -212,7 +241,8 @@ extern "C" bool ObserveAnimSelection(Humanoid* humanoid,
       "\"interrupt\":%d,\"current_type\":%d,\"has_possession\":%s,"
       "\"touch_pending\":%s,\"touch_frame\":%d,"
       "\"command_type\":%d,\"desired_x\":%.9g,"
-      "\"desired_speed\":%.9g,\"accepted\":%s,\"frame_before\":%d,\"frame_after\":%d}\n",
+      "\"desired_speed\":%.9g,\"accepted\":%s,\"frame_before\":%d,\"frame_after\":%d,"
+      "\"type_before\":%d,\"touch_pending_before\":%s,\"touch_frame_before\":%d}\n",
       Now(), static_cast<const void*>(humanoid->CastPlayer()), position.coords[0],
       position.coords[1], static_cast<int>(interrupt),
       static_cast<int>(humanoid->CastPlayer()->GetCurrentFunctionType()),
@@ -220,6 +250,23 @@ extern "C" bool ObserveAnimSelection(Humanoid* humanoid,
       humanoid->TouchPending() ? "true" : "false", humanoid->GetTouchFrame(),
       static_cast<int>(command.desiredFunctionType), command.desiredDirection.coords[0],
       command.desiredVelocityFloat, selected ? "true" : "false", before,
-      humanoid->GetCurrentFrame());
+      humanoid->GetCurrentFrame(), type_before,
+      touch_pending_before ? "true" : "false", touch_frame_before);
   return selected;
+}
+
+// Observe committed contact separately from animation selection. The game
+// records the last-touch player after it updates ball physics.
+extern "C" void ObserveLastTouch(Team*, Player*, e_TouchType)
+    asm("_ZN4Team18SetLastTouchPlayerEP6Player11e_TouchType");
+extern "C" void ObserveLastTouch(Team* team, Player* player, e_TouchType type) {
+  static const auto next = Next<void(*)(Team*, Player*, e_TouchType)>(
+      "_ZN4Team18SetLastTouchPlayerEP6Player11e_TouchType");
+  next(team, player, type);
+  if (!std::getenv("FOOTBALL_FEEL_COMMAND_TRACE")) return;
+  std::fprintf(Log(),
+      "{\"kind\":\"ball_touch\",\"time\":%lld,\"player\":\"%p\","
+      "\"team_id\":%d,\"touch_type\":%d}\n",
+      Now(), static_cast<const void*>(player), team->GetID(),
+      static_cast<int>(type));
 }

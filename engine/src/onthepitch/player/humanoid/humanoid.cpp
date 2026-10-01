@@ -119,6 +119,26 @@ void Humanoid::Process() {
   }
 
   bool mayReQueue = allowReQueue;
+  // Once a committed touch has happened, a new manual direction may take
+  // priority over the remainder of the ball-control animation.
+  const bool manualPostTouchTurn = CastPlayer()->ExternalControllerActive() &&
+      (currentAnim.functionType == e_FunctionType_BallControl ||
+       currentAnim.functionType == e_FunctionType_Trap) &&
+      currentAnim.touchFrame >= 0 &&
+      currentAnim.frameNum > currentAnim.touchFrame &&
+      match->IsInPlay() && !match->IsInSetPiece() &&
+      CastPlayer()->GetController()->GetFloatVelocity() > 0.5f &&
+      CastPlayer()->GetController()->GetDirection().GetDotProduct(
+          currentAnim.originatingCommand.desiredDirection) < 0.5f;
+  // A distant automatic first touch must not lock out an opposite manual turn.
+  const bool manualFarBallTurn = CastPlayer()->ExternalControllerActive() &&
+      match->IsInPlay() && !match->IsInSetPiece() &&
+      CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
+      match->GetBallRetainer() == 0 &&
+      spatialState.movement.GetDotProduct(
+          CastPlayer()->GetController()->GetDirection()) < -0.1f &&
+      (match->GetBall()->Predict(100).Get2D() - spatialState.position)
+          .GetLength() > 0.7f;
   const bool manualMovementTurn = CastPlayer()->ExternalControllerActive() &&
       currentAnim.functionType == e_FunctionType_Movement &&
       currentAnim.touchFrame == -1 && match->IsInPlay() &&
@@ -155,7 +175,7 @@ void Humanoid::Process() {
     float actionDistance = ((spatialState.position + spatialState.movement * 0.1f) - match->GetBall()->Predict(100).Get2D()).GetLength();
 
     int team_id = team->GetID() == match->SecondTeam() ? 1 : 0;
-    if (manualMovementTurn) {
+    if (manualMovementTurn || manualPostTouchTurn || manualFarBallTurn) {
       frameNumPredicate = true;
     } else if (match->GetDesignatedPossessionPlayer() == player &&
         actionDistance < 3.0f) {
@@ -193,7 +213,7 @@ void Humanoid::Process() {
     DO_VALIDATION;
 
     float ballDistance = (currentMentalImage->GetBallPrediction(500).Get2D() - spatialState.position).GetLength();
-    if ((manualMovementTurn ||
+    if ((manualMovementTurn || manualPostTouchTurn || manualFarBallTurn ||
          (currentAnim.functionType == e_FunctionType_Movement &&
           !CastPlayer()->HasPossession() && ballDistance < 16.0f) ||
          (currentAnim.functionType == e_FunctionType_Movement &&
@@ -245,6 +265,12 @@ void Humanoid::Process() {
       DO_VALIDATION;
 
       const PlayerCommand &command = commandQueue[i];
+
+      // Keep explicit passes and shots ahead of movement, but do not let an
+      // automatic touch request consume a deliberate post-touch turn.
+      if ((manualPostTouchTurn || manualFarBallTurn) &&
+          (command.desiredFunctionType == e_FunctionType_BallControl ||
+           command.desiredFunctionType == e_FunctionType_Trap)) continue;
 
       if (command.desiredFunctionType == e_FunctionType_ShortPass ||
           command.desiredFunctionType == e_FunctionType_LongPass ||
@@ -1197,26 +1223,79 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
 
   // /optimizations
 
+  bool manualMomentumRecovery = false;
+  bool manualAssistedTurn = false;
   if (localInterruptAnim == e_InterruptAnim_ReQueue) {
     DO_VALIDATION;
 
     float focusDistance = (match->GetDesignatedPossessionPlayer()->GetPosition() - spatialState.position).GetLength();
 
-    if (currentAnim.functionType != e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement) return false;
-    const bool manualMovementTurn = CastPlayer()->ExternalControllerActive() &&
+    const bool manualPostTouchTurn = CastPlayer()->ExternalControllerActive() &&
+        (currentAnim.functionType == e_FunctionType_BallControl ||
+         currentAnim.functionType == e_FunctionType_Trap) &&
+        command.desiredFunctionType == e_FunctionType_Movement &&
+        currentAnim.touchFrame >= 0 &&
+        currentAnim.frameNum > currentAnim.touchFrame &&
+        match->IsInPlay() && !match->IsInSetPiece() &&
+        CastPlayer()->GetController()->GetFloatVelocity() > 0.5f &&
+        CastPlayer()->GetController()->GetDirection().GetDotProduct(
+            currentAnim.originatingCommand.desiredDirection) < 0.5f;
+    const bool manualPreTouchTurn = CastPlayer()->ExternalControllerActive() &&
+        (currentAnim.functionType == e_FunctionType_BallControl ||
+         currentAnim.functionType == e_FunctionType_Trap) &&
+        command.desiredFunctionType == e_FunctionType_Movement &&
+        currentAnim.touchFrame > currentAnim.frameNum &&
+        match->IsInPlay() && !match->IsInSetPiece() &&
+        CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
+        match->GetBallRetainer() == 0 &&
+        spatialState.movement.GetDotProduct(
+            CastPlayer()->GetController()->GetDirection()) < -0.1f &&
+        (match->GetBall()->Predict(100).Get2D() - spatialState.position)
+            .GetLength() > 0.7f;
+    if (currentAnim.functionType != e_FunctionType_Movement &&
+        command.desiredFunctionType == e_FunctionType_Movement &&
+        !manualPostTouchTurn && !manualPreTouchTurn) return false;
+    const bool manualMovementContext = CastPlayer()->ExternalControllerActive() &&
         currentAnim.functionType == e_FunctionType_Movement &&
         command.desiredFunctionType == e_FunctionType_Movement &&
         currentAnim.touchFrame == -1 && match->IsInPlay() &&
-        !match->IsInSetPiece() &&
+        !match->IsInSetPiece();
+    const float commandChangeMagnitude =
+        ((currentAnim.originatingCommand.desiredDirection *
+          currentAnim.originatingCommand.desiredVelocityFloat) -
+         (command.desiredDirection * command.desiredVelocityFloat)).GetLength();
+    const bool persistentOpposedMotion = currentAnim.frameNum >= 8 &&
+        currentAnim.originatingCommand.desiredDirection.GetDotProduct(
+            CastPlayer()->GetController()->GetDirection()) > 0.8f;
+    manualMomentumRecovery = manualMovementContext &&
+        CastPlayer()->GetController()->GetFloatVelocity() > 0.5f &&
+        command.desiredVelocityFloat > 0.5f &&
+        (commandChangeMagnitude >= 1.5f || persistentOpposedMotion) &&
+        command.desiredDirection.GetDotProduct(
+            CastPlayer()->GetController()->GetDirection()) > 0.5f &&
+        spatialState.movement.GetDotProduct(
+            CastPlayer()->GetController()->GetDirection()) < -0.1f;
+    manualAssistedTurn = manualMovementContext &&
+        currentAnim.frameNum >= 5 &&
         CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
-        (CastPlayer()->GetController()->GetDirection().GetDotProduct(
-             currentAnim.originatingCommand.desiredDirection) < 0.5f ||
-         CastPlayer()->GetController()->GetFloatVelocity() -
-             currentAnim.originatingCommand.desiredVelocityFloat > 1.0f) &&
-        (command.desiredDirection.GetDotProduct(
-             currentAnim.originatingCommand.desiredDirection) < 0.5f ||
-         command.desiredVelocityFloat -
-              currentAnim.originatingCommand.desiredVelocityFloat > 1.0f);
+        CastPlayer()->GetController()->GetDirection().GetDotProduct(
+            currentAnim.originatingCommand.desiredDirection) < 0.5f &&
+        commandChangeMagnitude >= 0.8f &&
+        match->GetBallRetainer() == 0 &&
+        (match->GetBall()->Predict(100).Get2D() - spatialState.position)
+            .GetLength() > 1.0f;
+    const bool manualMovementTurn = manualMomentumRecovery ||
+        manualAssistedTurn ||
+        (manualMovementContext &&
+         CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
+         (CastPlayer()->GetController()->GetDirection().GetDotProduct(
+                currentAnim.originatingCommand.desiredDirection) < 0.5f ||
+          CastPlayer()->GetController()->GetFloatVelocity() -
+               currentAnim.originatingCommand.desiredVelocityFloat > 1.0f) &&
+         (command.desiredDirection.GetDotProduct(
+               currentAnim.originatingCommand.desiredDirection) < 0.5f ||
+          command.desiredVelocityFloat -
+              currentAnim.originatingCommand.desiredVelocityFloat > 1.0f));
     if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && !manualMovementTurn && (CastPlayer()->HasPossession()/* || team->GetTeamPossessionAmount() >= 1.0f*/ || focusDistance > 12.0f)) return false;
     if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && !manualMovementTurn && currentAnim.frameNum + minRemainingMovementReQueueFrames > currentAnim.anim->GetEffectiveFrameCount()) return false;
     if (currentAnim.functionType == e_FunctionType_Movement && command.desiredFunctionType == e_FunctionType_Movement && (!allowMovementReQueue || (!manualMovementTurn && reQueueDelayFrames > 0))) return false;
@@ -1227,11 +1306,8 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
 
     // too similar to what we are already trying to accomplish
     if (currentAnim.originatingCommand.desiredFunctionType ==
-            command.desiredFunctionType &&
-        ((currentAnim.originatingCommand.desiredDirection *
-          currentAnim.originatingCommand.desiredVelocityFloat) -
-         (command.desiredDirection * command.desiredVelocityFloat))
-                 .GetLength() < 1.5f) {
+            command.desiredFunctionType && !manualMomentumRecovery &&
+        !manualAssistedTurn && commandChangeMagnitude < 1.5f) {
       DO_VALIDATION;
       return false;
     }
@@ -1637,6 +1713,7 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
 
     // don't requeue to same quadrant
     if (currentAnim.functionType == command.desiredFunctionType &&
+        !manualMomentumRecovery && !manualAssistedTurn &&
 
         ((FloatToEnumVelocity(currentAnim.anim->GetOutgoingVelocity()) !=
               e_Velocity_Idle &&
