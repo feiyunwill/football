@@ -1,5 +1,7 @@
 # task-24.1.2.2 — 渲染性能验收
 
+2026-10-02 连续比赛双种子复核：正式基准新增显式私有 D3D12 驱动选择及实际加载库路径核对。Intel Arc 140T 上种子 42／43 的 1080p 完整 PBR p95 分别为 139.290／41.285ms，均超过 16.67ms，任务继续未通过。见[驱动身份与预算复核](../reports/optimization-render-budget-driver-2026-10-02.md)。
+
 2026-09-28 环境光采样复用原型：候选与基线的固定画面和模拟状态一致，但两组交错真实窗口比较未显示稳定的无探针 p95 收益，且基线及 PBR 对照波动大；正式着色器已恢复，不采用原型。见[环境光原型实测](../reports/optimization-ambient-shader-trial-2026-09-28.md)，`render_regression` 继续 `ready:false`。
 
 2026-09-28 当前源码 1080p GPU 预检：实际 Intel Arc 140T/D3D12 私有修复驱动上，关闭未消费 RGB 回读的离屏 Legacy 两轮 p95 为 14.98/13.85ms、PBR 完整效果为 11.11/10.64ms；相同源码的真实 SDL 窗口分别为 31.88/28.84ms 和 23.76/24.01ms，均未达到 16.67ms。交换入口占带探针整帧平均约 81%–86%，但包含已排队 GPU 工作；GLX/EGL 请求对照没有稳定收益，不采纳。PBR 离屏/窗口五帧 RGB 相同，Legacy 存在明显亮度差异待定位。四阶段原始样本与终态核验已存档，`render_regression` 保持 `ready:false`，任务和里程碑不提升。见 [当前硬件预检报告](../reports/optimization-current-gpu-1080-2026-09-28.md)。

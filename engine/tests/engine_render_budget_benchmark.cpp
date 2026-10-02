@@ -11,6 +11,7 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <stdexcept>
@@ -34,6 +35,18 @@ double Percentile(std::vector<double> values, double fraction) {
   std::sort(values.begin(), values.end());
   return values[static_cast<size_t>(std::ceil(fraction * values.size())) - 1];
 }
+
+std::string LoadedGalliumPath() {
+  std::ifstream maps("/proc/self/maps");
+  std::string line;
+  while (std::getline(maps, line)) {
+    const auto start = line.find('/');
+    if (start != std::string::npos &&
+        line.find("/libgallium-", start) != std::string::npos)
+      return line.substr(start);
+  }
+  return {};
+}
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -56,7 +69,7 @@ int main(int argc, char** argv) {
         frame_sync::NativeMatchContract(static_cast<uint32_t>(parsed), 1, 0));
     env.start_game(*scenario);
     env.state = game_running;
-    std::string renderer, vendor, version;
+    std::string renderer, vendor, version, gallium_path;
     {
       ContextHolder selected(&env);
       const auto* gl_renderer = glGetString(GL_RENDERER);
@@ -67,6 +80,7 @@ int main(int argc, char** argv) {
       renderer = reinterpret_cast<const char*>(gl_renderer);
       vendor = reinterpret_cast<const char*>(gl_vendor);
       version = reinterpret_cast<const char*>(gl_version);
+      gallium_path = LoadedGalliumPath();
       for (unsigned i = 0; glGetError() != GL_NO_ERROR; ++i)
         Require(i < 32, "Initialization GL error did not clear");
     }
@@ -108,6 +122,7 @@ int main(int argc, char** argv) {
               << ",\"vendor\":" << std::quoted(vendor)
               << ",\"renderer\":" << std::quoted(renderer)
               << ",\"gl_version\":" << std::quoted(version)
+              << ",\"gallium_path\":" << std::quoted(gallium_path)
               << ",\"width\":" << kWidth
               << ",\"height\":" << kHeight
               << ",\"quality\":\"pbr+bloom+fxaa+auto_exposure\""

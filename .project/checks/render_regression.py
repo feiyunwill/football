@@ -33,6 +33,9 @@ def percentile(values: list[float], fraction: float) -> float:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build', type=Path)
+    parser.add_argument('--gpu-driver-root', type=Path, default=Path(
+        os.environ['FOOTBALL_RENDER_GPU_DRIVER_ROOT']) if
+        os.environ.get('FOOTBALL_RENDER_GPU_DRIVER_ROOT') else None)
     args = parser.parse_args()
     if platform.system() != 'Linux' or sys.flags.optimize != 0:
         raise RuntimeError('Native render budget requires Linux and enabled assertions')
@@ -71,6 +74,12 @@ def main() -> int:
         binary = build / 'bin/engine_render_budget_benchmark'
         core = build / 'libfootball_engine.so'
         require(binary.is_file() and core.is_file(), 'Render benchmark binaries missing')
+        driver_root = args.gpu_driver_root.resolve() if args.gpu_driver_root else None
+        driver_lib = driver_root / 'lib' if driver_root else None
+        gallium = driver_lib / 'libgallium-26.2.2.so' if driver_lib else None
+        if driver_lib:
+            require(gallium.is_file() and (driver_lib / 'dri/d3d12_dri.so').is_file(),
+                    'Requested private D3D12 driver is missing')
         base_env = dict(os.environ)
         for key in ('LIBGL_ALWAYS_SOFTWARE', 'MESA_LOADER_DRIVER_OVERRIDE',
                     'LD_PRELOAD', 'GFOOTBALL_USE_PBR', 'GFOOTBALL_PBR_BLOOM',
@@ -85,6 +94,13 @@ def main() -> int:
             'GFOOTBALL_PBR_AUTO_EXPOSURE': '1',
             'LD_LIBRARY_PATH': str(build),
         })
+        if driver_lib:
+            base_env.update({
+                'LD_LIBRARY_PATH': str(build) + ':' + str(driver_lib),
+                'LIBGL_DRIVERS_PATH': str(driver_lib / 'dri'),
+                'GALLIUM_DRIVER': 'd3d12',
+                'MESA_LOADER_DRIVER_OVERRIDE': 'd3d12',
+            })
         measurements = []
         failures = []
         for seed in (42, 43):
@@ -108,6 +124,11 @@ def main() -> int:
                     'Reported p95 does not match raw frame times')
             require(bool(row['renderer']) and bool(row['vendor']) and
                     bool(row['gl_version']), 'OpenGL device identity missing')
+            if gallium:
+                require(Path(row['gallium_path']).resolve() == gallium.resolve(),
+                        'Benchmark did not load the requested Gallium driver')
+                require('D3D12' in row['renderer'],
+                        'Requested D3D12 renderer was not selected')
             if SOFTWARE.search(row['renderer']):
                 failures.append(f'seed {seed}: software renderer {row["renderer"]}')
             if row['p95_ms'] > MAX_P95_MS:
@@ -126,7 +147,9 @@ def main() -> int:
             'p95_budget_ms': MAX_P95_MS,
             'product_acceptance': not failures,
             'binaries': {'engine_sha256': sha(core),
-                         'benchmark_sha256': sha(binary)},
+                         'benchmark_sha256': sha(binary),
+                         'gallium_sha256': sha(gallium) if gallium else None},
+            'gpu_driver_root': str(driver_root) if driver_root else None,
             'measurements': measurements, 'commands': commands,
         }
         artifact = output / 'report.json'
