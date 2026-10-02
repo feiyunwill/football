@@ -1,0 +1,117 @@
+Running: cmake -S engine -B /tmp/football-optimization-native -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_ENABLE_SANITIZERS=OFF -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.5s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: cmake --build /tmp/football-optimization-native -j 1 --target engine_match_benchmark engine_hotspot_profile engine_animation_query_contract engine_ai_reachability_contract
+[  3%] Built target datalib
+[ 13%] Built target scenelib
+[ 19%] Built target utilslib
+[ 27%] Built target gui2lib
+[ 37%] Built target baselib
+[ 47%] Built target systemsgraphicslib
+[ 47%] Built target loaderslib
+[ 50%] Built target typeslib
+[ 52%] Built target blunted2
+[ 78%] Built target gamelib
+[ 88%] Built target menulib
+[100%] Built target football_engine
+[100%] Built target engine_match_benchmark
+Building CXX object CMakeFiles/engine_hotspot_profile.dir/tests/engine_hotspot_profile.cpp.o
+Linking CXX shared library libengine_hotspot_profile.so
+Built target engine_hotspot_profile
+[  3%] Built target datalib
+[ 13%] Built target scenelib
+[ 19%] Built target utilslib
+[ 26%] Built target gui2lib
+[ 36%] Built target baselib
+[ 46%] Built target systemsgraphicslib
+[ 46%] Built target loaderslib
+[ 50%] Built target typeslib
+[ 51%] Built target blunted2
+[ 76%] Built target gamelib
+[ 86%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_animation_query_contract.dir/tests/engine_animation_query_contract.cpp.o
+[100%] Linking CXX executable bin/engine_animation_query_contract
+[100%] Built target engine_animation_query_contract
+[  3%] Built target datalib
+[ 13%] Built target scenelib
+[ 19%] Built target utilslib
+[ 26%] Built target gui2lib
+[ 36%] Built target baselib
+[ 46%] Built target systemsgraphicslib
+[ 46%] Built target loaderslib
+[ 50%] Built target typeslib
+[ 51%] Built target blunted2
+[ 76%] Built target gamelib
+[ 86%] Built target menulib
+[ 98%] Built target football_engine
+[ 98%] Building CXX object CMakeFiles/engine_ai_reachability_contract.dir/tests/engine_ai_reachability_contract.cpp.o
+[100%] Linking CXX executable bin/engine_ai_reachability_contract
+[100%] Built target engine_ai_reachability_contract
+Running arrival-time differential contract: /tmp/football-optimization-native/bin/engine_ai_reachability_contract
+{"passed":true,"skipped":0,"assertions":1555846,"cached_cases":561280,"trajectory_bytes":1460,"cases":216640,"zero_results":11664,"fast_distance_cases":46855,"finite_timeout_cases":204535}
+
+Running: /usr/sbin/c++ --version
+Running: cmake -S engine/tests -B /tmp/football-optimization-query-tests -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/sbin/c++ -DENABLE_PCH=OFF -DENABLE_ASAN=ON -DENABLE_UBSAN=ON
+-- The CXX compiler identification is GNU 16.2.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/sbin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Using installed GoogleTest 1.18.0 at /usr/lib/cmake/GTest
+-- AddressSanitizer enabled
+-- UndefinedBehaviorSanitizer enabled
+-- Found OpenSSL: /usr/lib/libcrypto.so (found suitable version "3.6.4", minimum required is "3.0") found components: Crypto
+-- Found Threads: TRUE
+-- Build type: Debug
+-- Unity build: ON
+-- PCH enabled: OFF
+-- Build targets: 56
+-- Configuring done (1.2s)
+-- Generating done (0.0s)
+-- Build files have been written to: /tmp/football-optimization-query-tests
+Running: cmake --build /tmp/football-optimization-query-tests -j 1 --target ecs_query_contract_test
+[ 50%] Building CXX object CMakeFiles/ecs_query_contract_test.dir/Unity/unity_0_cxx.cxx.o
+[100%] Linking CXX executable ecs_query_contract_test
+[100%] Built target ecs_query_contract_test
+Running: readelf -d /tmp/football-optimization-query-tests/ecs_query_contract_test
+{"seed": 42, "repetition": 0, "cpu_ratio": 0.8590195261666828, "wall_ratio": 0.8591857157368462}
+{"seed": 43, "repetition": 0, "cpu_ratio": 0.8959628674364363, "wall_ratio": 0.8967788680662832}
+{"seed": 43, "repetition": 1, "cpu_ratio": 0.8344643907409942, "wall_ratio": 0.8345092302620396}
+{"seed": 42, "repetition": 1, "cpu_ratio": 0.8306909242182438, "wall_ratio": 0.8298301620636053}
+{"seed": 42, "repetition": 2, "cpu_ratio": 0.8140062717788542, "wall_ratio": 0.8127280891295773}
+{"seed": 43, "repetition": 2, "cpu_ratio": 0.8726167060577963, "wall_ratio": 0.8731524373254801}
+{"seed": 43, "repetition": 3, "cpu_ratio": 0.8492038333929397, "wall_ratio": 0.8494673720659781}
+{"seed": 42, "repetition": 3, "cpu_ratio": 0.8602099998316319, "wall_ratio": 0.8597863028997269}
+{"seed": 42, "repetition": 4, "cpu_ratio": 0.9148458127546761, "wall_ratio": 0.9142788459825566}
+{"seed": 43, "repetition": 4, "cpu_ratio": 0.8406134819110606, "wall_ratio": 0.839543192271165}
+{"seed": 43, "repetition": 5, "cpu_ratio": 0.8549518962620977, "wall_ratio": 0.8546897860999237}
+{"seed": 42, "repetition": 5, "cpu_ratio": 0.8011985703827683, "wall_ratio": 0.8016510788756852}
+{"seed": 42, "repetition": 6, "cpu_ratio": 0.8311712783377238, "wall_ratio": 0.8311102384069214}
+{"seed": 43, "repetition": 6, "cpu_ratio": 0.8627439690139773, "wall_ratio": 0.8631501581586112}
+{"seed": 43, "repetition": 7, "cpu_ratio": 0.8709933057880018, "wall_ratio": 0.8707136274347436}
+{"seed": 42, "repetition": 7, "cpu_ratio": 0.828827648831948, "wall_ratio": 0.8292700555241098}
+{"seed": 42, "repetition": 8, "cpu_ratio": 0.8324486328292396, "wall_ratio": 0.8324206646973431}
+{"seed": 43, "repetition": 8, "cpu_ratio": 0.8561424549162799, "wall_ratio": 0.8561406670444416}
+{"seed": 43, "repetition": 9, "cpu_ratio": 0.8265604162421095, "wall_ratio": 0.8263908766639305}
+{"seed": 42, "repetition": 9, "cpu_ratio": 0.8948117602108037, "wall_ratio": 0.8947623518352052}
+{"seed": 42, "repetition": 10, "cpu_ratio": 0.8264749154346057, "wall_ratio": 0.8254860194545799}
+{"seed": 43, "repetition": 10, "cpu_ratio": 0.9351413362182408, "wall_ratio": 0.935086577017372}
+{"seed": 43, "repetition": 11, "cpu_ratio": 0.8547057491616026, "wall_ratio": 0.8558664598402581}
+{"seed": 42, "repetition": 11, "cpu_ratio": 0.7756810931591333, "wall_ratio": 0.7760733515904069}
+{"seed": 42, "repetition": 12, "cpu_ratio": 0.8322032432327401, "wall_ratio": 0.832130437378703}
+{"seed": 43, "repetition": 12, "cpu_ratio": 0.8687693920956518, "wall_ratio": 0.8688278522407961}
+{"seed": 43, "repetition": 13, "cpu_ratio": 0.7681189829093512, "wall_ratio": 0.7681157837765316}
+{"seed": 42, "repetition": 13, "cpu_ratio": 0.8241814488494128, "wall_ratio": 0.8241479992997328}
+{"seed": 42, "repetition": 14, "cpu_ratio": 0.9532846871042383, "wall_ratio": 0.9531117588675299}
+{"seed": 43, "repetition": 14, "cpu_ratio": 1.0346519168966806, "wall_ratio": 1.0363833423879998}
+{"passed": true, "assertions": 1590027, "skipped": 0, "failures": [], "artifact": ".project/optimization/benchmarks/ecs-comparison-1790926395581714659.json", "artifact_sha256": "3cf1bda1b5b07a37710da1075df057812b0312c64c02806b1ca9b9fe96088d77", "comparisons": [{"seed": 42, "cpu": {"pairs": 15, "ratios": [0.8590195261666828, 0.8306909242182438, 0.8140062717788542, 0.8602099998316319, 0.9148458127546761, 0.8011985703827683, 0.8311712783377238, 0.828827648831948, 0.8324486328292396, 0.8948117602108037, 0.8264749154346057, 0.7756810931591333, 0.8322032432327401, 0.8241814488494128, 0.9532846871042383], "geometric_ratio": 0.8441629662234877, "bootstrap_95_lower": 0.823963366087992, "bootstrap_95_upper": 0.8669427753657439}, "wall": {"pairs": 15, "ratios": [0.8591857157368462, 0.8298301620636053, 0.8127280891295773, 0.8597863028997269, 0.9142788459825566, 0.8016510788756852, 0.8311102384069214, 0.8292700555241098, 0.8324206646973431, 0.8947623518352052, 0.8254860194545799, 0.7760733515904069, 0.832130437378703, 0.8241479992997328, 0.9531117588675299], "geometric_ratio": 0.8439608117930449, "bootstrap_95_lower": 0.8237871384870478, "bootstrap_95_upper": 0.8666824540952004}, "p99_ratio": 0.8869451592041677}, {"seed": 43, "cpu": {"pairs": 15, "ratios": [0.8959628674364363, 0.8344643907409942, 0.8726167060577963, 0.8492038333929397, 0.8406134819110606, 0.8549518962620977, 0.8627439690139773, 0.8709933057880018, 0.8561424549162799, 0.8265604162421095, 0.9351413362182408, 0.8547057491616026, 0.8687693920956518, 0.7681189829093512, 1.0346519168966806], "geometric_ratio": 0.8666438460536443, "bootstrap_95_lower": 0.841635557797301, "bootstrap_95_upper": 0.8960395143905533}, "wall": {"pairs": 15, "ratios": [0.8967788680662832, 0.8345092302620396, 0.8731524373254801, 0.8494673720659781, 0.839543192271165, 0.8546897860999237, 0.8631501581586112, 0.8707136274347436, 0.8561406670444416, 0.8263908766639305, 0.935086577017372, 0.8558664598402581, 0.8688278522407961, 0.7681157837765316, 1.0363833423879998], "geometric_ratio": 0.8668335736477719, "bootstrap_95_lower": 0.8416427511851183, "bootstrap_95_upper": 0.8964190313116043}, "p99_ratio": 0.8682811513658525}]}

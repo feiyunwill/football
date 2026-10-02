@@ -1,15 +1,15 @@
 {
   "check": "memory_budget",
-  "fingerprint": "eaff80b2d9a2e6849fd2097a7705eceed0ff34d1604e67f91af6af2624c15659",
+  "fingerprint": "3300a18fb570046fdf0d5b5473fa088326903de8f2a3a4617b9a07832e58b3b6",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1790881687.6343093,
-  "duration_seconds": 427.179,
+  "started": 1790926396.0937552,
+  "duration_seconds": 742.741,
   "argv": [
     "python3",
     ".project/checks/memory_budget.py"
   ],
-  "log": "memory_budget-1790881687634324036.log",
-  "log_sha256": "14959fe002b345afe1b76c176ce786229c2bd1d9ac576390703d7a262bd603de"
+  "log": "memory_budget-1790926396093775782.log",
+  "log_sha256": "c0a96ac7831a8757a7c67e54c85fd47a04bfe80598cd20604e9175b3bd1dbb0a"
 }

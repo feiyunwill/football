@@ -1,15 +1,15 @@
 {
   "check": "state_ownership",
-  "fingerprint": "f9fdef9d0ccd8f7b06caa5b69f828dbbb4a4252c5cccf84d6d791552824929ff",
+  "fingerprint": "b6b2c0230d245f45ea35045de658956735f1ddb78813359dd8f2ebc0872240e5",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1790880309.4781582,
-  "duration_seconds": 1.98,
+  "started": 1790924245.702618,
+  "duration_seconds": 6.865,
   "argv": [
     "python3",
     ".project/checks/state_ownership.py"
   ],
-  "log": "state_ownership-1790880309478175928.log",
-  "log_sha256": "cd5634247ed8a74beb0bd5adca76b4e057e079263962f91750649083e4d4dcc1"
+  "log": "state_ownership-1790924245702643393.log",
+  "log_sha256": "99c82107895e440171ab9abfec587ba01b5f0d07449cf98f572d74d6be020e6e"
 }
