@@ -68,7 +68,8 @@ def main():
 
     run("configure-native", ["cmake", "-S", "engine", "-B", NATIVE_BUILD,
                              "-DCMAKE_BUILD_TYPE=Release",
-                             "-DBUILD_PYTHON_BINDINGS=OFF"])
+                             "-DBUILD_PYTHON_BINDINGS=OFF",
+                             f"-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY={NATIVE_BUILD / 'bin'}"])
     run("build-native", ["cmake", "--build", NATIVE_BUILD, "-j", "1",
                          "--target", "engine_server_input_window_contract"])
     native = json.loads(run("native-window", [NATIVE_BUILD /
