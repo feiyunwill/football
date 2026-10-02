@@ -1,0 +1,46 @@
+{
+  "format": 7,
+  "id": "ecs-manual-response-pre-selection-scratch-and-vector-length-20261002",
+  "source_commit": "54b2f375f5cdbb8459ad61fbcd35ae835b4025df",
+  "semantic_patch": ".project/optimization/baselines/ecs_v5_perf_rollback.patch",
+  "semantic_patch_sha256": "814b8d908df94136c89ad08c1b1a731b4d3a6f481a148e28d1c299eb842c7ed9",
+  "source_identity": "ff4888101483cb1d6c0cb863dbba224df29d819ff605a32257d5b9c0253815da",
+  "source_artifact": ".project/optimization/evidence/ecs_manual_response_preperf_reference_20261002.json.gz",
+  "artifact_sha256": "6c76a69f7d571626c87480a83de5e13ff0ff100281ae90def5f607f890d11878",
+  "artifact_uncompressed_sha256": "7bad172c04b8f525b3ad296ada372c0154709a508bb56383d6041fab5fcc8135",
+  "validation_artifact": ".project/optimization/evidence/ecs_v7_preflight_20261002.json.gz",
+  "validation_artifact_sha256": "8592a89bd2565b23dab85dae427b64b5032f16934c5eb824cb0d0bb41139a576",
+  "measurement_contract": {
+    "seeds": [
+      42,
+      43
+    ],
+    "warmup_steps": 200,
+    "steady_steps": 2000,
+    "process_pairs_per_seed": 15,
+    "cpu_bootstrap_95_upper_below": 1.0,
+    "wall_geometric_ratio_below": 1.0,
+    "median_p99_ratio_max": 1.05,
+    "full_cache_allocations_each": 0,
+    "frame_allocation_count_must_decrease": true,
+    "frame_allocation_bytes_must_decrease": true
+  },
+  "binaries": {
+    "engine": {
+      "path": ".project/optimization/baselines/ecs_v7_engine.so.gz",
+      "compressed_sha256": "c27d542dc4b6d2f5e310b89c30d3dd70ecafc0b2680c6e25dc0a8e54f64cc36d",
+      "sha256": "a004b53d36e61d6397f8775db5d2210c7722ef52a84c4d717cf86bb7297a9243",
+      "compressed_bytes": 1158751,
+      "bytes": 3087584
+    },
+    "benchmark": {
+      "path": ".project/optimization/baselines/ecs_v7_match_benchmark.gz",
+      "compressed_sha256": "07b659706333c85ddd05a9b936f01ebad19266559e327e6b9763fab173114586",
+      "sha256": "8317094db9866a14ac8b51f0c3b9fd2e5ca1871de839cf74c038439d11c8099b",
+      "compressed_bytes": 88720,
+      "bytes": 205504
+    }
+  },
+  "derived_from_baseline_v6_sha256": "f7630382a27e4ee182d05f60dddd536703330aa665a64dcc9ec3a546afb52f24",
+  "generator_sha256": "66b0e6d74858c0302e59e1f217805094bc155067f91af39e7fa0f7dd0674e613"
+}
