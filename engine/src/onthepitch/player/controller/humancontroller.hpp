@@ -58,6 +58,7 @@ class HumanController : public PlayerController {
       state->process(actionButton);
       state->process(actionBufferTime_ms);
       state->process(gauge_ms);
+      state->process(suppressHeldPassUntilRelease);
       state->process(previousDirection);
       state->process(previousManualDirection);
       state->process(pendingManualMovementInput);
@@ -69,6 +70,11 @@ class HumanController : public PlayerController {
     AIControlledKeyboard *GetHIDevice() { return hid; }
 
     int GetActionMode() { DO_VALIDATION; return actionMode; }
+    int GetActionBufferTime_ms() const { return actionBufferTime_ms; }
+    bool GetSuppressHeldPassForTrace() const { return suppressHeldPassUntilRelease; }
+    Vector3 GetProcessedInputDirectionForTrace() const { return inputDirection; }
+    float GetProcessedInputVelocityForTrace() const { return inputVelocityFloat; }
+    Vector3 GetSteadyDirectionForTrace() const { return steadyDirection; }
 
     virtual void Reset();
 
@@ -86,6 +92,7 @@ class HumanController : public PlayerController {
     e_ButtonFunction actionButton;
     int actionBufferTime_ms = 0;
     int gauge_ms = 0;
+    bool suppressHeldPassUntilRelease = false;
 
     // stuff to keep track of analog stick (or keys even) so that we can use a direction once it's been pointed in for a while, instead of directly
     Vector3 previousDirection;

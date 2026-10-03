@@ -44,6 +44,13 @@ void HumanController::RequestCommand(PlayerCommandQueue &commandQueue) {
   CastPlayer()->SetDesiredTimeToBall_ms(0);
 
   _Preprocess(); // calculate some variables
+  if (suppressHeldPassUntilRelease &&
+      !hid->GetButton(e_ButtonFunction_ShortPass) &&
+      !hid->GetButton(e_ButtonFunction_LongPass) &&
+      !hid->GetButton(e_ButtonFunction_HighPass) &&
+      !hid->GetButton(e_ButtonFunction_Shot)) {
+    suppressHeldPassUntilRelease = false;
+  }
 
 
   // human input
@@ -520,7 +527,8 @@ void HumanController::Process() {
         allowShot = false;
       }
 
-      if (hid->GetButton(e_ButtonFunction_ShortPass) &&
+      if (!suppressHeldPassUntilRelease &&
+          hid->GetButton(e_ButtonFunction_ShortPass) &&
           !hid->GetPreviousButtonState(e_ButtonFunction_ShortPass) &&
           allowShortPass) {
         DO_VALIDATION;
@@ -528,7 +536,8 @@ void HumanController::Process() {
         actionButton = e_ButtonFunction_ShortPass;
       }
 
-      if (hid->GetButton(e_ButtonFunction_LongPass) &&
+      if (!suppressHeldPassUntilRelease &&
+          hid->GetButton(e_ButtonFunction_LongPass) &&
           !hid->GetPreviousButtonState(e_ButtonFunction_LongPass) &&
           allowLongPass) {
         DO_VALIDATION;
@@ -536,7 +545,8 @@ void HumanController::Process() {
         actionButton = e_ButtonFunction_LongPass;
       }
 
-      if (hid->GetButton(e_ButtonFunction_HighPass) &&
+      if (!suppressHeldPassUntilRelease &&
+          hid->GetButton(e_ButtonFunction_HighPass) &&
           !hid->GetPreviousButtonState(e_ButtonFunction_HighPass) &&
           allowHighPass) {
         DO_VALIDATION;
@@ -544,7 +554,8 @@ void HumanController::Process() {
         actionButton = e_ButtonFunction_HighPass;
       }
 
-      if (hid->GetButton(e_ButtonFunction_Shot) &&
+      if (!suppressHeldPassUntilRelease &&
+          hid->GetButton(e_ButtonFunction_Shot) &&
           !hid->GetPreviousButtonState(e_ButtonFunction_Shot) && allowShot) {
         DO_VALIDATION;
         actionMode = 2;
@@ -590,6 +601,11 @@ int HumanController::GetReactionTime_ms() {
 
 void HumanController::Reset() {
   DO_VALIDATION;
+  suppressHeldPassUntilRelease =
+      hid->GetButton(e_ButtonFunction_ShortPass) ||
+      hid->GetButton(e_ButtonFunction_LongPass) ||
+      hid->GetButton(e_ButtonFunction_HighPass) ||
+      hid->GetButton(e_ButtonFunction_Shot);
   actionMode = 0;
   gauge_ms = 0;
   actionButton = e_ButtonFunction_ShortPass;
@@ -648,8 +664,20 @@ void HumanController::_GetHidInput(Vector3 &rawInputDirection,
     float switchBias = std::pow(GetLastSwitchBias(), 0.7f);
     Vector3 currentMovement = player->GetDirectionVec() * player->GetFloatVelocity();
     Vector3 manualMovement = rawInputDirection * rawInputVelocityFloat;
-    Vector3 resultMovement = currentMovement * switchBias * switchInfluence +
-                             manualMovement * (1.0f - switchBias * switchInfluence);
+    float blend = switchBias * switchInfluence;
+    // Keep the handoff smooth without steering against a fresh physical input.
+    if (rawInputVelocityFloat >= idleDribbleSwitch) {
+      float currentProjection = currentMovement.GetDotProduct(rawInputDirection);
+      float minimumManualProjection = rawInputVelocityFloat *
+          (currentProjection < 0.0f ? 1.0f : 0.5f);
+      if (currentProjection < minimumManualProjection) {
+        blend = std::min(blend,
+                         (rawInputVelocityFloat - minimumManualProjection) /
+                             (rawInputVelocityFloat - currentProjection));
+      }
+    }
+    Vector3 resultMovement = currentMovement * blend +
+                             manualMovement * (1.0f - blend);
     rawInputDirection = resultMovement.GetNormalized(rawInputDirection);
     rawInputVelocityFloat = resultMovement.GetLength();
   }

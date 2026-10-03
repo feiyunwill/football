@@ -52,13 +52,13 @@ int main(int argc,char** argv) {
    env.reset(*scenario,false);env.state=game_running;
    auto engine=fs::MakeGameEnvCallbacks(&env);
    const auto initial_hash = engine.compute_hash();
-   if (initial_hash != 16928600586297136224ULL)
+   if (initial_hash != 11711201807211372808ULL)
      throw std::runtime_error("Retry after cancellation changed initial state: " +
                               std::to_string(initial_hash));
    ++assertions;
    engine.step_frame(std::vector<fs::SlotInput>(3,fs::SlotInput::Default()));
    const auto first_frame_hash = engine.compute_hash();
-   if (first_frame_hash != 5389848347737004989ULL)
+   if (first_frame_hash != 5635741614560240797ULL)
      throw std::runtime_error("Retry after cancellation changed first frame: " +
                               std::to_string(first_frame_hash));
    ++assertions;

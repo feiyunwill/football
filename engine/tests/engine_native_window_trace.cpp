@@ -190,14 +190,20 @@ extern "C" void ObserveHumanCommand(HumanController* controller,
   std::fprintf(Log(),
       "{\"kind\":\"human_command\",\"time\":%lld,\"player\":\"%p\",\"team_id\":%d,\"team_index\":%d,\"player_x\":%.9g,\"player_y\":%.9g,"
       "\"hid_x\":%.9g,\"hid_y\":%.9g,\"actual_vx\":%.9g,\"actual_vy\":%.9g,"
-      "\"movement\":%s,\"desired_x\":%.9g,\"desired_y\":%.9g,\"desired_speed\":%.9g}\n",
+      "\"movement\":%s,\"desired_x\":%.9g,\"desired_y\":%.9g,\"desired_speed\":%.9g,\"action_mode\":%d,\"action_buffer_ms\":%d,\"hid_short_pass\":%s,\"processed_x\":%.9g,\"processed_speed\":%.9g,\"steady_x\":%.9g,\"suppress_held_pass\":%s}\n",
       Now(), static_cast<const void*>(player), player->GetTeam()->GetID(),
       team_index, position.coords[0], position.coords[1],
       hid.coords[0], hid.coords[1],
       actual.coords[0], actual.coords[1], movement ? "true" : "false",
       movement ? movement->desiredDirection.coords[0] : 0,
       movement ? movement->desiredDirection.coords[1] : 0,
-      movement ? movement->desiredVelocityFloat : 0);
+      movement ? movement->desiredVelocityFloat : 0,
+      controller->GetActionMode(), controller->GetActionBufferTime_ms(),
+      controller->GetHIDevice()->GetButton(e_ButtonFunction_ShortPass) ? "true" : "false",
+      controller->GetProcessedInputDirectionForTrace().coords[0],
+      controller->GetProcessedInputVelocityForTrace(),
+      controller->GetSteadyDirectionForTrace().coords[0],
+      controller->GetSuppressHeldPassForTrace() ? "true" : "false");
 }
 
 extern "C" bool ObserveAnimSelection(Humanoid*, const PlayerCommand&,

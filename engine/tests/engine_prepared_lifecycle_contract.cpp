@@ -76,9 +76,9 @@ int main(int argc, char** argv) {
     other.state = game_running;
     auto reference = fs::MakeGameEnvCallbacks(&other);
     const auto initial_hash = reference.compute_hash();
-    // HumanController now serializes the pending manual input edge so restored
-    // sessions preserve the same animation choice as uninterrupted sessions.
-    if (initial_hash != 16928600586297136224ULL)
+    // HumanController also serializes a held pass inherited across selection,
+    // so restored sessions preserve the same release-before-repress rule.
+    if (initial_hash != 11711201807211372808ULL)
       throw std::runtime_error("Legacy initial hash changed: " +
                                std::to_string(initial_hash));
     ++assertions;

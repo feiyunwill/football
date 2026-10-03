@@ -228,6 +228,7 @@ def product(output, build, library, cycles, gpu_driver_root, seed, trace_command
     client = None
     keyboard = None
     actions = []
+    restart_inputs = []
     try:
         client = subprocess.Popen([str(build / "bin/standalone_game"), "--seed", str(seed)],
                                   cwd=output, env=runtime, stdout=log, stderr=subprocess.STDOUT)
@@ -253,34 +254,71 @@ def product(output, build, library, cycles, gpu_driver_root, seed, trace_command
         require(not driver or mapped_driver, "Actual product did not load the requested GPU driver")
         time.sleep(.25)
         for index in range(cycles):
-            require(client.poll() is None, "Actual product exited during input samples")
-            observed = events(trace)
-            prior_step = next((row for row in reversed(observed) if row["kind"] == "step"), None)
-            prior_timing = (next((row for row in reversed(observed)
-                                  if row["kind"] == "step_timing" and
-                                  prior_step and row["index"] == prior_step["index"]), None))
-            require(prior_step and prior_timing, "Missing current player motion before XTEST")
+            wait_started = time.monotonic()
+            wait_deadline = wait_started + 12
+            unavailable_steps = set()
+            last_restart = 0.0
+            while True:
+                require(client.poll() is None, "Actual product exited during input samples")
+                observed = events(trace)
+                prior_step = next((row for row in reversed(observed)
+                                   if row["kind"] == "step"), None)
+                prior_timing = next((row for row in reversed(observed)
+                                     if row["kind"] == "step_timing" and prior_step and
+                                     row["index"] == prior_step["index"]), None)
+                step_age_ns = (time.monotonic_ns() - prior_step["time"]
+                               if prior_step else None)
+                if prior_step and prior_timing and prior_step["owned"] >= 0 and \
+                        prior_timing["in_play"] and prior_timing.get("game_mode") == 0 and \
+                        0 <= step_age_ns <= 22_000_000:
+                    break
+                if prior_step:
+                    unavailable_steps.add(prior_step["index"])
+                if prior_step and prior_timing and prior_step["owned"] >= 0 and \
+                        prior_timing["in_play"] and prior_timing.get("game_mode") != 0 and \
+                        time.monotonic() - last_restart >= .5 and \
+                        len(restart_inputs) < cycles * 4:
+                    restart_start = time.monotonic_ns()
+                    keyboard.key("z", True)
+                    time.sleep(.04)
+                    restart_end = time.monotonic_ns()
+                    keyboard.key("z", False)
+                    restart_inputs.append({"before_press": index,
+                                           "selection_step": prior_step["index"],
+                                           "game_mode": prior_timing["game_mode"],
+                                           "owned_player": prior_step["owned"],
+                                           "start_ns": restart_start,
+                                           "end_ns": restart_end})
+                    last_restart = time.monotonic()
+                require(time.monotonic() < wait_deadline,
+                        f"No controllable in-play player before press {index} after 12 seconds")
+                time.sleep(.02)
             prior_vx = prior_timing["vx"]
             direction = (-1 if prior_vx > .2 else 1 if prior_vx < -.2
                          else 1 if index % 2 == 0 else -1)
             key = "d" if direction > 0 else "a"
+            waited_for_playable_ms = round((time.monotonic() - wait_started) * 1000, 3)
             start = time.monotonic_ns()
             keyboard.key(key, True)
             time.sleep(.34)
             end = time.monotonic_ns()
             keyboard.key(key, False)
             actions.append({"index": index, "direction": direction,
-                            "selection_vx": prior_vx,
-                            "selection_game_mode": prior_timing.get("game_mode"),
-                            "selection_owned_player": prior_step["owned"],
-                            "start_ns": start, "end_ns": end})
+                             "selection_vx": prior_vx,
+                             "selection_game_mode": prior_timing.get("game_mode"),
+                             "selection_owned_player": prior_step["owned"],
+                             "selection_step_age_ms": round(step_age_ns / 1e6, 3),
+                             "waited_for_playable_ms": waited_for_playable_ms,
+                             "unavailable_steps_before_press": len(unavailable_steps),
+                             "start_ns": start, "end_ns": end})
             time.sleep(.34)
         keyboard.tap("q")
         require(client.wait(timeout=15) == 0, "Actual product exit failed")
         (output / "actions.json").write_text(json.dumps(actions, indent=2) + "\n")
         result = analyze(output, actions, require_causal=trace_commands)
         result.update(actual_product_main=True, actual_xtest=True,
-                      actual_player_velocity=True, passed=True,
+                       actual_player_velocity=True, passed=True,
+                       set_piece_restarts=restart_inputs,
                       source_sha256=sha(__file__), trace_sha256=sha(trace / "events.jsonl"),
                       actions_sha256=sha(output / "actions.json"),
                       keyboard_source_sha256=sha(CHECKS / "native_input_window_cases.py"),
