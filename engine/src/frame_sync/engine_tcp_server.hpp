@@ -542,7 +542,10 @@ class BasicEngineSessionServer {
 // 2026-09-15: a released admission is no longer a participant in the opening barrier.
 //         if (client->disconnected || client->spectator) continue;
         if (client->disconnected || client->spectator || client->phase == Phase::Cancelled) continue;
-        if (!client->slot || client->phase != Phase::Streaming) return false;
+        // UDP transport can retain unauthenticated handshake sessions. They
+        // have no slot and cannot participate in the opening Ready barrier.
+        if (!client->slot) continue;
+        if (client->phase != Phase::Streaming) return false;
         player = true;
       }
       return player;
