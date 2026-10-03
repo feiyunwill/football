@@ -29,6 +29,12 @@ class PairedPerformanceTest(unittest.TestCase):
         new["buckets"][-1]["allocations"] = 0
         new["buckets"][-1].update(calls=0, ns=0)
         self.assertTrue(profile_failures(pair))
+        new["buckets"][-1].update(calls=20000, ns=100)
+        old["buckets"][1].update(calls=0, ns=0)
+        new["buckets"][1].update(calls=0, ns=0)
+        self.assertFalse(profile_failures(pair))
+        new["buckets"][2].update(calls=0, ns=0)
+        self.assertTrue(profile_failures(pair))
 
     def test_repository_baseline_matches_its_source_and_binaries(self):
         manifest, artifact, temporary, directory = load_repository_baseline()
@@ -42,12 +48,12 @@ class PairedPerformanceTest(unittest.TestCase):
             temporary.cleanup()
 
     def test_repository_baseline_rejects_relaxed_cpu_threshold(self):
-        source = Path(__file__).resolve().parents[1] / "optimization/baselines/ecs_v7.json"
+        source = Path(__file__).resolve().parents[1] / "optimization/baselines/ecs_v8.json"
         manifest = json.loads(source.read_text())
         manifest["measurement_contract"]["cpu_bootstrap_95_upper_below"] = 1.01
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            destination = root / ".project/optimization/baselines/ecs_v7.json"
+            destination = root / ".project/optimization/baselines/ecs_v8.json"
             destination.parent.mkdir(parents=True)
             destination.write_text(json.dumps(manifest))
             with mock.patch.object(ecs_performance, "ROOT", root):

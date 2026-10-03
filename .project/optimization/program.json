@@ -1347,7 +1347,12 @@
         ".project/optimization/evidence/ecs_v4_failed_formal_20261001.json.gz",
         ".project/optimization/evidence/ecs_v5_passed_formal_20261001.json.gz",
         ".project/optimization/evidence/ecs_handfeel_preperf_reference_20261002.json.gz",
-        ".project/optimization/evidence/ecs_v6_preflight_20261002.json.gz"
+        ".project/optimization/evidence/ecs_v6_preflight_20261002.json.gz",
+        ".project/optimization/baselines/ecs_v7*",
+        ".project/optimization/baselines/ecs_v8*",
+        ".project/optimization/diagnostics/ecs_reference_refresh_v8.py",
+        ".project/optimization/evidence/ecs_ai_mirror_preperf_reference_20261003.json.gz",
+        ".project/optimization/evidence/ecs_v8_preflight_20261003.json.gz"
       ],
       "tools": [
         "python3",

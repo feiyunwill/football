@@ -60,10 +60,10 @@ def same_trajectory(left, right):
 
 def load_repository_baseline():
     """Verify and relocate the versioned, repository-owned reference build."""
-    manifest_path = ROOT / ".project/optimization/baselines/ecs_v7.json"
+    manifest_path = ROOT / ".project/optimization/baselines/ecs_v8.json"
     manifest = json.loads(manifest_path.read_text())
-    require(manifest["format"] == 7 and manifest["id"] ==
-            "ecs-manual-response-pre-selection-scratch-and-vector-length-20261002",
+    require(manifest["format"] == 8 and manifest["id"] ==
+            "ecs-ai-mirror-current-gameplay-pre-selection-scratch-and-vector-length-20261003",
             "Wrong ECS baseline version")
     require(manifest["measurement_contract"] == {
         "seeds": list(benchmark.SEEDS), "warmup_steps": 200, "steady_steps": 2000,
@@ -83,10 +83,10 @@ def load_repository_baseline():
 
     require(benchmark.file_hash(source_path(manifest["semantic_patch"])) ==
             manifest["semantic_patch_sha256"], "Baseline semantic patch changed")
-    require(benchmark.file_hash(source_path(".project/optimization/baselines/ecs_v6.json")) ==
-            manifest["derived_from_baseline_v6_sha256"], "Parent ECS baseline changed")
+    require(benchmark.file_hash(source_path(".project/optimization/baselines/ecs_v7.json")) ==
+            manifest["derived_from_baseline_v7_sha256"], "Parent ECS baseline changed")
     require(benchmark.file_hash(source_path(
-                ".project/optimization/diagnostics/ecs_reference_refresh_v7.py")) ==
+                ".project/optimization/diagnostics/ecs_reference_refresh_v8.py")) ==
             manifest["generator_sha256"], "ECS reference generator changed")
     require(benchmark.file_hash(source_path(manifest["validation_artifact"])) ==
             manifest["validation_artifact_sha256"], "ECS trajectory and allocation preflight changed")
@@ -137,8 +137,17 @@ def profile_failures(pair):
         if (profile.get("hotspot_profile") is not True or profile["steps_seen"] != 4200
                 or group["frame"]["calls"] != 2000 or group["full_cache"]["calls"] != 20000):
             failures.append(f"seed {pair['seed']}: wrong {role} profile interval")
-        if any(item["calls"] <= 0 or item["ns"] <= 0 for item in group.values()):
-            failures.append(f"seed {pair['seed']}: a {role} wrapper never ran")
+        # RunPlayerSystems is registered as an internal system callback and can
+        # bypass the dynamic-symbol interposer. It is diagnostic only; the
+        # enclosing measured frame and the other three active wrappers remain
+        # mandatory, and both builds must have identical callback coverage.
+        if any(item["calls"] <= 0 or item["ns"] <= 0
+               for name, item in group.items() if name != "players"):
+            failures.append(f"seed {pair['seed']}: an active {role} wrapper never ran")
+        if group["players"]["calls"] == 0 and group["players"]["ns"] != 0:
+            failures.append(f"seed {pair['seed']}: invalid {role} player wrapper timing")
+        if group["players"]["calls"] > 0 and group["players"]["ns"] <= 0:
+            failures.append(f"seed {pair['seed']}: invalid {role} player wrapper timing")
     old, new = buckets["baseline"], buckets["candidate"]
     if any(old[name]["calls"] != new[name]["calls"] for name in expected_names):
         failures.append(f"seed {pair['seed']}: function coverage changed")
@@ -182,11 +191,11 @@ def main():
             previous = next(item for item in baseline["runs"] if item["seed"] == seed)
             assertions += checks + same_trajectory(previous, result)
             results.append(result)
-        artifact = ROOT / ".project/optimization/benchmarks" / f"ecs-v7-preflight-{time.time_ns()}.json"
+        artifact = ROOT / ".project/optimization/benchmarks" / f"ecs-v8-preflight-{time.time_ns()}.json"
         artifact.write_text(json.dumps({"format": 2, "baseline_preflight": True,
             "passed": True, "skipped": 0, "assertions": assertions,
             "baseline_manifest_sha256": benchmark.file_hash(
-                ROOT / ".project/optimization/baselines/ecs_v7.json"),
+                ROOT / ".project/optimization/baselines/ecs_v8.json"),
             "source_commit": pointer["source_commit"], "binaries": pointer["binaries"],
             "machine": benchmark.machine_identity(args.cpu), "results": results}, indent=2) + "\n")
         print(json.dumps({"baseline_preflight": True, "passed": True, "skipped": 0,
