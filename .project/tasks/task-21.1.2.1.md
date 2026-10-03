@@ -1,5 +1,7 @@
 # task-21.1.2.1 — 网络与回滚内存预算
 
+2026-10-03 当前源码的正式容量门禁通过：1,400 条断言、零跳过，29 组场景及 60 项命令，普通／Sanitizer、原生／Python 与回放文件证据已归档。质量系统判定 `verified`；整个进程 RSS、GPU 字节数及手感仍属其他任务。见[容量边界复验](../reports/optimization-memory-budget-2026-10-03.md)。
+
 类型：task
 
 状态由 `python3 .project/quality.py status` 根据当前源码和验收证据计算。
