@@ -1,5 +1,7 @@
 # task-22.1.2.1 — 平滑与暂停恢复
 
+2026-10-04 当前源码再次正式通过 `presentation_smoothing`：543 条断言、零跳过；实际 GameEnv 回滚、重定向、暂停像素和原生持牌姿态均在检查范围内。证据与边界见[本轮复验](../reports/optimization-presentation-smoothing-current-2026-10-04.md)。
+
 2026-10-03 当前源码 `presentation_smoothing` 正式通过 543 条断言、零跳过，task 复核通过；与已通过的 50ms 手感门禁共同使 ms-22.1 由质量系统判为 verified。范围和长尾见[本轮复验](../reports/optimization-smoothing-network-render-2026-10-03.md)。
 
 类型：task
