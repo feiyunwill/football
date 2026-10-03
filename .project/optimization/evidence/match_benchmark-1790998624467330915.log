@@ -1,0 +1,188 @@
+Running: cmake -S engine -B /tmp/football-optimization-native -DCMAKE_BUILD_TYPE=Release -DFOOTBALL_ENABLE_SANITIZERS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin
+-- The C compiler identification is GNU 16.2.1
+-- The CXX compiler identification is GNU 16.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/sbin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/sbin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found OpenGL: /usr/lib/libOpenGL.so
+-- Found EGL: /usr/lib/libEGL.so
+-- Found SDL2_image: /usr/lib/libSDL2_image.so
+-- Found SDL2_ttf: /usr/lib/libSDL2_ttf.so
+-- Found SDL2_gfx: /usr/lib/libSDL2_gfx.so (found version "1.0.4")
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Found Boost: /usr/lib/cmake/Boost-1.92.0/BoostConfig.cmake (found version "1.92.0") found components: system
+-- Found OpenSSL: /usr/lib/libcrypto.so (found suitable version "3.6.4", minimum required is "3.0") found components: Crypto
+-- Configuring done (5.0s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: /usr/sbin/c++ --version
+Running: cmake --build /tmp/football-optimization-native -j 1 --target engine_match_benchmark
+[  0%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/style.cpp.o
+[  1%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/caption.cpp.o
+[  1%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/image.cpp.o
+[  3%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/root.cpp.o
+[  3%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/frame.cpp.o
+[  3%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/view.cpp.o
+[  5%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/windowmanager.cpp.o
+[  5%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/guitask.cpp.o
+[  7%] Building CXX object CMakeFiles/gui2lib.dir/src/utils/gui2/page.cpp.o
+[  7%] Built target gui2lib
+[  7%] Building CXX object CMakeFiles/baselib.dir/src/base/sdl_surface.cpp.o
+[  7%] Building CXX object CMakeFiles/baselib.dir/src/base/utils.cpp.o
+[  9%] Building CXX object CMakeFiles/baselib.dir/src/base/properties.cpp.o
+[  9%] Building CXX object CMakeFiles/baselib.dir/src/base/log.cpp.o
+[ 11%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/triangle.cpp.o
+[ 11%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/line.cpp.o
+[ 11%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/trianglemeshutils.cpp.o
+[ 13%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/aabb.cpp.o
+[ 13%] Building CXX object CMakeFiles/baselib.dir/src/base/geometry/plane.cpp.o
+[ 15%] Building CXX object CMakeFiles/baselib.dir/src/base/math/vector3.cpp.o
+[ 15%] Building CXX object CMakeFiles/baselib.dir/src/base/math/matrix3.cpp.o
+[ 17%] Building CXX object CMakeFiles/baselib.dir/src/base/math/bluntmath.cpp.o
+[ 17%] Building CXX object CMakeFiles/baselib.dir/src/base/math/quaternion.cpp.o
+[ 17%] Building CXX object CMakeFiles/baselib.dir/src/base/math/matrix4.cpp.o
+[ 17%] Built target baselib
+[ 19%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/render_service.cpp.o
+[ 19%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_object.cpp.o
+[ 19%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_task.cpp.o
+[ 21%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_geometry.cpp.o
+[ 21%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_camera.cpp.o
+[ 23%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_light.cpp.o
+[ 23%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_overlay2d.cpp.o
+[ 25%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_scene.cpp.o
+[ 25%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/resources/vertexbuffer.cpp.o
+[ 25%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/resources/texture.cpp.o
+[ 27%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/rendering/opengl_renderer3d.cpp.o
+[ 27%] Building CXX object CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_system.cpp.o
+[ 27%] Built target systemsgraphicslib
+[ 27%] Building CXX object CMakeFiles/loaderslib.dir/src/loaders/imageloader.cpp.o
+[ 27%] Building CXX object CMakeFiles/loaderslib.dir/src/loaders/aseloader.cpp.o
+[ 27%] Built target loaderslib
+[ 29%] Building CXX object CMakeFiles/typeslib.dir/src/types/spatial.cpp.o
+[ 29%] Building CXX object CMakeFiles/typeslib.dir/src/types/refcounted.cpp.o
+[ 31%] Building CXX object CMakeFiles/typeslib.dir/src/types/observer.cpp.o
+[ 31%] Building CXX object CMakeFiles/typeslib.dir/src/types/command.cpp.o
+[ 31%] Built target typeslib
+[ 31%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objectfactory.cpp.o
+[ 33%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene2d/scene2d.cpp.o
+[ 33%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene.cpp.o
+[ 33%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/image2d.cpp.o
+[ 35%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/light.cpp.o
+[ 35%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/geometry.cpp.o
+[ 37%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/skybox.cpp.o
+[ 37%] Building CXX object CMakeFiles/scenelib.dir/src/scene/objects/camera.cpp.o
+[ 39%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene3d/scene3d.cpp.o
+[ 39%] Building CXX object CMakeFiles/scenelib.dir/src/scene/scene3d/node.cpp.o
+[ 39%] Building CXX object CMakeFiles/scenelib.dir/src/scene/object.cpp.o
+[ 41%] Building CXX object CMakeFiles/scenelib.dir/src/scene/resources/surface.cpp.o
+[ 41%] Building CXX object CMakeFiles/scenelib.dir/src/scene/resources/geometrydata.cpp.o
+[ 41%] Built target scenelib
+[ 41%] Building CXX object CMakeFiles/utilslib.dir/src/utils/orbitcamera.cpp.o
+[ 43%] Building CXX object CMakeFiles/utilslib.dir/src/utils/animation.cpp.o
+[ 43%] Building CXX object CMakeFiles/utilslib.dir/src/utils/splitgeometry.cpp.o
+[ 45%] Building CXX object CMakeFiles/utilslib.dir/src/utils/objectloader.cpp.o
+[ 45%] Building CXX object CMakeFiles/utilslib.dir/src/utils/xmlloader.cpp.o
+[ 47%] Building CXX object CMakeFiles/utilslib.dir/src/utils/animationextensions/footballanimationextension.cpp.o
+[ 47%] Built target utilslib
+[ 49%] Building CXX object CMakeFiles/blunted2.dir/src/blunted.cpp.o
+[ 49%] Linking CXX static library libblunted2.a
+[ 49%] Built target blunted2
+[ 49%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ecs_systems.cpp.o
+[ 49%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ecs_direct_systems.cpp.o
+[ 50%] Building CXX object CMakeFiles/gamelib.dir/src/ecs/system_batch.cpp.o
+[ 50%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/officials.cpp.o
+[ 52%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid_utils.cpp.o
+[ 52%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/animcollection.cpp.o
+/root/work_space/football/engine/src/onthepitch/player/humanoid/animcollection.cpp: In member function ‘void AnimCollection::CrudeSelection(DataSet&, const CrudeSelectionQuery&)’:
+/root/work_space/football/engine/src/onthepitch/player/humanoid/animcollection.cpp:666:122: warning: arithmetic between enumeration type ‘e_Side’ and floating-point type ‘blunted::real’ {aka ‘float’} is deprecated [-Wdeprecated-enum-float-conversion]
+  666 |         if (queryIncomingToFenceSide == animSide && fenceToAnimOutgoingSide == animSide && fabs(queryIncomingToFenceSide + fenceToOutgoingAngle) < pi) continue;
+      |                                                                                                 ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+[ 54%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoidbase.cpp.o
+[ 54%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid.cpp.o
+[ 54%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/playerofficial.cpp.o
+[ 56%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/player.cpp.o
+[ 56%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/playerbase.cpp.o
+[ 58%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/playercontroller.cpp.o
+[ 58%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/humancontroller.cpp.o
+[ 60%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/icontroller.cpp.o
+[ 60%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/refereecontroller.cpp.o
+[ 60%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/elizacontroller.cpp.o
+[ 62%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/strategy.cpp.o
+[ 62%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_mid.cpp.o
+[ 64%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_off.cpp.o
+[ 64%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_def.cpp.o
+[ 66%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/goalie_default.cpp.o
+[ 66%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/humangamer.cpp.o
+[ 66%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/ball.cpp.o
+[ 68%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/match.cpp.o
+[ 68%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/referee.cpp.o
+[ 70%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/mentalimage.cpp.o
+[ 70%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/AIfunctions.cpp.o
+[ 72%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/proceduralpitch.cpp.o
+[ 72%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/team.cpp.o
+[ 72%] Building CXX object CMakeFiles/gamelib.dir/src/onthepitch/teamAIcontroller.cpp.o
+[ 74%] Linking CXX static library libgamelib.a
+[ 74%] Built target gamelib
+[ 76%] Building CXX object CMakeFiles/menulib.dir/src/menu/startmatch/loadingmatch.cpp.o
+[ 76%] Building CXX object CMakeFiles/menulib.dir/src/menu/pagefactory.cpp.o
+[ 78%] Building CXX object CMakeFiles/menulib.dir/src/menu/menutask.cpp.o
+[ 78%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/radar.cpp.o
+[ 80%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/gamepage.cpp.o
+[ 80%] Building CXX object CMakeFiles/menulib.dir/src/menu/ingame/scoreboard.cpp.o
+[ 80%] Building CXX object CMakeFiles/menulib.dir/src/menu/mainmenu.cpp.o
+[ 82%] Building CXX object CMakeFiles/menulib.dir/src/menu/settings.cpp.o
+[ 82%] Building CXX object CMakeFiles/menulib.dir/src/menu/pausemenu.cpp.o
+[ 84%] Linking CXX static library libmenulib.a
+[ 84%] Built target menulib
+[ 86%] Building CXX object CMakeFiles/datalib.dir/src/data/matchdata.cpp.o
+[ 86%] Building CXX object CMakeFiles/datalib.dir/src/data/playerdata.cpp.o
+[ 88%] Building CXX object CMakeFiles/datalib.dir/src/data/teamdata.cpp.o
+[ 88%] Linking CXX static library libdatalib.a
+[ 88%] Built target datalib
+[ 88%] Building CXX object CMakeFiles/football_engine.dir/src/cmake/backtrace.cpp.o
+[ 90%] Building CXX object CMakeFiles/football_engine.dir/src/cmake/file.cpp.o
+[ 90%] Building CXX object CMakeFiles/football_engine.dir/src/misc/perlin.cpp.o
+[ 92%] Building CXX object CMakeFiles/football_engine.dir/src/misc/hungarian.cpp.o
+[ 92%] Building CXX object CMakeFiles/football_engine.dir/src/gametask.cpp.o
+[ 92%] Building CXX object CMakeFiles/football_engine.dir/src/utils.cpp.o
+[ 94%] Building CXX object CMakeFiles/football_engine.dir/src/main.cpp.o
+[ 94%] Building CXX object CMakeFiles/football_engine.dir/src/gamedefines.cpp.o
+[ 96%] Building CXX object CMakeFiles/football_engine.dir/src/defines.cpp.o
+[ 96%] Building CXX object CMakeFiles/football_engine.dir/src/frame_sync/input_codec.cpp.o
+[ 98%] Building CXX object CMakeFiles/football_engine.dir/src/game_load.cpp.o
+[ 98%] Building CXX object CMakeFiles/football_engine.dir/src/ai/ai_keyboard.cpp.o
+[ 98%] Building CXX object CMakeFiles/football_engine.dir/src/ai/ai_tactics.cpp.o
+[100%] Building CXX object CMakeFiles/football_engine.dir/src/game_env.cpp.o
+[100%] Linking CXX shared library libfootball_engine.so
+[100%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_match_benchmark.dir/tests/engine_match_benchmark.cpp.o
+[100%] Linking CXX executable bin/engine_match_benchmark
+[100%] Built target engine_match_benchmark
+Running: readelf -d /tmp/football-optimization-native/libfootball_engine.so
+{"seed": 42, "repetition": 0, "startup_ms": 158.768495, "steady_p50_ms": 2.187957, "steady_p95_ms": 3.497307, "steady_p99_ms": 4.513786, "hash": "f08c62c2c4b68eef"}
+{"seed": 43, "repetition": 0, "startup_ms": 134.67437, "steady_p50_ms": 2.179695, "steady_p95_ms": 3.506306, "steady_p99_ms": 4.521655, "hash": "47365935b8841021"}
+{"seed": 43, "repetition": 1, "startup_ms": 205.424955, "steady_p50_ms": 2.222027, "steady_p95_ms": 3.643541, "steady_p99_ms": 4.558898, "hash": "47365935b8841021"}
+{"seed": 42, "repetition": 1, "startup_ms": 141.012422, "steady_p50_ms": 2.114898, "steady_p95_ms": 3.365152, "steady_p99_ms": 4.412099, "hash": "f08c62c2c4b68eef"}
+{"seed": 42, "repetition": 2, "startup_ms": 139.31571, "steady_p50_ms": 2.052352, "steady_p95_ms": 3.478084, "steady_p99_ms": 4.466297, "hash": "f08c62c2c4b68eef"}
+{"seed": 43, "repetition": 2, "startup_ms": 131.230604, "steady_p50_ms": 2.122002, "steady_p95_ms": 3.569755, "steady_p99_ms": 4.648507, "hash": "47365935b8841021"}
+{"seed": 43, "repetition": 3, "startup_ms": 227.546483, "steady_p50_ms": 2.24221, "steady_p95_ms": 4.754893, "steady_p99_ms": 6.057926, "hash": "47365935b8841021"}
+{"seed": 42, "repetition": 3, "startup_ms": 151.335328, "steady_p50_ms": 1.998166, "steady_p95_ms": 3.583206, "steady_p99_ms": 4.445121, "hash": "f08c62c2c4b68eef"}
+{"seed": 42, "repetition": 4, "startup_ms": 138.516396, "steady_p50_ms": 2.040852, "steady_p95_ms": 3.46578, "steady_p99_ms": 4.315752, "hash": "f08c62c2c4b68eef"}
+{"seed": 43, "repetition": 4, "startup_ms": 151.198778, "steady_p50_ms": 2.238697, "steady_p95_ms": 3.807545, "steady_p99_ms": 4.884396, "hash": "47365935b8841021"}
+{"passed": true, "assertions": 563, "skipped": 0, "artifact": ".project/optimization/benchmarks/match-1790999051072967901.json", "artifact_sha256": "a02922d6b4588fdf08242a5ef4f6f05884a49d94836b4928bb724e8a601e6152", "source_identity": "f55748910da24009db9a015cd21be46dc8b330d6d534702d08fbbafbd1e137e9", "runs": 10, "summary": [{"seed": 42, "processes": 5, "samples": 10000, "startup_p50_ms": 141.012422, "steady": {"count": 10000, "sum_ns": 22444736392, "max_ns": 16360883, "p50_ns": 2071970, "p95_ns": 3481445, "p99_ns": 4457355}, "per_process_p99_ns": [4513786, 4412099, 4466297, 4445121, 4315752], "active_frames": 9895, "stopped_frames": 105, "rss_max_observed_bytes": 89055232, "rss_max_growth_bytes": 40960, "final_hash": "f08c62c2c4b68eef", "input_hash": "b7f3bcf2014e649e"}, {"seed": 43, "processes": 5, "samples": 10000, "startup_p50_ms": 151.198778, "steady": {"count": 10000, "sum_ns": 24204844092, "max_ns": 9708703, "p50_ns": 2194630, "p95_ns": 3916267, "p99_ns": 5136471}, "per_process_p99_ns": [4521655, 4558898, 4648507, 6057926, 4884396], "active_frames": 9790, "stopped_frames": 210, "rss_max_observed_bytes": 89038848, "rss_max_growth_bytes": 40960, "final_hash": "47365935b8841021", "input_hash": "b7f3bcf2014e649e"}]}
