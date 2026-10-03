@@ -13,4 +13,4 @@ The fixed 15-pair-per-seed formal comparison passed 1,590,027 assertions with no
 Current-match raw evidence: .project/optimization/evidence/match_ai_mirror_current_20261003.json.gz.
 Formal paired raw evidence: .project/optimization/evidence/ecs_v8_passed_formal_20261003.json.gz.
 Frozen reference and preflight: .project/optimization/baselines/ecs_v8.json and referenced artifacts.
-The direct check passed; quality.py evidence for the dependency chain must still be refreshed after changing the checker and program.
+After commit 954ca37, quality.py run task-21.1.1.2 passed all dependencies and the formal ECS check. plan-21.1.1 is verified. The current receipts, logs, and raw quality-run artifacts are archived at .project/optimization/evidence/ecs_v8_quality_receipts_20261003.tar.gz.
