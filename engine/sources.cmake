@@ -537,6 +537,7 @@ set(ENGINE_AI_TOUCH_CONTRACT_SOURCES tests/engine_ai_touch_contract.cpp)
 # 2026-09-14: shared tactical state, role decisions and real takeover replay.
 set(ENGINE_AI_TACTICS_CONTRACT_SOURCES tests/engine_ai_tactics_contract.cpp)
 set(ENGINE_AI_TACTICS_ROLES_CONTRACT_SOURCES tests/engine_ai_tactics_roles_contract.cpp)
+set(ENGINE_AI_MATCH_MIRROR_CONTRACT_SOURCES tests/engine_ai_match_mirror_contract.cpp)
 set(ENGINE_AI_TACTICAL_STATE_CONTRACT_SOURCES tests/engine_ai_tactical_state_contract.cpp)
 set(ENGINE_NATIVE_TACTICS_REPLAY_CONTRACT_SOURCES tests/engine_native_tactics_replay_contract.cpp)
 

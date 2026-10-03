@@ -73,7 +73,7 @@ void RefereeSystemProcess(Match* match) {
 //     if (pref->player->CastHumanoid()) pref->player->CastHumanoid()->Process();
 //   }
 // }
-void RunPlayerSystems(Match* match) {
+void RunPlayerSystems(Match* match, int team_id) {
   DO_VALIDATION;
   blunted::World& w = match->GetEcsWorld();
   auto* pool_PlayerMeta = w.GetPool<PlayerMeta>();
@@ -83,7 +83,7 @@ void RunPlayerSystems(Match* match) {
     PlayerMeta* meta = pool_PlayerMeta->Get(e);
     PlayerRef* pref = pool_PlayerRef->Get(e);
     // 2026-08-25 ECS Phase 2：实时刷新活跃快照，与旧 Team 内循环判定等价
-    if (!meta || !pref || !pref->player) continue;
+    if (!meta || !pref || !pref->player || meta->team_id != team_id) continue;
     meta->is_active = pref->player->IsActive();
     if (!meta->is_active) continue;
     ControllerRef* cref = pool_ControllerRef->Get(e);

@@ -1481,8 +1481,13 @@ bool Match::StepTeamsProcess(bool reverse) {
 
 bool Match::StepPlayersProcess(bool reverse) {
   DO_VALIDATION;
-  // 2025-03-17 ECS 迁移：由 RunPlayerSystems 统一执行球员 controller/humanoid Process
-  RunPlayerSystems(this);
+  // Player controllers consume team-local coordinates. Preserve the same
+  // per-team mirror context used by the tactics phase above.
+  Mirror(first_team == 1, first_team == 0, first_team == 1);
+  RunPlayerSystems(this, first_team);
+  Mirror(true, true, true);
+  RunPlayerSystems(this, second_team);
+  Mirror(first_team == 0, first_team == 1, first_team == 0);
   // 2026-09-09: the frame boundary fills complete caches once.
   // blunted::PlayerSystemBatch player_batch;
   // player_batch.Execute(GetEcsWorld());
