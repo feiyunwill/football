@@ -1,0 +1,94 @@
+{
+  "source_sha256": "90f0c08c730bae1c25fd405ea021e439df75ce612a4d55f304f8e1a05b3eda40",
+  "binary_sha256": "fbb87abb5ecfd9402e633adbdb6c3ccc40f2412e4ba929c77a26226e10c7742f",
+  "environment": {
+    "ASAN_OPTIONS": "halt_on_error=1:detect_leaks=1:quarantine_size_mb=16",
+    "UBSAN_OPTIONS": "halt_on_error=1:print_stacktrace=1",
+    "LSAN_OPTIONS": "exitcode=23",
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "FOOTBALL_RENDER_GPU_DRIVER_ROOT": "/root/.cache/football-mesa-build-20260913-a/install-candidate"
+  },
+  "runs": [
+    {
+      "run": 0,
+      "returncode": 0,
+      "duration_seconds": 83.015,
+      "result": {
+        "passed": true,
+        "assertions": 167,
+        "skipped": 0,
+        "warm_rss_bytes": 336052224,
+        "final_rss_bytes": 337010688,
+        "rss_after_cycles": [
+          346075136,
+          339349504,
+          337063936,
+          336052224,
+          318779392,
+          339173376,
+          338747392,
+          337534976,
+          338055168,
+          337629184,
+          339390464,
+          337010688
+        ]
+      },
+      "log_sha256": "eeb4a0802c461135e1190abbafee7c676beb72b63ccab5cce52783eeff238d28"
+    },
+    {
+      "run": 1,
+      "returncode": 0,
+      "duration_seconds": 82.113,
+      "result": {
+        "passed": true,
+        "assertions": 167,
+        "skipped": 0,
+        "warm_rss_bytes": 328949760,
+        "final_rss_bytes": 332046336,
+        "rss_after_cycles": [
+          337862656,
+          333426688,
+          335110144,
+          328949760,
+          323657728,
+          330747904,
+          333545472,
+          331665408,
+          335011840,
+          333905920,
+          336289792,
+          332046336
+        ]
+      },
+      "log_sha256": "0941bb38109c1fd714b13460a746edbf8a67553ba4ace7735f76500e92684a17"
+    },
+    {
+      "run": 2,
+      "returncode": 0,
+      "duration_seconds": 80.644,
+      "result": {
+        "passed": true,
+        "assertions": 167,
+        "skipped": 0,
+        "warm_rss_bytes": 336183296,
+        "final_rss_bytes": 338845696,
+        "rss_after_cycles": [
+          344883200,
+          339279872,
+          338067456,
+          336183296,
+          323448832,
+          335990784,
+          338448384,
+          336310272,
+          335368192,
+          334602240,
+          337965056,
+          338845696
+        ]
+      },
+      "log_sha256": "082f704b262d3cc66b6a5ce9801daea8083c6abb518c5a48b9b8d27458af18be"
+    }
+  ]
+}

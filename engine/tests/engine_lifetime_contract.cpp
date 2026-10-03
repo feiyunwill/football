@@ -242,6 +242,7 @@ int main(int argc, char** argv) {
     }
     size_t warm_memory = 0;
     size_t final_memory = 0;
+    std::array<size_t, 12> rss_after_cycles{};
     for (int cycle = 0; cycle < 12; ++cycle) {
       {
         GameEnv environment;
@@ -258,14 +259,26 @@ int main(int argc, char** argv) {
       Require(GetGame() == nullptr, "Loop teardown left dangling TLS state");
       Require(TTF_WasInit() == initial_fonts, "Repeated restart leaked font references");
       final_memory = ResidentBytes();
+      rss_after_cycles[cycle] = final_memory;
       if (cycle == 3) warm_memory = final_memory;
     }
     // RSS includes allocator caching; reject sustained growth equivalent to
     // retaining another full match, then use sanitizers for exact allocations.
+    if (final_memory > warm_memory + 16 * 1024 * 1024) {
+      std::cerr << "Engine lifetime RSS: warm=" << warm_memory
+                << " final=" << final_memory << " cycles=[";
+      for (size_t cycle = 0; cycle < rss_after_cycles.size(); ++cycle)
+        std::cerr << (cycle ? "," : "") << rss_after_cycles[cycle];
+      std::cerr << "]\n";
+    }
     Require(final_memory <= warm_memory + 16 * 1024 * 1024, "Repeated restart retained match-sized allocations");
     std::cout << "{\"passed\":true,\"assertions\":" << assertions
               << ",\"skipped\":0,\"warm_rss_bytes\":" << warm_memory
-              << ",\"final_rss_bytes\":" << final_memory << "}" << std::endl;
+              << ",\"final_rss_bytes\":" << final_memory
+              << ",\"rss_after_cycles\":[";
+    for (size_t cycle = 0; cycle < rss_after_cycles.size(); ++cycle)
+      std::cout << (cycle ? "," : "") << rss_after_cycles[cycle];
+    std::cout << "]}" << std::endl;
     return 0;
   } catch (const std::exception& error) {
     std::cerr << "Engine lifetime contract: " << error.what() << std::endl;
