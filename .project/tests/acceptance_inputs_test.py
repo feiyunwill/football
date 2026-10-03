@@ -12,6 +12,7 @@ PROJECT = Path(__file__).resolve().parents[1]
 ROOT = PROJECT.parent
 sys.path.insert(0, str(PROJECT / "checks"))
 import framework_regression as framework
+from input_contract import tactical_coverage, require_tactical_parity
 
 spec = importlib.util.spec_from_file_location("acceptance_quality", PROJECT / "quality.py")
 quality = importlib.util.module_from_spec(spec)
@@ -29,6 +30,33 @@ FIXTURE_CHECKS = (
 
 
 class AcceptanceInputsTest(unittest.TestCase):
+    def test_tactical_scenario_coverage_rejects_missing_or_hollow_cases(self):
+        cases = [
+            dict(seed=42, physics=2, actual_frames=240, nonzero_actors=960, restarts=0),
+            dict(seed=42, physics=10, actual_frames=240, nonzero_actors=876, restarts=4),
+            dict(seed=43, physics=2, actual_frames=240, nonzero_actors=960, restarts=0),
+            dict(seed=43, physics=10, actual_frames=240, nonzero_actors=792, restarts=94),
+        ]
+        summary = dict(assertions=27456, frames=960, nonzero_actors=3588, restarts=98)
+        raw = lambda rows: "\n".join(json.dumps(row) for row in rows)
+        self.assertEqual(len(tactical_coverage(raw(cases), summary)[1]), 4)
+        with self.assertRaisesRegex(RuntimeError, "matrix"):
+            tactical_coverage(raw(cases[:-1]), summary)
+        hollow = [dict(row) for row in cases]
+        hollow[1]["restarts"] = 0
+        with self.assertRaisesRegex(RuntimeError, "coverage"):
+            tactical_coverage(raw(hollow), summary)
+        hollow = [dict(row) for row in cases]
+        hollow[3]["nonzero_actors"] = 719
+        with self.assertRaisesRegex(RuntimeError, "coverage"):
+            tactical_coverage(raw(hollow), summary)
+        with self.assertRaisesRegex(RuntimeError, "totals"):
+            tactical_coverage(raw(cases), dict(summary, restarts=99))
+        coverage = tactical_coverage(raw(cases), summary)
+        require_tactical_parity(coverage, coverage)
+        with self.assertRaisesRegex(RuntimeError, "Release/Sanitizer"):
+            require_tactical_parity(coverage, (coverage[0], coverage[1][:-1]))
+
     def test_nested_fixture_content_and_addition_invalidate_each_gate(self):
         manifest = json.loads((PROJECT / "optimization/program.json").read_text(encoding="utf-8"))
         checks = {check["id"]: check for check in manifest["checks"]}

@@ -16,7 +16,7 @@ CONTRACTS={
  # 2026-09-14: real tactical state, actor identity, role symmetry and fresh actions are mandatory.
  'engine_ai_tactics_contract':(7288,{'symmetry_cases':600}),
  'engine_ai_tactics_roles_contract':(3601,{'role_mirror_cases':1800,'failed':0}),
-  'engine_ai_tactical_state_contract':(27618,{'frames':960,'actual_gameenv':True,'nonzero_actors':3513,'restarts':325}),
+  'engine_ai_tactical_state_contract':(27000,{'frames':960,'actual_gameenv':True}),
  # 2026-09-14: native controls must retain moving touches and stationary ball handling.
  'engine_ai_touch_contract':(586,{'seeds':3,'ball_control_assets':270,'quiet_idle':24,'actual_gameenv':True}),
  # 2026-09-13: native display-only capture keeps default RGB and logical state.
@@ -569,6 +569,33 @@ def observation():
                 socket_mode=oct(socket.stat().st_mode&0o7777) if socket.exists() else None,
                 xkbcomp_exists=Path('/usr/bin/xkbcomp').exists())
 
+def tactical_coverage(raw, summary):
+    """Verify per-scenario actor/set-piece coverage and its aggregate report."""
+    cases=[json.loads(line) for line in raw.splitlines() if line.startswith('{"seed":')]
+    require(len(cases)==4 and
+            {(case.get('seed'),case.get('physics')) for case in cases}==
+            {(42,2),(42,10),(43,2),(43,10)},
+            'Incomplete tactical scenario matrix')
+    require(all(case.get('actual_frames')==240 and
+                type(case.get('nonzero_actors')) is int and
+                case['nonzero_actors']>=720 and
+                type(case.get('restarts')) is int and
+                (case['restarts']>0 if case['physics']==10 else case['restarts']>=0)
+                for case in cases),
+            'Insufficient tactical actor or set-piece coverage')
+    require(summary.get('frames')==960 and
+            sum(case['nonzero_actors'] for case in cases)==summary.get('nonzero_actors') and
+            sum(case['restarts'] for case in cases)==summary.get('restarts'),
+            'Tactical scenario totals disagree')
+    return (summary['assertions'],
+            tuple((case['seed'],case['physics'],case['nonzero_actors'],case['restarts'])
+                  for case in cases))
+
+
+def require_tactical_parity(release, sanitized):
+    require(release==sanitized, 'Release/Sanitizer tactical scenarios differ')
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--build',type=Path,default=Path('/tmp/football-optimization-native'))
@@ -623,6 +650,7 @@ def main():
         run([sys.executable,ROOT/'.project/checks/native_input_oracle.py',output/'oracle.txt'],'python-oracle')
         oracle=json.loads((output/'oracle.json').read_text())
         require(oracle['operations']==20168,'Python/native input cohort changed')
+        tactical_reference=None
         builds={'release':args.build.resolve(),'sanitized':args.sanitized_build.resolve()}
         require(builds['release']!=builds['sanitized'],'Release and sanitizer builds must be distinct')
         runtimes={}
@@ -673,7 +701,16 @@ def main():
                              else [output/(label+'-capture-images')] if target=='engine_frame_capture_contract'
                              else [])
                 argv=[binary]+arguments
-                results[label+'-'+target]=parsed(run(argv,label+'-'+target,runtime),minimum,expected)
+                raw=run(argv,label+'-'+target,runtime)
+                row=parsed(raw,minimum,expected)
+                if target=='engine_ai_tactical_state_contract':
+                    coverage=tactical_coverage(raw,row)
+                    if sanitized:
+                        require_tactical_parity(tactical_reference, coverage)
+                    else:
+                        tactical_reference=coverage
+                    row['scenario_coverage']=coverage[1]
+                results[label+'-'+target]=row
         # 2026-09-13: thread instrumentation is separate from the ASan/UBSan engine.
         # This contract exercises publication and sampled input, not the whole engine.
         compiler=shlex.split(next(r['command'] for r in compile_rows

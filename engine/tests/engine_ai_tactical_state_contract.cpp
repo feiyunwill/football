@@ -34,6 +34,7 @@ void Check(unsigned seed, unsigned physics) {
   auto observe = fs::MakeGameEnvBotObserver(&env, 2, 2);
   fs::BotTakeoverManager bots(100 / physics);
   for (unsigned i = 0; i < 4; ++i) bots.Takeover(i, i < 2 ? 0 : 1);
+  unsigned case_nonzero_actors = 0, case_restarts = 0;
   for (unsigned tick = 0; tick < 240; ++tick) {
     const auto info = env.get_info();
     const auto digest = env.get_state_digest();
@@ -73,6 +74,7 @@ void Check(unsigned seed, unsigned physics) {
         unsigned actor = f.controlled_player[slot];
         const auto& p = team[actor];
         nonzero_actors += actor != 0;
+        case_nonzero_actors += actor != 0;
         Require(f.players[side][actor].position ==
                     std::array<float, 2>{p.player_position[0],
                                          p.player_position[1]},
@@ -92,9 +94,15 @@ void Check(unsigned seed, unsigned physics) {
                 "No selection generated action");
     }
     restarts += f.set_piece;
+    case_restarts += f.set_piece;
     engine.step_frame(inputs);
     ++frames;
   }
+  Require(case_nonzero_actors >= 720,
+          "Fixture did not exercise enough selected outfield actors");
+  if (physics == 10)
+    Require(case_restarts > 0,
+            "Full-physics fixture did not exercise a set piece");
   {
     ContextHolder guard(&env);
     auto* match = env.context->gameTask->GetMatch();
@@ -124,7 +132,8 @@ void Check(unsigned seed, unsigned physics) {
     Require(env.get_state_digest() == digest, "HID test failed to restore");
   }
   std::cout << "{\"seed\":" << seed << ",\"physics\":" << physics
-            << ",\"actual_frames\":240}\n";
+            << ",\"actual_frames\":240,\"nonzero_actors\":"
+            << case_nonzero_actors << ",\"restarts\":" << case_restarts << "}\n";
 }
 int main(int, char**) {
   try {
