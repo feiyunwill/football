@@ -16,6 +16,8 @@ adoption B 已接入 4 文件：NativePublicationClock 校正适用于多帧提�
 
 # task-22.1.1.1 — 统一输入采样
 
+2026-10-03 当前源码正式输入门禁通过 3,073,292 条断言、零跳过，task 复核通过；私有 X11／XTEST 下 standalone、TCP、UDP 产品入口通过。产品延迟验收仍为 false，详见[当前输入复验](../reports/optimization-input-current-2026-10-03.md)。
+
 2026-09-24 UDP 输入缺口已取得发送端证据并修复调度：真实抓包中输入帧 205 后直接出现 207，206 为权威空帧；旧算法对照复现，连续未来帧发布修复在两种构建中各通过 11,011 条断言及 12 项 RTT 测试。正式源码现为 1135 项，完整输入、框架、战术、AI 和原生边界门禁串行重验中。见[实现与证据](../reports/optimization-native-input-continuity-2026-09-24.md)，状态未提升。
 
 类型：task
