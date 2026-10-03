@@ -24,7 +24,7 @@ CONTRACTS={
  # 2026-09-13: slow authority lead and real unavailable-player AI recovery are mandatory.
  #     'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6}),
  'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6,'resync_frames':572,'resync_max_lead':2}),
-  'engine_native_bot_selection_contract':(2145,{'prefix_frames':512,'recorded_tail_frames':245,'unavailable_frames':105,'recovered_frames':66,'opponent_restart_wait_frames':66,'actual_gameenv':True}),
+  'engine_native_bot_selection_contract':(8751,{'prefix_frames':512,'recorded_tail_frames':1566,'unavailable_frames':105,'recovered_frames':66,'opponent_restart_wait_frames':66,'actual_gameenv':True}),
  'engine_native_match_contract':(44000,{'clock_events':10000,'engine_frames':600,'actual_gameenv':True,'native_contract':1}),
  # 2026-09-13: shared history and joined transport ownership are mandatory input contracts.
  'engine_native_transport_pump_contract':(20333,{'ledger_frames':4000,'concurrent_frames':128,'joined_lifetimes':64}),
@@ -93,7 +93,7 @@ def verify_bot_selection_reference():
     requeue=verify_bot_selection_requeue()
     momentum=verify_bot_selection_momentum()
     assist=verify_bot_selection_assist()
-    handfeel=verify_bot_selection_response()
+    handfeel=verify_bot_selection_ai_mirror()
     return {'manifest_sha256':benchmark.file_hash(base/'bot_selection_v2.json'),
               'oracle_output_sha256':manifest['oracle_output']['sha256'],
               'prefix_frames':512,'aligned_tail_frames':91,**requeue,**momentum,**assist,**handfeel}
@@ -511,8 +511,7 @@ def verify_bot_selection_response():
         raw={name:package.extractfile(name).read() for name in expected_members}
     require(all(hashlib.sha256(data).hexdigest()==recorded['files'][name]
                 for name,data in raw.items()) and
-            recorded['files']['generator.cpp']==archive['generator_sha256']==
-            benchmark.file_hash(ROOT/'engine/tests/engine_native_bot_selection_contract.cpp'),
+            recorded['files']['generator.cpp']==archive['generator_sha256'],
             'Manual-response generator or archive member changed')
     fixture_names={
         kind:f'engine/tests/fixtures/native_bot_transition_{kind}_response_20261002.inc'
@@ -562,6 +561,108 @@ def verify_bot_selection_response():
             'manual_response_archive_sha256':archive['sha256'],
             'manual_response_unavailable_frames':105,
             'manual_response_recovered_frames':66}
+
+def verify_bot_selection_ai_mirror():
+    """Validate the current replay and retain the earlier semantic lineage."""
+    historical=verify_bot_selection_response()
+    base=ROOT/'.project/optimization/baselines'
+    path=base/'bot_selection_ai_mirror_20261004.json'
+    manifest=json.loads(path.read_text())
+    prior=base/'bot_selection_response_20261002.json'
+    expected_contract={
+        'prefix_frames':512,'tail_frames':1566,'historical_input_frames':245,
+        'first_changed_frame_vs_prior':100,
+        'changed_prefix_hashes_vs_prior':412,
+        'first_unavailable_tail_frame':1394,'unavailable_frames':105,
+        'recovered_frames':66,'opponent_restart_wait_frames':66,
+        'assertions':3892}
+    require(manifest['format']==1 and
+            manifest['id']=='bot-selection-ai-mirror-20261004' and
+            manifest['historical_reference']==str(prior.relative_to(ROOT)) and
+            manifest['historical_reference_sha256']==benchmark.file_hash(prior) and
+            manifest['contract']==expected_contract and
+            manifest['raw_oracles']['independent_runs']==2,
+            'AI mirror bot-selection reference contract changed')
+    expected_sources={
+        'engine/src/ai/ai_tactics.cpp',
+        'engine/src/ai/ai_tactics.hpp',
+        'engine/src/frame_sync/bot_takeover.hpp',
+        'engine/src/frame_sync/engine_bot_observer.hpp',
+        'engine/src/onthepitch/team.cpp'}
+    require(set(manifest['candidate_sources'])==expected_sources,
+            'AI mirror source scope changed')
+    for relative,expected in manifest['candidate_sources'].items():
+        source=(ROOT/relative).resolve()
+        require(source.is_relative_to(ROOT) and
+                benchmark.file_hash(source)==expected,
+                'AI mirror source changed: '+relative)
+    archive=manifest['archive']
+    archive_path=(ROOT/archive['path']).resolve()
+    require(archive_path.is_relative_to(ROOT) and
+            benchmark.file_hash(archive_path)==archive['sha256'],
+            'AI mirror oracle archive changed')
+    expected_members={'generator.cpp','hashes-run1.inc','hashes-run2.inc',
+                      'tail-run1.inc','tail-run2.inc','run1.log','run2.log'}
+    with tarfile.open(archive_path,'r:gz') as package:
+        recorded=json.load(package.extractfile('manifest.json'))
+        require(recorded['format']=='bot-selection-ai-mirror-oracle-v1' and
+                set(recorded['files'])==expected_members and
+                set(package.getnames())==expected_members|{'manifest.json'},
+                'AI mirror oracle archive members changed')
+        raw={name:package.extractfile(name).read() for name in expected_members}
+    require(all(hashlib.sha256(data).hexdigest()==recorded['files'][name]
+                for name,data in raw.items()) and
+            recorded['files']['generator.cpp']==archive['generator_sha256']==
+            benchmark.file_hash(ROOT/'engine/tests/engine_native_bot_selection_contract.cpp'),
+            'AI mirror generator or archive member changed')
+    for kind,frames in (('hashes',512),('tail',1566)):
+        first=raw[f'{kind}-run1.inc']
+        require(first==raw[f'{kind}-run2.inc'] and
+                hashlib.sha256(first).hexdigest()==
+                manifest['raw_oracles'][f'{kind}_sha256'] and
+                len(first.splitlines())==frames,
+                'AI mirror independent replays differ')
+        relative=f'engine/tests/fixtures/native_bot_transition_{kind}_ai_mirror_20261004.inc'
+        fixture=(ROOT/relative).resolve()
+        require(set(manifest['fixtures'])=={
+                    f'engine/tests/fixtures/native_bot_transition_{k}_ai_mirror_20261004.inc'
+                    for k in ('hashes','tail')} and
+                fixture.is_relative_to(ROOT) and
+                benchmark.file_hash(fixture)==manifest['fixtures'][relative] and
+                fixture.read_bytes().partition(b'\n')[2]==first,
+                'AI mirror fixture differs from archived replay: '+kind)
+    previous=(ROOT/'engine/tests/fixtures/native_bot_transition_hashes_response_20261002.inc').read_text().splitlines()[1:]
+    current=raw['hashes-run1.inc'].decode().splitlines()
+    changed=[i for i,(a,b) in enumerate(zip(previous,current)) if a!=b]
+    require(len(previous)==len(current)==512 and
+            changed==list(range(100,512)),
+            'AI mirror prefix divergence changed')
+    def fields(line):
+        return line.strip().rstrip(',').strip('{}').split(',')
+    prior_tail=(ROOT/'engine/tests/fixtures/native_bot_transition_tail_response_20261002.inc').read_text().splitlines()[1:]
+    current_tail=raw['tail-run1.inc'].decode().splitlines()
+    selected=[int(fields(line)[3]) for line in current_tail]
+    require(len(prior_tail)==245 and len(current_tail)==1566 and
+            all(fields(a)[:3]==fields(b)[:3]
+                for a,b in zip(prior_tail,current_tail[:245])) and
+            selected[1394:1499]==[-1]*105 and
+            selected[1499:]==[9]*67 and
+            all(actor>=0 for actor in selected[:1394]),
+            'AI mirror fixed inputs or real selection transition changed')
+    expected_report={'passed':True,'assertions':3892,'prefix_frames':512,
+                     'recorded_tail_frames':1566,'unavailable_frames':105,
+                     'skipped':0,'actual_gameenv':True,'recovered_frames':66,
+                     'opponent_restart_wait_frames':66}
+    for run in (1,2):
+        log=raw[f'run{run}.log'].decode()
+        require(log.startswith('exit=0\n') and
+                json.loads(log.split('\n',1)[1])==expected_report,
+                'AI mirror archived replay did not complete')
+    return {**historical,
+            'ai_mirror_manifest_sha256':benchmark.file_hash(path),
+            'ai_mirror_archive_sha256':archive['sha256'],
+            'ai_mirror_unavailable_frames':105,
+            'ai_mirror_recovered_frames':66}
 
 def observation():
     socket=Path('/tmp/.X11-unix')

@@ -1,0 +1,39 @@
+{
+  "archive": {
+    "generator_sha256": "839f4ee128aed7ed52dbf995c1f5d66e4d04af5f70c02877f060c9e41e53fc8b",
+    "path": ".project/optimization/baselines/bot_selection_ai_mirror_20261004.tar.gz",
+    "sha256": "210e8afe4c53ada766512173e820d63db4e1f736fa558dcd6d78855eacef14a4"
+  },
+  "candidate_sources": {
+    "engine/src/ai/ai_tactics.cpp": "a4d414d78186f201e6b336f98a748648d293c62d2980c76f4fe18e775cd18b76",
+    "engine/src/ai/ai_tactics.hpp": "a53171660c4ea9b74303cf4a955c607c2c75d0955de74c66e7411e0091e864e4",
+    "engine/src/frame_sync/bot_takeover.hpp": "f59efc1cd7ee70baab3b0141408d1655c7f134b8be0fe089945099dd3a4f92db",
+    "engine/src/frame_sync/engine_bot_observer.hpp": "90c964ac30eba2e45d095070eeca5061f9a7c265b3230497fbf9ddb9c24ee39e",
+    "engine/src/onthepitch/team.cpp": "a2a6264bf040fbd772741ad333b1b92c743ec9b921514d6852936b40e9ab4c7d"
+  },
+  "contract": {
+    "assertions": 3892,
+    "changed_prefix_hashes_vs_prior": 412,
+    "first_changed_frame_vs_prior": 100,
+    "first_unavailable_tail_frame": 1394,
+    "historical_input_frames": 245,
+    "opponent_restart_wait_frames": 66,
+    "prefix_frames": 512,
+    "recovered_frames": 66,
+    "tail_frames": 1566,
+    "unavailable_frames": 105
+  },
+  "fixtures": {
+    "engine/tests/fixtures/native_bot_transition_hashes_ai_mirror_20261004.inc": "96351da991bdda17314708260ed9964f27839c44ad0427238ca73ae6923911f0",
+    "engine/tests/fixtures/native_bot_transition_tail_ai_mirror_20261004.inc": "d37c9c3ee91cd8039e66ba0ffe8e398ba6ae5e51882071a851aa0d0ae91ab640"
+  },
+  "format": 1,
+  "historical_reference": ".project/optimization/baselines/bot_selection_response_20261002.json",
+  "historical_reference_sha256": "82806a597fe08c60e5843d2bcbd1ae3819a6c14a913279998c39976fd07a71f2",
+  "id": "bot-selection-ai-mirror-20261004",
+  "raw_oracles": {
+    "hashes_sha256": "312703f97c77cc35112390a2abb4171c281333d6fb2c861c98517f77cdc757e3",
+    "independent_runs": 2,
+    "tail_sha256": "c1a2a26d60ea7a69638a48cfa25b4b400a7bd5d49cac8fb7421512e3d8519957"
+  }
+}

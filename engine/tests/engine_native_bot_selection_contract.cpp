@@ -1,4 +1,4 @@
-// 2026-09-13: actual TCP disconnect/dead-ball replay and AI recovery.
+// Actual GameEnv bot takeover through a dead-ball selection gap and recovery.
 
 #include "frame_sync/engine_tcp_bridge.hpp"
 #include "frame_sync/native_match_replay.hpp"
@@ -10,11 +10,14 @@ namespace fs=frame_sync;
 unsigned assertions=0,unavailable=0,recovered=0;
 void Require(bool v,const char*m){++assertions;if(!v)throw std::runtime_error(m);}
 using Recorded = std::tuple<float,float,unsigned,int,float,float>;
-const Recorded tail[]={
+const Recorded legacy_tail[]={
 #include "fixtures/native_bot_transition_tail_response_20261002.inc"
 };
+const Recorded tail[]={
+#include "fixtures/native_bot_transition_tail_ai_mirror_20261004.inc"
+};
 const std::uint64_t semantic_hashes[]={
-#include "fixtures/native_bot_transition_hashes_response_20261002.inc"
+#include "fixtures/native_bot_transition_hashes_ai_mirror_20261004.inc"
 };
 const char replay_bytes[] =
 #include "fixtures/native_bot_transition_replay_20260913.inc"
@@ -23,8 +26,9 @@ const char replay_bytes[] =
 // int main(){
 int main(int argc, char** argv){
  try {
-  const bool emit_reference =
-      argc == 4 && std::string(argv[1]) == "--emit-reference";
+   const bool emit_reference =
+       argc == 4 && std::string(argv[1]) == "--emit-reference";
+   constexpr unsigned max_reference_frames = 3000;
   Require(argc == 1 || emit_reference, "Unexpected bot-selection arguments");
   std::ofstream hashes_output, tail_output;
   if (emit_reference) {
@@ -68,7 +72,14 @@ int main(int argc, char** argv){
   fs::BotTakeoverManager bots(fs::NativeMatchContract::kHz);bots.Takeover(0,0);
   bool seen_unavailable=false;
   unsigned opponent_restart_wait_frames=0;
-  for(const auto&[x,y,buttons,owned,px,py]:tail){
+  unsigned tail_frames_run=0;
+  Require(std::size(legacy_tail)==245,"Recorded input prefix changed");
+  const unsigned frame_count=emit_reference ? max_reference_frames : std::size(tail);
+  for(unsigned tail_frame=0; tail_frame<frame_count; ++tail_frame){
+   const auto [x,y,buttons,owned,px,py] = emit_reference
+       ? (tail_frame<std::size(legacy_tail) ? legacy_tail[tail_frame]
+                                              : Recorded{0.f,0.f,0,-2,0.f,0.f})
+       : tail[tail_frame];
    const auto before=env.get_info();
    const auto snapshot=observe();
    const auto bot_input=bots.GenerateInput(0,snapshot);
@@ -89,15 +100,20 @@ int main(int argc, char** argv){
      ++opponent_restart_wait_frames;
     }
    }
-   const std::array inputs{fs::SlotInput{x,y,static_cast<std::uint16_t>(buttons)},fs::SlotInput::Default()};
+   if(!emit_reference && tail_frame>=std::size(legacy_tail))
+    Require(bot_input.dir_x==x && bot_input.dir_y==y && bot_input.buttons==buttons,
+            "Recovered bot command diverged from recorded trajectory");
+   const std::array inputs{tail_frame<std::size(legacy_tail)
+        ? fs::SlotInput{x,y,static_cast<std::uint16_t>(buttons)} : bot_input,
+        fs::SlotInput::Default()};
    engine.step_frame(inputs);
    auto info=env.get_info();Require(info.left_controllers.size()==MAX_PLAYERS,"Controller disappeared");
    const int actual_owned=info.left_controllers[0].controlled_player;
    if(emit_reference){
     const float actual_x=actual_owned>=0 ? info.left_team[actual_owned].player_position[0] : 0.f;
     const float actual_y=actual_owned>=0 ? info.left_team[actual_owned].player_position[1] : 0.f;
-    tail_output << "{" << std::hexfloat << x << "f," << y << "f,"
-                << std::dec << buttons << "," << actual_owned << ","
+    tail_output << "{" << std::hexfloat << inputs[0].dir_x << "f," << inputs[0].dir_y << "f,"
+                << std::dec << inputs[0].buttons << "," << actual_owned << ","
                 << std::hexfloat << actual_x << "f," << actual_y << "f},\n"
                 << std::defaultfloat;
    }else{
@@ -107,9 +123,11 @@ int main(int argc, char** argv){
      Require(std::abs(p[0]-px)<.0001 && std::abs(p[1]-py)<.0001,"Recorded position diverged");
     }
    }
+   ++tail_frames_run;
+   if (emit_reference && recovered>=66) break;
   }
   Require(unavailable>0 && recovered>0,"Bot did not resume after real selection recovery");
-  std::cout<<"{\"passed\":true,\"assertions\":"<<assertions<<",\"prefix_frames\":512,\"recorded_tail_frames\":"<<std::size(tail)
+  std::cout<<"{\"passed\":true,\"assertions\":"<<assertions<<",\"prefix_frames\":512,\"recorded_tail_frames\":"<<tail_frames_run
            <<",\"unavailable_frames\":"<<unavailable<<",\"skipped\":0,\"actual_gameenv\":true,\"recovered_frames\":"<<recovered
            <<",\"opponent_restart_wait_frames\":"<<opponent_restart_wait_frames<<"}\n";
  }catch(const std::exception&e){std::cerr<<e.what()<<'\n';return 1;}
