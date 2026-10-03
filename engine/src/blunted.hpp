@@ -19,6 +19,7 @@
 #define _HPP_BLUNTED
 
 #include "defines.hpp"
+#include <mutex>
 
 namespace blunted {
 
@@ -29,6 +30,9 @@ namespace blunted {
 
   /// unload all
   void Exit();
+
+  // SDL_ttf and FreeType font creation/destruction share process-wide state.
+  std::mutex& FontLifecycleMutex();
 }
 
 #endif

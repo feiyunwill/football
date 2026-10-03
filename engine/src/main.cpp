@@ -145,30 +145,28 @@ void run_game(Properties* input_config, bool render) {
   game->context->gameTask = std::shared_ptr<GameTask>(new GameTask());
   std::string fontfilename = game->context->config->Get(
       "font_filename", "media/fonts/alegreya/AlegreyaSansSC-ExtraBold.ttf");
-#ifdef WIN32
-  game->context->defaultFont = TTF_OpenFont(fontfilename.c_str(), 32);
-  game->context->defaultOutlineFont = TTF_OpenFont(fontfilename.c_str(), 32);
-#else
+#ifndef WIN32
   game->context->font = GetFile(fontfilename);
-  game->context->defaultFont =
-      TTF_OpenFontIndexRW(SDL_RWFromConstMem(game->context->font.data(),
-                                             game->context->font.size()),
-                          // 2026-09-09: TTF owns and closes each allocated RWops.
-                          // 0, 32, 0);
-                          1, 32, 0);
-  game->context->defaultOutlineFont =
-      TTF_OpenFontIndexRW(SDL_RWFromConstMem(game->context->font.data(),
-                                             game->context->font.size()),
-                          // 2026-09-09: TTF owns and closes each allocated RWops.
-                          // 0, 32, 0);
-                          1, 32, 0);
 #endif
-  // 2026-09-09: either font may fail; return control to startup cleanup.
-  // if (!game->context->defaultFont)
-  //   Log(e_FatalError, "football", "main", "Could not load font " + fontfilename);
-  if (!game->context->defaultFont || !game->context->defaultOutlineFont)
-    throw std::runtime_error("Could not load font " + fontfilename + ": " + TTF_GetError());
-  TTF_SetFontOutline(game->context->defaultOutlineFont, 2);
+  {
+    std::lock_guard font_lock(FontLifecycleMutex());
+#ifdef WIN32
+    game->context->defaultFont = TTF_OpenFont(fontfilename.c_str(), 32);
+    game->context->defaultOutlineFont = TTF_OpenFont(fontfilename.c_str(), 32);
+#else
+    game->context->defaultFont =
+        TTF_OpenFontIndexRW(SDL_RWFromConstMem(game->context->font.data(),
+                                               game->context->font.size()),
+                            1, 32, 0);
+    game->context->defaultOutlineFont =
+        TTF_OpenFontIndexRW(SDL_RWFromConstMem(game->context->font.data(),
+                                               game->context->font.size()),
+                            1, 32, 0);
+#endif
+    if (!game->context->defaultFont || !game->context->defaultOutlineFont)
+      throw std::runtime_error("Could not load font " + fontfilename + ": " + TTF_GetError());
+    TTF_SetFontOutline(game->context->defaultOutlineFont, 2);
+  }
   game->context->menuTask = std::shared_ptr<MenuTask>(
       new MenuTask(5.0f / 4.0f, 0, game->context->defaultFont,
                    game->context->defaultOutlineFont, game->context->config));
@@ -213,10 +211,13 @@ void quit_game() {
   context.animPositionCache.clear();
   context.anims.reset();
   context.colorCoords.clear();
-  if (context.defaultFont) TTF_CloseFont(context.defaultFont);
-  if (context.defaultOutlineFont) TTF_CloseFont(context.defaultOutlineFont);
-  context.defaultFont = nullptr;
-  context.defaultOutlineFont = nullptr;
+  {
+    std::lock_guard font_lock(FontLifecycleMutex());
+    if (context.defaultFont) TTF_CloseFont(context.defaultFont);
+    if (context.defaultOutlineFont) TTF_CloseFont(context.defaultOutlineFont);
+    context.defaultFont = nullptr;
+    context.defaultOutlineFont = nullptr;
+  }
   Exit();
   delete context.config;
   context.config = nullptr;

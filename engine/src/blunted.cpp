@@ -40,6 +40,8 @@
 namespace blunted {
 namespace { std::mutex font_lifecycle_mutex; }
 
+std::mutex& FontLifecycleMutex() { return font_lifecycle_mutex; }
+
 void Initialize() {
   DO_VALIDATION;
   // initialize resource managers

@@ -1,11 +1,11 @@
 {
   "check": "quality_selftest",
-  "fingerprint": "bc20c6d3a0faeaef08ca8cfdb994ac9befb7f971e0de970a60867103200dd45b",
+  "fingerprint": "cb688c3b912ef5f96652f50e0c70be1fd51e760041c324dbced1aefa55565a9c",
   "passed": true,
   "reason": "unittest requires sufficient tests, zero failures, zero skips",
   "returncode": 0,
-  "started": 1790934954.0245116,
-  "duration_seconds": 4.786,
+  "started": 1791008556.655103,
+  "duration_seconds": 4.884,
   "argv": [
     "python3",
     "-m",
@@ -16,6 +16,6 @@
     "-p",
     "*_test.py"
   ],
-  "log": "quality_selftest-1790934954024534131.log",
-  "log_sha256": "f30c5b43ae2d23952fe297d9381b302e6536c3d4f85f11f0cf1ecfdd76cf1d0b"
+  "log": "quality_selftest-1791008556655128483.log",
+  "log_sha256": "fc04b604118ec0236c928a804b450c8d3923131c58c1e2995c7505b7c6926ff8"
 }
