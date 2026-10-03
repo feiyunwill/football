@@ -22,6 +22,7 @@
 namespace {
 namespace fs = frame_sync;
 std::uint64_t assertions = 0, steps = 0, corrected = 0, confirmations = 0;
+std::uint64_t response_active = 0, response_divergent = 0;
 void Require(bool condition, const char* message) {
   ++assertions;
   if (!condition) throw std::runtime_error(message);
@@ -130,13 +131,24 @@ void ActualPlayerResponse(unsigned int seed) {
   Require(owned >= 0 && owned < int(initial.left_team.size()), "No player assigned to input slot");
   fs::NativeInputBuffer to_right, to_left;
   to_right.Feed(Sample({"d", "lshift"})); to_left.Feed(Sample({"a", "lshift"}));
+  unsigned divergent_frames=0, active_frames=0;
   for (int frame = 0; frame < 30; ++frame) {
     Step(right, {to_right.Take(), fs::SlotInput::Default()});
     Step(left, {to_left.Take(), fs::SlotInput::Default()});
+    const auto r=right.get_info(), l=left.get_info();
+    if (r.left_controllers[0].controlled_player==owned &&
+        l.left_controllers[0].controlled_player==owned) {
+      ++active_frames;
+      if (r.left_team[owned].player_position!=l.left_team[owned].player_position)
+        ++divergent_frames;
+    }
   }
-  const auto a = right.get_info(), b = left.get_info();
-  Require(a.left_team[owned].player_position != b.left_team[owned].player_position,
-          "Opposing buffered directions never changed the actual owned player's position");
+  // A later dead ball can deselect the actor and align both final positions.
+  // Measure the response while the same real player remains selected.
+  Require(active_frames >= 8 && divergent_frames >= 8,
+          "Opposing buffered directions did not move the selected player");
+  response_active += active_frames;
+  response_divergent += divergent_frames;
   right.close(); left.close();
 }
 void ActualReconciliation(unsigned int seed) {
@@ -219,11 +231,16 @@ int main(int, char**) {
       ActualReconciliation(seed);
     }
     Require(corrected > 0 && confirmations == 82, "Missing actual correction coverage");
+    Require(response_active >= 16 && response_divergent >= 16,
+            "Insufficient actual player response coverage");
     std::cout << "{\"passed\":true,\"skipped\":0,\"assertions\":" << assertions
               << ",\"actual_gameenv\":true,\"actual_sockets\":false"
               << ",\"synthetic_samples\":true,\"steps\":" << steps
               << ",\"confirmed_frames\":" << confirmations
-              << ",\"corrected_frames\":" << corrected << "}\n";
+              << ",\"corrected_frames\":" << corrected
+              << ",\"player_response_active_frames\":" << response_active
+              << ",\"player_response_divergent_frames\":" << response_divergent
+              << "}\n";
     return 0;
   } catch (const std::exception& error) {
     std::cerr << error.what() << '\n';
