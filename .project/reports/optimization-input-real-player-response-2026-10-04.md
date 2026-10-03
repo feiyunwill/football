@@ -4,4 +4,4 @@ The previous input contract compared one player's position only after 30 frames 
 
 The contract now observes the same owned player after every step and requires at least eight active and divergent frames for each seed. It retains the buffered-input replay, pause/resume barrier, exact authoritative hash reconciliation, and correction checks.
 
-Release and ASan/UBSan runs both passed with 3,902 assertions, 39 active response frames, 39 divergent response frames, 82 confirmed frames, and 74 corrected frames. The full `task-22.1.1.1` input gate must still be rerun to issue a formal receipt.
+Release and ASan/UBSan runs both passed with 3,902 assertions, 39 active response frames, 39 divergent response frames, 82 confirmed frames, and 74 corrected frames. The full `task-22.1.1.1` gate subsequently passed, including 3,116,103 input-contract assertions and all upstream framework, architecture, performance, and memory checks.
