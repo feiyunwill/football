@@ -1,0 +1,96 @@
+{
+  "files": {
+    ".project/optimization/benchmarks/render-phase-20261003-a/wayland_seed_42.stderr": {
+      "bytes": 73,
+      "sha256": "0687fce400ad761ed5b67eb4c61e9908eee775cd9005324d9be896c97b2f18e5"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/wayland_seed_42.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/baseline_42.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/baseline_42.stdout": {
+      "bytes": 2090,
+      "sha256": "73f11db3388ab5a5ae384b8320e5d82b00b0f8722f27ab438c0b5c2285c165e7"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/baseline_42_repeat.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/baseline_42_repeat.stdout": {
+      "bytes": 2090,
+      "sha256": "8905381aab1f9d421ad8422d77e46039ffc2ffe27d86a50485629548906c9875"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/baseline_43.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/baseline_43.stdout": {
+      "bytes": 2090,
+      "sha256": "a74c6c648a1cf93127c8ea017c763fcc81cfe6efe58f2e2394574cc7832da791"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/candidate/data/media/shaders/pbr.frag": {
+      "bytes": 3487,
+      "sha256": "8ce7e888f9c8b918dcce09bed49d0205ce3d9ba7aade944046a19770d9277a1b"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/candidate_42.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/candidate_42.stdout": {
+      "bytes": 2090,
+      "sha256": "b621cc4417ced1f00597d535d6b4fdd6aeb0353f6e627bc866c7d0903c4a0587"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/candidate_42_repeat.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/candidate_42_repeat.stdout": {
+      "bytes": 2090,
+      "sha256": "92c86407b5a7bdd99d0e2b7947f1313b19a2e07e7f1c403c54defeb523e6e519"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/candidate_43.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-shader-20261003-c/candidate_43.stdout": {
+      "bytes": 2090,
+      "sha256": "7e80e01f1de473ef1d995251a5f4d1df590d15e134603d967f26ab177fe22c14"
+    },
+    ".project/optimization/benchmarks/render-stage-20261003-b/commands.json": {
+      "bytes": 2964,
+      "sha256": "18be64b5e10c4fc8e90a32b93ef84b16339cb0cd780195cef83b33895cc1ee1f"
+    },
+    ".project/optimization/benchmarks/render-stage-20261003-b/compile.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-stage-20261003-b/ldd.txt": {
+      "bytes": 3167,
+      "sha256": "1213ad2746c7ec79880d55d2198265e9e03efb67ddf93e6c6e6bd0a99bbd85ab"
+    },
+    ".project/optimization/benchmarks/render-stage-20261003-b/link.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-stage-20261003-b/opengl_renderer3d_stage.cpp": {
+      "bytes": 133255,
+      "sha256": "c2ed08f46ab5b0b2201bc9763b6cb75ea1880815bb9262b0dde6414809cc36bc"
+    },
+    ".project/optimization/benchmarks/render-stage-20261003-b/run.stderr": {
+      "bytes": 29724,
+      "sha256": "7688b937620dc1bc0a049e05f457f8aa16d569c460a7f2b06fa0c89da70565d5"
+    },
+    ".project/optimization/benchmarks/render-stage-20261003-b/run.stdout": {
+      "bytes": 2090,
+      "sha256": "a57aa9262c8d894f80a492fcb7c81a41d9777c7be78e5bf956bed4d92fcc75f2"
+    },
+    ".project/optimization/evidence/render_ai_diagnostic_20261003.json": {
+      "bytes": 4241,
+      "sha256": "a23de5bee965c3b4229fbc0eb642048ea2563d0033a65bfcd0636ae5ed0980ca"
+    }
+  }
+}

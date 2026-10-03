@@ -1,0 +1,136 @@
+{
+  "candidate_shader_sha256": "8ce7e888f9c8b918dcce09bed49d0205ce3d9ba7aade944046a19770d9277a1b",
+  "gpu_stage_barriers": {
+    "bloom": {
+      "count": 150,
+      "mean_ms": 3.1828094333333334,
+      "p50_ms": 2.455432,
+      "p95_ms": 5.813991
+    },
+    "exposure": {
+      "count": 150,
+      "mean_ms": 0.9960089416666666,
+      "p50_ms": 0.836649,
+      "p95_ms": 1.773528
+    },
+    "fxaa": {
+      "count": 150,
+      "mean_ms": 3.2409694083333336,
+      "p50_ms": 2.863269,
+      "p95_ms": 6.009755
+    },
+    "gbuffer": {
+      "count": 150,
+      "mean_ms": 5.130814591666667,
+      "p50_ms": 4.491739,
+      "p95_ms": 7.983082
+    },
+    "ibl": {
+      "count": 150,
+      "mean_ms": 4.407903875,
+      "p50_ms": 3.596396,
+      "p95_ms": 7.355093
+    },
+    "ibl_setup": {
+      "count": 150,
+      "mean_ms": 2.733145275,
+      "p50_ms": 2.40319,
+      "p95_ms": 6.018544
+    },
+    "lights": {
+      "count": 150,
+      "mean_ms": 5.1208145583333335,
+      "p50_ms": 4.684004,
+      "p95_ms": 8.712384
+    },
+    "tone": {
+      "count": 150,
+      "mean_ms": 2.229804366666667,
+      "p50_ms": 2.061899,
+      "p95_ms": 3.609626
+    }
+  },
+  "passed": false,
+  "product_acceptance": false,
+  "scope": "Isolated GPU-stage diagnosis and shader trial; formal 1080p render budget remains failed",
+  "shader_source_sha256": "c22b82b7fdd1baa259609d572229bc41a0a91413f3df459074dff41439ab6e03",
+  "shader_trial": {
+    "42_baseline": {
+      "gallium_path": "/root/.cache/football-mesa-build-20260913-a/install-candidate/lib/libgallium-26.2.2.so",
+      "p50_ms": 18.976682,
+      "p95_ms": 24.85794,
+      "p99_ms": 26.589604,
+      "renderer": "D3D12 (Intel(R) Arc(TM) 140T GPU (16GB))"
+    },
+    "42_baseline_repeat": {
+      "gallium_path": "/root/.cache/football-mesa-build-20260913-a/install-candidate/lib/libgallium-26.2.2.so",
+      "p50_ms": 28.88948,
+      "p95_ms": 32.55727,
+      "p99_ms": 36.987279,
+      "renderer": "D3D12 (Intel(R) Arc(TM) 140T GPU (16GB))"
+    },
+    "42_candidate": {
+      "gallium_path": "/root/.cache/football-mesa-build-20260913-a/install-candidate/lib/libgallium-26.2.2.so",
+      "p50_ms": 26.343238,
+      "p95_ms": 31.423377,
+      "p99_ms": 33.320954,
+      "renderer": "D3D12 (Intel(R) Arc(TM) 140T GPU (16GB))"
+    },
+    "42_candidate_repeat": {
+      "gallium_path": "/root/.cache/football-mesa-build-20260913-a/install-candidate/lib/libgallium-26.2.2.so",
+      "p50_ms": 29.334953,
+      "p95_ms": 34.201173,
+      "p99_ms": 43.307592,
+      "renderer": "D3D12 (Intel(R) Arc(TM) 140T GPU (16GB))"
+    },
+    "43_baseline": {
+      "gallium_path": "/root/.cache/football-mesa-build-20260913-a/install-candidate/lib/libgallium-26.2.2.so",
+      "p50_ms": 27.916359,
+      "p95_ms": 32.890467,
+      "p99_ms": 35.055365,
+      "renderer": "D3D12 (Intel(R) Arc(TM) 140T GPU (16GB))"
+    },
+    "43_candidate": {
+      "gallium_path": "/root/.cache/football-mesa-build-20260913-a/install-candidate/lib/libgallium-26.2.2.so",
+      "p50_ms": 26.674812,
+      "p95_ms": 33.136268,
+      "p99_ms": 36.208601,
+      "renderer": "D3D12 (Intel(R) Arc(TM) 140T GPU (16GB))"
+    }
+  },
+  "source_sha256": "2829a87d26b1b52870d6bd1c2dae09288ec332d625d5cff1e55574fe268f08e0",
+  "stage_frame": {
+    "gallium_path": "/root/.cache/football-mesa-build-20260913-a/install-candidate/lib/libgallium-26.2.2.so",
+    "p50_ms": 38.902088,
+    "p95_ms": 50.933385,
+    "p99_ms": 72.660087,
+    "renderer": "D3D12 (Intel(R) Arc(TM) 140T GPU (16GB))"
+  },
+  "training_receipt_log_sha256": "f35738cd02b80c7169fb1d43291c155f66af2b03db460436b9d31c31b6fd789b",
+  "training_reliability": {
+    "assertions": 51,
+    "atomic_file_tests": 38,
+    "binary_sha256": "706b3e3f5f0518607b9580a82b86d494174803f7bb2807bc3c269d275d3b877a",
+    "debug_flags": "validated",
+    "passed": true,
+    "rejected": [
+      "truncated",
+      "damaged",
+      "wrong-dimension",
+      "legacy-unsealed",
+      "invalid-interval",
+      "non-file-destination"
+    ],
+    "save_restore_steps": [
+      1,
+      2
+    ],
+    "single_environment": true,
+    "skipped": 0,
+    "tar_members": 212
+  },
+  "wayland": {
+    "available": false,
+    "reason": "Render benchmark failed: SDL video initialization: wayland not available"
+  }
+}

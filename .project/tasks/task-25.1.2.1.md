@@ -1,5 +1,7 @@
 # task-25.1.2.1 — 训练与检查点
 
+2026-10-03 当前源码的独立 `training_reliability` 预检通过 51 条断言、零跳过，含真实 PPO 1→2 步跨进程恢复、38 项原子文件测试和六类错误拒绝。渲染前置条件仍失败，本 task 不提升；见[训练与渲染诊断](../reports/optimization-render-stage-training-2026-10-03.md)。
+
 2026-09-24：训练检查点错误返回已在真实写入失败下复现；共享原子文件层候选及原回放回归在 Release/完整 Debug 各 38 项通过。完整 RLtools、状态损坏恢复和训练生命周期仍未验证，候选未正式采用。见[实现与边界](../reports/optimization-training-checkpoint-io-2026-09-24.md)。
 
 以下保留此前阶段记录：

@@ -1,0 +1,15 @@
+{
+  "check": "training_reliability",
+  "fingerprint": "ecc9d6d43d08cf125e6258017696fa127b13659b05aa705b5d659eb7be7dd471",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1791005345.184081,
+  "duration_seconds": 218.1,
+  "argv": [
+    "python3",
+    ".project/checks/training_reliability.py"
+  ],
+  "log": "training_reliability-1791005345184142827.log",
+  "log_sha256": "f35738cd02b80c7169fb1d43291c155f66af2b03db460436b9d31c31b6fd789b"
+}
