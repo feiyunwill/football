@@ -1,5 +1,7 @@
 # task-22.1.1.2 — 固定步长与节拍
 
+2026-10-04 当前源码的正式 `fixed_timestep` 门禁已通过，任务状态由质量系统计算为 `verified`。本轮输入合同 3,116,103 条断言、固定步长 52 条断言均零跳过；完整范围及报告哈希见[当前验收](../reports/optimization-fixed-timestep-current-2026-10-04.md)。后续手感与渲染验收仍属于其他任务。
+
 类型：task
 
 状态由 `python3 .project/quality.py status` 根据当前源码和验收证据计算。
