@@ -1521,7 +1521,15 @@
         ".project/optimization/evidence/ecs_v6_preflight_20261002.json.gz",
         ".project/optimization/baselines/ecs_v3.json",
         ".project/optimization/baselines/ecs_v3_engine.so.gz",
-        ".project/optimization/baselines/ecs_v3_manual_turn.patch"
+        ".project/optimization/baselines/ecs_v3_manual_turn.patch",
+        ".project/optimization/baselines/soak_v5*",
+        ".project/optimization/baselines/soak_v6*",
+        ".project/optimization/baselines/ecs_v7*",
+        ".project/optimization/baselines/ecs_v8*",
+        ".project/optimization/diagnostics/soak_reference_refresh_v5.py",
+        ".project/optimization/diagnostics/soak_reference_refresh_v6.py",
+        ".project/optimization/evidence/soak_v5_validation_20261002.tar.gz",
+        ".project/optimization/evidence/soak_v6_validation_20261003.tar.gz"
       ],
       "tools": [
         "python3",
