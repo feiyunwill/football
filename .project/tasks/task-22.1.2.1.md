@@ -1,5 +1,7 @@
 # task-22.1.2.1 — 平滑与暂停恢复
 
+2026-10-03 当前源码 `presentation_smoothing` 正式通过 543 条断言、零跳过，task 复核通过；与已通过的 50ms 手感门禁共同使 ms-22.1 由质量系统判为 verified。范围和长尾见[本轮复验](../reports/optimization-smoothing-network-render-2026-10-03.md)。
+
 类型：task
 
 状态由 `python3 .project/quality.py status` 根据当前源码和验收证据计算。

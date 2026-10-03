@@ -1,0 +1,260 @@
+{
+  "files": {
+    ".project/optimization/benchmarks/feel-regression-1790933249836589854/report.json": {
+      "bytes": 1425,
+      "sha256": "937ee361deb1bfc1ff011f0a2ec2e993ba87cece09f4bc1985af1f7d6613a9d4"
+    },
+    ".project/optimization/benchmarks/network-input-window-1790927922101248760/report.json": {
+      "bytes": 3411,
+      "sha256": "0b142f3aa93b229d9b548056efe7137756fcbc86bb7439d0f9a23e68c7a88474"
+    },
+    ".project/optimization/benchmarks/network-reconnect-1790927966275131621/report.json": {
+      "bytes": 5563,
+      "sha256": "a8db22b41e7a70a371d8083e66a7dc8bc8b21de7262c81cb44399734fae9e6c8"
+    },
+    ".project/optimization/benchmarks/network-regression-1790928350291966645/report.json": {
+      "bytes": 4272,
+      "sha256": "5b51340e03a4745f66312b31a2b47cfbdcce641820629b16f0a07e6eb383ec44"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/actual-correction.log": {
+      "bytes": 2317,
+      "sha256": "cb8a1c9695b8e9552debf4ae7b0170f3aa1decc3f9768d50ace61f154cd9f9b9"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/actual-pose.log": {
+      "bytes": 2375,
+      "sha256": "27884528fc5de094165150e5ec562fbb2ce690a08c3da25535d2c107df115ec6"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/build.log": {
+      "bytes": 11667,
+      "sha256": "0d3c2317410266c4dc69cf1762dfe6a0dceda65f788d2c9612acda928d4095d3"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/configure.log": {
+      "bytes": 1881,
+      "sha256": "9a897eac34d504aa23c5abffe0e70dab6dfd468b6b5d4a936b20d0aa71e589e2"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/package/gfootball_engine/__init__.py": {
+      "bytes": 3144,
+      "sha256": "f8d5a7b3993f8255259ffd2c0bccbfac837cbd14412c9f6f86cd3488809b41bc"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/package/gfootball_engine/_gameplayfootball.so": {
+      "bytes": 994936,
+      "sha256": "4dd316ad97c8104f9c919ebf4222ff4025ad43aec373d5096ebdba51890d3fdb"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/package/gfootball_engine/libfootball_engine.so": {
+      "bytes": 3067104,
+      "sha256": "5b631591073199825d431212bc829c695f8838a5edf7c179df92bf23c5b83850"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/pose/build.log": {
+      "bytes": 582,
+      "sha256": "fac8a74aabe33df6eb3355101a5efa0209f502869aa484e5da27d1f40f9e47b9"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/pose/configure.log": {
+      "bytes": 470,
+      "sha256": "a92368e8f23c1f5f8528bcf2e89d342ce5eaf44dc54a448afb630a5de8669bcc"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/pose/contract.log": {
+      "bytes": 187,
+      "sha256": "675cf6fd6372e11736ec8ad1842ca1cab133a88428af33db083a3cdd73a6fb01"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/pose/images/normal_red_0.ppm": {
+      "bytes": 172815,
+      "sha256": "227bb4755404f3d63a4609269f8fcb53660dd56bdec9f6cecd96fe715e525970"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/pose/images/normal_red_1.ppm": {
+      "bytes": 172815,
+      "sha256": "46b21841ce279e26cb3268511f36a3142c9bbb089c6adfdb1936c6302ed37f00"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/pose/images/normal_red_2.ppm": {
+      "bytes": 172815,
+      "sha256": "b835eb041e8f904c1eff9220a4098eedeaf8d48604ebc7f79c4a5409128e7d99"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/pose/images/reverse_red_0.ppm": {
+      "bytes": 172815,
+      "sha256": "f902702f9721de539cb6d0172fed915dc10f2bce5b1731e00d4b206c2e619a1f"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/pose/images/reverse_red_1.ppm": {
+      "bytes": 172815,
+      "sha256": "15728b7ad8e70f7e5e0d23d663ff8370a3b0583bf3dda8c35c707e9a4f42298e"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/pose/images/reverse_red_2.ppm": {
+      "bytes": 172815,
+      "sha256": "f86d770804aec9a594b43ec3ff91bb0ad895c80fcba58c4da5277cb3660fa5eb"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/pose/report.json": {
+      "bytes": 106467,
+      "sha256": "3d633bf128406c1d95a0b6427496e14be7937f6dcb6b74aa54c621588a3539cb"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/report.json": {
+      "bytes": 168510,
+      "sha256": "dfd50178c6568ce216ca11f4dfdae959f143f01603d5726b28caf9e148e4ed3a"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/worker/images/correction_middle.png": {
+      "bytes": 1294522,
+      "sha256": "83272dc14b0b74fbb5d3c1eb0c8a8383bb15dd8f3cdb7fb8bf634720815cc9f8"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/worker/images/correction_start.png": {
+      "bytes": 918094,
+      "sha256": "80b522ec148fb57b947beb0f6ad9f3c3a1843520828795476a11a54eaf8b5e5c"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/worker/images/paused_endpoint.png": {
+      "bytes": 1093068,
+      "sha256": "e64939d279f570a25b7b0159ff7a0530f18ae3651708590fad79029e5e31f10c"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/worker/images/retarget_end.png": {
+      "bytes": 1093068,
+      "sha256": "e64939d279f570a25b7b0159ff7a0530f18ae3651708590fad79029e5e31f10c"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/worker/images/retarget_start.png": {
+      "bytes": 1294522,
+      "sha256": "83272dc14b0b74fbb5d3c1eb0c8a8383bb15dd8f3cdb7fb8bf634720815cc9f8"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/worker/images/visible_before_rollback.png": {
+      "bytes": 918094,
+      "sha256": "80b522ec148fb57b947beb0f6ad9f3c3a1843520828795476a11a54eaf8b5e5c"
+    },
+    ".project/optimization/benchmarks/presentation-smoothing-1791002744994264966/worker/report.json": {
+      "bytes": 2450,
+      "sha256": "75256fae3b1c61d216fb90b902a4fcda49cef46723d1f1060078eadcf77aa5a6"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/compile.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/compile2.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/compile_no_swap.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/compile_swap.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/egl_seed_42.stderr": {
+      "bytes": 140,
+      "sha256": "87d070519e61243f05d28b5e3b9ffe1bfa2646480de63df770070b1cfe4439a4"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/egl_seed_42.stdout": {
+      "bytes": 2090,
+      "sha256": "f0e5d002e38d241992fd169c578dc2d6cf5f9f56d731256f304fa943ef4b4688"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/egl_seed_43.stderr": {
+      "bytes": 140,
+      "sha256": "87d070519e61243f05d28b5e3b9ffe1bfa2646480de63df770070b1cfe4439a4"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/egl_seed_43.stdout": {
+      "bytes": 2090,
+      "sha256": "d08789f71878e31686649e5cf57c0fcc3a3c3a6ae7f59b48030086eb756bcc37"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/link.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/link2.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/link_no_swap.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/render_phase.cpp": {
+      "bytes": 6525,
+      "sha256": "6d908d08e487ee1a124c3aca62ea56aaa56647b4745facc7897a4789385aab08"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/render_phase2.cpp": {
+      "bytes": 7266,
+      "sha256": "40bb05d90e722b4c4ccd568938ba446d32f4909bee959d3adfaf3b5679de65e3"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/render_phase_no_swap.cpp": {
+      "bytes": 7267,
+      "sha256": "852b7dfcffe3dec0d92bbbfc5cfe5fcb08e7295edf9821b68abbe52f7a9e7639"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/run.stderr": {
+      "bytes": 105,
+      "sha256": "22e2d7da530acbec2bd13ef8ccc4fc6825161325a0ee12bca18932c3865f8009"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/run.stdout": {
+      "bytes": 2090,
+      "sha256": "6bb43ce020def0d73c2fbabdac423931deb0b7637bf19653621537ef8d163566"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/run2.stderr": {
+      "bytes": 159,
+      "sha256": "0b1cd5c979e6204a6f805e5053acae93f06e4549c1f700a196dd4fc08d4966e4"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/run2.stdout": {
+      "bytes": 2090,
+      "sha256": "8c88f062403b058ef59c1ef8c9cda3e242385c3c7b5f12f3a65d7fe8e4d46050"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/run_no_swap.stderr": {
+      "bytes": 157,
+      "sha256": "09ed57fccc578671ee752d10cf21919da0c3b89fd9635fa18e0b693792689686"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/run_no_swap.stdout": {
+      "bytes": 2020,
+      "sha256": "e2723559cc41bd81f1d57aa06dee2346174ce7183ebed15a4cdb2fd5005a5681"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/swap_baseline.stderr": {
+      "bytes": 8305,
+      "sha256": "21c2ef1c2199ddafd8a515c77d8ccef5501348734d95f274ee7c41a98135e1ce"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/swap_baseline.stdout": {
+      "bytes": 2090,
+      "sha256": "31837cee1f1a345bcfaae4bac2f80db3727f8e70440e6bc50d7c37ce2902c8e8"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/swap_diag.c": {
+      "bytes": 971,
+      "sha256": "c9515ecde7746aed632bbe2f43c5c25dcf99b4268eecfe08a94d9da3f4e705ac"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/swap_prefinish.stderr": {
+      "bytes": 8246,
+      "sha256": "c04cdc8cd70ecd2fda5d906520c3c3db8973cddccec4b2199214e614e252ad48"
+    },
+    ".project/optimization/benchmarks/render-phase-20261003-a/swap_prefinish.stdout": {
+      "bytes": 2090,
+      "sha256": "eb5a3740524d571c1f4b5bdec04dbc461c6777d4c210d5a2da886de6be9c49e4"
+    },
+    ".project/optimization/benchmarks/render-regression-1791003299459024362/build.log": {
+      "bytes": 11773,
+      "sha256": "2d46a6dadcf1832628d1335b3cb747778664cb33e90293dc9fe4131b35cd8388"
+    },
+    ".project/optimization/benchmarks/render-regression-1791003299459024362/configure.log": {
+      "bytes": 1631,
+      "sha256": "b7aef1bad307dc504c3d9e7d11de998d99d95d9d59a65402e699647f7cbd0cfb"
+    },
+    ".project/optimization/benchmarks/render-regression-1791003299459024362/report.json": {
+      "bytes": 8488,
+      "sha256": "1a6be408565f9ce119e6fa8d62cf7e19e76483b64c0aaeb8a8f8fe7e71bbed79"
+    },
+    ".project/optimization/benchmarks/render-regression-1791003299459024362/seed-42.log": {
+      "bytes": 1717,
+      "sha256": "596d9a23ea8fb41951445ff19cd60ecdee8bc189a5e64df0c9838d37479006fd"
+    },
+    ".project/optimization/benchmarks/render-regression-1791003299459024362/seed-43.log": {
+      "bytes": 1717,
+      "sha256": "18df88d806adb8a5f5decc8fa8097d883211508127fc941bb22b8195d4143f7b"
+    },
+    ".project/optimization/benchmarks/render-regression-1791003647650929599/build.log": {
+      "bytes": 11773,
+      "sha256": "5ba0485ff94866b3ac9e3946bc07c85e7376ab0368bdba4ab9b0b916a2a4dc34"
+    },
+    ".project/optimization/benchmarks/render-regression-1791003647650929599/configure.log": {
+      "bytes": 1631,
+      "sha256": "c9e9fd530c16510913e5396136276f9279f7acbce6bac9ba7ed3a397dd274c72"
+    },
+    ".project/optimization/benchmarks/render-regression-1791003647650929599/report.json": {
+      "bytes": 8367,
+      "sha256": "05cc9417c22cf227625e2d5451d1337f1195407e4efbd92f039a14e8d4884c6b"
+    },
+    ".project/optimization/benchmarks/render-regression-1791003647650929599/seed-42.log": {
+      "bytes": 2090,
+      "sha256": "3b23f3c8c054a236307a536953993af07d19144fd0a5d8144dad17cff4c499a6"
+    },
+    ".project/optimization/benchmarks/render-regression-1791003647650929599/seed-43.log": {
+      "bytes": 2090,
+      "sha256": "0c9f0f1ff7dc5fe7d6b8e9dfc5d4378352ed45cc51830c8fbcf062f37d3c5655"
+    }
+  }
+}

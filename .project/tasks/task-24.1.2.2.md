@@ -1,5 +1,7 @@
 # task-24.1.2.2 — 渲染性能验收
 
+2026-10-03 当前源码正式双种子 1080p PBR 复验失败：未选硬件时 llvmpipe p95 为 258.225/220.760ms；显式选 Intel Arc 140T 私有 D3D12 驱动后 p95 为 32.619/31.921ms，仍超 16.67ms。隔离诊断将主要等待定位到图形任务的交换/呈现阶段，EGL 对照亦无收益；尚未形成产品修复；任务继续未通过。见[本轮复验与诊断](../reports/optimization-smoothing-network-render-2026-10-03.md)。
+
 2026-10-02 连续比赛双种子复核：正式基准新增显式私有 D3D12 驱动选择及实际加载库路径核对。Intel Arc 140T 上种子 42／43 的 1080p 完整 PBR p95 分别为 139.290／41.285ms，均超过 16.67ms，任务继续未通过。见[驱动身份与预算复核](../reports/optimization-render-budget-driver-2026-10-02.md)。
 
 2026-09-28 环境光采样复用原型：候选与基线的固定画面和模拟状态一致，但两组交错真实窗口比较未显示稳定的无探针 p95 收益，且基线及 PBR 对照波动大；正式着色器已恢复，不采用原型。见[环境光原型实测](../reports/optimization-ambient-shader-trial-2026-09-28.md)，`render_regression` 继续 `ready:false`。

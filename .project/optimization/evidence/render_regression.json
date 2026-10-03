@@ -1,0 +1,15 @@
+{
+  "check": "render_regression",
+  "fingerprint": "a0649245e407d4cf5b8e1642aaea59efeea20c04ab05e1b0aaae63e6e695c186",
+  "passed": false,
+  "reason": "Command exited with 1",
+  "returncode": 1,
+  "started": 1791003647.6131268,
+  "duration_seconds": 195.54,
+  "argv": [
+    "python3",
+    ".project/checks/render_regression.py"
+  ],
+  "log": "render_regression-1791003647613148452.log",
+  "log_sha256": "74df75008ed53b8e3f3e969aec6537954a5da2ce428778591aa8314fc0964ac7"
+}

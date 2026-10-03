@@ -1,15 +1,15 @@
 {
   "check": "presentation_smoothing",
-  "fingerprint": "d2b35cff2533d96bbd9c1c2060e9a0ca1dbb3a08dea2ba2561e142ae96b0a4f7",
+  "fingerprint": "beca1c608efcc38126acab2067e8390623fa5f3ee8930897e31e8048b9d0328c",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1790916087.9987566,
-  "duration_seconds": 32.839,
+  "started": 1791002744.9333904,
+  "duration_seconds": 372.601,
   "argv": [
     "python3",
     ".project/gates/presentation_smoothing.py"
   ],
-  "log": "presentation_smoothing-1790916087998788119.log",
-  "log_sha256": "0404a063b22e19193fb831d05bbe86a4da663ebf06dd9c27723a660036af3902"
+  "log": "presentation_smoothing-1791002744933433019.log",
+  "log_sha256": "cfbebab0b8623dad2b40727e5290d8d5a114cc23458d07f9897965891048fef6"
 }
