@@ -171,7 +171,10 @@ def main():
     build = args.build.resolve()
     pointer, baseline, baseline_temporary, archive = load_repository_baseline()
     for path, expected in baseline["sources"].items():
-        if path.startswith(("engine/data/", "engine/fonts/")) or path in (
+        # This benchmark is simulation-only; shaders are neither loaded nor
+        # inputs to its baseline trajectory or CPU timing comparison.
+        if (path.startswith(("engine/data/", "engine/fonts/")) and
+                not path.startswith("engine/data/media/shaders/")) or path in (
                 "engine/tests/engine_match_benchmark.cpp", "engine/src/frame_sync/default_scenario.hpp"):
             require(benchmark.file_hash(ROOT / path) == expected, f"Comparison fixture changed: {path}")
 

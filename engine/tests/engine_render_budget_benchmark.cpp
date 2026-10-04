@@ -4,6 +4,7 @@
 #include "game_env.hpp"
 #include "systems/graphics/graphics_system.hpp"
 
+#include <SDL.h>
 #include <SDL_opengl.h>
 #include <algorithm>
 #include <array>
@@ -51,13 +52,21 @@ std::string LoadedGalliumPath() {
 
 int main(int argc, char** argv) {
   try {
-    Require(argc == 2, "Expected one deterministic match seed");
+    Require(argc == 2 || (argc == 3 && std::string(argv[2]) == "--diagnostic"),
+            "Expected one deterministic match seed and optional --diagnostic");
+    const bool diagnostic = argc == 3;
     const unsigned long parsed = std::stoul(argv[1]);
     Require(parsed <= UINT32_MAX, "Match seed out of range");
-    Require(Enabled("GFOOTBALL_USE_PBR") && Enabled("GFOOTBALL_PBR_BLOOM") &&
+    Require(Enabled("GFOOTBALL_USE_PBR") &&
+                (diagnostic || (Enabled("GFOOTBALL_PBR_BLOOM") &&
                 Enabled("GFOOTBALL_PBR_FXAA") &&
-                Enabled("GFOOTBALL_PBR_AUTO_EXPOSURE"),
+                Enabled("GFOOTBALL_PBR_AUTO_EXPOSURE"))),
             "1080p quality profile is incomplete");
+    std::string quality = "pbr";
+    if (Enabled("GFOOTBALL_PBR_BLOOM")) quality += "+bloom";
+    if (Enabled("GFOOTBALL_PBR_FXAA")) quality += "+fxaa";
+    if (Enabled("GFOOTBALL_PBR_AUTO_EXPOSURE")) quality += "+auto_exposure";
+    const bool swap_enabled = !diagnostic || !Enabled("GFOOTBALL_RENDER_SKIP_SWAP");
     GameEnv env;
     env.game_config.render = true;
     env.game_config.capture_frames = false;
@@ -70,8 +79,10 @@ int main(int argc, char** argv) {
     env.start_game(*scenario);
     env.state = game_running;
     std::string renderer, vendor, version, gallium_path;
+    int swap_interval = 0;
     {
       ContextHolder selected(&env);
+      swap_interval = SDL_GL_GetSwapInterval();
       const auto* gl_renderer = glGetString(GL_RENDERER);
       const auto* gl_vendor = glGetString(GL_VENDOR);
       const auto* gl_version = glGetString(GL_VERSION);
@@ -89,21 +100,32 @@ int main(int argc, char** argv) {
       env.StepWithInput(&neutral, sizeof(neutral));
     unsigned in_play = 0;
     std::vector<double> samples;
+    std::vector<double> submit_samples;
+    std::vector<double> finish_samples;
     samples.reserve(kSamples);
+    submit_samples.reserve(kSamples);
+    finish_samples.reserve(kSamples);
     for (unsigned frame = 0; frame < kWarmup + kSamples; ++frame) {
       env.StepWithInput(&neutral, sizeof(neutral));
       in_play += env.get_info().is_in_play;
       const auto before = std::chrono::steady_clock::now();
+      std::chrono::steady_clock::time_point after_submit;
       {
         ContextHolder selected(&env);
-        env.render();
+        env.render(swap_enabled);
+        after_submit = std::chrono::steady_clock::now();
         glFinish();  // Include completion, rather than submission alone.
         Require(glGetError() == GL_NO_ERROR, "Real render produced a GL error");
       }
       const auto after = std::chrono::steady_clock::now();
-      if (frame >= kWarmup)
+      if (frame >= kWarmup) {
         samples.push_back(std::chrono::duration<double, std::milli>(
                               after - before).count());
+        submit_samples.push_back(std::chrono::duration<double, std::milli>(
+                                     after_submit - before).count());
+        finish_samples.push_back(std::chrono::duration<double, std::milli>(
+                                     after - after_submit).count());
+      }
     }
     Require(samples.size() == kSamples && in_play > 0,
             "Rendered no live match samples");
@@ -125,16 +147,28 @@ int main(int argc, char** argv) {
               << ",\"gallium_path\":" << std::quoted(gallium_path)
               << ",\"width\":" << kWidth
               << ",\"height\":" << kHeight
-              << ",\"quality\":\"pbr+bloom+fxaa+auto_exposure\""
+              << ",\"quality\":" << std::quoted(quality)
+              << ",\"swap_enabled\":" << (swap_enabled ? "true" : "false")
+              << ",\"swap_interval\":" << swap_interval
               << ",\"warmup_frames\":" << kWarmup
               << ",\"measured_frames\":" << samples.size()
               << ",\"in_play_frames\":" << in_play
               << ",\"p50_ms\":" << Percentile(samples, .50)
               << ",\"p95_ms\":" << Percentile(samples, .95)
               << ",\"p99_ms\":" << Percentile(samples, .99)
+              << ",\"submit_p50_ms\":" << Percentile(submit_samples, .50)
+              << ",\"submit_p95_ms\":" << Percentile(submit_samples, .95)
+              << ",\"finish_p50_ms\":" << Percentile(finish_samples, .50)
+              << ",\"finish_p95_ms\":" << Percentile(finish_samples, .95)
               << ",\"samples_ms\":[";
     for (size_t i = 0; i < samples.size(); ++i)
       std::cout << (i ? "," : "") << samples[i];
+    std::cout << "],\"submit_samples_ms\":[";
+    for (size_t i = 0; i < submit_samples.size(); ++i)
+      std::cout << (i ? "," : "") << submit_samples[i];
+    std::cout << "],\"finish_samples_ms\":[";
+    for (size_t i = 0; i < finish_samples.size(); ++i)
+      std::cout << (i ? "," : "") << finish_samples[i];
     std::cout << "]}\n";
     return 0;
   } catch (const std::exception& error) {

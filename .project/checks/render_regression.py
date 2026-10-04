@@ -84,7 +84,9 @@ def main() -> int:
         for key in ('LIBGL_ALWAYS_SOFTWARE', 'MESA_LOADER_DRIVER_OVERRIDE',
                     'LD_PRELOAD', 'GFOOTBALL_USE_PBR', 'GFOOTBALL_PBR_BLOOM',
                     'GFOOTBALL_PBR_FXAA', 'GFOOTBALL_PBR_AUTO_EXPOSURE',
-                    'GFOOTBALL_PBR_EXPOSURE'):
+                    'GFOOTBALL_PBR_EXPOSURE', 'GFOOTBALL_RENDER_PHASE_PROFILE',
+                    'GFOOTBALL_RENDER_GPU_PHASE_PROFILE',
+                    'GFOOTBALL_RENDER_SKIP_SWAP'):
             base_env.pop(key, None)
         base_env.update({
             'GFOOTBALL_DATA_DIR': str(ROOT / 'engine/data'),
@@ -111,12 +113,22 @@ def main() -> int:
                     (row['width'], row['height']) == (1920, 1080),
                     'Benchmark used the wrong match or resolution')
             require(row['quality'] == 'pbr+bloom+fxaa+auto_exposure' and
+                    row['swap_enabled'] is True and
                     row['warmup_frames'] == 30 and
                     row['measured_frames'] == SAMPLES and
                     row['in_play_frames'] > 0,
                     'Benchmark did not render the required live quality profile')
             values = row['samples_ms']
             require(len(values) == SAMPLES, 'Measured frame sample count changed')
+            submit = row['submit_samples_ms']
+            finish = row['finish_samples_ms']
+            require(len(submit) == SAMPLES and len(finish) == SAMPLES,
+                    'Render submit/finish sample count changed')
+            for total, submitted, completed in zip(values, submit, finish):
+                require(all(math.isfinite(value) and value > 0 for value in
+                            (total, submitted, completed)) and
+                        abs(total - submitted - completed) < .01,
+                        'Render phase samples do not reconcile')
             for value in values:
                 require(isinstance(value, (int, float)) and math.isfinite(value)
                         and value > 0, 'Invalid measured render frame time')

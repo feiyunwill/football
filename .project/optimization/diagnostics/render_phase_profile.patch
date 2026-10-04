@@ -1,0 +1,131 @@
+diff --git a/engine/src/game_env.cpp b/engine/src/game_env.cpp
+index 8dc223e..2d65674 100644
+--- a/engine/src/game_env.cpp
++++ b/engine/src/game_env.cpp
+@@ -21,10 +21,12 @@
+ 
+ #include <cerrno>
+ #include <chrono>
++#include <cstdlib>
+ #include <ctime>
+ #include <iostream>
+ #include <ratio>
+ #include <stdexcept>
++#include <vector>
+ // 2026-09-10: printable HUD text validation uses std::any_of directly.
+ #include <algorithm>
+ #include <cmath>
+@@ -841,8 +843,35 @@ void GameEnv::render(bool swap_buffer) {
+   struct RestoreTracker {
+     ~RestoreTracker() { GetTracker()->setDisabled(false); }
+   } tracker_guard;
++  static const bool profile = [] {
++    const char* value = std::getenv("GFOOTBALL_RENDER_PHASE_PROFILE");
++    return value && std::string(value) == "1";
++  }();
++  const auto before_prepare = profile ? std::chrono::steady_clock::now() :
++                                       std::chrono::steady_clock::time_point{};
+   context->gameTask->PrepareRender();
++  const auto after_prepare = profile ? std::chrono::steady_clock::now() :
++                                      std::chrono::steady_clock::time_point{};
+   context->graphicsSystem.GetTask()->Render(swap_buffer);
++  if (profile) {
++    const auto after_graphics = std::chrono::steady_clock::now();
++    thread_local std::vector<double> prepare_ms;
++    thread_local std::vector<double> graphics_ms;
++    prepare_ms.push_back(std::chrono::duration<double, std::milli>(
++                             after_prepare - before_prepare).count());
++    graphics_ms.push_back(std::chrono::duration<double, std::milli>(
++                              after_graphics - after_prepare).count());
++    if (prepare_ms.size() == 150) {
++      auto report = [](const std::vector<double>& values, const char* label) {
++        std::vector<double> sorted(values.begin() + 30, values.end());
++        std::sort(sorted.begin(), sorted.end());
++        std::cerr << "RENDER_PHASE_PROFILE " << label << " p50_ms="
++                  << sorted[59] << " p95_ms=" << sorted[113] << '\n';
++      };
++      report(prepare_ms, "prepare");
++      report(graphics_ms, "graphics");
++    }
++  }
+   render_presented_ = true;
+ }
+ 
+diff --git a/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp b/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
+index 08c2409..c2db604 100644
+--- a/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
++++ b/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
+@@ -43,8 +43,11 @@
+ #include <cmath>
+ #include <cstdlib>
+ #include <algorithm>
++#include <chrono>
++#include <iostream>
+ #include <mutex>
+ #include <stdexcept>
++#include <vector>
+ #include "wrap_SDL.h"
+ 
+ #include "../../../base/geometry/aabb.hpp"
+@@ -3329,6 +3332,12 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+                                      std::deque<LightQueueEntry> &visibleLights,
+                                      std::deque<VertexBufferQueueEntry> &skyboxes) {
+   DO_VALIDATION;
++  static const bool profile = [] {
++    const char* value = std::getenv("GFOOTBALL_RENDER_GPU_PHASE_PROFILE");
++    return value && std::string(value) == "1";
++  }();
++  const auto phase_start = profile ? std::chrono::steady_clock::now() :
++                                   std::chrono::steady_clock::time_point{};
+   CreateIBLResources(visibleLights);
+   
+   std::vector<e_TargetAttachment> targets;
+@@ -3380,6 +3389,9 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   ClearBuffer(Vector3(0, 0, 0), true, true);
+   
+   RenderVertexBuffer(visibleGeometry, e_RenderMode_Full);
++  if (profile) ::glFinish();
++  const auto after_geometry = profile ? std::chrono::steady_clock::now() :
++                                        std::chrono::steady_clock::time_point{};
+   
+   // ============================================
+   // 3. 光照阶段 (PBR + IBL)
+@@ -3466,6 +3478,9 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   BindTexture(0);
+   SetTextureUnit(0);
+   BindTexture(0);
++  if (profile) ::glFinish();
++  const auto after_lighting = profile ? std::chrono::steady_clock::now() :
++                                        std::chrono::steady_clock::time_point{};
+   
+   // ============================================
+   // 4. 后处理阶段 (Tone Mapping + Bloom + FXAA)
+@@ -3642,6 +3657,28 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+     SetTextureUnit(0);
+     BindTexture(0);
+   }
++  if (profile) {
++    ::glFinish();
++    const auto after_post = std::chrono::steady_clock::now();
++    thread_local std::vector<std::array<double, 3>> samples;
++    samples.push_back({
++        std::chrono::duration<double, std::milli>(after_geometry - phase_start).count(),
++        std::chrono::duration<double, std::milli>(after_lighting - after_geometry).count(),
++        std::chrono::duration<double, std::milli>(after_post - after_lighting).count()});
++    if (samples.size() == 150) {
++      for (size_t phase = 0; phase < 3; ++phase) {
++        std::vector<double> sorted;
++        sorted.reserve(120);
++        for (size_t i = 30; i < samples.size(); ++i)
++          sorted.push_back(samples[i][phase]);
++        std::sort(sorted.begin(), sorted.end());
++        const char* name = phase == 0 ? "geometry" :
++                           phase == 1 ? "lighting" : "post";
++        std::cerr << "RENDER_GPU_PHASE_PROFILE " << name << " p50_ms="
++                  << sorted[59] << " p95_ms=" << sorted[113] << '\n';
++      }
++    }
++  }
+   SetFramebufferGammaCorrection(false);
+   UseShader("");
+   SetRenderTargets({e_TargetAttachment_Back});

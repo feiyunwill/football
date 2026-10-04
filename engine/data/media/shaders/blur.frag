@@ -24,28 +24,20 @@ uniform vec2 textureSize;           // 纹理尺寸
 
 out vec4 stdout;
 
-// 高斯权重 (5x5)
-const float weight[5] = float[](0.227027, 0.1945946, 0.1216216, 0.054054, 0.016216);
+// Adjacent Gaussian taps share a bilinear fetch on the linear-filtered Bloom
+// texture: five reads reproduce the nine-tap kernel up to texture precision.
+const float centerWeight = 0.227027;
+const float pairWeight[2] = float[](0.3162162, 0.07027);
+const float pairOffset[2] = float[](1.384615336, 3.230767041);
 
 void main() {
     vec2 texCoord = gl_FragCoord.xy / textureSize;
     
-    // 中心采样
-    vec3 result = texture(map_texture, texCoord).rgb * weight[0];
-    
-    // 双向采样
-    vec2 offset = direction / textureSize;
-    
-    // 正方向采样
-    for (int i = 1; i < 5; i++) {
-        vec2 sampleCoord = texCoord + offset * float(i);
-        result += texture(map_texture, sampleCoord).rgb * weight[i];
-    }
-    
-    // 负方向采样
-    for (int i = 1; i < 5; i++) {
-        vec2 sampleCoord = texCoord - offset * float(i);
-        result += texture(map_texture, sampleCoord).rgb * weight[i];
+    vec3 result = texture(map_texture, texCoord).rgb * centerWeight;
+    for (int i = 0; i < 2; ++i) {
+        vec2 offset = direction * pairOffset[i] / textureSize;
+        result += (texture(map_texture, texCoord + offset).rgb +
+                   texture(map_texture, texCoord - offset).rgb) * pairWeight[i];
     }
     
     stdout = vec4(result, 1.0);
