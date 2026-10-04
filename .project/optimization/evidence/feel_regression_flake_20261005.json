@@ -1,0 +1,229 @@
+{
+  "schema": "feel-flake-triage-v1",
+  "failed": {
+    "report_sha256": "f715bcbe6341700b83068e9222332306757b03845b1ff1a37a11b6231f3a6b94",
+    "archive_sha256": "9790ddbc47746b2569934afff8f798cb7980621fb468cf67f83137930e286c6a",
+    "assertions": 465,
+    "presses": 60,
+    "responded": 59,
+    "failures": [
+      "No real player velocity response: seed 52, press 3",
+      "No product display after response: seed 52, press 3",
+      "Some physical presses never changed actual player velocity"
+    ],
+    "triage_causes": {
+      "animation_selection_delay": 1,
+      "movement_physics_delay": 2
+    },
+    "seed52_press3": {
+      "index": 3,
+      "direction": -1,
+      "status": "no_velocity_response",
+      "owned_player": 9,
+      "selection_owned_player": 9,
+      "selection_handoff": false,
+      "input_admission_ms": 25.046,
+      "render_blocking_before_admission_ms": 21.276,
+      "raw_velocity_change_ms": 161.391,
+      "first_aligned_command_ms": 42.217,
+      "first_accepted_aligned_movement_ms": 261.067,
+      "first_accepted_aligned_touch_ms": null,
+      "first_accepted_aligned_action_ms": 261.067,
+      "causal_action_type": 1,
+      "pre_selection_vx": -2.37969184,
+      "velocity_response_ms": null,
+      "first_swap_after_admission_ms": 27.539,
+      "first_swap_after_response_ms": null,
+      "baseline_vx": -0.835609436,
+      "response_vx": null,
+      "baseline_x": -18.4626007,
+      "response_x": null,
+      "admitted_step": 377,
+      "response_step": null,
+      "admission_swap_index": 439,
+      "response_swap_index": null
+    },
+    "seed52_press3_action": {
+      "index": 3,
+      "direction": -1,
+      "selection_owned_player": 9,
+      "waited_for_playable_ms": 2362.477,
+      "unavailable_steps_before_press": 81
+    },
+    "seed52_press3_controlled_events": [
+      {
+        "ms_from_press": 42.217,
+        "kind": "human_command",
+        "frame_before": null,
+        "interrupt": null,
+        "accepted": null,
+        "desired_speed": 2.92429972,
+        "actual_vx": -0.835609436
+      },
+      {
+        "ms_from_press": 42.221,
+        "kind": "anim_select",
+        "frame_before": 4,
+        "interrupt": 7,
+        "accepted": false,
+        "desired_speed": 2.92429972,
+        "actual_vx": null
+      },
+      {
+        "ms_from_press": 75.696,
+        "kind": "human_command",
+        "frame_before": null,
+        "interrupt": null,
+        "accepted": null,
+        "desired_speed": 4.10133743,
+        "actual_vx": -1.26075745
+      },
+      {
+        "ms_from_press": 75.702,
+        "kind": "anim_select",
+        "frame_before": 8,
+        "interrupt": 7,
+        "accepted": false,
+        "desired_speed": 4.10133743,
+        "actual_vx": null
+      },
+      {
+        "ms_from_press": 123.781,
+        "kind": "human_command",
+        "frame_before": null,
+        "interrupt": null,
+        "accepted": null,
+        "desired_speed": 4.23485899,
+        "actual_vx": -1.56803131
+      },
+      {
+        "ms_from_press": 123.788,
+        "kind": "anim_select",
+        "frame_before": 12,
+        "interrupt": 7,
+        "accepted": false,
+        "desired_speed": 4.23485899,
+        "actual_vx": null
+      },
+      {
+        "ms_from_press": 160.079,
+        "kind": "human_command",
+        "frame_before": null,
+        "interrupt": null,
+        "accepted": null,
+        "desired_speed": 4.38478374,
+        "actual_vx": -1.89247131
+      },
+      {
+        "ms_from_press": 160.085,
+        "kind": "anim_select",
+        "frame_before": 16,
+        "interrupt": 7,
+        "accepted": false,
+        "desired_speed": 4.38478374,
+        "actual_vx": null
+      },
+      {
+        "ms_from_press": 191.667,
+        "kind": "human_command",
+        "frame_before": null,
+        "interrupt": null,
+        "accepted": null,
+        "desired_speed": 4.55368233,
+        "actual_vx": -2.22892761
+      },
+      {
+        "ms_from_press": 191.67,
+        "kind": "anim_select",
+        "frame_before": 20,
+        "interrupt": 7,
+        "accepted": false,
+        "desired_speed": 4.55368233,
+        "actual_vx": null
+      },
+      {
+        "ms_from_press": 240.967,
+        "kind": "human_command",
+        "frame_before": null,
+        "interrupt": null,
+        "accepted": null,
+        "desired_speed": 4.75288391,
+        "actual_vx": -2.37303591
+      },
+      {
+        "ms_from_press": 240.974,
+        "kind": "anim_select",
+        "frame_before": 24,
+        "interrupt": 7,
+        "accepted": false,
+        "desired_speed": 4.75288391,
+        "actual_vx": null
+      },
+      {
+        "ms_from_press": 260.817,
+        "kind": "human_command",
+        "frame_before": null,
+        "interrupt": null,
+        "accepted": null,
+        "desired_speed": 4.88536406,
+        "actual_vx": -2.37969184
+      },
+      {
+        "ms_from_press": 261.067,
+        "kind": "anim_select",
+        "frame_before": 26,
+        "interrupt": 1,
+        "accepted": true,
+        "desired_speed": 4.88536406,
+        "actual_vx": null
+      },
+      {
+        "ms_from_press": 278.234,
+        "kind": "human_command",
+        "frame_before": null,
+        "interrupt": null,
+        "accepted": null,
+        "desired_speed": 5,
+        "actual_vx": -2.49209523
+      },
+      {
+        "ms_from_press": 278.24,
+        "kind": "anim_select",
+        "frame_before": 2,
+        "interrupt": 7,
+        "accepted": false,
+        "desired_speed": 5,
+        "actual_vx": null
+      },
+      {
+        "ms_from_press": 313.664,
+        "kind": "human_command",
+        "frame_before": null,
+        "interrupt": null,
+        "accepted": null,
+        "desired_speed": 5,
+        "actual_vx": -3.17391396
+      },
+      {
+        "ms_from_press": 313.673,
+        "kind": "anim_select",
+        "frame_before": 6,
+        "interrupt": 7,
+        "accepted": false,
+        "desired_speed": 5,
+        "actual_vx": null
+      }
+    ]
+  },
+  "passing_rerun": {
+    "report_sha256": "607f73e760bcd66c2e67ff566dde37afb1c2b5b0707b2ee538ab4357852b5a53",
+    "archive_sha256": "78e075c32d49ad150e7942132817ce41324b340091e4ab7e8f7a5ab230afffe8",
+    "assertions": 465,
+    "presses": 60,
+    "responded": 60,
+    "response_p95_ms": 35.514,
+    "visible_p95_ms": 38.471
+  },
+  "same_engine_sha256": "fc8e3e37b3e2e00fb77a5076f23dd958c601bb01a80d96ac28a805fa8ec86b50",
+  "same_source_sha256": "ea225fa569531c0d314c2a3742c52fbdbe73b7fea011f4c60960dbe46cc417ac"
+}

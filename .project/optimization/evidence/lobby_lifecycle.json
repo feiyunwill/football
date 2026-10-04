@@ -1,15 +1,15 @@
 {
   "check": "lobby_lifecycle",
-  "fingerprint": "7458a7b6c556e9009c916173a43af82c17695829fa81e47c1b41632b3ffbfddd",
+  "fingerprint": "0c99d68e5c905c9acbbe647d331c05a39ed2a4a7d01371747bb4ba20101c4f13",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1791132421.6375804,
-  "duration_seconds": 83.85,
+  "started": 1791152022.6587396,
+  "duration_seconds": 54.625,
   "argv": [
     "python3",
     ".project/checks/lobby_lifecycle.py"
   ],
-  "log": "lobby_lifecycle-1791132421637618957.log",
-  "log_sha256": "307816d8363a79d5b49b2fd1fb003bc540e7c065cb5d870e9abf88e6d9145985"
+  "log": "lobby_lifecycle-1791152022658770293.log",
+  "log_sha256": "857258d46e115dfe70129c1141b02c6c82518bd258226e5d6771bc1e025eed14"
 }
