@@ -1,15 +1,15 @@
 {
   "check": "pbr_pipeline",
-  "fingerprint": "e571312cb6286c17ae0a6c78b0499bb05d8f934d9c39b07fa867637e82b24c34",
+  "fingerprint": "b97393f2463c3f0364d18a652ce95548758c41d73dca714bbccd7a4e91c57ba2",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1791076637.0147448,
-  "duration_seconds": 909.078,
+  "started": 1791134654.9133477,
+  "duration_seconds": 2581.031,
   "argv": [
     "python3",
     ".project/checks/pbr_pipeline.py"
   ],
-  "log": "pbr_pipeline-1791076637014767438.log",
-  "log_sha256": "766b50a3f77ea36d58ab2ec9c3dd64d857f25767067c653324989be761cd588a"
+  "log": "pbr_pipeline-1791134654913397377.log",
+  "log_sha256": "ac29b6506d46ad5ba77b0412b5190db48fd71a60faad0b915dee5340ce9704e9"
 }
