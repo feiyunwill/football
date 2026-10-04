@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "reference_check": "postprocessing",
-  "reference_stage": "postprocessing-1790575700200788263",
-  "reference_commit": "95f2c910e565b353b902a64037b1e1aff5d7c85d",
+  "reference_stage": "postprocessing-1791077578318549829",
+  "reference_commit": "112268d9569cf19e5942f28cc7a875aa175227f7",
   "identity": {
     "renderer": "llvmpipe (LLVM 22.1.8, 256 bits)",
     "width": 321,
@@ -24,53 +24,53 @@
       "0": "edb627bbb6687fa165c2d51c9cecded96fa0e5eb2103c7a4697f95a627a32a50",
       "40": "625f50beb453300a65bea126a3fdb0e7d1105c18c2a37c32e7789dbe3118fa95",
       "80": "35b22ad573cedeade83d42c144704601f813d29579fc9a631c90dd7ffef057e5",
-      "120": "4d604771002fc33b7d05a3f206f0c7071daa32d0b76eedd38b49e7314acf4259",
-      "160": "6ea94d2f19503838dae2815432cac1e3dc7b78057bf9703d9fdeaea268daf372"
+      "120": "3b105ed35d298bfeea03f23d1d627b18d37ad6a096f51be2cd35b4eb309551a5",
+      "160": "a5f39d504c98419ed00d8cdb13fc6928d3b64f31d4be9c2e84ef7593270ec0d2"
     },
     "baseline": {
       "0": "7e43a5c7aa0ca9676035fe6e97272dcf25ebdfc579e5aaeaec2a854c738efb1c",
       "40": "3c24157f3011e75a5cbf76d97be48de4b9697e36af47e6fad9487746ae894e62",
       "80": "9b6b48277655ebfa122d803d7dd62bb46061689bef2db64cd45c245e915aaf36",
-      "120": "d3999f82b08ab4af96eb3c2cf34d5a33b2d49a0bf8f671aeda39623b19ff4a1b",
-      "160": "c0d1a24551b456346644ad02986f2dad2d659d8cc8768d43ad21be84d5fd086b"
+      "120": "d4505eeb606eaf43f9a3c11b6d47784c403cff761bfe50e6f193724f403a24fe",
+      "160": "98c4013da5fd3d29f182784ce3992884d887c2a463c225fa3dfde2773fc42fb8"
     },
     "bloom": {
       "0": "7e43a5c7aa0ca9676035fe6e97272dcf25ebdfc579e5aaeaec2a854c738efb1c",
       "40": "3c24157f3011e75a5cbf76d97be48de4b9697e36af47e6fad9487746ae894e62",
       "80": "fd12e604bc665cc988497dfbb29dedb95156216939a7d2c62f1bac7d7e76c32e",
-      "120": "0ba6860daca24a85bb3bd529468696d48847d5684a55727ad9f6d2384b3a58c6",
-      "160": "5c90625ea7ca55a579b2f89da92f6cdf7be5bf47745de3aaf92b59bda9dde5f2"
+      "120": "929e62aafb7ccf852d249a526d62aed6b48c0259f834ac35ce031641e8dded51",
+      "160": "cb3c28d4fac24a516fae2143f33f35b02c8e44117d3f3b32962384ab515729b3"
     },
     "fxaa": {
       "0": "0546311ab3630b53563dfb7623e1c8095f37cf6d2e8df7af45e753dad7cf5a03",
       "40": "3aad99b4e369d6b505247640a559b3eec88407aa6e8ccc1bb4c245c164e748f5",
       "80": "66399ae0be837054268eafe28bab90159231b17bd0b8cd73468ee64c0289d92c",
-      "120": "21c9730982c4bec57521aab6fc6b6e63f86e1cda627f2cd645200cb2198ba447",
-      "160": "a80d15152fd4aaad0080d148c296186328b282eb05c3ccdc3968dab7d54c6bae"
+      "120": "ac9f5eda94198c5636baf915c56ec405b77242429b97d4f366750ba816de298b",
+      "160": "23f5fa71bcdf36c1f5c84f6e61a672d034f5071440b3822efbe13641eab0b632"
     },
     "auto": {
       "0": "6cada48da2b7d494feeb1b76cea7038b75a7d8c6a051fee89886ba4a9524f869",
       "40": "8ef5a2fdecbbf5916185bcd39bd186c69c569fcb6f7924cda93791bd821c6ffe",
       "80": "256bf73facc16ca01544f2e022345534a014a7beeffded43263d0c5c5a146e55",
-      "120": "538c68fe40998ae12f819489aa4c1f80a708f9c8782daa78d52f49cd34586534",
-      "160": "6f8e56b71a2ce503b1fad667c1693cf405a6812f40741b7bdf1a2a69bfb0c149"
+      "120": "fdf72b0acba9f4a6ee8b99af668cc18a27dbf4ae6ff81496965da16542a516a4",
+      "160": "0437ac678fdc29692c039347dc54ad4faa566a3eff10e4de302db46528c78f78"
     },
     "auto_combined": {
       "0": "758a9c1cd94ad84c0da73352a0cfb2e345e09cccf90fa53615855afdadea2580",
       "40": "cd8755bafd79de4caf9b84af3864cc9b340b6ad5a260696b172b700407bfd663",
       "80": "e40eaf9f89c6edd0e9e65a1b7d7393ac83363cc5a570c2bbef5c3a61ac969123",
-      "120": "a27902df5351c58769127716c67a1db78454db7f4de7f7a6b47915982a1fe8da",
-      "160": "86d6e4fc45cc76a60524b9628b22113a75db16287c6dcd47725906d08014b92b"
+      "120": "3d4e401ce39993eeb76d56c9b33aba74c78e521b1d47c2cf34cc682363fb14ff",
+      "160": "b85cc49fc7c3f3906c7682fbffaad3995877e0b2c8a889f801fe32472056fa12"
     }
   },
   "states": {
-    "0": "afa2ed3c74415ee612062048ae2030d2eb971959c7bd93cbf9bb0f4919e9fb28",
-    "40": "fc1b83065eee5b7f96b88cbc5e36bf42ac11a88a2c215cff43974be409af8555",
-    "80": "ef0d78778ab470c0ca71eba006fc261431ae1fd9b5dca2bc50df6caeb6fe7f87",
-    "120": "2bf4b5402f6a9dd3ce36e061aa6cb43ef6f61549348c25df29fac9626d43ac2d",
-    "160": "8862e9db2c43e3fd616ec713ab8eefcfdf55c2b2c6bff2a6766b50b7b5585635"
+    "0": "3a520d70738eeebc65c1f05a14481061884395a6c13aad25ab4dfcf340608a38",
+    "40": "6b1c25d21cc1f914a6ad65b694e21a03093ecdf3e6ff3edc01992c89da06d8e3",
+    "80": "d6d06c61590fb5b8266922ff5403a557c19ee2f33ef0504586d144cba7c23968",
+    "120": "4ad42c70c7be290934775fd39dae8e61991c3aa31ccf1fb7975f491db913a465",
+    "160": "0f6b019e63d4d8505ee62d46b8df946f8b764237262e7c1d0a8986b51798a522"
   },
-  "state_reference_stage": "render-images-1790886319818945451",
-  "state_reference_commit": "4fb9c526bc8620b6034af2374fced8013c5fe833",
-  "state_reference_note": "HumanController manual-input state added 12-byte direction and 1-byte pending flag; image reference is byte-identical."
+  "state_reference_stage": "postprocessing-1791077578318549829",
+  "state_reference_commit": "112268d9569cf19e5942f28cc7a875aa175227f7",
+  "state_reference_note": "Current player-switch gameplay; identical Release and Debug Sanitizer state captures across six render modes."
 }

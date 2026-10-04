@@ -1,15 +1,15 @@
 {
   "check": "render_images",
-  "fingerprint": "fed9539b2172ad5a98c36e587bad47c35694c9e66d80df83721d024922a40003",
+  "fingerprint": "9a0ef3e1ebe2f5ae1c1398bd43d4628123c3dc21ef166d3999f362b17e2428b4",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1790930436.5572927,
-  "duration_seconds": 839.839,
+  "started": 1791078612.4963136,
+  "duration_seconds": 829.063,
   "argv": [
     "python3",
     ".project/checks/render_images.py"
   ],
-  "log": "render_images-1790930436557326293.log",
-  "log_sha256": "91e35ba67761f51647f9cf3dcacbaa81746cb9b19dae5fe44c0e3520cb218a40"
+  "log": "render_images-1791078612496335516.log",
+  "log_sha256": "3bf17f3356000706d666a8b42a1f05d252313587e0e20c49eb36c3761c708a8a"
 }

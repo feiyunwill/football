@@ -92,6 +92,7 @@ def evaluate(cohort, output, binaries, sources):
     check(len(samples) == SAMPLES and cohort.get("total_presses") == SAMPLES,
           "Incomplete physical input cohort")
     all_samples = []
+    all_excluded = []
     for seed in SEEDS:
         directory = output / "cohort" / f"seed-{seed}"
         report_path = directory / "report.json"
@@ -131,6 +132,13 @@ def evaluate(cohort, output, binaries, sources):
               report.get("keyboard_source_sha256") == sources[
               ".project/checks/native_input_window_cases.py"],
               f"Product measurement source changed for seed {seed}")
+        excluded = report.get("excluded_unplayable_transitions", [])
+        check(len(excluded) <= 1 and
+              report.get("physical_presses") == CYCLES + len(excluded) and
+              all(row.get("reason") == "play_ended_before_first_step" and
+                  0 <= row.get("index", -1) < CYCLES for row in excluded),
+              f"Unbounded or unattributed transition retry for seed {seed}")
+        all_excluded.extend(dict(row, seed=seed) for row in excluded)
         for index, sample in enumerate(report.get("samples", [])):
             check(sample.get("index") == index and sample.get("direction") in (-1, 1),
                   f"Invalid press identity for seed {seed}, press {index}")
@@ -150,6 +158,9 @@ def evaluate(cohort, output, binaries, sources):
                   f"Velocity changed before accepted input animation: seed {seed}, press {index}")
             all_samples.append(dict(sample, seed=seed))
     check(all_samples == samples, "Cohort samples differ from per-match raw reports")
+    check(cohort.get("excluded_unplayable_transitions") == all_excluded and
+          cohort.get("physical_presses") == SAMPLES + len(all_excluded),
+          "Transition attempts differ from per-match evidence")
     responses = [row["velocity_response_ms"] for row in all_samples
                  if row.get("velocity_response_ms") is not None]
     swaps = [row["first_swap_after_response_ms"] for row in all_samples
@@ -170,6 +181,8 @@ def evaluate(cohort, output, binaries, sources):
           "Visible product response p95 exceeds 50 ms")
     return {"passed": not failures, "assertions": assertions, "skipped": 0,
             "failures": failures, "presses": len(all_samples),
+            "physical_presses": SAMPLES + len(all_excluded),
+            "excluded_unplayable_transitions": len(all_excluded),
             "admitted": len(admissions), "responded": len(responses),
             "response_p95_ms": p95(responses), "visible_p95_ms": p95(swaps),
             "input_admission_p95_ms": p95(admissions)}

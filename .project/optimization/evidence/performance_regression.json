@@ -1,15 +1,15 @@
 {
   "check": "performance_regression",
-  "fingerprint": "b8020f41a2e8f2f730fa7d2c99836200ad35a86ad4b8410acbcd8dcfd1acd98b",
+  "fingerprint": "fef259547d44d95489c5f6756f53050f6f65ba37bba4b84f709820947bd19eaf",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1791075340.25288,
-  "duration_seconds": 487.995,
+  "started": 1791080035.7127695,
+  "duration_seconds": 522.741,
   "argv": [
     "python3",
     ".project/checks/performance_regression.py"
   ],
-  "log": "performance_regression-1791075340252896281.log",
-  "log_sha256": "b08314ec7634adf6ccd66e56e7c88e103d121be5a1226b0f4cb074e968e6df20"
+  "log": "performance_regression-1791080035712782788.log",
+  "log_sha256": "a8c91a40f6778dbb25961b7ef64cffb8b31a879bfd9e4ddb5d3eb64438583412"
 }

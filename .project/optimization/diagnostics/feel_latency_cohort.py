@@ -49,6 +49,7 @@ def main():
     source_sha = sha(WINDOW)
     reports = []
     samples = []
+    excluded_transitions = []
     core_sha = None
     try:
         for offset in range(args.runs):
@@ -76,6 +77,13 @@ def main():
             core_sha = core_sha or report["engine_core_sha256"]
             require(report["engine_core_sha256"] == core_sha,
                     "Product engine core changed during cohort")
+            excluded = report.get("excluded_unplayable_transitions", [])
+            require(report.get("physical_presses") == args.cycles_per_run + len(excluded)
+                    and len(excluded) <= 1 and all(
+                        row.get("reason") == "play_ended_before_first_step"
+                        for row in excluded),
+                    f"Unbounded or unattributed transition retry in match {seed}")
+            excluded_transitions.extend(dict(row, seed=seed) for row in excluded)
             reports.append({"seed": seed, "path": str(report_path.relative_to(output)),
                             "sha256": sha(report_path),
                             "admitted_count": report["admitted_count"],
@@ -93,6 +101,8 @@ def main():
                   "command_trace_enabled": args.trace_commands,
                   "source_sha256": sha(__file__), "window_source_sha256": source_sha,
                   "matches": reports, "total_presses": len(samples),
+                  "physical_presses": len(samples) + len(excluded_transitions),
+                  "excluded_unplayable_transitions": excluded_transitions,
                   "admitted_count": len(admitted), "response_count": len(responded),
                   "status_counts": dict(collections.Counter(row["status"] for row in samples)),
                   "input_admission_p95_ms": p95([row["input_admission_ms"] for row in admitted]),

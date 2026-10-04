@@ -33,6 +33,18 @@ def percentile(values, fraction):
     return ordered[math.ceil(fraction * len(ordered)) - 1]
 
 
+def unplayable_transition(rows, start, end):
+    """Only retry a press when play ended before its first simulation step."""
+    active = [row for row in rows if row["kind"] == "step" and
+              start <= row["time"] < end]
+    if not active:
+        return False
+    timing = {row["index"]: row for row in rows if row["kind"] == "step_timing"}
+    require(all(row["index"] in timing for row in active),
+            "Missing transition step timing")
+    return all(not timing[row["index"]]["in_play"] for row in active)
+
+
 def analyze(output, actions, require_causal=False):
     trace = output / "trace"
     rows = events(trace)
@@ -86,24 +98,27 @@ def analyze(output, actions, require_causal=False):
         controlled = admitted["owned"]
         handoff = controlled != baseline["owned"]
         # Auto-selection can change the controlled player between the physical
-        # press and its first consumed step. The new player's first command
+        # press and its first consumed step. The controlled player's command
         # records actual velocity before this input changes their motion.
-        first_handoff_command = (next((row for row in human_commands
-                                       if start <= row["time"] < admitted["time"] and
-                                       row.get("team_id") == 0 and
-                                       row.get("team_index") == controlled and
-                                       row.get("hid_x") == direction and
-                                       math.isfinite(row.get("actual_vx", math.nan))), None)
-                                 if handoff else None)
-        if handoff and first_handoff_command is None:
+        first_control_command = next((row for row in human_commands
+                                      if start <= row["time"] < end and
+                                      row.get("team_id") == 0 and
+                                      row.get("team_index") == controlled and
+                                      row.get("hid_x") == direction and
+                                      math.isfinite(row.get("actual_vx", math.nan))), None)
+        if first_control_command is None:
             samples.append({"index": action["index"], "direction": direction,
-                            "status": "handoff_without_human_command",
+                            "status": ("handoff_without_human_command" if handoff else
+                                       "no_human_command_before_admission"),
                             "selection_owned_player": baseline["owned"],
                             "owned_player": controlled})
             continue
-        initial_vx = (first_handoff_command["actual_vx"] if handoff else
-                      timing[baseline["index"]]["vx"])
+        # The last pre-press step can be one physics frame older than the
+        # command. Measure from the player's actual velocity when the human
+        # command is issued, before that command changes the next step.
+        initial_vx = first_control_command["actual_vx"]
         raw_response = next((row for row in active if row["index"] >= admitted["index"] and
+                          row["time"] >= first_control_command["time"] and
                           row["owned"] == controlled and
                           timing[row["index"]]["in_play"] and
                           timing[row["index"]].get("game_mode") == 0 and
@@ -142,23 +157,19 @@ def analyze(output, actions, require_causal=False):
                                if choice is not None),
                               key=lambda choice: choice["time"], default=None)
         causal_start = accepted_action["time"] if accepted_action else None
-        if handoff:
-            pre_selection_command = next((row for row in reversed(human_commands)
-                                          if causal_start is not None and
-                                          row["time"] < causal_start and
-                                          row.get("player") == first_handoff_command["player"] and
-                                          math.isfinite(row.get("actual_vx", math.nan))),
-                                         first_handoff_command)
-            pre_selection_vx = pre_selection_command["actual_vx"]
-        else:
-            pre_selection = next((row for row in reversed(steps)
-                                  if causal_start is not None and row["time"] < causal_start and
-                                  row["owned"] == controlled), baseline)
-            pre_selection_vx = timing[pre_selection["index"]]["vx"]
+        pre_selection_command = next((row for row in reversed(human_commands)
+                                      if causal_start is not None and
+                                      start <= row["time"] < causal_start and
+                                      row.get("player") == first_control_command["player"] and
+                                      row.get("hid_x") == direction and
+                                      math.isfinite(row.get("actual_vx", math.nan))),
+                                     first_control_command)
+        pre_selection_vx = pre_selection_command["actual_vx"]
         responded = raw_response
         if require_causal:
             responded = (next((row for row in active
                                if row["index"] >= admitted["index"] and
+                                row["time"] >= first_control_command["time"] and
                                 row["owned"] == controlled and
                                row["time"] >= causal_start and
                                timing[row["index"]]["in_play"] and
@@ -200,8 +211,7 @@ def analyze(output, actions, require_causal=False):
                                                          if following_response else None),
                         "baseline_vx": initial_vx,
                         "response_vx": timing[responded["index"]]["vx"] if responded else None,
-                         "baseline_x": (first_handoff_command["player_x"] if handoff else
-                                        baseline["player_x"]),
+                         "baseline_x": first_control_command["player_x"],
                         "response_x": responded["player_x"] if responded else None,
                         "admitted_step": admitted["index"],
                         "response_step": responded["index"] if responded else None,
@@ -285,7 +295,13 @@ def product(output, build, library, cycles, gpu_driver_root, seed, trace_command
         mapped_driver = str(driver.resolve()) in mappings if driver else False
         require(not driver or mapped_driver, "Actual product did not load the requested GPU driver")
         time.sleep(.25)
-        for index in range(cycles):
+        excluded_transitions = []
+        attempts = 0
+        while len(actions) < cycles:
+            index = len(actions)
+            attempts += 1
+            require(attempts <= cycles + 1,
+                    "More than one press lost to an actual play transition")
             wait_started = time.monotonic()
             wait_deadline = wait_started + 12
             unavailable_steps = set()
@@ -335,6 +351,14 @@ def product(output, build, library, cycles, gpu_driver_root, seed, trace_command
             time.sleep(.34)
             end = time.monotonic_ns()
             keyboard.key(key, False)
+            if unplayable_transition(events(trace), start, end):
+                excluded_transitions.append({"index": index, "start_ns": start,
+                                             "end_ns": end,
+                                             "selection_step": prior_step["index"],
+                                             "selection_owned_player": prior_step["owned"],
+                                             "reason": "play_ended_before_first_step"})
+                time.sleep(.34)
+                continue
             actions.append({"index": index, "direction": direction,
                              "selection_vx": prior_vx,
                              "selection_game_mode": prior_timing.get("game_mode"),
@@ -350,6 +374,8 @@ def product(output, build, library, cycles, gpu_driver_root, seed, trace_command
         result = analyze(output, actions, require_causal=trace_commands)
         result.update(actual_product_main=True, actual_xtest=True,
                        actual_player_velocity=True, passed=True,
+                       excluded_unplayable_transitions=excluded_transitions,
+                       physical_presses=attempts,
                        set_piece_restarts=restart_inputs,
                       source_sha256=sha(__file__), trace_sha256=sha(trace / "events.jsonl"),
                       actions_sha256=sha(output / "actions.json"),

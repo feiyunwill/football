@@ -23,7 +23,8 @@ def fixture_rows(touch_player="controlled", touch_time_ms=80, include_selection=
          "in_play": True, "game_mode": 0},
         {"kind": "human_command", "time": start + 5 * ms,
          "player": "controlled", "team_id": 0, "team_index": 7,
-         "hid_x": 1, "desired_x": 1, "desired_speed": 5},
+         "hid_x": 1, "desired_x": 1, "desired_speed": 5,
+         "actual_vx": 0.0, "player_x": 0.0},
         {"kind": "step", "time": start + 10 * ms, "index": 1, "x": 1,
          "owned": 7, "player_x": 0.01},
         {"kind": "step_timing", "index": 1, "vx": 0.0,
@@ -90,6 +91,50 @@ def handoff_case(include_command=True, include_selection=True):
 
 
 class CausalTouchTests(unittest.TestCase):
+    def test_same_owner_uses_velocity_at_command_instead_of_older_step(self):
+        rows, actions = fixture_rows()
+        rows[1]["vx"] = -.245
+        rows[2]["actual_vx"] = -.497
+        rows[4]["vx"] = -.198
+        next(row for row in rows if row["kind"] == "anim_select")["command_type"] = 1
+        with TemporaryDirectory() as directory, patch.object(feel_window, "events", return_value=rows):
+            sample = feel_window.analyze(Path(directory), actions, require_causal=True)["samples"][0]
+        self.assertEqual(sample["status"], "admitted")
+        self.assertEqual(sample["baseline_vx"], -.497)
+        self.assertEqual(sample["pre_selection_vx"], -.497)
+        self.assertEqual(sample["velocity_response_ms"], 10)
+
+    def test_command_after_input_admission_uses_next_physics_step(self):
+        rows, actions = fixture_rows()
+        start = actions[0]["start_ns"]
+        command = next(row for row in rows if row["kind"] == "human_command")
+        choice = next(row for row in rows if row["kind"] == "anim_select")
+        command["time"] = start + 35_000_000
+        choice["time"] = start + 36_000_000
+        choice["command_type"] = 1
+        rows.extend([{"kind": "step", "time": start + 45_000_000,
+                      "index": 3, "x": 1, "owned": 7, "player_x": 0.03},
+                     {"kind": "step_timing", "index": 3, "vx": 0.3,
+                      "in_play": True, "game_mode": 0},
+                     {"kind": "swap", "time": start + 50_000_000,
+                      "index": 3, "render_owner": True}])
+        with TemporaryDirectory() as directory, patch.object(feel_window, "events", return_value=rows):
+            sample = feel_window.analyze(Path(directory), actions, require_causal=True)["samples"][0]
+        self.assertEqual(sample["status"], "admitted")
+        self.assertEqual(sample["input_admission_ms"], 10)
+        self.assertEqual(sample["velocity_response_ms"], 45)
+
+    def test_transition_retry_requires_only_off_play_simulation_steps(self):
+        start = 1_000_000_000
+        off_play = [{"kind": "step", "time": start + 10, "index": 1},
+                    {"kind": "step_timing", "index": 1, "in_play": False}]
+        self.assertTrue(feel_window.unplayable_transition(off_play, start, start + 100))
+        self.assertFalse(feel_window.unplayable_transition([], start, start + 100))
+        self.assertFalse(feel_window.unplayable_transition(
+            off_play + [{"kind": "step", "time": start + 20, "index": 2},
+                        {"kind": "step_timing", "index": 2, "in_play": True}],
+            start, start + 100))
+
     def test_selection_handoff_uses_successor_precommand_velocity(self):
         sample = handoff_case()
         self.assertEqual(sample["status"], "admitted")
