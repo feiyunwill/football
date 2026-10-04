@@ -14,7 +14,7 @@ const Recorded legacy_tail[]={
 #include "fixtures/native_bot_transition_tail_response_20261002.inc"
 };
 const Recorded tail[]={
-#include "fixtures/native_bot_transition_tail_player_switch_20261004.inc"
+#include "fixtures/native_bot_transition_tail_pass_buffer_20261004.inc"
 };
 const std::uint64_t semantic_hashes[]={
 #include "fixtures/native_bot_transition_hashes_player_switch_20261004.inc"
@@ -28,7 +28,9 @@ int main(int argc, char** argv){
  try {
    const bool emit_reference =
        argc == 4 && std::string(argv[1]) == "--emit-reference";
-   constexpr unsigned max_reference_frames = 3000;
+   constexpr unsigned max_reference_frames = 10000;
+   // Keep the recorded route to the selection gap, then execute the live bot.
+   constexpr unsigned scripted_frames = 1531;
   Require(argc == 1 || emit_reference, "Unexpected bot-selection arguments");
   std::ofstream hashes_output, tail_output;
   if (emit_reference) {
@@ -73,11 +75,17 @@ int main(int argc, char** argv){
   bool seen_unavailable=false;
   unsigned opponent_restart_wait_frames=0;
   unsigned tail_frames_run=0;
-  Require(std::size(legacy_tail)==245,"Recorded input prefix changed");
+   Require(std::size(legacy_tail)==245 && std::size(tail)>scripted_frames,
+           "Recorded input prefix changed");
+   for (unsigned i=0; i<std::size(legacy_tail); ++i)
+     Require(std::get<0>(tail[i])==std::get<0>(legacy_tail[i]) &&
+             std::get<1>(tail[i])==std::get<1>(legacy_tail[i]) &&
+             std::get<2>(tail[i])==std::get<2>(legacy_tail[i]),
+             "Recorded input prefix diverged");
   const unsigned frame_count=emit_reference ? max_reference_frames : std::size(tail);
   for(unsigned tail_frame=0; tail_frame<frame_count; ++tail_frame){
    const auto [x,y,buttons,owned,px,py] = emit_reference
-       ? (tail_frame<std::size(legacy_tail) ? legacy_tail[tail_frame]
+        ? (tail_frame<std::size(tail) ? tail[tail_frame]
                                               : Recorded{0.f,0.f,0,-2,0.f,0.f})
        : tail[tail_frame];
    const auto before=env.get_info();
@@ -100,12 +108,19 @@ int main(int argc, char** argv){
      ++opponent_restart_wait_frames;
     }
    }
-   if(!emit_reference && tail_frame>=std::size(legacy_tail))
+   if(!emit_reference && tail_frame>=scripted_frames)
     Require(bot_input.dir_x==x && bot_input.dir_y==y && bot_input.buttons==buttons,
             "Recovered bot command diverged from recorded trajectory");
-   const std::array inputs{tail_frame<std::size(legacy_tail)
+   const bool opponent_restart = seen_unavailable && snapshot.tactics &&
+       snapshot.tactics->set_piece && snapshot.tactics->restart_team==1;
+   // A released, single-frame short pass lets the controlled opponent restart.
+   // Holding it across a controller reset is intentionally suppressed.
+   const auto restart_input = opponent_restart && tail_frame%20==0
+       ? fs::SlotInput{0.f,0.f,static_cast<std::uint16_t>(1u<<e_ButtonFunction_ShortPass)}
+       : fs::SlotInput::Default();
+   const std::array inputs{tail_frame<scripted_frames
         ? fs::SlotInput{x,y,static_cast<std::uint16_t>(buttons)} : bot_input,
-        fs::SlotInput::Default()};
+        restart_input};
    engine.step_frame(inputs);
    auto info=env.get_info();Require(info.left_controllers.size()==MAX_PLAYERS,"Controller disappeared");
    const int actual_owned=info.left_controllers[0].controlled_player;
@@ -124,9 +139,12 @@ int main(int argc, char** argv){
     }
    }
    ++tail_frames_run;
-   if (emit_reference && recovered>=66) break;
+   if (emit_reference && recovered>=66 &&
+       recovered-opponent_restart_wait_frames>=66) break;
   }
-  Require(unavailable>0 && recovered>0,"Bot did not resume after real selection recovery");
+   Require(unavailable>0 && recovered>=66 &&
+           recovered-opponent_restart_wait_frames>=66,
+           "Bot did not resume active play after real selection recovery");
   std::cout<<"{\"passed\":true,\"assertions\":"<<assertions<<",\"prefix_frames\":512,\"recorded_tail_frames\":"<<tail_frames_run
            <<",\"unavailable_frames\":"<<unavailable<<",\"skipped\":0,\"actual_gameenv\":true,\"recovered_frames\":"<<recovered
            <<",\"opponent_restart_wait_frames\":"<<opponent_restart_wait_frames<<"}\n";

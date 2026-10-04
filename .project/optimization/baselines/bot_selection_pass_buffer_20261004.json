@@ -1,0 +1,42 @@
+{
+  "archive": {
+    "path": ".project/optimization/baselines/bot_selection_pass_buffer_20261004.tar.gz",
+    "sha256": "65f40da1707a62f96b92e60347c41efa7558fcd78e9ff381637ea2b39afb3dd2"
+  },
+  "binary_sha256": "74b4616d4fe772e213115f4ce8945bc9eeb780511e12d7f3251fc3fe09cff7b8",
+  "contract": {
+    "active_bot_frames": 66,
+    "emit_assertions": 4473,
+    "first_unavailable_tail_frame": 1531,
+    "historical_input_frames": 245,
+    "normal_assertions": 8553,
+    "opponent_restart_wait_frames": 32,
+    "prefix_frames": 512,
+    "recovered_frames": 98,
+    "scripted_frames": 1531,
+    "tail_frames": 1735,
+    "unavailable_frames": 105
+  },
+  "engine_sha256": "fc8e3e37b3e2e00fb77a5076f23dd958c601bb01a80d96ac28a805fa8ec86b50",
+  "fixture": {
+    "path": "engine/tests/fixtures/native_bot_transition_tail_pass_buffer_20261004.inc",
+    "sha256": "329a5f7a6ed6daf4c095d4d6de2a4d4d51c3a83e434ffa68a730fb2b17a1cd50"
+  },
+  "format": 1,
+  "gameplay_source_commit": "1d211521a7c0eea40504e09afc93aec0665e8a50",
+  "gameplay_sources": {
+    "engine/src/onthepitch/player/controller/humancontroller.cpp": "d8dc7e6e9803f27932a0cf9835609326386b6b173e8c958de5a8d14973b99d30",
+    "engine/src/onthepitch/player/controller/humancontroller.hpp": "632fb2c3c756fdc6eb2b339f0e0224b4c5a0e03cf10c33c7bc8b6f6a0fbef7c0",
+    "engine/src/onthepitch/player/controller/playercontroller.cpp": "067ff8612591e2d24f85b8e9f4582da2187858a5f56a9bdc6eaeda4aea372fd9"
+  },
+  "generator_sha256": "66a7ba813a82deb3538f0c8f09a41f10fbc72a5258196ba3a008c4485c76a341",
+  "historical_reference": ".project/optimization/baselines/bot_selection_player_switch_20261004.json",
+  "historical_reference_sha256": "36f408c8b217ae90d180a7934a25d4a3d98ab3449070ce780945882e56289190",
+  "id": "bot-selection-pass-buffer-20261004",
+  "raw_oracles": {
+    "hashes_sha256": "f9f604fc770c53c181ba1dc726697f697c1b6ef34f01720c0aba70293bb12832",
+    "independent_runs": 2,
+    "tail_sha256": "98548984ea421f672ced9054cd10e3b78a16e9269d4173d2f49ca6a7f86898bc"
+  },
+  "test_source_sha256": "cf7660ee07703ae7f726f46db4f1c0c20fe4564c7860a0b421efa982800302d2"
+}

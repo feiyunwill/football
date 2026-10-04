@@ -24,7 +24,7 @@ CONTRACTS={
  # 2026-09-13: slow authority lead and real unavailable-player AI recovery are mandatory.
  #     'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6}),
  'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6,'resync_frames':572,'resync_max_lead':2}),
-  'engine_native_bot_selection_contract':(11610,{'prefix_frames':512,'recorded_tail_frames':2151,'unavailable_frames':30,'recovered_frames':66,'opponent_restart_wait_frames':0,'actual_gameenv':True}),
+  'engine_native_bot_selection_contract':(8553,{'prefix_frames':512,'recorded_tail_frames':1735,'unavailable_frames':105,'recovered_frames':98,'opponent_restart_wait_frames':32,'actual_gameenv':True}),
  'engine_native_match_contract':(44000,{'clock_events':10000,'engine_frames':600,'actual_gameenv':True,'native_contract':1}),
  # 2026-09-13: shared history and joined transport ownership are mandatory input contracts.
  'engine_native_transport_pump_contract':(20333,{'ledger_frames':4000,'concurrent_frames':128,'joined_lifetimes':64}),
@@ -94,9 +94,10 @@ def verify_bot_selection_reference():
     momentum=verify_bot_selection_momentum()
     assist=verify_bot_selection_assist()
     handfeel=verify_bot_selection_player_switch()
+    pass_buffer=verify_bot_selection_pass_buffer()
     return {'manifest_sha256':benchmark.file_hash(base/'bot_selection_v2.json'),
               'oracle_output_sha256':manifest['oracle_output']['sha256'],
-              'prefix_frames':512,'aligned_tail_frames':91,**requeue,**momentum,**assist,**handfeel}
+              'prefix_frames':512,'aligned_tail_frames':91,**requeue,**momentum,**assist,**handfeel,**pass_buffer}
 
 def verify_bot_selection_requeue():
     """Keep the archived old oracle while validating a separately versioned turn."""
@@ -780,6 +781,102 @@ def verify_bot_selection_player_switch():
             'player_switch_archive_sha256':archive['sha256'],
             'player_switch_unavailable_frames':30,
             'player_switch_recovered_frames':66}
+
+def verify_bot_selection_pass_buffer():
+    """Authenticate the new active bot recovery without rewriting the old oracle."""
+    base=ROOT/'.project/optimization/baselines'
+    path=base/'bot_selection_pass_buffer_20261004.json'
+    manifest=json.loads(path.read_text())
+    parent=base/'bot_selection_player_switch_20261004.json'
+    contract={
+        'prefix_frames':512,'tail_frames':1735,'scripted_frames':1531,
+        'historical_input_frames':245,'first_unavailable_tail_frame':1531,
+        'unavailable_frames':105,'recovered_frames':98,
+        'opponent_restart_wait_frames':32,'active_bot_frames':66,
+        'emit_assertions':4473,'normal_assertions':8553}
+    require(manifest['format']==1 and
+            manifest['id']=='bot-selection-pass-buffer-20261004' and
+            manifest['historical_reference']==str(parent.relative_to(ROOT)) and
+            manifest['historical_reference_sha256']==benchmark.file_hash(parent) and
+            manifest['contract']==contract and
+            manifest['raw_oracles']['independent_runs']==2,
+            'Pass-buffer reference contract changed')
+    generator=ROOT/'.project/optimization/diagnostics/bot_selection_pass_buffer_reference.py'
+    source=ROOT/'engine/tests/engine_native_bot_selection_contract.cpp'
+    require(benchmark.file_hash(generator)==manifest['generator_sha256'] and
+            benchmark.file_hash(source)==manifest['test_source_sha256'],
+            'Pass-buffer generator source changed')
+    for relative,expected in manifest['gameplay_sources'].items():
+        recorded=subprocess.check_output(
+            ['git','show',manifest['gameplay_source_commit']+':'+relative],cwd=ROOT)
+        require(hashlib.sha256(recorded).hexdigest()==expected and
+                benchmark.file_hash(ROOT/relative)==expected,
+                'Pass-buffer pinned gameplay differs: '+relative)
+    archive=manifest['archive']
+    archive_path=(ROOT/archive['path']).resolve()
+    require(archive_path.is_relative_to(ROOT) and
+            benchmark.file_hash(archive_path)==archive['sha256'],
+            'Pass-buffer oracle archive changed')
+    names={'generator.cpp','hashes-run1.inc','hashes-run2.inc',
+           'tail-run1.inc','tail-run2.inc','emit-run1.log','emit-run2.log',
+           'normal-run1.log','normal-run2.log'}
+    with tarfile.open(archive_path,'r:gz') as package:
+        metadata=json.load(package.extractfile('manifest.json'))
+        require(metadata['format']=='bot-selection-pass-buffer-oracle-v1' and
+                set(metadata['files'])==names and
+                set(package.getnames())==names|{'manifest.json'},
+                'Pass-buffer oracle archive members changed')
+        raw={name:package.extractfile(name).read() for name in names}
+    require(all(hashlib.sha256(data).hexdigest()==metadata['files'][name]
+                for name,data in raw.items()) and
+            hashlib.sha256(raw['generator.cpp']).hexdigest()==
+                manifest['test_source_sha256'],
+            'Pass-buffer oracle archive member changed')
+    for kind,frames in (('hashes',512),('tail',1735)):
+        first=raw[f'{kind}-run1.inc']
+        require(first==raw[f'{kind}-run2.inc'] and
+                len(first.splitlines())==frames and
+                hashlib.sha256(first).hexdigest()==
+                manifest['raw_oracles'][f'{kind}_sha256'],
+                'Pass-buffer independent replays differ')
+    fixture=manifest['fixture']
+    fixture_path=(ROOT/fixture['path']).resolve()
+    require(fixture_path.is_relative_to(ROOT) and
+            fixture['path']=='engine/tests/fixtures/native_bot_transition_tail_pass_buffer_20261004.inc' and
+            benchmark.file_hash(fixture_path)==fixture['sha256'] and
+            fixture_path.read_bytes().partition(b'\n')[2]==raw['tail-run1.inc'],
+            'Pass-buffer fixture differs from archived replay')
+    old_hashes=(ROOT/'engine/tests/fixtures/native_bot_transition_hashes_player_switch_20261004.inc').read_text().splitlines()[1:]
+    require(raw['hashes-run1.inc'].decode().splitlines()==old_hashes,
+            'Pass-buffer replay prefix changed')
+    def fields(line):
+        return line.strip().rstrip(',').strip('{}').split(',')
+    current=[fields(line) for line in raw['tail-run1.inc'].decode().splitlines()]
+    previous=[fields(line) for line in
+              (ROOT/'engine/tests/fixtures/native_bot_transition_tail_player_switch_20261004.inc').read_text().splitlines()[1:]]
+    legacy=[fields(line) for line in
+            (ROOT/'engine/tests/fixtures/native_bot_transition_tail_response_20261002.inc').read_text().splitlines()[1:]]
+    selected=[int(row[3]) for row in current]
+    require(len(legacy)==245 and
+            all(a[:3]==b[:3] for a,b in zip(legacy,current[:245])) and
+            all(a[:3]==b[:3] for a,b in zip(previous[:1531],current[:1531])) and
+            all(actor>=0 for actor in selected[:1531]) and
+            selected[1531:1636]==[-1]*105 and
+            all(actor>=0 for actor in selected[1636:]),
+            'Pass-buffer scripted route or recovery changed')
+    expected={'passed':True,'prefix_frames':512,'recorded_tail_frames':1735,
+              'unavailable_frames':105,'skipped':0,'actual_gameenv':True,
+              'recovered_frames':98,'opponent_restart_wait_frames':32}
+    for run in (1,2):
+        for kind,assertions in (('emit',4473),('normal',8553)):
+            log=raw[f'{kind}-run{run}.log'].decode()
+            require(log.startswith('exit=0\n') and
+                    json.loads(log.split('\n',1)[1])==dict(expected,assertions=assertions),
+                    'Pass-buffer archived replay did not complete')
+    return {'pass_buffer_manifest_sha256':benchmark.file_hash(path),
+            'pass_buffer_archive_sha256':archive['sha256'],
+            'pass_buffer_unavailable_frames':105,
+            'pass_buffer_active_bot_frames':66}
 
 def observation():
     socket=Path('/tmp/.X11-unix')

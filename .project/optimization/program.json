@@ -1356,7 +1356,11 @@
         ".project/optimization/baselines/ecs_v9*",
         ".project/optimization/diagnostics/ecs_reference_refresh_v9.py",
         ".project/optimization/evidence/ecs_player_switch_preperf_reference_20261004.json.gz",
-        ".project/optimization/evidence/ecs_v9_preflight_20261004.json.gz"
+        ".project/optimization/evidence/ecs_v9_preflight_20261004.json.gz",
+        ".project/optimization/baselines/ecs_v10*",
+        ".project/optimization/diagnostics/ecs_reference_refresh_v10.py",
+        ".project/optimization/evidence/ecs_pass_buffer_preperf_reference_20261004.json.gz",
+        ".project/optimization/evidence/ecs_v10_preflight_20261004.json.gz"
       ],
       "tools": [
         "python3",
@@ -1537,7 +1541,11 @@
         ".project/optimization/baselines/soak_v7*",
         ".project/optimization/baselines/ecs_v9*",
         ".project/optimization/diagnostics/soak_reference_refresh_v7.py",
-        ".project/optimization/evidence/soak_v7_validation_20261004.tar.gz"
+        ".project/optimization/evidence/soak_v7_validation_20261004.tar.gz",
+        ".project/optimization/baselines/soak_v8*",
+        ".project/optimization/baselines/ecs_v10*",
+        ".project/optimization/diagnostics/soak_reference_refresh_v8.py",
+        ".project/optimization/evidence/soak_v8_validation_20261004.tar.gz"
       ],
       "tools": [
         "python3",
@@ -1605,6 +1613,7 @@
         ".project/optimization/baselines/bot_selection_*.cpp.gz",
         ".project/optimization/diagnostics/bot_selection_handfeel_reference.py",
         ".project/optimization/diagnostics/bot_selection_player_switch_reference.py",
+        ".project/optimization/diagnostics/bot_selection_pass_buffer_reference.py",
         ".project/reports/optimization-bot-selection-semantic-reference-2026-10-01.md"
       ],
       "tools": [

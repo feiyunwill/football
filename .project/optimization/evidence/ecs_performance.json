@@ -1,15 +1,15 @@
 {
   "check": "ecs_performance",
-  "fingerprint": "2d0a3665f7b7c19a6155ccf8fa95089dba29a9bc388633dd6dc3120c1201c479",
+  "fingerprint": "52d44f13e2e6acf7b28846d47e628505ee44260b7ed770d5893d0c141232a578",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1791071420.4478416,
-  "duration_seconds": 1035.568,
+  "started": 1791097844.7464545,
+  "duration_seconds": 945.605,
   "argv": [
     "python3",
     ".project/checks/ecs_performance.py"
   ],
-  "log": "ecs_performance-1791071420447855051.log",
-  "log_sha256": "621dbf2694e1a7ffac51c72f9bc48c3eda6af60bed851e03d74bc1307ed0589e"
+  "log": "ecs_performance-1791097844746472324.log",
+  "log_sha256": "a59ccb386009a719d810b9cf9ed0548d01d3a074866dab11bc9e750637553001"
 }

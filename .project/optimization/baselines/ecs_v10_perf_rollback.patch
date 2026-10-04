@@ -1,0 +1,74 @@
+diff --git a/engine/src/base/math/vector3.hpp b/engine/src/base/math/vector3.hpp
+index 28edf17..33a0b58 100644
+--- a/engine/src/base/math/vector3.hpp
++++ b/engine/src/base/math/vector3.hpp
+@@ -255,13 +255,8 @@ namespace blunted {
+ 
+   inline
+   real Vector3::GetLength() const {
+-    // Float coordinates have at most 24 significant bits, so their squares
+-    // are exact in double. This preserves pow(x, 2)'s sum and sqrt rounding
+-    // without three library calls on every distance query.
+-    const double x = coords[0];
+-    const double y = coords[1];
+-    const double z = coords[2];
+-    float length = sqrt(x * x + y * y + z * z);
++    float length = sqrt(std::pow(coords[0], 2) + std::pow(coords[1], 2) +
++                        std::pow(coords[2], 2));
+ 
+     if (length < 0.000001) length = 0;
+     return length;
+diff --git a/engine/src/onthepitch/player/humanoid/humanoid.cpp b/engine/src/onthepitch/player/humanoid/humanoid.cpp
+index c9f9c76..11736fd 100755
+--- a/engine/src/onthepitch/player/humanoid/humanoid.cpp
++++ b/engine/src/onthepitch/player/humanoid/humanoid.cpp
+@@ -1507,8 +1507,7 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
+ 
+   if (!currentAnim.anim->GetVariableCache().outgoing_special_state().empty()) query.incomingVelocity = e_Velocity_Idle; // standing up anims always start out idle
+ 
+-  DataSet &dataSet = selectionDataSet_;
+-  dataSet.clear();
++  DataSet dataSet;
+   anims->CrudeSelection(dataSet, query);
+   if (dataSet.size() == 0) {
+     DO_VALIDATION;
+diff --git a/engine/src/onthepitch/player/humanoid/humanoidbase.cpp b/engine/src/onthepitch/player/humanoid/humanoidbase.cpp
+index 57e8718..931a796 100755
+--- a/engine/src/onthepitch/player/humanoid/humanoidbase.cpp
++++ b/engine/src/onthepitch/player/humanoid/humanoidbase.cpp
+@@ -890,8 +890,7 @@ int HumanoidBase::GetIdleMovementAnimID() {
+   query.byOutgoingVelocity = true;
+   query.outgoingVelocity = e_Velocity_Idle;
+ 
+-  DataSet &dataSet = idleSelectionDataSet_;
+-  dataSet.clear();
++  DataSet dataSet;
+   anims->CrudeSelection(dataSet, query);
+ 
+   SetIdlePredicate(1);
+@@ -1258,8 +1257,7 @@ bool HumanoidBase::SelectAnim(const PlayerCommand &command,
+ 
+   if (!currentAnim.anim->GetVariableCache().outgoing_special_state().empty()) query.incomingVelocity = e_Velocity_Idle; // standing up anims always start out idle
+ 
+-  DataSet &dataSet = selectionDataSet_;
+-  dataSet.clear();
++  DataSet dataSet;
+   anims->CrudeSelection(dataSet, query);
+   if (dataSet.size() == 0) {
+     DO_VALIDATION;
+diff --git a/engine/src/onthepitch/player/humanoid/humanoidbase.hpp b/engine/src/onthepitch/player/humanoid/humanoidbase.hpp
+index 185d2fa..cf35edb 100755
+--- a/engine/src/onthepitch/player/humanoid/humanoidbase.hpp
++++ b/engine/src/onthepitch/player/humanoid/humanoidbase.hpp
+@@ -399,11 +399,6 @@ class HumanoidBase {
+     PlayerBase *player;
+     // Shared between all players, no need to snapshot.
+     std::shared_ptr<AnimCollection> anims;
+-    // Selection scratch belongs to this humanoid and is cleared before use.
+-    // Idle selection has a separate buffer because it can be called as a
+-    // fallback while SelectAnim is still using the main buffer.
+-    DataSet selectionDataSet_;
+-    DataSet idleSelectionDataSet_;
+     // Pointers from elements in humanoidNode to Nodes.
+     NodeMap nodeMap;
+     // Seems to contain current animation context.

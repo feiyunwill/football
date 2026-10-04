@@ -1,15 +1,15 @@
 {
   "check": "native_boundary",
-  "fingerprint": "694eb5da0872354ea68cb5a3468a4e0f56507b87373264c3883d0b7aec9e12a1",
+  "fingerprint": "91e8d6d4c97ace77d812bfa06d019d21eea7d66d818cd92f2ebbe24b0f2fb8a2",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1791070462.1793654,
-  "duration_seconds": 4.205,
+  "started": 1791096867.3967602,
+  "duration_seconds": 4.206,
   "argv": [
     "python3",
     ".project/checks/native_boundary.py"
   ],
-  "log": "native_boundary-1791070462179379588.log",
-  "log_sha256": "aadddec9e4f77546028355f58d8409a5a9ea80360fb49e5fea7e0b4c85025f7e"
+  "log": "native_boundary-1791096867396774587.log",
+  "log_sha256": "22f76bb5a9f5cc276df484ff34ee3cbe3d8235296c62d338b6b15c654e09df5f"
 }

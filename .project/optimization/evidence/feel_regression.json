@@ -1,15 +1,15 @@
 {
   "check": "feel_regression",
-  "fingerprint": "c6abf6dbb18909f9c51a47e53ee25c670fdde1e164b880d224d14ace09b6b8b7",
+  "fingerprint": "f42db39743df15279478c3c13c65f3d23f9fb6e0081003bd199e0703ea796bd5",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1791081307.5281672,
-  "duration_seconds": 163.692,
+  "started": 1791099997.1718333,
+  "duration_seconds": 165.163,
   "argv": [
     "python3",
     ".project/gates/feel_regression.py"
   ],
-  "log": "feel_regression-1791081307528197094.log",
-  "log_sha256": "7a96b29b7c0d19002eba494753ce7dfd6c0098775e64b9bdaaacd5468b1bb079"
+  "log": "feel_regression-1791099997171850587.log",
+  "log_sha256": "5fbe549abb77741c2209f7dc17d81c3c963d60099d8d8816f17cb3e84ad49ec9"
 }
