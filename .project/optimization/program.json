@@ -2367,9 +2367,44 @@
     },
     {
       "id": "ai_regression",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "固定种子对照比赛记录胜率、传球/射门/犯规/无效动作，统计区间和退化检查"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/ai_regression.py"
+      ],
+      "kind": "json",
+      "min_assertions": 400,
+      "timeout": 5400,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/tests/engine_ai_match_metrics.cpp",
+        "engine/data/**/*",
+        ".project/checks/ai_regression.py",
+        ".project/optimization/baselines/ai_match_reference_20261005.json"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "ldd"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "PYTHONOPTIMIZE"
       ]
     },
     {

@@ -1,0 +1,979 @@
+{
+  "binary_sha256": "7f3c175e7abe1233d2ceeabc76d37bec4fb3e32d0ccee14ef3063fbf68711b66",
+  "engine_sha256": "fc8e3e37b3e2e00fb77a5076f23dd958c601bb01a80d96ac28a805fa8ec86b50",
+  "evaluator_sha256": "8ca00b5c29c69f308fb4e981765b2674945c310d60ead045a8f8819a2fbba8b6",
+  "fixture": {
+    "frames": 6000,
+    "left_team_difficulty": 1.0,
+    "right_team_difficulty": 1.0,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65
+    ],
+    "teams": "11v11 AI vs AI"
+  },
+  "repeat_rows": [
+    {
+      "final_hash": "1758813f64b16bd3",
+      "fouls": [
+        1,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        0,
+        1
+      ],
+      "kicked_passes": [
+        4,
+        2
+      ],
+      "kicked_shots": [
+        2,
+        1
+      ],
+      "match_time_ms": 10614297,
+      "pass_attempts": [
+        4,
+        3
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        1,
+        0
+      ],
+      "seed": 42,
+      "shot_attempts": [
+        2,
+        1
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "d315d1e18e4a4a1e",
+      "fouls": [
+        1,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        3,
+        1
+      ],
+      "kicked_passes": [
+        4,
+        4
+      ],
+      "kicked_shots": [
+        0,
+        1
+      ],
+      "match_time_ms": 10511127,
+      "pass_attempts": [
+        7,
+        5
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 65,
+      "shot_attempts": [
+        0,
+        1
+      ],
+      "unattributed_fouls": 0
+    }
+  ],
+  "rows": [
+    {
+      "final_hash": "1758813f64b16bd3",
+      "fouls": [
+        1,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        0,
+        1
+      ],
+      "kicked_passes": [
+        4,
+        2
+      ],
+      "kicked_shots": [
+        2,
+        1
+      ],
+      "match_time_ms": 10614297,
+      "pass_attempts": [
+        4,
+        3
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        1,
+        0
+      ],
+      "seed": 42,
+      "shot_attempts": [
+        2,
+        1
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "117925366f04a225",
+      "fouls": [
+        0,
+        1
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        1,
+        1
+      ],
+      "kicked_passes": [
+        2,
+        3
+      ],
+      "kicked_shots": [
+        4,
+        2
+      ],
+      "match_time_ms": 10538277,
+      "pass_attempts": [
+        3,
+        4
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        1,
+        0
+      ],
+      "seed": 43,
+      "shot_attempts": [
+        4,
+        2
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "c830f7caed7bfcba",
+      "fouls": [
+        0,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        1,
+        1
+      ],
+      "kicked_passes": [
+        4,
+        4
+      ],
+      "kicked_shots": [
+        4,
+        3
+      ],
+      "match_time_ms": 10576287,
+      "pass_attempts": [
+        5,
+        5
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        1,
+        0
+      ],
+      "seed": 44,
+      "shot_attempts": [
+        4,
+        3
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "e8af8ddfc286e3f9",
+      "fouls": [
+        1,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        2,
+        3
+      ],
+      "kicked_passes": [
+        3,
+        6
+      ],
+      "kicked_shots": [
+        6,
+        3
+      ],
+      "match_time_ms": 10451397,
+      "pass_attempts": [
+        5,
+        9
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        1,
+        1
+      ],
+      "seed": 45,
+      "shot_attempts": [
+        6,
+        3
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "909e6be282398e8a",
+      "fouls": [
+        1,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        1,
+        5
+      ],
+      "kicked_passes": [
+        3,
+        3
+      ],
+      "kicked_shots": [
+        4,
+        1
+      ],
+      "match_time_ms": 10587147,
+      "pass_attempts": [
+        3,
+        7
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 46,
+      "shot_attempts": [
+        5,
+        2
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "56e25814cf5af6a6",
+      "fouls": [
+        0,
+        1
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        2,
+        2
+      ],
+      "kicked_passes": [
+        4,
+        4
+      ],
+      "kicked_shots": [
+        4,
+        4
+      ],
+      "match_time_ms": 10511127,
+      "pass_attempts": [
+        6,
+        6
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 47,
+      "shot_attempts": [
+        4,
+        4
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "32eac74fed6ed59a",
+      "fouls": [
+        0,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        3,
+        2
+      ],
+      "kicked_passes": [
+        4,
+        1
+      ],
+      "kicked_shots": [
+        2,
+        5
+      ],
+      "match_time_ms": 10587147,
+      "pass_attempts": [
+        7,
+        3
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 48,
+      "shot_attempts": [
+        2,
+        5
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "fc79600ce85583e9",
+      "fouls": [
+        0,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        2,
+        1
+      ],
+      "kicked_passes": [
+        5,
+        2
+      ],
+      "kicked_shots": [
+        4,
+        6
+      ],
+      "match_time_ms": 10511127,
+      "pass_attempts": [
+        7,
+        3
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 49,
+      "shot_attempts": [
+        4,
+        6
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "c11299f0537b263a",
+      "fouls": [
+        0,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        0,
+        2
+      ],
+      "kicked_passes": [
+        5,
+        1
+      ],
+      "kicked_shots": [
+        0,
+        3
+      ],
+      "match_time_ms": 10587147,
+      "pass_attempts": [
+        5,
+        3
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 50,
+      "shot_attempts": [
+        0,
+        3
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "45c5c73eaf80e061",
+      "fouls": [
+        2,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        2,
+        2
+      ],
+      "kicked_passes": [
+        4,
+        7
+      ],
+      "kicked_shots": [
+        5,
+        2
+      ],
+      "match_time_ms": 10386237,
+      "pass_attempts": [
+        6,
+        9
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        1,
+        0
+      ],
+      "seed": 51,
+      "shot_attempts": [
+        5,
+        2
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "6e221953cdbfa157",
+      "fouls": [
+        0,
+        1
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        3,
+        1
+      ],
+      "kicked_passes": [
+        3,
+        1
+      ],
+      "kicked_shots": [
+        0,
+        0
+      ],
+      "match_time_ms": 10549137,
+      "pass_attempts": [
+        7,
+        2
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 52,
+      "shot_attempts": [
+        0,
+        0
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "87846c8aac18dfc1",
+      "fouls": [
+        0,
+        1
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        2,
+        3
+      ],
+      "kicked_passes": [
+        2,
+        2
+      ],
+      "kicked_shots": [
+        4,
+        2
+      ],
+      "match_time_ms": 10652307,
+      "pass_attempts": [
+        4,
+        5
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        1
+      ],
+      "seed": 53,
+      "shot_attempts": [
+        4,
+        2
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "8773576d2916b8a9",
+      "fouls": [
+        0,
+        1
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        1,
+        1
+      ],
+      "kicked_passes": [
+        6,
+        0
+      ],
+      "kicked_shots": [
+        0,
+        5
+      ],
+      "match_time_ms": 10625157,
+      "pass_attempts": [
+        7,
+        1
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 54,
+      "shot_attempts": [
+        0,
+        5
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "b7f668ee63b1053e",
+      "fouls": [
+        0,
+        1
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        4,
+        1
+      ],
+      "kicked_passes": [
+        5,
+        7
+      ],
+      "kicked_shots": [
+        6,
+        0
+      ],
+      "match_time_ms": 10473117,
+      "pass_attempts": [
+        9,
+        8
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 55,
+      "shot_attempts": [
+        6,
+        0
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "4d369dc92c9195e0",
+      "fouls": [
+        1,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        1,
+        1
+      ],
+      "kicked_passes": [
+        2,
+        4
+      ],
+      "kicked_shots": [
+        3,
+        4
+      ],
+      "match_time_ms": 10587147,
+      "pass_attempts": [
+        3,
+        5
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 56,
+      "shot_attempts": [
+        3,
+        4
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "f5e0b4a6356577ab",
+      "fouls": [
+        0,
+        1
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        4,
+        2
+      ],
+      "kicked_passes": [
+        6,
+        6
+      ],
+      "kicked_shots": [
+        5,
+        3
+      ],
+      "match_time_ms": 10473117,
+      "pass_attempts": [
+        9,
+        7
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 57,
+      "shot_attempts": [
+        6,
+        4
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "fe6317e352c60c7a",
+      "fouls": [
+        1,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        4,
+        2
+      ],
+      "kicked_passes": [
+        6,
+        4
+      ],
+      "kicked_shots": [
+        3,
+        6
+      ],
+      "match_time_ms": 10440537,
+      "pass_attempts": [
+        10,
+        6
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        1,
+        2
+      ],
+      "seed": 58,
+      "shot_attempts": [
+        3,
+        6
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "c65a03f3b0632ace",
+      "fouls": [
+        0,
+        1
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        5,
+        4
+      ],
+      "kicked_passes": [
+        6,
+        7
+      ],
+      "kicked_shots": [
+        4,
+        5
+      ],
+      "match_time_ms": 10364517,
+      "pass_attempts": [
+        9,
+        10
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        2,
+        1
+      ],
+      "seed": 59,
+      "shot_attempts": [
+        6,
+        6
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "56d1aab9d5997559",
+      "fouls": [
+        0,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        3,
+        2
+      ],
+      "kicked_passes": [
+        3,
+        2
+      ],
+      "kicked_shots": [
+        2,
+        3
+      ],
+      "match_time_ms": 10555472,
+      "pass_attempts": [
+        6,
+        4
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 60,
+      "shot_attempts": [
+        2,
+        3
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "ee4c8625ecb94a85",
+      "fouls": [
+        0,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        3,
+        5
+      ],
+      "kicked_passes": [
+        3,
+        7
+      ],
+      "kicked_shots": [
+        5,
+        2
+      ],
+      "match_time_ms": 10397097,
+      "pass_attempts": [
+        6,
+        12
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 61,
+      "shot_attempts": [
+        5,
+        2
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "3173aa92f8dd7c06",
+      "fouls": [
+        0,
+        1
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        4,
+        1
+      ],
+      "kicked_passes": [
+        7,
+        3
+      ],
+      "kicked_shots": [
+        0,
+        4
+      ],
+      "match_time_ms": 10462257,
+      "pass_attempts": [
+        9,
+        4
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        1
+      ],
+      "seed": 62,
+      "shot_attempts": [
+        2,
+        4
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "07ec453c5376beae",
+      "fouls": [
+        1,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        6,
+        4
+      ],
+      "kicked_passes": [
+        6,
+        4
+      ],
+      "kicked_shots": [
+        3,
+        3
+      ],
+      "match_time_ms": 10272207,
+      "pass_attempts": [
+        12,
+        8
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        1
+      ],
+      "seed": 63,
+      "shot_attempts": [
+        3,
+        3
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "583a218f9e42bd6b",
+      "fouls": [
+        1,
+        1
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        1,
+        2
+      ],
+      "kicked_passes": [
+        7,
+        4
+      ],
+      "kicked_shots": [
+        0,
+        5
+      ],
+      "match_time_ms": 10473117,
+      "pass_attempts": [
+        8,
+        6
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 64,
+      "shot_attempts": [
+        0,
+        5
+      ],
+      "unattributed_fouls": 0
+    },
+    {
+      "final_hash": "d315d1e18e4a4a1e",
+      "fouls": [
+        1,
+        0
+      ],
+      "frames": 6000,
+      "invalid_intents": [
+        3,
+        1
+      ],
+      "kicked_passes": [
+        4,
+        4
+      ],
+      "kicked_shots": [
+        0,
+        1
+      ],
+      "match_time_ms": 10511127,
+      "pass_attempts": [
+        7,
+        5
+      ],
+      "schema": "ai-match-metrics-v1",
+      "score": [
+        0,
+        0
+      ],
+      "seed": 65,
+      "shot_attempts": [
+        0,
+        1
+      ],
+      "unattributed_fouls": 0
+    }
+  ],
+  "schema": "ai-match-reference-v1",
+  "source_commit": "2a4be4e33f4bb29f96334de46f9dffaeb5eff723"
+}
