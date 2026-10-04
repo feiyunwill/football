@@ -60,8 +60,17 @@ void HumanController::RequestCommand(PlayerCommandQueue &commandQueue) {
   _GetHidInput(rawInputDirection, rawInputVelocityFloat);
   _SetInput(rawInputDirection, rawInputVelocityFloat);
 
-
-  // clear buffer?
+  // A released pass buffer must not commit a new kick after the player has
+  // deliberately reversed direction. That late kick locks the movement
+  // animation behind a pending touch, long after the pass button was released.
+  const Vector3 heldDirection = hid->GetDirection();
+  if (actionMode == 2 && !hid->GetButton(actionButton) &&
+      heldDirection.GetLength() >= analogStickDeadzone &&
+      CastPlayer()->GetMovement().GetDotProduct(heldDirection) < -0.1f) {
+    actionMode = 0;
+    gauge_ms = 0;
+    actionBufferTime_ms = 0;
+  }
 
   e_FunctionType functionType = CastPlayer()->GetCurrentFunctionType();
   if (actionMode == 2 &&
@@ -355,7 +364,8 @@ void HumanController::RequestCommand(PlayerCommandQueue &commandQueue) {
     forceMagnet = true;
     extraHaste = true;
   }
-  if (actionMode == 2) {
+  if (actionMode == 2 &&
+      (hid->GetButton(actionButton) || inputVelocityFloat < idleDribbleSwitch)) {
     DO_VALIDATION;
     forceMagnet = true;
     extraHaste = true;
