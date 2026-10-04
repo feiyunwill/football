@@ -11,6 +11,7 @@ import shlex
 import signal
 import subprocess
 import sys
+import tarfile
 import time
 import traceback
 
@@ -21,7 +22,12 @@ import performance_regression as runner
 from input_contract import observation
 from pbr_pipeline import pixel_difference, terminal_fixture
 
-GOLDEN = CHECKS / "golden/render_images_llvmpipe.json"
+GOLDEN = CHECKS / "golden/render_images_llvmpipe_bilinear_20261004.json"
+OLD_GOLDEN = CHECKS / "golden/render_images_llvmpipe.json"
+OLD_GOLDEN_SHA256 = "fe0aa64d30a9157ccb4469471e98ee6f16db49407d61ce1a420fce71d84307be"
+OLD_CAPTURE = ROOT / ".project/optimization/evidence/render_images_player_switch_reference_20261004.tar.gz"
+OLD_CAPTURE_SHA256 = "f12cac7d6965a2f7c75e0f5e627fdc48f8e034176af13c957039501bb0d9b80a"
+CHANGED_FRAMES = {"bloom": {80, 120, 160}, "auto_combined": {80, 120, 160}}
 
 
 def require(condition: bool, message: str) -> None:
@@ -32,6 +38,79 @@ def require(condition: bool, message: str) -> None:
 def sha(path: Path) -> str:
     with path.open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def verify_bilinear_reference(golden: dict) -> None:
+    """Authenticate both generations and independently repeated Bloom captures."""
+    require(sha(OLD_GOLDEN) == OLD_GOLDEN_SHA256 and
+            sha(OLD_CAPTURE) == OLD_CAPTURE_SHA256,
+            "Historical image reference changed")
+    old = json.loads(OLD_GOLDEN.read_text())
+    archive = ROOT / golden["bilinear_archive"]
+    generator = ROOT / ".project/optimization/diagnostics/render_image_reference_refresh_20261004.py"
+    require(golden["parent_golden"] == str(OLD_GOLDEN.relative_to(ROOT)) and
+            golden["parent_golden_sha256"] == OLD_GOLDEN_SHA256 and
+            golden["bilinear_archive"] ==
+            ".project/optimization/evidence/render_images_bilinear_20261004.tar.gz" and
+            sha(archive) == golden["bilinear_archive_sha256"] and
+            sha(generator) == golden["bilinear_generator_sha256"] and
+            sha(ROOT / "engine/data/media/shaders/blur.frag") ==
+            golden["blur_shader_sha256"] and
+            golden["identity"] == old["identity"] and
+            golden["states"] == old["states"] and
+            golden["frames"] == old["frames"] and
+            set(golden["cases"]) == set(old["cases"]),
+            "Bilinear image reference identity changed")
+    with tarfile.open(archive, "r:gz") as package:
+        files = package.getnames()
+        manifest = json.load(package.extractfile("manifest.json"))
+        require(manifest["format"] == "render-images-bilinear-oracle-v1" and
+                set(files) == set(manifest["files"]) | {"manifest.json"},
+                "Bilinear image archive members changed")
+        raw = {name: package.extractfile(name).read()
+               for name in manifest["files"]}
+    require(all(hashlib.sha256(data).hexdigest() == manifest["files"][name]
+                for name, data in raw.items()) and
+            hashlib.sha256(raw["blur.frag"]).hexdigest() ==
+            golden["blur_shader_sha256"],
+            "Bilinear image archive digest changed")
+    differences = json.loads(raw["differences.json"])
+    with tarfile.open(OLD_CAPTURE, "r:gz") as package:
+        for case in old["cases"]:
+            for frame in old["frames"]:
+                is_changed = frame in CHANGED_FRAMES.get(case, set())
+                require((golden["cases"][case][str(frame)] !=
+                         old["cases"][case][str(frame)]) == is_changed,
+                        f"Unexpected image reference scope: {case}/{frame}")
+                metrics = differences[case][str(frame)]
+                if not is_changed:
+                    require(metrics == {"changed_pixels": 0,
+                                        "max_channel_delta": 0},
+                            f"Unrelated image changed: {case}/{frame}")
+                    continue
+                name = f"{case}/frame-{frame}"
+                previous = package.extractfile(name + ".rgb").read()
+                current = raw["capture/" + name + ".rgb"]
+                repeat = raw["repeat/" + name + ".rgb"]
+                state = raw["capture/" + name + ".state"]
+                require(current == repeat and
+                        state == raw["repeat/" + name + ".state"] and
+                        hashlib.sha256(previous).hexdigest() ==
+                        old["cases"][case][str(frame)] and
+                        hashlib.sha256(current).hexdigest() ==
+                        golden["cases"][case][str(frame)] and
+                        hashlib.sha256(state).hexdigest() ==
+                        golden["states"][str(frame)],
+                        f"Independent Bloom capture differs: {case}/{frame}")
+                require(len(previous) == len(current) and len(current) % 3 == 0,
+                        "RGB sizes differ")
+                pixels = sum(previous[i:i+3] != current[i:i+3]
+                             for i in range(0, len(current), 3))
+                maximum = max(abs(a-b) for a, b in zip(previous, current))
+                require(metrics == {"changed_pixels": pixels,
+                                    "max_channel_delta": maximum} and
+                        0 < pixels <= 300 and maximum <= 7,
+                        f"Bilinear image delta exceeds review: {case}/{frame}")
 
 
 def save(stage: Path, name: str, value: object) -> None:
@@ -164,6 +243,7 @@ def run_acceptance() -> dict:
             and golden["frames"] == [0, 40, 80, 120, 160]
             and len(golden["cases"]) == 6,
             "Unexpected image reference layout")
+    verify_bilinear_reference(golden)
     sources: dict[str, str] = {}
     for pattern in check["sources"]:
         relative = Path(pattern)

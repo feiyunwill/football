@@ -1,0 +1,83 @@
+{
+  "bilinear_archive": ".project/optimization/evidence/render_images_bilinear_20261004.tar.gz",
+  "bilinear_archive_sha256": "b288eead18caff8801e26f851fd705a1512e5502bedf868382bf6beb887de67d",
+  "bilinear_generator_sha256": "6225aa0b9504bdb155ef2e0c25718ae4d8e7d916c2a513b20736e007bc456522",
+  "blur_shader_sha256": "f2589213fcf3a2f603c8e1d10d73d8a37bd2122548c89604a5158a0604f6bf99",
+  "cases": {
+    "auto": {
+      "0": "6cada48da2b7d494feeb1b76cea7038b75a7d8c6a051fee89886ba4a9524f869",
+      "120": "fdf72b0acba9f4a6ee8b99af668cc18a27dbf4ae6ff81496965da16542a516a4",
+      "160": "0437ac678fdc29692c039347dc54ad4faa566a3eff10e4de302db46528c78f78",
+      "40": "8ef5a2fdecbbf5916185bcd39bd186c69c569fcb6f7924cda93791bd821c6ffe",
+      "80": "256bf73facc16ca01544f2e022345534a014a7beeffded43263d0c5c5a146e55"
+    },
+    "auto_combined": {
+      "0": "758a9c1cd94ad84c0da73352a0cfb2e345e09cccf90fa53615855afdadea2580",
+      "120": "affd717311cccd19400c26efcc2ba1494f1d5beb9ebc470d7b1034b99e525692",
+      "160": "690115b0d7eff20bf747956a264d6e14ef1ad49242eda84fda806576a86864ff",
+      "40": "cd8755bafd79de4caf9b84af3864cc9b340b6ad5a260696b172b700407bfd663",
+      "80": "e8e3c8e4f18c0af13a2dea452cfba80efe6bdd039c30e7db11e23fe057afe2bd"
+    },
+    "baseline": {
+      "0": "7e43a5c7aa0ca9676035fe6e97272dcf25ebdfc579e5aaeaec2a854c738efb1c",
+      "120": "d4505eeb606eaf43f9a3c11b6d47784c403cff761bfe50e6f193724f403a24fe",
+      "160": "98c4013da5fd3d29f182784ce3992884d887c2a463c225fa3dfde2773fc42fb8",
+      "40": "3c24157f3011e75a5cbf76d97be48de4b9697e36af47e6fad9487746ae894e62",
+      "80": "9b6b48277655ebfa122d803d7dd62bb46061689bef2db64cd45c245e915aaf36"
+    },
+    "bloom": {
+      "0": "7e43a5c7aa0ca9676035fe6e97272dcf25ebdfc579e5aaeaec2a854c738efb1c",
+      "120": "1f5c247882690c23b387e8e6e9cb48a0926cc12be80d203061982e0f9e47f8ef",
+      "160": "6cbac04b60d2475c51a332def0917e8055f038370e828a0e0e8b54c323fd3f13",
+      "40": "3c24157f3011e75a5cbf76d97be48de4b9697e36af47e6fad9487746ae894e62",
+      "80": "df6cf8d957a7691d4f5bd71859cfa2f6c0b1f0be078d13f46c59463bc68d4432"
+    },
+    "fxaa": {
+      "0": "0546311ab3630b53563dfb7623e1c8095f37cf6d2e8df7af45e753dad7cf5a03",
+      "120": "ac9f5eda94198c5636baf915c56ec405b77242429b97d4f366750ba816de298b",
+      "160": "23f5fa71bcdf36c1f5c84f6e61a672d034f5071440b3822efbe13641eab0b632",
+      "40": "3aad99b4e369d6b505247640a559b3eec88407aa6e8ccc1bb4c245c164e748f5",
+      "80": "66399ae0be837054268eafe28bab90159231b17bd0b8cd73468ee64c0289d92c"
+    },
+    "legacy": {
+      "0": "edb627bbb6687fa165c2d51c9cecded96fa0e5eb2103c7a4697f95a627a32a50",
+      "120": "3b105ed35d298bfeea03f23d1d627b18d37ad6a096f51be2cd35b4eb309551a5",
+      "160": "a5f39d504c98419ed00d8cdb13fc6928d3b64f31d4be9c2e84ef7593270ec0d2",
+      "40": "625f50beb453300a65bea126a3fdb0e7d1105c18c2a37c32e7789dbe3118fa95",
+      "80": "35b22ad573cedeade83d42c144704601f813d29579fc9a631c90dd7ffef057e5"
+    }
+  },
+  "frames": [
+    0,
+    40,
+    80,
+    120,
+    160
+  ],
+  "identity": {
+    "height": 181,
+    "renderer": "llvmpipe (LLVM 22.1.8, 256 bits)",
+    "width": 321
+  },
+  "parent_golden": ".project/checks/golden/render_images_llvmpipe.json",
+  "parent_golden_sha256": "fe0aa64d30a9157ccb4469471e98ee6f16db49407d61ce1a420fce71d84307be",
+  "reference_check": "render_images",
+  "reference_commit": "eae9a2808dd01a9f5a617564d568965f32261a67",
+  "reference_note": "Only Bloom and combined frames 80/120/160 change; two independent Release captures match, with unchanged simulation states.",
+  "reference_stage": "render-images-1791100592521609217",
+  "schema": 1,
+  "size": [
+    321,
+    181
+  ],
+  "state_reference_commit": "112268d9569cf19e5942f28cc7a875aa175227f7",
+  "state_reference_note": "Current player-switch gameplay; identical Release and Debug Sanitizer state captures across six render modes.",
+  "state_reference_stage": "postprocessing-1791077578318549829",
+  "states": {
+    "0": "3a520d70738eeebc65c1f05a14481061884395a6c13aad25ab4dfcf340608a38",
+    "120": "4ad42c70c7be290934775fd39dae8e61991c3aa31ccf1fb7975f491db913a465",
+    "160": "0f6b019e63d4d8505ee62d46b8df946f8b764237262e7c1d0a8986b51798a522",
+    "40": "6b1c25d21cc1f914a6ad65b694e21a03093ecdf3e6ff3edc01992c89da06d8e3",
+    "80": "d6d06c61590fb5b8266922ff5403a557c19ee2f33ef0504586d144cba7c23968"
+  }
+}
