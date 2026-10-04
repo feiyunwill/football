@@ -1,0 +1,57 @@
+Test project /tmp/football-optimization-tests
+      Start 200: TCPClientCapacity.InvalidConfigurationIsRejectedBeforeConnecting
+ 1/26 Test #200: TCPClientCapacity.InvalidConfigurationIsRejectedBeforeConnecting .........................   Passed    0.00 sec
+      Start 201: TCPClientCapacity.PartialHandshakeHasAnAbsoluteDeadline
+ 2/26 Test #201: TCPClientCapacity.PartialHandshakeHasAnAbsoluteDeadline ..................................   Passed    0.05 sec
+      Start 202: TCPClientCapacity.InvalidSessionAndSlotHeadersFailEarly
+ 3/26 Test #202: TCPClientCapacity.InvalidSessionAndSlotHeadersFailEarly ..................................   Passed    0.11 sec
+      Start 203: TCPClientCapacity.AuthorityCapacityReleasesOnPopAndPreservesWholeFrames
+ 4/26 Test #203: TCPClientCapacity.AuthorityCapacityReleasesOnPopAndPreservesWholeFrames ..................   Passed    0.06 sec
+      Start 204: TCPClientCapacity.AuthorityAndHashOverflowStopAndReleasePayloads
+ 5/26 Test #204: TCPClientCapacity.AuthorityAndHashOverflowStopAndReleasePayloads .........................   Passed    0.03 sec
+      Start 205: TCPClientCapacity.MalformedInputsAndConflictingHashesAreTerminal
+ 6/26 Test #205: TCPClientCapacity.MalformedInputsAndConflictingHashesAreTerminal .........................   Passed    0.07 sec
+      Start 206: TCPClientCapacity.ControlsConsumeEntirePacketsAndLeaveAuthorityAligned
+ 7/26 Test #206: TCPClientCapacity.ControlsConsumeEntirePacketsAndLeaveAuthorityAligned ...................   Passed    0.07 sec
+      Start 207: TCPClientCapacity.OutgoingLimitIncludesUndispatchedPacketsAndCloseDrains
+ 8/26 Test #207: TCPClientCapacity.OutgoingLimitIncludesUndispatchedPacketsAndCloseDrains .................   Passed    0.01 sec
+      Start 208: TCPClientCapacity.IdlePeerTerminatesAndForeignSlotsCannotBeSent
+ 9/26 Test #208: TCPClientCapacity.IdlePeerTerminatesAndForeignSlotsCannotBeSent ..........................   Passed    0.08 sec
+      Start 209: TCPClientCapacity.ResumeRestoresOneBoundedSnapshotAndKeepsCoalescedFrames
+10/26 Test #209: TCPClientCapacity.ResumeRestoresOneBoundedSnapshotAndKeepsCoalescedFrames ................   Passed    0.03 sec
+      Start 210: TCPClientCapacity.MaximumAssignmentAndInputUseAllTwentyTwoSlots
+11/26 Test #210: TCPClientCapacity.MaximumAssignmentAndInputUseAllTwentyTwoSlots ..........................   Passed    0.05 sec
+      Start 211: TCPClientCapacity.OversizedSnapshotFailsAndASecondAttemptRetainsSessionIdentity
+12/26 Test #211: TCPClientCapacity.OversizedSnapshotFailsAndASecondAttemptRetainsSessionIdentity ..........   Passed    0.11 sec
+      Start 212: TCPClientCapacity.DestructionDiscardsPendingReadAndUndispatchedWrites
+13/26 Test #212: TCPClientCapacity.DestructionDiscardsPendingReadAndUndispatchedWrites ....................   Passed    0.40 sec
+      Start 213: TCPFrameClient.FrameZeroAndIndependentInputsUnblockPredictionAtItsCap
+14/26 Test #213: TCPFrameClient.FrameZeroAndIndependentInputsUnblockPredictionAtItsCap ....................   Passed    0.02 sec
+      Start 214: TCPFrameClient.HashMismatchStopsAllFurtherEngineSteps
+15/26 Test #214: TCPFrameClient.HashMismatchStopsAllFurtherEngineSteps ....................................   Passed    0.03 sec
+      Start 215: TCPFrameClient.ResumeUsesSnapshotFrameOriginWithoutReinitializingEngine
+16/26 Test #215: TCPFrameClient.ResumeUsesSnapshotFrameOriginWithoutReinitializingEngine ..................   Passed    0.07 sec
+      Start 216: ReconnectingClient.RetryConfigurationAndMissingCredentialFailBeforeIO
+17/26 Test #216: ReconnectingClient.RetryConfigurationAndMissingCredentialFailBeforeIO ....................   Passed    0.00 sec
+      Start 217: ReconnectingClient.ConnectionRefusalSaturatesDelayAndExhaustsFiniteRetryBudget
+18/26 Test #217: ReconnectingClient.ConnectionRefusalSaturatesDelayAndExhaustsFiniteRetryBudget ...........   Passed    0.03 sec
+      Start 218: ReconnectingClient.EOFTriggersAutomaticSnapshotResumeAndConfirmedHashProgress
+19/26 Test #218: ReconnectingClient.EOFTriggersAutomaticSnapshotResumeAndConfirmedHashProgress ............   Passed    0.06 sec
+      Start 219: ReconnectingClient.ProtocolAndHashFailuresDoNotRetryOrKeepStepping
+20/26 Test #219: ReconnectingClient.ProtocolAndHashFailuresDoNotRetryOrKeepStepping .......................   Passed    0.03 sec
+      Start 220: ReconnectingClient.CloseInsideDisconnectCallbackCancelsAutomaticRecovery
+21/26 Test #220: ReconnectingClient.CloseInsideDisconnectCallbackCancelsAutomaticRecovery .................   Passed    0.02 sec
+      Start 221: ReconnectingClient.CloseOrThrowInsideRetryCallbackCannotStartANewConnection
+22/26 Test #221: ReconnectingClient.CloseOrThrowInsideRetryCallbackCannotStartANewConnection ..............   Passed    0.05 sec
+      Start 222: ReconnectingClient.CloseDuringEnginePreparationCannotReportConnectionSuccess
+23/26 Test #222: ReconnectingClient.CloseDuringEnginePreparationCannotReportConnectionSuccess .............   Passed    0.01 sec
+      Start 223: ReconnectingClient.FailedInitialEnginePreparationIsTerminal
+24/26 Test #223: ReconnectingClient.FailedInitialEnginePreparationIsTerminal ..............................   Passed    0.02 sec
+      Start 224: ReconnectingClient.PartialResumeTimeoutRetriesTheSameSessionAndRestoresOnSecondAttempt
+25/26 Test #224: ReconnectingClient.PartialResumeTimeoutRetriesTheSameSessionAndRestoresOnSecondAttempt ...   Passed    0.17 sec
+      Start 225: ReconnectingClient.InvalidEngineSnapshotDoesNotSendReadyOrRetry
+26/26 Test #225: ReconnectingClient.InvalidEngineSnapshotDoesNotSendReadyOrRetry ..........................   Passed    0.06 sec
+
+100% tests passed out of 26
+
+Total Test time (real) =   1.64 sec

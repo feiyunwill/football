@@ -1,0 +1,119 @@
+Test project /tmp/football-optimization-tests
+      Start  80: LobbyProtocolTest.PackUnpackUint32
+ 1/57 Test  #80: LobbyProtocolTest.PackUnpackUint32 ...................................................   Passed    0.00 sec
+      Start  81: LobbyProtocolTest.PackUnpackUint16
+ 2/57 Test  #81: LobbyProtocolTest.PackUnpackUint16 ...................................................   Passed    0.00 sec
+      Start  82: LobbyProtocolTest.PackUnpackString
+ 3/57 Test  #82: LobbyProtocolTest.PackUnpackString ...................................................   Passed    0.00 sec
+      Start  83: LobbyProtocolTest.PackUnpackEmptyString
+ 4/57 Test  #83: LobbyProtocolTest.PackUnpackEmptyString ..............................................   Passed    0.00 sec
+      Start  84: LobbyProtocolTest.ExplicitFixedRoomWireLayoutAndZeroReservedBytes
+ 5/57 Test  #84: LobbyProtocolTest.ExplicitFixedRoomWireLayoutAndZeroReservedBytes ....................   Passed    0.00 sec
+      Start  85: LobbyProtocolTest.PackStringRejectsLengthOverflow
+ 6/57 Test  #85: LobbyProtocolTest.PackStringRejectsLengthOverflow ....................................   Passed    0.00 sec
+      Start  86: LobbyProtocolTest.PackUnpackRoomMetadata
+ 7/57 Test  #86: LobbyProtocolTest.PackUnpackRoomMetadata .............................................   Passed    0.00 sec
+      Start  87: LobbyProtocolTest.PackUnpackRoomConfig
+ 8/57 Test  #87: LobbyProtocolTest.PackUnpackRoomConfig ...............................................   Passed    0.00 sec
+      Start  88: LobbyProtocolTest.PackRoomMetadata_BufferTooSmall
+ 9/57 Test  #88: LobbyProtocolTest.PackRoomMetadata_BufferTooSmall ....................................   Passed    0.00 sec
+      Start  89: LobbyProtocolTest.UnpackRoomMetadata_BufferTooSmall
+10/57 Test  #89: LobbyProtocolTest.UnpackRoomMetadata_BufferTooSmall ..................................   Passed    0.00 sec
+      Start  90: LobbyProtocolTest.PackString_BufferTooSmall
+11/57 Test  #90: LobbyProtocolTest.PackString_BufferTooSmall ..........................................   Passed    0.00 sec
+      Start  91: LobbyProtocolTest.RoomStatusValues
+12/57 Test  #91: LobbyProtocolTest.RoomStatusValues ...................................................   Passed    0.00 sec
+      Start  92: LobbyProtocolTest.LobbyMessageTypeValues
+13/57 Test  #92: LobbyProtocolTest.LobbyMessageTypeValues .............................................   Passed    0.00 sec
+      Start  93: LobbyProtocolTest.InvalidConfigRepresentationAndStringsPreserveOutput
+14/57 Test  #93: LobbyProtocolTest.InvalidConfigRepresentationAndStringsPreserveOutput ................   Passed    0.00 sec
+      Start  94: LobbyProtocolTest.InvalidMetadataFieldsPreserveOutput
+15/57 Test  #94: LobbyProtocolTest.InvalidMetadataFieldsPreserveOutput ................................   Passed    0.00 sec
+      Start  95: RoomManagerTest.CreateRoom
+16/57 Test  #95: RoomManagerTest.CreateRoom ...........................................................   Passed    0.00 sec
+      Start  96: RoomManagerTest.JoinRoom
+17/57 Test  #96: RoomManagerTest.JoinRoom .............................................................   Passed    0.00 sec
+      Start  97: RoomManagerTest.JoinRoom_Full
+18/57 Test  #97: RoomManagerTest.JoinRoom_Full ........................................................   Passed    0.00 sec
+      Start  98: RoomManagerTest.JoinRoom_AlreadyIn
+19/57 Test  #98: RoomManagerTest.JoinRoom_AlreadyIn ...................................................   Passed    0.00 sec
+      Start  99: RoomManagerTest.JoinRoom_NotFound
+20/57 Test  #99: RoomManagerTest.JoinRoom_NotFound ....................................................   Passed    0.00 sec
+      Start 100: RoomManagerTest.LeaveRoom
+21/57 Test #100: RoomManagerTest.LeaveRoom ............................................................   Passed    0.00 sec
+      Start 101: RoomManagerTest.LeaveRoom_HostLeaves
+22/57 Test #101: RoomManagerTest.LeaveRoom_HostLeaves .................................................   Passed    0.00 sec
+      Start 102: RoomManagerTest.LeaveRoom_LastPlayerLeaves
+23/57 Test #102: RoomManagerTest.LeaveRoom_LastPlayerLeaves ...........................................   Passed    0.00 sec
+      Start 103: RoomManagerTest.SetReady
+24/57 Test #103: RoomManagerTest.SetReady .............................................................   Passed    0.00 sec
+      Start 104: RoomManagerTest.StartGame_AllReady
+25/57 Test #104: RoomManagerTest.StartGame_AllReady ...................................................   Passed    0.00 sec
+      Start 105: RoomManagerTest.StartGame_NotHost
+26/57 Test #105: RoomManagerTest.StartGame_NotHost ....................................................   Passed    0.00 sec
+      Start 106: RoomManagerTest.StartGame_NotAllReady
+27/57 Test #106: RoomManagerTest.StartGame_NotAllReady ................................................   Passed    0.00 sec
+      Start 107: RoomManagerTest.StartGame_NeedTwoPlayers
+28/57 Test #107: RoomManagerTest.StartGame_NeedTwoPlayers .............................................   Passed    0.00 sec
+      Start 108: RoomManagerTest.ListRooms
+29/57 Test #108: RoomManagerTest.ListRooms ............................................................   Passed    0.00 sec
+      Start 109: RoomManagerTest.FindRoomByPlayer
+30/57 Test #109: RoomManagerTest.FindRoomByPlayer .....................................................   Passed    0.00 sec
+      Start 110: RoomManagerTest.JoinStartedRoom
+31/57 Test #110: RoomManagerTest.JoinStartedRoom ......................................................   Passed    0.00 sec
+      Start 111: RoomManagerTest.Cleanup
+32/57 Test #111: RoomManagerTest.Cleanup ..............................................................   Passed    0.00 sec
+      Start 112: RoomManagerRegression.ValidatesCapacityAndStartAddress
+33/57 Test #112: RoomManagerRegression.ValidatesCapacityAndStartAddress ...............................   Passed    0.00 sec
+      Start 113: LobbyE2ETest.CreateJoinChatAndStartProductionRoom
+34/57 Test #113: LobbyE2ETest.CreateJoinChatAndStartProductionRoom ....................................   Passed    0.05 sec
+      Start 114: LobbyE2ETest.FinishedRoomIsRetiredAndSamePeersCanEnterAnotherMatch
+35/57 Test #114: LobbyE2ETest.FinishedRoomIsRetiredAndSamePeersCanEnterAnotherMatch ...................   Passed    0.14 sec
+      Start 115: LobbyE2ETest.RejectsDuplicateNamesAndForeignChat
+36/57 Test #115: LobbyE2ETest.RejectsDuplicateNamesAndForeignChat .....................................   Passed    0.01 sec
+      Start 116: LobbyE2ETest.FragmentedChatAndEofAtClient
+37/57 Test #116: LobbyE2ETest.FragmentedChatAndEofAtClient ............................................   Passed    0.02 sec
+      Start 206: LobbyCapacity.ConstructorRejectsBadLimits
+38/57 Test #206: LobbyCapacity.ConstructorRejectsBadLimits ............................................   Passed    0.02 sec
+      Start 207: LobbyCapacity.RejectsExcessConnectionThenAcceptsAfterActualDisconnect
+39/57 Test #207: LobbyCapacity.RejectsExcessConnectionThenAcceptsAfterActualDisconnect ................   Passed    0.03 sec
+      Start 208: LobbyCapacity.UnidentifiedReservationExpiresButNamedConnectionSurvives
+40/57 Test #208: LobbyCapacity.UnidentifiedReservationExpiresButNamedConnectionSurvives ...............   Passed    0.22 sec
+      Start 209: LobbyCapacity.OversizedLengthHeadersAreRejectedWithoutTheirPayloads
+41/57 Test #209: LobbyCapacity.OversizedLengthHeadersAreRejectedWithoutTheirPayloads ..................   Passed    0.01 sec
+      Start 210: LobbyCapacity.InvalidConfigBoolAndUnterminatedStringAreRejectedBeforeRoomCreation
+42/57 Test #210: LobbyCapacity.InvalidConfigBoolAndUnterminatedStringAreRejectedBeforeRoomCreation ....   Passed    0.01 sec
+      Start 211: LobbyCapacity.OutboundMessageCapDisconnectsFlooderAndHealthyPeerStillWorks
+43/57 Test #211: LobbyCapacity.OutboundMessageCapDisconnectsFlooderAndHealthyPeerStillWorks ...........   Passed    0.02 sec
+      Start 212: LobbyCapacity.OutboundByteCapIsIndependentOfMessageCapAndRecovers
+44/57 Test #212: LobbyCapacity.OutboundByteCapIsIndependentOfMessageCapAndRecovers ....................   Passed    0.02 sec
+      Start 213: LobbyCapacity.LargestChatWithFragmentationAndFollowingMessageRemainsValid
+45/57 Test #213: LobbyCapacity.LargestChatWithFragmentationAndFollowingMessageRemainsValid ............   Passed    0.02 sec
+      Start 214: LobbyCapacity.DestroyServerWithActiveReadsAndQueuedOutputDrainsCallbacks
+46/57 Test #214: LobbyCapacity.DestroyServerWithActiveReadsAndQueuedOutputDrainsCallbacks .............   Passed    0.03 sec
+      Start 215: LobbyCapacity.StoppedIoCanDestroyServerAndPendingHandlersWithoutResurrection
+47/57 Test #215: LobbyCapacity.StoppedIoCanDestroyServerAndPendingHandlersWithoutResurrection .........   Passed    0.01 sec
+      Start 216: LobbyClientCapacity.CountLimitIsReservedBeforeIoAndOverflowDisconnectsExplicitly
+48/57 Test #216: LobbyClientCapacity.CountLimitIsReservedBeforeIoAndOverflowDisconnectsExplicitly .....   Passed    0.02 sec
+      Start 217: LobbyClientCapacity.ByteLimitIsIndependentOfMessageCount
+49/57 Test #217: LobbyClientCapacity.ByteLimitIsIndependentOfMessageCount .............................   Passed    0.02 sec
+      Start 218: LobbyClientCapacity.FullQueueDrainsInOrderAndCanBeReusedOneHundredTimes
+50/57 Test #218: LobbyClientCapacity.FullQueueDrainsInOrderAndCanBeReusedOneHundredTimes ..............   Passed    0.14 sec
+      Start 219: LobbyClientCapacity.OversizedHeadersAndUnknownTypesFailBeforePayloadArrival
+51/57 Test #219: LobbyClientCapacity.OversizedHeadersAndUnknownTypesFailBeforePayloadArrival ..........   Passed    0.11 sec
+      Start 220: LobbyClientCapacity.MaximumRoomListFragmentedThenCoalescedMessageIsPreserved
+52/57 Test #220: LobbyClientCapacity.MaximumRoomListFragmentedThenCoalescedMessageIsPreserved .........   Passed    0.02 sec
+      Start 221: LobbyClientCapacity.ByteBoundedChatHistoryAccountsMixedStringCapacitiesAndRecovers
+53/57 Test #221: LobbyClientCapacity.ByteBoundedChatHistoryAccountsMixedStringCapacitiesAndRecovers ...   Passed    0.70 sec
+      Start 222: LobbyClientCapacity.ChatCountLimitRetainsLatestMessagesBelowByteLimit
+54/57 Test #222: LobbyClientCapacity.ChatCountLimitRetainsLatestMessagesBelowByteLimit ................   Passed    1.22 sec
+      Start 223: LobbyClientCapacity.CallbackCanDisconnectReplaceItselfAndKeepPacketAlive
+55/57 Test #223: LobbyClientCapacity.CallbackCanDisconnectReplaceItselfAndKeepPacketAlive .............   Passed    0.01 sec
+      Start 224: LobbyClientCapacity.InvalidRoomMetadataDoesNotReplacePreviouslyValidList
+56/57 Test #224: LobbyClientCapacity.InvalidRoomMetadataDoesNotReplacePreviouslyValidList .............   Passed    0.02 sec
+      Start 225: LobbyClientCapacity.DestructionDiscardsNeverDispatchedReadsAndWritesSafely
+57/57 Test #225: LobbyClientCapacity.DestructionDiscardsNeverDispatchedReadsAndWritesSafely ...........   Passed    0.02 sec
+
+100% tests passed out of 57
+
+Total Test time (real) =   2.94 sec

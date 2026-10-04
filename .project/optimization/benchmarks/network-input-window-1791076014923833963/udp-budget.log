@@ -1,0 +1,32 @@
+test_active_payload_stays_charged_through_close_and_refunds_finally (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_active_payload_stays_charged_through_close_and_refunds_finally) ... ok
+test_capacity_and_window_reject_without_ack (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_capacity_and_window_reject_without_ack) ... ok
+test_conflicting_buffered_and_delivered_duplicates_are_terminal (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_conflicting_buffered_and_delivered_duplicates_are_terminal) ... ok
+test_gap_deadline_is_not_extended_by_duplicates_or_ack (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_gap_deadline_is_not_extended_by_duplicates_or_ack) ... ok
+test_history_eviction_does_not_redeliver_old_packets (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_history_eviction_does_not_redeliver_old_packets) ... ok
+test_limits_reject_invalid_types_bounds_and_nonfinite (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_limits_reject_invalid_types_bounds_and_nonfinite) ... ok
+test_malformed_exact_length_no_ack_or_state_allocation (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_malformed_exact_length_no_ack_or_state_allocation) ... ok
+test_out_of_order_duplicates_deliver_exactly_once (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_out_of_order_duplicates_deliver_exactly_once) ... ok
+test_receive_rate_limit_and_saturating_counters (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_receive_rate_limit_and_saturating_counters) ... ok
+test_remaining_gap_preserves_original_arrival_time (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_remaining_gap_preserves_original_arrival_time) ... ok
+test_retry_exhaustion_closes_whole_stream (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_retry_exhaustion_closes_whole_stream) ... ok
+test_rtt_bounds_karn_and_no_retransmission_before_deadline (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_rtt_bounds_karn_and_no_retransmission_before_deadline) ... ok
+test_send_actual_byte_budget_and_max_datagram (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_send_actual_byte_budget_and_max_datagram) ... ok
+test_send_count_backpressure_ack_refund_no_sequence_consumption (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_send_count_backpressure_ack_refund_no_sequence_consumption) ... ok
+test_sequence_wrap_order_ack_and_pending_collision (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_sequence_wrap_order_ack_and_pending_collision) ... ok
+test_unsent_write_deadline_is_absolute (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_unsent_write_deadline_is_absolute) ... ok
+test_untransmitted_ack_unknown_ack_and_trailing_ack_cannot_refund (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_untransmitted_ack_unknown_ack_and_trailing_ack_cannot_refund) ... ok
+test_wire_known_bytes_and_cpp_constants (gfootball.frame_sync.test_udp_budget.UDPStateTest.test_wire_known_bytes_and_cpp_constants) ... ok
+test_callback_failure_is_terminal_and_refunds (gfootball.frame_sync.test_udp_budget.UDPTransportTest.test_callback_failure_is_terminal_and_refunds) ... ok
+test_callback_reentry_and_stop_keep_active_charged (gfootball.frame_sync.test_udp_budget.UDPTransportTest.test_callback_reentry_and_stop_keep_active_charged) ... ok
+test_concurrent_receivers_serialize_in_order_callback (gfootball.frame_sync.test_udp_budget.UDPTransportTest.test_concurrent_receivers_serialize_in_order_callback) ... ok
+test_constructor_requires_borrowed_nonblocking_numeric_endpoint (gfootball.frame_sync.test_udp_budget.UDPTransportTest.test_constructor_requires_borrowed_nonblocking_numeric_endpoint) ... ok
+test_hard_socket_send_failure_is_terminal (gfootball.frame_sync.test_udp_budget.UDPTransportTest.test_hard_socket_send_failure_is_terminal) ... ok
+test_real_bidirectional_loss_duplicate_reorder_and_complete_refund (gfootball.frame_sync.test_udp_budget.UDPTransportTest.test_real_bidirectional_loss_duplicate_reorder_and_complete_refund) ... ok
+test_real_socket_send_ack_and_borrowed_socket_after_stop (gfootball.frame_sync.test_udp_budget.UDPTransportTest.test_real_socket_send_ack_and_borrowed_socket_after_stop) ... ok
+test_source_filter_does_not_ack_or_deliver_foreign_data (gfootball.frame_sync.test_udp_budget.UDPTransportTest.test_source_filter_does_not_ack_or_deliver_foreign_data) ... ok
+test_thread_start_idempotence_retry_exhaustion_and_join (gfootball.frame_sync.test_udp_budget.UDPTransportTest.test_thread_start_idempotence_retry_exhaustion_and_join) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.533s
+
+OK

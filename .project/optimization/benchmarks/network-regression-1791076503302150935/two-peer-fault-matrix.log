@@ -1,0 +1,6 @@
+.
+----------------------------------------------------------------------
+Ran 1 test in 3.165s
+
+OK
+NETWORK_MATRIX={"baseline": {"frames": 40, "peer_hash_checks": 80, "unique_digests": 40, "unique_inputs": 12}, "faults": {"delay_ms": [4, 10], "delayed": 43, "delivered": 46, "dropped": 3, "duplicated": 3, "frames": 40, "maximum_datagram": 56, "out_of_order": 11, "peer_hash_checks": 80, "reordered": 1, "unique_digests": 40, "unique_inputs": 12}, "latency": {"delay_ms": [6, 14], "delayed": 41, "delivered": 41, "dropped": 0, "duplicated": 0, "frames": 40, "maximum_datagram": 56, "out_of_order": 17, "peer_hash_checks": 80, "reordered": 0, "unique_digests": 40, "unique_inputs": 12}}

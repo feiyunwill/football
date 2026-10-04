@@ -1,0 +1,127 @@
+{
+  "passed": true,
+  "assertions": 552114,
+  "skipped": 0,
+  "native_window": {
+    "passed": true,
+    "skipped": 0,
+    "assertions": 552018,
+    "frames": 18000,
+    "fixed_bytes": 3728,
+    "actual_network": false
+  },
+  "server_tests": 32,
+  "udp_tests": 27,
+  "native_socket_tests": 37,
+  "actual_tcp_backpressure": true,
+  "actual_22_client_window": true,
+  "actual_udp_loss_duplicate_reorder": true,
+  "commands": [
+    {
+      "name": "configure-native",
+      "argv": [
+        "cmake",
+        "-S",
+        "engine",
+        "-B",
+        "/tmp/football-optimization-native",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DBUILD_PYTHON_BINDINGS=OFF",
+        "-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin"
+      ],
+      "log": "configure-native.log",
+      "sha256": "55bde562b18ce1c0fdf0de34b779e0f0f438500172bb4c042aa0e99ce4308f2b"
+    },
+    {
+      "name": "build-native",
+      "argv": [
+        "cmake",
+        "--build",
+        "/tmp/football-optimization-native",
+        "-j",
+        "1",
+        "--target",
+        "engine_server_input_window_contract"
+      ],
+      "log": "build-native.log",
+      "sha256": "f14cf78981a14687cbd0654f9bf43b03acd136c4d2938f7832c68bf5dc2cdb1b"
+    },
+    {
+      "name": "native-window",
+      "argv": [
+        "/tmp/football-optimization-native/bin/engine_server_input_window_contract"
+      ],
+      "log": "native-window.log",
+      "sha256": "c1eaf2c1b13f3377ee98c5138ade1b8f203c844fc4b4398c50f398d3d793ff6b"
+    },
+    {
+      "name": "server-budget",
+      "argv": [
+        "/usr/sbin/python3",
+        "-m",
+        "unittest",
+        "-v",
+        "gfootball.frame_sync.test_server_budget"
+      ],
+      "log": "server-budget.log",
+      "sha256": "20d35844a4596a741e319d310ff71b43a49df2d0363f98956c862a083d1a98ad"
+    },
+    {
+      "name": "udp-budget",
+      "argv": [
+        "/usr/sbin/python3",
+        "-m",
+        "unittest",
+        "-v",
+        "gfootball.frame_sync.test_udp_budget"
+      ],
+      "log": "udp-budget.log",
+      "sha256": "9039e61bbf94b0e9aecd720d3cfe9b409e5217244083dd626bc1240c59f35d37"
+    },
+    {
+      "name": "configure-native-sockets",
+      "argv": [
+        "cmake",
+        "-S",
+        "engine/tests",
+        "-B",
+        "/tmp/football-optimization-tests",
+        "-DCMAKE_BUILD_TYPE=Release"
+      ],
+      "log": "configure-native-sockets.log",
+      "sha256": "942a1ad03edf79ab55f77498565643b8b1fd0bc35183024e979ea8498475348d"
+    },
+    {
+      "name": "build-native-sockets",
+      "argv": [
+        "cmake",
+        "--build",
+        "/tmp/football-optimization-tests",
+        "-j",
+        "1",
+        "--target",
+        "tcp_frame_server_test",
+        "native_udp_window_test",
+        "bounded_tcp_writer_test",
+        "reliable_udp_budget_test"
+      ],
+      "log": "build-native-sockets.log",
+      "sha256": "9fe3f135e6243000130bd482144ea06d0fee97a209652888a4adeeebe63bde24"
+    },
+    {
+      "name": "native-sockets",
+      "argv": [
+        "ctest",
+        "--test-dir",
+        "/tmp/football-optimization-tests",
+        "-R",
+        "^(tcp_frame_server_test|native_udp_window_test|bounded_tcp_writer_test|reliable_udp_budget_test)\\.",
+        "--output-on-failure",
+        "-j",
+        "1"
+      ],
+      "log": "native-sockets.log",
+      "sha256": "8ef7144e5caf4ac6662191124d466f465466d5eb68407e4d5c84a7f53870ae80"
+    }
+  ]
+}

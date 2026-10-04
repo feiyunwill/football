@@ -1,0 +1,9 @@
+test_gameenv_host_join_authority_end_and_native_recording (gfootball.frame_sync.test_multiplayer_native.NativeMultiplayerTest.test_gameenv_host_join_authority_end_and_native_recording) ... ok
+test_real_gameenv_completed_checkpoint_and_replay (gfootball.frame_sync.test_match_completion_native.MatchCompletionNativeTest.test_real_gameenv_completed_checkpoint_and_replay) ... ok
+test_real_gameenv_tcp_natural_end_and_ack (gfootball.frame_sync.test_match_completion_native.MatchCompletionNativeTest.test_real_gameenv_tcp_natural_end_and_ack) ... ok
+test_real_gameenv_udp_natural_end_and_ack (gfootball.frame_sync.test_match_completion_native.MatchCompletionNativeTest.test_real_gameenv_udp_natural_end_and_ack) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 10.166s
+
+OK

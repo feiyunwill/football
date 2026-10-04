@@ -1,0 +1,15 @@
+[ 50%] Building CXX object CMakeFiles/tcp_frame_server_test.dir/Unity/unity_0_cxx.cxx.o
+[100%] Linking CXX executable tcp_frame_server_test
+[100%] Built target tcp_frame_server_test
+[ 25%] Building CXX object CMakeFiles/football_test_native_recovery.dir/Unity/unity_0_cxx.cxx.o
+[ 50%] Linking CXX static library libfootball_test_native_recovery.a
+[ 50%] Built target football_test_native_recovery
+[ 75%] Building CXX object CMakeFiles/native_udp_window_test.dir/Unity/unity_0_cxx.cxx.o
+[100%] Linking CXX executable native_udp_window_test
+[100%] Built target native_udp_window_test
+[ 50%] Building CXX object CMakeFiles/bounded_tcp_writer_test.dir/Unity/unity_0_cxx.cxx.o
+[100%] Linking CXX executable bounded_tcp_writer_test
+[100%] Built target bounded_tcp_writer_test
+[ 50%] Building CXX object CMakeFiles/reliable_udp_budget_test.dir/Unity/unity_0_cxx.cxx.o
+[100%] Linking CXX executable reliable_udp_budget_test
+[100%] Built target reliable_udp_budget_test

@@ -1,15 +1,15 @@
 {
   "check": "network_reconnect",
-  "fingerprint": "312f23299d6e614ea1dc3740ff504c7200f9f55a6f19d30110c923b3c5ea77d2",
+  "fingerprint": "5c6b02fd80a9417e393fefa0c29851f308456e21da6716cb5961a12078be14ca",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1790927966.2368174,
-  "duration_seconds": 250.305,
+  "started": 1791076100.1490903,
+  "duration_seconds": 220.51,
   "argv": [
     "python3",
     ".project/checks/network_reconnect.py"
   ],
-  "log": "network_reconnect-1790927966236854436.log",
-  "log_sha256": "b14f39bb54530a62cb68be7fc8d2b6d8f50087f9ab9ab1ae46d9427231b07561"
+  "log": "network_reconnect-1791076100149118408.log",
+  "log_sha256": "75c84c7101c3b456dc378e8322ea7637c1333c319137ec35b45d8df49d97d8a9"
 }

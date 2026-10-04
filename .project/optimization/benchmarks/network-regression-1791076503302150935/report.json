@@ -1,0 +1,148 @@
+{
+  "passed": true,
+  "assertions": 242,
+  "skipped": 0,
+  "matrix": {
+    "baseline": {
+      "frames": 40,
+      "peer_hash_checks": 80,
+      "unique_digests": 40,
+      "unique_inputs": 12
+    },
+    "faults": {
+      "delay_ms": [
+        4,
+        10
+      ],
+      "delayed": 43,
+      "delivered": 46,
+      "dropped": 3,
+      "duplicated": 3,
+      "frames": 40,
+      "maximum_datagram": 56,
+      "out_of_order": 11,
+      "peer_hash_checks": 80,
+      "reordered": 1,
+      "unique_digests": 40,
+      "unique_inputs": 12
+    },
+    "latency": {
+      "delay_ms": [
+        6,
+        14
+      ],
+      "delayed": 41,
+      "delivered": 41,
+      "dropped": 0,
+      "duplicated": 0,
+      "frames": 40,
+      "maximum_datagram": 56,
+      "out_of_order": 17,
+      "peer_hash_checks": 80,
+      "reordered": 0,
+      "unique_digests": 40,
+      "unique_inputs": 12
+    }
+  },
+  "disconnect_tests": 2,
+  "commands": [
+    {
+      "name": "install-python",
+      "argv": [
+        "/tmp/football-framework-python-fba597b1aa5c844a/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--disable-pip-version-check",
+        "-r",
+        "/root/work_space/football/.project/checks/requirements.txt"
+      ],
+      "log": "install-python.log",
+      "sha256": "c1b34af372755e576253bb9d1d6ee1d74292c3382c3f91e2615d11e7f75a7c04",
+      "returncode": 0
+    },
+    {
+      "name": "check-python",
+      "argv": [
+        "/tmp/football-framework-python-fba597b1aa5c844a/bin/python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "log": "check-python.log",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "returncode": 0
+    },
+    {
+      "name": "pybind11-dir",
+      "argv": [
+        "/tmp/football-framework-python-fba597b1aa5c844a/bin/python",
+        "-m",
+        "pybind11",
+        "--cmakedir"
+      ],
+      "log": "pybind11-dir.log",
+      "sha256": "1ae4c378e39880715af21dd615ebab0616a7f0e97f6ac99f763df0438cb35e90",
+      "returncode": 0
+    },
+    {
+      "name": "configure-binding",
+      "argv": [
+        "cmake",
+        "-S",
+        "engine",
+        "-B",
+        "/tmp/football-network-reconnect-bindings",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DBUILD_PYTHON_BINDINGS=ON",
+        "-DPython_EXECUTABLE=/tmp/football-framework-python-fba597b1aa5c844a/bin/python",
+        "-Dpybind11_DIR=/tmp/football-framework-python-fba597b1aa5c844a/lib/python3.14/site-packages/pybind11/share/cmake/pybind11",
+        "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/tmp/football-network-reconnect-bindings/package/gfootball_engine"
+      ],
+      "log": "configure-binding.log",
+      "sha256": "634da64d66bff07374cb3cd4cded6fe9ea0585e0b607e8f9ab471c36719dd419",
+      "returncode": 0
+    },
+    {
+      "name": "build-binding",
+      "argv": [
+        "cmake",
+        "--build",
+        "/tmp/football-network-reconnect-bindings",
+        "-j",
+        "2",
+        "--target",
+        "game"
+      ],
+      "log": "build-binding.log",
+      "sha256": "600347c382c27a02394997352fdf5e148371453a20c388bb1f9de5e7a9523fad",
+      "returncode": 0
+    },
+    {
+      "name": "two-peer-fault-matrix",
+      "argv": [
+        "/tmp/football-framework-python-fba597b1aa5c844a/bin/python",
+        "-m",
+        "gfootball.frame_sync.test_network_regression_native"
+      ],
+      "log": "two-peer-fault-matrix.log",
+      "sha256": "2ecd08bbdddf4294c91be743a12e6424b66dbac2aaa1ee7f142cb79fd456b0cb",
+      "returncode": 0
+    },
+    {
+      "name": "disconnect-recovery",
+      "argv": [
+        "/tmp/football-framework-python-fba597b1aa5c844a/bin/python",
+        "-m",
+        "unittest",
+        "-v",
+        "gfootball.frame_sync.test_udp_resume_native.UDPResumeNativeTest.test_gameenv_automatic_token_snapshot_handback_and_thirteen_frames",
+        "gfootball.frame_sync.test_multiplayer_udp.MultiplayerUDPTest.test_running_client_only_loss_recovers_original_token_engine_and_new_epoch"
+      ],
+      "log": "disconnect-recovery.log",
+      "sha256": "1dd4b8556bb3d85ab40b57fa715416d6d2af331ad30ca876ab36b7ad076d733c",
+      "returncode": 0
+    }
+  ],
+  "scope": "Python UDP product transport; native GameEnv hash replica; disconnect includes one native and one two-peer oracle test"
+}

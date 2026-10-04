@@ -1,0 +1,79 @@
+Test project /tmp/football-optimization-tests
+      Start 227: native_udp_window_test.DatagramTest.ConstructorValidatesBudgetBeforeUse
+ 1/37 Test #227: native_udp_window_test.DatagramTest.ConstructorValidatesBudgetBeforeUse ....................................   Passed    0.02 sec
+      Start 228: native_udp_window_test.DatagramTest.PacketCapRejectsBeforeSequenceAndRecoversAfterAck
+ 2/37 Test #228: native_udp_window_test.DatagramTest.PacketCapRejectsBeforeSequenceAndRecoversAfterAck ......................   Passed    0.05 sec
+      Start 229: native_udp_window_test.DatagramTest.ByteCapIsIndependentOfPacketCountAndSurvivesRepeatedDrain
+ 3/37 Test #229: native_udp_window_test.DatagramTest.ByteCapIsIndependentOfPacketCountAndSurvivesRepeatedDrain ..............   Passed    0.48 sec
+      Start 230: native_udp_window_test.DatagramTest.InvalidLengthsNeverAllocateOrConsumeSequence
+ 4/37 Test #230: native_udp_window_test.DatagramTest.InvalidLengthsNeverAllocateOrConsumeSequence ...........................   Passed    0.02 sec
+      Start 231: native_udp_window_test.DatagramTest.RetryExhaustionIsTerminalAndReleasesAllPackets
+ 5/37 Test #231: native_udp_window_test.DatagramTest.RetryExhaustionIsTerminalAndReleasesAllPackets .........................   Passed    0.05 sec
+      Start 232: native_udp_window_test.DatagramTest.AckAfterRetransmitDoesNotDistortRttAndFreesCapacity
+ 6/37 Test #232: native_udp_window_test.DatagramTest.AckAfterRetransmitDoesNotDistortRttAndFreesCapacity ....................   Passed    0.04 sec
+      Start 233: native_udp_window_test.DatagramTest.SendAndRetransmitSocketFailuresReleasePendingStorage
+ 7/37 Test #233: native_udp_window_test.DatagramTest.SendAndRetransmitSocketFailuresReleasePendingStorage ...................   Passed    0.08 sec
+      Start 234: native_udp_window_test.DatagramTest.MalformedDataAndUnknownAcksDoNotChangePendingOrDeliver
+ 8/37 Test #234: native_udp_window_test.DatagramTest.MalformedDataAndUnknownAcksDoNotChangePendingOrDeliver .................   Passed    0.04 sec
+      Start 235: native_udp_window_test.DatagramTest.RealReceiverAcknowledgesAndCallbackCanSendAndClose
+ 9/37 Test #235: native_udp_window_test.DatagramTest.RealReceiverAcknowledgesAndCallbackCanSendAndClose .....................   Passed    0.04 sec
+      Start 236: native_udp_window_test.DatagramTest.AckSendFailureDoesNotDeliverAndClosePreservesSharedSocket
+10/37 Test #236: native_udp_window_test.DatagramTest.AckSendFailureDoesNotDeliverAndClosePreservesSharedSocket ..............   Passed    0.04 sec
+      Start 237: native_udp_window_test.DatagramTest.ConcurrentSendsCannotExceedBudget
+11/37 Test #237: native_udp_window_test.DatagramTest.ConcurrentSendsCannotExceedBudget ......................................   Passed    0.08 sec
+      Start 238: native_udp_window_test.DatagramTest.ReorderedDatagramsDeliverExactlyOnceAndInSequence
+12/37 Test #238: native_udp_window_test.DatagramTest.ReorderedDatagramsDeliverExactlyOnceAndInSequence ......................   Passed    0.03 sec
+      Start 239: native_udp_window_test.DatagramTest.ConflictingFutureDatagramFailsBeforeApplicationDelivery
+13/37 Test #239: native_udp_window_test.DatagramTest.ConflictingFutureDatagramFailsBeforeApplicationDelivery ................   Passed    0.04 sec
+      Start 240: native_udp_window_test.DatagramTest.ReceiveCapacityCountsInFlightCallbacksAndRetainedFuturePackets
+14/37 Test #240: native_udp_window_test.DatagramTest.ReceiveCapacityCountsInFlightCallbacksAndRetainedFuturePackets .........   Passed    0.04 sec
+      Start 241: native_udp_window_test.DatagramTest.ReentrantReceiveQueuesBehindCurrentCallbackWithoutDeadlock
+15/37 Test #241: native_udp_window_test.DatagramTest.ReentrantReceiveQueuesBehindCurrentCallbackWithoutDeadlock .............   Passed    0.04 sec
+      Start 242: native_udp_window_test.DatagramTest.ThrowingReceiveCallbackReleasesBothDirectionsAndRejectsFurtherWork
+16/37 Test #242: native_udp_window_test.DatagramTest.ThrowingReceiveCallbackReleasesBothDirectionsAndRejectsFurtherWork .....   Passed    0.04 sec
+      Start 243: native_udp_window_test.DatagramTest.ReceiveByteLimitAndSequenceWindowRejectBeforeAck
+17/37 Test #243: native_udp_window_test.DatagramTest.ReceiveByteLimitAndSequenceWindowRejectBeforeAck .......................   Passed    0.04 sec
+      Start 244: native_udp_window_test.RTTBudget.ExtremeDurationsAndDeviationRemainBoundedInMilliseconds
+18/37 Test #244: native_udp_window_test.RTTBudget.ExtremeDurationsAndDeviationRemainBoundedInMilliseconds ...................   Passed    0.00 sec
+      Start 245: native_udp_window_test.GenerationDatagramTest.LateDataCannotAdvanceNewConnection
+19/37 Test #245: native_udp_window_test.GenerationDatagramTest.LateDataCannotAdvanceNewConnection ...........................   Passed    0.04 sec
+      Start 246: native_udp_window_test.GenerationDatagramTest.LateAckCannotClearNewPending
+20/37 Test #246: native_udp_window_test.GenerationDatagramTest.LateAckCannotClearNewPending .................................   Passed    0.04 sec
+      Start 247: native_udp_window_test.GenerationDatagramTest.HeaderCarriesEveryIdentityByteAndExactMaximum
+21/37 Test #247: native_udp_window_test.GenerationDatagramTest.HeaderCarriesEveryIdentityByteAndExactMaximum ................   Passed    0.04 sec
+      Start 248: native_udp_window_test.GenerationDatagramTest.OversizedPayloadDoesNotConsumeSequence
+22/37 Test #248: native_udp_window_test.GenerationDatagramTest.OversizedPayloadDoesNotConsumeSequence .......................   Passed    0.04 sec
+      Start 249: native_udp_window_test.GenerationDatagramTest.AllZeroIdentityRejectedWithoutSocketEffects
+23/37 Test #249: native_udp_window_test.GenerationDatagramTest.AllZeroIdentityRejectedWithoutSocketEffects ..................   Passed    0.04 sec
+      Start 250: native_udp_window_test.GenerationDatagramTest.EveryWrongIdentityByteIsIgnoredBeforeQueueAndAck
+24/37 Test #250: native_udp_window_test.GenerationDatagramTest.EveryWrongIdentityByteIsIgnoredBeforeQueueAndAck .............   Passed    0.06 sec
+      Start 251: native_udp_window_test.GenerationDatagramTest.TruncatedAndExtendedPrefixesHaveNoStateEffects
+25/37 Test #251: native_udp_window_test.GenerationDatagramTest.TruncatedAndExtendedPrefixesHaveNoStateEffects ...............   Passed    0.03 sec
+      Start 252: native_udp_window_test.GenerationDatagramTest.WrongMalformedAndUnknownAcksKeepPendingAndRtt
+26/37 Test #252: native_udp_window_test.GenerationDatagramTest.WrongMalformedAndUnknownAcksKeepPendingAndRtt ................   Passed    0.06 sec
+      Start 253: native_udp_window_test.GenerationDatagramTest.LegacyAndScopedModesDoNotMix
+27/37 Test #253: native_udp_window_test.GenerationDatagramTest.LegacyAndScopedModesDoNotMix .................................   Passed    0.03 sec
+      Start 254: native_udp_window_test.GenerationDatagramTest.ScopedDataReordersAndDeliversExactlyOnce
+28/37 Test #254: native_udp_window_test.GenerationDatagramTest.ScopedDataReordersAndDeliversExactlyOnce .....................   Passed    0.04 sec
+      Start 255: native_udp_window_test.GenerationDatagramTest.ScopedSendByteBudgetIncludesIdentityStorage
+29/37 Test #255: native_udp_window_test.GenerationDatagramTest.ScopedSendByteBudgetIncludesIdentityStorage ..................   Passed    0.04 sec
+      Start 256: native_udp_window_test.GenerationDatagramTest.ScopedReceiveByteBudgetCountsHeaderBeforeAck
+30/37 Test #256: native_udp_window_test.GenerationDatagramTest.ScopedReceiveByteBudgetCountsHeaderBeforeAck .................   Passed    0.04 sec
+      Start 257: native_udp_window_test.GenerationDatagramTest.WrongGenerationExtremeSequenceCannotCloseCurrentWindow
+31/37 Test #257: native_udp_window_test.GenerationDatagramTest.WrongGenerationExtremeSequenceCannotCloseCurrentWindow .......   Passed    0.04 sec
+      Start 258: native_udp_window_test.GenerationDatagramTest.LostAckRetransmitsSameScopedPacketWithoutDuplicateDelivery
+32/37 Test #258: native_udp_window_test.GenerationDatagramTest.LostAckRetransmitsSameScopedPacketWithoutDuplicateDelivery ...   Passed    0.04 sec
+      Start 259: native_udp_window_test.GenerationDatagramTest.ScopedRetryExhaustionReleasesBothQueues
+33/37 Test #259: native_udp_window_test.GenerationDatagramTest.ScopedRetryExhaustionReleasesBothQueues ......................   Passed    0.04 sec
+      Start 260: native_udp_window_test.GenerationDatagramTest.CallbackCanReplyAndCloseWithIdentityPreserved
+34/37 Test #260: native_udp_window_test.GenerationDatagramTest.CallbackCanReplyAndCloseWithIdentityPreserved ................   Passed    0.04 sec
+      Start 261: native_udp_window_test.GenerationDatagramTest.RepeatedPhysicalGenerationsCannotReusePreviousPackets
+35/37 Test #261: native_udp_window_test.GenerationDatagramTest.RepeatedPhysicalGenerationsCannotReusePreviousPackets ........   Passed    0.75 sec
+      Start 262: native_udp_window_test.GenerationDatagramTest.SelectiveAcksCannotAdvancePastLostFirstPacket
+36/37 Test #262: native_udp_window_test.GenerationDatagramTest.SelectiveAcksCannotAdvancePastLostFirstPacket ................   Passed    0.05 sec
+      Start 263: native_udp_window_test.GenerationDatagramTest.SelectiveAcksCannotAdvancePastLostMiddlePacket
+37/37 Test #263: native_udp_window_test.GenerationDatagramTest.SelectiveAcksCannotAdvancePastLostMiddlePacket ...............   Passed    0.06 sec
+
+100% tests passed out of 37
+
+Total Test time (real) =   2.72 sec
