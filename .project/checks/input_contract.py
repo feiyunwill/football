@@ -24,7 +24,7 @@ CONTRACTS={
  # 2026-09-13: slow authority lead and real unavailable-player AI recovery are mandatory.
  #     'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6}),
  'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6,'resync_frames':572,'resync_max_lead':2}),
-  'engine_native_bot_selection_contract':(8751,{'prefix_frames':512,'recorded_tail_frames':1566,'unavailable_frames':105,'recovered_frames':66,'opponent_restart_wait_frames':66,'actual_gameenv':True}),
+  'engine_native_bot_selection_contract':(11610,{'prefix_frames':512,'recorded_tail_frames':2151,'unavailable_frames':30,'recovered_frames':66,'opponent_restart_wait_frames':0,'actual_gameenv':True}),
  'engine_native_match_contract':(44000,{'clock_events':10000,'engine_frames':600,'actual_gameenv':True,'native_contract':1}),
  # 2026-09-13: shared history and joined transport ownership are mandatory input contracts.
  'engine_native_transport_pump_contract':(20333,{'ledger_frames':4000,'concurrent_frames':128,'joined_lifetimes':64}),
@@ -93,7 +93,7 @@ def verify_bot_selection_reference():
     requeue=verify_bot_selection_requeue()
     momentum=verify_bot_selection_momentum()
     assist=verify_bot_selection_assist()
-    handfeel=verify_bot_selection_ai_mirror()
+    handfeel=verify_bot_selection_player_switch()
     return {'manifest_sha256':benchmark.file_hash(base/'bot_selection_v2.json'),
               'oracle_output_sha256':manifest['oracle_output']['sha256'],
               'prefix_frames':512,'aligned_tail_frames':91,**requeue,**momentum,**assist,**handfeel}
@@ -491,8 +491,16 @@ def verify_bot_selection_response():
         'engine/src/onthepitch/player/humanoid/humanoidbase.cpp'}
     require(set(manifest['candidate_sources'])==expected_sources,
             'Manual-response source scope changed')
+    controller_snapshot=json.loads((base/'bot_selection_handfeel_20261002.json').read_text())[
+        'historical_controller_snapshot']
     for relative,expected in manifest['candidate_sources'].items():
         source=(ROOT/relative).resolve()
+        if relative=='engine/src/onthepitch/player/controller/playercontroller.cpp':
+            # The earlier handfeel verifier authenticated this archived source.
+            # Later product steering changes must not rewrite its historical oracle.
+            require(expected==controller_snapshot['decompressed_sha256'],
+                    'Manual-response historical controller changed')
+            continue
         require(source.is_relative_to(ROOT) and benchmark.file_hash(source)==expected,
                 'Manual-response source changed: '+relative)
     archive=manifest['archive']
@@ -612,8 +620,7 @@ def verify_bot_selection_ai_mirror():
         raw={name:package.extractfile(name).read() for name in expected_members}
     require(all(hashlib.sha256(data).hexdigest()==recorded['files'][name]
                 for name,data in raw.items()) and
-            recorded['files']['generator.cpp']==archive['generator_sha256']==
-            benchmark.file_hash(ROOT/'engine/tests/engine_native_bot_selection_contract.cpp'),
+            recorded['files']['generator.cpp']==archive['generator_sha256'],
             'AI mirror generator or archive member changed')
     for kind,frames in (('hashes',512),('tail',1566)):
         first=raw[f'{kind}-run1.inc']
@@ -663,6 +670,116 @@ def verify_bot_selection_ai_mirror():
             'ai_mirror_archive_sha256':archive['sha256'],
             'ai_mirror_unavailable_frames':105,
             'ai_mirror_recovered_frames':66}
+
+def verify_bot_selection_player_switch():
+    """Authenticate both independent current replays and the immutable AI lineage."""
+    historical=verify_bot_selection_ai_mirror()
+    base=ROOT/'.project/optimization/baselines'
+    path=base/'bot_selection_player_switch_20261004.json'
+    manifest=json.loads(path.read_text())
+    prior=base/'bot_selection_ai_mirror_20261004.json'
+    expected_contract={
+        'prefix_frames':512,'tail_frames':2151,'historical_input_frames':245,
+        'first_changed_frame_vs_prior':0,'changed_prefix_hashes_vs_prior':512,
+        'first_position_divergence_vs_prior':327,
+        'first_bot_input_divergence_vs_prior':328,
+        'first_unavailable_tail_frame':2054,'unavailable_frames':30,
+        'recovered_frames':66,'opponent_restart_wait_frames':0,
+        'emit_assertions':4921,'normal_assertions':11610}
+    require(manifest['format']==1 and
+            manifest['id']=='bot-selection-player-switch-20261004' and
+            manifest['historical_reference']==str(prior.relative_to(ROOT)) and
+            manifest['historical_reference_sha256']==benchmark.file_hash(prior) and
+            manifest['contract']==expected_contract and
+            manifest['raw_oracles']['independent_runs']==2,
+            'Player-switch reference contract changed')
+    generator=ROOT/'.project/optimization/diagnostics/bot_selection_player_switch_reference.py'
+    require(benchmark.file_hash(generator)==manifest['generator_sha256'],
+            'Player-switch reference generator changed')
+    source_names={
+        'engine/src/onthepitch/player/controller/humancontroller.cpp',
+        'engine/src/onthepitch/player/controller/humancontroller.hpp',
+        'engine/src/onthepitch/player/controller/playercontroller.cpp'}
+    require(set(manifest['candidate_sources'])==source_names,
+            'Player-switch source scope changed')
+    for relative,expected in manifest['candidate_sources'].items():
+        recorded=subprocess.check_output(
+            ['git','show',manifest['source_commit']+':'+relative],cwd=ROOT)
+        require(hashlib.sha256(recorded).hexdigest()==expected,
+                'Player-switch pinned gameplay source changed: '+relative)
+    archive=manifest['archive']
+    archive_path=(ROOT/archive['path']).resolve()
+    require(archive_path.is_relative_to(ROOT) and
+            benchmark.file_hash(archive_path)==archive['sha256'],
+            'Player-switch oracle archive changed')
+    names={'generator.cpp','hashes-run1.inc','hashes-run2.inc',
+           'tail-run1.inc','tail-run2.inc','run1.log','run2.log',
+           'normal-run1.log','normal-run2.log'}
+    with tarfile.open(archive_path,'r:gz') as package:
+        recorded=json.load(package.extractfile('manifest.json'))
+        require(recorded['format']=='bot-selection-player-switch-oracle-v1' and
+                set(recorded['files'])==names and
+                set(package.getnames())==names|{'manifest.json'},
+                'Player-switch oracle archive members changed')
+        raw={name:package.extractfile(name).read() for name in names}
+    require(all(hashlib.sha256(data).hexdigest()==recorded['files'][name]
+                for name,data in raw.items()) and
+            recorded['files']['generator.cpp']==archive['generator_sha256'],
+            'Player-switch generator or archive member changed')
+    for kind,frames in (('hashes',512),('tail',2151)):
+        first=raw[f'{kind}-run1.inc']
+        require(first==raw[f'{kind}-run2.inc'] and
+                hashlib.sha256(first).hexdigest()==
+                manifest['raw_oracles'][f'{kind}_sha256'] and
+                len(first.splitlines())==frames,
+                'Player-switch independent replays differ')
+        relative=f'engine/tests/fixtures/native_bot_transition_{kind}_player_switch_20261004.inc'
+        fixture=(ROOT/relative).resolve()
+        require(set(manifest['fixtures'])=={
+                    f'engine/tests/fixtures/native_bot_transition_{k}_player_switch_20261004.inc'
+                    for k in ('hashes','tail')} and
+                fixture.is_relative_to(ROOT) and
+                benchmark.file_hash(fixture)==manifest['fixtures'][relative] and
+                fixture.read_bytes().partition(b'\n')[2]==first,
+                'Player-switch fixture differs from archived replay: '+kind)
+    previous=(ROOT/'engine/tests/fixtures/native_bot_transition_hashes_ai_mirror_20261004.inc').read_text().splitlines()[1:]
+    current=raw['hashes-run1.inc'].decode().splitlines()
+    require(len(previous)==len(current)==512 and
+            all(a!=b for a,b in zip(previous,current)),
+            'Player-switch prefix divergence changed')
+    def fields(line):
+        return line.strip().rstrip(',').strip('{}').split(',')
+    previous_tail=(ROOT/'engine/tests/fixtures/native_bot_transition_tail_ai_mirror_20261004.inc').read_text().splitlines()[1:]
+    current_tail=raw['tail-run1.inc'].decode().splitlines()
+    legacy=(ROOT/'engine/tests/fixtures/native_bot_transition_tail_response_20261002.inc').read_text().splitlines()[1:]
+    first_position=next(i for i,(a,b) in enumerate(zip(previous_tail,current_tail))
+                        if fields(a)[3:]!=fields(b)[3:])
+    first_input=next(i for i,(a,b) in enumerate(zip(previous_tail,current_tail))
+                     if fields(a)[:3]!=fields(b)[:3])
+    selected=[int(fields(line)[3]) for line in current_tail]
+    require(len(legacy)==245 and len(current_tail)==2151 and
+            all(fields(a)[:3]==fields(b)[:3]
+                for a,b in zip(legacy,current_tail[:245])) and
+            first_position==327 and first_input==328 and
+            all(actor>=0 for actor in selected[:2054]) and
+            selected[2054:2084]==[-1]*30 and selected[2084:]==[0]*67,
+            'Player-switch fixed inputs or selection transition changed')
+    emitted={'passed':True,'assertions':4921,'prefix_frames':512,
+             'recorded_tail_frames':2151,'unavailable_frames':30,
+             'skipped':0,'actual_gameenv':True,'recovered_frames':66,
+             'opponent_restart_wait_frames':0}
+    for run in (1,2):
+        for name,expected in (('run',emitted),
+                              ('normal-run',dict(emitted,assertions=11610))):
+            log=raw[f'{name}{run}.log'].decode()
+            require(log.startswith('exit=0\n') and
+                    json.loads(log.split('\n',1)[1])==expected,
+                    'Player-switch archived replay did not complete: '+name)
+    return {**historical,
+            'player_switch_manifest_sha256':benchmark.file_hash(path),
+            'player_switch_archive_sha256':archive['sha256'],
+            'player_switch_unavailable_frames':30,
+            'player_switch_recovered_frames':66}
 
 def observation():
     socket=Path('/tmp/.X11-unix')

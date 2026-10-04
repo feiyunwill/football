@@ -1,0 +1,45 @@
+{
+  "format": 7,
+  "id": "soak-player-switch-pre-ecs-query-20261004",
+  "source_commit": "db15fe00930f1510ae0f52512a0aa799fa410043",
+  "source_identity": "3e77539e0a549c214c97f14061871ba8aaf2a5014baa90ced95ea051040cdf0a",
+  "semantic_patch": ".project/optimization/baselines/ecs_v5_perf_rollback.patch",
+  "semantic_patch_sha256": "814b8d908df94136c89ad08c1b1a731b4d3a6f481a148e28d1c299eb842c7ed9",
+  "ecs_reference_sha256": "99d10b46d353af25b0338847fb3465dbafe5705e6cf56363e491b0bd45d79e82",
+  "derived_from_soak_v6_sha256": "0359e72fbc6f61dc095249f58562fa03a1a162213c0fb675a67a686b722fa91c",
+  "derived_from_reference_sha256": "0c49ddcb78c44208a2d5ea488d2fea7deee920ea890509706cd847b899f56f90",
+  "measurement_contract": {
+    "seeds": [
+      42,
+      43
+    ],
+    "warmup_frames": 1000,
+    "measured_frames": 36000,
+    "logical_p99_ns_below": 50000000,
+    "rss_growth_bytes_max": 4194304,
+    "rss_quarter_drift_bytes_max": 262144,
+    "rss_late_plateau_bytes_max": 262144
+  },
+  "reference_artifact": ".project/optimization/baselines/soak_v7_reference.json.gz",
+  "artifact_sha256": "06849f37706e5f38ac0607c6496ce37a3af4530d24c6069c054a16096ea42a45",
+  "artifact_uncompressed_sha256": "e14322e2d4838c8d1dd0fb28c27060251f3897d55293b04617c21051cc4805b3",
+  "validation_artifact": ".project/optimization/evidence/soak_v7_validation_20261004.tar.gz",
+  "validation_artifact_sha256": "ebb0c3c5c768a32146b9f02dda9d11c763c6fd347c8d495426ef36441fd41eef",
+  "generator_sha256": "9edc1c81d2a63192b31dcfa9dac6428ef840a9a844556116157c409db789d20b",
+  "binaries": {
+    "engine": {
+      "path": ".project/optimization/baselines/ecs_v9_engine.so.gz",
+      "compressed_sha256": "f67c2ed18bd0315230445a3687b99b9c653f584ba26eaea6c264fa182663cf98",
+      "sha256": "fb255ee72e8b2ad75a56e219e6ae3143d623fa970ebfde77b69d0aa94a3e0daa",
+      "compressed_bytes": 1159336,
+      "bytes": 3087760
+    },
+    "benchmark": {
+      "path": ".project/optimization/baselines/soak_v2_benchmark.gz",
+      "compressed_sha256": "1dea510145e189168e307d4e9431d43f4ed37f5bd7c0f3d04631473c111bda40",
+      "sha256": "39fd6ad932508c0dd795651588838a2adf674a43991ad752d9ea012f4ae5f5e7",
+      "compressed_bytes": 90614,
+      "bytes": 209624
+    }
+  }
+}

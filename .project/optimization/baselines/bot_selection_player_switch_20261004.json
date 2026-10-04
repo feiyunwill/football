@@ -1,0 +1,42 @@
+{
+  "archive": {
+    "generator_sha256": "d7950a0abc4363fb89ddc59f44c3f414bd39ed5d80147321e9d3786a17a5b8ec",
+    "path": ".project/optimization/baselines/bot_selection_player_switch_20261004.tar.gz",
+    "sha256": "49d4793ec3008bf3e8aeb6fd8f946582a9f5170deddd184fcd683c2c6890aaaf"
+  },
+  "candidate_sources": {
+    "engine/src/onthepitch/player/controller/humancontroller.cpp": "9be1968482e13376fe72ee4a95bbd59df49b77c418e9817f6efa88a122e7db9d",
+    "engine/src/onthepitch/player/controller/humancontroller.hpp": "632fb2c3c756fdc6eb2b339f0e0224b4c5a0e03cf10c33c7bc8b6f6a0fbef7c0",
+    "engine/src/onthepitch/player/controller/playercontroller.cpp": "067ff8612591e2d24f85b8e9f4582da2187858a5f56a9bdc6eaeda4aea372fd9"
+  },
+  "contract": {
+    "changed_prefix_hashes_vs_prior": 512,
+    "emit_assertions": 4921,
+    "first_bot_input_divergence_vs_prior": 328,
+    "first_changed_frame_vs_prior": 0,
+    "first_position_divergence_vs_prior": 327,
+    "first_unavailable_tail_frame": 2054,
+    "historical_input_frames": 245,
+    "normal_assertions": 11610,
+    "opponent_restart_wait_frames": 0,
+    "prefix_frames": 512,
+    "recovered_frames": 66,
+    "tail_frames": 2151,
+    "unavailable_frames": 30
+  },
+  "fixtures": {
+    "engine/tests/fixtures/native_bot_transition_hashes_player_switch_20261004.inc": "08e7c0171a040e0b385551e885bb16bcb08e4786785cc503af0ff700ab70468f",
+    "engine/tests/fixtures/native_bot_transition_tail_player_switch_20261004.inc": "c53ae8fbd44bf9bd5def7a8efbbe46a1229fa92ad61f2ff880ee22ca85f65e41"
+  },
+  "format": 1,
+  "generator_sha256": "a6463aaecc5b910401331258228488a106900fb67734e26f311d3c545ea0567e",
+  "historical_reference": ".project/optimization/baselines/bot_selection_ai_mirror_20261004.json",
+  "historical_reference_sha256": "2ab1db01d239f64a77d57447d039092846d682d4bd352995c300f2ce93a702f9",
+  "id": "bot-selection-player-switch-20261004",
+  "raw_oracles": {
+    "hashes_sha256": "f9f604fc770c53c181ba1dc726697f697c1b6ef34f01720c0aba70293bb12832",
+    "independent_runs": 2,
+    "tail_sha256": "7e23e022d3c1d1f06f8cdb93f17aa789a5316259634928b8a66397c471cca9f8"
+  },
+  "source_commit": "db15fe00930f1510ae0f52512a0aa799fa410043"
+}

@@ -75,23 +75,43 @@ def analyze(output, actions, require_causal=False):
                             "status": "set_piece_at_press",
                             "game_mode": timing[baseline["index"]].get("game_mode")})
             continue
-        initial_vx = timing[baseline["index"]]["vx"]
         admitted = next((row for row in active if row["x"] == direction and
-                         row["owned"] == baseline["owned"] and
+                         row["owned"] >= 0 and
+                         timing[row["index"]]["in_play"] and
                          timing[row["index"]].get("game_mode") == 0), None)
         if admitted is None:
             samples.append({"index": action["index"], "direction": direction,
-                            "status": "no_admitted_step_for_same_player"})
+                            "status": "no_admitted_controllable_step"})
             continue
+        controlled = admitted["owned"]
+        handoff = controlled != baseline["owned"]
+        # Auto-selection can change the controlled player between the physical
+        # press and its first consumed step. The new player's first command
+        # records actual velocity before this input changes their motion.
+        first_handoff_command = (next((row for row in human_commands
+                                       if start <= row["time"] < admitted["time"] and
+                                       row.get("team_id") == 0 and
+                                       row.get("team_index") == controlled and
+                                       row.get("hid_x") == direction and
+                                       math.isfinite(row.get("actual_vx", math.nan))), None)
+                                 if handoff else None)
+        if handoff and first_handoff_command is None:
+            samples.append({"index": action["index"], "direction": direction,
+                            "status": "handoff_without_human_command",
+                            "selection_owned_player": baseline["owned"],
+                            "owned_player": controlled})
+            continue
+        initial_vx = (first_handoff_command["actual_vx"] if handoff else
+                      timing[baseline["index"]]["vx"])
         raw_response = next((row for row in active if row["index"] >= admitted["index"] and
-                          row["owned"] == baseline["owned"] and
+                          row["owned"] == controlled and
                           timing[row["index"]]["in_play"] and
                           timing[row["index"]].get("game_mode") == 0 and
                           direction * (timing[row["index"]]["vx"] - initial_vx) >= .1), None)
         aligned_commands = [row for row in human_commands
                             if start <= row["time"] < end and
                             row.get("team_id") == 0 and
-                            row.get("team_index") == baseline["owned"] and
+                            row.get("team_index") == controlled and
                             row.get("hid_x") == direction and
                             row.get("desired_x", 0) * direction > .1 and
                             row.get("desired_speed", 0) > 0]
@@ -122,15 +142,24 @@ def analyze(output, actions, require_causal=False):
                                if choice is not None),
                               key=lambda choice: choice["time"], default=None)
         causal_start = accepted_action["time"] if accepted_action else None
-        pre_selection = next((row for row in reversed(steps)
-                              if causal_start is not None and row["time"] < causal_start and
-                              row["owned"] == baseline["owned"]), baseline)
-        pre_selection_vx = timing[pre_selection["index"]]["vx"]
+        if handoff:
+            pre_selection_command = next((row for row in reversed(human_commands)
+                                          if causal_start is not None and
+                                          row["time"] < causal_start and
+                                          row.get("player") == first_handoff_command["player"] and
+                                          math.isfinite(row.get("actual_vx", math.nan))),
+                                         first_handoff_command)
+            pre_selection_vx = pre_selection_command["actual_vx"]
+        else:
+            pre_selection = next((row for row in reversed(steps)
+                                  if causal_start is not None and row["time"] < causal_start and
+                                  row["owned"] == controlled), baseline)
+            pre_selection_vx = timing[pre_selection["index"]]["vx"]
         responded = raw_response
         if require_causal:
             responded = (next((row for row in active
                                if row["index"] >= admitted["index"] and
-                               row["owned"] == baseline["owned"] and
+                                row["owned"] == controlled and
                                row["time"] >= causal_start and
                                timing[row["index"]]["in_play"] and
                                timing[row["index"]].get("game_mode") == 0 and
@@ -146,7 +175,9 @@ def analyze(output, actions, require_causal=False):
                                      max(row["start"], start)) for row in rendering) / 1e6
         samples.append({"index": action["index"], "direction": direction,
                         "status": "admitted" if responded else "no_velocity_response",
-                        "owned_player": baseline["owned"],
+                         "owned_player": controlled,
+                         "selection_owned_player": baseline["owned"],
+                         "selection_handoff": handoff,
                         "input_admission_ms": round((admitted["time"] - start) / 1e6, 3),
                         "render_blocking_before_admission_ms": round(render_blocking_ms, 3),
                         "raw_velocity_change_ms": (round((raw_response["time"] - start) / 1e6, 3)
@@ -169,7 +200,8 @@ def analyze(output, actions, require_causal=False):
                                                          if following_response else None),
                         "baseline_vx": initial_vx,
                         "response_vx": timing[responded["index"]]["vx"] if responded else None,
-                        "baseline_x": baseline["player_x"],
+                         "baseline_x": (first_handoff_command["player_x"] if handoff else
+                                        baseline["player_x"]),
                         "response_x": responded["player_x"] if responded else None,
                         "admitted_step": admitted["index"],
                         "response_step": responded["index"] if responded else None,

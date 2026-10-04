@@ -14,10 +14,10 @@ const Recorded legacy_tail[]={
 #include "fixtures/native_bot_transition_tail_response_20261002.inc"
 };
 const Recorded tail[]={
-#include "fixtures/native_bot_transition_tail_ai_mirror_20261004.inc"
+#include "fixtures/native_bot_transition_tail_player_switch_20261004.inc"
 };
 const std::uint64_t semantic_hashes[]={
-#include "fixtures/native_bot_transition_hashes_ai_mirror_20261004.inc"
+#include "fixtures/native_bot_transition_hashes_player_switch_20261004.inc"
 };
 const char replay_bytes[] =
 #include "fixtures/native_bot_transition_replay_20260913.inc"

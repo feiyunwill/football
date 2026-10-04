@@ -1,0 +1,156 @@
+[
+  {
+    "argv": [
+      "cmake",
+      "-S",
+      "engine",
+      "-B",
+      "/tmp/football-optimization-native",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DBUILD_PYTHON_BINDINGS=OFF",
+      "-DFOOTBALL_ENABLE_SANITIZERS=OFF",
+      "-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin"
+    ],
+    "log": "configure.log",
+    "started": 1791075340.786834,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "cmake",
+      "-S",
+      "engine",
+      "-B",
+      "/tmp/football-optimization-native",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DBUILD_PYTHON_BINDINGS=OFF",
+      "-DFOOTBALL_ENABLE_SANITIZERS=OFF",
+      "-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin"
+    ],
+    "pid": 770031,
+    "seconds": 0.4153517450031359,
+    "returncode": 0,
+    "log_sha256": "55bde562b18ce1c0fdf0de34b779e0f0f438500172bb4c042aa0e99ce4308f2b"
+  },
+  {
+    "argv": [
+      "cmake",
+      "--build",
+      "/tmp/football-optimization-native",
+      "-j",
+      "1",
+      "--target",
+      "engine_soak_benchmark"
+    ],
+    "log": "build.log",
+    "started": 1791075341.2026358,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "cmake",
+      "--build",
+      "/tmp/football-optimization-native",
+      "-j",
+      "1",
+      "--target",
+      "engine_soak_benchmark"
+    ],
+    "pid": 770033,
+    "seconds": 0.41529422299936414,
+    "returncode": 0,
+    "log_sha256": "4f856bd7e30e79a0f0112632297f83e9d5b688616780c0874060c2ca7a4ba19e"
+  },
+  {
+    "argv": [
+      "/usr/sbin/c++",
+      "--version"
+    ],
+    "log": "compiler.log",
+    "started": 1791075341.6332889,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/usr/sbin/c++",
+      "--version"
+    ],
+    "pid": 770093,
+    "seconds": 0.0014751490016351454,
+    "returncode": 0,
+    "log_sha256": "0b52fa36f98d1a1ff3f77256f64c13ac7e2264cf7f072ea7943756a0ef378028"
+  },
+  {
+    "argv": [
+      "ldd",
+      "/tmp/football-optimization-native/bin/engine_soak_benchmark"
+    ],
+    "log": "linkage.log",
+    "started": 1791075341.6428044,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "ldd",
+      "/tmp/football-optimization-native/bin/engine_soak_benchmark"
+    ],
+    "pid": 770094,
+    "seconds": 0.007861650999984704,
+    "returncode": 0,
+    "log_sha256": "2c16302efa106573377205a069067e8897bce7003e9ab2c136b848e91bf1248b"
+  },
+  {
+    "argv": [
+      "/tmp/football-optimization-native/bin/engine_soak_benchmark",
+      "42",
+      "0"
+    ],
+    "log": "seed-42.log",
+    "started": 1791075341.6515262,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/tmp/football-optimization-native/bin/engine_soak_benchmark",
+      "42",
+      "0"
+    ],
+    "pid": 770099,
+    "seconds": 234.42152150900074,
+    "returncode": 0,
+    "log_sha256": "9b1aad06b993b1ec5320932ff39546a3dca1af1477b22bb9322ebafd5ee05148"
+  },
+  {
+    "argv": [
+      "/tmp/football-optimization-native/bin/engine_soak_benchmark",
+      "43",
+      "0"
+    ],
+    "log": "seed-43.log",
+    "started": 1791075576.116095,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/tmp/football-optimization-native/bin/engine_soak_benchmark",
+      "43",
+      "0"
+    ],
+    "pid": 771087,
+    "seconds": 251.82377115499548,
+    "returncode": 0,
+    "log_sha256": "a9a8055481d3d34d3d1ecdad81bc3dcfc637c990ede94110d242ebbdc593c161"
+  }
+]

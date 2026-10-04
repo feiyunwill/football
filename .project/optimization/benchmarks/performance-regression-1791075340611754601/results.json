@@ -1,0 +1,200 @@
+[
+  {
+    "passed": true,
+    "assertions": 106,
+    "skipped": 0,
+    "seed": 42,
+    "cpu": 0,
+    "requirements": {
+      "steady_p99": true,
+      "every_window_p99": true,
+      "rss_growth": true,
+      "rss_quarter_drift": true,
+      "rss_late_plateau": true
+    },
+    "failures": [],
+    "trajectory_compared": true,
+    "measured_frames": 36000,
+    "simulated_seconds": 3600.0,
+    "measured_loop_wall_seconds": 111.098450814,
+    "steady": {
+      "count": 36000,
+      "sum_ns": 110611571335,
+      "p50_ns": 3028112,
+      "p95_ns": 5224176,
+      "p99_ns": 6197173,
+      "max_ns": 11020586
+    },
+    "active_frames": 32640,
+    "final_hash": "51b3730c6d05b112",
+    "frame_windows": [
+      {
+        "count": 6000,
+        "sum_ns": 18191825415,
+        "max_ns": 9956869,
+        "p50_ns": 2954932,
+        "p95_ns": 5090674,
+        "p99_ns": 6072455
+      },
+      {
+        "count": 6000,
+        "sum_ns": 18126847834,
+        "max_ns": 10596233,
+        "p50_ns": 2949147,
+        "p95_ns": 5213372,
+        "p99_ns": 6360713
+      },
+      {
+        "count": 6000,
+        "sum_ns": 17784727092,
+        "max_ns": 11020586,
+        "p50_ns": 2925281,
+        "p95_ns": 5154173,
+        "p99_ns": 6163218
+      },
+      {
+        "count": 6000,
+        "sum_ns": 17707988937,
+        "max_ns": 9547626,
+        "p50_ns": 2935838,
+        "p95_ns": 5079224,
+        "p99_ns": 6128867
+      },
+      {
+        "count": 6000,
+        "sum_ns": 19809771437,
+        "max_ns": 8903226,
+        "p50_ns": 3242453,
+        "p95_ns": 5389797,
+        "p99_ns": 6117570
+      },
+      {
+        "count": 6000,
+        "sum_ns": 18990410620,
+        "max_ns": 9237067,
+        "p50_ns": 3129850,
+        "p95_ns": 5406909,
+        "p99_ns": 6320667
+      }
+    ],
+    "rss": {
+      "warm": 91455488,
+      "observed_max": 91529216,
+      "final": 91529216,
+      "closed": 87486464,
+      "process_peak_including_replay": 91316224,
+      "first_quarter_median": 91525120.0,
+      "last_quarter_median": 91529216.0,
+      "window_medians": [
+        91521024.0,
+        91525120.0,
+        91525120.0,
+        91529216.0,
+        91529216.0,
+        91529216.0
+      ]
+    },
+    "scope": "native headless logical steps and observed process RSS; simulated duration is distinct from wall-clock duration; does not establish renderer, network or input-device latency",
+    "log": "seed-42.log",
+    "log_sha256": "9b1aad06b993b1ec5320932ff39546a3dca1af1477b22bb9322ebafd5ee05148"
+  },
+  {
+    "passed": true,
+    "assertions": 106,
+    "skipped": 0,
+    "seed": 43,
+    "cpu": 0,
+    "requirements": {
+      "steady_p99": true,
+      "every_window_p99": true,
+      "rss_growth": true,
+      "rss_quarter_drift": true,
+      "rss_late_plateau": true
+    },
+    "failures": [],
+    "trajectory_compared": true,
+    "measured_frames": 36000,
+    "simulated_seconds": 3600.0,
+    "measured_loop_wall_seconds": 132.755352475,
+    "steady": {
+      "count": 36000,
+      "sum_ns": 132075116262,
+      "p50_ns": 3570807,
+      "p95_ns": 6173550,
+      "p99_ns": 7844829,
+      "max_ns": 26863267
+    },
+    "active_frames": 32757,
+    "final_hash": "fc3aa73695b37591",
+    "frame_windows": [
+      {
+        "count": 6000,
+        "sum_ns": 21774505202,
+        "max_ns": 18684466,
+        "p50_ns": 3500748,
+        "p95_ns": 6098725,
+        "p99_ns": 8160154
+      },
+      {
+        "count": 6000,
+        "sum_ns": 21478160319,
+        "max_ns": 12053317,
+        "p50_ns": 3547140,
+        "p95_ns": 6066487,
+        "p99_ns": 7630593
+      },
+      {
+        "count": 6000,
+        "sum_ns": 23001301822,
+        "max_ns": 26863267,
+        "p50_ns": 3719471,
+        "p95_ns": 6202708,
+        "p99_ns": 7747432
+      },
+      {
+        "count": 6000,
+        "sum_ns": 20764879889,
+        "max_ns": 10177839,
+        "p50_ns": 3426252,
+        "p95_ns": 5950353,
+        "p99_ns": 7418290
+      },
+      {
+        "count": 6000,
+        "sum_ns": 22121468628,
+        "max_ns": 11423319,
+        "p50_ns": 3571692,
+        "p95_ns": 6148325,
+        "p99_ns": 7547812
+      },
+      {
+        "count": 6000,
+        "sum_ns": 22934800402,
+        "max_ns": 18422609,
+        "p50_ns": 3674861,
+        "p95_ns": 6480325,
+        "p99_ns": 8402270
+      }
+    ],
+    "rss": {
+      "warm": 91549696,
+      "observed_max": 91623424,
+      "final": 91623424,
+      "closed": 87580672,
+      "process_peak_including_replay": 91152384,
+      "first_quarter_median": 91619328.0,
+      "last_quarter_median": 91623424.0,
+      "window_medians": [
+        91615232.0,
+        91619328.0,
+        91619328.0,
+        91623424.0,
+        91623424.0,
+        91623424.0
+      ]
+    },
+    "scope": "native headless logical steps and observed process RSS; simulated duration is distinct from wall-clock duration; does not establish renderer, network or input-device latency",
+    "log": "seed-43.log",
+    "log_sha256": "a9a8055481d3d34d3d1ecdad81bc3dcfc637c990ede94110d242ebbdc593c161"
+  }
+]

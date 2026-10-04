@@ -1,0 +1,1046 @@
+[
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/sdl_surface.cpp.o -c /root/work_space/football/engine/src/base/sdl_surface.cpp",
+    "file": "/root/work_space/football/engine/src/base/sdl_surface.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/sdl_surface.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/utils.cpp.o -c /root/work_space/football/engine/src/base/utils.cpp",
+    "file": "/root/work_space/football/engine/src/base/utils.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/utils.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/properties.cpp.o -c /root/work_space/football/engine/src/base/properties.cpp",
+    "file": "/root/work_space/football/engine/src/base/properties.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/properties.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/log.cpp.o -c /root/work_space/football/engine/src/base/log.cpp",
+    "file": "/root/work_space/football/engine/src/base/log.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/log.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/geometry/triangle.cpp.o -c /root/work_space/football/engine/src/base/geometry/triangle.cpp",
+    "file": "/root/work_space/football/engine/src/base/geometry/triangle.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/geometry/triangle.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/geometry/line.cpp.o -c /root/work_space/football/engine/src/base/geometry/line.cpp",
+    "file": "/root/work_space/football/engine/src/base/geometry/line.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/geometry/line.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/geometry/trianglemeshutils.cpp.o -c /root/work_space/football/engine/src/base/geometry/trianglemeshutils.cpp",
+    "file": "/root/work_space/football/engine/src/base/geometry/trianglemeshutils.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/geometry/trianglemeshutils.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/geometry/aabb.cpp.o -c /root/work_space/football/engine/src/base/geometry/aabb.cpp",
+    "file": "/root/work_space/football/engine/src/base/geometry/aabb.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/geometry/aabb.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/geometry/plane.cpp.o -c /root/work_space/football/engine/src/base/geometry/plane.cpp",
+    "file": "/root/work_space/football/engine/src/base/geometry/plane.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/geometry/plane.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/math/vector3.cpp.o -c /root/work_space/football/engine/src/base/math/vector3.cpp",
+    "file": "/root/work_space/football/engine/src/base/math/vector3.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/math/vector3.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/math/matrix3.cpp.o -c /root/work_space/football/engine/src/base/math/matrix3.cpp",
+    "file": "/root/work_space/football/engine/src/base/math/matrix3.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/math/matrix3.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/math/bluntmath.cpp.o -c /root/work_space/football/engine/src/base/math/bluntmath.cpp",
+    "file": "/root/work_space/football/engine/src/base/math/bluntmath.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/math/bluntmath.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/math/quaternion.cpp.o -c /root/work_space/football/engine/src/base/math/quaternion.cpp",
+    "file": "/root/work_space/football/engine/src/base/math/quaternion.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/math/quaternion.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/baselib.dir/src/base/math/matrix4.cpp.o -c /root/work_space/football/engine/src/base/math/matrix4.cpp",
+    "file": "/root/work_space/football/engine/src/base/math/matrix4.cpp",
+    "output": "CMakeFiles/baselib.dir/src/base/math/matrix4.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/render_service.cpp.o -c /root/work_space/football/engine/src/systems/graphics/render_service.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/render_service.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/render_service.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_object.cpp.o -c /root/work_space/football/engine/src/systems/graphics/graphics_object.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/graphics_object.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_object.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_task.cpp.o -c /root/work_space/football/engine/src/systems/graphics/graphics_task.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/graphics_task.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_task.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_geometry.cpp.o -c /root/work_space/football/engine/src/systems/graphics/objects/graphics_geometry.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/objects/graphics_geometry.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_geometry.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_camera.cpp.o -c /root/work_space/football/engine/src/systems/graphics/objects/graphics_camera.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/objects/graphics_camera.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_camera.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_light.cpp.o -c /root/work_space/football/engine/src/systems/graphics/objects/graphics_light.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/objects/graphics_light.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_light.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_overlay2d.cpp.o -c /root/work_space/football/engine/src/systems/graphics/objects/graphics_overlay2d.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/objects/graphics_overlay2d.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/objects/graphics_overlay2d.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_scene.cpp.o -c /root/work_space/football/engine/src/systems/graphics/graphics_scene.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/graphics_scene.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_scene.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/resources/vertexbuffer.cpp.o -c /root/work_space/football/engine/src/systems/graphics/resources/vertexbuffer.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/resources/vertexbuffer.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/resources/vertexbuffer.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/resources/texture.cpp.o -c /root/work_space/football/engine/src/systems/graphics/resources/texture.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/resources/texture.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/resources/texture.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/rendering/opengl_renderer3d.cpp.o -c /root/work_space/football/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/rendering/opengl_renderer3d.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_system.cpp.o -c /root/work_space/football/engine/src/systems/graphics/graphics_system.cpp",
+    "file": "/root/work_space/football/engine/src/systems/graphics/graphics_system.cpp",
+    "output": "CMakeFiles/systemsgraphicslib.dir/src/systems/graphics/graphics_system.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/loaderslib.dir/src/loaders/imageloader.cpp.o -c /root/work_space/football/engine/src/loaders/imageloader.cpp",
+    "file": "/root/work_space/football/engine/src/loaders/imageloader.cpp",
+    "output": "CMakeFiles/loaderslib.dir/src/loaders/imageloader.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/loaderslib.dir/src/loaders/aseloader.cpp.o -c /root/work_space/football/engine/src/loaders/aseloader.cpp",
+    "file": "/root/work_space/football/engine/src/loaders/aseloader.cpp",
+    "output": "CMakeFiles/loaderslib.dir/src/loaders/aseloader.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/typeslib.dir/src/types/spatial.cpp.o -c /root/work_space/football/engine/src/types/spatial.cpp",
+    "file": "/root/work_space/football/engine/src/types/spatial.cpp",
+    "output": "CMakeFiles/typeslib.dir/src/types/spatial.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/typeslib.dir/src/types/refcounted.cpp.o -c /root/work_space/football/engine/src/types/refcounted.cpp",
+    "file": "/root/work_space/football/engine/src/types/refcounted.cpp",
+    "output": "CMakeFiles/typeslib.dir/src/types/refcounted.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/typeslib.dir/src/types/observer.cpp.o -c /root/work_space/football/engine/src/types/observer.cpp",
+    "file": "/root/work_space/football/engine/src/types/observer.cpp",
+    "output": "CMakeFiles/typeslib.dir/src/types/observer.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/typeslib.dir/src/types/command.cpp.o -c /root/work_space/football/engine/src/types/command.cpp",
+    "file": "/root/work_space/football/engine/src/types/command.cpp",
+    "output": "CMakeFiles/typeslib.dir/src/types/command.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/objectfactory.cpp.o -c /root/work_space/football/engine/src/scene/objectfactory.cpp",
+    "file": "/root/work_space/football/engine/src/scene/objectfactory.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/objectfactory.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/scene2d/scene2d.cpp.o -c /root/work_space/football/engine/src/scene/scene2d/scene2d.cpp",
+    "file": "/root/work_space/football/engine/src/scene/scene2d/scene2d.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/scene2d/scene2d.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/scene.cpp.o -c /root/work_space/football/engine/src/scene/scene.cpp",
+    "file": "/root/work_space/football/engine/src/scene/scene.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/scene.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/objects/image2d.cpp.o -c /root/work_space/football/engine/src/scene/objects/image2d.cpp",
+    "file": "/root/work_space/football/engine/src/scene/objects/image2d.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/objects/image2d.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/objects/light.cpp.o -c /root/work_space/football/engine/src/scene/objects/light.cpp",
+    "file": "/root/work_space/football/engine/src/scene/objects/light.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/objects/light.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/objects/geometry.cpp.o -c /root/work_space/football/engine/src/scene/objects/geometry.cpp",
+    "file": "/root/work_space/football/engine/src/scene/objects/geometry.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/objects/geometry.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/objects/skybox.cpp.o -c /root/work_space/football/engine/src/scene/objects/skybox.cpp",
+    "file": "/root/work_space/football/engine/src/scene/objects/skybox.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/objects/skybox.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/objects/camera.cpp.o -c /root/work_space/football/engine/src/scene/objects/camera.cpp",
+    "file": "/root/work_space/football/engine/src/scene/objects/camera.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/objects/camera.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/scene3d/scene3d.cpp.o -c /root/work_space/football/engine/src/scene/scene3d/scene3d.cpp",
+    "file": "/root/work_space/football/engine/src/scene/scene3d/scene3d.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/scene3d/scene3d.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/scene3d/node.cpp.o -c /root/work_space/football/engine/src/scene/scene3d/node.cpp",
+    "file": "/root/work_space/football/engine/src/scene/scene3d/node.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/scene3d/node.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/object.cpp.o -c /root/work_space/football/engine/src/scene/object.cpp",
+    "file": "/root/work_space/football/engine/src/scene/object.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/object.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/resources/surface.cpp.o -c /root/work_space/football/engine/src/scene/resources/surface.cpp",
+    "file": "/root/work_space/football/engine/src/scene/resources/surface.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/resources/surface.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/resources/geometrydata.cpp.o -c /root/work_space/football/engine/src/scene/resources/geometrydata.cpp",
+    "file": "/root/work_space/football/engine/src/scene/resources/geometrydata.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/resources/geometrydata.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/utilslib.dir/src/utils/orbitcamera.cpp.o -c /root/work_space/football/engine/src/utils/orbitcamera.cpp",
+    "file": "/root/work_space/football/engine/src/utils/orbitcamera.cpp",
+    "output": "CMakeFiles/utilslib.dir/src/utils/orbitcamera.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/utilslib.dir/src/utils/animation.cpp.o -c /root/work_space/football/engine/src/utils/animation.cpp",
+    "file": "/root/work_space/football/engine/src/utils/animation.cpp",
+    "output": "CMakeFiles/utilslib.dir/src/utils/animation.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/utilslib.dir/src/utils/splitgeometry.cpp.o -c /root/work_space/football/engine/src/utils/splitgeometry.cpp",
+    "file": "/root/work_space/football/engine/src/utils/splitgeometry.cpp",
+    "output": "CMakeFiles/utilslib.dir/src/utils/splitgeometry.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/utilslib.dir/src/utils/objectloader.cpp.o -c /root/work_space/football/engine/src/utils/objectloader.cpp",
+    "file": "/root/work_space/football/engine/src/utils/objectloader.cpp",
+    "output": "CMakeFiles/utilslib.dir/src/utils/objectloader.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/utilslib.dir/src/utils/xmlloader.cpp.o -c /root/work_space/football/engine/src/utils/xmlloader.cpp",
+    "file": "/root/work_space/football/engine/src/utils/xmlloader.cpp",
+    "output": "CMakeFiles/utilslib.dir/src/utils/xmlloader.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/utilslib.dir/src/utils/animationextensions/footballanimationextension.cpp.o -c /root/work_space/football/engine/src/utils/animationextensions/footballanimationextension.cpp",
+    "file": "/root/work_space/football/engine/src/utils/animationextensions/footballanimationextension.cpp",
+    "output": "CMakeFiles/utilslib.dir/src/utils/animationextensions/footballanimationextension.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gui2lib.dir/src/utils/gui2/style.cpp.o -c /root/work_space/football/engine/src/utils/gui2/style.cpp",
+    "file": "/root/work_space/football/engine/src/utils/gui2/style.cpp",
+    "output": "CMakeFiles/gui2lib.dir/src/utils/gui2/style.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/caption.cpp.o -c /root/work_space/football/engine/src/utils/gui2/widgets/caption.cpp",
+    "file": "/root/work_space/football/engine/src/utils/gui2/widgets/caption.cpp",
+    "output": "CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/caption.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/image.cpp.o -c /root/work_space/football/engine/src/utils/gui2/widgets/image.cpp",
+    "file": "/root/work_space/football/engine/src/utils/gui2/widgets/image.cpp",
+    "output": "CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/image.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/root.cpp.o -c /root/work_space/football/engine/src/utils/gui2/widgets/root.cpp",
+    "file": "/root/work_space/football/engine/src/utils/gui2/widgets/root.cpp",
+    "output": "CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/root.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/frame.cpp.o -c /root/work_space/football/engine/src/utils/gui2/widgets/frame.cpp",
+    "file": "/root/work_space/football/engine/src/utils/gui2/widgets/frame.cpp",
+    "output": "CMakeFiles/gui2lib.dir/src/utils/gui2/widgets/frame.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gui2lib.dir/src/utils/gui2/view.cpp.o -c /root/work_space/football/engine/src/utils/gui2/view.cpp",
+    "file": "/root/work_space/football/engine/src/utils/gui2/view.cpp",
+    "output": "CMakeFiles/gui2lib.dir/src/utils/gui2/view.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gui2lib.dir/src/utils/gui2/windowmanager.cpp.o -c /root/work_space/football/engine/src/utils/gui2/windowmanager.cpp",
+    "file": "/root/work_space/football/engine/src/utils/gui2/windowmanager.cpp",
+    "output": "CMakeFiles/gui2lib.dir/src/utils/gui2/windowmanager.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gui2lib.dir/src/utils/gui2/guitask.cpp.o -c /root/work_space/football/engine/src/utils/gui2/guitask.cpp",
+    "file": "/root/work_space/football/engine/src/utils/gui2/guitask.cpp",
+    "output": "CMakeFiles/gui2lib.dir/src/utils/gui2/guitask.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gui2lib.dir/src/utils/gui2/page.cpp.o -c /root/work_space/football/engine/src/utils/gui2/page.cpp",
+    "file": "/root/work_space/football/engine/src/utils/gui2/page.cpp",
+    "output": "CMakeFiles/gui2lib.dir/src/utils/gui2/page.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/blunted2.dir/src/blunted.cpp.o -c /root/work_space/football/engine/src/blunted.cpp",
+    "file": "/root/work_space/football/engine/src/blunted.cpp",
+    "output": "CMakeFiles/blunted2.dir/src/blunted.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/ecs_systems.cpp.o -c /root/work_space/football/engine/src/onthepitch/ecs_systems.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/ecs_systems.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/ecs_systems.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/ecs_direct_systems.cpp.o -c /root/work_space/football/engine/src/onthepitch/ecs_direct_systems.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/ecs_direct_systems.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/ecs_direct_systems.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/ecs/system_batch.cpp.o -c /root/work_space/football/engine/src/ecs/system_batch.cpp",
+    "file": "/root/work_space/football/engine/src/ecs/system_batch.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/ecs/system_batch.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/officials.cpp.o -c /root/work_space/football/engine/src/onthepitch/officials.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/officials.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/officials.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid_utils.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/humanoid/humanoid_utils.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/humanoid/humanoid_utils.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid_utils.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/animcollection.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/humanoid/animcollection.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/humanoid/animcollection.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/animcollection.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoidbase.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/humanoid/humanoidbase.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/humanoid/humanoidbase.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoidbase.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/humanoid/humanoid.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/humanoid/humanoid.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoid.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/playerofficial.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/playerofficial.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/playerofficial.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/playerofficial.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/player.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/player.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/player.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/player.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/playerbase.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/playerbase.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/playerbase.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/playerbase.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/controller/playercontroller.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/controller/playercontroller.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/controller/playercontroller.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/controller/playercontroller.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/controller/humancontroller.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/controller/humancontroller.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/controller/humancontroller.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/controller/humancontroller.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/controller/icontroller.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/controller/icontroller.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/controller/icontroller.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/controller/icontroller.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/controller/refereecontroller.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/controller/refereecontroller.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/controller/refereecontroller.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/controller/refereecontroller.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/controller/elizacontroller.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/controller/elizacontroller.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/controller/elizacontroller.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/controller/elizacontroller.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/strategy.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/controller/strategies/strategy.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/controller/strategies/strategy.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/strategy.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_mid.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/controller/strategies/offtheball/default_mid.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/controller/strategies/offtheball/default_mid.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_mid.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_off.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/controller/strategies/offtheball/default_off.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/controller/strategies/offtheball/default_off.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_off.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_def.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/controller/strategies/offtheball/default_def.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/controller/strategies/offtheball/default_def.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/default_def.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/goalie_default.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/controller/strategies/offtheball/goalie_default.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/controller/strategies/offtheball/goalie_default.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/controller/strategies/offtheball/goalie_default.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/humangamer.cpp.o -c /root/work_space/football/engine/src/onthepitch/humangamer.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/humangamer.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/humangamer.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/ball.cpp.o -c /root/work_space/football/engine/src/onthepitch/ball.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/ball.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/ball.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/match.cpp.o -c /root/work_space/football/engine/src/onthepitch/match.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/match.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/match.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/referee.cpp.o -c /root/work_space/football/engine/src/onthepitch/referee.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/referee.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/referee.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/mentalimage.cpp.o -c /root/work_space/football/engine/src/onthepitch/AIsupport/mentalimage.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/AIsupport/mentalimage.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/mentalimage.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/AIfunctions.cpp.o -c /root/work_space/football/engine/src/onthepitch/AIsupport/AIfunctions.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/AIsupport/AIfunctions.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/AIsupport/AIfunctions.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/proceduralpitch.cpp.o -c /root/work_space/football/engine/src/onthepitch/proceduralpitch.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/proceduralpitch.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/proceduralpitch.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/team.cpp.o -c /root/work_space/football/engine/src/onthepitch/team.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/team.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/team.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/teamAIcontroller.cpp.o -c /root/work_space/football/engine/src/onthepitch/teamAIcontroller.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/teamAIcontroller.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/teamAIcontroller.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/menulib.dir/src/menu/startmatch/loadingmatch.cpp.o -c /root/work_space/football/engine/src/menu/startmatch/loadingmatch.cpp",
+    "file": "/root/work_space/football/engine/src/menu/startmatch/loadingmatch.cpp",
+    "output": "CMakeFiles/menulib.dir/src/menu/startmatch/loadingmatch.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/menulib.dir/src/menu/pagefactory.cpp.o -c /root/work_space/football/engine/src/menu/pagefactory.cpp",
+    "file": "/root/work_space/football/engine/src/menu/pagefactory.cpp",
+    "output": "CMakeFiles/menulib.dir/src/menu/pagefactory.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/menulib.dir/src/menu/menutask.cpp.o -c /root/work_space/football/engine/src/menu/menutask.cpp",
+    "file": "/root/work_space/football/engine/src/menu/menutask.cpp",
+    "output": "CMakeFiles/menulib.dir/src/menu/menutask.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/menulib.dir/src/menu/ingame/radar.cpp.o -c /root/work_space/football/engine/src/menu/ingame/radar.cpp",
+    "file": "/root/work_space/football/engine/src/menu/ingame/radar.cpp",
+    "output": "CMakeFiles/menulib.dir/src/menu/ingame/radar.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/menulib.dir/src/menu/ingame/gamepage.cpp.o -c /root/work_space/football/engine/src/menu/ingame/gamepage.cpp",
+    "file": "/root/work_space/football/engine/src/menu/ingame/gamepage.cpp",
+    "output": "CMakeFiles/menulib.dir/src/menu/ingame/gamepage.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/menulib.dir/src/menu/ingame/scoreboard.cpp.o -c /root/work_space/football/engine/src/menu/ingame/scoreboard.cpp",
+    "file": "/root/work_space/football/engine/src/menu/ingame/scoreboard.cpp",
+    "output": "CMakeFiles/menulib.dir/src/menu/ingame/scoreboard.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/menulib.dir/src/menu/mainmenu.cpp.o -c /root/work_space/football/engine/src/menu/mainmenu.cpp",
+    "file": "/root/work_space/football/engine/src/menu/mainmenu.cpp",
+    "output": "CMakeFiles/menulib.dir/src/menu/mainmenu.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/menulib.dir/src/menu/settings.cpp.o -c /root/work_space/football/engine/src/menu/settings.cpp",
+    "file": "/root/work_space/football/engine/src/menu/settings.cpp",
+    "output": "CMakeFiles/menulib.dir/src/menu/settings.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/menulib.dir/src/menu/pausemenu.cpp.o -c /root/work_space/football/engine/src/menu/pausemenu.cpp",
+    "file": "/root/work_space/football/engine/src/menu/pausemenu.cpp",
+    "output": "CMakeFiles/menulib.dir/src/menu/pausemenu.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/datalib.dir/src/data/matchdata.cpp.o -c /root/work_space/football/engine/src/data/matchdata.cpp",
+    "file": "/root/work_space/football/engine/src/data/matchdata.cpp",
+    "output": "CMakeFiles/datalib.dir/src/data/matchdata.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/datalib.dir/src/data/playerdata.cpp.o -c /root/work_space/football/engine/src/data/playerdata.cpp",
+    "file": "/root/work_space/football/engine/src/data/playerdata.cpp",
+    "output": "CMakeFiles/datalib.dir/src/data/playerdata.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/datalib.dir/src/data/teamdata.cpp.o -c /root/work_space/football/engine/src/data/teamdata.cpp",
+    "file": "/root/work_space/football/engine/src/data/teamdata.cpp",
+    "output": "CMakeFiles/datalib.dir/src/data/teamdata.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/cmake/backtrace.cpp.o -c /root/work_space/football/engine/src/cmake/backtrace.cpp",
+    "file": "/root/work_space/football/engine/src/cmake/backtrace.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/cmake/backtrace.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/cmake/file.cpp.o -c /root/work_space/football/engine/src/cmake/file.cpp",
+    "file": "/root/work_space/football/engine/src/cmake/file.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/cmake/file.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/misc/perlin.cpp.o -c /root/work_space/football/engine/src/misc/perlin.cpp",
+    "file": "/root/work_space/football/engine/src/misc/perlin.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/misc/perlin.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/misc/hungarian.cpp.o -c /root/work_space/football/engine/src/misc/hungarian.cpp",
+    "file": "/root/work_space/football/engine/src/misc/hungarian.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/misc/hungarian.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/gametask.cpp.o -c /root/work_space/football/engine/src/gametask.cpp",
+    "file": "/root/work_space/football/engine/src/gametask.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/gametask.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/utils.cpp.o -c /root/work_space/football/engine/src/utils.cpp",
+    "file": "/root/work_space/football/engine/src/utils.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/utils.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/main.cpp.o -c /root/work_space/football/engine/src/main.cpp",
+    "file": "/root/work_space/football/engine/src/main.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/main.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/gamedefines.cpp.o -c /root/work_space/football/engine/src/gamedefines.cpp",
+    "file": "/root/work_space/football/engine/src/gamedefines.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/gamedefines.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/defines.cpp.o -c /root/work_space/football/engine/src/defines.cpp",
+    "file": "/root/work_space/football/engine/src/defines.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/defines.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/frame_sync/input_codec.cpp.o -c /root/work_space/football/engine/src/frame_sync/input_codec.cpp",
+    "file": "/root/work_space/football/engine/src/frame_sync/input_codec.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/frame_sync/input_codec.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/game_load.cpp.o -c /root/work_space/football/engine/src/game_load.cpp",
+    "file": "/root/work_space/football/engine/src/game_load.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/game_load.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/ai/ai_keyboard.cpp.o -c /root/work_space/football/engine/src/ai/ai_keyboard.cpp",
+    "file": "/root/work_space/football/engine/src/ai/ai_keyboard.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/ai/ai_keyboard.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/ai/ai_tactics.cpp.o -c /root/work_space/football/engine/src/ai/ai_tactics.cpp",
+    "file": "/root/work_space/football/engine/src/ai/ai_tactics.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/ai/ai_tactics.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dfootball_engine_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_engine.dir/src/game_env.cpp.o -c /root/work_space/football/engine/src/game_env.cpp",
+    "file": "/root/work_space/football/engine/src/game_env.cpp",
+    "output": "CMakeFiles/football_engine.dir/src/game_env.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/football_native_recovery.dir/src/frame_sync/native_recovery_digest.cpp.o -c /root/work_space/football/engine/src/frame_sync/native_recovery_digest.cpp",
+    "file": "/root/work_space/football/engine/src/frame_sync/native_recovery_digest.cpp",
+    "output": "CMakeFiles/football_native_recovery.dir/src/frame_sync/native_recovery_digest.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -DFOOTBALL_NATIVE_DEFAULT_SERVER=1 -DFOOTBALL_NATIVE_UDP_SERVER=1 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/football_server.dir/src/frame_sync/integrated_server.cpp.o -c /root/work_space/football/engine/src/frame_sync/integrated_server.cpp",
+    "file": "/root/work_space/football/engine/src/frame_sync/integrated_server.cpp",
+    "output": "CMakeFiles/football_server.dir/src/frame_sync/integrated_server.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -DFOOTBALL_NATIVE_UDP_CLIENT=1 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/football_client.dir/src/frame_sync/integrated_client.cpp.o -c /root/work_space/football/engine/src/frame_sync/integrated_client.cpp",
+    "file": "/root/work_space/football/engine/src/frame_sync/integrated_client.cpp",
+    "output": "CMakeFiles/football_client.dir/src/frame_sync/integrated_client.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/football_client_tcp.dir/src/frame_sync/integrated_client.cpp.o -c /root/work_space/football/engine/src/frame_sync/integrated_client.cpp",
+    "file": "/root/work_space/football/engine/src/frame_sync/integrated_client.cpp",
+    "output": "CMakeFiles/football_client_tcp.dir/src/frame_sync/integrated_client.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/football_server_tcp.dir/src/frame_sync/integrated_server.cpp.o -c /root/work_space/football/engine/src/frame_sync/integrated_server.cpp",
+    "file": "/root/work_space/football/engine/src/frame_sync/integrated_server.cpp",
+    "output": "CMakeFiles/football_server_tcp.dir/src/frame_sync/integrated_server.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/football_lobby.dir/src/frame_sync/lobby_server.cpp.o -c /root/work_space/football/engine/src/frame_sync/lobby_server.cpp",
+    "file": "/root/work_space/football/engine/src/frame_sync/lobby_server.cpp",
+    "output": "CMakeFiles/football_lobby.dir/src/frame_sync/lobby_server.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/headless_match.dir/src/frame_sync/headless_match.cpp.o -c /root/work_space/football/engine/src/frame_sync/headless_match.cpp",
+    "file": "/root/work_space/football/engine/src/frame_sync/headless_match.cpp",
+    "output": "CMakeFiles/headless_match.dir/src/frame_sync/headless_match.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/standalone_game.dir/src/frame_sync/standalone_game.cpp.o -c /root/work_space/football/engine/src/frame_sync/standalone_game.cpp",
+    "file": "/root/work_space/football/engine/src/frame_sync/standalone_game.cpp",
+    "output": "CMakeFiles/standalone_game.dir/src/frame_sync/standalone_game.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_state_contract.dir/tests/engine_state_contract.cpp.o -c /root/work_space/football/engine/tests/engine_state_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_state_contract.cpp",
+    "output": "CMakeFiles/engine_state_contract.dir/tests/engine_state_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_lifetime_contract.dir/tests/engine_lifetime_contract.cpp.o -c /root/work_space/football/engine/tests/engine_lifetime_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_lifetime_contract.cpp",
+    "output": "CMakeFiles/engine_lifetime_contract.dir/tests/engine_lifetime_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_simulation_contract.dir/tests/engine_simulation_contract.cpp.o -c /root/work_space/football/engine/tests/engine_simulation_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_simulation_contract.cpp",
+    "output": "CMakeFiles/engine_simulation_contract.dir/tests/engine_simulation_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_architecture_contract.dir/tests/engine_architecture_contract.cpp.o -c /root/work_space/football/engine/tests/engine_architecture_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_architecture_contract.cpp",
+    "output": "CMakeFiles/engine_architecture_contract.dir/tests/engine_architecture_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_memory_contract.dir/tests/engine_memory_contract.cpp.o -c /root/work_space/football/engine/tests/engine_memory_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_memory_contract.cpp",
+    "output": "CMakeFiles/engine_memory_contract.dir/tests/engine_memory_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_match_benchmark.dir/tests/engine_match_benchmark.cpp.o -c /root/work_space/football/engine/tests/engine_match_benchmark.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_match_benchmark.cpp",
+    "output": "CMakeFiles/engine_match_benchmark.dir/tests/engine_match_benchmark.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_soak_benchmark.dir/tests/engine_soak_benchmark.cpp.o -c /root/work_space/football/engine/tests/engine_soak_benchmark.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_soak_benchmark.cpp",
+    "output": "CMakeFiles/engine_soak_benchmark.dir/tests/engine_soak_benchmark.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_animation_query_contract.dir/tests/engine_animation_query_contract.cpp.o -c /root/work_space/football/engine/tests/engine_animation_query_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_animation_query_contract.cpp",
+    "output": "CMakeFiles/engine_animation_query_contract.dir/tests/engine_animation_query_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_ai_reachability_contract.dir/tests/engine_ai_reachability_contract.cpp.o -c /root/work_space/football/engine/tests/engine_ai_reachability_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_ai_reachability_contract.cpp",
+    "output": "CMakeFiles/engine_ai_reachability_contract.dir/tests/engine_ai_reachability_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dengine_hotspot_profile_EXPORTS -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/engine_hotspot_profile.dir/tests/engine_hotspot_profile.cpp.o -c /root/work_space/football/engine/tests/engine_hotspot_profile.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_hotspot_profile.cpp",
+    "output": "CMakeFiles/engine_hotspot_profile.dir/tests/engine_hotspot_profile.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_tcp_contract.dir/tests/engine_tcp_contract.cpp.o -c /root/work_space/football/engine/tests/engine_tcp_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_tcp_contract.cpp",
+    "output": "CMakeFiles/engine_tcp_contract.dir/tests/engine_tcp_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_runtime_contract.dir/tests/engine_runtime_contract.cpp.o -c /root/work_space/football/engine/tests/engine_runtime_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_runtime_contract.cpp",
+    "output": "CMakeFiles/engine_runtime_contract.dir/tests/engine_runtime_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_render_pose_contract.dir/tests/engine_render_pose_contract.cpp.o -c /root/work_space/football/engine/tests/engine_render_pose_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_render_pose_contract.cpp",
+    "output": "CMakeFiles/engine_render_pose_contract.dir/tests/engine_render_pose_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_frame_capture_contract.dir/tests/engine_frame_capture_contract.cpp.o -c /root/work_space/football/engine/tests/engine_frame_capture_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_frame_capture_contract.cpp",
+    "output": "CMakeFiles/engine_frame_capture_contract.dir/tests/engine_frame_capture_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_render_budget_benchmark.dir/tests/engine_render_budget_benchmark.cpp.o -c /root/work_space/football/engine/tests/engine_render_budget_benchmark.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_render_budget_benchmark.cpp",
+    "output": "CMakeFiles/engine_render_budget_benchmark.dir/tests/engine_render_budget_benchmark.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_tcp_client_contract.dir/tests/engine_tcp_client_contract.cpp.o -c /root/work_space/football/engine/tests/engine_tcp_client_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_tcp_client_contract.cpp",
+    "output": "CMakeFiles/engine_tcp_client_contract.dir/tests/engine_tcp_client_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_input_buffer_contract.dir/tests/engine_native_input_buffer_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_input_buffer_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_input_buffer_contract.cpp",
+    "output": "CMakeFiles/engine_native_input_buffer_contract.dir/tests/engine_native_input_buffer_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_input_gameenv_contract.dir/tests/engine_native_input_gameenv_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_input_gameenv_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_input_gameenv_contract.cpp",
+    "output": "CMakeFiles/engine_native_input_gameenv_contract.dir/tests/engine_native_input_gameenv_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_input_admission_contract.dir/tests/engine_native_input_admission_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_input_admission_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_input_admission_contract.cpp",
+    "output": "CMakeFiles/engine_native_input_admission_contract.dir/tests/engine_native_input_admission_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_presentation_contract.dir/tests/engine_native_presentation_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_presentation_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_presentation_contract.cpp",
+    "output": "CMakeFiles/engine_native_presentation_contract.dir/tests/engine_native_presentation_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_server_input_window_contract.dir/tests/engine_server_input_window_contract.cpp.o -c /root/work_space/football/engine/tests/engine_server_input_window_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_server_input_window_contract.cpp",
+    "output": "CMakeFiles/engine_server_input_window_contract.dir/tests/engine_server_input_window_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_clock_replay_contract.dir/tests/engine_native_clock_replay_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_clock_replay_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_clock_replay_contract.cpp",
+    "output": "CMakeFiles/engine_native_clock_replay_contract.dir/tests/engine_native_clock_replay_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -I/root/.cache/football-input-x11-20260913-a/root-relocated/usr/include -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_sdl_input_contract.dir/tests/engine_native_sdl_input_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_sdl_input_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_sdl_input_contract.cpp",
+    "output": "CMakeFiles/engine_native_sdl_input_contract.dir/tests/engine_native_sdl_input_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_match_contract.dir/tests/engine_native_match_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_match_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_match_contract.cpp",
+    "output": "CMakeFiles/engine_native_match_contract.dir/tests/engine_native_match_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_transport_pump_contract.dir/tests/engine_native_transport_pump_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_transport_pump_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_transport_pump_contract.cpp",
+    "output": "CMakeFiles/engine_native_transport_pump_contract.dir/tests/engine_native_transport_pump_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_render_service_contract.dir/tests/engine_render_service_contract.cpp.o -c /root/work_space/football/engine/tests/engine_render_service_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_render_service_contract.cpp",
+    "output": "CMakeFiles/engine_render_service_contract.dir/tests/engine_render_service_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_input_timeline_contract.dir/tests/engine_native_input_timeline_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_input_timeline_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_input_timeline_contract.cpp",
+    "output": "CMakeFiles/engine_native_input_timeline_contract.dir/tests/engine_native_input_timeline_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_ui_owner_contract.dir/tests/engine_native_ui_owner_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_ui_owner_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_ui_owner_contract.cpp",
+    "output": "CMakeFiles/engine_native_ui_owner_contract.dir/tests/engine_native_ui_owner_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_publication_clock_contract.dir/tests/engine_native_publication_clock_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_publication_clock_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_publication_clock_contract.cpp",
+    "output": "CMakeFiles/engine_native_publication_clock_contract.dir/tests/engine_native_publication_clock_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_bot_selection_contract.dir/tests/engine_native_bot_selection_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_bot_selection_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_bot_selection_contract.cpp",
+    "output": "CMakeFiles/engine_native_bot_selection_contract.dir/tests/engine_native_bot_selection_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -Dengine_native_window_trace_EXPORTS -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -I/root/.cache/football-input-x11-20260913-a/root-relocated/usr/include -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/engine_native_window_trace.dir/tests/engine_native_window_trace.cpp.o -c /root/work_space/football/engine/tests/engine_native_window_trace.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_window_trace.cpp",
+    "output": "CMakeFiles/engine_native_window_trace.dir/tests/engine_native_window_trace.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_ai_touch_contract.dir/tests/engine_ai_touch_contract.cpp.o -c /root/work_space/football/engine/tests/engine_ai_touch_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_ai_touch_contract.cpp",
+    "output": "CMakeFiles/engine_ai_touch_contract.dir/tests/engine_ai_touch_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_ai_tactics_contract.dir/tests/engine_ai_tactics_contract.cpp.o -c /root/work_space/football/engine/tests/engine_ai_tactics_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_ai_tactics_contract.cpp",
+    "output": "CMakeFiles/engine_ai_tactics_contract.dir/tests/engine_ai_tactics_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_ai_tactics_roles_contract.dir/tests/engine_ai_tactics_roles_contract.cpp.o -c /root/work_space/football/engine/tests/engine_ai_tactics_roles_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_ai_tactics_roles_contract.cpp",
+    "output": "CMakeFiles/engine_ai_tactics_roles_contract.dir/tests/engine_ai_tactics_roles_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_ai_match_mirror_contract.dir/tests/engine_ai_match_mirror_contract.cpp.o -c /root/work_space/football/engine/tests/engine_ai_match_mirror_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_ai_match_mirror_contract.cpp",
+    "output": "CMakeFiles/engine_ai_match_mirror_contract.dir/tests/engine_ai_match_mirror_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_ai_tactical_state_contract.dir/tests/engine_ai_tactical_state_contract.cpp.o -c /root/work_space/football/engine/tests/engine_ai_tactical_state_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_ai_tactical_state_contract.cpp",
+    "output": "CMakeFiles/engine_ai_tactical_state_contract.dir/tests/engine_ai_tactical_state_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_tactics_replay_contract.dir/tests/engine_native_tactics_replay_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_tactics_replay_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_tactics_replay_contract.cpp",
+    "output": "CMakeFiles/engine_native_tactics_replay_contract.dir/tests/engine_native_tactics_replay_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_native_recovery_tcp_contract.dir/tests/engine_native_recovery_tcp_contract.cpp.o -c /root/work_space/football/engine/tests/engine_native_recovery_tcp_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_native_recovery_tcp_contract.cpp",
+    "output": "CMakeFiles/engine_native_recovery_tcp_contract.dir/tests/engine_native_recovery_tcp_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_prepared_lifecycle_contract.dir/tests/engine_prepared_lifecycle_contract.cpp.o -c /root/work_space/football/engine/tests/engine_prepared_lifecycle_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_prepared_lifecycle_contract.cpp",
+    "output": "CMakeFiles/engine_prepared_lifecycle_contract.dir/tests/engine_prepared_lifecycle_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_tracker_owner_contract.dir/tests/engine_tracker_owner_contract.cpp.o -c /root/work_space/football/engine/tests/engine_tracker_owner_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_tracker_owner_contract.cpp",
+    "output": "CMakeFiles/engine_tracker_owner_contract.dir/tests/engine_tracker_owner_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_loading_cancellation_contract.dir/tests/engine_loading_cancellation_contract.cpp.o -c /root/work_space/football/engine/tests/engine_loading_cancellation_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_loading_cancellation_contract.cpp",
+    "output": "CMakeFiles/engine_loading_cancellation_contract.dir/tests/engine_loading_cancellation_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_loading_seat_contract.dir/tests/engine_loading_seat_contract.cpp.o -c /root/work_space/football/engine/tests/engine_loading_seat_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_loading_seat_contract.cpp",
+    "output": "CMakeFiles/engine_loading_seat_contract.dir/tests/engine_loading_seat_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_loading_tcp_contract.dir/tests/engine_loading_tcp_contract.cpp.o -c /root/work_space/football/engine/tests/engine_loading_tcp_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_loading_tcp_contract.cpp",
+    "output": "CMakeFiles/engine_loading_tcp_contract.dir/tests/engine_loading_tcp_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_loading_client_drain_contract.dir/tests/engine_loading_client_drain_contract.cpp.o -c /root/work_space/football/engine/tests/engine_loading_client_drain_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_loading_client_drain_contract.cpp",
+    "output": "CMakeFiles/engine_loading_client_drain_contract.dir/tests/engine_loading_client_drain_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_ase_parser_contract.dir/tests/engine_ase_parser_contract.cpp.o -c /root/work_space/football/engine/tests/engine_ase_parser_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_ase_parser_contract.cpp",
+    "output": "CMakeFiles/engine_ase_parser_contract.dir/tests/engine_ase_parser_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++  -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_file_read_contract.dir/tests/engine_file_read_contract.cpp.o -c /root/work_space/football/engine/tests/engine_file_read_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_file_read_contract.cpp",
+    "output": "CMakeFiles/engine_file_read_contract.dir/tests/engine_file_read_contract.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -DFOOTBALL_NATIVE_UDP_CLIENT=1 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/football_client_udp.dir/src/frame_sync/integrated_client.cpp.o -c /root/work_space/football/engine/src/frame_sync/integrated_client.cpp",
+    "file": "/root/work_space/football/engine/src/frame_sync/integrated_client.cpp",
+    "output": "CMakeFiles/football_client_udp.dir/src/frame_sync/integrated_client.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -DFOOTBALL_NATIVE_UDP_SERVER=1 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/football_server_udp.dir/src/frame_sync/integrated_server.cpp.o -c /root/work_space/football/engine/src/frame_sync/integrated_server.cpp",
+    "file": "/root/work_space/football/engine/src/frame_sync/integrated_server.cpp",
+    "output": "CMakeFiles/football_server_udp.dir/src/frame_sync/integrated_server.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-optimization-native",
+    "command": "/usr/sbin/c++ -DFOOTBALL_NATIVE_UDP_CLIENT=1 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -isystem /usr/include/SDL2 -O3 -DNDEBUG -std=c++23 -fPIE -o CMakeFiles/engine_loading_udp_client_drain_contract.dir/tests/engine_loading_client_drain_contract.cpp.o -c /root/work_space/football/engine/tests/engine_loading_client_drain_contract.cpp",
+    "file": "/root/work_space/football/engine/tests/engine_loading_client_drain_contract.cpp",
+    "output": "CMakeFiles/engine_loading_udp_client_drain_contract.dir/tests/engine_loading_client_drain_contract.cpp.o"
+  }
+]

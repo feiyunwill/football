@@ -53,7 +53,61 @@ def analyze_case(**kwargs):
         return feel_window.analyze(Path(directory), actions, require_causal=True)["samples"][0]
 
 
+def handoff_case(include_command=True, include_selection=True):
+    start = 1_000_000_000
+    ms = 1_000_000
+    rows = [
+        {"kind": "step", "time": start - 10 * ms, "index": 0, "x": 0,
+         "owned": 7, "player_x": 0.0},
+        {"kind": "step_timing", "index": 0, "vx": 0.0,
+         "in_play": True, "game_mode": 0},
+        {"kind": "step", "time": start + 10 * ms, "index": 1, "x": -1,
+         "owned": 2, "player_x": 0.03},
+        {"kind": "step_timing", "index": 1, "vx": 0.6,
+         "in_play": True, "game_mode": 0},
+        {"kind": "swap", "time": start + 15 * ms, "index": 1,
+         "render_owner": True},
+    ]
+    if include_command:
+        rows.extend([
+            {"kind": "human_command", "time": start + 5 * ms,
+             "player": "successor", "team_id": 0, "team_index": 2,
+             "hid_x": -1, "desired_x": 0.5, "desired_speed": 5,
+             "actual_vx": 1.0, "player_x": 0.0},
+            {"kind": "human_command", "time": start + 7 * ms,
+             "player": "successor", "team_id": 0, "team_index": 2,
+             "hid_x": -1, "desired_x": -1, "desired_speed": 5,
+             "actual_vx": 0.9, "player_x": 0.01},
+        ])
+    if include_selection:
+        rows.append({"kind": "anim_select", "time": start + 8 * ms,
+                     "player": "successor", "command_type": 1,
+                     "desired_x": -1, "accepted": True})
+    actions = [{"index": 0, "start_ns": start,
+                "end_ns": start + 100 * ms, "direction": -1}]
+    with TemporaryDirectory() as directory, patch.object(feel_window, "events", return_value=rows):
+        return feel_window.analyze(Path(directory), actions, require_causal=True)["samples"][0]
+
+
 class CausalTouchTests(unittest.TestCase):
+    def test_selection_handoff_uses_successor_precommand_velocity(self):
+        sample = handoff_case()
+        self.assertEqual(sample["status"], "admitted")
+        self.assertEqual(sample["selection_owned_player"], 7)
+        self.assertEqual(sample["owned_player"], 2)
+        self.assertTrue(sample["selection_handoff"])
+        self.assertEqual(sample["pre_selection_vx"], 0.9)
+        self.assertEqual(sample["first_accepted_aligned_action_ms"], 8)
+        self.assertEqual(sample["velocity_response_ms"], 10)
+
+    def test_handoff_needs_real_command_and_accepted_action(self):
+        self.assertEqual(handoff_case(include_command=False)["status"],
+                         "handoff_without_human_command")
+        sample = handoff_case(include_selection=False)
+        self.assertEqual(sample["status"], "no_velocity_response")
+        self.assertEqual(sample["raw_velocity_change_ms"], 10)
+        self.assertIsNone(sample["velocity_response_ms"])
+
     def test_new_touch_with_same_player_contact_is_causal(self):
         sample = analyze_case()
         self.assertEqual(sample["velocity_response_ms"], 30)

@@ -1,0 +1,14 @@
+{
+  "command_launcher": {
+    "path": "/usr/bin/env",
+    "sha256": "08392d72874da4f88c619ee717f2b4a5f28ba0534ff8cf1083fb2edc37d6475f"
+  },
+  "libfootball_engine.so": {
+    "path": "/tmp/football-optimization-native/libfootball_engine.so",
+    "sha256": "f1a86a762dde01ba999f32011966425c9d610cf411ad8f58357f652894f71d64"
+  },
+  "bin/engine_soak_benchmark": {
+    "path": "/tmp/football-optimization-native/bin/engine_soak_benchmark",
+    "sha256": "39fd6ad932508c0dd795651588838a2adf674a43991ad752d9ea012f4ae5f5e7"
+  }
+}
