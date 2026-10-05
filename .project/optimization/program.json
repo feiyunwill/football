@@ -2461,9 +2461,55 @@
     },
     {
       "id": "product_package",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "干净目录启动、资源定位和错误诊断；版本/协议/构建信息写入报告"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/product_package.py"
+      ],
+      "kind": "json",
+      "min_assertions": 20,
+      "timeout": 3600,
+      "sources": [
+        "setup.py",
+        "pyproject.toml",
+        "requirements.txt",
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/CMakeModules/*.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/__init__.py",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "gfootball/**/*.py",
+        ".project/checks/product_package.py",
+        ".project/checks/gymnasium_package_probe.py",
+        ".project/checks/gym_registration_probe.py",
+        ".project/checks/requirements.txt"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "git"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "DISPLAY",
+        "LD_LIBRARY_PATH",
+        "PYTHONPATH",
+        "GFOOTBALL_DATA_DIR",
+        "GFOOTBALL_FONT",
+        "PIP_INDEX_URL",
+        "PYTHONOPTIMIZE"
       ]
     },
     {
