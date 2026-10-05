@@ -61,6 +61,8 @@
 
 相同候选在 llvmpipe 的五帧固定场景中保持模拟状态逐字节一致，但每帧有 **6,050–6,689** 个像素与基线不同，最大通道差 **2–3**，不符合当前精确图像回归。[逐帧差异与哈希](diagnostics/render-fused-ibl-image-20261006/report.json)和[原始图像归档](evidence/render_fused_ibl_image_20261006.zip)已核验（归档 SHA-256：`42ba164e5724fc95350af1c13ab4a7e50f13ed0caa8ad29ef03d7eb843f8fd6f`）。该候选未合入产品代码，也未调整画质基线或门禁；`ms-24.1` 继续未通过。
 
+在恢复原 PBR 着色器后，用[九点 GPU 时间戳补丁](diagnostics/render_post_gpu_timer.patch)进一步拆分几何、光照、Bloom 提取／横向模糊／纵向模糊、自动曝光、色调映射及 FXAA；全部查询仍在 150 帧完成后读取。Intel Arc 140T/D3D12、完整 1080p PBR、真实交换的四次运行中，整帧墙钟 p95 为 **25.431、25.223、25.595、28.673 ms**。Bloom 提取的 GPU p95 为 **2.097–2.884 ms**，FXAA 为 **1.311–3.670 ms**；两次模糊各约 **0.262 ms**，自动曝光约 **0.262 ms**。这些分位数不能相加，时间戳也有约 0.131 ms 的量化阶梯。见[四次运行的原始时间戳与日志](diagnostics/render-post-gpu-profile-20261006/report.json)（报告 SHA-256：`380e1bc009116f510e350684e7c841b2f4f460fed6ecfad4d704ca9bbecc08f8`）。本机下一轮优先检验 Bloom 提取与 FXAA 的等画质优化；当前测量没有改变产品验收结论。
+
 复现这台 WSL 设备上的正式检查：
 
 ```sh

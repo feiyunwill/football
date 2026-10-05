@@ -1,0 +1,174 @@
+diff --git a/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp b/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
+index 08c2409..4cfc29d 100644
+--- a/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
++++ b/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
+@@ -45,6 +45,8 @@
+ #include <algorithm>
+ #include <mutex>
+ #include <stdexcept>
++#include <iostream>
++#include <vector>
+ #include "wrap_SDL.h"
+ 
+ #include "../../../base/geometry/aabb.hpp"
+@@ -69,6 +71,59 @@ struct GLfunctions {
+ // 2026-09-09: GL dispatch belongs to the calling thread and selected context.
+ // GLfunctions mapping;
+ thread_local GLfunctions mapping{};
++namespace {
++struct GpuTimerState {
++  PFNGLGENQUERIESPROC generate = nullptr;
++  PFNGLQUERYCOUNTERPROC counter = nullptr;
++  PFNGLGETQUERYOBJECTUIVPROC available = nullptr;
++  PFNGLGETQUERYOBJECTUI64VPROC result = nullptr;
++  PFNGLDELETEQUERIESPROC destroy = nullptr;
++  std::vector<std::array<GLuint, 9>> frames;
++};
++thread_local GpuTimerState gpu_timer;
++bool GpuTimerEnabled() {
++  static const bool enabled = [] {
++    const char* value = std::getenv("GFOOTBALL_GPU_TIMER_PROFILE");
++    return value && value[0] == '1' && value[1] == '\0';
++  }();
++  return enabled;
++}
++void InitializeGpuTimer() {
++  if (gpu_timer.generate) return;
++  gpu_timer.generate = reinterpret_cast<PFNGLGENQUERIESPROC>(SDL_GL_GetProcAddress("glGenQueries"));
++  gpu_timer.counter = reinterpret_cast<PFNGLQUERYCOUNTERPROC>(SDL_GL_GetProcAddress("glQueryCounter"));
++  gpu_timer.available = reinterpret_cast<PFNGLGETQUERYOBJECTUIVPROC>(SDL_GL_GetProcAddress("glGetQueryObjectuiv"));
++  gpu_timer.result = reinterpret_cast<PFNGLGETQUERYOBJECTUI64VPROC>(SDL_GL_GetProcAddress("glGetQueryObjectui64v"));
++  gpu_timer.destroy = reinterpret_cast<PFNGLDELETEQUERIESPROC>(SDL_GL_GetProcAddress("glDeleteQueries"));
++  if (!gpu_timer.generate || !gpu_timer.counter || !gpu_timer.available ||
++      !gpu_timer.result || !gpu_timer.destroy)
++    throw std::runtime_error("GPU timestamp queries are unavailable");
++}
++}
++extern "C" void FootballDumpGpuProfile() {
++  if (!GpuTimerEnabled()) return;
++  if (gpu_timer.frames.size() != 150)
++    throw std::runtime_error("GPU timestamp profile did not observe 150 frames");
++  for (size_t frame = 30; frame < gpu_timer.frames.size(); ++frame) {
++    GLuint ready = 0;
++    gpu_timer.available(gpu_timer.frames[frame][8], GL_QUERY_RESULT_AVAILABLE, &ready);
++    if (!ready) throw std::runtime_error("GPU timestamp query is incomplete");
++    GLuint64 stamp[9]{};
++    for (size_t phase = 0; phase < 9; ++phase)
++      gpu_timer.result(gpu_timer.frames[frame][phase], GL_QUERY_RESULT, &stamp[phase]);
++    for (size_t phase = 1; phase < 9; ++phase)
++      if (stamp[phase] < stamp[phase - 1])
++        throw std::runtime_error("GPU timestamps are not monotonic");
++    std::cerr << "GPU_POST_SAMPLE " << frame - 30;
++    for (size_t phase = 1; phase < 9; ++phase)
++      std::cerr << ' ' << stamp[phase] - stamp[phase - 1];
++    std::cerr << ' ' << stamp[8] - stamp[0] << '\n';
++    gpu_timer.destroy(9, gpu_timer.frames[frame].data());
++  }
++  for (size_t frame = 0; frame < 30; ++frame)
++    gpu_timer.destroy(9, gpu_timer.frames[frame].data());
++  gpu_timer.frames.clear();
++}
+ #ifdef __linux__
+ namespace {
+ std::mutex egl_lifecycle_mutex;
+@@ -3329,6 +3384,13 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+                                      std::deque<LightQueueEntry> &visibleLights,
+                                      std::deque<VertexBufferQueueEntry> &skyboxes) {
+   DO_VALIDATION;
++  const bool gpu_profile = GpuTimerEnabled();
++  std::array<GLuint, 9> gpu_query{};
++  if (gpu_profile) {
++    InitializeGpuTimer();
++    gpu_timer.generate(9, gpu_query.data());
++    gpu_timer.counter(gpu_query[0], GL_TIMESTAMP);
++  }
+   CreateIBLResources(visibleLights);
+   
+   std::vector<e_TargetAttachment> targets;
+@@ -3380,6 +3442,7 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   ClearBuffer(Vector3(0, 0, 0), true, true);
+   
+   RenderVertexBuffer(visibleGeometry, e_RenderMode_Full);
++  if (gpu_profile) gpu_timer.counter(gpu_query[1], GL_TIMESTAMP);
+   
+   // ============================================
+   // 3. 光照阶段 (PBR + IBL)
+@@ -3466,6 +3529,7 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   BindTexture(0);
+   SetTextureUnit(0);
+   BindTexture(0);
++  if (gpu_profile) gpu_timer.counter(gpu_query[2], GL_TIMESTAMP);
+   
+   // ============================================
+   // 4. 后处理阶段 (Tone Mapping + Bloom + FXAA)
+@@ -3537,6 +3601,7 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+     SetTextureUnit(0);
+     BindTexture(view.accumBuffer_AccumTexID);
+     RenderOverlay2D();
++    if (gpu_profile) gpu_timer.counter(gpu_query[3], GL_TIMESTAMP);
+ 
+     UseShader("blur");
+     SetUniformFloat2("blur", "textureSize", (float)bloomWidth,
+@@ -3547,6 +3612,7 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+     SetTextureUnit(0);
+     BindTexture(view.postBloomTextureID[0]);
+     RenderOverlay2D();
++    if (gpu_profile) gpu_timer.counter(gpu_query[4], GL_TIMESTAMP);
+     SetUniformFloat2("blur", "direction", 0.0f, 1.0f);
+     BindFrameBuffer(view.postBloomFrameBufferID[0]);
+     SetRenderTargets({e_TargetAttachment_Color0});
+@@ -3556,6 +3622,7 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+     SetTextureUnit(0);
+     BindTexture(0);
+   }
++  if (gpu_profile) gpu_timer.counter(gpu_query[5], GL_TIMESTAMP);
+   // A capture toggle or repeated presentation of the same simulation state
+   // must not advance eye adaptation. Actual match time is snapshot-owned.
+   const unsigned long presentationTimeMs =
+@@ -3582,6 +3649,7 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+     view.postExposureTimeMs = presentationTimeMs;
+     view.postExposureInitialized = true;
+   }
++  if (gpu_profile) gpu_timer.counter(gpu_query[6], GL_TIMESTAMP);
+ 
+   int width, height, bpp;
+   GetContextSize(width, height, bpp);
+@@ -3619,6 +3687,7 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   SetTextureUnit(0);
+   BindTexture(view.accumBuffer_AccumTexID);
+   RenderOverlay2D();
++  if (gpu_profile) gpu_timer.counter(gpu_query[7], GL_TIMESTAMP);
+   SetTextureUnit(2);
+   BindTexture(0);
+   SetTextureUnit(3);
+@@ -3646,5 +3715,9 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   UseShader("");
+   SetRenderTargets({e_TargetAttachment_Back});
+   SetViewport(0, 0, width, height);
++  if (gpu_profile) {
++    gpu_timer.counter(gpu_query[8], GL_TIMESTAMP);
++    gpu_timer.frames.push_back(gpu_query);
++  }
+ }
+ }
+diff --git a/engine/tests/engine_render_budget_benchmark.cpp b/engine/tests/engine_render_budget_benchmark.cpp
+index c3b9545..372219e 100644
+--- a/engine/tests/engine_render_budget_benchmark.cpp
++++ b/engine/tests/engine_render_budget_benchmark.cpp
+@@ -19,6 +19,8 @@
+ #include <string>
+ #include <vector>
+ 
++extern "C" void FootballDumpGpuProfile();
++
+ namespace {
+ constexpr int kWidth = 1920, kHeight = 1080;
+ constexpr unsigned kWarmup = 30, kSamples = 120;
+@@ -138,6 +140,7 @@ int main(int argc, char** argv) {
+       glGetIntegerv(GL_VIEWPORT, viewport);
+       Require(viewport[2] == kWidth && viewport[3] == kHeight,
+               "OpenGL viewport differs from 1080p target");
++      FootballDumpGpuProfile();
+     }
+     std::cout << std::fixed << std::setprecision(6)
+               << "{\"seed\":" << parsed
