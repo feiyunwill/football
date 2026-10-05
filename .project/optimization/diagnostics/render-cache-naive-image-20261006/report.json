@@ -1,0 +1,106 @@
+{
+  "schema": "football-render-cache-naive-image-v1",
+  "product_acceptance": false,
+  "scope": "llvmpipe full-PBR capture comparing cache flag only; compact Bloom held constant",
+  "patch_sha256": "bcecffa21711f08834b50857da9abc1cf313d5af03087208a181f9bdc9173bdc",
+  "capture_benchmark_sha256": "2aca5dd29ca3be62be702bc8f45c5df99dbdc463d1c6b3b270010295668e8385",
+  "baseline_engine_sha256": "3479c2dd9e18d44f2bb615981ce8c283462a9c0a1d8b9a4f9271793b4c8138d0",
+  "candidate_engine_sha256": "ac90d10d2f54a22f1991a75bbac3db4021826afc29efbba5a21ca96188edca08",
+  "archive_name": "render_cache_naive_image_20261006.zip",
+  "archive_sha256": "65a6b4c89dd0cbb891b701dc44853619b13dea1478fa87c61a955fa2b3db5251",
+  "cases": {
+    "baseline": {
+      "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4",
+      "identity": {
+        "renderer": "llvmpipe (LLVM 22.1.8, 256 bits)",
+        "width": 321,
+        "height": 181
+      },
+      "frames": {
+        "0": {
+          "rgb_sha256": "758a9c1cd94ad84c0da73352a0cfb2e345e09cccf90fa53615855afdadea2580",
+          "state_sha256": "3a520d70738eeebc65c1f05a14481061884395a6c13aad25ab4dfcf340608a38"
+        },
+        "40": {
+          "rgb_sha256": "cd8755bafd79de4caf9b84af3864cc9b340b6ad5a260696b172b700407bfd663",
+          "state_sha256": "6b1c25d21cc1f914a6ad65b694e21a03093ecdf3e6ff3edc01992c89da06d8e3"
+        },
+        "80": {
+          "rgb_sha256": "72705608ff5f921b493bd6f1305e91530b68d89bdadf71e1471598f648c808bc",
+          "state_sha256": "d6d06c61590fb5b8266922ff5403a557c19ee2f33ef0504586d144cba7c23968"
+        },
+        "120": {
+          "rgb_sha256": "d9c7c0b566fd1ded4036ca331e658f08f85cb595976a81ae1bd0214e25ca3536",
+          "state_sha256": "4ad42c70c7be290934775fd39dae8e61991c3aa31ccf1fb7975f491db913a465"
+        },
+        "160": {
+          "rgb_sha256": "e32c2109e1c4aef8cb793f84876bce1dc7af3ce48edf2cc7be28a1965a8ba6e6",
+          "state_sha256": "0f6b019e63d4d8505ee62d46b8df946f8b764237262e7c1d0a8986b51798a522"
+        }
+      }
+    },
+    "cache_on": {
+      "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4",
+      "identity": {
+        "renderer": "llvmpipe (LLVM 22.1.8, 256 bits)",
+        "width": 321,
+        "height": 181
+      },
+      "frames": {
+        "0": {
+          "rgb_sha256": "758a9c1cd94ad84c0da73352a0cfb2e345e09cccf90fa53615855afdadea2580",
+          "state_sha256": "3a520d70738eeebc65c1f05a14481061884395a6c13aad25ab4dfcf340608a38"
+        },
+        "40": {
+          "rgb_sha256": "cd8755bafd79de4caf9b84af3864cc9b340b6ad5a260696b172b700407bfd663",
+          "state_sha256": "6b1c25d21cc1f914a6ad65b694e21a03093ecdf3e6ff3edc01992c89da06d8e3"
+        },
+        "80": {
+          "rgb_sha256": "72705608ff5f921b493bd6f1305e91530b68d89bdadf71e1471598f648c808bc",
+          "state_sha256": "d6d06c61590fb5b8266922ff5403a557c19ee2f33ef0504586d144cba7c23968"
+        },
+        "120": {
+          "rgb_sha256": "d9c7c0b566fd1ded4036ca331e658f08f85cb595976a81ae1bd0214e25ca3536",
+          "state_sha256": "4ad42c70c7be290934775fd39dae8e61991c3aa31ccf1fb7975f491db913a465"
+        },
+        "160": {
+          "rgb_sha256": "e32c2109e1c4aef8cb793f84876bce1dc7af3ce48edf2cc7be28a1965a8ba6e6",
+          "state_sha256": "0f6b019e63d4d8505ee62d46b8df946f8b764237262e7c1d0a8986b51798a522"
+        }
+      }
+    }
+  },
+  "diffs": {
+    "0": {
+      "state_equal": true,
+      "changed_pixels": 0,
+      "max_channel_delta": 0,
+      "mean_abs_channel_delta": 0.0
+    },
+    "40": {
+      "state_equal": true,
+      "changed_pixels": 0,
+      "max_channel_delta": 0,
+      "mean_abs_channel_delta": 0.0
+    },
+    "80": {
+      "state_equal": true,
+      "changed_pixels": 0,
+      "max_channel_delta": 0,
+      "mean_abs_channel_delta": 0.0
+    },
+    "120": {
+      "state_equal": true,
+      "changed_pixels": 0,
+      "max_channel_delta": 0,
+      "mean_abs_channel_delta": 0.0
+    },
+    "160": {
+      "state_equal": true,
+      "changed_pixels": 0,
+      "max_channel_delta": 0,
+      "mean_abs_channel_delta": 0.0
+    }
+  },
+  "diagnostic_complete": true
+}
