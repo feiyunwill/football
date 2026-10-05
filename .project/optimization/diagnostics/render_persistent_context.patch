@@ -1,0 +1,27 @@
+diff --git a/engine/tests/engine_render_budget_benchmark.cpp b/engine/tests/engine_render_budget_benchmark.cpp
+--- a/engine/tests/engine_render_budget_benchmark.cpp
++++ b/engine/tests/engine_render_budget_benchmark.cpp
+@@ -107,13 +107,14 @@
+     samples.reserve(kSamples);
+     submit_samples.reserve(kSamples);
+     finish_samples.reserve(kSamples);
++    {
++      ContextHolder persistent(&env);
+     for (unsigned frame = 0; frame < kWarmup + kSamples; ++frame) {
+       env.StepWithInput(&neutral, sizeof(neutral));
+       in_play += env.get_info().is_in_play;
+       const auto before = std::chrono::steady_clock::now();
+       std::chrono::steady_clock::time_point after_submit;
+       {
+-        ContextHolder selected(&env);
+         env.render(swap_enabled);
+         after_submit = std::chrono::steady_clock::now();
+         glFinish();  // Include completion, rather than submission alone.
+@@ -128,6 +129,7 @@
+         finish_samples.push_back(std::chrono::duration<double, std::milli>(
+                                      after - after_submit).count());
+       }
++    }
+     }
+     Require(samples.size() == kSamples && in_play > 0,
+             "Rendered no live match samples");
