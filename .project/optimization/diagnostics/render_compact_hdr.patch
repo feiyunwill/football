@@ -1,0 +1,51 @@
+diff --git a/engine/src/systems/graphics/rendering/interface_renderer3d.hpp b/engine/src/systems/graphics/rendering/interface_renderer3d.hpp
+index a78d37a..de3c064 100644
+--- a/engine/src/systems/graphics/rendering/interface_renderer3d.hpp
++++ b/engine/src/systems/graphics/rendering/interface_renderer3d.hpp
+@@ -233,7 +233,8 @@ namespace blunted {
+ 		e_InternalPixelFormat_DepthComponent32,
+ 		e_InternalPixelFormat_DepthComponent32F,
+ 		e_InternalPixelFormat_StencilIndex8,
+-    e_InternalPixelFormat_RG16F
++    e_InternalPixelFormat_RG16F,
++    e_InternalPixelFormat_R11G11B10F
+   };
+   constexpr std::strong_ordering operator<=>(e_InternalPixelFormat a, e_InternalPixelFormat b) {
+     return std::to_underlying(a) <=> std::to_underlying(b);
+diff --git a/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp b/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
+index 08c2409..2e4d301 100644
+--- a/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
++++ b/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
+@@ -1062,8 +1062,10 @@ int OpenGLRenderer3D::CreateView(float x_percent, float y_percent,
+   view.accumBufferID = CreateFrameBuffer();
+   BindFrameBuffer(view.accumBufferID);
+ 
++  const bool pbrAccum = std::getenv("GFOOTBALL_USE_PBR") != nullptr;
+   view.accumBuffer_AccumTexID = CreateTexture(
+-      e_InternalPixelFormat_RGBA16F, e_PixelFormat_RGBA, accumBufWidth,
++      pbrAccum ? e_InternalPixelFormat_R11G11B10F : e_InternalPixelFormat_RGBA16F,
++      pbrAccum ? e_PixelFormat_RGB : e_PixelFormat_RGBA, accumBufWidth,
+       accumBufHeight, false, false, false, false, false);
+   SetFrameBufferTexture2D(e_TargetAttachment_Color0,
+                           view.accumBuffer_AccumTexID);
+@@ -2079,6 +2081,9 @@ GLenum GetGLInternalPixelFormat(e_InternalPixelFormat pixelFormat) {
+     case e_InternalPixelFormat_RG16F:
+       format = GL_RG16F;
+       break;
++    case e_InternalPixelFormat_R11G11B10F:
++      format = GL_R11F_G11F_B10F;
++      break;
+     case e_InternalPixelFormat_RGBA32F:
+       format = GL_RGBA32F;
+       break;
+@@ -3385,8 +3390,9 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   // 3. 光照阶段 (PBR + IBL)
+   // ============================================
+   BindFrameBuffer(view.accumBufferID);
++  // PBR reads only the HDR accumulation texture. The modifier attachment is
++  // reserved for the legacy path and need not be cleared or written here.
+   targets.push_back(e_TargetAttachment_Color0);
+-  targets.push_back(e_TargetAttachment_Color1);
+   SetRenderTargets(targets);
+   targets.clear();
+   // Each HDR light accumulation pass starts from defined contents.

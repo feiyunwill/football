@@ -1,0 +1,15 @@
+diff --git a/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp b/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
+index 08c2409..22192c5 100644
+--- a/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
++++ b/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
+@@ -3385,8 +3385,9 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   // 3. 光照阶段 (PBR + IBL)
+   // ============================================
+   BindFrameBuffer(view.accumBufferID);
++  // PBR reads only the HDR accumulation texture. The modifier attachment is
++  // reserved for the legacy path and need not be cleared or written here.
+   targets.push_back(e_TargetAttachment_Color0);
+-  targets.push_back(e_TargetAttachment_Color1);
+   SetRenderTargets(targets);
+   targets.clear();
+   // Each HDR light accumulation pass starts from defined contents.
