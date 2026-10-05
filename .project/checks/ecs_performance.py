@@ -60,10 +60,10 @@ def same_trajectory(left, right):
 
 def load_repository_baseline():
     """Verify and relocate the versioned, repository-owned reference build."""
-    manifest_path = ROOT / ".project/optimization/baselines/ecs_v10.json"
+    manifest_path = ROOT / ".project/optimization/baselines/ecs_v11.json"
     manifest = json.loads(manifest_path.read_text())
-    require(manifest["format"] == 10 and manifest["id"] ==
-            "ecs-pass-buffer-current-gameplay-pre-selection-scratch-and-vector-length-20261004",
+    require(manifest["format"] == 11 and manifest["id"] ==
+            "ecs-manual-fresh-current-gameplay-pre-selection-scratch-and-vector-length-20261005",
             "Wrong ECS baseline version")
     require(manifest["measurement_contract"] == {
         "seeds": list(benchmark.SEEDS), "warmup_steps": 200, "steady_steps": 2000,
@@ -81,12 +81,26 @@ def load_repository_baseline():
         require(path.is_relative_to(ROOT.resolve()), "ECS baseline path escapes repository")
         return path
 
+    historical_path = source_path(".project/optimization/baselines/ecs_v10.json")
+    historical = json.loads(historical_path.read_text())
+    require(benchmark.file_hash(historical_path) ==
+            manifest["derived_from_baseline_v10_sha256"] and
+            historical["format"] == 10 and historical["id"] ==
+            "ecs-pass-buffer-current-gameplay-pre-selection-scratch-and-vector-length-20261004",
+            "Historical ECS v10 baseline lineage changed")
+    for role in ("engine", "benchmark"):
+        entry = historical["binaries"][role]
+        packed = source_path(entry["path"]).read_bytes()
+        require(hashlib.sha256(packed).hexdigest() == entry["compressed_sha256"] and
+                hashlib.sha256(gzip.decompress(packed)).hexdigest() == entry["sha256"],
+                "Historical ECS v10 binary changed: " + role)
+
     require(benchmark.file_hash(source_path(manifest["semantic_patch"])) ==
             manifest["semantic_patch_sha256"], "Baseline semantic patch changed")
-    require(benchmark.file_hash(source_path(".project/optimization/baselines/ecs_v9.json")) ==
-            manifest["derived_from_baseline_v9_sha256"], "Parent ECS baseline changed")
+    require(benchmark.file_hash(source_path(".project/optimization/baselines/ecs_v10.json")) ==
+            manifest["derived_from_baseline_v10_sha256"], "Parent ECS baseline changed")
     require(benchmark.file_hash(source_path(
-                ".project/optimization/diagnostics/ecs_reference_refresh_v10.py")) ==
+                ".project/optimization/diagnostics/ecs_reference_refresh_v11.py")) ==
             manifest["generator_sha256"], "ECS reference generator changed")
     require(benchmark.file_hash(source_path(manifest["validation_artifact"])) ==
             manifest["validation_artifact_sha256"], "ECS trajectory and allocation preflight changed")
@@ -105,7 +119,7 @@ def load_repository_baseline():
             hashlib.sha256(json.dumps(baseline["sources"], sort_keys=True).encode()).hexdigest() ==
             manifest["source_identity"], "Baseline source identity changed")
 
-    temporary = tempfile.TemporaryDirectory(prefix="football-ecs-baseline-v10-")
+    temporary = tempfile.TemporaryDirectory(prefix="football-ecs-baseline-v11-")
     archive = Path(temporary.name)
     for role, destination in (("engine", archive / "libfootball_engine.so"),
                               ("benchmark", archive / "bin/engine_match_benchmark")):
@@ -194,11 +208,11 @@ def main():
             previous = next(item for item in baseline["runs"] if item["seed"] == seed)
             assertions += checks + same_trajectory(previous, result)
             results.append(result)
-        artifact = ROOT / ".project/optimization/benchmarks" / f"ecs-v10-preflight-{time.time_ns()}.json"
+        artifact = ROOT / ".project/optimization/benchmarks" / f"ecs-v11-preflight-{time.time_ns()}.json"
         artifact.write_text(json.dumps({"format": 2, "baseline_preflight": True,
             "passed": True, "skipped": 0, "assertions": assertions,
             "baseline_manifest_sha256": benchmark.file_hash(
-                ROOT / ".project/optimization/baselines/ecs_v10.json"),
+                ROOT / ".project/optimization/baselines/ecs_v11.json"),
             "source_commit": pointer["source_commit"], "binaries": pointer["binaries"],
             "machine": benchmark.machine_identity(args.cpu), "results": results}, indent=2) + "\n")
         print(json.dumps({"baseline_preflight": True, "passed": True, "skipped": 0,

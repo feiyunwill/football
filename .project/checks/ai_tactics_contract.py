@@ -18,8 +18,10 @@ from native_boundary import ROOT, TARGETS, require
 CONTRACTS = {
     "engine_ai_tactics_contract": (7288, {"symmetry_cases": 600}),
     "engine_ai_tactics_roles_contract": (3601, {"role_mirror_cases": 1800, "failed": 0}),
+    # Fresh manual movement changes the deterministic bot route in the
+    # full-physics seed-42 case. Keep the observed actor/set-piece counts exact.
     "engine_ai_tactical_state_contract": (
-         27450, {"frames": 960, "actual_gameenv": True, "nonzero_actors": 3672, "restarts": 8}),
+         27450, {"frames": 960, "actual_gameenv": True, "nonzero_actors": 3588, "restarts": 12}),
     "engine_ai_touch_contract": (
         586, {"seeds": 3, "ball_control_assets": 270, "quiet_idle": 24, "actual_gameenv": True}),
 }
