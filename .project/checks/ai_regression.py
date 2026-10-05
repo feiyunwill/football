@@ -23,6 +23,7 @@ PAIR_FIELDS = ('score', 'pass_attempts', 'kicked_passes', 'shot_attempts',
                'kicked_shots', 'fouls', 'invalid_intents')
 SOURCE_GLOBS = ('engine/CMakeLists.txt', 'engine/sources.cmake',
                 'engine/src/**/*.cpp', 'engine/src/**/*.hpp', 'engine/src/**/*.h',
+                'engine/data/**/*',
                 'engine/tests/engine_ai_match_metrics.cpp',
                 '.project/checks/ai_regression.py',
                 '.project/optimization/baselines/ai_match_reference_20261005.json')
@@ -215,6 +216,12 @@ def main() -> int:
             require(row == previous[seed - SEEDS[0]],
                     f'Baseline seed {seed} is nondeterministic')
         sources = source_manifest()
+        report['inputs'] = {
+            'file_count': len(sources),
+            'data_file_count': sum(path.startswith('engine/data/') for path in sources),
+            'manifest_sha256': hashlib.sha256(json.dumps(
+                sources, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
+        }
         builds = {'release': (args.release_build or output / 'release-build').resolve(),
                   'sanitized': (args.sanitized_build or output / 'sanitized-build').resolve()}
         binaries = {}

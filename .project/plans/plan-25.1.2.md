@@ -1,5 +1,7 @@
 # plan-25.1.2 — 评估与训练可靠性
 
+2026-10-06 AI 固定赛程回归检查已在当前源码上独立通过，新增 465 个 `engine/data` 文件的前后清单核对；计划仍受渲染前置任务约束。见[完整验收证据](../reports/optimization-ai-input-manifest-2026-10-06.md)。
+
 2026-09-24：检查点文件 I/O 候选的 Release/Debug 回归通过，完整训练序列化与生命周期仍待验证，训练验收状态不提升。见[实现与边界](../reports/optimization-training-checkpoint-io-2026-09-24.md)。
 
 以下保留此前阶段记录：
