@@ -1,15 +1,15 @@
 {
   "check": "render_regression",
-  "fingerprint": "427ec2bfde915d7c3f9e0070a57d7f84c6732ba3d3b8587af8b6f3721adf7adb",
+  "fingerprint": "7714d061fedc4680c9154e1cd044a2142b91c9662cd5f8edb0453d3bb61f9049",
   "passed": false,
   "reason": "Command exited with 1",
   "returncode": 1,
-  "started": 1791155021.931235,
-  "duration_seconds": 200.714,
+  "started": 1791234222.2076898,
+  "duration_seconds": 201.358,
   "argv": [
     "python3",
     ".project/checks/render_regression.py"
   ],
-  "log": "render_regression-1791155021931265010.log",
-  "log_sha256": "6795ee2e8f994607134e9160aec3992475dc383546b9932331a6c5d24a788862"
+  "log": "render_regression-1791234222207749721.log",
+  "log_sha256": "313ca535706fa34ad923541583aa8a89001af73fccf709db8f1e05b5fe66dcac"
 }
