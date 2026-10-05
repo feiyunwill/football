@@ -63,6 +63,10 @@
 
 在恢复原 PBR 着色器后，用[九点 GPU 时间戳补丁](diagnostics/render_post_gpu_timer.patch)进一步拆分几何、光照、Bloom 提取／横向模糊／纵向模糊、自动曝光、色调映射及 FXAA；全部查询仍在 150 帧完成后读取。Intel Arc 140T/D3D12、完整 1080p PBR、真实交换的四次运行中，整帧墙钟 p95 为 **25.431、25.223、25.595、28.673 ms**。Bloom 提取的 GPU p95 为 **2.097–2.884 ms**，FXAA 为 **1.311–3.670 ms**；两次模糊各约 **0.262 ms**，自动曝光约 **0.262 ms**。这些分位数不能相加，时间戳也有约 0.131 ms 的量化阶梯。见[四次运行的原始时间戳与日志](diagnostics/render-post-gpu-profile-20261006/report.json)（报告 SHA-256：`380e1bc009116f510e350684e7c841b2f4f460fed6ecfad4d704ca9bbecc08f8`）。本机下一轮优先检验 Bloom 提取与 FXAA 的等画质优化；当前测量没有改变产品验收结论。
 
+针对 Bloom 中间纹理，在隔离构建中将两张半分辨率 RGBA16F 改为 R11G11B10F，不改最终 HDR 缓冲。[候选补丁](diagnostics/render_compact_bloom_with_post_timer.patch)包含九点时间戳仪表，仅供复现。两种子两轮、交替八次的基线／候选完整帧 p95 分别为种子 42 的 **23.403/23.614、38.704/36.636 ms**，以及种子 43 的 **32.565/26.714、31.657/50.362 ms**；Bloom 提取 GPU p95 也没有跨轮稳定下降。八次全部超预算，运行间漂移明显。[逐次样本与阶段时间](diagnostics/render-compact-bloom-ab-20261006/report.json)已按日志重新核验（报告 SHA-256：`058216471eb6fea3181dfecdaf11c6ffff75d0c72f674596bebfb96157680f4b`）。五帧固定画面的状态逐字节一致，改变的像素依次为 **0、0、57、65、151**，最大通道差 **2**；见[图像差异](diagnostics/render-compact-bloom-image-20261006/report.json)及[原始图像归档](evidence/render_compact_bloom_image_20261006.zip)（归档 SHA-256：`50485b697e3026aa32435df3dbaf8941edfbe2484f699e54acf6b362e528f964`）。候选没有稳定性能收益，也不满足精确图像回归，未合入。
+
+为区分像素负载与固定开销，又在原 Bloom 格式和同一 D3D12 驱动上，用[诊断分辨率补丁](diagnostics/render_resolution_profile.patch)交替测量 960×540、1280×720、1920×1080。每种分辨率两个种子、两轮，共 12 次，全部保留完整 PBR 效果、真实交换和每次 120 帧；仅 **1080p** 属于产品门禁。三种分辨率的完整帧 p95 区间分别为 **17.468–24.114、19.156–25.582、26.683–40.500 ms**，对应 GPU 总时长 p95 区间为 **4.981–9.093、7.193–9.077、11.059–18.776 ms**。逐帧墙钟减 GPU 时间的中位数在 540p 为 **10.688–12.428 ms**，在 1080p 为 **14.689–16.810 ms**；它同时包含 CPU、驱动和呈现等待，不能归因于某一个子系统。GPU 成本和这部分额外时间总体上随分辨率增大，说明只缩小 Bloom 中间纹理不足以达到 1080p 预算。见[12 次原始数组、设备身份与日志](diagnostics/render-resolution-sweep-20261006/report.json)（报告 SHA-256：`88ee60cbad24c86814c8daaff4c4793218e6e3e96b4fbd37d0f91244811eb9e4`）。
+
 复现这台 WSL 设备上的正式检查：
 
 ```sh

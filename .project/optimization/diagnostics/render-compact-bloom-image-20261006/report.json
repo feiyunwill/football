@@ -1,0 +1,105 @@
+{
+  "schema": "football-render-compact-bloom-image-v1",
+  "product_acceptance": false,
+  "patch_sha256": "663b5bfcabc3ff0b9b0eef5a933f79f64ef901392b4e9013940ca7b2fe4fa20d",
+  "capture_benchmark_sha256": "2aca5dd29ca3be62be702bc8f45c5df99dbdc463d1c6b3b270010295668e8385",
+  "baseline_engine_sha256": "d31d7dbd37eb544e1dd677b2449528c6e0a5b5aa327c190e8179f4da53e331d4",
+  "candidate_engine_sha256": "3479c2dd9e18d44f2bb615981ce8c283462a9c0a1d8b9a4f9271793b4c8138d0",
+  "archive_name": "render_compact_bloom_image_20261006.zip",
+  "archive_sha256": "50485b697e3026aa32435df3dbaf8941edfbe2484f699e54acf6b362e528f964",
+  "cases": {
+    "baseline": {
+      "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4",
+      "identity": {
+        "renderer": "llvmpipe (LLVM 22.1.8, 256 bits)",
+        "width": 321,
+        "height": 181
+      },
+      "frames": {
+        "0": {
+          "rgb_sha256": "758a9c1cd94ad84c0da73352a0cfb2e345e09cccf90fa53615855afdadea2580",
+          "state_sha256": "3a520d70738eeebc65c1f05a14481061884395a6c13aad25ab4dfcf340608a38"
+        },
+        "40": {
+          "rgb_sha256": "cd8755bafd79de4caf9b84af3864cc9b340b6ad5a260696b172b700407bfd663",
+          "state_sha256": "6b1c25d21cc1f914a6ad65b694e21a03093ecdf3e6ff3edc01992c89da06d8e3"
+        },
+        "80": {
+          "rgb_sha256": "e8e3c8e4f18c0af13a2dea452cfba80efe6bdd039c30e7db11e23fe057afe2bd",
+          "state_sha256": "d6d06c61590fb5b8266922ff5403a557c19ee2f33ef0504586d144cba7c23968"
+        },
+        "120": {
+          "rgb_sha256": "affd717311cccd19400c26efcc2ba1494f1d5beb9ebc470d7b1034b99e525692",
+          "state_sha256": "4ad42c70c7be290934775fd39dae8e61991c3aa31ccf1fb7975f491db913a465"
+        },
+        "160": {
+          "rgb_sha256": "690115b0d7eff20bf747956a264d6e14ef1ad49242eda84fda806576a86864ff",
+          "state_sha256": "0f6b019e63d4d8505ee62d46b8df946f8b764237262e7c1d0a8986b51798a522"
+        }
+      }
+    },
+    "candidate": {
+      "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4",
+      "identity": {
+        "renderer": "llvmpipe (LLVM 22.1.8, 256 bits)",
+        "width": 321,
+        "height": 181
+      },
+      "frames": {
+        "0": {
+          "rgb_sha256": "758a9c1cd94ad84c0da73352a0cfb2e345e09cccf90fa53615855afdadea2580",
+          "state_sha256": "3a520d70738eeebc65c1f05a14481061884395a6c13aad25ab4dfcf340608a38"
+        },
+        "40": {
+          "rgb_sha256": "cd8755bafd79de4caf9b84af3864cc9b340b6ad5a260696b172b700407bfd663",
+          "state_sha256": "6b1c25d21cc1f914a6ad65b694e21a03093ecdf3e6ff3edc01992c89da06d8e3"
+        },
+        "80": {
+          "rgb_sha256": "72705608ff5f921b493bd6f1305e91530b68d89bdadf71e1471598f648c808bc",
+          "state_sha256": "d6d06c61590fb5b8266922ff5403a557c19ee2f33ef0504586d144cba7c23968"
+        },
+        "120": {
+          "rgb_sha256": "d9c7c0b566fd1ded4036ca331e658f08f85cb595976a81ae1bd0214e25ca3536",
+          "state_sha256": "4ad42c70c7be290934775fd39dae8e61991c3aa31ccf1fb7975f491db913a465"
+        },
+        "160": {
+          "rgb_sha256": "e32c2109e1c4aef8cb793f84876bce1dc7af3ce48edf2cc7be28a1965a8ba6e6",
+          "state_sha256": "0f6b019e63d4d8505ee62d46b8df946f8b764237262e7c1d0a8986b51798a522"
+        }
+      }
+    }
+  },
+  "diffs": {
+    "0": {
+      "state_equal": true,
+      "changed_pixels": 0,
+      "max_channel_delta": 0,
+      "mean_abs_channel_delta": 0.0
+    },
+    "40": {
+      "state_equal": true,
+      "changed_pixels": 0,
+      "max_channel_delta": 0,
+      "mean_abs_channel_delta": 0.0
+    },
+    "80": {
+      "state_equal": true,
+      "changed_pixels": 57,
+      "max_channel_delta": 2,
+      "mean_abs_channel_delta": 0.0004015995134908751
+    },
+    "120": {
+      "state_equal": true,
+      "changed_pixels": 65,
+      "max_channel_delta": 1,
+      "mean_abs_channel_delta": 0.0003843881057698376
+    },
+    "160": {
+      "state_equal": true,
+      "changed_pixels": 151,
+      "max_channel_delta": 2,
+      "mean_abs_channel_delta": 0.0009466274246570627
+    }
+  },
+  "diagnostic_complete": true
+}
