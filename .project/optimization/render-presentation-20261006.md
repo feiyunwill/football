@@ -10,7 +10,7 @@
 
 [SDL 的交换间隔文档](https://wiki.libsdl.org/SDL2/SDL_GL_SetSwapInterval)将 0 定义为立即更新，1 为垂直同步，-1 为自适应同步；本机正式运行已报告 0。因此仅将间隔改为 0 不是剩余问题的修复。[WSLg 官方说明](https://github.com/microsoft/wslg/wiki/Controlling-WSLg-frame-rate)指出其呈现要经过 Linux 的 Weston 与 Windows 的 DWM 两级合成，默认向 Windows 最多提交 60 fps。结合本项目逐帧配对数据，合成/传输路径是待验证的原因之一；这些资料本身不能证明本机每次等待的具体来源，也不能代替目标设备上的完整帧测试。
 
-本机 `/mnt/wslg/weston.log` 当前启动记录报告 `rdp_monitor_refresh_rate: 60000`，同时列出两个显示器；Windows GPU 的 `CurrentRefreshRate` 查询为 120 Hz，但单个 GPU 属性不能证明两个显示器都以 120 Hz 工作。因此不能直接把 WSLg 配置为 120 Hz 并把更高的提交率视为产品性能修复；需要先确认每台显示器的实际刷新率，再做与正式门禁相同的隔离 A/B 和可见帧检查。
+本机 `/mnt/wslg/weston.log` 当前启动记录报告 `rdp_monitor_refresh_rate: 60000`。通过 Windows [`EnumDisplaySettingsW` 的当前模式查询](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsw)，两台显示器分别为 `2880×1800 @ 120 Hz` 与 `1920×1080 @ 60 Hz`；这解释了只读 GPU 属性虽报告 120 Hz，WSLg 仍以双屏中较慢的 60 Hz 提交。按照 [WSLg 的官方说明](https://github.com/microsoft/wslg/wiki/Controlling-WSLg-frame-rate)，把提交率设高于实际 60 Hz 屏幕可消耗的速率会丢弃额外帧并浪费资源。因此仅提高 WSLg 提交率不能作为本机双屏配置的产品修复；仍需在目标显示路径上隔离测量完整帧与可见帧。
 
 尝试把 SDL 窗口 `SDL_GL_ALPHA_SIZE` 从 8 改为 0，在独立 worktree 编译并以两个种子、两轮交替运行。四组原配置 p95 为 20.449、19.719、20.276、20.799 ms；相邻的无 alpha 配置为 21.216、21.671、22.858、20.737 ms，见 [A/B 原始帧样本](evidence/render_alpha0_ab_20261006.json)。该改动没有稳定收益，未合入主线。
 
