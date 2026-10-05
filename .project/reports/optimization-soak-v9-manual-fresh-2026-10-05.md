@@ -1,0 +1,7 @@
+# Long-match v9 reference after fresh manual movement (2026-10-05)
+
+The fresh manual movement change made the October 4 long-match v8 `warm_hash` stale. The v8 manifest, archive and binary identities remain authenticated as historical evidence. The new [v9 manifest](../optimization/baselines/soak_v9.json) binds a current-gameplay ECS v11 engine to the unchanged versioned 11v11 long-match workload. The [generator](../optimization/diagnostics/soak_reference_refresh_v9.py) checks the archived binaries, loader identity, two seeds and the complete fixed budget before writing the reference. The [validation archive](../optimization/evidence/soak_v9_validation_20261005.tar.gz) contains all four raw baseline/current process outputs and linkage proof.
+
+Each seed ran independently for 1,000 warmup and 36,000 measured frames in both versions. Seed 42 produced warm/final hashes `23f3096aaf6a74f8` / `207ada0022a38cdf`; seed 43 produced `87570badd45daa27` / `f54fa78a87d27d90`. Input hash, state checkpoints and active-frame flags also match exactly for each pair. Both baseline and current version passed every 50 ms logical p99, per-window p99, RSS growth, quarter drift and late plateau condition. The current version's overall p99 was 6.78 ms for seed 42 and 6.66 ms for seed 43.
+
+The current acceptance check now loads v9 and verifies the historical v8 lineage; no long-match thresholds were relaxed. Formal quality-state revalidation is still required after this check-source edit. The graphics 16.67 ms p95 target remains a separate unresolved release gate.
