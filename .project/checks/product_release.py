@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import platform
+import re
 import subprocess
 import sys
 import time
@@ -21,6 +22,67 @@ SEVERE = {'blocker', 'critical', 'high'}
 
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def audit_artifact_children(path: Path, check) -> dict[str, str]:
+    """Verify the command logs and package files cited by an acceptance report."""
+    report = json.loads(path.read_text())
+    base = path.parent.resolve()
+    verified: dict[str, str] = {}
+
+    def verify(candidate: str | Path | None, expected: str | None,
+               description: str) -> None:
+        valid_hash = isinstance(expected, str) and re.fullmatch(r'[0-9a-f]{64}', expected)
+        valid_path = isinstance(candidate, (str, Path)) and bool(str(candidate))
+        if not valid_hash or not valid_path:
+            check(False, f'{description} lacks a path or SHA-256')
+            return
+        child = Path(candidate)
+        if not child.is_absolute():
+            child = base / child
+        child = child.resolve()
+        in_artifact = child.is_relative_to(base)
+        matches = in_artifact and child.is_file() and sha(child) == expected
+        check(matches, f'{description} is absent, outside its artifact, or differs from SHA-256')
+        if matches:
+            verified[str(child.relative_to(base))] = expected
+
+    commands = report.get('commands', [])
+    check(isinstance(commands, list), f'{path} has invalid command records')
+    for command in commands if isinstance(commands, list) else []:
+        if not isinstance(command, dict):
+            check(False, f'{path} contains an invalid command record')
+            continue
+        log = command.get('log')
+        if log is None and isinstance(command.get('label'), str):
+            log = command['label'] + '.log'
+        verify(log, command.get('log_sha256') or command.get('sha256'),
+               f'{path} command log')
+
+    runs = report.get('runs', [])
+    check(isinstance(runs, list), f'{path} has invalid run records')
+    for run in runs if isinstance(runs, list) else []:
+        if not isinstance(run, dict):
+            check(False, f'{path} contains an invalid run record')
+            continue
+        if 'log_sha256' not in run:
+            continue
+        log = run.get('log')
+        if log is None and isinstance(run.get('build'), str) and isinstance(run.get('seed'), int):
+            log = f"{run['build']}-{run['seed']}.log"
+        verify(log, run['log_sha256'], f'{path} measured run log')
+
+    if 'wheel' in report:
+        wheel = report['wheel']
+        check(isinstance(wheel, dict), f'{path} has invalid wheel identity')
+        if isinstance(wheel, dict):
+            verify(wheel.get('path'), wheel.get('sha256'), f'{path} wheel')
+            check(wheel.get('sha256') == report.get('build', {}).get('wheel_sha256'),
+                  f'{path} build and wheel hashes differ')
+    if 'probe_report_sha256' in report:
+        verify('installed-probe/report.json', report['probe_report_sha256'],
+               f'{path} package probe report')
+    return verified
 
 
 def main() -> int:
@@ -48,6 +110,7 @@ def main() -> int:
 
         records = {}
         artifacts = {}
+        artifact_children = {}
         for name, definition in program.checks.items():
             if name == 'product_release' or not definition['ready']:
                 continue
@@ -79,8 +142,10 @@ def main() -> int:
                   f'{name} artifact is absent or differs from its recorded hash')
             if path.is_file():
                 artifacts[name] = {'path': str(path), 'sha256': sha(path)}
+                artifact_children[name] = audit_artifact_children(path, check)
         report['checks'] = records
         report['artifacts'] = artifacts
+        report['artifact_children'] = artifact_children
 
         issues = json.loads(ISSUES.read_text())
         check(issues.get('schema') == 'football-known-issues-v1' and
