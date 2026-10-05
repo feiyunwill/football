@@ -1,0 +1,21 @@
+diff --git a/engine/data/media/shaders/pbr.frag b/engine/data/media/shaders/pbr.frag
+index 5a69d78..bb311ba 100644
+--- a/engine/data/media/shaders/pbr.frag
++++ b/engine/data/media/shaders/pbr.frag
+@@ -38,15 +38,8 @@ float geometrySchlickGGX(float NdotDirection, float roughness) {
+ }
+ float shadowVisibility(vec3 worldPosition) {
+     if (!has_shadow) return 1.0;
+-    vec2 offsets[9] = vec2[9](
+-        vec2(0.5,0.5),vec2(-0.5,0.5),vec2(0.5,-0.5),vec2(-0.5,-0.5),
+-        vec2(1,0),vec2(0,1),vec2(-1,0),vec2(0,-1),vec2(0,0));
+     vec4 projected = lightViewProjectionMatrix * vec4(worldPosition,1.0);
+-    float visibility = 0.0;
+-    for (int i=0;i<9;++i)
+-        visibility += textureProj(map_shadow,projected+
+-            vec4(offsets[i],0,0)/1500.0+vec4(0,0,-0.0002,0));
+-    return clamp(visibility/9.0,0.0,1.0);
++    return textureProj(map_shadow, projected + vec4(0,0,-0.0002,0));
+ }
+ void main() {
+     vec2 uv = (gl_FragCoord.xy-vec2(contextX,contextY))/
