@@ -1,0 +1,16 @@
+--- a/engine/data/media/shaders/fxaa.frag
++++ b/engine/data/media/shaders/fxaa.frag
+@@ -42,5 +42,8 @@
+-    vec3 rgbNW = texture(map_texture, texCoord + vec2(-1.0, -1.0) * texelSize).rgb;
+-    vec3 rgbNE = texture(map_texture, texCoord + vec2( 1.0, -1.0) * texelSize).rgb;
+-    vec3 rgbSW = texture(map_texture, texCoord + vec2(-1.0,  1.0) * texelSize).rgb;
+-    vec3 rgbSE = texture(map_texture, texCoord + vec2( 1.0,  1.0) * texelSize).rgb;
+-    vec3 rgbM  = texture(map_texture, texCoord).rgb;
++    // Fixed taps are pixel-centre reads; clamp to match GL_CLAMP_TO_EDGE.
++    ivec2 pixel = ivec2(gl_FragCoord.xy - contextOrigin);
++    ivec2 limit = ivec2(textureSize) - ivec2(1);
++    vec3 rgbNW = texelFetch(map_texture, clamp(pixel + ivec2(-1, -1), ivec2(0), limit), 0).rgb;
++    vec3 rgbNE = texelFetch(map_texture, clamp(pixel + ivec2( 1, -1), ivec2(0), limit), 0).rgb;
++    vec3 rgbSW = texelFetch(map_texture, clamp(pixel + ivec2(-1,  1), ivec2(0), limit), 0).rgb;
++    vec3 rgbSE = texelFetch(map_texture, clamp(pixel + ivec2( 1,  1), ivec2(0), limit), 0).rgb;
++    vec3 rgbM  = texelFetch(map_texture, clamp(pixel, ivec2(0), limit), 0).rgb;

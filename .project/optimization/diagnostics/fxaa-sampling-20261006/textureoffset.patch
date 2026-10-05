@@ -1,0 +1,12 @@
+--- a/engine/data/media/shaders/fxaa.frag
++++ b/engine/data/media/shaders/fxaa.frag
+@@ -42,4 +42,5 @@
+-    vec3 rgbNW = texture(map_texture, texCoord + vec2(-1.0, -1.0) * texelSize).rgb;
+-    vec3 rgbNE = texture(map_texture, texCoord + vec2( 1.0, -1.0) * texelSize).rgb;
+-    vec3 rgbSW = texture(map_texture, texCoord + vec2(-1.0,  1.0) * texelSize).rgb;
+-    vec3 rgbSE = texture(map_texture, texCoord + vec2( 1.0,  1.0) * texelSize).rgb;
++    // Integer offsets retain the texture sampler's filtering and edge mode.
++    vec3 rgbNW = textureOffset(map_texture, texCoord, ivec2(-1, -1)).rgb;
++    vec3 rgbNE = textureOffset(map_texture, texCoord, ivec2( 1, -1)).rgb;
++    vec3 rgbSW = textureOffset(map_texture, texCoord, ivec2(-1,  1)).rgb;
++    vec3 rgbSE = textureOffset(map_texture, texCoord, ivec2( 1,  1)).rgb;

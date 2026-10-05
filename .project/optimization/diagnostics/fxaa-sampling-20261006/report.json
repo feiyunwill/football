@@ -1,0 +1,127 @@
+{
+  "date": "2026-10-06",
+  "product_acceptance": false,
+  "decision": "reject both candidates: exact RGB regression fails before GPU budget testing",
+  "scope": "llvmpipe fixed 321x181 PBR Bloom FXAA auto-exposure, five captured frames and simulation state",
+  "baseline_source_sha256": "5040fc3ef6c1604804bd5929865595bb0ad435734f48c3002f487425a87a4216",
+  "variants": {
+    "texelfetch": {
+      "source_sha256": "5eb9038843f7daf8049abaca9dfe97300fc1c967be5682409e47b3c88f3204f1",
+      "patch_sha256": "e52083d6455431cc14421717802fa9d08b270d3c8c850f9d8a2df05a51f6fdbf",
+      "capture_passed": true,
+      "frames": [
+        {
+          "frame": "frame-0.rgb",
+          "baseline_rgb_sha256": "758a9c1cd94ad84c0da73352a0cfb2e345e09cccf90fa53615855afdadea2580",
+          "candidate_rgb_sha256": "5b17ed524082eaf4febbb9e41d36fa8c9b1061d53745bdbac0a6276950a378ff",
+          "changed_pixels": 1678,
+          "peak_channel_delta": 22,
+          "state_equal": true
+        },
+        {
+          "frame": "frame-120.rgb",
+          "baseline_rgb_sha256": "affd717311cccd19400c26efcc2ba1494f1d5beb9ebc470d7b1034b99e525692",
+          "candidate_rgb_sha256": "5598e0ee538a5c2a8943708a4f2c0a1e401991dcaf104a80b34987c125333d7d",
+          "changed_pixels": 2038,
+          "peak_channel_delta": 41,
+          "state_equal": true
+        },
+        {
+          "frame": "frame-160.rgb",
+          "baseline_rgb_sha256": "690115b0d7eff20bf747956a264d6e14ef1ad49242eda84fda806576a86864ff",
+          "candidate_rgb_sha256": "6dec3391cf0416785e2bf3394ecdcb0c3fa82673f8df244815a408b53b4cd088",
+          "changed_pixels": 2407,
+          "peak_channel_delta": 51,
+          "state_equal": true
+        },
+        {
+          "frame": "frame-40.rgb",
+          "baseline_rgb_sha256": "cd8755bafd79de4caf9b84af3864cc9b340b6ad5a260696b172b700407bfd663",
+          "candidate_rgb_sha256": "8920fc83eab9d307061803802e9db7f06ea0fc289c0c254fe3f92efe87ffa8d0",
+          "changed_pixels": 1834,
+          "peak_channel_delta": 27,
+          "state_equal": true
+        },
+        {
+          "frame": "frame-80.rgb",
+          "baseline_rgb_sha256": "e8e3c8e4f18c0af13a2dea452cfba80efe6bdd039c30e7db11e23fe057afe2bd",
+          "candidate_rgb_sha256": "3c6f968e3f070105736a581680c84aa317bd00ed9e0babb0882e04fb1f1d46d4",
+          "changed_pixels": 1911,
+          "peak_channel_delta": 24,
+          "state_equal": true
+        }
+      ]
+    },
+    "textureoffset": {
+      "source_sha256": "e69ff3034cde627cb5bbfd6ec7450170df55e04c21232213f0a4ad4c06a303c9",
+      "patch_sha256": "ecf9b5146bef5b5842596f4212af72f848342ea4761f5b57549c61db202a96f2",
+      "capture_passed": true,
+      "frames": [
+        {
+          "frame": "frame-0.rgb",
+          "baseline_rgb_sha256": "758a9c1cd94ad84c0da73352a0cfb2e345e09cccf90fa53615855afdadea2580",
+          "candidate_rgb_sha256": "f47cded62aa5d258aebec960f0cda133df35c1fcd8d1a9809db29c884f7ed68d",
+          "changed_pixels": 42,
+          "peak_channel_delta": 5,
+          "state_equal": true
+        },
+        {
+          "frame": "frame-120.rgb",
+          "baseline_rgb_sha256": "affd717311cccd19400c26efcc2ba1494f1d5beb9ebc470d7b1034b99e525692",
+          "candidate_rgb_sha256": "568d4fdea018b6c1d020e1fc24fe135dfffc7cbc04914d080aebe9c297cb78ad",
+          "changed_pixels": 16,
+          "peak_channel_delta": 21,
+          "state_equal": true
+        },
+        {
+          "frame": "frame-160.rgb",
+          "baseline_rgb_sha256": "690115b0d7eff20bf747956a264d6e14ef1ad49242eda84fda806576a86864ff",
+          "candidate_rgb_sha256": "eac334722475b195e859fafdc10b138f3aa861dd93cbf60eb2d5719205c0be60",
+          "changed_pixels": 4,
+          "peak_channel_delta": 1,
+          "state_equal": true
+        },
+        {
+          "frame": "frame-40.rgb",
+          "baseline_rgb_sha256": "cd8755bafd79de4caf9b84af3864cc9b340b6ad5a260696b172b700407bfd663",
+          "candidate_rgb_sha256": "bd6a02e591667dedb3751f42418fab3377084e1df90508af0cfe1e09e0cd1e95",
+          "changed_pixels": 6,
+          "peak_channel_delta": 9,
+          "state_equal": true
+        },
+        {
+          "frame": "frame-80.rgb",
+          "baseline_rgb_sha256": "e8e3c8e4f18c0af13a2dea452cfba80efe6bdd039c30e7db11e23fe057afe2bd",
+          "candidate_rgb_sha256": "5f9f30556793ab4f25d10a73875005d256520ba9731cb7d8e83034167d6db003",
+          "changed_pixels": 15,
+          "peak_channel_delta": 3,
+          "state_equal": true
+        }
+      ]
+    }
+  },
+  "capture_contract": {
+    "binary": "/tmp/football-render-gpu-profile-20261006/build/bin/engine_frame_capture_contract",
+    "binary_sha256": "2aca5dd29ca3be62be702bc8f45c5df99dbdc463d1c6b3b270010295668e8385",
+    "engine_library_sha256": "d31d7dbd37eb544e1dd677b2449528c6e0a5b5aa327c190e8179f4da53e331d4",
+    "env": {
+      "GFOOTBALL_USE_PBR": "1",
+      "GFOOTBALL_PBR_BLOOM": "1",
+      "GFOOTBALL_PBR_FXAA": "1",
+      "GFOOTBALL_PBR_AUTO_EXPOSURE": "1",
+      "LIBGL_ALWAYS_SOFTWARE": "1",
+      "GALLIUM_DRIVER": "llvmpipe",
+      "MESA_LOADER_DRIVER_OVERRIDE": "llvmpipe",
+      "GFOOTBALL_DATA_DIR": "<baseline or candidate>/engine/data",
+      "LD_LIBRARY_PATH": "<post_timer_baseline dir>"
+    },
+    "command": "engine_frame_capture_contract <new output directory>",
+    "baseline_commit": "a53d5c8667434db3baefe76625031dce0e133af0"
+  },
+  "capture_archive": {
+    "path": "captures.zip",
+    "sha256": "55a634c77f5619065813ce88f614aba7ff38e282d511e119e5d05d008b5c2b85",
+    "files": 30
+  },
+  "patch_apply_command": "git apply --unidiff-zero <candidate.patch>"
+}
