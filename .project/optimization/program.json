@@ -2514,9 +2514,29 @@
     },
     {
       "id": "product_release",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "七个领域当前源码验收全部有效；已知严重缺陷为零；产物与运行证据可复现"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/product_release.py"
+      ],
+      "kind": "json",
+      "min_assertions": 30,
+      "timeout": 300,
+      "sources": [
+        ".project/quality.py",
+        ".project/optimization/program.json",
+        ".project/optimization/known_issues.json",
+        ".project/checks/product_release.py"
+      ],
+      "tools": [
+        "python3",
+        "git"
+      ],
+      "environment": [
+        "PYTHONOPTIMIZE"
       ]
     },
     {
