@@ -17,4 +17,17 @@ python3 .project/scripts/archive_product_soak.py --verify \
   .project/optimization/evidence/product_soak_5754078e079c.zip
 ```
 
-这份结果是独立长时运行证据。质量编排中的 `product_soak` 当前仍待正式复验；它通过且依赖任务全部通过之前，不将产品发布里程碑标为完成。
+这份结果是独立长时运行证据。质量编排中的 `product_soak` 已完成正式复验，状态为 `verified`；发布里程碑仍受上游渲染门禁和其他待刷新证据约束。
+
+## 正式质量编排复验
+
+`product_soak` 的正式运行再次完成 Release 与 ASan/UBSan 各 108,000 个测量帧，**406 项断言、零跳过**，三个种子的完整轨迹逐一匹配。Release 三组 p99 分别为 **8.320、9.156、6.192 ms**，RSS 增长均为 **132 KiB**；Sanitizer 三组 p99 分别为 **57.535、34.605、28.764 ms**，独立工具开销上界均通过。已用原生验证器重算六份原始日志，复核 12 份命令日志、827 项源码与资源清单、Release 与 Sanitizer 测量二进制哈希。
+
+[正式归档](evidence/product_soak_cc2641c37587.zip)的 SHA-256 为 `c4a8531563e126671147209bffd8df442780066718ccdf464045d08c281cabd6`，正式报告 SHA-256 为 `cc2641c37587b2c6ecdb8fbd46345d46630efd6523117c074b1494ca67331492`。归档经独立回读校验，并重复构建为完全相同的字节。校验命令：
+
+```sh
+python3 .project/scripts/archive_product_soak.py --verify \
+  .project/optimization/evidence/product_soak_cc2641c37587.zip
+```
+
+这证明当前逻辑帧长时稳定性，不覆盖真实图形呈现或广域网；发布验收仍以全部里程碑和正式门禁为准。

@@ -1,0 +1,15 @@
+{
+  "check": "product_soak",
+  "fingerprint": "0985658e9889b42172a0c6cda83b6acd4b21b1da34a9fa804ef337188f28f022",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1791224915.8629563,
+  "duration_seconds": 4433.133,
+  "argv": [
+    "python3",
+    ".project/checks/product_soak.py"
+  ],
+  "log": "product_soak-1791224915863001468.log",
+  "log_sha256": "dffaf35c5114a37b040255e2df06ba6bd962205db27083591d283df49c6d968a"
+}

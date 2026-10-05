@@ -1,0 +1,13 @@
+release-configure
+release-build
+release-linkage
+sanitized-configure
+sanitized-build
+sanitized-linkage
+release-42
+sanitized-42
+release-43
+sanitized-43
+release-44
+sanitized-44
+{"passed": true, "assertions": 406, "skipped": 0, "error": null, "artifact": "/root/work_space/football/.project/optimization/benchmarks/product-soak-1791224915904294461/report.json", "measured_frames_by_build": {"release": 108000, "sanitized": 108000}, "artifact_sha256": "cc2641c37587b2c6ecdb8fbd46345d46630efd6523117c074b1494ca67331492"}
