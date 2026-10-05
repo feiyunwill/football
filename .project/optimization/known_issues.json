@@ -1,0 +1,13 @@
+{
+  "schema": "football-known-issues-v1",
+  "issues": [
+    {
+      "id": "render-1080p-p95-20261006",
+      "severity": "blocker",
+      "status": "open",
+      "summary": "1920x1080 PBR + Bloom + FXAA + auto exposure exceeds the 16.67 ms p95 product frame budget on the measured Arc/WSLg presentation path",
+      "evidence": ".project/optimization/evidence/render_gpu_wayland_20261006.json",
+      "closure_evidence": null
+    }
+  ]
+}
