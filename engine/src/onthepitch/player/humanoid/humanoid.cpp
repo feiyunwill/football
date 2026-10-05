@@ -144,7 +144,7 @@ void Humanoid::Process() {
       currentAnim.touchFrame == -1 && currentAnim.frameNum >= 1 &&
       match->IsInPlay() && !match->IsInSetPiece() &&
       CastPlayer()->GetController()->HasFreshManualMovementInput() &&
-      CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
+      CastPlayer()->GetController()->GetFloatVelocity() > 0.5f &&
       spatialState.movement.GetDotProduct(
           CastPlayer()->GetController()->GetDirection()) <
           CastPlayer()->GetController()->GetFloatVelocity() * 0.5f;
@@ -1304,7 +1304,7 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
     manualFreshMovementInput = manualMovementContext &&
         currentAnim.frameNum >= 1 &&
         CastPlayer()->GetController()->HasFreshManualMovementInput() &&
-        CastPlayer()->GetController()->GetFloatVelocity() >= walkVelocity &&
+        CastPlayer()->GetController()->GetFloatVelocity() > 0.5f &&
         command.desiredVelocityFloat > 0.5f &&
         command.desiredDirection.GetDotProduct(
             CastPlayer()->GetController()->GetDirection()) > 0.5f &&

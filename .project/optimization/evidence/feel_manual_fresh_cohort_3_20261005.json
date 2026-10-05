@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "assertions": 465,
+  "skipped": 0,
+  "failures": [],
+  "presses": 60,
+  "physical_presses": 60,
+  "excluded_unplayable_transitions": 0,
+  "admitted": 60,
+  "responded": 60,
+  "response_p95_ms": 38.872,
+  "visible_p95_ms": 41.47,
+  "input_admission_p95_ms": 37.036,
+  "scope": "15 independent real standalone-game windows, 4 XTEST presses each; actual controlled-player velocity and following product swap",
+  "seeds": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56
+  ],
+  "budget_ms": 50.0,
+  "source_sha256": "ea225fa569531c0d314c2a3742c52fbdbe73b7fea011f4c60960dbe46cc417ac",
+  "binaries": {
+    "engine": "00b128af320f36659584882570b475bead999fe1a247fd33d047e84a0a89333c",
+    "product": "2b1819814360afaa42d5623bba0e3e5949ffcbe883f2504343d279d9d7e46277",
+    "trace": "c5ab1420c802919275e8e070fc22a17e4272aa0be6fa06e3b9b5df9bab7adafd",
+    "driver": "46e392bcd6aafc9abeeb1aed1874fa47cb60e1b30665d5da818c14fc5e35f998"
+  },
+  "driver_root": "/root/.cache/football-mesa-build-20260913-a/install-candidate",
+  "x11_root": "/root/.cache/football-input-x11-20260913-a/root-relocated",
+  "cohort_sha256": "64e40732edc7cfaf4a0c1d16b84614305cd4a0dd4ea1cbc704e62fa8c5a73efd",
+  "triage_sha256": "0b67b3b1b826a577e136a67876ab9c94e6314cf189b966437db184b8ed53740c",
+  "triage_violations": 1,
+  "triage_causes": {
+    "presentation_delay": 1
+  }
+}

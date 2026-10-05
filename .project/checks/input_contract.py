@@ -24,7 +24,7 @@ CONTRACTS={
  # 2026-09-13: slow authority lead and real unavailable-player AI recovery are mandatory.
  #     'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6}),
  'engine_native_publication_clock_contract':(30559,{'cadence_frames':6000,'concurrent_frames':512,'edge_frames':6,'resync_frames':572,'resync_max_lead':2}),
-  'engine_native_bot_selection_contract':(8553,{'prefix_frames':512,'recorded_tail_frames':1735,'unavailable_frames':105,'recovered_frames':98,'opponent_restart_wait_frames':32,'actual_gameenv':True}),
+  'engine_native_bot_selection_contract':(9404,{'prefix_frames':512,'recorded_tail_frames':1918,'unavailable_frames':105,'recovered_frames':66,'opponent_restart_wait_frames':0,'actual_gameenv':True}),
  'engine_native_match_contract':(44000,{'clock_events':10000,'engine_frames':600,'actual_gameenv':True,'native_contract':1}),
  # 2026-09-13: shared history and joined transport ownership are mandatory input contracts.
  'engine_native_transport_pump_contract':(20333,{'ledger_frames':4000,'concurrent_frames':128,'joined_lifetimes':64}),
@@ -95,9 +95,10 @@ def verify_bot_selection_reference():
     assist=verify_bot_selection_assist()
     handfeel=verify_bot_selection_player_switch()
     pass_buffer=verify_bot_selection_pass_buffer()
+    manual_fresh=verify_bot_selection_manual_fresh()
     return {'manifest_sha256':benchmark.file_hash(base/'bot_selection_v2.json'),
               'oracle_output_sha256':manifest['oracle_output']['sha256'],
-              'prefix_frames':512,'aligned_tail_frames':91,**requeue,**momentum,**assist,**handfeel,**pass_buffer}
+              'prefix_frames':512,'aligned_tail_frames':91,**requeue,**momentum,**assist,**handfeel,**pass_buffer,**manual_fresh}
 
 def verify_bot_selection_requeue():
     """Keep the archived old oracle while validating a separately versioned turn."""
@@ -495,15 +496,15 @@ def verify_bot_selection_response():
     controller_snapshot=json.loads((base/'bot_selection_handfeel_20261002.json').read_text())[
         'historical_controller_snapshot']
     for relative,expected in manifest['candidate_sources'].items():
-        source=(ROOT/relative).resolve()
+        # Authenticate the historical commit, so later accepted gameplay changes
+        # do not invalidate the sealed manual-response oracle.
+        recorded=subprocess.check_output(
+            ['git','show','f8181eb6d1f15efbf9457dbd4131d42619d0ede6:'+relative],cwd=ROOT)
+        require(hashlib.sha256(recorded).hexdigest()==expected,
+                'Manual-response pinned source changed: '+relative)
         if relative=='engine/src/onthepitch/player/controller/playercontroller.cpp':
-            # The earlier handfeel verifier authenticated this archived source.
-            # Later product steering changes must not rewrite its historical oracle.
             require(expected==controller_snapshot['decompressed_sha256'],
                     'Manual-response historical controller changed')
-            continue
-        require(source.is_relative_to(ROOT) and benchmark.file_hash(source)==expected,
-                'Manual-response source changed: '+relative)
     archive=manifest['archive']
     archive_path=(ROOT/archive['path']).resolve()
     require(archive_path.is_relative_to(ROOT) and
@@ -802,15 +803,16 @@ def verify_bot_selection_pass_buffer():
             manifest['raw_oracles']['independent_runs']==2,
             'Pass-buffer reference contract changed')
     generator=ROOT/'.project/optimization/diagnostics/bot_selection_pass_buffer_reference.py'
-    source=ROOT/'engine/tests/engine_native_bot_selection_contract.cpp'
+    source='engine/tests/engine_native_bot_selection_contract.cpp'
+    recorded=subprocess.check_output(
+        ['git','show','af33c5484f90b39db86ae5ada04e628f761dbb74:'+source],cwd=ROOT)
     require(benchmark.file_hash(generator)==manifest['generator_sha256'] and
-            benchmark.file_hash(source)==manifest['test_source_sha256'],
-            'Pass-buffer generator source changed')
+            hashlib.sha256(recorded).hexdigest()==manifest['test_source_sha256'],
+            'Pass-buffer historical generator source changed')
     for relative,expected in manifest['gameplay_sources'].items():
         recorded=subprocess.check_output(
             ['git','show',manifest['gameplay_source_commit']+':'+relative],cwd=ROOT)
-        require(hashlib.sha256(recorded).hexdigest()==expected and
-                benchmark.file_hash(ROOT/relative)==expected,
+        require(hashlib.sha256(recorded).hexdigest()==expected,
                 'Pass-buffer pinned gameplay differs: '+relative)
     archive=manifest['archive']
     archive_path=(ROOT/archive['path']).resolve()
@@ -877,6 +879,100 @@ def verify_bot_selection_pass_buffer():
             'pass_buffer_archive_sha256':archive['sha256'],
             'pass_buffer_unavailable_frames':105,
             'pass_buffer_active_bot_frames':66}
+
+def verify_bot_selection_manual_fresh():
+    """Pin the current fresh-input route while retaining the old pass-buffer oracle."""
+    base=ROOT/'.project/optimization/baselines'
+    path=base/'bot_selection_manual_fresh_20261005.json'
+    manifest=json.loads(path.read_text())
+    parent=base/'bot_selection_pass_buffer_20261004.json'
+    contract={'prefix_frames':512,'scripted_frames':1531,'tail_frames':1918,
+              'first_position_divergence_vs_prior':264,
+              'first_bot_input_divergence_vs_prior':1531,
+              'first_unavailable_tail_frame':1746,'unavailable_frames':105,
+              'recovered_frames':66,'active_bot_frames':66,
+              'opponent_restart_wait_frames':0,'emit_assertions':4775,
+              'normal_assertions':9404}
+    require(manifest['format']==1 and
+            manifest['id']=='bot-selection-manual-fresh-20261005' and
+            manifest['historical_reference']==str(parent.relative_to(ROOT)) and
+            manifest['historical_reference_sha256']==benchmark.file_hash(parent) and
+            manifest['source_parent_commit']=='af33c5484f90b39db86ae5ada04e628f761dbb74' and
+            manifest['contract']==contract and
+            manifest['raw_oracles']['independent_runs']==2,
+            'Manual-fresh reference contract changed')
+    expected_sources={'engine/src/onthepitch/player/humanoid/humanoid.cpp',
+                      'engine/tests/engine_native_bot_selection_contract.cpp'}
+    require(set(manifest['candidate_sources'])==expected_sources and
+            all(benchmark.file_hash(ROOT/relative)==expected
+                for relative,expected in manifest['candidate_sources'].items()),
+            'Manual-fresh current source changed')
+    archive=manifest['archive']
+    archive_path=(ROOT/archive['path']).resolve()
+    require(archive_path.is_relative_to(ROOT) and
+            archive['path']=='.project/optimization/baselines/bot_selection_manual_fresh_20261005.tar.gz' and
+            benchmark.file_hash(archive_path)==archive['sha256'],
+            'Manual-fresh oracle archive changed')
+    names={'generator.cpp','hashes-run1.inc','hashes-run2.inc',
+           'tail-run1.inc','tail-run2.inc','emit-run1.log','emit-run2.log',
+           'normal-run1.log','normal-run2.log'}
+    with tarfile.open(archive_path,'r:gz') as package:
+        metadata=json.load(package.extractfile('manifest.json'))
+        require(metadata['format']=='bot-selection-manual-fresh-oracle-v1' and
+                set(metadata['files'])==names and
+                set(package.getnames())==names|{'manifest.json'},
+                'Manual-fresh oracle archive members changed')
+        raw={name:package.extractfile(name).read() for name in names}
+    require(all(hashlib.sha256(data).hexdigest()==metadata['files'][name]
+                for name,data in raw.items()) and
+            hashlib.sha256(raw['generator.cpp']).hexdigest()==
+            manifest['candidate_sources']['engine/tests/engine_native_bot_selection_contract.cpp'],
+            'Manual-fresh oracle archive member changed')
+    for kind,frames in (('hashes',512),('tail',1918)):
+        first=raw[f'{kind}-run1.inc']
+        require(first==raw[f'{kind}-run2.inc'] and
+                len(first.splitlines())==frames and
+                hashlib.sha256(first).hexdigest()==
+                manifest['raw_oracles'][f'{kind}_sha256'],
+                'Manual-fresh independent replays differ')
+    fixture=manifest['fixture']
+    fixture_path=(ROOT/fixture['path']).resolve()
+    require(fixture_path.is_relative_to(ROOT) and
+            fixture['path']=='engine/tests/fixtures/native_bot_transition_tail_manual_fresh_20261005.inc' and
+            benchmark.file_hash(fixture_path)==fixture['sha256'] and
+            fixture_path.read_bytes().partition(b'\n')[2]==raw['tail-run1.inc'],
+            'Manual-fresh fixture differs from independent replays')
+    old_hashes=(ROOT/'engine/tests/fixtures/native_bot_transition_hashes_player_switch_20261004.inc').read_text().splitlines()[1:]
+    require(raw['hashes-run1.inc'].decode().splitlines()==old_hashes,
+            'Manual-fresh semantic prefix changed')
+    def fields(line):
+        return line.strip().rstrip(',').strip('{}').split(',')
+    previous=[fields(line) for line in
+              (ROOT/'engine/tests/fixtures/native_bot_transition_tail_pass_buffer_20261004.inc').read_text().splitlines()[1:]]
+    current=[fields(line) for line in raw['tail-run1.inc'].decode().splitlines()]
+    require(len(previous)==1735 and len(current)==1918 and
+            next(i for i,(a,b) in enumerate(zip(previous,current)) if a[3:]!=b[3:])==264 and
+            next(i for i,(a,b) in enumerate(zip(previous,current)) if a[:3]!=b[:3])==1531 and
+            all(a[:3]==b[:3] for a,b in zip(previous[:1531],current[:1531])),
+            'Manual-fresh scripted route or divergence changed')
+    selected=[int(row[3]) for row in current]
+    require(all(actor>=0 for actor in selected[:1746]) and
+            selected[1746:1851]==[-1]*105 and
+            selected[1851:]==[0]*67,
+            'Manual-fresh bot recovery changed')
+    expected={'passed':True,'prefix_frames':512,'recorded_tail_frames':1918,
+              'unavailable_frames':105,'skipped':0,'actual_gameenv':True,
+              'recovered_frames':66,'opponent_restart_wait_frames':0}
+    for run in (1,2):
+        for kind,assertions in (('emit',4775),('normal',9404)):
+            log=raw[f'{kind}-run{run}.log'].decode()
+            require(log.startswith('exit=0\n') and
+                    json.loads(log.split('\n',1)[1])==dict(expected,assertions=assertions),
+                    'Manual-fresh archived replay did not complete')
+    return {'manual_fresh_manifest_sha256':benchmark.file_hash(path),
+            'manual_fresh_archive_sha256':archive['sha256'],
+            'manual_fresh_unavailable_frames':105,
+            'manual_fresh_active_bot_frames':66}
 
 def observation():
     socket=Path('/tmp/.X11-unix')

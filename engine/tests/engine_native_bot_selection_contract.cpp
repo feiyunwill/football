@@ -14,7 +14,7 @@ const Recorded legacy_tail[]={
 #include "fixtures/native_bot_transition_tail_response_20261002.inc"
 };
 const Recorded tail[]={
-#include "fixtures/native_bot_transition_tail_pass_buffer_20261004.inc"
+#include "fixtures/native_bot_transition_tail_manual_fresh_20261005.inc"
 };
 const std::uint64_t semantic_hashes[]={
 #include "fixtures/native_bot_transition_hashes_player_switch_20261004.inc"
