@@ -85,6 +85,33 @@ def audit_artifact_children(path: Path, check) -> dict[str, str]:
     return verified
 
 
+def audit_soak_archive(report_path: Path, check) -> dict | None:
+    """Require the formal soak's raw evidence to be independently verifiable and committed."""
+    report_hash = sha(report_path)
+    relative = Path('.project/optimization/evidence') / (
+        'product_soak_' + report_hash[:12] + '.zip')
+    archive = ROOT / relative
+    if not archive.is_file():
+        check(False, f'Formal product soak has no committed archive: {relative}')
+        return None
+    tracked = subprocess.run(['git', 'ls-files', '--error-unmatch', '--', str(relative)],
+                             cwd=ROOT, capture_output=True, text=True)
+    clean = subprocess.run(['git', 'diff', '--quiet', 'HEAD', '--', str(relative)],
+                           cwd=ROOT, capture_output=True)
+    check(tracked.returncode == 0 and clean.returncode == 0,
+          f'Formal product soak archive is not committed: {relative}')
+    sys.path.insert(0, str(ROOT / '.project/scripts'))
+    from archive_product_soak import verify_archive
+    try:
+        verified = verify_archive(archive)
+    except (OSError, ValueError, KeyError, RuntimeError) as error:
+        check(False, f'Formal product soak archive cannot be verified: {error}')
+        return None
+    check(verified['report_sha256'] == report_hash,
+          'Formal product soak archive contains a different report')
+    return verified
+
+
 def main() -> int:
     output = BENCHMARKS / f'product-release-{time.time_ns()}'
     output.mkdir(parents=True, exist_ok=False)
@@ -111,6 +138,7 @@ def main() -> int:
         records = {}
         artifacts = {}
         artifact_children = {}
+        archives = {}
         for name, definition in program.checks.items():
             if name == 'product_release' or not definition['ready']:
                 continue
@@ -143,9 +171,12 @@ def main() -> int:
             if path.is_file():
                 artifacts[name] = {'path': str(path), 'sha256': sha(path)}
                 artifact_children[name] = audit_artifact_children(path, check)
+                if name == 'product_soak':
+                    archives[name] = audit_soak_archive(path, check)
         report['checks'] = records
         report['artifacts'] = artifacts
         report['artifact_children'] = artifact_children
+        report['archives'] = archives
 
         issues = json.loads(ISSUES.read_text())
         check(issues.get('schema') == 'football-known-issues-v1' and
@@ -170,12 +201,12 @@ def main() -> int:
 
         changed = subprocess.run(
             ['git', 'diff', '--name-only', 'HEAD', '--', 'engine', 'gfootball',
-             '.project/checks', '.project/optimization/program.json',
+             '.project/checks', '.project/scripts', '.project/optimization/program.json',
              '.project/optimization/known_issues.json', 'setup.py', 'pyproject.toml'],
             cwd=ROOT, capture_output=True, text=True, check=True).stdout.splitlines()
         untracked = subprocess.run(
             ['git', 'ls-files', '--others', '--exclude-standard', '--',
-             'engine', 'gfootball', '.project/checks'],
+             'engine', 'gfootball', '.project/checks', '.project/scripts'],
             cwd=ROOT, capture_output=True, text=True, check=True).stdout.splitlines()
         check(not changed and not untracked,
               'Release source is not committed: ' + ', '.join(changed + untracked))

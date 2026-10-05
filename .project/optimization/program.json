@@ -2566,7 +2566,8 @@
         ".project/quality.py",
         ".project/optimization/program.json",
         ".project/optimization/known_issues.json",
-        ".project/checks/product_release.py"
+        ".project/checks/product_release.py",
+        ".project/scripts/archive_product_soak.py"
       ],
       "tools": [
         "python3",

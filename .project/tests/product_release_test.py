@@ -4,10 +4,11 @@ import json
 import sys
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'checks'))
-from product_release import audit_artifact_children
+from product_release import ROOT, audit_artifact_children, audit_soak_archive
 
 
 def digest(data: bytes) -> str:
@@ -15,6 +16,24 @@ def digest(data: bytes) -> str:
 
 
 class ReleaseArtifactTest(unittest.TestCase):
+    def test_requires_matching_committed_soak_archive(self):
+        archive = ROOT / '.project/optimization/evidence/product_soak_5754078e079c.zip'
+        with zipfile.ZipFile(archive) as zipped, tempfile.TemporaryDirectory() as temporary:
+            report = Path(temporary) / 'report.json'
+            report.write_bytes(zipped.read('report.json'))
+
+            def audit():
+                failures = []
+                result = audit_soak_archive(
+                    report, lambda okay, message: failures.append(message) if not okay else None)
+                return failures, result
+
+            failures, result = audit()
+            self.assertEqual(failures, [])
+            self.assertEqual(result['logs'], 12)
+            report.write_bytes(report.read_bytes() + b'changed')
+            self.assertTrue(audit()[0])
+
     def test_accepts_intact_artifact_and_rejects_changed_children(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
