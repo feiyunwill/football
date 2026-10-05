@@ -2454,9 +2454,46 @@
     },
     {
       "id": "product_soak",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "多种子至少 100000 逻辑帧；已覆盖路径无 ASan/UBSan 问题，资源增长有界"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/product_soak.py"
+      ],
+      "kind": "json",
+      "min_assertions": 300,
+      "timeout": 7200,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/tests/engine_soak_benchmark.cpp",
+        "engine/data/**/*",
+        ".project/checks/product_soak.py",
+        ".project/checks/match_benchmark.py",
+        ".project/checks/native_boundary.py"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "ldd"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "LD_LIBRARY_PATH",
+        "GFOOTBALL_DATA_DIR",
+        "ASAN_OPTIONS",
+        "UBSAN_OPTIONS",
+        "PYTHONOPTIMIZE"
       ]
     },
     {
