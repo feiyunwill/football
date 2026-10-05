@@ -2409,9 +2409,47 @@
     },
     {
       "id": "product_journey",
-      "ready": false,
+      "ready": true,
       "acceptance": [
         "新启动到大厅、比赛、结束、退出完整脚本；恢复故障后可继续使用"
+      ],
+      "argv": [
+        "python3",
+        ".project/checks/product_journey.py"
+      ],
+      "kind": "json",
+      "min_assertions": 20,
+      "timeout": 3600,
+      "sources": [
+        "engine/CMakeLists.txt",
+        "engine/sources.cmake",
+        "engine/src/**/*.cpp",
+        "engine/src/**/*.hpp",
+        "engine/src/**/*.h",
+        "engine/ai.cpp",
+        "engine/data/**/*",
+        "engine/fonts/*.ttf",
+        "engine/__init__.py",
+        "gfootball/**/*.py",
+        ".project/checks/product_journey.py",
+        ".project/checks/requirements.txt"
+      ],
+      "tools": [
+        "python3",
+        "cmake",
+        "c++",
+        "pip"
+      ],
+      "environment": [
+        "CC",
+        "CXX",
+        "CFLAGS",
+        "CXXFLAGS",
+        "LDFLAGS",
+        "LD_LIBRARY_PATH",
+        "PYTHONPATH",
+        "GFOOTBALL_DATA_DIR",
+        "PYTHONOPTIMIZE"
       ]
     },
     {
