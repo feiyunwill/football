@@ -1,0 +1,259 @@
+diff --git a/engine/data/media/shaders/pbr.frag b/engine/data/media/shaders/pbr.frag
+index 5a69d78..c3408a5 100644
+--- a/engine/data/media/shaders/pbr.frag
++++ b/engine/data/media/shaders/pbr.frag
+@@ -5,7 +5,11 @@ uniform sampler2D map_albedo;
+ uniform sampler2D map_normal;
+ uniform sampler2D map_depth;
+ uniform sampler2D map_aux;
++uniform samplerCube irradianceMap;
++uniform samplerCube prefilterMap;
++uniform sampler2D brdfLUT;
+ uniform sampler2DShadow map_shadow;
++uniform bool includeIBL;
+ uniform mat4 inverseProjectionViewMatrix;
+ uniform mat4 lightViewProjectionMatrix;
+ uniform float contextWidth;
+@@ -73,7 +77,21 @@ void main() {
+     vec3 diffuse=(1.0-F)*(1.0-metallic)*albedo/PI;
+     float attenuation=clamp(1.0-length(toLight)/max(lightRadius,1e-6),0.0,1.0);
+     vec3 radiance=lightColor*attenuation*attenuation;
++    vec3 ambient=vec3(0.0);
++    if (includeIBL) {
++        float ao=parameters.b;
++        vec3 iblF=F0+(max(vec3(1.0-roughness),F0)-F0)*pow(1.0-clamp(NdotV,0.0,1.0),5.0);
++        vec3 kD=(vec3(1.0)-iblF)*(1.0-metallic);
++        vec3 irradiance=max(texture(irradianceMap,N).rgb,vec3(0.0));
++        vec3 iblDiffuse=irradiance*albedo;
++        vec3 R=reflect(-V,N);
++        vec3 prefiltered=max(textureLod(prefilterMap,R,roughness*4.0).rgb,vec3(0.0));
++        vec2 brdf=clamp(texture(brdfLUT,vec2(clamp(NdotV,0.0,1.0),roughness)).rg,
++                        vec2(0.0),vec2(1.0));
++        vec3 iblSpecular=prefiltered*(iblF*brdf.x+brdf.y);
++        ambient=max((kD*iblDiffuse+iblSpecular)*ao,vec3(0.0));
++    }
+     // Keep lighting linear HDR; the later tone-map pass owns display encoding.
+-    stdout0=vec4((diffuse+specular)*radiance*NdotL*shadowVisibility(worldPosition),0.0);
++    stdout0=vec4(ambient+(diffuse+specular)*radiance*NdotL*shadowVisibility(worldPosition),0.0);
+     stdout1=vec4(0.0);
+ }
+diff --git a/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp b/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
+index 08c2409..7e35b58 100644
+--- a/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
++++ b/engine/src/systems/graphics/rendering/opengl_renderer3d.cpp
+@@ -45,6 +45,8 @@
+ #include <algorithm>
+ #include <mutex>
+ #include <stdexcept>
++#include <iostream>
++#include <vector>
+ #include "wrap_SDL.h"
+ 
+ #include "../../../base/geometry/aabb.hpp"
+@@ -69,6 +71,57 @@ struct GLfunctions {
+ // 2026-09-09: GL dispatch belongs to the calling thread and selected context.
+ // GLfunctions mapping;
+ thread_local GLfunctions mapping{};
++namespace {
++struct GpuTimerState {
++  PFNGLGENQUERIESPROC generate = nullptr;
++  PFNGLQUERYCOUNTERPROC counter = nullptr;
++  PFNGLGETQUERYOBJECTUIVPROC available = nullptr;
++  PFNGLGETQUERYOBJECTUI64VPROC result = nullptr;
++  PFNGLDELETEQUERIESPROC destroy = nullptr;
++  std::vector<std::array<GLuint, 4>> frames;
++};
++thread_local GpuTimerState gpu_timer;
++bool GpuTimerEnabled() {
++  static const bool enabled = [] {
++    const char* value = std::getenv("GFOOTBALL_GPU_TIMER_PROFILE");
++    return value && value[0] == '1' && value[1] == '\0';
++  }();
++  return enabled;
++}
++void InitializeGpuTimer() {
++  if (gpu_timer.generate) return;
++  gpu_timer.generate = reinterpret_cast<PFNGLGENQUERIESPROC>(SDL_GL_GetProcAddress("glGenQueries"));
++  gpu_timer.counter = reinterpret_cast<PFNGLQUERYCOUNTERPROC>(SDL_GL_GetProcAddress("glQueryCounter"));
++  gpu_timer.available = reinterpret_cast<PFNGLGETQUERYOBJECTUIVPROC>(SDL_GL_GetProcAddress("glGetQueryObjectuiv"));
++  gpu_timer.result = reinterpret_cast<PFNGLGETQUERYOBJECTUI64VPROC>(SDL_GL_GetProcAddress("glGetQueryObjectui64v"));
++  gpu_timer.destroy = reinterpret_cast<PFNGLDELETEQUERIESPROC>(SDL_GL_GetProcAddress("glDeleteQueries"));
++  if (!gpu_timer.generate || !gpu_timer.counter || !gpu_timer.available ||
++      !gpu_timer.result || !gpu_timer.destroy)
++    throw std::runtime_error("GPU timestamp queries are unavailable");
++}
++}
++extern "C" void FootballDumpGpuProfile() {
++  if (!GpuTimerEnabled()) return;
++  if (gpu_timer.frames.size() != 150)
++    throw std::runtime_error("GPU timestamp profile did not observe 150 frames");
++  for (size_t frame = 30; frame < gpu_timer.frames.size(); ++frame) {
++    GLuint ready = 0;
++    gpu_timer.available(gpu_timer.frames[frame][3], GL_QUERY_RESULT_AVAILABLE, &ready);
++    if (!ready) throw std::runtime_error("GPU timestamp query is incomplete");
++    GLuint64 stamp[4]{};
++    for (size_t phase = 0; phase < 4; ++phase)
++      gpu_timer.result(gpu_timer.frames[frame][phase], GL_QUERY_RESULT, &stamp[phase]);
++    if (!(stamp[0] <= stamp[1] && stamp[1] <= stamp[2] && stamp[2] <= stamp[3]))
++      throw std::runtime_error("GPU timestamps are not monotonic");
++    std::cerr << "GPU_TIMER_SAMPLE " << frame - 30 << ' '
++              << stamp[1] - stamp[0] << ' ' << stamp[2] - stamp[1] << ' '
++              << stamp[3] - stamp[2] << ' ' << stamp[3] - stamp[0] << '\n';
++    gpu_timer.destroy(4, gpu_timer.frames[frame].data());
++  }
++  for (size_t frame = 0; frame < 30; ++frame)
++    gpu_timer.destroy(4, gpu_timer.frames[frame].data());
++  gpu_timer.frames.clear();
++}
+ #ifdef __linux__
+ namespace {
+ std::mutex egl_lifecycle_mutex;
+@@ -2936,6 +2989,9 @@ void OpenGLRenderer3D::LoadShader(const std::string &name,
+     SetUniformInt("pbr", "map_normal", 1);
+     SetUniformInt("pbr", "map_depth", 2);
+     SetUniformInt("pbr", "map_aux", 3);
++    SetUniformInt("pbr", "irradianceMap", 4);
++    SetUniformInt("pbr", "prefilterMap", 5);
++    SetUniformInt("pbr", "brdfLUT", 6);
+     SetUniformInt("pbr", "map_shadow", 7);
+   }
+   if (name == "ibl_irradiance") {
+@@ -3329,6 +3385,13 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+                                      std::deque<LightQueueEntry> &visibleLights,
+                                      std::deque<VertexBufferQueueEntry> &skyboxes) {
+   DO_VALIDATION;
++  const bool gpu_profile = GpuTimerEnabled();
++  std::array<GLuint, 4> gpu_query{};
++  if (gpu_profile) {
++    InitializeGpuTimer();
++    gpu_timer.generate(4, gpu_query.data());
++    gpu_timer.counter(gpu_query[0], GL_TIMESTAMP);
++  }
+   CreateIBLResources(visibleLights);
+   
+   std::vector<e_TargetAttachment> targets;
+@@ -3380,6 +3443,7 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   ClearBuffer(Vector3(0, 0, 0), true, true);
+   
+   RenderVertexBuffer(visibleGeometry, e_RenderMode_Full);
++  if (gpu_profile) gpu_timer.counter(gpu_query[1], GL_TIMESTAMP);
+   
+   // ============================================
+   // 3. 光照阶段 (PBR + IBL)
+@@ -3410,35 +3474,34 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   SetTextureUnit(6);
+   BindTexture(iblTextures_[3]);
+   SetTextureUnit(0);
+-  UseShader("ibl_composition");
+-  
+-  SetUniformFloat("ibl_composition", "contextWidth", (float)view.width);
+-  SetUniformFloat("ibl_composition", "contextHeight", (float)view.height);
+-  SetUniformFloat("ibl_composition", "contextX", (float)0);
+-  SetUniformFloat("ibl_composition", "contextY", (float)0);
+-  SetUniformMatrix4("ibl_composition", "inverseProjectionViewMatrix",
+-                    inverseProjectionViewMatrix);
+-  const Vector3 iblCamera = viewMatrix.GetInverse().GetTranslation();
+-  SetUniformFloat3("ibl_composition", "cameraPosition", iblCamera.coords[0],
+-                   iblCamera.coords[1], iblCamera.coords[2]);
+-  
+-  SetDepthTesting(false);
+-  SetDepthMask(false);
+-  
+-  RenderOverlay2D();
+-  SetTextureUnit(4);
+-  mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+-  SetTextureUnit(5);
+-  mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+-  SetTextureUnit(6);
+-  BindTexture(0);
+-  SetTextureUnit(0);
+-  
+-  // 直接光照 (PBR)
++  // A single directional light covers the whole screen: direct light and IBL
++  // can share one G-buffer read and one HDR write.
++  const bool fuseIBL = visibleLights.size() == 1 && visibleLights.front().type == 0;
++  if (!fuseIBL) {
++    UseShader("ibl_composition");
++    SetUniformFloat("ibl_composition", "contextWidth", (float)view.width);
++    SetUniformFloat("ibl_composition", "contextHeight", (float)view.height);
++    SetUniformFloat("ibl_composition", "contextX", (float)0);
++    SetUniformFloat("ibl_composition", "contextY", (float)0);
++    SetUniformMatrix4("ibl_composition", "inverseProjectionViewMatrix",
++                      inverseProjectionViewMatrix);
++    const Vector3 iblCamera = viewMatrix.GetInverse().GetTranslation();
++    SetUniformFloat3("ibl_composition", "cameraPosition", iblCamera.coords[0],
++                     iblCamera.coords[1], iblCamera.coords[2]);
++    SetDepthTesting(false);
++    SetDepthMask(false);
++    RenderOverlay2D();
++  }
++
++  // Direct light, with ambient included for one directional light.
+   UseShader("pbr");
+-  
+-  SetBlendingMode(e_BlendingMode_On);
+-  SetBlendingFunction(e_BlendingFunction_One, e_BlendingFunction_One);
++  SetUniformInt("pbr", "includeIBL", fuseIBL ? 1 : 0);
++  if (fuseIBL) {
++    SetBlendingMode(e_BlendingMode_Off);
++  } else {
++    SetBlendingMode(e_BlendingMode_On);
++    SetBlendingFunction(e_BlendingFunction_One, e_BlendingFunction_One);
++  }
+   
+   SetUniformFloat("pbr", "contextWidth", (float)view.width);
+   SetUniformFloat("pbr", "contextHeight", (float)view.height);
+@@ -3457,6 +3520,14 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   SetDepthMask(true);
+   SetCullingMode(e_CullingMode_Off);
+   
++  SetTextureUnit(4);
++  mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
++  SetTextureUnit(5);
++  mapping.glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
++  SetTextureUnit(6);
++  BindTexture(0);
++  SetTextureUnit(0);
++
+   // 清理纹理绑定
+   SetTextureUnit(1);
+   BindTexture(0);
+@@ -3466,6 +3537,7 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   BindTexture(0);
+   SetTextureUnit(0);
+   BindTexture(0);
++  if (gpu_profile) gpu_timer.counter(gpu_query[2], GL_TIMESTAMP);
+   
+   // ============================================
+   // 4. 后处理阶段 (Tone Mapping + Bloom + FXAA)
+@@ -3646,5 +3718,9 @@ void OpenGLRenderer3D::RenderViewPBR(View &view, const Matrix4 &projectionMatrix
+   UseShader("");
+   SetRenderTargets({e_TargetAttachment_Back});
+   SetViewport(0, 0, width, height);
++  if (gpu_profile) {
++    gpu_timer.counter(gpu_query[3], GL_TIMESTAMP);
++    gpu_timer.frames.push_back(gpu_query);
++  }
+ }
+ }
+diff --git a/engine/tests/engine_render_budget_benchmark.cpp b/engine/tests/engine_render_budget_benchmark.cpp
+index c3b9545..372219e 100644
+--- a/engine/tests/engine_render_budget_benchmark.cpp
++++ b/engine/tests/engine_render_budget_benchmark.cpp
+@@ -19,6 +19,8 @@
+ #include <string>
+ #include <vector>
+ 
++extern "C" void FootballDumpGpuProfile();
++
+ namespace {
+ constexpr int kWidth = 1920, kHeight = 1080;
+ constexpr unsigned kWarmup = 30, kSamples = 120;
+@@ -138,6 +140,7 @@ int main(int argc, char** argv) {
+       glGetIntegerv(GL_VIEWPORT, viewport);
+       Require(viewport[2] == kWidth && viewport[3] == kHeight,
+               "OpenGL viewport differs from 1080p target");
++      FootballDumpGpuProfile();
+     }
+     std::cout << std::fixed << std::setprecision(6)
+               << "{\"seed\":" << parsed
