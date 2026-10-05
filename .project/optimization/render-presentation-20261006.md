@@ -8,6 +8,8 @@
 
 原始数组还允许逐帧配对：151 次交换包含首帧 1 次、热身 30 次和测量 120 次，因此将测量帧 `render.samples_ms[i]` 与 `swap.samples_ms[i + 31]` 对齐。120 个差值全部为正，中位数 **2.285 ms**、p95 **2.847 ms**（范围 2.009–3.772 ms）。这说明同次运行的非交换部分远低于完整帧预算，而窗口交换等待主导长尾；仍须以包含真实交换的完整帧 p95 判定产品门禁。
 
+[SDL 的交换间隔文档](https://wiki.libsdl.org/SDL2/SDL_GL_SetSwapInterval)将 0 定义为立即更新，1 为垂直同步，-1 为自适应同步；本机正式运行已报告 0。因此仅将间隔改为 0 不是剩余问题的修复。[WSLg 官方说明](https://github.com/microsoft/wslg/wiki/Controlling-WSLg-frame-rate)指出其呈现要经过 Linux 的 Weston 与 Windows 的 DWM 两级合成，默认向 Windows 最多提交 60 fps。结合本项目逐帧配对数据，合成/传输路径是待验证的原因之一；这些资料本身不能证明本机每次等待的具体来源，也不能代替目标设备上的完整帧测试。
+
 尝试把 SDL 窗口 `SDL_GL_ALPHA_SIZE` 从 8 改为 0，在独立 worktree 编译并以两个种子、两轮交替运行。四组原配置 p95 为 20.449、19.719、20.276、20.799 ms；相邻的无 alpha 配置为 21.216、21.671、22.858、20.737 ms，见 [A/B 原始帧样本](evidence/render_alpha0_ab_20261006.json)。该改动没有稳定收益，未合入主线。
 
 复现这台 WSL 设备上的正式检查：
