@@ -1,0 +1,15 @@
+{
+  "check": "product_release",
+  "fingerprint": "cb5d19779e430655ed4fccd699862548ca98a5df7507d6b9ad9035095b261089",
+  "passed": false,
+  "reason": "Command exited with 1",
+  "returncode": 1,
+  "started": 1791236520.456343,
+  "duration_seconds": 7.055,
+  "argv": [
+    "python3",
+    ".project/checks/product_release.py"
+  ],
+  "log": "product_release-1791236520456395754.log",
+  "log_sha256": "bbd9160f95237dfc277fd3d39b870f7e13397276f31221fb5b1f219de07631e6"
+}

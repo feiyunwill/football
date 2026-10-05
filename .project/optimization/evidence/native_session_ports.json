@@ -1,15 +1,15 @@
 {
   "check": "native_session_ports",
-  "fingerprint": "05aca8e2d01c66db7618ddeb549e1ee4100ca36b1d6928b513857898b355470b",
+  "fingerprint": "348ef83134c0f28299eae6814b0e6c5e80cca4bc83ff63bf6a3fc7225f1d14c5",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1791151945.8613114,
-  "duration_seconds": 70.9,
+  "started": 1791233831.7693489,
+  "duration_seconds": 74.07,
   "argv": [
     "python3",
     ".project/checks/native_automatic_port_contract.py"
   ],
-  "log": "native_session_ports-1791151945861348317.log",
-  "log_sha256": "8a1169b465cd09b09010802cf1b9d880fb43592fc9043c59f1a8fe56f5f5c07a"
+  "log": "native_session_ports-1791233831769364045.log",
+  "log_sha256": "136df94204ca3522083249c34765bed522e3de4960160977b6b4fa24c1f607bf"
 }

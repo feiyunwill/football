@@ -1,0 +1,13 @@
+Processing ./.
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: gfootball
+  Building wheel for gfootball (pyproject.toml): started
+  Building wheel for gfootball (pyproject.toml): finished with status 'done'
+  Created wheel for gfootball: filename=gfootball-2.10.3-cp314-cp314-linux_x86_64.whl size=10964171 sha256=6db45ba46e5afb007be5f365ca5d420f3cbbd6c3f6de725188df3c6bf4a1bc87
+  Stored in directory: /tmp/pip-ephem-wheel-cache-zb08c1zq/wheels/d2/0b/52/e5c759e04c5cecc56526d6093f9d802f0ccc41f5e8497dcadf
+Successfully built gfootball

@@ -1,0 +1,15 @@
+{
+  "check": "product_package",
+  "fingerprint": "42bb2b51571ae3abc12c56775cc146d9648d207c5a2e70293b696f96ae0d3015",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1791236224.7002957,
+  "duration_seconds": 68.419,
+  "argv": [
+    "python3",
+    ".project/checks/product_package.py"
+  ],
+  "log": "product_package-1791236224700340092.log",
+  "log_sha256": "38219b2b03e01b414cd8da29732579f4ef3b2866fc04e4872e64df59c19e63bd"
+}

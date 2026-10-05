@@ -1,0 +1,450 @@
+{
+  "passed": false,
+  "assertions": 283,
+  "skipped": 0,
+  "failures": [
+    "ms-24.1 is failed",
+    "ms-25.1 is failed",
+    "task-26.1.1.1 is failed",
+    "task-26.1.1.2 is failed",
+    "task-26.1.2.1 is failed",
+    "render_regression evidence is failed",
+    "Open severe issues: render-1080p-p95-20261006"
+  ],
+  "artifact": "/root/work_space/football/.project/optimization/benchmarks/product-release-1791236520514384774/report.json",
+  "milestones": {
+    "ms-19.1": "verified",
+    "ms-20.1": "verified",
+    "ms-21.1": "verified",
+    "ms-22.1": "verified",
+    "ms-23.1": "verified",
+    "ms-24.1": "failed",
+    "ms-25.1": "failed"
+  },
+  "product_tasks": {
+    "task-26.1.1.1": "failed",
+    "task-26.1.1.2": "failed",
+    "task-26.1.2.1": "failed"
+  },
+  "checks": {
+    "quality_selftest": {
+      "fingerprint": "aa5d95f06f0cf44c4a7eb24b6d207c1db9e9a3250739913eb6cccb5331af251f",
+      "evidence_sha256": "c596606869b3b75455a8a10b5b25c95265b7aa4fef3be3e88ac71f4636019cb0",
+      "log_sha256": "a4f8c2ecf4330e24d52d97ac2339b970ffafddbc164061159fca005efb962507"
+    },
+    "native_boundary": {
+      "fingerprint": "f216507a24fa2dbcb25b5215b3443454c35f4e311c2418f0f408b6dd529d1e09",
+      "evidence_sha256": "a807ea1fb4d672e3d9d8ace730708cfb0d8f30dd27a8331dc82cf7b4530b9e56",
+      "log_sha256": "d8cf7de27a396033b7e479a88d16d2395a54441d887ad5541fb2eab9795125b9"
+    },
+    "framework_regression": {
+      "fingerprint": "bb166ead9c45614381d7dc9566eb59f83401fd344698b79bf826b637264dc3cb",
+      "evidence_sha256": "df7dc72e948aa63f6c9a541a7397653939cc26b88d43b21a16bc9ee747783de9",
+      "log_sha256": "c2ea2b82ec7dd9b13eca2788e140739d60ed5e1d2c74b1effe821f1a0f268fa8"
+    },
+    "state_ownership": {
+      "fingerprint": "08f9a177e6647fd099999ecb3575b384390697db55de5435325be143eba0aabf",
+      "evidence_sha256": "b39f760bfc578c68a2d25bc2b3ee194fa88970a5987b7a8ab0a828eef6e3a3ec",
+      "log_sha256": "4f3b4a5f6de4a0600c1ce2dc64d6669fb158278c83b9430168ae832fd554a094"
+    },
+    "environment_lifetime": {
+      "fingerprint": "599671347b9d51babb39e1630dbedf287b5367a6d2520c212ee558436d114f91",
+      "evidence_sha256": "bff977463a4478e3dc9e321f1ba8edbb78086364510b553225f9dbcd3cb47df3",
+      "log_sha256": "010596e2b4337872c277a51ad1b396a3b0e0dc236438245e19e013bc7665a90b"
+    },
+    "simulation_contract": {
+      "fingerprint": "0f1ec16506e17d0a219117ebd0babdf27f1dbbcc19f290176b066cc5ed453c30",
+      "evidence_sha256": "b625e2b0e14a5e365a15eec1c484da4df2472e60374592352bd142b0a14e04e9",
+      "log_sha256": "22bf7d9f2ccfb460d810259dc575a4ee86d2d8487e45a42c20f1a4439faa2ced"
+    },
+    "architecture_regression": {
+      "fingerprint": "ff9bc9b6042229cf384f0680d713223d20026e1a6240878ab85c3c07415775fe",
+      "evidence_sha256": "2662d10dafc16f18995566d8aa45727d32a80613de713ef915ad5d4548f390c6",
+      "log_sha256": "66a959b846555727f3e494fc41ce283be9e4bd5fa2f31f8181f58b0fac797a58"
+    },
+    "match_benchmark": {
+      "fingerprint": "69ddac31a51488123c6b4e3e01280e76cb63ae2c445f58129799a09cd2034d5c",
+      "evidence_sha256": "0f8badf5fb6cc31ac9d3b4d1c78d5cc6e23634016f9fdca4cd685ba2375d8581",
+      "log_sha256": "374680598ea7487591625281dd33c697378fa895d14f6e39996fdc8a3878ec41"
+    },
+    "ecs_performance": {
+      "fingerprint": "76d85de767e5cb832116a62fda8c9fa189e28118196d74e37fe5c8b7ef644aa5",
+      "evidence_sha256": "e8ec2a8ed4b6ecca74da2d2f12e060b99c9fd91122536c1781af0a8bc30a3105",
+      "log_sha256": "ad2a12addc621a9bd3495001494c8c83ab61bb217d9dd8df82b5eaaf625db331"
+    },
+    "memory_budget": {
+      "fingerprint": "36a626ceec958b93be4a1bd39e6ea2ac93921c1e6b097283699f4cced3efac78",
+      "evidence_sha256": "fbfdd50b227e85faf98636ceaa9ab3c3075092780eb5887386abd8dbf3c0d885",
+      "log_sha256": "b5cbb29a54a6709cb44ca729e0864bb5be0a5b2d0f824bd1695835694725b5cc"
+    },
+    "performance_regression": {
+      "fingerprint": "f1d5ae32c753b9be8ad57d2829f18c1b844e8e7c13a177b54cc68454d73f6997",
+      "evidence_sha256": "2beec5184a725fe3af38c0bfb5967ea51f6c654ac28ec5af2508672f481d7008",
+      "log_sha256": "ee58ba15f68ee54865b7f3c7d2d2881e6a156c98d604ea0a8f84695a2ea66ec9"
+    },
+    "input_contract": {
+      "fingerprint": "8617a98860ada4b22aa2e18dfbd226243e2a091ee6538415d482debe8b80ff0e",
+      "evidence_sha256": "698987b24ae759b8061f82c43b56ec7d587965b2b166b36c9ab131cbe983bbd6",
+      "log_sha256": "3b949268d5ef89ccae68253e03dc90bc91f9699ab2c9cf0db9d7c957794c7192"
+    },
+    "fixed_timestep": {
+      "fingerprint": "45340973791a30deb416cfc4d1c7560f7e3fa7b7bc97ebf0ddbcb12f6dd822ab",
+      "evidence_sha256": "541f1e41cdc8428e578625c7af651512c82740eb1d72f6b3749bc4074ea680bd",
+      "log_sha256": "199e91dcbf4e5d3fe9e2aeb6c92ab3e2ee8f170462b7f67596d8761a754bf772"
+    },
+    "presentation_smoothing": {
+      "fingerprint": "86a1441daebc5dc0041f145a9228aa83fc99dae7134135501cb6d1e5c89b4311",
+      "evidence_sha256": "cfbcb8ccec705cdae9c0777f48e62c039e25967699f47d333ec32f700bb5d0ec",
+      "log_sha256": "091d66ca4a9a7b2eb3310da9b31bbd17f58a82550df304625a1b7e0dd1724476"
+    },
+    "feel_regression": {
+      "fingerprint": "3f958d73a211b5b792e5e85c2a7ae66a5dd8ee76311f870f0b4069f24df2e2e7",
+      "evidence_sha256": "7aa11eb60f40a43619f3a4657e71e97ca2b5f9b97c2ef8da351a56f116eebde6",
+      "log_sha256": "514797a98ee4f28ecaa00ce8b243a1b14c64ccea2ba095dd82b831cd313fc893"
+    },
+    "network_input_window": {
+      "fingerprint": "420f79b238a0e9305970d766381f94b0d14a25491bcbeacfb6edaa044dc0a066",
+      "evidence_sha256": "0f6f19c090c15ae6e82f7175af1acc159ccbe36e50b3bdb0b74bf49a343fc249",
+      "log_sha256": "44a4d98605092190f3aa91f7a29259ed2d762617052b6b341b9c50ea9d20e3d8"
+    },
+    "network_reconnect": {
+      "fingerprint": "40d8966acb3ad094df9050413963cc2e6786ea6416d44d3b1ebe5b7326210c49",
+      "evidence_sha256": "3b0802207edbb7f0375a4629935e7f7d9015082b777367e032f6e5e3aaa3a031",
+      "log_sha256": "9027ac15f5c2730d3e308d10ba9b7051552eb88a66d85a0592dcfd0fcf1c875c"
+    },
+    "lobby_lifecycle": {
+      "fingerprint": "36705eb0272bdb29a49f51c3b0d4a8fb689d241bad04059d3a5421edf3e9e6e0",
+      "evidence_sha256": "69c2f50afcb68cb53730ed12722e4352458847e8b19acdec19fafbcf917c4238",
+      "log_sha256": "a1f10ea8e9415de1140138ccd6984f2b76548e26142efe2421f0dac3498427b4"
+    },
+    "network_regression": {
+      "fingerprint": "0eb4a7deb3028638772f9713c3aee82324978579818fc6df49151aa84d53c0f1",
+      "evidence_sha256": "f79ea45d4263f88a16c8307319ddf236a37fdaaa5c379bae2c4906df0b066a35",
+      "log_sha256": "7a3f91ce70d1ef863aef45e7efd825adac123f655d79dee0c89f138f8fcb69a8"
+    },
+    "pbr_pipeline": {
+      "fingerprint": "a4670289166352428d371d6597db368e17ae72ca06b9f65306ba253c2d5301be",
+      "evidence_sha256": "c71bef0a4c0bf8139b0e3dc73317d99d3717936801040fef7ccf62c2770d1f51",
+      "log_sha256": "005adbe370fb4b553d9ac90884812a2b00ad15e182d3c02d1263a0cd96b16f7f"
+    },
+    "postprocessing": {
+      "fingerprint": "cadf88b0f34c020c82a85fa3222cf1b7d42a842b8cc3793de45aa12c4dbf2803",
+      "evidence_sha256": "8c6eb1f8cbdd874cc89d0bd6c7f6d56882ab57011143cd37f17bf0c0cb45a7b5",
+      "log_sha256": "a697944a34107851c77472a2d00d523773ba60147473882c0db099787de6dc6d"
+    },
+    "render_images": {
+      "fingerprint": "00a9837601ae11b73e1bac818c154d356b24461479fc17ae22ae98e1b0a8a7e2",
+      "evidence_sha256": "fc3053e62ad1d42286cf5d9785dd19d6f7975dfab3e82fa614b94d42b0c4bf89",
+      "log_sha256": "ab8345316d610f3e344399023e377390a015b494965e5f7cac0a208db36af3d4"
+    },
+    "tactical_integration": {
+      "fingerprint": "20edf10ef1a75482b28b43d0d76180325d729e1b1a6433a57e1d7188936d1535",
+      "evidence_sha256": "5b93017cb3e949c3c387865d5acbb320a7ebd57d347ded9f1984ebe6b52598ba",
+      "log_sha256": "ccb91c4d2a9003f6649e52330cf7fb4c409b62912ad34523c9ba9b7bf910dfa6"
+    },
+    "ai_decisions": {
+      "fingerprint": "dcb1f69a5d2aae937b7cb85bf987f5a42e8d11923cd83ae349d94615d88ccff7",
+      "evidence_sha256": "8ceaa6f5ae898a435c80899e0c6094c553ebb982cdb2b48e59bc405b3bd77a5f",
+      "log_sha256": "bba8cc7cba9919b50ee33e6b3901efc32454c2f4d18d0902b610b6aed4823698"
+    },
+    "training_reliability": {
+      "fingerprint": "30176adfe7a2d04a42ed87c164567e38b7577efcde308a5fa8f53ed7d2ded6bc",
+      "evidence_sha256": "7ed6c893d617ac41264ac49b98c7a3a9e40a3861ed21c71f13c40f26e76ddc06",
+      "log_sha256": "f35738cd02b80c7169fb1d43291c155f66af2b03db460436b9d31c31b6fd789b"
+    },
+    "ai_regression": {
+      "fingerprint": "c34ef773c0fc10efd1c33fa53a56901b84d0fe43ef9f7571198b60a7d789d6c9",
+      "evidence_sha256": "7170a29773ba3fe84f62e457b24517cbf30b5389f5005e4a97a9974cfb0c22c9",
+      "log_sha256": "62c53b63299f40925190e69a32a519e6b24180069f496b46bcd6c01bdda2b859"
+    },
+    "product_journey": {
+      "fingerprint": "251311f3e6651c3657061dcc8f458b486d1699821cd205d104ef9f51f960dc38",
+      "evidence_sha256": "7a628fd304e77812380deb5ca4732c73bb59f0549464ebfc8ce98dcda97874b6",
+      "log_sha256": "63b62118726b1acb5d1a6e759631f9add12061f896b9804c385c74b480f6c48b"
+    },
+    "product_soak": {
+      "fingerprint": "0985658e9889b42172a0c6cda83b6acd4b21b1da34a9fa804ef337188f28f022",
+      "evidence_sha256": "eaec3c0d3715923ed0f23a580f9b97229a4029489d1c7c4ed0063e60c25dc50f",
+      "log_sha256": "dffaf35c5114a37b040255e2df06ba6bd962205db27083591d283df49c6d968a"
+    },
+    "product_package": {
+      "fingerprint": "42bb2b51571ae3abc12c56775cc146d9648d207c5a2e70293b696f96ae0d3015",
+      "evidence_sha256": "3baa926f776b7fa1fba588951c2e19bf33ab9fe509a524235e9d7f5b5ef18ab4",
+      "log_sha256": "38219b2b03e01b414cd8da29732579f4ef3b2866fc04e4872e64df59c19e63bd"
+    },
+    "native_session_ports": {
+      "fingerprint": "348ef83134c0f28299eae6814b0e6c5e80cca4bc83ff63bf6a3fc7225f1d14c5",
+      "evidence_sha256": "9b4c94029496a5544ca0d53b1b604e86aa3ee3afe5978afc4a178f0b03907d5f",
+      "log_sha256": "136df94204ca3522083249c34765bed522e3de4960160977b6b4fa24c1f607bf"
+    }
+  },
+  "artifacts": {
+    "match_benchmark": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/match-1791231255137397136.json",
+      "sha256": "189244f1fbb4293a12585d5129abb2a031e9affa12bac037e1956eee8020df16"
+    },
+    "ecs_performance": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/ecs-comparison-1791232196769683004.json",
+      "sha256": "6a0b0779dd67424a3f23ef2b98146d0d65bedb887ba32b2f3cf97a2193c0b15d"
+    },
+    "memory_budget": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/memory-budget-1791232197237831276/report.json",
+      "sha256": "77e2c1d2e20cf401935d3460a4d5ef8824bed9ad3e224f7cb20627012efc5071"
+    },
+    "performance_regression": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/performance-regression-1791232670835589220/report.json",
+      "sha256": "5adba52b3bfc69814f725fb4bb56e7bc684b24151ffda13ef916c2326546f38a"
+    },
+    "input_contract": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/input-contract-1791233154410404934/report.json",
+      "sha256": "a517727d0e625e7cc546e2363ff2de0cbea576b2cccc0f7f9d4639299816ab69"
+    },
+    "presentation_smoothing": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/presentation-smoothing-1791233553110655827/report.json",
+      "sha256": "58c5cdf3e8bdc316ccb4b916298f59d29dd08aaf8ed228fb579044fb103cdf5e"
+    },
+    "feel_regression": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/feel-regression-1791233570423488336/report.json",
+      "sha256": "b3d3d2a46630c74862edaedd9fcacace30958ddc731569f6eadf7bc029131500"
+    },
+    "network_input_window": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/network-input-window-1791233742352371016/report.json",
+      "sha256": "7fe22ae76e66d828f16dbb8cbf291899fbc37f0ff9e0e1495083801a04e6f599"
+    },
+    "network_reconnect": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/network-reconnect-1791233795249674868/report.json",
+      "sha256": "0bd0cfb77f61fa2af4998d3d379fbb53e8903aea299c588fd369dadae5312721"
+    },
+    "lobby_lifecycle": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/lobby-lifecycle-1791233906018886081/report.json",
+      "sha256": "7ed343b079620d1ac79bdde57ae6cedc85165791c361b92d9467d452eb1d516b"
+    },
+    "network_regression": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/network-regression-1791233964157696923/report.json",
+      "sha256": "88d39a80c006d927710b4016082501c7ab4cd30aee7d541003e4572cb9b9b6ae"
+    },
+    "ai_regression": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/ai-regression-1791234779986026567/report.json",
+      "sha256": "5787ddc3571328df3811bf22d997b86e2b6d5b9486e0346525f9e5260f7663df"
+    },
+    "product_journey": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/product-journey-1791235988283589424/report.json",
+      "sha256": "4619247fde9f6178133dc03d8cf542bee9a579cca822e901ec2a5f35ec2024aa"
+    },
+    "product_soak": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/product-soak-1791224915904294461/report.json",
+      "sha256": "cc2641c37587b2c6ecdb8fbd46345d46630efd6523117c074b1494ca67331492"
+    },
+    "product_package": {
+      "path": "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/report.json",
+      "sha256": "f0d1c4b44b2d6cc08d2728ee5672ee2b4547833888f38454f7c759b43a0e8229"
+    }
+  },
+  "artifact_children": {
+    "match_benchmark": {},
+    "ecs_performance": {},
+    "memory_budget": {
+      "ordinary-configure-tests.log": "0e5077aaab64293f0ddc6f9ea9f78f2681a5bdcf51479112d35844daf8ef3994",
+      "ordinary-build-tests.log": "8ae70c43568bcbec4045b054b6578b212521af659b18ce44ee6a86bfbdb56e6f",
+      "ordinary-reliable_udp_budget_test-dependencies.log": "4f49cdca74977ddc6ab370595b697daa0a61a300307549682c6b0e2e078827d5",
+      "ordinary-reliable_udp_budget_test.log": "e6ce0d588a1df30cfde7d3d6e1027d02cc2a9c8bc8e107166008c2797ec1e6f9",
+      "ordinary-bounded_tcp_writer_test-dependencies.log": "704c4893f562fb58ee20e829a71817935129fe5e7dec23a45fc4edb65fe940be",
+      "ordinary-bounded_tcp_writer_test.log": "d3390a49e5d530e6e455cfa8e88ee155e7e42d09e408c6d9fbe8ff1a899932c0",
+      "ordinary-lobby_capacity_test-dependencies.log": "6913d61065acb841d11b03392f87e8e0d1ce1dd3d3476717b53482a14a07d604",
+      "ordinary-lobby_capacity_test.log": "0defd033e58b502623c9493a384c19201b489b12c631097c5f17f326e157aafc",
+      "ordinary-lobby_client_capacity_test-dependencies.log": "57d4b884a05502871f33f52179d268dbf05c9925ea78e6dfcded13113279dfbd",
+      "ordinary-lobby_client_capacity_test.log": "fb88f16c1ff272cc7d79e20071fa12056e1e2578197a324bf90d06d2aae10a01",
+      "ordinary-tcp_frame_server_test-dependencies.log": "ac884b4bafdf958bed5e912e5d03cd3750fb8baba90abbb13f35af322dcda338",
+      "ordinary-tcp_frame_server_test.log": "195d1d65b14646e89e1ec709f684482e2019745f4b38f052cb1939247fd8e331",
+      "ordinary-tcp_client_capacity_test-dependencies.log": "bab21405cbb71d3a2379d87e235fb4fd4cd8f7d418d6157af9f68713374f475b",
+      "ordinary-tcp_client_capacity_test.log": "c0536e111a952dc5f2a1228eec5598c26897ab3d12a0567c880ad3d009e01b61",
+      "ordinary-configure-native.log": "5892643ea4a58dd968ef8057cb374a3934ef6a224165cca6bfd5cfd47d4f9ecb",
+      "ordinary-build-native.log": "27a7b65f03a211e08aa4ed6551a45d9cb6f9b6f9ed6f25c424be0fd8c94c6eb9",
+      "ordinary-native-dependencies.log": "c62680e61b593982f126a74b22698d93e73e9650445632f08b587ef635a5207f",
+      "ordinary-runtime.log": "7347e94df49e35a1b1f90e391252b7a90bca065b90c7e778b7248e99da3f103a",
+      "ordinary-native-tcp-server.log": "4ad1ea16261963e402193f139f419073f8a8279212228fc1df9062da68668b22",
+      "ordinary-tcp-resume.log": "cd0d358827303a5b08800ccc9e90f427d301df2c10a54b660394b7ffbde05b21",
+      "ordinary-integrated-tcp.log": "b2cede9c46b1d3c4c6f74f19aae8c5856a527e6195b6230a8e585e7c90c7c0a3",
+      "ordinary-udp-product.log": "9e70f3c5c7aeabefdc779373a0bcd039168362b6fca82b70e3e7f0bad4f5d878",
+      "ordinary-configure-standalone.log": "2e8e26f3b97e9e46cc6aac9a4d8515fe2bdc02e4da2958c1e30aa1097e71d9c8",
+      "ordinary-build-standalone.log": "c0039862a1f9528d6c6a05a7c35d350a750781a02acb1cb72a160f8181389fd7",
+      "ordinary-frame_sync_server-dependencies.log": "11e5e6748a08a8159e571159664b882cff1c5277f955e909445b31612912f50c",
+      "ordinary-frame_sync_client-dependencies.log": "7f441822d72171297d17f5c1ed6d76b0ecc5450446a90ae54d61cce18e73301c",
+      "ordinary-standalone-server.log": "13a05d4b4fb82654437e23a53225f9d2c29f5684be777eda9bc5b6e3618c8cfe",
+      "ordinary-standalone-client.log": "df204fa5193cd203c9d4b069934335f0c56aeb2838a036bec9c3e4a90bcaa291",
+      "sanitized-configure-tests.log": "f7c58d4c320d999da57a7bbbdebf1dc74513a9a533ecd6ee3c02eb8a31563e47",
+      "sanitized-build-tests.log": "8ae70c43568bcbec4045b054b6578b212521af659b18ce44ee6a86bfbdb56e6f",
+      "sanitized-reliable_udp_budget_test-dependencies.log": "8c12a988503446f54591841a561fd460741753262d503ceb05f978fb627ff0cf",
+      "sanitized-reliable_udp_budget_test.log": "70487831fd9e710e76c5e4796373ddf07553ce372bf78919634e87a11a6c4e77",
+      "sanitized-bounded_tcp_writer_test-dependencies.log": "a2f821c1da1c37a46acbd415fec8b9f253ecc7aefa6088e6cc5942a5f6ee80de",
+      "sanitized-bounded_tcp_writer_test.log": "1b5bd616bf818f6762030f04dfb61ad2fefd24f646943362331b7605f4cfb6f2",
+      "sanitized-lobby_capacity_test-dependencies.log": "54f6b17499644a30e3cd92fd033666a7b4e97454d5a8e2d0b74e6ec0d88019a0",
+      "sanitized-lobby_capacity_test.log": "348202e674a81aa258d589da5a2e048cbc1ba941cd7c6e7e2cfd97d7f2c51426",
+      "sanitized-lobby_client_capacity_test-dependencies.log": "4991fbb4c615fdd568274b83d753be1d74097ae8e620bd536c4aac6e998d14f5",
+      "sanitized-lobby_client_capacity_test.log": "fd5ce8326287671fc72b9ff0c42a63056d07caf4a162091dd0cf4944bc0caf06",
+      "sanitized-tcp_frame_server_test-dependencies.log": "2f4db768c747707070e0063ccd530fc8d70841d8047b8cf386b466f4749d4f75",
+      "sanitized-tcp_frame_server_test.log": "be1a801bc2596c3d77239a6d6a65912657a7fd032d90f15cc75e822882ac1efe",
+      "sanitized-tcp_client_capacity_test-dependencies.log": "d1517b674a62f8689a1e68cdfc7c9f79fc521747233fb60fbbe824bcb6b9586e",
+      "sanitized-tcp_client_capacity_test.log": "c214e83255dea394277d389d1d248a1073f5e252fe8dfadd9467a76d1951f9d9",
+      "sanitized-configure-native.log": "ff200835d83797a1e2be32b599b2a55ade1858cb797f2f070db2f80226fd631f",
+      "sanitized-build-native.log": "793951e32254670420422405e404ac2b3de5f28ebdf24fe471e7874984f9eb3d",
+      "sanitized-native-dependencies.log": "d7b6df4e872471f4746c19514b016ca1412d957cb667015f2de4442e70c0335c",
+      "sanitized-runtime.log": "4e77ee49c3ef8cfa2d36e09320fccf246b623b3786bbd27b481776b71a28085d",
+      "sanitized-native-tcp-server.log": "b329ef42267bdff885bff94e9fd651ab0100e9203c634a0ec47b249e3d458d0e",
+      "sanitized-tcp-resume.log": "01162b62f33c881482c542f4080acbd37d6195b4d2cbd71633a43213b8744c48",
+      "sanitized-integrated-tcp.log": "52269901ed76167a14594b387a090ea16cada2bb0371c68990293409fa0e239a",
+      "sanitized-udp-product.log": "8e04144241e100d3e175b6ad0b09983a9a82b97a4f024de59c841a21bc97723d",
+      "sanitized-configure-standalone.log": "7e2df61c3554d588f0f319d81c2ae3e42ea0871219e70567f7efcc0b32b586a4",
+      "sanitized-build-standalone.log": "c0039862a1f9528d6c6a05a7c35d350a750781a02acb1cb72a160f8181389fd7",
+      "sanitized-frame_sync_server-dependencies.log": "dc9f3ff67ae111e6f4d9b991d2076f3efeedc1d744c99ffdfcd09de5a0838c83",
+      "sanitized-frame_sync_client-dependencies.log": "f491e159769303e6543e1ac06199e3448b0bc802d00a56841c40bc983e0ca194",
+      "sanitized-standalone-server.log": "935882bb0b70c4c6ea380fe1d825e6796ad38a4b2435568eaca81aba1ee69283",
+      "sanitized-standalone-client.log": "e759a630706255294191bce2ccc1194975e2c38641500cc4c5919fdc1d1245c8",
+      "replay.log": "cef14c3fa8f4f9214ab5400674f08dad3eee9429b4622ef8b305ca4c385e7149",
+      "python-native-identity.log": "7d52319ba863100493ac095c5b448c139da72a41f0cb3ccc57aa9f27fd21fbf7",
+      "python-frame-sync.log": "cf05be68156300e07a36280a0205afaf98fd0e48ad8129b015a714c168cfdd8e",
+      "python-recording.log": "49d3933a1b0bbd5f5dfe519c370c4e92c4fbf1248ecb669fd396c316b7b88f90"
+    },
+    "performance_regression": {
+      "seed-42.log": "2f7808edc4ef7a6e07f072f546adb1959f115b13c01911f35efa03f4eefbf2ff",
+      "seed-43.log": "225338cb1c7bb30eeadcc46fa8820a9875fe0432e7f481a466f67a1bfc473394"
+    },
+    "input_contract": {},
+    "presentation_smoothing": {
+      "configure.log": "8bee3897e224b01bade107e74975b547a1bd12e6d7dfa9a41cfeb647b11b200b",
+      "build.log": "973a3fd8d18a688bde58f9daef442a2e305142b6f7b95ac240c1da8492f7d65b",
+      "actual-correction.log": "04b1b1a9434590880c698c169b6afbb63d330e0dbcc4841fdefc516c0615240d",
+      "actual-pose.log": "06f9f34e93673e0128754776fce6fd51409c9c02e664370a61060f6c84af26f9"
+    },
+    "feel_regression": {},
+    "network_input_window": {
+      "configure-native.log": "101e3b6927e013783242c95a1678430bf65377480d763e8bd3acc0ed0705385e",
+      "build-native.log": "f7d16aa60c9ebac2aba500c5f0c87e43b1b051ee1f6805e7520d3feac7450f91",
+      "native-window.log": "c1eaf2c1b13f3377ee98c5138ade1b8f203c844fc4b4398c50f398d3d793ff6b",
+      "server-budget.log": "0527bc2c17e276d42a309f0de5377dca11ab42009e1154bf71257c54347cdbf8",
+      "udp-budget.log": "5afc632cf31462e8110a05dd472a353678430f03b4b47090bd654b2d48027de4",
+      "configure-native-sockets.log": "942a1ad03edf79ab55f77498565643b8b1fd0bc35183024e979ea8498475348d",
+      "build-native-sockets.log": "9fe3f135e6243000130bd482144ea06d0fee97a209652888a4adeeebe63bde24",
+      "native-sockets.log": "d1672a531ea3e6209fbaf056ab7bb2405ee9cef4bb588e1818b34baabf6da99c"
+    },
+    "network_reconnect": {
+      "install-python.log": "c1b34af372755e576253bb9d1d6ee1d74292c3382c3f91e2615d11e7f75a7c04",
+      "check-python.log": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "pybind11-dir.log": "1ae4c378e39880715af21dd615ebab0616a7f0e97f6ac99f763df0438cb35e90",
+      "python-transports.log": "8a297058971c100b5a63f936213ddc9008fad26d4e1402ad0e1ae4b9e996ba5a",
+      "configure-binding.log": "47953d419fc108e5378b082e052fbfeed550b6d1b7dc3243da150adc6bb57a39",
+      "build-binding.log": "1ab5b3e45fd15f5cff9d68b0ed9cd2a05d56546a7468a46b6df529964e2a3764",
+      "python-native-resume.log": "bdb2053357551182ac0e06f4e3d47e1e6e406f0b404f0b7aed4507fb476f230d",
+      "configure-cpp.log": "942a1ad03edf79ab55f77498565643b8b1fd0bc35183024e979ea8498475348d",
+      "build-cpp.log": "84a9e66813da7a502c430de4d278ee31de7dd3b0615c81b07086c810784c2e16",
+      "cpp-reconnect.log": "ad14898ebdc411786ebdd52273329db4d10ee199c20d6eaf3d4029a33d1c09c3"
+    },
+    "lobby_lifecycle": {
+      "configure-cpp.log": "942a1ad03edf79ab55f77498565643b8b1fd0bc35183024e979ea8498475348d",
+      "build-cpp.log": "7628914f7b7bb80ff559d050cdbcc34e00f9a3e0b7ecb7005b4b353645bdeefd",
+      "cpp-lobby.log": "7b7560f82d3d967294d4923b44e5c9d2a2c874b441c343cfdfff058ed68c9532",
+      "install-python.log": "c1b34af372755e576253bb9d1d6ee1d74292c3382c3f91e2615d11e7f75a7c04",
+      "check-python.log": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "pybind11-dir.log": "1ae4c378e39880715af21dd615ebab0616a7f0e97f6ac99f763df0438cb35e90",
+      "configure-binding.log": "47953d419fc108e5378b082e052fbfeed550b6d1b7dc3243da150adc6bb57a39",
+      "build-binding.log": "d78e4833a090f89ae204a289c179dc8ecc943d1ca8b34a2ae46b2bb718c78980",
+      "python-lifecycle.log": "92e229d6a5fb7b487bc8a7b762856df5d924a92c82bbeec7cd6bbaff8fd9f199",
+      "python-native-match.log": "4e8fb12d9c26042da64871c67fdfadd6b189c639f9982d0823da72307e24a241"
+    },
+    "network_regression": {
+      "install-python.log": "c1b34af372755e576253bb9d1d6ee1d74292c3382c3f91e2615d11e7f75a7c04",
+      "check-python.log": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "pybind11-dir.log": "1ae4c378e39880715af21dd615ebab0616a7f0e97f6ac99f763df0438cb35e90",
+      "configure-binding.log": "634da64d66bff07374cb3cd4cded6fe9ea0585e0b607e8f9ab471c36719dd419",
+      "build-binding.log": "d78e4833a090f89ae204a289c179dc8ecc943d1ca8b34a2ae46b2bb718c78980",
+      "two-peer-fault-matrix.log": "0246df7c3163ad91f6f2ff1aa2161540b2a60e5a2ae462374851f5620ed7e512",
+      "disconnect-recovery.log": "d208b1aa17dea5d79cd5a98d8e538aa0117a984874d0df7b0d70a121fecfa2c9"
+    },
+    "ai_regression": {
+      "release-configure.log": "b4b06214965eee4b5b0c133d5b3206e0ba9b44c9c5555098de1a26a8202bcfe9",
+      "release-build.log": "c36059e0601a8d9b11b2dd68f308116ac259e62d9a8368e40b2b30f03c1cd5bf",
+      "release-links.log": "9b708ca2610c8a79adc8fd02faede5a1fee36928630271f19f8241f1464e6a66",
+      "sanitized-configure.log": "fb21dacb5a83d43e36aba6feae509eda4f88f60814e48798b3c6c74855fba36a",
+      "sanitized-build.log": "111899a9ddeeb089a7ce0a4e88cd9d14ac3017c515f94d74d733cdc70aaa8637",
+      "sanitized-links.log": "fffc68a5ef371b495febf8d0b4a575790f2dd7da77e2329a8f8c5edbadc180b4",
+      "release-42-6000.log": "c4d572f2a2486d590a16ca2686edf8b3738381a9c1bdf5c65cb48565c2ef0cff",
+      "release-43-6000.log": "e5f802030bbdbc2ff81cc093d9fadee804ff9e63dfdbcdc133c4e0b96d7c6c0e",
+      "release-44-6000.log": "4cd9fe752d7056d204e0e60a30368fbdf7d62fd48edb517c2f8f7cc4c14224d1",
+      "release-45-6000.log": "c740190f1f1364bf23cddbd07380185682ce0492626d3deaba71e8a8cad8080d",
+      "release-46-6000.log": "160c5691199a60ae30d1c8b21f6dee99f1c5917ee48b3fe88ed9522a427119b9",
+      "release-47-6000.log": "e94cf038f441114451b077a5081998846962dc58a891134c7ebe0ac902ee4795",
+      "release-48-6000.log": "a83e35d290e00cd9141e4a000aae9bf75f3542797eff6832f8a587c7d1919a26",
+      "release-49-6000.log": "73380a08bcd8685e2dd8ab47ba96500329cfbb67be39b77716c0d90ee4a83adf",
+      "release-50-6000.log": "cfd17fd1a5d27125dd313fbfaebe7305c888740b1f750f612f9fa565acf51a92",
+      "release-51-6000.log": "e7b342ce4d236140a28fad399866c0505e90a9136cc81f7e6d48969632a2f30f",
+      "release-52-6000.log": "65e22ca95624653787ba32a4e14eba49981ff1c2dc06aaf711142aed1ad8950a",
+      "release-53-6000.log": "2978e1c4268560208098e08c7a9ceab2b2f3623626582316b543f877120b70db",
+      "release-54-6000.log": "926c7994e11a13bedb6518d4ae763b17474caa8d08161faa56e2f88b81f52cee",
+      "release-55-6000.log": "c67d01f939883c4aeffd352d4393d0473f86d724c3d6b37b780eef7dff2a97b0",
+      "release-56-6000.log": "f0808bb334553cd9102aefc158c45c30725235e2c06b92df1940c07f009b0df8",
+      "release-57-6000.log": "2194d5f21a148cbf46822b13fd6e775b0a826624fbed9e468e73a592a2be3855",
+      "release-58-6000.log": "63a2f8204a5ddba7585ea9c2fed58909a526d3fe72ecfa24e6876b5a3a166886",
+      "release-59-6000.log": "f55462419204f1c349946e6e4f70b296f93c5e2e3eb5278b520b0c00217f3bbb",
+      "release-60-6000.log": "5f90a55c55f3af9eb18cdfbcd7022177fd7ccbe91f34b58cf035f9d36f3bbe4a",
+      "release-61-6000.log": "6c6873b0cd08e28414e87f5be6a2b4e64efa0545010d35101b951a49178b7146",
+      "release-62-6000.log": "2fd18a79df97f9c4bc8fddf6e55ae9bd88c94aaea6e1acbbd49fcc394543d8fd",
+      "release-63-6000.log": "991d1902819e03c8cf82ffc2c35c3952bf7440099c8116b196d9d9cde4ad8d05",
+      "release-64-6000.log": "59358b9eb3cbd87b86203556a0a48d8d1bef868a866303068405aeb5453f09ed",
+      "release-65-6000.log": "fd223d43a9fa7b36e9d5433fe3cd192e61294be9af81b0381b9cdf59195e6c21",
+      "release-42-6000-repeat.log": "c4d572f2a2486d590a16ca2686edf8b3738381a9c1bdf5c65cb48565c2ef0cff",
+      "release-65-6000-repeat.log": "fd223d43a9fa7b36e9d5433fe3cd192e61294be9af81b0381b9cdf59195e6c21",
+      "release-42-3000-sanitizer-probe.log": "dc9ef88d80910d16d15355c48e85cec2445af91c12326c9aeb3d391a01eb8607",
+      "sanitized-42-3000-sanitizer-probe.log": "dc9ef88d80910d16d15355c48e85cec2445af91c12326c9aeb3d391a01eb8607"
+    },
+    "product_journey": {
+      "install-requirements.log": "c1b34af372755e576253bb9d1d6ee1d74292c3382c3f91e2615d11e7f75a7c04",
+      "check-requirements.log": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "pybind11-dir.log": "1ae4c378e39880715af21dd615ebab0616a7f0e97f6ac99f763df0438cb35e90",
+      "configure-binding.log": "112c5f595621985248a380a35f585cea58ef9a27f88d67ecae4c46278fa66a21",
+      "build-binding.log": "54e0d8a82d5dde9c9a4788b67acc480ac827cabc1358c46916f51fe182d3b7cb",
+      "import-binding.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "interactive-journey.log": "8201cf7442bbb17fb9bfde24508664fd92a3c28eedc1093b1ec8cbdac0e55b71"
+    },
+    "product_soak": {
+      "release-configure.log": "53877df3e8603624121a8b699947a7e98180f597c8919aa9117ba7a486b35f1c",
+      "release-build.log": "4251910fff6258722c20b0c277e7060ef2fa9b99a362c9fb02831a51354286bb",
+      "release-linkage.log": "2b6dcd540521c09464c962ab1460da4615f61eb5a8f7a8b0e15ca1d3090a15eb",
+      "sanitized-configure.log": "aea52c19530a9ebbae303d178a6b17c3eb44b71a0cc8fdc8cd9200d220bb7de4",
+      "sanitized-build.log": "019401bd8143acd0a9e91219bb26f8524dc61f904772bba1b77ae148fd476305",
+      "sanitized-linkage.log": "c3c7956e0a837509426344c6c8e674a960b24da717f164f406b50805a3fe6825",
+      "release-42.log": "2de0bfd464adacc2e026e351d7c91c3b4fa0a4dd1c672720f9866ffa43eb0da2",
+      "sanitized-42.log": "e0acd92537c9eefd1c9c8b9914c0a9d85c3c76e4d6b97d529bb95e9cc3d2c8dc",
+      "release-43.log": "aa25d62da4a5f024114c871c4e6a3aee38ecda61a79f7fc858517c80355337ca",
+      "sanitized-43.log": "2a920002c4423fa62c4788b0180e7c4e463c838cb7656ee1b0118563e63c506f",
+      "release-44.log": "b9751688d9264152be4ad90556730bf45c2b6c7ba0c98cfd143c0b2e984f1a31",
+      "sanitized-44.log": "1b71b91c8219d55918b1ea19d96b6498f91659f734ee70ec41153adf8510225c"
+    },
+    "product_package": {
+      "install-build-requirements.log": "c1b34af372755e576253bb9d1d6ee1d74292c3382c3f91e2615d11e7f75a7c04",
+      "check-build-requirements.log": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "build-wheel.log": "577846bf2a37a83599f1d2b8ee1e2a5f90b95d591642ad83eb1bb2470c74b786",
+      "clean-install-probe.log": "d3b4484f5284dcdf441863d13440fc557955e9a3036d4399919ff678e92ace47",
+      "installed-identity.log": "375a8bf4f8e6ff3ea966a70a065acb6192cab1a4293a6e6ca385559f65199a72",
+      "missing-checkpoint-diagnostic.log": "192712530d791e8eafe54bc6155d276fb6b25e9fae9e67ac6556fdf6d0797daf",
+      "installed-local-match.log": "d180d73f5e819f21c0fc4ca2bfb3adb781bb63c59c3ece0e988c4a9c40537f38",
+      "compiler.log": "0b52fa36f98d1a1ff3f77256f64c13ac7e2264cf7f072ea7943756a0ef378028",
+      "source-commit.log": "bb78a56b9296d212144a62662bf51a4b7920cf3481c1485ac2ba0f5ce21d081f",
+      "wheel/gfootball-2.10.3-cp314-cp314-linux_x86_64.whl": "6db45ba46e5afb007be5f365ca5d420f3cbbd6c3f6de725188df3c6bf4a1bc87",
+      "installed-probe/report.json": "ab3f3db5c43120b20b66ca5bf30d0b79edead1db97484ac5aca253acb2886b9b"
+    }
+  },
+  "archives": {
+    "product_soak": {
+      "archive": "/root/work_space/football/.project/optimization/evidence/product_soak_cc2641c37587.zip",
+      "sha256": "c4a8531563e126671147209bffd8df442780066718ccdf464045d08c281cabd6",
+      "source_commit": "30219139ebf31474a5be7eea60b29cb5c45cf50a",
+      "logs": 12,
+      "report_sha256": "cc2641c37587b2c6ecdb8fbd46345d46630efd6523117c074b1494ca67331492"
+    }
+  },
+  "open_severe_issues": [
+    "render-1080p-p95-20261006"
+  ],
+  "source_commit": "10a6e72637aabecc627a352c6b0dabf53286d553",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.44"
+}

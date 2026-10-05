@@ -1,0 +1,160 @@
+{
+  "passed": true,
+  "assertions": 24,
+  "skipped": 0,
+  "target_platform": "Linux x86_64",
+  "commands": [
+    {
+      "label": "install-build-requirements",
+      "argv": [
+        "/tmp/football-framework-python-fba597b1aa5c844a/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--disable-pip-version-check",
+        "-r",
+        "/root/work_space/football/.project/checks/requirements.txt"
+      ],
+      "returncode": 0,
+      "log_sha256": "c1b34af372755e576253bb9d1d6ee1d74292c3382c3f91e2615d11e7f75a7c04"
+    },
+    {
+      "label": "check-build-requirements",
+      "argv": [
+        "/tmp/football-framework-python-fba597b1aa5c844a/bin/python",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "returncode": 0,
+      "log_sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "label": "build-wheel",
+      "argv": [
+        "/tmp/football-framework-python-fba597b1aa5c844a/bin/python",
+        "-m",
+        "pip",
+        "wheel",
+        "--no-deps",
+        "--wheel-dir",
+        "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/wheel",
+        "/root/work_space/football"
+      ],
+      "returncode": 0,
+      "log_sha256": "577846bf2a37a83599f1d2b8ee1e2a5f90b95d591642ad83eb1bb2470c74b786"
+    },
+    {
+      "label": "clean-install-probe",
+      "argv": [
+        "/tmp/football-framework-python-fba597b1aa5c844a/bin/python",
+        "/root/work_space/football/.project/checks/gymnasium_package_probe.py",
+        "--wheel",
+        "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/wheel/gfootball-2.10.3-cp314-cp314-linux_x86_64.whl",
+        "--venv",
+        "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/clean-venv",
+        "--output",
+        "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/installed-probe"
+      ],
+      "returncode": 0,
+      "log_sha256": "d3b4484f5284dcdf441863d13440fc557955e9a3036d4399919ff678e92ace47"
+    },
+    {
+      "label": "installed-identity",
+      "argv": [
+        "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/clean-venv/bin/python",
+        "-I",
+        "-c",
+        "\nimport hashlib, importlib.metadata, json\nfrom pathlib import Path\nimport gfootball, gfootball_engine\nfrom gfootball.frame_sync import protocol, match_bootstrap\npackage = Path(gfootball_engine.__file__).parent\nbinding = next(package.glob('_gameplayfootball*.so'))\nprint(json.dumps({'version': importlib.metadata.version('gfootball'),\n                  'python_package': gfootball.__file__,\n                  'native_package': gfootball_engine.__file__,\n                  'binding_sha256': hashlib.sha256(binding.read_bytes()).hexdigest(),\n                  'engine_sha256': hashlib.sha256((package/'libfootball_engine.so').read_bytes()).hexdigest(),\n                  'protocol_version': protocol.PROTOCOL_VERSION,\n                  'protocol_min_version': protocol.PROTOCOL_MIN_VERSION,\n                  'match_version': match_bootstrap.MATCH_VERSION,\n                  'data_exists': (package/'data/media/shaders/pbr.frag').is_file(),\n                  'font_exists': (package/'fonts/AlegreyaSansSC-ExtraBold.ttf').is_file()}))\n"
+      ],
+      "returncode": 0,
+      "log_sha256": "375a8bf4f8e6ff3ea966a70a065acb6192cab1a4293a6e6ca385559f65199a72"
+    },
+    {
+      "label": "missing-checkpoint-diagnostic",
+      "argv": [
+        "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/clean-venv/bin/python",
+        "-I",
+        "-m",
+        "gfootball.frame_sync.main_menu",
+        "--mode",
+        "resume",
+        "--settings-file",
+        "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/clean-runtime/preferences.json"
+      ],
+      "returncode": 1,
+      "log_sha256": "192712530d791e8eafe54bc6155d276fb6b25e9fae9e67ac6556fdf6d0797daf"
+    },
+    {
+      "label": "installed-local-match",
+      "argv": [
+        "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/clean-venv/bin/python",
+        "-I",
+        "-m",
+        "gfootball.frame_sync.main_menu",
+        "--mode",
+        "local",
+        "--settings-file",
+        "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/clean-runtime/preferences.json"
+      ],
+      "returncode": 0,
+      "log_sha256": "d180d73f5e819f21c0fc4ca2bfb3adb781bb63c59c3ece0e988c4a9c40537f38"
+    },
+    {
+      "label": "compiler",
+      "argv": [
+        "c++",
+        "--version"
+      ],
+      "returncode": 0,
+      "log_sha256": "0b52fa36f98d1a1ff3f77256f64c13ac7e2264cf7f072ea7943756a0ef378028"
+    },
+    {
+      "label": "source-commit",
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "returncode": 0,
+      "log_sha256": "bb78a56b9296d212144a62662bf51a4b7920cf3481c1485ac2ba0f5ce21d081f"
+    }
+  ],
+  "artifact": "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/report.json",
+  "source_manifest_sha256": "6fd9e534638e39296d8b4bf0b0606ab932bedb7a25dea25cd7f0056d77471c8a",
+  "wheel": {
+    "path": "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/wheel/gfootball-2.10.3-cp314-cp314-linux_x86_64.whl",
+    "sha256": "6db45ba46e5afb007be5f365ca5d420f3cbbd6c3f6de725188df3c6bf4a1bc87",
+    "bytes": 10964171
+  },
+  "version": "2.10.3",
+  "protocol": {
+    "frame_sync": 2,
+    "minimum": 1,
+    "match": 7
+  },
+  "build": {
+    "source_commit": "a66c9258b3840af4afcd81507b98c4f581f38f79",
+    "compiler": "c++ (GCC) 16.2.1 20260810",
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "wheel_sha256": "6db45ba46e5afb007be5f365ca5d420f3cbbd6c3f6de725188df3c6bf4a1bc87",
+    "source_manifest_sha256": "6fd9e534638e39296d8b4bf0b0606ab932bedb7a25dea25cd7f0056d77471c8a"
+  },
+  "installed": {
+    "version": "2.10.3",
+    "python_package": "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/clean-venv/lib/python3.14/site-packages/gfootball/__init__.py",
+    "native_package": "/root/work_space/football/.project/optimization/benchmarks/product-package-1791236224737372413/clean-venv/lib/python3.14/site-packages/gfootball_engine/__init__.py",
+    "binding_sha256": "903faa7c7d3245229569adf79d468e31eebba9a0eddbae4c9da33f2b9de2b277",
+    "engine_sha256": "e3ca24c5d6b01d9ed4822c60dcbff4f0786d26e914a8b751d8dd7b1f110bc8b3",
+    "protocol_version": 2,
+    "protocol_min_version": 1,
+    "match_version": 7,
+    "data_exists": true,
+    "font_exists": true
+  },
+  "probe_report_sha256": "ab3f3db5c43120b20b66ca5bf30d0b79edead1db97484ac5aca253acb2886b9b",
+  "fresh_install": true,
+  "clean_directory_match": true,
+  "error_diagnostic": true,
+  "product_acceptance": true
+}
