@@ -1,17 +1,17 @@
 {
   "check": "ai_decisions",
-  "fingerprint": "36c221ae9f12be99385a5efd63ac88955c33753c3a4388e75ddf81903994f9cc",
+  "fingerprint": "dcb1f69a5d2aae937b7cb85bf987f5a42e8d11923cd83ae349d94615d88ccff7",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1790221767.2307343,
-  "duration_seconds": 16.882,
+  "started": 1791234733.18897,
+  "duration_seconds": 16.423,
   "argv": [
     "python3",
     ".project/checks/ai_tactics_contract.py",
     "--suite",
     "decisions"
   ],
-  "log": "ai_decisions-1790221767230781001.log",
-  "log_sha256": "df5e04c8c8750bd82297dde3dbffdea6e64df01a625ae5c81fe43deec82c04ef"
+  "log": "ai_decisions-1791234733188989991.log",
+  "log_sha256": "bba8cc7cba9919b50ee33e6b3901efc32454c2f4d18d0902b610b6aed4823698"
 }

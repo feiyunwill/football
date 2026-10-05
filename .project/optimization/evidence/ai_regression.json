@@ -1,0 +1,15 @@
+{
+  "check": "ai_regression",
+  "fingerprint": "c34ef773c0fc10efd1c33fa53a56901b84d0fe43ef9f7571198b60a7d789d6c9",
+  "passed": true,
+  "reason": "Structured assertions evaluated",
+  "returncode": 0,
+  "started": 1791234779.9383411,
+  "duration_seconds": 1149.22,
+  "argv": [
+    "python3",
+    ".project/checks/ai_regression.py"
+  ],
+  "log": "ai_regression-1791234779938357225.log",
+  "log_sha256": "62c53b63299f40925190e69a32a519e6b24180069f496b46bcd6c01bdda2b859"
+}

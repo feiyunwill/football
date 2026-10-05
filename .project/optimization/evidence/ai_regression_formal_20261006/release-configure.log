@@ -1,0 +1,32 @@
+-- The C compiler identification is GNU 16.2.1
+-- The CXX compiler identification is GNU 16.2.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/sbin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/sbin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Found OpenGL: /usr/lib/libOpenGL.so
+-- Found EGL: /usr/lib/libEGL.so
+-- Found SDL2_image: /usr/lib/libSDL2_image.so
+-- Found SDL2_ttf: /usr/lib/libSDL2_ttf.so
+-- Found SDL2_gfx: /usr/lib/libSDL2_gfx.so (found version "1.0.4")
+-- Found Boost: /usr/lib/cmake/Boost-1.92.0/BoostConfig.cmake (found version "1.92.0") found components: system
+-- Found OpenSSL: /usr/lib/libcrypto.so (found suitable version "3.6.4", minimum required is "3.0") found components: Crypto
+-- Configuring done (4.9s)
+-- Generating done (0.1s)
+-- Build files have been written to: /root/work_space/football/.project/optimization/benchmarks/ai-regression-1791234779986026567/release-build
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
