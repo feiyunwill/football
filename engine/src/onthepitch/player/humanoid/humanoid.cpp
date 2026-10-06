@@ -1306,8 +1306,10 @@ bool Humanoid::SelectAnim(const PlayerCommand &command,
         CastPlayer()->GetController()->HasFreshManualMovementInput() &&
         CastPlayer()->GetController()->GetFloatVelocity() > 0.5f &&
         command.desiredVelocityFloat > 0.5f &&
+        // Ball assistance can bend a new lateral press just beyond the old
+        // 0.5 alignment cutoff while still requesting movement to that side.
         command.desiredDirection.GetDotProduct(
-            CastPlayer()->GetController()->GetDirection()) > 0.5f &&
+            CastPlayer()->GetController()->GetDirection()) > 0.45f &&
         spatialState.movement.GetDotProduct(
             CastPlayer()->GetController()->GetDirection()) <
             CastPlayer()->GetController()->GetFloatVelocity() * 0.5f;

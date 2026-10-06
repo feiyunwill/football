@@ -36,6 +36,8 @@ def main() -> int:
     parser.add_argument('--gpu-driver-root', type=Path, default=Path(
         os.environ['FOOTBALL_RENDER_GPU_DRIVER_ROOT']) if
         os.environ.get('FOOTBALL_RENDER_GPU_DRIVER_ROOT') else None)
+    parser.add_argument('--sdl-video-driver', default=os.environ.get(
+        'FOOTBALL_RENDER_SDL_VIDEODRIVER'))
     args = parser.parse_args()
     if platform.system() != 'Linux' or sys.flags.optimize != 0:
         raise RuntimeError('Native render budget requires Linux and enabled assertions')
@@ -82,7 +84,8 @@ def main() -> int:
                     'Requested private D3D12 driver is missing')
         base_env = dict(os.environ)
         for key in ('LIBGL_ALWAYS_SOFTWARE', 'MESA_LOADER_DRIVER_OVERRIDE',
-                    'LD_PRELOAD', 'GFOOTBALL_USE_PBR', 'GFOOTBALL_PBR_BLOOM',
+                    'LD_PRELOAD', 'SDL_VIDEODRIVER', 'GFOOTBALL_USE_PBR',
+                    'GFOOTBALL_PBR_BLOOM',
                     'GFOOTBALL_PBR_FXAA', 'GFOOTBALL_PBR_AUTO_EXPOSURE',
                     'GFOOTBALL_PBR_EXPOSURE', 'GFOOTBALL_RENDER_PHASE_PROFILE',
                     'GFOOTBALL_RENDER_GPU_PHASE_PROFILE',
@@ -103,6 +106,8 @@ def main() -> int:
                 'GALLIUM_DRIVER': 'd3d12',
                 'MESA_LOADER_DRIVER_OVERRIDE': 'd3d12',
             })
+        if args.sdl_video_driver:
+            base_env['SDL_VIDEODRIVER'] = args.sdl_video_driver
         measurements = []
         failures = []
         for seed in (42, 43):
@@ -162,6 +167,7 @@ def main() -> int:
                          'benchmark_sha256': sha(binary),
                          'gallium_sha256': sha(gallium) if gallium else None},
             'gpu_driver_root': str(driver_root) if driver_root else None,
+            'sdl_video_driver_requested': args.sdl_video_driver,
             'measurements': measurements, 'commands': commands,
         }
         artifact = output / 'report.json'

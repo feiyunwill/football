@@ -1,0 +1,37 @@
+{
+  "format": 1,
+  "id": "bot-selection-assisted-angle-20261006",
+  "source_parent_commit": "2c288cc4ee6583c1f62306e283f95c6c70aefde7",
+  "historical_reference": ".project/optimization/baselines/bot_selection_manual_fresh_20261005.json",
+  "historical_reference_sha256": "1be5b58debfddcbcad0328992c20e0298c966d6f137d071c86c99bf9ccaa67dc",
+  "candidate_sources": {
+    "engine/src/onthepitch/player/humanoid/humanoid.cpp": "c2beed619305efa7c7435b71c89b23b6b12b0ad0d1a0489b654ba6740680652b",
+    "engine/tests/engine_native_bot_selection_contract.cpp": "161da86ccdfb08df18d29a2d931d615dd563b4804358d39f1709cafe1e3600b0"
+  },
+  "fixture": {
+    "path": "engine/tests/fixtures/native_bot_transition_tail_manual_fresh_20261005.inc",
+    "sha256": "d2925d424f75ab2cf850cc212c3f15b732d31734dbfd430644e337440d24c38f"
+  },
+  "contract": {
+    "prefix_frames": 512,
+    "tail_frames": 1918,
+    "scripted_frames": 1531,
+    "unavailable_frames": 105,
+    "recovered_frames": 66,
+    "opponent_restart_wait_frames": 0,
+    "emit_assertions": 4775,
+    "normal_assertions": 9404,
+    "identical_to_historical": true
+  },
+  "raw_oracles": {
+    "independent_runs": 2,
+    "hashes_sha256": "f9f604fc770c53c181ba1dc726697f697c1b6ef34f01720c0aba70293bb12832",
+    "tail_sha256": "fb34399d7b9e51e04c7b045d32ca6e5f4778b6b00263261a45a9e1c2e86bf689",
+    "binary_sha256": "2c71fd7ca7c00befeb589146cd753bf3da4c39ece076493f35704da8514a5d6e",
+    "engine_sha256": "78583e7937fcab457caf06d2c90515d8d87d8470a62e50e1b95ccdbaf3faf156"
+  },
+  "archive": {
+    "path": ".project/optimization/baselines/bot_selection_assisted_angle_20261006.tar.gz",
+    "sha256": "49f59ec28258ca3ec528b5065c1dd7c65dd7618ff14e1ca962ff2cc1499f9f3d"
+  }
+}

@@ -96,9 +96,10 @@ def verify_bot_selection_reference():
     handfeel=verify_bot_selection_player_switch()
     pass_buffer=verify_bot_selection_pass_buffer()
     manual_fresh=verify_bot_selection_manual_fresh()
+    assisted_angle=verify_bot_selection_assisted_angle()
     return {'manifest_sha256':benchmark.file_hash(base/'bot_selection_v2.json'),
               'oracle_output_sha256':manifest['oracle_output']['sha256'],
-              'prefix_frames':512,'aligned_tail_frames':91,**requeue,**momentum,**assist,**handfeel,**pass_buffer,**manual_fresh}
+              'prefix_frames':512,'aligned_tail_frames':91,**requeue,**momentum,**assist,**handfeel,**pass_buffer,**manual_fresh,**assisted_angle}
 
 def verify_bot_selection_requeue():
     """Keep the archived old oracle while validating a separately versioned turn."""
@@ -902,11 +903,9 @@ def verify_bot_selection_manual_fresh():
             manifest['raw_oracles']['independent_runs']==2,
             'Manual-fresh reference contract changed')
     expected_sources={'engine/src/onthepitch/player/humanoid/humanoid.cpp',
-                      'engine/tests/engine_native_bot_selection_contract.cpp'}
-    require(set(manifest['candidate_sources'])==expected_sources and
-            all(benchmark.file_hash(ROOT/relative)==expected
-                for relative,expected in manifest['candidate_sources'].items()),
-            'Manual-fresh current source changed')
+                       'engine/tests/engine_native_bot_selection_contract.cpp'}
+    require(set(manifest['candidate_sources'])==expected_sources,
+            'Manual-fresh historical source scope changed')
     archive=manifest['archive']
     archive_path=(ROOT/archive['path']).resolve()
     require(archive_path.is_relative_to(ROOT) and
@@ -973,6 +972,80 @@ def verify_bot_selection_manual_fresh():
             'manual_fresh_archive_sha256':archive['sha256'],
             'manual_fresh_unavailable_frames':105,
             'manual_fresh_active_bot_frames':66}
+
+def verify_bot_selection_assisted_angle():
+    """Pin the current handfeel source without rewriting the sealed 2026-10-05 route."""
+    base=ROOT/'.project/optimization/baselines'
+    path=base/'bot_selection_assisted_angle_20261006.json'
+    manifest=json.loads(path.read_text())
+    historical=base/'bot_selection_manual_fresh_20261005.json'
+    old=json.loads(historical.read_text())
+    expected_sources={'engine/src/onthepitch/player/humanoid/humanoid.cpp',
+                      'engine/tests/engine_native_bot_selection_contract.cpp'}
+    expected_contract={'prefix_frames':512,'tail_frames':1918,'scripted_frames':1531,
+                       'unavailable_frames':105,'recovered_frames':66,
+                       'opponent_restart_wait_frames':0,'emit_assertions':4775,
+                       'normal_assertions':9404,'identical_to_historical':True}
+    require(manifest['format']==1 and
+            manifest['id']=='bot-selection-assisted-angle-20261006' and
+            manifest['historical_reference']==str(historical.relative_to(ROOT)) and
+            manifest['historical_reference_sha256']==benchmark.file_hash(historical) and
+            manifest['contract']==expected_contract and
+            set(manifest['candidate_sources'])==expected_sources and
+            all(benchmark.file_hash(ROOT/relative)==expected
+                for relative,expected in manifest['candidate_sources'].items()) and
+            manifest['raw_oracles']['independent_runs']==2,
+            'Assisted-angle current source or historical lineage changed')
+    fixture=manifest['fixture']
+    require(fixture==old['fixture'] and
+            benchmark.file_hash(ROOT/fixture['path'])==fixture['sha256'],
+            'Assisted-angle fixture changed')
+    archive=manifest['archive']
+    archive_path=(ROOT/archive['path']).resolve()
+    require(archive_path.is_relative_to(ROOT) and
+            archive['path']=='.project/optimization/baselines/bot_selection_assisted_angle_20261006.tar.gz' and
+            benchmark.file_hash(archive_path)==archive['sha256'],
+            'Assisted-angle oracle archive changed')
+    names={'generator.cpp','humanoid.cpp','hashes-run1.inc','hashes-run2.inc',
+           'tail-run1.inc','tail-run2.inc','emit-run1.log','emit-run2.log',
+           'normal-run1.log','normal-run2.log'}
+    with tarfile.open(archive_path,'r:gz') as package:
+        metadata=json.load(package.extractfile('manifest.json'))
+        require(metadata['format']=='bot-selection-assisted-angle-oracle-v1' and
+                metadata['historical_reference_sha256']==benchmark.file_hash(historical) and
+                set(metadata['files'])==names and
+                set(package.getnames())==names|{'manifest.json'},
+                'Assisted-angle oracle archive members changed')
+        raw={name:package.extractfile(name).read() for name in names}
+    require(all(hashlib.sha256(data).hexdigest()==metadata['files'][name]
+                for name,data in raw.items()) and
+            hashlib.sha256(raw['generator.cpp']).hexdigest()==manifest['candidate_sources'][
+                'engine/tests/engine_native_bot_selection_contract.cpp'] and
+            hashlib.sha256(raw['humanoid.cpp']).hexdigest()==manifest['candidate_sources'][
+                'engine/src/onthepitch/player/humanoid/humanoid.cpp'],
+            'Assisted-angle archived source or raw output changed')
+    for kind,frames in (('hashes',512),('tail',1918)):
+        first=raw[f'{kind}-run1.inc']
+        require(first==raw[f'{kind}-run2.inc'] and
+                len(first.splitlines())==frames and
+                hashlib.sha256(first).hexdigest()==manifest['raw_oracles'][f'{kind}_sha256'] and
+                hashlib.sha256(first).hexdigest()==old['raw_oracles'][f'{kind}_sha256'],
+                'Assisted-angle independent replay differs from sealed route')
+    require(raw['tail-run1.inc']==(ROOT/fixture['path']).read_bytes().partition(b'\n')[2],
+            'Assisted-angle replay differs from current fixture')
+    expected={'passed':True,'prefix_frames':512,'recorded_tail_frames':1918,
+              'unavailable_frames':105,'skipped':0,'actual_gameenv':True,
+              'recovered_frames':66,'opponent_restart_wait_frames':0}
+    for run in (1,2):
+        require(json.loads(raw[f'emit-run{run}.log'].decode().splitlines()[-1])==
+                dict(expected,assertions=4775) and
+                raw[f'normal-run{run}.log'].startswith(b'exit=0\n') and
+                json.loads(raw[f'normal-run{run}.log'].decode().splitlines()[-1])==
+                dict(expected,assertions=9404),
+                'Assisted-angle archived replay did not complete')
+    return {'assisted_angle_manifest_sha256':benchmark.file_hash(path),
+            'assisted_angle_archive_sha256':archive['sha256'],
+            'assisted_angle_historical_route_unchanged':True}
 
 def observation():
     socket=Path('/tmp/.X11-unix')
