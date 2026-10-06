@@ -1,0 +1,97 @@
+{
+  "schema": "football-render-native-windows-diagnostic-v1",
+  "product_acceptance": false,
+  "reason": "program.json targets Linux x86_64; Windows OpenGL driver timing is diagnostic and does not satisfy render_regression",
+  "source_base": "1b02fd259ddc76c1ac18dfd09a5dbf201cdef003",
+  "source_code_diff_sha256": "7e451db0e47183176ac9cb49af6cec608b932828ed947e77a6e0b62bbdc43400",
+  "platform": {
+    "os": "Windows 11 10.0.26200",
+    "toolchain": "MSYS2 UCRT64 GCC 16.2.0 / CMake 4.4.4 / Ninja 1.13.2",
+    "gpu": "Intel(R) Arc(TM) 140T GPU (16GB)",
+    "gl_version": "4.6.0 - Build 32.0.101.8860",
+    "driver_version": "32.0.101.8860"
+  },
+  "binary_sha256": {
+    "engine_render_budget_benchmark.exe": "d7adf8ecf0348a20965755e9ac9c8d70f03ddde293f24b5a5f853e688ec30668",
+    "libfootball_engine.dll": "1566e3cd15f692a7eaf7d88af330c74bd5202c2e87098a8e89aa5dde29d68990"
+  },
+  "profile": {
+    "width": 1920,
+    "height": 1080,
+    "quality": "pbr+bloom+fxaa+auto_exposure",
+    "swap_enabled": true,
+    "swap_interval": 1,
+    "warmup_frames": 30,
+    "measured_frames": 120,
+    "budget_p95_ms": 16.67
+  },
+  "runs": [
+    {
+      "seed": 42,
+      "run": 1,
+      "file": "seed42-run1.json",
+      "sha256": "66fdc8d626f463078c39325ed3e8c990a0a9de9119e5697d831919eea709f9f1",
+      "p50_ms": 9.5612,
+      "p95_ms": 13.1122,
+      "p99_ms": 16.2015,
+      "samples": 120,
+      "in_play_frames": 141
+    },
+    {
+      "seed": 43,
+      "run": 1,
+      "file": "seed43-run1.json",
+      "sha256": "164054afa2c2ad630fd5cbbd5c0ba1d0b89aaf40aec9836fa692669b1801e97a",
+      "p50_ms": 9.6999,
+      "p95_ms": 11.4446,
+      "p99_ms": 13.1824,
+      "samples": 120,
+      "in_play_frames": 150
+    },
+    {
+      "seed": 43,
+      "run": 2,
+      "file": "seed43-run2.json",
+      "sha256": "ecf11264b519bc3b76755c02598b91777fa160fe16cda14d33724ef702897f9f",
+      "p50_ms": 9.7211,
+      "p95_ms": 11.3119,
+      "p99_ms": 12.3066,
+      "samples": 120,
+      "in_play_frames": 150
+    },
+    {
+      "seed": 42,
+      "run": 2,
+      "file": "seed42-run2.json",
+      "sha256": "2000ca4861c4c42d45ab2818aa8f8dec83b3f0952a36715d642f5f64e195dc5b",
+      "p50_ms": 9.7128,
+      "p95_ms": 12.0382,
+      "p99_ms": 12.9415,
+      "samples": 120,
+      "in_play_frames": 141
+    }
+  ],
+  "negative_asset_check": {
+    "file": "missing-noise.log",
+    "sha256": "e1c4bc94b6c9583c6e225389cc79f0c8d4b7ae4aa901b241c65806f53973ccdf",
+    "exit_code": 1,
+    "asset_restored": true
+  },
+  "linux_image_regression": {
+    "passed": true,
+    "assertions": 2088,
+    "skipped": 0,
+    "cases": 12,
+    "product_acceptance": false,
+    "files_sha256": {
+      "linux-image-report.json": "564be83f9378f57020f317e6758709542f94d0dcaed898deeb78d5de35f9e63d",
+      "linux-image-commands.json": "3aea1fe77b22e09509ea6041cfcfdc646bdf51dcf5943a9ad0ab81b22f8d6e3e",
+      "linux-image-sources.json": "01ba7c2a253b03bba8795bd171b6aea78b71964ecd1ec86ee77588671f1924b4",
+      "linux-image-inputs.json": "4769befd2a1b4d08dec36797b71750c915d9dab2dd104a802c17f9ec29ae6f4b",
+      "linux-image-exit.json": "44341f304301e490175e95cea22e137152de4cf5fdeef3ad2e1fe58ed345d929"
+    },
+    "invoked_command": "python3 .project/checks/render_images.py --help",
+    "reproduce_command": "python3 .project/checks/render_images.py",
+    "note": "The checker ignores command-line arguments and executed its full acceptance path."
+  }
+}

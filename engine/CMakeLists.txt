@@ -3,8 +3,12 @@
 cmake_minimum_required(VERSION 3.14)
 
 option(BUILD_PYTHON_BINDINGS "Build the Python extension (not required by native programs)" ON)
+option(FOOTBALL_USE_MINGW "Build native Windows targets with the MinGW toolchain" OFF)
+if(FOOTBALL_USE_MINGW AND BUILD_PYTHON_BINDINGS)
+  message(FATAL_ERROR "MinGW native builds require BUILD_PYTHON_BINDINGS=OFF")
+endif()
 
-if(WIN32)
+if(WIN32 AND NOT FOOTBALL_USE_MINGW)
   # Check for required Environment variables
   if(NOT DEFINED CMAKE_GENERATOR_PLATFORM)
     message(FATAL_ERROR "CMAKE_GENERATOR_PLATFORM is not defined. Add -Ax64 or -AWin32 to cmake command")
@@ -29,12 +33,19 @@ if(WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
   # Windows requires the library to have the same name as the module
   set(OUTPUT_LIB_NAME _gameplayfootball)
-else()  # UNIX
+else()  # UNIX or MinGW native-only
   set(OUTPUT_LIB_NAME game)
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMakeModules")
 endif()
 
 project(gameplayfootball)
+if(FOOTBALL_USE_MINGW)
+  if(NOT MINGW)
+    message(FATAL_ERROR "FOOTBALL_USE_MINGW requires a MinGW compiler")
+  endif()
+  # The native Windows paths in the engine use WIN32 rather than _WIN32.
+  add_compile_definitions(WIN32)
+endif()
 set(PACKAGE gameplayfootball)
 
 # 全工程现代化：统一 C++ 标准，兼顾兼容性与现代特性
@@ -48,6 +59,10 @@ set(CMAKE_CXX_STANDARD 23)
 # set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+if(MINGW AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  # GCC's std::print terminal functions live in this library on Windows.
+  link_libraries(stdc++exp)
+endif()
 
 # 2026-04-02 原因：生成 compile_commands.json 供 clangd/ccls 等 LSP 解析 include/宏（位于 ${CMAKE_BINARY_DIR}/compile_commands.json）
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -93,7 +108,7 @@ if(UNIX AND NOT APPLE)
   include_directories(${EGL_INCLUDE_DIR})
 endif()
 
-if(WIN32)
+if(WIN32 AND NOT FOOTBALL_USE_MINGW)
   FIND_PACKAGE(SDL2-image REQUIRED)
   FIND_PACKAGE(SDL2-ttf REQUIRED)
   FIND_PACKAGE(SDL2-gfx REQUIRED)
@@ -206,7 +221,10 @@ add_library(gamelib ${GAME_SOURCES} ${GAME_HEADERS})
 add_library(menulib ${MENU_SOURCES} ${MENU_HEADERS})
 add_library(datalib ${DATA_SOURCES} ${DATA_HEADERS})
 
-if(UNIX)
+if(FOOTBALL_USE_MINGW)
+  set(SDL2_LIBS_ALL ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES}
+      ${SDL2_GFX_LIBRARIES} SDL2::SDL2main SDL2::SDL2)
+elseif(UNIX)
   set(SDL2_LIBS_ALL ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_GFX_LIBRARIES} ${SDL2_LIBRARIES})
 elseif(WIN32)
   set(SDL2_LIBS_ALL SDL2::SDL2 SDL2::SDL2_image SDL2::SDL2_ttf SDL2::SDL2_gfx SDL2::SDL2main)

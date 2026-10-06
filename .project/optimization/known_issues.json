@@ -9,7 +9,8 @@
       "evidence": ".project/optimization/evidence/render_gpu_repeat_20261006/report.json",
       "related_evidence": [
         ".project/optimization/evidence/render_gpu_wayland_20261006.json",
-        ".project/optimization/diagnostics/render-swap-interval-ab-1791229412562625558/report.json"
+        ".project/optimization/diagnostics/render-swap-interval-ab-1791229412562625558/report.json",
+        ".project/optimization/evidence/render_native_windows_20261006/manifest.json"
       ],
       "closure_evidence": null
     }

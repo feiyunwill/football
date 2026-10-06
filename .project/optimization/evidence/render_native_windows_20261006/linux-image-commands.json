@@ -1,0 +1,390 @@
+[
+  {
+    "argv": [
+      "/usr/bin/cmake",
+      "-S",
+      "/root/work_space/football/engine",
+      "-B",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DBUILD_PYTHON_BINDINGS=OFF",
+      "-DBUILD_RL_TRAINING=OFF",
+      "-DFOOTBALL_ENABLE_SANITIZERS=OFF",
+      "-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin"
+    ],
+    "log": "release-configure.log",
+    "started": 1791254069.452778,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/usr/bin/cmake",
+      "-S",
+      "/root/work_space/football/engine",
+      "-B",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DBUILD_PYTHON_BINDINGS=OFF",
+      "-DBUILD_RL_TRAINING=OFF",
+      "-DFOOTBALL_ENABLE_SANITIZERS=OFF",
+      "-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin"
+    ],
+    "pid": 3553781,
+    "seconds": 3.8766991589800455,
+    "returncode": 0,
+    "log_sha256": "1ed985f087d9ac84cc741614d998fb1e34aa45c11d19146d622be9e613407554"
+  },
+  {
+    "argv": [
+      "/usr/bin/cmake",
+      "--build",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release",
+      "-j",
+      "1",
+      "--target",
+      "engine_frame_capture_contract"
+    ],
+    "log": "release-build.log",
+    "started": 1791254073.436523,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/usr/bin/cmake",
+      "--build",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release",
+      "-j",
+      "1",
+      "--target",
+      "engine_frame_capture_contract"
+    ],
+    "pid": 3553900,
+    "seconds": 388.096110308019,
+    "returncode": 0,
+    "log_sha256": "ec836d082ff419ff95b11b48c18cc3ac65d61b0bd372cd543601d80f9d744ba0"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/auto"
+    ],
+    "log": "release-auto.log",
+    "started": 1791254461.6922855,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/auto"
+    ],
+    "pid": 3557269,
+    "seconds": 4.080617445986718,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/auto_combined"
+    ],
+    "log": "release-auto_combined.log",
+    "started": 1791254465.9036064,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/auto_combined"
+    ],
+    "pid": 3557303,
+    "seconds": 3.9769412070163526,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/baseline"
+    ],
+    "log": "release-baseline.log",
+    "started": 1791254470.0094469,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/baseline"
+    ],
+    "pid": 3557341,
+    "seconds": 4.0303062990133185,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/bloom"
+    ],
+    "log": "release-bloom.log",
+    "started": 1791254474.1724775,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/bloom"
+    ],
+    "pid": 3557414,
+    "seconds": 4.028601263009477,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/fxaa"
+    ],
+    "log": "release-fxaa.log",
+    "started": 1791254478.3331091,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/fxaa"
+    ],
+    "pid": 3557449,
+    "seconds": 4.028813033015467,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/legacy"
+    ],
+    "log": "release-legacy.log",
+    "started": 1791254482.5148222,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/release/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/release/legacy"
+    ],
+    "pid": 3557522,
+    "seconds": 3.8310439300257713,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  },
+  {
+    "argv": [
+      "/usr/bin/cmake",
+      "-S",
+      "/root/work_space/football/engine",
+      "-B",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized",
+      "-DCMAKE_BUILD_TYPE=Debug",
+      "-DBUILD_PYTHON_BINDINGS=OFF",
+      "-DBUILD_RL_TRAINING=OFF",
+      "-DFOOTBALL_ENABLE_SANITIZERS=ON",
+      "-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin"
+    ],
+    "log": "sanitized-configure.log",
+    "started": 1791254487.6091423,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/usr/bin/cmake",
+      "-S",
+      "/root/work_space/football/engine",
+      "-B",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized",
+      "-DCMAKE_BUILD_TYPE=Debug",
+      "-DBUILD_PYTHON_BINDINGS=OFF",
+      "-DBUILD_RL_TRAINING=OFF",
+      "-DFOOTBALL_ENABLE_SANITIZERS=ON",
+      "-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin"
+    ],
+    "pid": 3557556,
+    "seconds": 5.3809360210143495,
+    "returncode": 0,
+    "log_sha256": "8c2d3bb4c2c742bf5dba7545286dc6c0de67fe0d45c89f541a73cc10a8b5e382"
+  },
+  {
+    "argv": [
+      "/usr/bin/cmake",
+      "--build",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized",
+      "-j",
+      "1",
+      "--target",
+      "engine_frame_capture_contract"
+    ],
+    "log": "sanitized-build.log",
+    "started": 1791254493.1371663,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/usr/bin/cmake",
+      "--build",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized",
+      "-j",
+      "1",
+      "--target",
+      "engine_frame_capture_contract"
+    ],
+    "pid": 3557675,
+    "seconds": 397.91393132397207,
+    "returncode": 0,
+    "log_sha256": "ecf966bc3ca764ed74c7d5f1780506853c0ea45b0d2fca67a9d6dab40f422504"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/auto"
+    ],
+    "log": "sanitized-auto.log",
+    "started": 1791254891.3239703,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/auto"
+    ],
+    "pid": 3560736,
+    "seconds": 28.838211032998515,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/auto_combined"
+    ],
+    "log": "sanitized-auto_combined.log",
+    "started": 1791254920.38741,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/auto_combined"
+    ],
+    "pid": 3560889,
+    "seconds": 22.144314733013744,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/baseline"
+    ],
+    "log": "sanitized-baseline.log",
+    "started": 1791254942.7648127,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/baseline"
+    ],
+    "pid": 3561044,
+    "seconds": 21.29461556498427,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/bloom"
+    ],
+    "log": "sanitized-bloom.log",
+    "started": 1791254964.278265,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/bloom"
+    ],
+    "pid": 3561169,
+    "seconds": 21.593176291004056,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/fxaa"
+    ],
+    "log": "sanitized-fxaa.log",
+    "started": 1791254986.1016252,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/fxaa"
+    ],
+    "pid": 3561283,
+    "seconds": 21.74689940799726,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  },
+  {
+    "argv": [
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/legacy"
+    ],
+    "log": "sanitized-legacy.log",
+    "started": 1791255008.107469,
+    "state": "finished",
+    "timed_out": false,
+    "launch_argv": [
+      "/usr/bin/env",
+      "--default-signal=2,15",
+      "--",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/build/sanitized/bin/engine_frame_capture_contract",
+      "/root/work_space/football/.project/optimization/benchmarks/render-images-1791254068691013319/sanitized/legacy"
+    ],
+    "pid": 3561412,
+    "seconds": 22.444514586997684,
+    "returncode": 0,
+    "log_sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+  }
+]

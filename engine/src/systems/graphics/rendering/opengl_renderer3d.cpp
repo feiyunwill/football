@@ -957,6 +957,8 @@ bool OpenGLRenderer3D::CreateContext(int width, int height, int bpp,
   currentShader = shaders.begin();
 
   SDL_Surface *noise = IMG_LoadBmp("media/shaders/noise.png");
+  if (!noise)
+    throw std::runtime_error(std::string("Noise texture load failed: ") + SDL_GetError());
   noiseTexID =
       CreateTexture(e_InternalPixelFormat_RGB8, e_PixelFormat_RGB, noise->w,
                     noise->h, false, true, false, false, false);

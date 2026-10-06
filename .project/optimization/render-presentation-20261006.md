@@ -83,6 +83,32 @@ FXAA 的零方向提前返回候选在隔离资源副本中完成画质预检：
 
 又在隔离工作树试验 FXAA 的固定邻域采样：`texelFetch` 加边界钳制，以及保留原有纹理过滤的 `textureOffset`。两种候选均通过同一个 321×181、PBR＋Bloom＋FXAA＋自动曝光的五帧捕获合同，模拟状态与基线逐字节一致，但 RGB 未达到精确图像门禁。`texelFetch` 每帧改变 1,678–2,407 个像素，最大通道差 51；`textureOffset` 每帧改变 4–42 个像素，最大通道差 21。见[两份补丁、逐帧 SHA-256 与原始捕获](diagnostics/fxaa-sampling-20261006/report.json)。这些差异发生在性能测试前，两个候选均未合入，也不刷新参考图。
 
+同一台机器的 Windows 原生 OpenGL 驱动提供了独立的平台对照。用 MSYS2 UCRT64 GCC 16.2 构建当前代码的 `engine_render_budget_benchmark`，Intel Arc 140T 驱动 `32.0.101.8860` 报告 OpenGL 4.6，交换间隔为 1。保持 1920×1080、完整 PBR＋Bloom＋FXAA＋自动曝光、真实窗口交换、30 帧预热和 120 帧测量，对两个种子各运行两次：
+
+| 种子 | 首次 p95 | 复测 p95 |
+| --- | ---: | ---: |
+| 42 | 13.1122 ms | 12.0382 ms |
+| 43 | 11.4446 ms | 11.3119 ms |
+
+四次均低于 16.67 ms，且每次都记录了有效比赛帧、GPU 身份、完整逐帧数组及可执行文件哈希，见[原生 Windows 诊断清单](evidence/render_native_windows_20261006/manifest.json)。另外临时移走噪声纹理后，基准以明确的资源错误和退出码 1 结束，资源已恢复，错误日志也在清单中。该对照表明本机 Windows 原生路径可以达到预算，而现有 Linux/WSLg 路径仍超预算；两个路径使用不同驱动和窗口系统，不能把差值全归因于 WSLg，也不能将 Windows 结果替代 `program.json` 指定的 Linux x86_64 产品门禁。`ms-24.1` 和相关阻断问题保持未通过。
+
+原生对照的复现方式是在 MSYS2 UCRT64 Shell 中安装 GCC、CMake、Ninja、Boost、SDL2 及 SDL2_image/ttf/gfx；将仓库当前源码放入短的 Windows 路径，并确保字体符号链接在 Windows 上可读取，然后执行：
+
+```sh
+cmake -S C:/football-native-src/engine -B C:/football-native-build -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=OFF \
+  -DFOOTBALL_USE_MINGW=ON \
+  -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=C:/football-native-build/bin
+cmake --build C:/football-native-build --target engine_render_budget_benchmark --parallel 4
+PATH=/c/football-native-build:/ucrt64/bin:$PATH \
+GFOOTBALL_DATA_DIR=C:/football-native-src/engine/data \
+GFOOTBALL_USE_PBR=1 GFOOTBALL_PBR_BLOOM=1 GFOOTBALL_PBR_FXAA=1 \
+GFOOTBALL_PBR_AUTO_EXPOSURE=1 SDL_VIDEODRIVER=windows SDL_AUDIODRIVER=dummy \
+/c/football-native-build/bin/engine_render_budget_benchmark.exe 42
+```
+
+对种子 43 及重复轮次执行相同命令。该路径只验证原生性能。变更后的 Linux `render_images.py` 已在全新 Release 与 ASan/UBSan 构建中通过六种模式、两种配置共 12 个实际 GameEnv 捕获，**2088 项断言、零跳过**，两种配置的状态与 RGB 逐帧一致；[完整报告、命令、输入与源码哈希](evidence/render_native_windows_20261006/manifest.json)已归档。此图像检查不测量 1080p 帧预算，Linux 性能门禁仍需独立通过。
+
 复现这台 WSL 设备上的正式检查：
 
 ```sh
