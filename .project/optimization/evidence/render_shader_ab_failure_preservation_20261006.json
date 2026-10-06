@@ -1,0 +1,58 @@
+{
+  "archive": ".project/optimization/evidence/render_shader_ab_failure_preservation_20261006.tar.gz",
+  "archive_members_sha256": {
+    "gpu_build_missing/evidence.tar.gz": "4b43f718e4604acd43bc9ea4087b79eb99a24165d004349525625a90536b2bc4",
+    "gpu_build_missing/report.json": "06f22511a00ab65de4bc63d55c7819a233eb2c5dc1e9e356053075bcb14bd834",
+    "shader_compile_failure/evidence.tar.gz": "202fa12d07c327a257dc825232f93ae4af62365885506675f79caa38c3d941d5",
+    "shader_compile_failure/report.json": "abb1afa2e2b0a176833ace3215c3ebbc26fcb9f1dfef6469d20b9ce65c79caaa",
+    "valid_image_preflight/evidence.tar.gz": "27cdaf8666709e81df05470c2ab591c2f93698bef88edacc3de35f51cbfea44b",
+    "valid_image_preflight/report.json": "fc6c61222f11aea2f9897a59e12b6fbafd68278c395f137a7fca5e2cc30cd18c"
+  },
+  "archive_sha256": "7a5b76f7ef3bd90c3504b0b4a909af91a8008d23088f4641cbf7e80e2d496574",
+  "cases": {
+    "gpu_build_missing": {
+      "budget_met": false,
+      "captures": 12,
+      "diagnostic_complete": false,
+      "failures": [
+        "RuntimeError: Benchmark, engine, or private D3D12 driver is missing"
+      ],
+      "gpu_runs": 0,
+      "image_equal": true,
+      "image_preflight_complete": true,
+      "raw_archive_sha256": "4b43f718e4604acd43bc9ea4087b79eb99a24165d004349525625a90536b2bc4",
+      "raw_members": 159,
+      "report_sha256": "06f22511a00ab65de4bc63d55c7819a233eb2c5dc1e9e356053075bcb14bd834"
+    },
+    "shader_compile_failure": {
+      "budget_met": false,
+      "captures": 1,
+      "diagnostic_complete": false,
+      "failures": [
+        "RuntimeError: legacy/candidate capture failed: /root/work_space/football/.project/optimization/diagnostics/render-shader-ab-1791251060064286097/capture-candidate-legacy.log"
+      ],
+      "gpu_runs": 0,
+      "image_equal": null,
+      "image_preflight_complete": false,
+      "raw_archive_sha256": "202fa12d07c327a257dc825232f93ae4af62365885506675f79caa38c3d941d5",
+      "raw_members": 17,
+      "report_sha256": "abb1afa2e2b0a176833ace3215c3ebbc26fcb9f1dfef6469d20b9ce65c79caaa"
+    },
+    "valid_image_preflight": {
+      "budget_met": false,
+      "captures": 12,
+      "diagnostic_complete": true,
+      "failures": [],
+      "gpu_runs": 0,
+      "image_equal": true,
+      "image_preflight_complete": true,
+      "raw_archive_sha256": "27cdaf8666709e81df05470c2ab591c2f93698bef88edacc3de35f51cbfea44b",
+      "raw_members": 159,
+      "report_sha256": "fc6c61222f11aea2f9897a59e12b6fbafd68278c395f137a7fca5e2cc30cd18c"
+    }
+  },
+  "conclusion": "The diagnostic preserves a final report and raw archive after shader compile or GPU build failures, while retaining completed image-preflight truth values.",
+  "product_acceptance": false,
+  "runner_sha256": "186cfc4a85c360c6ec97e4baa4c4a164f1b69a42d448f4bfd89b94c796004432",
+  "schema": "football-render-shader-ab-failure-preservation-v1"
+}

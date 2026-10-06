@@ -167,121 +167,141 @@ def main() -> int:
               'repeats': args.repeats, 'captures': [], 'runs': [], 'failures': []}
     (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
     image_equal = True
-    for case in CASES:
-        for mode, data in (('baseline', DATA), ('candidate', overlay)):
-            target = output / 'captures' / mode / case
-            target.parent.mkdir(parents=True, exist_ok=True)
-            completed = subprocess.run([str(capture_binary), str(target)], cwd=ROOT,
-                                       env=capture_environment(data, capture_build, case),
-                                       capture_output=True, timeout=300)
-            log = output / f'capture-{mode}-{case}.log'
-            log.write_bytes(completed.stdout + completed.stderr)
-            require(completed.returncode == 0, f'{case}/{mode} capture failed: {log}')
-            identity = json.loads((target / 'identity.json').read_text())
-            require(identity == golden['identity'], f'{case}/{mode} renderer differs')
-            result = {'case': case, 'mode': mode, 'log_sha256': sha(log), 'frames': {}}
-            for frame in golden['frames']:
-                name = f'frame-{frame}'
-                rgb = (target / f'{name}.rgb').read_bytes()
-                state = (target / f'{name}.state').read_bytes()
-                require(len(rgb) == 321 * 181 * 3,
-                        f'{case}/{mode}/{name} has wrong dimensions')
-                value = {'rgb_sha256': hashlib.sha256(rgb).hexdigest(),
-                         'state_sha256': hashlib.sha256(state).hexdigest()}
-                require(value['state_sha256'] == golden['states'][str(frame)],
-                        f'{case}/{mode}/{name} simulation changed')
-                if mode == 'baseline':
-                    require(value['rgb_sha256'] == golden['cases'][case][str(frame)],
-                            f'{case}/{name} current image differs from oracle')
-                else:
-                    previous = (output / 'captures/baseline' / case /
-                                f'{name}.rgb').read_bytes()
-                    value['changed_pixels'] = sum(
-                        previous[i:i + 3] != rgb[i:i + 3]
-                        for i in range(0, len(rgb), 3))
-                    value['max_channel_delta'] = max(
-                        abs(a - b) for a, b in zip(previous, rgb))
-                    image_equal &= value['changed_pixels'] == 0
-                result['frames'][str(frame)] = value
-            report['captures'].append(result)
-            (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
-            print('capture', case, mode, 'ok', flush=True)
+    try:
+        for case in CASES:
+            for mode, data in (('baseline', DATA), ('candidate', overlay)):
+                target = output / 'captures' / mode / case
+                target.parent.mkdir(parents=True, exist_ok=True)
+                completed = subprocess.run([str(capture_binary), str(target)], cwd=ROOT,
+                                           env=capture_environment(data, capture_build, case),
+                                           capture_output=True, timeout=300)
+                log = output / f'capture-{mode}-{case}.log'
+                log.write_bytes(completed.stdout + completed.stderr)
+                require(completed.returncode == 0, f'{case}/{mode} capture failed: {log}')
+                identity = json.loads((target / 'identity.json').read_text())
+                require(identity == golden['identity'], f'{case}/{mode} renderer differs')
+                result = {'case': case, 'mode': mode, 'log_sha256': sha(log), 'frames': {}}
+                for frame in golden['frames']:
+                    name = f'frame-{frame}'
+                    rgb = (target / f'{name}.rgb').read_bytes()
+                    state = (target / f'{name}.state').read_bytes()
+                    require(len(rgb) == 321 * 181 * 3,
+                            f'{case}/{mode}/{name} has wrong dimensions')
+                    value = {'rgb_sha256': hashlib.sha256(rgb).hexdigest(),
+                             'state_sha256': hashlib.sha256(state).hexdigest()}
+                    require(value['state_sha256'] == golden['states'][str(frame)],
+                            f'{case}/{mode}/{name} simulation changed')
+                    if mode == 'baseline':
+                        require(value['rgb_sha256'] == golden['cases'][case][str(frame)],
+                                f'{case}/{name} current image differs from oracle')
+                    else:
+                        previous = (output / 'captures/baseline' / case /
+                                    f'{name}.rgb').read_bytes()
+                        value['changed_pixels'] = sum(
+                            previous[i:i + 3] != rgb[i:i + 3]
+                            for i in range(0, len(rgb), 3))
+                        value['max_channel_delta'] = max(
+                            abs(a - b) for a, b in zip(previous, rgb))
+                        image_equal &= value['changed_pixels'] == 0
+                    result['frames'][str(frame)] = value
+                report['captures'].append(result)
+                (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
+                print('capture', case, mode, 'ok', flush=True)
+                if not image_equal:
+                    break
             if not image_equal:
                 break
+        report['image_preflight_complete'] = len(report['captures']) == len(CASES) * 2
+        report['image_equal'] = image_equal
         if not image_equal:
-            break
-    report['image_equal'] = image_equal
-    if not image_equal:
-        report['failures'].append('Candidate image differs; GPU benchmark skipped')
+            report['failures'].append('Candidate image differs; GPU benchmark skipped')
 
-    if image_equal and not args.image_only:
-        benchmark_build = args.benchmark_build.resolve()
-        driver = args.gpu_driver_root.resolve() / 'lib'
-        binary = benchmark_build / 'bin/engine_render_budget_benchmark'
-        core = benchmark_build / 'libfootball_engine.so'
-        gallium = driver / 'libgallium-26.2.2.so'
-        require(all(path.is_file() for path in (binary, core, gallium)),
-                'Benchmark, engine, or private D3D12 driver is missing')
-        report.update({'benchmark_binary_sha256': sha(binary),
-                       'benchmark_engine_sha256': sha(core),
-                       'gallium_sha256': sha(gallium)})
-        for repetition in range(args.repeats):
-            for seed in (42, 43):
-                order = ('baseline', 'candidate') if (seed + repetition) % 2 == 0 \
-                    else ('candidate', 'baseline')
-                for mode in order:
-                    label = f'seed{seed}-repeat{repetition}-{mode}'
-                    log = output / f'{label}.log'
-                    data = DATA if mode == 'baseline' else overlay
-                    completed = subprocess.run([str(binary), str(seed)], cwd=ROOT,
-                                               env=benchmark_environment(data, benchmark_build,
-                                                                         driver),
-                                               capture_output=True, timeout=240)
-                    log.write_bytes(completed.stdout + completed.stderr)
-                    require(completed.returncode == 0, f'{label} failed: {log}')
-                    lines = [line for line in completed.stdout.splitlines()
-                             if line.startswith(b'{')]
-                    require(len(lines) == 1, f'{label} JSON missing')
-                    row = json.loads(lines[0])
-                    samples = row['samples_ms']
-                    submit = row['submit_samples_ms']
-                    finish = row['finish_samples_ms']
-                    require(row['seed'] == seed and row['quality'] == report['quality'] and
-                            (row['width'], row['height']) == (1920, 1080) and
-                            row['measured_frames'] == 120 and
-                            len(samples) == len(submit) == len(finish) == 120 and
-                            row['swap_enabled'] is True and row['swap_interval'] == 0 and
-                            'D3D12' in row['renderer'] and
-                            Path(row['gallium_path']).resolve() == gallium and
-                            abs(sorted(samples)[math.ceil(.95 * 120) - 1] -
-                                row['p95_ms']) < .001,
-                            f'{label} measured another GPU workload')
-                    require(all(math.isfinite(value) and value > 0 for values in
-                                (samples, submit, finish) for value in values) and
-                            all(abs(total - sent - done) < .01
-                                for total, sent, done in zip(samples, submit, finish)),
-                            f'{label} raw frame phases do not reconcile')
-                    result = {'label': label, 'seed': seed, 'repetition': repetition,
-                              'mode': mode, 'renderer': row['renderer'],
-                              'p50_ms': row['p50_ms'], 'p95_ms': row['p95_ms'],
-                              'p99_ms': row['p99_ms'],
-                              'submit_p95_ms': row['submit_p95_ms'],
-                              'finish_p95_ms': row['finish_p95_ms'],
-                              'samples_ms': samples, 'submit_samples_ms': submit,
-                              'finish_samples_ms': finish, 'log_sha256': sha(log)}
-                    report['runs'].append(result)
-                    (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
-                    print(label, row['p95_ms'], flush=True)
-        require(sha(binary) == report['benchmark_binary_sha256'] and
-                sha(core) == report['benchmark_engine_sha256'] and
-                sha(gallium) == report['gallium_sha256'],
-                'Benchmark binary, engine, or driver changed during A/B')
-    require(data_manifest() == source_files and
-            sha(Path(__file__)) == report['runner_sha256'] and
-            sha(source_shader) == report['source_shader_sha256'] and
-            sha(capture_binary) == report['capture_binary_sha256'] and
-            sha(capture_core) == report['capture_engine_sha256'],
-            'Source resource or capture binary changed during diagnostic')
+        if image_equal and not args.image_only:
+            benchmark_build = args.benchmark_build.resolve()
+            driver = args.gpu_driver_root.resolve() / 'lib'
+            binary = benchmark_build / 'bin/engine_render_budget_benchmark'
+            core = benchmark_build / 'libfootball_engine.so'
+            gallium = driver / 'libgallium-26.2.2.so'
+            require(all(path.is_file() for path in (binary, core, gallium)),
+                    'Benchmark, engine, or private D3D12 driver is missing')
+            report.update({'benchmark_binary_sha256': sha(binary),
+                           'benchmark_engine_sha256': sha(core),
+                           'gallium_sha256': sha(gallium)})
+            for repetition in range(args.repeats):
+                for seed in (42, 43):
+                    order = ('baseline', 'candidate') if (seed + repetition) % 2 == 0 \
+                        else ('candidate', 'baseline')
+                    for mode in order:
+                        label = f'seed{seed}-repeat{repetition}-{mode}'
+                        log = output / f'{label}.log'
+                        data = DATA if mode == 'baseline' else overlay
+                        completed = subprocess.run([str(binary), str(seed)], cwd=ROOT,
+                                                   env=benchmark_environment(data, benchmark_build,
+                                                                             driver),
+                                                   capture_output=True, timeout=240)
+                        log.write_bytes(completed.stdout + completed.stderr)
+                        require(completed.returncode == 0, f'{label} failed: {log}')
+                        lines = [line for line in completed.stdout.splitlines()
+                                 if line.startswith(b'{')]
+                        require(len(lines) == 1, f'{label} JSON missing')
+                        row = json.loads(lines[0])
+                        samples = row['samples_ms']
+                        submit = row['submit_samples_ms']
+                        finish = row['finish_samples_ms']
+                        require(row['seed'] == seed and row['quality'] == report['quality'] and
+                                (row['width'], row['height']) == (1920, 1080) and
+                                row['measured_frames'] == 120 and
+                                len(samples) == len(submit) == len(finish) == 120 and
+                                row['swap_enabled'] is True and row['swap_interval'] == 0 and
+                                'D3D12' in row['renderer'] and
+                                Path(row['gallium_path']).resolve() == gallium and
+                                abs(sorted(samples)[math.ceil(.95 * 120) - 1] -
+                                    row['p95_ms']) < .001,
+                                f'{label} measured another GPU workload')
+                        require(all(math.isfinite(value) and value > 0 for values in
+                                    (samples, submit, finish) for value in values) and
+                                all(abs(total - sent - done) < .01
+                                    for total, sent, done in zip(samples, submit, finish)),
+                                f'{label} raw frame phases do not reconcile')
+                        result = {'label': label, 'seed': seed, 'repetition': repetition,
+                                  'mode': mode, 'renderer': row['renderer'],
+                                  'p50_ms': row['p50_ms'], 'p95_ms': row['p95_ms'],
+                                  'p99_ms': row['p99_ms'],
+                                  'submit_p95_ms': row['submit_p95_ms'],
+                                  'finish_p95_ms': row['finish_p95_ms'],
+                                  'samples_ms': samples, 'submit_samples_ms': submit,
+                                  'finish_samples_ms': finish, 'log_sha256': sha(log)}
+                        report['runs'].append(result)
+                        (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
+                        print(label, row['p95_ms'], flush=True)
+            require(sha(binary) == report['benchmark_binary_sha256'] and
+                    sha(core) == report['benchmark_engine_sha256'] and
+                    sha(gallium) == report['gallium_sha256'],
+                    'Benchmark binary, engine, or driver changed during A/B')
+        require(data_manifest() == source_files and
+                sha(Path(__file__)) == report['runner_sha256'] and
+                sha(source_shader) == report['source_shader_sha256'] and
+                sha(capture_binary) == report['capture_binary_sha256'] and
+                sha(capture_core) == report['capture_engine_sha256'],
+                'Source resource or capture binary changed during diagnostic')
+    except Exception as error:
+        report['failures'].append(f'{type(error).__name__}: {error}')
+        if isinstance(error, subprocess.TimeoutExpired):
+            timed_out = (error.stdout or b'') + (error.stderr or b'')
+            (output / 'timeout.log').write_bytes(timed_out)
+        preflight_complete = len(report['captures']) == len(CASES) * 2
+        report['image_preflight_complete'] = preflight_complete
+        report['image_equal'] = (image_equal if preflight_complete or not image_equal
+                                 else None)
+        report['diagnostic_complete'] = False
+        report['budget_met'] = False
+        (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
+        artifact_sha = archive(output)
+        print(json.dumps({'diagnostic_complete': False,
+                          'image_equal': report['image_equal'], 'budget_met': False,
+                          'output': str(output), 'archive_sha256': artifact_sha,
+                          'failures': report['failures']}), flush=True)
+        return 1
     report['diagnostic_complete'] = (
         image_equal and not report['failures'] and
         (args.image_only or len(report['runs']) == args.repeats * 4))

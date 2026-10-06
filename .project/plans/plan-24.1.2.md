@@ -1,5 +1,7 @@
 # plan-24.1.2 — 画质与帧预算
 
+2026-10-06 着色器候选工具的正常画面、GLSL 编译失败和 GPU 构建缺失三条路径均以当前脚本实测并归档；失败结果不再丢失原始证据或误报画面已验证。该变更只改进自动筛查，正式 1080p 帧预算仍未通过，见[留证验证](../optimization/evidence/render_shader_ab_failure_preservation_20261006.json)。
+
 2026-10-06 着色器候选的六模式画面预检与双种子真实窗口交错测量已脚本化，并以成功和故意改变画面的失败路径验证。Bloom 暗像素提前返回没有稳定跨种子收益，天空像素提前返回缺少分支覆盖；产品着色器、参考图和 16.67ms 门禁未改变。计划仍未通过，见[诊断与原始证据](../optimization/evidence/render_shader_experiments_20261006.json)。
 
 2026-10-06 当前源码的正式 1080p PBR 真窗口渲染检查双种子 p95 为 26.618/25.863 ms，仍超预算；[原始报告](../optimization/evidence/render_gpu_after_ai_refresh_20261006.json)保留失败，计划不提升。
