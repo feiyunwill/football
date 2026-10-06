@@ -1,5 +1,7 @@
 # task-24.1.2.2 — 渲染性能验收
 
+2026-10-06 FXAA 零方向提前返回候选在两个画质模式、各五帧的 RGB／状态逐字节一致，但真实窗口双种子两轮交错 A/B 中种子 43 均变慢，八次完整帧均超预算。候选未合入，任务继续未完成；见[候选原始证据](../optimization/evidence/fxaa_zero_dir_20261006.json)。
+
 2026-10-06 前五个里程碑重新验证后，当前源码的正式 Wayland／D3D12 1080p 完整 PBR 检查仍失败：种子 42/43 p95 为 26.618/25.863 ms，超过 16.67 ms；503 项断言、零跳过。见[当前正式报告与原始样本](../optimization/evidence/render_gpu_after_ai_refresh_20261006.json)。本任务保持未完成。
 
 2026-10-06 FXAA 的 `texelFetch` 与 `textureOffset` 邻域采样候选分别在固定五帧中改变 1,678–2,407 和 4–42 个像素；虽未改变模拟状态，但未通过精确图像门禁，均未合入或进入性能验收。见[补丁和逐帧证据](../optimization/diagnostics/fxaa-sampling-20261006/report.json)。
