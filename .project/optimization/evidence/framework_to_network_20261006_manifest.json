@@ -1,0 +1,2732 @@
+{
+  "all_check_states": {
+    "architecture_regression": "verified",
+    "ecs_performance": "verified",
+    "environment_lifetime": "verified",
+    "feel_regression": "verified",
+    "fixed_timestep": "verified",
+    "framework_regression": "verified",
+    "input_contract": "verified",
+    "lobby_lifecycle": "verified",
+    "match_benchmark": "verified",
+    "memory_budget": "verified",
+    "native_boundary": "verified",
+    "native_session_ports": "verified",
+    "network_input_window": "verified",
+    "network_reconnect": "verified",
+    "network_regression": "verified",
+    "performance_regression": "verified",
+    "presentation_smoothing": "verified",
+    "quality_selftest": "verified",
+    "simulation_contract": "verified",
+    "state_ownership": "verified"
+  },
+  "archive": "framework_to_network_20261006.tar.gz",
+  "archive_bytes": 76229139,
+  "archive_sha256": "c6ae4834e87ac5d7fa28cbdbd03357668ed2af1b364acd16c640ed512a2926e1",
+  "checks": {
+    "architecture_regression": {
+      "fingerprint": "2498c877f439d20511ea5e1590cecf24998f46b496205495063e9496251473bc",
+      "passed": true
+    },
+    "ecs_performance": {
+      "fingerprint": "4c8c25c521e60084a87d22ebf574cba47719e3ebc92036644707281cf4db3406",
+      "passed": true
+    },
+    "environment_lifetime": {
+      "fingerprint": "195b72c14b41017a501472d1bab08690357ea2dd242587f7971a5c9b3bb8b338",
+      "passed": true
+    },
+    "framework_regression": {
+      "fingerprint": "4f15f7a4cdb2451a92aff832fc317e42843ea3a7c543400e9e2635bdc46d4aa4",
+      "passed": true
+    },
+    "input_contract": {
+      "fingerprint": "f520b04ad70e63d0c4953fbe7146296ac0ff3c32d403ffeae7f67ed03e5955d6",
+      "passed": true
+    },
+    "match_benchmark": {
+      "fingerprint": "486577465cc9a3e3f1dd5a6ab604d4853951e154ad7380cb87ee842a9d8c1345",
+      "passed": true
+    },
+    "memory_budget": {
+      "fingerprint": "adf1d24f29aba0f05f5aa6a1d04ec82c46a91418de8825615db3325c8c52aee2",
+      "passed": true
+    },
+    "native_boundary": {
+      "fingerprint": "d11b56599e528329e43ebf2337e1767a395da254b5722c41f27593adb1a735a8",
+      "passed": true
+    },
+    "native_session_ports": {
+      "fingerprint": "8b72c293c394a06bd397a8d113530aa765ec7d92551d158407495825b214fe14",
+      "passed": true
+    },
+    "performance_regression": {
+      "fingerprint": "8f24ddad1515f2fcfa5e7ec0229ca2c04804c2e2978db34bb4541f0512364350",
+      "passed": true
+    },
+    "quality_selftest": {
+      "fingerprint": "b5c3d3afdaae50dcb7521526bf7c6817a6cdefb35e0940541c6c6d8661e2c01d",
+      "passed": true
+    },
+    "simulation_contract": {
+      "fingerprint": "388b1d43407032dee271babdfad8a5cc40a85041e78cd8870b19c4060ba37b93",
+      "passed": true
+    },
+    "state_ownership": {
+      "fingerprint": "394a6a3a6c3df2138571e5101bb4258697115197e2b90b1f03e96a622a391c50",
+      "passed": true
+    }
+  },
+  "files": {
+    ".project/optimization/benchmarks/ecs-comparison-1791246540313176926.json": {
+      "bytes": 6089839,
+      "sha256": "de8d47acbf94891f8b230ff9642eef356b99c0577e74c1e4172e39fe5cca8f27"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/actual-input-windows.log": {
+      "bytes": 9080,
+      "sha256": "6e25162192c7a1490e9f9b4540c31a68902d94518779268a5811d5b95244b2b4"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/commands.json": {
+      "bytes": 64434,
+      "sha256": "9b585e6e0d021ba7338df4c911bc3436f0d0a3219c99d73506485bce1022c4d3"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/dependencies.json": {
+      "bytes": 173207,
+      "sha256": "d460dba95c374df08677078dde489c0371f4be26f86fe3a568ecfa4a041b8602"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/native-publication-clock-tsan": {
+      "bytes": 717856,
+      "sha256": "ca58ccbb1fe1e68576eb2424581cdbd9021f61b2b9abff7d17a92ebb35f15d7e"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/native-transport-pump-tsan": {
+      "bytes": 836784,
+      "sha256": "bbd3ec39210a23c0d7892c698d03115bbdd102762aed0535fe5ae2dab3c80764"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/native-ui-owner-tsan": {
+      "bytes": 781232,
+      "sha256": "b9130420a8c4282fb8da2dcc7ddd8d00208778a4946acc2abe5d173e0fc5c7be"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/oracle.json": {
+      "bytes": 665,
+      "sha256": "36075dc9a714a8412f3a467ec4d6f40079539e38882968a8f66b1204466b004a"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/oracle.txt": {
+      "bytes": 414261,
+      "sha256": "b3d333d397d2f59938622a3fa2f299ae299b87b1aac5371e412d0ae29de10d2d"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/parent-after.json": {
+      "bytes": 91,
+      "sha256": "860e96db3a8391959c1f6eef90506b6803a4675507badc5ad7b215da42c589a4"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/parent-before.json": {
+      "bytes": 91,
+      "sha256": "860e96db3a8391959c1f6eef90506b6803a4675507badc5ad7b215da42c589a4"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/python-input.log": {
+      "bytes": 1814,
+      "sha256": "6cda4900368fd675d9bae591f834e4922b9f22d4cab46561fcad13d95fbc864b"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/python-oracle.log": {
+      "bytes": 607,
+      "sha256": "ec20b7adda77c59e58aafd0a2681c2bf59e08ab2fd64e4221b22bc35cdbe034e"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-build.log": {
+      "bytes": 11819,
+      "sha256": "6277cdf885bcfbc5afe2a53dbd44d2f47b5b29d16f043ff4e83dcb69b666ca8a"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/frame-0.rgb": {
+      "bytes": 174303,
+      "sha256": "edb627bbb6687fa165c2d51c9cecded96fa0e5eb2103c7a4697f95a627a32a50"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/frame-0.state": {
+      "bytes": 80495,
+      "sha256": "3a520d70738eeebc65c1f05a14481061884395a6c13aad25ab4dfcf340608a38"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/frame-120.rgb": {
+      "bytes": 174303,
+      "sha256": "3b105ed35d298bfeea03f23d1d627b18d37ad6a096f51be2cd35b4eb309551a5"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/frame-120.state": {
+      "bytes": 93707,
+      "sha256": "4ad42c70c7be290934775fd39dae8e61991c3aa31ccf1fb7975f491db913a465"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/frame-160.rgb": {
+      "bytes": 174303,
+      "sha256": "a5f39d504c98419ed00d8cdb13fc6928d3b64f31d4be9c2e84ef7593270ec0d2"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/frame-160.state": {
+      "bytes": 94371,
+      "sha256": "0f6b019e63d4d8505ee62d46b8df946f8b764237262e7c1d0a8986b51798a522"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/frame-40.rgb": {
+      "bytes": 174303,
+      "sha256": "625f50beb453300a65bea126a3fdb0e7d1105c18c2a37c32e7789dbe3118fa95"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/frame-40.state": {
+      "bytes": 80495,
+      "sha256": "6b1c25d21cc1f914a6ad65b694e21a03093ecdf3e6ff3edc01992c89da06d8e3"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/frame-80.rgb": {
+      "bytes": 174303,
+      "sha256": "35b22ad573cedeade83d42c144704601f813d29579fc9a631c90dd7ffef057e5"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/frame-80.state": {
+      "bytes": 80495,
+      "sha256": "d6d06c61590fb5b8266922ff5403a557c19ee2f33ef0504586d144cba7c23968"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/identity.json": {
+      "bytes": 73,
+      "sha256": "cbc931623b7d2f75779ef0edaed4767c6308fb9fb8b68800de97817aa3a15a6b"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-capture-images/loaded-maps.txt": {
+      "bytes": 44995,
+      "sha256": "c2b969dfceb4efe47860ba350b94f6f1a4b060640c354c117d5d95afc2f73d1b"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-clock-replay.log": {
+      "bytes": 146,
+      "sha256": "f41b919fcf27fba953618d13a1d5aa846d425f4b3aee763e0d4c09c5b21f5dac"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-configure.log": {
+      "bytes": 470,
+      "sha256": "101e3b6927e013783242c95a1678430bf65377480d763e8bd3acc0ed0705385e"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_ai_tactical_state_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "de3f326400c4c159abd3341671a9a6130d6206e13b12291ee49f5b8c6946f7fc"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_ai_tactical_state_contract.log": {
+      "bytes": 432,
+      "sha256": "4af40814a98f250a650313dacedc3a01297c3a8165ce0f1c6ad72fa5e16ec95a"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_ai_tactics_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "6eeeb050faee0bba6a5f3024239c75c7b62da21fce1b2bb2dcd69726a718bb0c"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_ai_tactics_contract.log": {
+      "bytes": 67,
+      "sha256": "eb739798b6b9df33c5e610e687dfbc49aaaaf184b889da775d7140658f9f30a7"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_ai_tactics_roles_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "2fc9c05aa7d272d139d534fddd79166f2100707a80c2115e54ffcd6b05d4134d"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_ai_tactics_roles_contract.log": {
+      "bytes": 82,
+      "sha256": "dbea29fd89136c0b7d2f745c8c24cfcf77f2f3a5342442a7780b0ba082f82739"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_ai_touch_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "f5e4fb394ee3c08260ab3b7bc63a43caecf3c98bcdfd8f7d571028a12050aeb3"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_ai_touch_contract.log": {
+      "bytes": 419,
+      "sha256": "2f9917327d8832cd9d2b49e02d7862378f02001b2ee40fc0be28fe167d160d5d"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_frame_capture_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "9feed3dc7fa8593b738518dc5f8ab0fd0454cc33df8ec201339e5ba0427008b7"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_frame_capture_contract.log": {
+      "bytes": 394,
+      "sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_bot_selection_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "6a43f7d7207ed019b1ff585319e3b2961ef302db6f99739cae1892fd4fc77591"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_bot_selection_contract.log": {
+      "bytes": 196,
+      "sha256": "02ff7d15c1f480ff20f121280e8b234b6eadd7bf3edbbb24500e87423e7ca0f0"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_input_admission_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "0ae04c43d3a954f510e59164320c05a414e78010cc72cbf9f9fac3548fdfcb48"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_input_admission_contract.log": {
+      "bytes": 192,
+      "sha256": "5b13642ee145b8631ec4f62f058e6c56f7f187bb8a4adea34c77aec451603488"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_input_buffer_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "fa141782d4c546fc0b06e8c0caaa1f2a92dba21e645dcd479f59a05c1269f714"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_input_buffer_contract.log": {
+      "bytes": 66,
+      "sha256": "304c854dc052c47259c77dead7db9d568e5e9b809618b6e1e784dfe980a4f969"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_input_gameenv_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "4524659b03ad1c49cd2015c1825d691b38bb068c01d91bb52dada485908b7b60"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_input_gameenv_contract.log": {
+      "bytes": 245,
+      "sha256": "c736c24b1134e607ccc9b0de758b022d2f0b58b5e9268c36c5e73112b1ef9350"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_input_timeline_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "4b8d756d6c7fcb432e6c32feb6f803b1a92a63932db317af719822a8bdeb846e"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_input_timeline_contract.log": {
+      "bytes": 142,
+      "sha256": "b39d6b6989dd1d120853ed322aa08acf893739a4f6f35113601f258e2b0c4669"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_match_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "a91a2b9e0fc3e92ecc46c83433c90d139d133034d7fe804800da15e97c6b89e4"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_match_contract.log": {
+      "bytes": 131,
+      "sha256": "34f7336f2fa8c463c77cc8461f57683ce58efe5192553bccfd65754b9a91ce97"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_presentation_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "240be0eb514e5e2fb720bc35ae690cdf5826aa2b8ba74f32b7e66e8e833f8fcf"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_presentation_contract.log": {
+      "bytes": 115,
+      "sha256": "3c6a38c752ab28c11e47ab8d49865e1ea0b52974b485f7e22326738df30a1efd"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_publication_clock_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "6baf4b9b3575111beae6159aa2d45c299ba4fc4c0a6a7da7395f4c618de53227"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_publication_clock_contract.log": {
+      "bytes": 169,
+      "sha256": "afe0e3bf075eb70abdc6b655dbf332378d915369efd184b5dbbdf812f67ac21c"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_transport_pump_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "dc65d985fc769626d4411dfc3ecf78eac43f8511ce8773a6067b98d90a10edbe"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_transport_pump_contract.log": {
+      "bytes": 114,
+      "sha256": "1dc97a872fb17a4523447c0d542d3eed2f987729a15b8cf00a58ec0da3c6d9af"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_ui_owner_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "d7066a34d65d049abca540753a6b9a07601a6df6f0f6317eb64388e8ddbfd10c"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_native_ui_owner_contract.log": {
+      "bytes": 151,
+      "sha256": "3b25ec900ea918e12c8dd8358aa9a90a2ae735596aed3815ebb817827462f520"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_render_service_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "e2c89e5e3d13fcaa6c288e3419ab1d27c052c99ff97e0047ee3b6b5e36ee20ca"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_render_service_contract.log": {
+      "bytes": 134,
+      "sha256": "24f989c107f70f3d2f3e03322d9b489022fe4cdc13ada8eecb3df9d76c168f88"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_server_input_window_contract-linkage.log": {
+      "bytes": 3118,
+      "sha256": "be991fb2b0bf7d3eae70b227e07cbee6c75960b9518a0f1cabb8983d82d9c47b"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/release-engine_server_input_window_contract.log": {
+      "bytes": 105,
+      "sha256": "c1eaf2c1b13f3377ee98c5138ade1b8f203c844fc4b4398c50f398d3d793ff6b"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/report.json": {
+      "bytes": 392455,
+      "sha256": "e8aa91fa34e9b0453ddd02b3b9f5f278aac1995b9122df97c27de19d8ba05651"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-build.log": {
+      "bytes": 14317,
+      "sha256": "508a8177f32808ab7dbf22d484f7612da3c200b1d7a1f9e7c7c531d69eb749b2"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/frame-0.rgb": {
+      "bytes": 174303,
+      "sha256": "edb627bbb6687fa165c2d51c9cecded96fa0e5eb2103c7a4697f95a627a32a50"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/frame-0.state": {
+      "bytes": 80495,
+      "sha256": "3a520d70738eeebc65c1f05a14481061884395a6c13aad25ab4dfcf340608a38"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/frame-120.rgb": {
+      "bytes": 174303,
+      "sha256": "3b105ed35d298bfeea03f23d1d627b18d37ad6a096f51be2cd35b4eb309551a5"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/frame-120.state": {
+      "bytes": 93707,
+      "sha256": "4ad42c70c7be290934775fd39dae8e61991c3aa31ccf1fb7975f491db913a465"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/frame-160.rgb": {
+      "bytes": 174303,
+      "sha256": "a5f39d504c98419ed00d8cdb13fc6928d3b64f31d4be9c2e84ef7593270ec0d2"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/frame-160.state": {
+      "bytes": 94371,
+      "sha256": "0f6b019e63d4d8505ee62d46b8df946f8b764237262e7c1d0a8986b51798a522"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/frame-40.rgb": {
+      "bytes": 174303,
+      "sha256": "625f50beb453300a65bea126a3fdb0e7d1105c18c2a37c32e7789dbe3118fa95"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/frame-40.state": {
+      "bytes": 80495,
+      "sha256": "6b1c25d21cc1f914a6ad65b694e21a03093ecdf3e6ff3edc01992c89da06d8e3"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/frame-80.rgb": {
+      "bytes": 174303,
+      "sha256": "35b22ad573cedeade83d42c144704601f813d29579fc9a631c90dd7ffef057e5"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/frame-80.state": {
+      "bytes": 80495,
+      "sha256": "d6d06c61590fb5b8266922ff5403a557c19ee2f33ef0504586d144cba7c23968"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/identity.json": {
+      "bytes": 73,
+      "sha256": "cbc931623b7d2f75779ef0edaed4767c6308fb9fb8b68800de97817aa3a15a6b"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-capture-images/loaded-maps.txt": {
+      "bytes": 59058,
+      "sha256": "412e63ff4f4444e00873a7a943add53546e2d26fb0f3c1b5872ac482eaf71891"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-clock-replay.log": {
+      "bytes": 146,
+      "sha256": "f41b919fcf27fba953618d13a1d5aa846d425f4b3aee763e0d4c09c5b21f5dac"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-configure.log": {
+      "bytes": 473,
+      "sha256": "d9c69cbc5b08d6b2078dd64acb897cdb83988078d064865e493c8d25f575dab9"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-core-symbols.log": {
+      "bytes": 1624936,
+      "sha256": "95992a668474c64d2b6296c791ece5fdaa082100f000a1d70c07e1b3123cd870"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_ai_tactical_state_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "43d0c05887daa3eb1d79942181b09045e466bd61ee652666aada0a9b635c1895"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_ai_tactical_state_contract.log": {
+      "bytes": 432,
+      "sha256": "4af40814a98f250a650313dacedc3a01297c3a8165ce0f1c6ad72fa5e16ec95a"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_ai_tactics_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "72ff28ca4a8a60885b0d609d0a8d7dd5eacc1e100fe8de709a4ef06d600bd1f7"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_ai_tactics_contract.log": {
+      "bytes": 67,
+      "sha256": "eb739798b6b9df33c5e610e687dfbc49aaaaf184b889da775d7140658f9f30a7"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_ai_tactics_roles_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "309a0e2aeeb7f277a1cf776d229c650587c37365dad92e8d2482598fbe4989db"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_ai_tactics_roles_contract.log": {
+      "bytes": 82,
+      "sha256": "dbea29fd89136c0b7d2f745c8c24cfcf77f2f3a5342442a7780b0ba082f82739"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_ai_touch_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "825c365e7a797a80f6694768457529cd907a0d8c5bb2a9caed70af339e34d75d"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_ai_touch_contract.log": {
+      "bytes": 419,
+      "sha256": "2f9917327d8832cd9d2b49e02d7862378f02001b2ee40fc0be28fe167d160d5d"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_frame_capture_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "fc3bdc79eda088c9d8c357acc663811df467896ba2c3d7e076cf7a0fabdfe5b6"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_frame_capture_contract.log": {
+      "bytes": 394,
+      "sha256": "7121af4769b64be0ad113f2cc65f372ca02183b696787fd80b276b33c6758af4"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_bot_selection_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "6253a7dd0ef7de97b26a0b7dd10071be7c61dcb0c4ff7e4ab822e7b415b32e9f"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_bot_selection_contract.log": {
+      "bytes": 196,
+      "sha256": "02ff7d15c1f480ff20f121280e8b234b6eadd7bf3edbbb24500e87423e7ca0f0"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_input_admission_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "2dafec687c5c847456e39d193427aac3981aaf9f1b859b36c76002e9efc8dd24"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_input_admission_contract.log": {
+      "bytes": 192,
+      "sha256": "5b13642ee145b8631ec4f62f058e6c56f7f187bb8a4adea34c77aec451603488"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_input_buffer_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "1bbc4e9b23ec86dc40ad5481bf24758d9fb4a0cc68b2416a10e3e974edde8402"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_input_buffer_contract.log": {
+      "bytes": 66,
+      "sha256": "304c854dc052c47259c77dead7db9d568e5e9b809618b6e1e784dfe980a4f969"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_input_gameenv_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "16c0fd708d2bbc0df1a68fcc4d055a772f3d3d0afef8896ff86ac78ab493f027"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_input_gameenv_contract.log": {
+      "bytes": 245,
+      "sha256": "c736c24b1134e607ccc9b0de758b022d2f0b58b5e9268c36c5e73112b1ef9350"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_input_timeline_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "ec67949dac5a6dc99e627a7e7ea971d49675bf4e90b7f0e35c07f9b647904284"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_input_timeline_contract.log": {
+      "bytes": 142,
+      "sha256": "b39d6b6989dd1d120853ed322aa08acf893739a4f6f35113601f258e2b0c4669"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_match_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "c9ec7c9690c638570bce2cdf653ce95ebf6a533d8382578c6e54ba407e0e504f"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_match_contract.log": {
+      "bytes": 131,
+      "sha256": "34f7336f2fa8c463c77cc8461f57683ce58efe5192553bccfd65754b9a91ce97"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_presentation_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "89fde3e142270d40fe64e544f92ff14d65a92b1a79bc06a80acae25431d6cab4"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_presentation_contract.log": {
+      "bytes": 115,
+      "sha256": "3c6a38c752ab28c11e47ab8d49865e1ea0b52974b485f7e22326738df30a1efd"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_publication_clock_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "4d58e0011c9bdcd4f5f32fb9179f1f76de6eb1be3f726c456e5aacde08cd4b8c"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_publication_clock_contract.log": {
+      "bytes": 169,
+      "sha256": "afe0e3bf075eb70abdc6b655dbf332378d915369efd184b5dbbdf812f67ac21c"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_transport_pump_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "848a2a79a469a5984f194dbab71127ba887f3c4302216703053136c6aeb2a71f"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_transport_pump_contract.log": {
+      "bytes": 114,
+      "sha256": "1dc97a872fb17a4523447c0d542d3eed2f987729a15b8cf00a58ec0da3c6d9af"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_ui_owner_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "77229735557d7c3c1807c6b48983fc9d51db04c7beae5170dec13e4cb0cf5b9b"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_native_ui_owner_contract.log": {
+      "bytes": 151,
+      "sha256": "4c676b40be61e3b0d883087153fb5cd0e29bfc103bc8017cae8d1d073d63b5ea"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_render_service_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "0048d90a6efe1ac44d2ef947a0c942dfc10566882349d90f89b8d262a333130d"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_render_service_contract.log": {
+      "bytes": 134,
+      "sha256": "24f989c107f70f3d2f3e03322d9b489022fe4cdc13ada8eecb3df9d76c168f88"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_server_input_window_contract-linkage.log": {
+      "bytes": 3243,
+      "sha256": "f17effd42444ce69d6484f8b47af74a9538734226fbc8d707adbd7677d68e94e"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sanitized-engine_server_input_window_contract.log": {
+      "bytes": 105,
+      "sha256": "c1eaf2c1b13f3377ee98c5138ade1b8f203c844fc4b4398c50f398d3d793ff6b"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/sources.json": {
+      "bytes": 145264,
+      "sha256": "78db3bfbdea128f00f4136af3c735e49224f6876d9cfdab92b9ab93b027f6b8c"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/thread-owner-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/thread-owner-linkage.log": {
+      "bytes": 417,
+      "sha256": "07533a55966cd0b8f1dcc8dc804ed10406825231fb3699e76004b39862903d40"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/thread-owner.log": {
+      "bytes": 151,
+      "sha256": "fb5bfe3308a668dc844a3c066b8b82c946a95c2ae7d52e07e01161bcf110f18f"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/thread-publication-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/thread-publication-linkage.log": {
+      "bytes": 417,
+      "sha256": "6b0d16a1921f252c1edb61f358ae381eb1623a6e99c84e3644ca83462fa117a9"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/thread-publication.log": {
+      "bytes": 169,
+      "sha256": "afe0e3bf075eb70abdc6b655dbf332378d915369efd184b5dbbdf812f67ac21c"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/thread-pump-build.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/thread-pump-linkage.log": {
+      "bytes": 417,
+      "sha256": "7621cf085c7b3396ca9db438a4d163a022d5ae1ea472da22141cd647d5984918"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/thread-pump.log": {
+      "bytes": 114,
+      "sha256": "1dc97a872fb17a4523447c0d542d3eed2f987729a15b8cf00a58ec0da3c6d9af"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/authority": {
+      "bytes": 44,
+      "sha256": "9ac823f6b58a6b72496e49f60768406100dd39f348b48282ff95ae83a038a397"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/bind-host-tools.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/commands.json": {
+      "bytes": 1883,
+      "sha256": "4841bae47c1f4640342ff55baa2f1deaab4a71bbffae2e6800f46fb45070d462"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/private-tools-overlay.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/private-x-sockets.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/release-sampler.log": {
+      "bytes": 537,
+      "sha256": "3421a4deaf532bc01d3175fa561a2e4b16c49fb98abca329b0e6c786204785f8"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/report.json": {
+      "bytes": 12606,
+      "sha256": "35f61b8fd508c19706278255b8948daaa2b4202b2e02f4ab04edab6b310c0627"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/sanitized-sampler.log": {
+      "bytes": 537,
+      "sha256": "3421a4deaf532bc01d3175fa561a2e4b16c49fb98abca329b0e6c786204785f8"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/server.log": {
+      "bytes": 4902,
+      "sha256": "f8d685f9f4d11d8911ecfb6cdd0451fe993d45016b400a0f5a4e5cb243d20d7d"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows.log": {
+      "bytes": 7980,
+      "sha256": "7d7065c4217c68021982fc5473aa9514041aacd72a1f43a7b6c1da547165126b"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/report.json": {
+      "bytes": 10688,
+      "sha256": "71095ffd9d446db325860fc4232a34e1fcba4d1773cb388ef915f25946289b39"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/actions.json": {
+      "bytes": 792,
+      "sha256": "f5e7c77b66915211969a2c9d17de296a560968c732de25abbfb2cc1839535975"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/client.log": {
+      "bytes": 174,
+      "sha256": "e8db41aab8d34524d2f4db3b9dcc14de0015b58c23c6462d7b44a9d8cd1d8a9d"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/report.json": {
+      "bytes": 2833,
+      "sha256": "002ecacd04f1f0660e14be28dc128d3db75ba0c88dc654bb9cc63323a53f696f"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/events.jsonl": {
+      "bytes": 248100,
+      "sha256": "200c75da394a0f81e0b572823d630cb9bb291572f0a829763a9ccf7128a5dfaa"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-1.png": {
+      "bytes": 34397,
+      "sha256": "7d744162e1a71d9073c210def688a4f5e6772f0010f0c855f2f9de726b6b3ed0"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-1.ppm": {
+      "bytes": 2764816,
+      "sha256": "7f7c2580189603a58a790da375a1f861d6da36c5b960f2e351e536ebb4b889f7"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-12.png": {
+      "bytes": 1473573,
+      "sha256": "b9ece5da7f7e1cf615a503eb374e4d80d4c3371a0ed336ae6386ec142cdfb471"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-12.ppm": {
+      "bytes": 2764816,
+      "sha256": "e3fa130087ac1db131f824451698f855895e48bfe34e7c1f8a20a69ba4fc6984"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-2.png": {
+      "bytes": 1320185,
+      "sha256": "934617c4a0ed2e8c0973c23427b855188c9b533cad1c5bcb6639fd0ac7330cc0"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-2.ppm": {
+      "bytes": 2764816,
+      "sha256": "e0fba2df8ab600ca8c6e3fa2ba704a34b8c218bbee6ffcdee0d7e530b63362bf"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-24.png": {
+      "bytes": 1578428,
+      "sha256": "44e6e7a76ea29213ff7d7738b418b4d4782f59987a2014657338c1a66af35e67"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-24.ppm": {
+      "bytes": 2764816,
+      "sha256": "8e94039f552639e95ea554e82a67fc37cc8c9d2e68dd4be9ca7ecf1bca55b03d"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-3.png": {
+      "bytes": 1318229,
+      "sha256": "32ab7debac041f69310a303006c3682bc5f4f07a0151e7156b283d79a16d7d83"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-3.ppm": {
+      "bytes": 2764816,
+      "sha256": "1ca4195218504c657ea01ddd018d075456c0302b0cffe3386723ffe326fe70ac"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-4.png": {
+      "bytes": 1308455,
+      "sha256": "0f54707054e0bb0803fd731661becfd19e4bbb9719d0fd76b83d7ba12a7bac37"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-4.ppm": {
+      "bytes": 2764816,
+      "sha256": "584870304842885bdfb8c54989f832847d46b0bbc26c2f4f703ce99288d5c82b"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-40.png": {
+      "bytes": 1572540,
+      "sha256": "e9406250d5484978f104df7afe1eb8054c22bbc07b02c37c7dbe1f6759f8f514"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-40.ppm": {
+      "bytes": 2764816,
+      "sha256": "03cbdd6655dfb8846a97c248110b4dc7694ea08dd48fe7d6029b5fa743db5f6a"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-5.png": {
+      "bytes": 1299624,
+      "sha256": "63c198e9b5f3e50ce06b17862e3db04a4356e9712277fdcadc1b524dc4367603"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-5.ppm": {
+      "bytes": 2764816,
+      "sha256": "f52683fb30d8162d3260996f55b644a90a01cb1176aea558aa981751a97d14e4"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-6.png": {
+      "bytes": 1276926,
+      "sha256": "8d6c3f64adba99591b8213d2a1af03615e9ee95077a1e74d20909393f315b307"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/standalone/trace/frame-6.ppm": {
+      "bytes": 2764816,
+      "sha256": "9b9aad703c59c4f717eeaac51a8e43ee8a3f7e94b38cd9a614a7b01cc8c1cda7"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/actions.json": {
+      "bytes": 860,
+      "sha256": "3daf889e31f5cd5888e01ce02e6762240ff95c20969d4d1a5bea4b205d8586e8"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/client.log": {
+      "bytes": 2880,
+      "sha256": "92be76ddad5dbb6b986d3b246905d89f0bd5cc82f74aa4993c2cc2e2ea269b66"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/midmatch-replay.bin": {
+      "bytes": 15121,
+      "sha256": "a5c03a057a175bb06c5896375f775e23410db00b4e1fbafacc1282be84588729"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/replay_42.bin": {
+      "bytes": 16529,
+      "sha256": "8027e59fd59cd0c6e356948416f3a4cea9332f68f4320a2249a703a3c2a15159"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/report.json": {
+      "bytes": 3276,
+      "sha256": "270b8922b9a1e916c640860089204e497f87b4a0e6be3d733b72e63b0a427aa4"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/server-trace/events.jsonl": {
+      "bytes": 296556,
+      "sha256": "248f6c60bddd2f678a64b8e906fbde0f2a13bbce53870806451cca6f2f898615"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/server.log": {
+      "bytes": 46,
+      "sha256": "f544cfa37be5d893c066062147d69b09223e8ae0b7eba90f1d0b6125ae515184"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/events.jsonl": {
+      "bytes": 278059,
+      "sha256": "58d9ac190c97e15463d14344d60d6296b5ef70c43ff23c097017d8c5cbff5ffc"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-1.png": {
+      "bytes": 34397,
+      "sha256": "7d744162e1a71d9073c210def688a4f5e6772f0010f0c855f2f9de726b6b3ed0"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-1.ppm": {
+      "bytes": 2764816,
+      "sha256": "7f7c2580189603a58a790da375a1f861d6da36c5b960f2e351e536ebb4b889f7"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-12.png": {
+      "bytes": 1482701,
+      "sha256": "638416907fed1d374131a2a084f5de4fc4183505984cd25c638deb87e0b44a38"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-12.ppm": {
+      "bytes": 2764816,
+      "sha256": "c39823f4f3009631ae4cbcb9f58e570b5bccb44659626a4b4a18bc545ba535f7"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-2.png": {
+      "bytes": 1320266,
+      "sha256": "d5b47d9126aff23970c989028d9faf07588118a01459ca00ab05dab0f548854a"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-2.ppm": {
+      "bytes": 2764816,
+      "sha256": "95e9c654b8a4b0f7145b50b56a60862f2aa99c149c48794343cd7718dc0b27cf"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-24.png": {
+      "bytes": 1575320,
+      "sha256": "234188d1d8b2ec145e14e19be26455a53c5282208ae299508a11c05cf91c9286"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-24.ppm": {
+      "bytes": 2764816,
+      "sha256": "7c36c9098cc27a5a30cb033f952eae2efa0692d437ed5712eb486cca360dfd9e"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-3.png": {
+      "bytes": 1317875,
+      "sha256": "153387efc1c072128912f0b49c9f62ff7486d0c64ad71bb54a85059bd55de3d6"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-3.ppm": {
+      "bytes": 2764816,
+      "sha256": "023cbda1b763981b35179f7ddc921643c4c4c5e761fe047d0df79e543972bbee"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-4.png": {
+      "bytes": 1307850,
+      "sha256": "19bb027d2e5fb1173c9255b167b8018ae3da2c03a92bb7683a63dce88bb10214"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-4.ppm": {
+      "bytes": 2764816,
+      "sha256": "91cd23ea6a6ffb43a2bd19b75dfb38bbb13297d8c24e4ec32ab40e22a1012f6a"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-40.png": {
+      "bytes": 1577981,
+      "sha256": "ad1872325a33124d1db0921a087700b102baf6bb6a50a63c060b5c0809a9a04c"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-40.ppm": {
+      "bytes": 2764816,
+      "sha256": "8c209e7ad039a43e53727e91982a7fd6606d08a5399f35ef95496483cbc46379"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-5.png": {
+      "bytes": 1298612,
+      "sha256": "d93540e4aadc431c6e4424f05a7169bb9a280613d66d1bf828a49ae52cba42be"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-5.ppm": {
+      "bytes": 2764816,
+      "sha256": "f63efc052b76c2086685ee10b92751d874833b42f47c3e10558026e4500924ee"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-6.png": {
+      "bytes": 1277104,
+      "sha256": "cb1935a2dbe2334e6abddd840f3b565aff02f1e2cc9dc2886aeb82062bfb5c02"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/tcp/trace/frame-6.ppm": {
+      "bytes": 2764816,
+      "sha256": "b4a25b82492d54793feef9e6a3f26743cd482fb1531af18cb2b3df9027779f8c"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/actions.json": {
+      "bytes": 860,
+      "sha256": "eb5d1179d440b1dfa143f19280468e5cd0097752de5dcdcfafa21327e3d5b0f9"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/client.log": {
+      "bytes": 2880,
+      "sha256": "bcbff2896583ca247288736ad9124f016bebdcdacb091a9da293207f080c13d6"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/midmatch-replay.bin": {
+      "bytes": 15089,
+      "sha256": "2eb8f8daf7ee84769af56e58ca609b331639f0acd27c3763e68e37d2aa212df5"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/replay_42.bin": {
+      "bytes": 16497,
+      "sha256": "e6d7ecee47d0b23501dbb072ca37cca2be0fb2015ffdf61d965b52a2452ee6ab"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/report.json": {
+      "bytes": 3278,
+      "sha256": "1e815a29d8b5b55b91d48289ed2b530621b3f8303bedc033ac6acebeb3252e4c"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/server-trace/events.jsonl": {
+      "bytes": 286941,
+      "sha256": "bfac1fff045164c39d4b2969f0a5301eec9fa076c187cd65948df871d28b844d"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/server.log": {
+      "bytes": 46,
+      "sha256": "bbae745ac5178b2fcd47b3343d017de2f43bea323bac9213ca4a5dde248a99f0"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/events.jsonl": {
+      "bytes": 281912,
+      "sha256": "5ee2b7ce9257cc322f2c4bb04ba54fe2c7bfb2bda000f5c25cf564191a13ba2d"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-1.png": {
+      "bytes": 34397,
+      "sha256": "7d744162e1a71d9073c210def688a4f5e6772f0010f0c855f2f9de726b6b3ed0"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-1.ppm": {
+      "bytes": 2764816,
+      "sha256": "7f7c2580189603a58a790da375a1f861d6da36c5b960f2e351e536ebb4b889f7"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-12.png": {
+      "bytes": 1482740,
+      "sha256": "40e482bad6c82c5d7b5eef70ab0583d838cac7858d67bfcfc68c237bf1ae2aea"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-12.ppm": {
+      "bytes": 2764816,
+      "sha256": "8e7da2bcc370dc29f96bc246fdab7a6de1b3f3ffdca8cee1ddcb3df8ce46844e"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-2.png": {
+      "bytes": 1320266,
+      "sha256": "d5b47d9126aff23970c989028d9faf07588118a01459ca00ab05dab0f548854a"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-2.ppm": {
+      "bytes": 2764816,
+      "sha256": "95e9c654b8a4b0f7145b50b56a60862f2aa99c149c48794343cd7718dc0b27cf"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-24.png": {
+      "bytes": 1575675,
+      "sha256": "6131e32cb702868e5b782bfea19a219132f4a44c274e8472ad1d6dc701de494c"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-24.ppm": {
+      "bytes": 2764816,
+      "sha256": "d953b4e0a4560a024fbe675372d31c90edaf59ad43e6d26da305f6571df3b9a3"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-3.png": {
+      "bytes": 1317757,
+      "sha256": "6d9e80531141f6655135b6d7a200396f7248e27cb56423a98c806c4393c3eb29"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-3.ppm": {
+      "bytes": 2764816,
+      "sha256": "d20de30c0b263908511c4929cdfb3fe21152eef899593d73672e977a20cf43a3"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-4.png": {
+      "bytes": 1308543,
+      "sha256": "3e111c50234ff8046447e965b8e230216542a33286a449935991d6cddd6325d3"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-4.ppm": {
+      "bytes": 2764816,
+      "sha256": "08e6bf40ee752cbf357ed0062d2529262380b5d86e010ebac221f2bd7cb75609"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-40.png": {
+      "bytes": 1572973,
+      "sha256": "c2e809dd80582f61b64dc448f063e5597acbd57be0cb09fe761c79cd8ae5100a"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-40.ppm": {
+      "bytes": 2764816,
+      "sha256": "ab4f6de80c7968a5d137d18acb16a574790b289d7ebe65b15943cb09e3c58af8"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-5.png": {
+      "bytes": 1297985,
+      "sha256": "7ca245d57ace8b5b83c00d45db7653c167da487888a720afa0776e021e486160"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-5.ppm": {
+      "bytes": 2764816,
+      "sha256": "102d0d5d870f58bc92682359097dac359e5fe679a6f3b91c40396ee0e2050de0"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-6.png": {
+      "bytes": 1278220,
+      "sha256": "09ec648a898d8e5bccddcc486e91f2a9fd0ef7ac04a250c6fbf0d22d3cb62cec"
+    },
+    ".project/optimization/benchmarks/input-contract-1791247662172759581/x11/windows/udp/trace/frame-6.ppm": {
+      "bytes": 2764816,
+      "sha256": "815dbffaaa33fb668a483115dad842d24d8a3bb822402168b86eb427c8d2c569"
+    },
+    ".project/optimization/benchmarks/match-1791245632927593642.json": {
+      "bytes": 1236059,
+      "sha256": "eae6b9016115f9a96d5f01ab41cf90041f9fc4f092e3a767c6cf11114e3ea935"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/binaries.json": {
+      "bytes": 11566,
+      "sha256": "484b71dbbf8b22dfc67775ca3b36e38e0e47eca293e09ba30c6fc055ff8593b2"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/commands.json": {
+      "bytes": 29492,
+      "sha256": "4850b01ef0e18b85d1adaf5ce470f0c927e5046bd692a239dff932364fdabf34"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-bounded_tcp_writer_test-dependencies.log": {
+      "bytes": 1780,
+      "sha256": "704c4893f562fb58ee20e829a71817935129fe5e7dec23a45fc4edb65fe940be"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-bounded_tcp_writer_test.json": {
+      "bytes": 4198,
+      "sha256": "740cd3ea1edd037a8c790089826eb3e5f39f3d97a4a55909e41b4c6405e7c160"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-bounded_tcp_writer_test.log": {
+      "bytes": 2043,
+      "sha256": "3c40c5dfb1e7ad859af0c8925c4edc251e9d6a6c117e034f8dcb4b093586766c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-build-native.log": {
+      "bytes": 3879,
+      "sha256": "27a7b65f03a211e08aa4ed6551a45d9cb6f9b6f9ed6f25c424be0fd8c94c6eb9"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-build-standalone.log": {
+      "bytes": 76,
+      "sha256": "c0039862a1f9528d6c6a05a7c35d350a750781a02acb1cb72a160f8181389fd7"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-build-tests.log": {
+      "bytes": 1125,
+      "sha256": "ebcc6d05656eb1eb304eee5729a6ca3ad52c8c035f7541e58cbec7cc84d41b2f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-configure-native.log": {
+      "bytes": 704,
+      "sha256": "15431d535c78aa899922750560b561165b5c76b765f9eb7244beb29552ef9e8d"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-configure-standalone.log": {
+      "bytes": 482,
+      "sha256": "2e8e26f3b97e9e46cc6aac9a4d8515fe2bdc02e4da2958c1e30aa1097e71d9c8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-configure-tests.log": {
+      "bytes": 265,
+      "sha256": "227b1e139562bde8fed0329fa7d253341f405c0535556851108e8724a52117db"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-frame_sync_client-dependencies.log": {
+      "bytes": 1618,
+      "sha256": "7f441822d72171297d17f5c1ed6d76b0ecc5450446a90ae54d61cce18e73301c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-frame_sync_server-dependencies.log": {
+      "bytes": 1618,
+      "sha256": "11e5e6748a08a8159e571159664b882cff1c5277f955e909445b31612912f50c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-integrated-tcp.log": {
+      "bytes": 798,
+      "sha256": "09db49e3ae3f9d07a872d2d28c98413ba02ede0838b9d9c7e5bf1f3a166ae07f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-integrated-tcp/report.json": {
+      "bytes": 1012,
+      "sha256": "7943c321d179988c3ac558ea65f65301064d44bcb260b3cd33b790f085c43173"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-integrated-tcp/tcp/report.json": {
+      "bytes": 436,
+      "sha256": "78be9b8bec22907df1ad6792e53ce3336d17ad6415bf2e15717091e4de60026b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-integrated-tcp/tcp/server.log": {
+      "bytes": 46,
+      "sha256": "10cb6f89fac41955aeaff020dca551d3cf4dcb556c9022c971b49bb82075402c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-lobby_capacity_test-dependencies.log": {
+      "bytes": 1780,
+      "sha256": "6913d61065acb841d11b03392f87e8e0d1ce1dd3d3476717b53482a14a07d604"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-lobby_capacity_test.json": {
+      "bytes": 4231,
+      "sha256": "f7783eb2f941f98ddb3d9bb452e843e0f262c4dea7bdcd52d7a9af44444562d6"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-lobby_capacity_test.log": {
+      "bytes": 2359,
+      "sha256": "b72717e3ab8d6388766237dd4dd4c7ad104a4b7724522cd14d9bd056cff31604"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-lobby_client_capacity_test-dependencies.log": {
+      "bytes": 1780,
+      "sha256": "57d4b884a05502871f33f52179d268dbf05c9925ea78e6dfcded13113279dfbd"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-lobby_client_capacity_test.json": {
+      "bytes": 4345,
+      "sha256": "a9b6bfa1f180be0adf2147feb6c70c5da690a97e9f009993722edfc1d5cc934c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-lobby_client_capacity_test.log": {
+      "bytes": 2286,
+      "sha256": "65f1ba18e0c41eba86281a711838a047741103e9e95c25267fe905c752552bbb"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-native-dependencies.log": {
+      "bytes": 2231,
+      "sha256": "c62680e61b593982f126a74b22698d93e73e9650445632f08b587ef635a5207f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-native-tcp-server.log": {
+      "bytes": 120,
+      "sha256": "5631b9ffed3e3f5daf0f61fc8ecae12ee002f27b655157878bbb7e649aa35675"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-reliable_udp_budget_test-dependencies.log": {
+      "bytes": 1780,
+      "sha256": "4f49cdca74977ddc6ab370595b697daa0a61a300307549682c6b0e2e078827d5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-reliable_udp_budget_test.json": {
+      "bytes": 7516,
+      "sha256": "67698f64116ff33c255022a011a5a5eb829fed9b5c338dad14c58f9add210cc3"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-reliable_udp_budget_test.log": {
+      "bytes": 3494,
+      "sha256": "25d2e72791310b2703d017ecc104ae5b52e65cc2704d7b1b382baa91acf45fee"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-runtime.log": {
+      "bytes": 1025,
+      "sha256": "1b87a5d6f39da4d866e237939be13cafdec619649f665617c9678022ad6c80c0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-runtime/fatal.log": {
+      "bytes": 653,
+      "sha256": "6ae95b34ef0f6a78325c33d18a16ad60e1f1b62d8cd89793d9557bf0b14399a7"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-runtime/logs.log": {
+      "bytes": 49380,
+      "sha256": "bd11306fe9ea024238a71da876ce585540994f96cacc265d37ce17ee928acbcf"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-runtime/queues.log": {
+      "bytes": 61,
+      "sha256": "3960534c48718d9a96167772105a09d94877b224623601df81507f9f246c0ee2"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-runtime/render.log": {
+      "bytes": 246,
+      "sha256": "e8b792531c85e4e27a7de6276e26d255085d18ec514b65c27e8c6b55b6223abf"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-runtime/report.json": {
+      "bytes": 2415,
+      "sha256": "cb8060457e35021d103d1574af62cdcd181434f6bb0e8e45443d98cc396dc016"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client.log": {
+      "bytes": 4108,
+      "sha256": "0d360e1ce93ee53407e0d3dc63c373ab7d9629bb8be3340acd9c4c63bc17ab06"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/client_signal_shutdown.client.log": {
+      "bytes": 272,
+      "sha256": "e7ca46b70fdadde4c82c345761c338a3552ccadfdb0a199e45009534272e9173"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/client_signal_shutdown.server.log": {
+      "bytes": 42,
+      "sha256": "b608318ee71b4dfad3c11995cb86f4ddf48081fce53ffba2cdaf382b2caa5dc3"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/control_framing.log": {
+      "bytes": 153,
+      "sha256": "9fcb540f989f9150558dc1cbeab2ef9997b8677986ad3446379f74885db8b6a8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/extra_argument.log": {
+      "bytes": 51,
+      "sha256": "e2e95d173930654e77f6cff1ff051141b250eacca53da0e2442cb28fd3fc5fff"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/oversized_authority_header.log": {
+      "bytes": 123,
+      "sha256": "1a62fa082fbc105c186714d199f55436b4d83f795569879e6302dfe742be8147"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/partial_handshake.log": {
+      "bytes": 21,
+      "sha256": "40172f0c2ab525c6cf12c8766aa4728a0dc780738be00b7dc4c85e4dbe31b1d3"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/port_overflow.log": {
+      "bytes": 24,
+      "sha256": "2bd14fe0900e4468b2f4434041a0c12b0279e993eb4c4fe80f692690d183ba33"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/port_zero.log": {
+      "bytes": 24,
+      "sha256": "2bd14fe0900e4468b2f4434041a0c12b0279e993eb4c4fe80f692690d183ba33"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/report.json": {
+      "bytes": 4108,
+      "sha256": "0d360e1ce93ee53407e0d3dc63c373ab7d9629bb8be3340acd9c4c63bc17ab06"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/server_eof_shutdown.client.log": {
+      "bytes": 273,
+      "sha256": "7160c7763a9cc2f0bbd37096024704ea78a03a118d1587537e664e4bb43bcaac"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/server_eof_shutdown.server.log": {
+      "bytes": 42,
+      "sha256": "f32345ccbd01691b9620d8cb3491a6c2d29eb7822a1eb05aaaa326c7e7f1272b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/slot_overflow.log": {
+      "bytes": 24,
+      "sha256": "2bd14fe0900e4468b2f4434041a0c12b0279e993eb4c4fe80f692690d183ba33"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/trailing_text.log": {
+      "bytes": 24,
+      "sha256": "2bd14fe0900e4468b2f4434041a0c12b0279e993eb4c4fe80f692690d183ba33"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-client/wrong_expected_slot.log": {
+      "bytes": 41,
+      "sha256": "fa5f172dc891e48dbcd6f62e792a974ba1a9262e492e5bc593f154b8c409f212"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-server.log": {
+      "bytes": 2278,
+      "sha256": "7b9f4c3d31d233a57663190a22e0a23f0c844b01ce075af2c6150dee3b0fc3e3"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-server/invalid_port.log": {
+      "bytes": 48,
+      "sha256": "d4cd8a65569dded704938dbb3b3c835bfa22c8d8c19f3c24e457b6e936240ad0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-server/narrowing_wrap.log": {
+      "bytes": 48,
+      "sha256": "246edc2539d69f50c8a6d20a834e9e14f3c6bebac90c2536bb59fcf3810eeb74"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-server/normal_progress_shutdown.log": {
+      "bytes": 42,
+      "sha256": "3a28e8f0c0e380294c5bb9aa63c261f73014dfcc17f388866243a20a398a4284"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-server/oversized_header_shutdown.log": {
+      "bytes": 42,
+      "sha256": "ffe48a002d3fc1a1686f167cb1083ac1e3111a26543c9f85a34e74d54d5717b0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-server/report.json": {
+      "bytes": 2278,
+      "sha256": "7b9f4c3d31d233a57663190a22e0a23f0c844b01ce075af2c6150dee3b0fc3e3"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-server/seed_overflow.log": {
+      "bytes": 48,
+      "sha256": "246edc2539d69f50c8a6d20a834e9e14f3c6bebac90c2536bb59fcf3810eeb74"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-server/trailing_text.log": {
+      "bytes": 48,
+      "sha256": "246edc2539d69f50c8a6d20a834e9e14f3c6bebac90c2536bb59fcf3810eeb74"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-standalone-server/zero_slots.log": {
+      "bytes": 79,
+      "sha256": "a84caebddf95725d6da4bb0c5cb2ba2ddf506eb9c2b3d70c2446a3ceb886d7be"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-tcp-resume.log": {
+      "bytes": 2701,
+      "sha256": "2c4da91e5ce848339e26540224f08539bcdb25c7329ae8feb089c7ac6deeb6d8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-tcp-resume/automatic_resume.log": {
+      "bytes": 212,
+      "sha256": "dc6f1f5dc7c9a83d4abca7b0cea1cdb2895563aabd24cefc7ecd8b444a48bb5a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-tcp-resume/explicit_resume.log": {
+      "bytes": 213,
+      "sha256": "2e429a00ee18dc741f34c0bdb8c5358f544efb8cfc89f23ed6283f43248d0534"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-tcp-resume/report.json": {
+      "bytes": 2701,
+      "sha256": "2c4da91e5ce848339e26540224f08539bcdb25c7329ae8feb089c7ac6deeb6d8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-tcp_client_capacity_test-dependencies.log": {
+      "bytes": 1786,
+      "sha256": "bab21405cbb71d3a2379d87e235fb4fd4cd8f7d418d6157af9f68713374f475b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-tcp_client_capacity_test.json": {
+      "bytes": 10945,
+      "sha256": "9a0b243f5fe96ba8f058670e60cc84484b6177c997b9d2ece6c4752611ce61b5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-tcp_client_capacity_test.log": {
+      "bytes": 5163,
+      "sha256": "02039e00b3c6f0aa4ca34eda0dbe5d2f2435f2410364071910340dd067416cfc"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-tcp_frame_server_test-dependencies.log": {
+      "bytes": 1780,
+      "sha256": "ac884b4bafdf958bed5e912e5d03cd3750fb8baba90abbb13f35af322dcda338"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-tcp_frame_server_test.json": {
+      "bytes": 3472,
+      "sha256": "0d58c33e393710f0a5ae866f697d8ae09e49966d198dde6ed6bad0054e82ff75"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-tcp_frame_server_test.log": {
+      "bytes": 1830,
+      "sha256": "5f374fcec11b46f79ca36b5ebe9d17649485b8eb66f688d8b46d63ba6f101ef6"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-udp-product.log": {
+      "bytes": 796,
+      "sha256": "e89d3e64e9e77f27275271362c721649e9290836501d50067b62da927cd7c75a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-udp-product/report.json": {
+      "bytes": 1010,
+      "sha256": "a3e23c203ce5ce268046b47a599fcd2811cc3e3077dba98b82831a38d7ff4a2b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-udp-product/udp/report.json": {
+      "bytes": 437,
+      "sha256": "e907e6ae656f6cbf5b63b757c59b7e762e1aadd3aab247bcdcfe0bed534f0dc7"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/ordinary-udp-product/udp/server.log": {
+      "bytes": 46,
+      "sha256": "1725d157d78b2c6281b23c7604828533593debc66d8f03565adef10bf7ba7de6"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/python-frame-sync.log": {
+      "bytes": 1020,
+      "sha256": "cb9e2146f0eadd04c687efa810e3ed149416e9b3e71afd2f56a90af606c71522"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/python-frame-sync.xml": {
+      "bytes": 121189,
+      "sha256": "558c4ac685710b9dbf00b7de713de2bbcca5b204477e79d0cc806a1840b78a1f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/python-native-identity.log": {
+      "bytes": 1022,
+      "sha256": "6f558b56bc2864b7727244b1ceb6cc9a8becdd1a7165f496db52738f005962c4"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/python-recording.log": {
+      "bytes": 10581,
+      "sha256": "2eef82bef28b22fa128c30ae8a373c245e8d8a4f8a568ebb3c171690eaa2123a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/python-recording/report.json": {
+      "bytes": 9945,
+      "sha256": "2ded59fd092f5e3b90f0e645f7186fd52822fea936261033ec1b28f0e74a5061"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/python-recording/tests.log": {
+      "bytes": 32246,
+      "sha256": "9d378b8f71bd01db03b22cf0bde0be3a764ff4a749e556c0bf7e7183912b1771"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay.log": {
+      "bytes": 264,
+      "sha256": "1ee005afd183f1ba0e0d014f9a65217920a259d8f553afc9ed92abd7847edd9a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/commands.json": {
+      "bytes": 14358,
+      "sha256": "ab8fa48c074d3529068ac852bc1d94b57bad2778c5f643ccd8af6b0ea9fab088"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-build-native.log": {
+      "bytes": 1299,
+      "sha256": "93179abda283b9075441f0d88f6caa789e58c0c7bffe99012f076b9b3cfb7555"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-build-tests.log": {
+      "bytes": 4486,
+      "sha256": "fd0458bdd717d8e36b304efb36c250307112578a5c41abf6f455124a95263595"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-configure.log": {
+      "bytes": 265,
+      "sha256": "227b1e139562bde8fed0329fa7d253341f405c0535556851108e8724a52117db"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-dependencies.log": {
+      "bytes": 1779,
+      "sha256": "5c31a9eb869a3741ac9a54ac8775ab0ac2ef505606a1edc1e3b56f90bbb99dff"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory.log": {
+      "bytes": 20987,
+      "sha256": "68079aead889e2004c721885005bdd3050bef9f03ab00f79d39336ea3143c383"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/bytes/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/bytes_recovered-partner.log": {
+      "bytes": 2019,
+      "sha256": "59695a8dc69823bbb5371fecc6176bf635777be2b6d13ebe0fe508fc2305ce30"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/bytes_recovered-partner/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/bytes_recovered-server.log": {
+      "bytes": 46,
+      "sha256": "4c91c505d8df896e6bcec3b6e03c9d4010a0cf68ad5fb614ae72d73ea46f8bae"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/bytes_recovered.log": {
+      "bytes": 2019,
+      "sha256": "9a88df87f27fadea551130087ccd571779cbfda2270ae1bf033bd9da7cd49ba6"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/bytes_refused-partner.log": {
+      "bytes": 2019,
+      "sha256": "aeadb6c5d8207c63da8b031f2848bcf347d87ef2634f27fe8b773b5ec9d6ae58"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/bytes_refused-partner/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/bytes_refused-server.log": {
+      "bytes": 46,
+      "sha256": "b9c6935893a2ad1823119cffc4cf39c308d31233c95c4e3148158dbf1bfc7b36"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/bytes_refused.log": {
+      "bytes": 1975,
+      "sha256": "41cdef2baafd3450c0c9e6ebb53ee0df436f2fdea64057b31baf08007debcac8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1001.bin": {
+      "bytes": 22,
+      "sha256": "06902e89fdc317a54e3655d47f6ac5041280e0dc8e65b15cd0314dc6eb49aeca"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1002.bin": {
+      "bytes": 22,
+      "sha256": "9e38049c244eeb34fe5eebf323f182022e900ff6785bc11857f2bf3525658346"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1003.bin": {
+      "bytes": 22,
+      "sha256": "096001d77bda15b5575666d92a72d219a1cdd9ae11b28955a387c82fbebb7563"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1004.bin": {
+      "bytes": 22,
+      "sha256": "d4465fb02509663ef8418be1ea0416861aeacee9393433709e0946898e18e5c5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1005.bin": {
+      "bytes": 22,
+      "sha256": "2c0cd19671e7978828b485212110ab9df7ce85bd2a4965be6a6c0f7dcd33fa03"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1006.bin": {
+      "bytes": 22,
+      "sha256": "a40e68c7af32a8cad9ab120b4f1c9929f7af58fee44d37b0f22ec1c3c1248d7b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1007.bin": {
+      "bytes": 22,
+      "sha256": "5c3ed435d3f392e0afeb2c3128826cbbfebacfcb5b948807c34b715c3517021c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1008.bin": {
+      "bytes": 22,
+      "sha256": "436f5037db6e01710f3a5a397d4f07392fbd2dd467779c7de2b9d2bd76afbe35"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1009.bin": {
+      "bytes": 22,
+      "sha256": "507f2a12f28b975ce48f9ea5b2cf53a21ae046bb5f924b537385110a9f286ead"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1010.bin": {
+      "bytes": 22,
+      "sha256": "ecc96f903a24b86a6e5232b5ddb9362bcf6fda01a706b6d19e11e040e4abcd76"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1011.bin": {
+      "bytes": 22,
+      "sha256": "80a210c35cbc8f5d97caa5245bd40b2e0014eb9e2b594857844ba10eef4df4f1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1012.bin": {
+      "bytes": 22,
+      "sha256": "6ba30f8ac1d1fd4ef781d238158e59ffbf9e65c131674b2e4adf9c95966019c4"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1013.bin": {
+      "bytes": 22,
+      "sha256": "c4fa6b711fdda911aa36433fa687749a5c71271bdfe577f3ef88e53e3fd2711e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1014.bin": {
+      "bytes": 22,
+      "sha256": "18eb66b986117da6d773c1fdabd98cec4c8262ed35546bc81a67560afa695e5f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1015.bin": {
+      "bytes": 22,
+      "sha256": "a477fe72dd3198c46e23912927788f229bba504ab9de40235e3a4940310d970f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1016.bin": {
+      "bytes": 22,
+      "sha256": "1a6671fb1cccb881692c8cfa89cb4e179a1d7df998bdd9d0dc36841ee095e5b2"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1017.bin": {
+      "bytes": 22,
+      "sha256": "c78b1472df222178281bd4602652447a2565182bcc761bc456e4c1eae43e62f0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1018.bin": {
+      "bytes": 22,
+      "sha256": "3414f854929b0fe47d9ce530d8b62f27f8fe6eed78352b9c291b697bfb1d5b68"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1019.bin": {
+      "bytes": 22,
+      "sha256": "924e7b06f4c9483a32dba397620930627240be7419fdcff712a1c27eafd24626"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1020.bin": {
+      "bytes": 22,
+      "sha256": "2b64338b7c13e3cd5286c5280c042a1d4a39321dc6cc38687ca2112c8b1d679a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1021.bin": {
+      "bytes": 22,
+      "sha256": "c1ae840ae9dd48273ddc396643d8af917fb22da772971413a2c442d858664b1c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1022.bin": {
+      "bytes": 22,
+      "sha256": "47dadc5f5610ba2784d69fb1f9cb7ad1a4e40ebd392371b30b6d5ddb228e560a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1023.bin": {
+      "bytes": 22,
+      "sha256": "8911f810be8bf866bfda92b3973962bc3121c59513e65a73001d928d6c0df8a9"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1024.bin": {
+      "bytes": 22,
+      "sha256": "84e3bf8ab78ba9e15bda150220cb50c23c527704fe4a2a9cbf62c504a37c7bc1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1025.bin": {
+      "bytes": 22,
+      "sha256": "e5f0f920614858a2d868abfb1d0944a93870b42f494b054dacf3b05a67a038b0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1026.bin": {
+      "bytes": 22,
+      "sha256": "800f5389b3665277260dc8ac14591b201a76727bff2d9d7fd91a2f6c76437e55"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1027.bin": {
+      "bytes": 22,
+      "sha256": "197ddc15815255e838388adcfd177f82507db64458664d9623a86f591b4fb44b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1028.bin": {
+      "bytes": 22,
+      "sha256": "7fbadfc85e090863e0bda1f08d6c23518e5f4f75dc41a5599cc7e8bfcef2bc01"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1029.bin": {
+      "bytes": 22,
+      "sha256": "f78848f4b198a9aa3c77b9a4cccfbc7fc09dd4f903db2d8ae7bd7c3f6a2737b0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1030.bin": {
+      "bytes": 22,
+      "sha256": "d45958fb1c08728391b014f61d48b6e0d65f0d082ad02da857471cea52237c46"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1031.bin": {
+      "bytes": 22,
+      "sha256": "d488cadfded7cd960416356cff493a989d60ab1129717921816ea50930038d58"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1032.bin": {
+      "bytes": 22,
+      "sha256": "d5bfb8ea6ad46592a34bc3ccc56af13da944669af97baef92955c250f7d08d2e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1033.bin": {
+      "bytes": 22,
+      "sha256": "65819bbd3617fbd0045d2e07ff2bd232bf229dc55f226436b0d84b3e3bc3cf08"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1034.bin": {
+      "bytes": 22,
+      "sha256": "6e32006c7700453ae0a3eb0a83f77fff9b1fd68c1e332b0146709d18bdf994eb"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1035.bin": {
+      "bytes": 22,
+      "sha256": "5784fc83f3b73069199ddab7698d5172e50722d3f37d1f1368263217c136b0f0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1036.bin": {
+      "bytes": 22,
+      "sha256": "d649caff01c81c04a30a275755dd120d1a52feb56805fdd3de30958fd9ad1d03"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1037.bin": {
+      "bytes": 22,
+      "sha256": "417db7f349342fdecd6f18a0af4d357aefe2acd9b58e22eb0cd58782802d12b9"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1038.bin": {
+      "bytes": 22,
+      "sha256": "8e2dea98025d14e61df3927fe5cc467a01acd6352e9b281e2b5908f6e83618d1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1039.bin": {
+      "bytes": 22,
+      "sha256": "cd33ebdbabbd7b2758d23f01bdffee88b7ab2bd430cbcb0d205b966a9ace7dd2"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1040.bin": {
+      "bytes": 22,
+      "sha256": "e88a7a0435008d726ca71beb1525f170e58a38dc52f155164ae6d436239ce212"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1041.bin": {
+      "bytes": 22,
+      "sha256": "9166fa120a884e7ba8a8cd3512a22c836c040eaa302c412dfd158efd172bb842"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1042.bin": {
+      "bytes": 22,
+      "sha256": "cdc3f7f0cdfca3dde706a03e19c5723c3259f1b9ee0e4e505d90565067aee850"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1043.bin": {
+      "bytes": 22,
+      "sha256": "1147fe380a69e042c9c89ca0e0981639c9c0b1840974293da69fc9986cf276d8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1044.bin": {
+      "bytes": 22,
+      "sha256": "8269ef0717ae1fc761bd30bf77bf303cbe6870e5efd18adc8e4c2cb09cf775b9"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1045.bin": {
+      "bytes": 22,
+      "sha256": "e936763a29d99d9ca6198b201654955e20f76696ddf0550db6703538a87bb6ae"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1046.bin": {
+      "bytes": 22,
+      "sha256": "adac1d12fc61042963001fb7db874a125f60f33325fb87341b4bae51357b4859"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1047.bin": {
+      "bytes": 22,
+      "sha256": "749ec21c424453721a5ac000ec3ec4859f974a66d80764bbe9c3a9b6ded50d51"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1048.bin": {
+      "bytes": 22,
+      "sha256": "68f67e7c93a7b4f77d45ff47f72d89ebfb29a5bf010707839c391bf8d1802648"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1049.bin": {
+      "bytes": 22,
+      "sha256": "4b43f88309a92c08961070433595f1199e93f90c6567f233b8fa233638fe78da"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1050.bin": {
+      "bytes": 22,
+      "sha256": "e5fd9211be833d932b79dd04cf68ed4c17a744b2af7c49a8c50853905dde3be5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1051.bin": {
+      "bytes": 22,
+      "sha256": "23f60ad61f848a5580c6cb3c5712c3d8393b97f397a81d24881c144c7305a71b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1052.bin": {
+      "bytes": 22,
+      "sha256": "481c1b2043dde7f68c079e5edba4825ef349de9b407b8e7ac6c3ec2d7e28d445"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1053.bin": {
+      "bytes": 22,
+      "sha256": "782e4ea70e5e4acb94dafe795cc9e54468e2fd341b324fc55da23d20c86e62d0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1054.bin": {
+      "bytes": 22,
+      "sha256": "79ff4fed6bbd17a3d6a5cf69ec0e0a950e32193f3f1acf51e5cd28acaeed4d60"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1055.bin": {
+      "bytes": 22,
+      "sha256": "775d0954457835139c5bfabb1c51fe3de11d948c49179474af021138e676b110"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1056.bin": {
+      "bytes": 22,
+      "sha256": "41aae559cd2c8598c9d0d7ebbf06d1807a9a4d68f84fc73b75853353dc98625d"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1057.bin": {
+      "bytes": 22,
+      "sha256": "57d99cff1c5bb46493caadbbc9daedaae783092dd7b702e92443d74e23967f55"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1058.bin": {
+      "bytes": 22,
+      "sha256": "beeb9a91b88e36746fad586a3c7a12345fd8acb4af7c4bf8b564f7af2d44888f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1059.bin": {
+      "bytes": 22,
+      "sha256": "6d58c1a5ff7dd6a49976aebfb22515d11430f9a60b87e5ad46f6cec36fa5fc6e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1060.bin": {
+      "bytes": 22,
+      "sha256": "64be709c32c837de9d3e660e7a21129790bef80ac025dc6931927d2b1f44ff12"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1061.bin": {
+      "bytes": 22,
+      "sha256": "32e6979a6cba033f0a877344b2b34238fc5bfed7bb3bb3e0e2575e3364e468a1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1062.bin": {
+      "bytes": 22,
+      "sha256": "4c71967170d4b40fad404ebc7df292c0d48e9c6a591595f0a4c376631c8e966e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_1063.bin": {
+      "bytes": 22,
+      "sha256": "080718b1dc03b6033bec5edf49dc08d74765bbb894743caacfec28dcebb4b7e4"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count_recovered-partner.log": {
+      "bytes": 2019,
+      "sha256": "c289e684ae215a97f4c1b42e0ce3c8972bf0f0e83cc58a04287667f4d688fe71"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count_recovered-partner/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count_recovered-server.log": {
+      "bytes": 46,
+      "sha256": "2da8609447909a6242f2203993fbd0201ce45b59b114ab035cf5f99b7ea47ad1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count_recovered.log": {
+      "bytes": 2019,
+      "sha256": "53b2d910c858aea263712f229f0ede9ac7eb02a6c540c23c503030b66f3f0103"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count_refused-partner.log": {
+      "bytes": 2019,
+      "sha256": "24ddfe1512dd2a7e10abc0ff58e9ad0987e1aaf59d7a4ba22ce23a31880332f3"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count_refused-partner/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count_refused-server.log": {
+      "bytes": 46,
+      "sha256": "d7e4ba23c3e5e5295089d65d3c5faee0e4337ca83b571ea5e67df6bafc5bf415"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/count_refused.log": {
+      "bytes": 1980,
+      "sha256": "d40da9e036cd6c749ebef1334756ef8a1dcccbaa7693d892bd8f436e06b914c5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/owned_scratch_recovered-partner.log": {
+      "bytes": 2019,
+      "sha256": "eeaa00b6143a887a267e9321877b86b065e84679bf3e703644a0bb41fe4d0f3d"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/owned_scratch_recovered-partner/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/owned_scratch_recovered-server.log": {
+      "bytes": 46,
+      "sha256": "912a625de4b4a9aaaa9d53bdf96b8808dcfd3b1071e6334d12646a68fda51aa4"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/owned_scratch_recovered.log": {
+      "bytes": 2019,
+      "sha256": "25433f214b4593030a3a803747cde36558d282bf19b571f579a4bf91618d1be3"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/recovery/.football-replay-tmp-v1/keep.txt": {
+      "bytes": 26,
+      "sha256": "c870773ba9e66c929ffa3ba39e6486af97623637e4206bae777e94d151f9341e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/recovery/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-directory/report.json": {
+      "bytes": 175821,
+      "sha256": "b888b6ec37d5f1013e8d07c4b1311a764a2e7f4fd8567fee397537eb50ef47ca"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-engine_integration_test.json": {
+      "bytes": 7236,
+      "sha256": "1e66fd47aac3b8f323cbc59d5789c7268631a17ec82ec9d2f17fcea927e59ce0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-engine_integration_test.log": {
+      "bytes": 2867,
+      "sha256": "6015501fd0658f2bbaf317197e2d94d1faa9543d9076d9778ac4186eee4eb608"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-fixed-pair.log": {
+      "bytes": 1062,
+      "sha256": "8695d02918be86473d1a65cb01fa8dbe48ef1331c46b003d06e3bdb54356d127"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-fixed-pair/report.json": {
+      "bytes": 2653,
+      "sha256": "80340c5a32aa4fb5d72d54cd3c6e773a8586c9009b54f8b92210e38bff3ab368"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-fixed-pair/two_actual_players/authority1.bin": {
+      "bytes": 567,
+      "sha256": "74b583272559c42017248ebf38c1e09b8c457bb3556d55919ab494356b9e8e04"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-fixed-pair/two_actual_players/authority2.bin": {
+      "bytes": 567,
+      "sha256": "74b583272559c42017248ebf38c1e09b8c457bb3556d55919ab494356b9e8e04"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-fixed-pair/two_actual_players/hashes1.bin": {
+      "bytes": 39,
+      "sha256": "4ab15ff1c4ceb33004d9f49eba36358b30d6ce7f026c0b24a7da63f0d1361da5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-fixed-pair/two_actual_players/hashes2.bin": {
+      "bytes": 39,
+      "sha256": "4ab15ff1c4ceb33004d9f49eba36358b30d6ce7f026c0b24a7da63f0d1361da5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-fixed-pair/two_actual_players/left.log": {
+      "bytes": 2020,
+      "sha256": "5a38ec4b28e07dac7a0e6f2cb6618769eeb472bbd25bea25c44831cac658f289"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-fixed-pair/two_actual_players/player1/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-fixed-pair/two_actual_players/player2/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-fixed-pair/two_actual_players/right.log": {
+      "bytes": 2020,
+      "sha256": "6023066483c71664e400079593da87d2747fc45b0596ef0ff01a28460f3cd7c8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-fixed-pair/two_actual_players/server.log": {
+      "bytes": 46,
+      "sha256": "bfc373ccc116aea7baa9cc5ed5000a50e341313463ecc3dc5ef5b86c3f5218b6"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-frame_sync_test.json": {
+      "bytes": 8268,
+      "sha256": "40940a68b8b44487d5d9d50f976252e370c075617d05f652f367d75bb03a884e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-frame_sync_test.log": {
+      "bytes": 3106,
+      "sha256": "eab9d53f8a2a7d8a65089a3c9c0fe92f5dbcce31ecd514f298bb8c1107d2d9d1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-maximum.bin": {
+      "bytes": 23200050,
+      "sha256": "85efcdb354671681d33fdc1e39ae3600529a3dff9e078fca25720bfae0cbb7e5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-memory.log": {
+      "bytes": 148,
+      "sha256": "4eeabf09668dab2a52377c2537ca6f165409b2a278a4ebc2338f3259f3f06bf0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-memory_budget_test.json": {
+      "bytes": 9082,
+      "sha256": "605e13c906b04af64d9544ddb60b0ed61da2757e97e0aa52ed19f4a982fb8223"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-memory_budget_test.log": {
+      "bytes": 4515,
+      "sha256": "f2d28ce627f9f9a147ee932b157c2d11d802d2bf9a8421ddf9b8ce1e5f09471e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-pair.log": {
+      "bytes": 681,
+      "sha256": "a1924cbb0614d7aaef4abb40f3236a7d2b2e2618a97df5de049053e3df1b8a2a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-pair/report.json": {
+      "bytes": 2220,
+      "sha256": "4220a405934cf08a0186edcc9726d13040dff3bafafadb18877ff18578f6b19f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-pair/two_actual_players/left.log": {
+      "bytes": 2020,
+      "sha256": "2c439635c50fc1364b68472d7b4016d64f1d2dbb5590b5bc99ced652c102ba2b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-pair/two_actual_players/player1/replay_42.bin": {
+      "bytes": 1681,
+      "sha256": "e2d10e60a564abf9754103e2e5fccf4d345c7933ee90727cf8879c92790aeb3a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-pair/two_actual_players/player2/replay_42.bin": {
+      "bytes": 1681,
+      "sha256": "e2d10e60a564abf9754103e2e5fccf4d345c7933ee90727cf8879c92790aeb3a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-pair/two_actual_players/right.log": {
+      "bytes": 2020,
+      "sha256": "9195375a09571a79860bf56e0ee77836ef45c301c6a9fa40405a32abf088e7d8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-pair/two_actual_players/server.log": {
+      "bytes": 46,
+      "sha256": "3e927ff71a1c8c972f3f4d7b3b046fc6844228e2de32bf36f27a60e6bf3b2358"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-phase16_integration_test.json": {
+      "bytes": 9288,
+      "sha256": "8a1d4b74e07f4e6e6fdc787cb1b4b08497ab28f5cbde177e9230cc31ce5fc4ca"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-phase16_integration_test.log": {
+      "bytes": 3952,
+      "sha256": "0f38f6bb8e9f7691992f38997b1d3fd34ad5f331773ad92e987857fa68fa3712"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-replay_directory_test.json": {
+      "bytes": 6617,
+      "sha256": "2fcd8c8f3786021b77e0af31ad8d7c2344e46886022dc47f3df43d873b731d80"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-replay_directory_test.log": {
+      "bytes": 3387,
+      "sha256": "8da09227bd4f35e43652e57c4eec1e76201e1dbc0adee73a57ec7e5d60c8bbeb"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-replay_file_test.json": {
+      "bytes": 4169,
+      "sha256": "5e0cfcc9fbce9227e328a85e8d56e0a635e992e6a7365341a9c128e1bca82ba9"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-replay_file_test.log": {
+      "bytes": 2330,
+      "sha256": "36ce621ee84a8384b7618bc3f37fa98576e1eac34e5e4d108d95fb0f2d443ee5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-replay_integration_test.json": {
+      "bytes": 1804,
+      "sha256": "273e3ebedec688f1bd47ab140f3becb1f8117a37b6b6d8d52c7d3a20d4366692"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/ordinary-replay_integration_test.log": {
+      "bytes": 913,
+      "sha256": "1447a80d4cb9e4def799b3d112286c8fc6f0eb4f788c38353194401c41d9aadb"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/report.json": {
+      "bytes": 563670,
+      "sha256": "0adef37b397ecd8e15eb99a0e0e1ef9d8c4b35f280e299fe8235061f7ab00247"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-build-native.log": {
+      "bytes": 1299,
+      "sha256": "536cf4d67a2e264b1831840d08c55fc731754a990a29800c08c3fae13e043c45"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-build-tests.log": {
+      "bytes": 287,
+      "sha256": "490abd042b3c50021b26b113ba7d06ec6103102ba39e8d6332cfcb634d934b8e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-configure.log": {
+      "bytes": 337,
+      "sha256": "f7c58d4c320d999da57a7bbbdebf1dc74513a9a533ecd6ee3c02eb8a31563e47"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-dependencies.log": {
+      "bytes": 2037,
+      "sha256": "e0fcd4ad1811f775289508b0fedf10217be5295367fff44b7e04d34a98784e44"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory.log": {
+      "bytes": 21008,
+      "sha256": "28cc027f5d7a3ec7eb73f9d8416ad302e2bd239e9925c36a48c27f7ee10f720f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/bytes/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/bytes_recovered-partner.log": {
+      "bytes": 2019,
+      "sha256": "14e16abb9ebf6e3d2f563dc5728240529ca36ad7b328a75b746208444e231357"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/bytes_recovered-partner/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/bytes_recovered-server.log": {
+      "bytes": 46,
+      "sha256": "361862573583c9c9b37509411bb4e6694983e821fe2771e51563783bb3470309"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/bytes_recovered.log": {
+      "bytes": 2019,
+      "sha256": "380f41e0d2c4a0ec6d50496dc5d104f52a2938af3d40ad660b521e53fb670796"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/bytes_refused-partner.log": {
+      "bytes": 2019,
+      "sha256": "aef71d9289917c025a5ade6a3a661febcdf0ee00dfff8bc54cf43648dbcd9dfc"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/bytes_refused-partner/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/bytes_refused-server.log": {
+      "bytes": 46,
+      "sha256": "3cc5c0a257cbe0e3e61645cfa22f558ddcc216cfe59d05eae0210b6381070e9c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/bytes_refused.log": {
+      "bytes": 1975,
+      "sha256": "41cdef2baafd3450c0c9e6ebb53ee0df436f2fdea64057b31baf08007debcac8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1001.bin": {
+      "bytes": 22,
+      "sha256": "06902e89fdc317a54e3655d47f6ac5041280e0dc8e65b15cd0314dc6eb49aeca"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1002.bin": {
+      "bytes": 22,
+      "sha256": "9e38049c244eeb34fe5eebf323f182022e900ff6785bc11857f2bf3525658346"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1003.bin": {
+      "bytes": 22,
+      "sha256": "096001d77bda15b5575666d92a72d219a1cdd9ae11b28955a387c82fbebb7563"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1004.bin": {
+      "bytes": 22,
+      "sha256": "d4465fb02509663ef8418be1ea0416861aeacee9393433709e0946898e18e5c5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1005.bin": {
+      "bytes": 22,
+      "sha256": "2c0cd19671e7978828b485212110ab9df7ce85bd2a4965be6a6c0f7dcd33fa03"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1006.bin": {
+      "bytes": 22,
+      "sha256": "a40e68c7af32a8cad9ab120b4f1c9929f7af58fee44d37b0f22ec1c3c1248d7b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1007.bin": {
+      "bytes": 22,
+      "sha256": "5c3ed435d3f392e0afeb2c3128826cbbfebacfcb5b948807c34b715c3517021c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1008.bin": {
+      "bytes": 22,
+      "sha256": "436f5037db6e01710f3a5a397d4f07392fbd2dd467779c7de2b9d2bd76afbe35"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1009.bin": {
+      "bytes": 22,
+      "sha256": "507f2a12f28b975ce48f9ea5b2cf53a21ae046bb5f924b537385110a9f286ead"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1010.bin": {
+      "bytes": 22,
+      "sha256": "ecc96f903a24b86a6e5232b5ddb9362bcf6fda01a706b6d19e11e040e4abcd76"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1011.bin": {
+      "bytes": 22,
+      "sha256": "80a210c35cbc8f5d97caa5245bd40b2e0014eb9e2b594857844ba10eef4df4f1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1012.bin": {
+      "bytes": 22,
+      "sha256": "6ba30f8ac1d1fd4ef781d238158e59ffbf9e65c131674b2e4adf9c95966019c4"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1013.bin": {
+      "bytes": 22,
+      "sha256": "c4fa6b711fdda911aa36433fa687749a5c71271bdfe577f3ef88e53e3fd2711e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1014.bin": {
+      "bytes": 22,
+      "sha256": "18eb66b986117da6d773c1fdabd98cec4c8262ed35546bc81a67560afa695e5f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1015.bin": {
+      "bytes": 22,
+      "sha256": "a477fe72dd3198c46e23912927788f229bba504ab9de40235e3a4940310d970f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1016.bin": {
+      "bytes": 22,
+      "sha256": "1a6671fb1cccb881692c8cfa89cb4e179a1d7df998bdd9d0dc36841ee095e5b2"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1017.bin": {
+      "bytes": 22,
+      "sha256": "c78b1472df222178281bd4602652447a2565182bcc761bc456e4c1eae43e62f0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1018.bin": {
+      "bytes": 22,
+      "sha256": "3414f854929b0fe47d9ce530d8b62f27f8fe6eed78352b9c291b697bfb1d5b68"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1019.bin": {
+      "bytes": 22,
+      "sha256": "924e7b06f4c9483a32dba397620930627240be7419fdcff712a1c27eafd24626"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1020.bin": {
+      "bytes": 22,
+      "sha256": "2b64338b7c13e3cd5286c5280c042a1d4a39321dc6cc38687ca2112c8b1d679a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1021.bin": {
+      "bytes": 22,
+      "sha256": "c1ae840ae9dd48273ddc396643d8af917fb22da772971413a2c442d858664b1c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1022.bin": {
+      "bytes": 22,
+      "sha256": "47dadc5f5610ba2784d69fb1f9cb7ad1a4e40ebd392371b30b6d5ddb228e560a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1023.bin": {
+      "bytes": 22,
+      "sha256": "8911f810be8bf866bfda92b3973962bc3121c59513e65a73001d928d6c0df8a9"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1024.bin": {
+      "bytes": 22,
+      "sha256": "84e3bf8ab78ba9e15bda150220cb50c23c527704fe4a2a9cbf62c504a37c7bc1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1025.bin": {
+      "bytes": 22,
+      "sha256": "e5f0f920614858a2d868abfb1d0944a93870b42f494b054dacf3b05a67a038b0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1026.bin": {
+      "bytes": 22,
+      "sha256": "800f5389b3665277260dc8ac14591b201a76727bff2d9d7fd91a2f6c76437e55"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1027.bin": {
+      "bytes": 22,
+      "sha256": "197ddc15815255e838388adcfd177f82507db64458664d9623a86f591b4fb44b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1028.bin": {
+      "bytes": 22,
+      "sha256": "7fbadfc85e090863e0bda1f08d6c23518e5f4f75dc41a5599cc7e8bfcef2bc01"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1029.bin": {
+      "bytes": 22,
+      "sha256": "f78848f4b198a9aa3c77b9a4cccfbc7fc09dd4f903db2d8ae7bd7c3f6a2737b0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1030.bin": {
+      "bytes": 22,
+      "sha256": "d45958fb1c08728391b014f61d48b6e0d65f0d082ad02da857471cea52237c46"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1031.bin": {
+      "bytes": 22,
+      "sha256": "d488cadfded7cd960416356cff493a989d60ab1129717921816ea50930038d58"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1032.bin": {
+      "bytes": 22,
+      "sha256": "d5bfb8ea6ad46592a34bc3ccc56af13da944669af97baef92955c250f7d08d2e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1033.bin": {
+      "bytes": 22,
+      "sha256": "65819bbd3617fbd0045d2e07ff2bd232bf229dc55f226436b0d84b3e3bc3cf08"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1034.bin": {
+      "bytes": 22,
+      "sha256": "6e32006c7700453ae0a3eb0a83f77fff9b1fd68c1e332b0146709d18bdf994eb"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1035.bin": {
+      "bytes": 22,
+      "sha256": "5784fc83f3b73069199ddab7698d5172e50722d3f37d1f1368263217c136b0f0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1036.bin": {
+      "bytes": 22,
+      "sha256": "d649caff01c81c04a30a275755dd120d1a52feb56805fdd3de30958fd9ad1d03"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1037.bin": {
+      "bytes": 22,
+      "sha256": "417db7f349342fdecd6f18a0af4d357aefe2acd9b58e22eb0cd58782802d12b9"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1038.bin": {
+      "bytes": 22,
+      "sha256": "8e2dea98025d14e61df3927fe5cc467a01acd6352e9b281e2b5908f6e83618d1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1039.bin": {
+      "bytes": 22,
+      "sha256": "cd33ebdbabbd7b2758d23f01bdffee88b7ab2bd430cbcb0d205b966a9ace7dd2"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1040.bin": {
+      "bytes": 22,
+      "sha256": "e88a7a0435008d726ca71beb1525f170e58a38dc52f155164ae6d436239ce212"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1041.bin": {
+      "bytes": 22,
+      "sha256": "9166fa120a884e7ba8a8cd3512a22c836c040eaa302c412dfd158efd172bb842"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1042.bin": {
+      "bytes": 22,
+      "sha256": "cdc3f7f0cdfca3dde706a03e19c5723c3259f1b9ee0e4e505d90565067aee850"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1043.bin": {
+      "bytes": 22,
+      "sha256": "1147fe380a69e042c9c89ca0e0981639c9c0b1840974293da69fc9986cf276d8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1044.bin": {
+      "bytes": 22,
+      "sha256": "8269ef0717ae1fc761bd30bf77bf303cbe6870e5efd18adc8e4c2cb09cf775b9"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1045.bin": {
+      "bytes": 22,
+      "sha256": "e936763a29d99d9ca6198b201654955e20f76696ddf0550db6703538a87bb6ae"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1046.bin": {
+      "bytes": 22,
+      "sha256": "adac1d12fc61042963001fb7db874a125f60f33325fb87341b4bae51357b4859"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1047.bin": {
+      "bytes": 22,
+      "sha256": "749ec21c424453721a5ac000ec3ec4859f974a66d80764bbe9c3a9b6ded50d51"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1048.bin": {
+      "bytes": 22,
+      "sha256": "68f67e7c93a7b4f77d45ff47f72d89ebfb29a5bf010707839c391bf8d1802648"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1049.bin": {
+      "bytes": 22,
+      "sha256": "4b43f88309a92c08961070433595f1199e93f90c6567f233b8fa233638fe78da"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1050.bin": {
+      "bytes": 22,
+      "sha256": "e5fd9211be833d932b79dd04cf68ed4c17a744b2af7c49a8c50853905dde3be5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1051.bin": {
+      "bytes": 22,
+      "sha256": "23f60ad61f848a5580c6cb3c5712c3d8393b97f397a81d24881c144c7305a71b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1052.bin": {
+      "bytes": 22,
+      "sha256": "481c1b2043dde7f68c079e5edba4825ef349de9b407b8e7ac6c3ec2d7e28d445"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1053.bin": {
+      "bytes": 22,
+      "sha256": "782e4ea70e5e4acb94dafe795cc9e54468e2fd341b324fc55da23d20c86e62d0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1054.bin": {
+      "bytes": 22,
+      "sha256": "79ff4fed6bbd17a3d6a5cf69ec0e0a950e32193f3f1acf51e5cd28acaeed4d60"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1055.bin": {
+      "bytes": 22,
+      "sha256": "775d0954457835139c5bfabb1c51fe3de11d948c49179474af021138e676b110"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1056.bin": {
+      "bytes": 22,
+      "sha256": "41aae559cd2c8598c9d0d7ebbf06d1807a9a4d68f84fc73b75853353dc98625d"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1057.bin": {
+      "bytes": 22,
+      "sha256": "57d99cff1c5bb46493caadbbc9daedaae783092dd7b702e92443d74e23967f55"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1058.bin": {
+      "bytes": 22,
+      "sha256": "beeb9a91b88e36746fad586a3c7a12345fd8acb4af7c4bf8b564f7af2d44888f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1059.bin": {
+      "bytes": 22,
+      "sha256": "6d58c1a5ff7dd6a49976aebfb22515d11430f9a60b87e5ad46f6cec36fa5fc6e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1060.bin": {
+      "bytes": 22,
+      "sha256": "64be709c32c837de9d3e660e7a21129790bef80ac025dc6931927d2b1f44ff12"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1061.bin": {
+      "bytes": 22,
+      "sha256": "32e6979a6cba033f0a877344b2b34238fc5bfed7bb3bb3e0e2575e3364e468a1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1062.bin": {
+      "bytes": 22,
+      "sha256": "4c71967170d4b40fad404ebc7df292c0d48e9c6a591595f0a4c376631c8e966e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_1063.bin": {
+      "bytes": 22,
+      "sha256": "080718b1dc03b6033bec5edf49dc08d74765bbb894743caacfec28dcebb4b7e4"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count_recovered-partner.log": {
+      "bytes": 2020,
+      "sha256": "b8665febcf918b8d78173b71be034927cee595b6683b45bb9c7f0eccbfe21139"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count_recovered-partner/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count_recovered-server.log": {
+      "bytes": 46,
+      "sha256": "de79d6f7111d4daf3b76061581a4479579677338d1c85fd4f8448e64bc4a293f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count_recovered.log": {
+      "bytes": 2020,
+      "sha256": "c3b7032ac918c19b7e678af0cf03dbc64280c4eac18d252a4030c75416e589ba"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count_refused-partner.log": {
+      "bytes": 2019,
+      "sha256": "507e71b551f80c161a3d76d4b13339e7e10b3b7afa68401523fb728c583a19ad"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count_refused-partner/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count_refused-server.log": {
+      "bytes": 46,
+      "sha256": "891e3db9a12a2d416366b0f7e7ef25778e0534ffe0d30b7066328edd3c35254b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/count_refused.log": {
+      "bytes": 1980,
+      "sha256": "aefc4d5afc8f2fb0e801cbc076601206db88b85c80cfa4b1d979090b9836f42c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/owned_scratch_recovered-partner.log": {
+      "bytes": 2019,
+      "sha256": "bdef1236e052d70636142730589428423143522288f5b28c0892887f4f0cf77b"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/owned_scratch_recovered-partner/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/owned_scratch_recovered-server.log": {
+      "bytes": 46,
+      "sha256": "76e9951e8c9a0c2f5a8574cc1c97a96c9d7c566adbf708a43a974eda011cad8a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/owned_scratch_recovered.log": {
+      "bytes": 2019,
+      "sha256": "efea209d8c02347c5a10a629edcbff7df00c3d60c1a4cd0882b2b10d8d127ccd"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/recovery/.football-replay-tmp-v1/keep.txt": {
+      "bytes": 26,
+      "sha256": "c870773ba9e66c929ffa3ba39e6486af97623637e4206bae777e94d151f9341e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/recovery/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-directory/report.json": {
+      "bytes": 175841,
+      "sha256": "8ce77ab9014c4ddc96162c0222fbc6327f17dbaca1cd3370a88fb6bf967c6f73"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-engine_integration_test.json": {
+      "bytes": 7240,
+      "sha256": "8e123f78dcf0f6f7e369fcfb25a476bac88654010bb5a0186d6f69ab52465ccd"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-engine_integration_test.log": {
+      "bytes": 2867,
+      "sha256": "4fad7a46d6cf9c4c1669360dbf3cf754abb2663a49ffed1ab658e32e4a597c44"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-fixed-pair.log": {
+      "bytes": 1062,
+      "sha256": "b26d009685dfe36e30d1c7ddcff439172c99d91099c6e84ce151109d7b67d031"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-fixed-pair/report.json": {
+      "bytes": 2653,
+      "sha256": "1d9a28d3da1bbe9e16c04de76dc671857e346afacee0a1b9b87f85290728cbec"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-fixed-pair/two_actual_players/authority1.bin": {
+      "bytes": 567,
+      "sha256": "74b583272559c42017248ebf38c1e09b8c457bb3556d55919ab494356b9e8e04"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-fixed-pair/two_actual_players/authority2.bin": {
+      "bytes": 567,
+      "sha256": "74b583272559c42017248ebf38c1e09b8c457bb3556d55919ab494356b9e8e04"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-fixed-pair/two_actual_players/hashes1.bin": {
+      "bytes": 39,
+      "sha256": "4ab15ff1c4ceb33004d9f49eba36358b30d6ce7f026c0b24a7da63f0d1361da5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-fixed-pair/two_actual_players/hashes2.bin": {
+      "bytes": 39,
+      "sha256": "4ab15ff1c4ceb33004d9f49eba36358b30d6ce7f026c0b24a7da63f0d1361da5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-fixed-pair/two_actual_players/left.log": {
+      "bytes": 2021,
+      "sha256": "449bf6161fe9a8672b685932288140b7e82b84982c5823582ec36ee10e7930d6"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-fixed-pair/two_actual_players/player1/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-fixed-pair/two_actual_players/player2/replay_42.bin": {
+      "bytes": 753,
+      "sha256": "545a93492e346b1815e2040142408c8feb4d71b762ee72a2044e833759ac6268"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-fixed-pair/two_actual_players/right.log": {
+      "bytes": 2020,
+      "sha256": "c88a056b6701e7942687009f75e3f3abc85aef7578ec34e703b2849b4335f0bd"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-fixed-pair/two_actual_players/server.log": {
+      "bytes": 46,
+      "sha256": "cd8514761cff9b892a48cb081dc9554575ea42f0abf78c98af7f32ac94d2c898"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-frame_sync_test.json": {
+      "bytes": 8272,
+      "sha256": "ab82ae177ab41d0726558dbbadbaac174f0ce031bf2988bb592ea41e1d6452d9"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-frame_sync_test.log": {
+      "bytes": 3106,
+      "sha256": "9431b6a15ecfacdf8975bec00298c385a25f6da169e534cd0f372124ef6d7a41"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-maximum.bin": {
+      "bytes": 23200050,
+      "sha256": "85efcdb354671681d33fdc1e39ae3600529a3dff9e078fca25720bfae0cbb7e5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-memory.log": {
+      "bytes": 148,
+      "sha256": "4eeabf09668dab2a52377c2537ca6f165409b2a278a4ebc2338f3259f3f06bf0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-memory_budget_test.json": {
+      "bytes": 9105,
+      "sha256": "b309185d14f947ebae534546b54e8e990772e9100b78796233dc7a71c7017c83"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-memory_budget_test.log": {
+      "bytes": 4518,
+      "sha256": "240916a1c013b7e4e52c40f4afa20b53a020162a2e44d299b26fe702fa1823b2"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-pair.log": {
+      "bytes": 681,
+      "sha256": "cd7e95aafc5a6b6329c6390477568b9aafd75e9bb4552cc0a4f2771f20ef9146"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-pair/report.json": {
+      "bytes": 2220,
+      "sha256": "daa1ea7f5802f9d4675d636741cbbe9be3cd72e8dcb2cc29c859fed6b934ba65"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-pair/two_actual_players/left.log": {
+      "bytes": 2021,
+      "sha256": "7e4ab70fd487af2d901aa47452dfdfe69838a4d80f06159261cd0918641823d4"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-pair/two_actual_players/player1/replay_42.bin": {
+      "bytes": 1681,
+      "sha256": "e2d10e60a564abf9754103e2e5fccf4d345c7933ee90727cf8879c92790aeb3a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-pair/two_actual_players/player2/replay_42.bin": {
+      "bytes": 1681,
+      "sha256": "e2d10e60a564abf9754103e2e5fccf4d345c7933ee90727cf8879c92790aeb3a"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-pair/two_actual_players/right.log": {
+      "bytes": 2021,
+      "sha256": "a9f63c48d3b118642632e87441acb6ffd42136d3b1856e0cbd3d92fed4385524"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-pair/two_actual_players/server.log": {
+      "bytes": 46,
+      "sha256": "822455ea14f9467ab17d16207342c5cc8a851f1aefbe1e8582436fcf36cf8ac9"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-phase16_integration_test.json": {
+      "bytes": 9316,
+      "sha256": "37f653538d36df287b77aece42bdee5b703f71d8fa4c1561c2043e7f7188c4d7"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-phase16_integration_test.log": {
+      "bytes": 3953,
+      "sha256": "44f403e11a4670c3c7a1a443e862d2a011624c5b28c3d480b32668944ef44fec"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-replay_directory_test.json": {
+      "bytes": 6639,
+      "sha256": "e06e6bb58803fab41da0cdefb37e20760df969953e2cafd3332600f8aca684b8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-replay_directory_test.log": {
+      "bytes": 3389,
+      "sha256": "0f5e0d7e7301963c4d6b7cea6dd35618022bd73649c721c1bd8aa7164ef3c8a2"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-replay_file_test.json": {
+      "bytes": 4177,
+      "sha256": "59791626c5c80f3ff3c18852ce3536f513b95bddb1463b832d273a2c40c1dedb"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-replay_file_test.log": {
+      "bytes": 2337,
+      "sha256": "b0f3299f319a1012f942910cd984d3a2256714f59ea5fd94ed6690163fdfeffd"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-replay_integration_test.json": {
+      "bytes": 1816,
+      "sha256": "74711c14e2a2fbb48150903e0cc8348bfd323558430eda42887ce9b870887925"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/replay/sanitized-replay_integration_test.log": {
+      "bytes": 913,
+      "sha256": "ec9d7886d0993706ddacaf2fd4f183abe91389e8a364038c8f4cc3169454e50e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/report.json": {
+      "bytes": 277732,
+      "sha256": "f2ea23ec5848ca479c58643a1c9fb9562dfc59db9d4bf3756753a53b01589a68"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-bounded_tcp_writer_test-dependencies.log": {
+      "bytes": 2040,
+      "sha256": "a2f821c1da1c37a46acbd415fec8b9f253ecc7aefa6088e6cc5942a5f6ee80de"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-bounded_tcp_writer_test.json": {
+      "bytes": 4198,
+      "sha256": "245692dd22733dff1179d61f4da1bb198ad3282db8fd43f923c180aeb486080e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-bounded_tcp_writer_test.log": {
+      "bytes": 2041,
+      "sha256": "71e5b366fc14c6bdb2658cd131b0187eb90e444e1246aa7a08ff91fd39c7c3fb"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-build-native.log": {
+      "bytes": 4126,
+      "sha256": "793951e32254670420422405e404ac2b3de5f28ebdf24fe471e7874984f9eb3d"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-build-standalone.log": {
+      "bytes": 76,
+      "sha256": "c0039862a1f9528d6c6a05a7c35d350a750781a02acb1cb72a160f8181389fd7"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-build-tests.log": {
+      "bytes": 263,
+      "sha256": "8ae70c43568bcbec4045b054b6578b212521af659b18ce44ee6a86bfbdb56e6f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-configure-native.log": {
+      "bytes": 473,
+      "sha256": "8002cbf3a0269cec2b2235795886f16315020fc692fbc59048d69831d7d56d7c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-configure-standalone.log": {
+      "bytes": 474,
+      "sha256": "7e2df61c3554d588f0f319d81c2ae3e42ea0871219e70567f7efcc0b32b586a4"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-configure-tests.log": {
+      "bytes": 337,
+      "sha256": "f7c58d4c320d999da57a7bbbdebf1dc74513a9a533ecd6ee3c02eb8a31563e47"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-frame_sync_client-dependencies.log": {
+      "bytes": 1878,
+      "sha256": "f491e159769303e6543e1ac06199e3448b0bc802d00a56841c40bc983e0ca194"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-frame_sync_server-dependencies.log": {
+      "bytes": 1880,
+      "sha256": "dc9f3ff67ae111e6f4d9b991d2076f3efeedc1d744c99ffdfcd09de5a0838c83"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-integrated-tcp.log": {
+      "bytes": 805,
+      "sha256": "02f66666f1d3bf7296199d1524b61ed421345be603ad3e8022078532e0a5f3f0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-integrated-tcp/report.json": {
+      "bytes": 1019,
+      "sha256": "5af64a8765963e3ee3ebb91c8c33fbf74b36787d5903d95ec812426828b3ce3f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-integrated-tcp/tcp/report.json": {
+      "bytes": 437,
+      "sha256": "456f5455c03c57b226feb07a6aadc9441e49c5c29f2d9e0e9a6fd7a3316676ad"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-integrated-tcp/tcp/server.log": {
+      "bytes": 46,
+      "sha256": "e67fb9d29ea3d71635b91e32a1e5ea36d905a703f752517453e5fb4fc8caa2d1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-lobby_capacity_test-dependencies.log": {
+      "bytes": 2041,
+      "sha256": "54f6b17499644a30e3cd92fd033666a7b4e97454d5a8e2d0b74e6ec0d88019a0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-lobby_capacity_test.json": {
+      "bytes": 4233,
+      "sha256": "833c1b4c55543f2c6a7040b6583ede1c78e867da99aba1284149831071515b69"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-lobby_capacity_test.log": {
+      "bytes": 2363,
+      "sha256": "5228f82e318f17f22400d60b2a4701aad88fc2e37da906bd59bda350b4474f45"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-lobby_client_capacity_test-dependencies.log": {
+      "bytes": 2041,
+      "sha256": "4991fbb4c615fdd568274b83d753be1d74097ae8e620bd536c4aac6e998d14f5"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-lobby_client_capacity_test.json": {
+      "bytes": 4347,
+      "sha256": "1457891793f3d4116bb76b4297455b0cf43eb1ec25dad5a8469a6f8b4394f920"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-lobby_client_capacity_test.log": {
+      "bytes": 2287,
+      "sha256": "c112b1593ac5859a05c41d8dc506704968728524b9ad8fb017919d773acae557"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-native-dependencies.log": {
+      "bytes": 2322,
+      "sha256": "d7b6df4e872471f4746c19514b016ca1412d957cb667015f2de4442e70c0335c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-native-tcp-server.log": {
+      "bytes": 120,
+      "sha256": "faf0f92013ab7b611d2c4a6dcabe9c4eb7218f2851cf55dc4d4ab0dc4fe3a20f"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-reliable_udp_budget_test-dependencies.log": {
+      "bytes": 2040,
+      "sha256": "8c12a988503446f54591841a561fd460741753262d503ceb05f978fb627ff0cf"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-reliable_udp_budget_test.json": {
+      "bytes": 7520,
+      "sha256": "91c83d226fb716484eaae5735c51d98326026cf72ff5be4b3b501f6eb340ffa2"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-reliable_udp_budget_test.log": {
+      "bytes": 3494,
+      "sha256": "e594693d8bb80d3c9420033deb8d883fec10df0f4c8d59025d0a079508e28262"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-runtime.log": {
+      "bytes": 1025,
+      "sha256": "657e8cb2e75f3e8f22cc954c7a8fe68c29a9d355dd8267e9bbda92fc53d3dcc2"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-runtime/fatal.log": {
+      "bytes": 716,
+      "sha256": "74c7307efacdf7087f544ecd10d78afe1b6d70f5080a3d069f1c59aff890f5c6"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-runtime/logs.log": {
+      "bytes": 49380,
+      "sha256": "82ec0c391bb7bf3fb012994e54616cfcea4ff04807850d56a4348f72325e8552"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-runtime/queues.log": {
+      "bytes": 61,
+      "sha256": "3960534c48718d9a96167772105a09d94877b224623601df81507f9f246c0ee2"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-runtime/render.log": {
+      "bytes": 246,
+      "sha256": "e8b792531c85e4e27a7de6276e26d255085d18ec514b65c27e8c6b55b6223abf"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-runtime/report.json": {
+      "bytes": 2415,
+      "sha256": "54c8a4c278adec2c38c67da7faaa516f8aca9cc5cc4541f14ac1a737235d6883"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client.log": {
+      "bytes": 4090,
+      "sha256": "7577d006fdf8951e87d9aee5e209b2a2de2bf2c51506135e2e75336d8d23f3c1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/client_signal_shutdown.client.log": {
+      "bytes": 272,
+      "sha256": "e7ca46b70fdadde4c82c345761c338a3552ccadfdb0a199e45009534272e9173"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/client_signal_shutdown.server.log": {
+      "bytes": 42,
+      "sha256": "86f8b325fbd380cf87bf1d1cb1420903500069094606735a20f8b6d4487ac501"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/control_framing.log": {
+      "bytes": 153,
+      "sha256": "9fcb540f989f9150558dc1cbeab2ef9997b8677986ad3446379f74885db8b6a8"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/extra_argument.log": {
+      "bytes": 51,
+      "sha256": "e2e95d173930654e77f6cff1ff051141b250eacca53da0e2442cb28fd3fc5fff"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/oversized_authority_header.log": {
+      "bytes": 123,
+      "sha256": "1a62fa082fbc105c186714d199f55436b4d83f795569879e6302dfe742be8147"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/partial_handshake.log": {
+      "bytes": 21,
+      "sha256": "40172f0c2ab525c6cf12c8766aa4728a0dc780738be00b7dc4c85e4dbe31b1d3"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/port_overflow.log": {
+      "bytes": 24,
+      "sha256": "2bd14fe0900e4468b2f4434041a0c12b0279e993eb4c4fe80f692690d183ba33"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/port_zero.log": {
+      "bytes": 24,
+      "sha256": "2bd14fe0900e4468b2f4434041a0c12b0279e993eb4c4fe80f692690d183ba33"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/report.json": {
+      "bytes": 4090,
+      "sha256": "7577d006fdf8951e87d9aee5e209b2a2de2bf2c51506135e2e75336d8d23f3c1"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/server_eof_shutdown.client.log": {
+      "bytes": 273,
+      "sha256": "7160c7763a9cc2f0bbd37096024704ea78a03a118d1587537e664e4bb43bcaac"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/server_eof_shutdown.server.log": {
+      "bytes": 42,
+      "sha256": "f281af6f4f1bc0f65218780a4e5422a649405973a8b0d7e199ae3fa1221479ea"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/slot_overflow.log": {
+      "bytes": 24,
+      "sha256": "2bd14fe0900e4468b2f4434041a0c12b0279e993eb4c4fe80f692690d183ba33"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/trailing_text.log": {
+      "bytes": 24,
+      "sha256": "2bd14fe0900e4468b2f4434041a0c12b0279e993eb4c4fe80f692690d183ba33"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-client/wrong_expected_slot.log": {
+      "bytes": 41,
+      "sha256": "fa5f172dc891e48dbcd6f62e792a974ba1a9262e492e5bc593f154b8c409f212"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-server.log": {
+      "bytes": 2270,
+      "sha256": "9cc129e303cbd8c502a90a8b03692a386796e1919495ad214932a7a28cf95cac"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-server/invalid_port.log": {
+      "bytes": 48,
+      "sha256": "d4cd8a65569dded704938dbb3b3c835bfa22c8d8c19f3c24e457b6e936240ad0"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-server/narrowing_wrap.log": {
+      "bytes": 48,
+      "sha256": "246edc2539d69f50c8a6d20a834e9e14f3c6bebac90c2536bb59fcf3810eeb74"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-server/normal_progress_shutdown.log": {
+      "bytes": 42,
+      "sha256": "b90a4211c348547e0a64211fe26e1c8321b063b492074697d076e26b43acd853"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-server/oversized_header_shutdown.log": {
+      "bytes": 42,
+      "sha256": "fa713b43ea9757728c72f657ad2b9f17cbab33f2782faf72515899f83eda5546"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-server/report.json": {
+      "bytes": 2270,
+      "sha256": "9cc129e303cbd8c502a90a8b03692a386796e1919495ad214932a7a28cf95cac"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-server/seed_overflow.log": {
+      "bytes": 48,
+      "sha256": "246edc2539d69f50c8a6d20a834e9e14f3c6bebac90c2536bb59fcf3810eeb74"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-server/trailing_text.log": {
+      "bytes": 48,
+      "sha256": "246edc2539d69f50c8a6d20a834e9e14f3c6bebac90c2536bb59fcf3810eeb74"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-standalone-server/zero_slots.log": {
+      "bytes": 79,
+      "sha256": "a84caebddf95725d6da4bb0c5cb2ba2ddf506eb9c2b3d70c2446a3ceb886d7be"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-tcp-resume.log": {
+      "bytes": 2706,
+      "sha256": "6ff9b0d8a134a2b1d96f5862172685398fe8368fecf401d0bc4b3f0d122e0d62"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-tcp-resume/automatic_resume.log": {
+      "bytes": 213,
+      "sha256": "a1b7bc6ab45006a03890cabf54c9c4a3b0a90956bd75bc6bfebe045995926ed9"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-tcp-resume/explicit_resume.log": {
+      "bytes": 214,
+      "sha256": "fb5bd5f9be4b94d33faf6e929ea45d07aca29c577249257a08f78f41e2e5512c"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-tcp-resume/report.json": {
+      "bytes": 2706,
+      "sha256": "6ff9b0d8a134a2b1d96f5862172685398fe8368fecf401d0bc4b3f0d122e0d62"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-tcp_client_capacity_test-dependencies.log": {
+      "bytes": 2041,
+      "sha256": "d1517b674a62f8689a1e68cdfc7c9f79fc521747233fb60fbbe824bcb6b9586e"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-tcp_client_capacity_test.json": {
+      "bytes": 10949,
+      "sha256": "8cce1888ae89a6ee5b58b8edccb092358c4c094232ecb293e055703ac72ae847"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-tcp_client_capacity_test.log": {
+      "bytes": 5163,
+      "sha256": "08bb4f65071f4eed6915e08cc86c3c502a6e69123117af8b55258f7052c45675"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-tcp_frame_server_test-dependencies.log": {
+      "bytes": 2041,
+      "sha256": "2f4db768c747707070e0063ccd530fc8d70841d8047b8cf386b466f4749d4f75"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-tcp_frame_server_test.json": {
+      "bytes": 3472,
+      "sha256": "7af1ec789a7e67096b65dfbb9686271e8441fe4ab4040089416e1f96d01d01fb"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-tcp_frame_server_test.log": {
+      "bytes": 1830,
+      "sha256": "8546f57bc93da9e94c4a9c84bdc0c4b29f15625338ad96b8c56287e5f150732d"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-udp-product.log": {
+      "bytes": 802,
+      "sha256": "8ffdd35e68cc622af8cd35209370d89c14c1c8988dfe255ca35d70ed3d8c9706"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-udp-product/report.json": {
+      "bytes": 1016,
+      "sha256": "3d990a524ad218631063eae511acb351049077c4f64770dbccdae6709c1025e4"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-udp-product/udp/report.json": {
+      "bytes": 437,
+      "sha256": "4a05e1b078b5afff4e6c3b339b68fd4f585150a7efe1da9e97bfaaacaca15ef4"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sanitized-udp-product/udp/server.log": {
+      "bytes": 46,
+      "sha256": "ec5dd625fbd72ebaa267908119293e2d511a15f4986ee837aff1896a6a339be6"
+    },
+    ".project/optimization/benchmarks/memory-budget-1791246540750766239/sources.json": {
+      "bytes": 157186,
+      "sha256": "183e669e37c2d59e1fff6abae9ec16e4c628864d27f45c2515d10180d503e062"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/binaries.json": {
+      "bytes": 521,
+      "sha256": "723d04d83e144f43129fbeb9fb3d1876b55b349d7dff69c104aad9e37b2ae433"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/build.log": {
+      "bytes": 404,
+      "sha256": "71ddb5379e215b894a66b7ae4be563f552e1556a14e6395ed9c094ea3e001249"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/commands.json": {
+      "bytes": 3860,
+      "sha256": "f4c23daf5d0ebfcdfff8cc319cdb1f66d9d1063270639e77ca4bd9bb15058e72"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/compile_commands.json": {
+      "bytes": 95738,
+      "sha256": "71b8ef9967d1f6bcd0dc161e0fa104c987839485480d80c05a6a9d3f888735ad"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/compiler.log": {
+      "bytes": 228,
+      "sha256": "0b52fa36f98d1a1ff3f77256f64c13ac7e2264cf7f072ea7943756a0ef378028"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/configure.log": {
+      "bytes": 470,
+      "sha256": "e8db1c4c11c45eb10b728c2c83d4cc279ebc8e7a8a3bfdb6ce7be24a58bbc874"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/environment.json": {
+      "bytes": 1228,
+      "sha256": "16ad319730746e808b888bf241aaf0fb555db7645f0eeb1f4c48773ec2a47a5d"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/linkage.log": {
+      "bytes": 3118,
+      "sha256": "dfcd1690f7abd60bea8cdc7d8ea475163d7e20b48f9a807a45cb3581387daf64"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/machine.json": {
+      "bytes": 25363,
+      "sha256": "99a07181ea7ba674d325f76fd804d5960c26d1a50ec4994d84704ac6027504f4"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/references.json": {
+      "bytes": 1702,
+      "sha256": "9dc8cae80b0e7b49137fe39cde6cbce4022ffa9194e6f910412a70d1ca898cee"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/report.json": {
+      "bytes": 189736,
+      "sha256": "2ca86e5b877dce39b5e4ee9797ea55e24c85040a743f0021e01326381d8831d3"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/results.json": {
+      "bytes": 5000,
+      "sha256": "778478819b872461deb330a485f1cc5d9d064e1554be63b84c8aac3fb91dac07"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/seed-42.log": {
+      "bytes": 662605,
+      "sha256": "213ab87e2999b2980266948e09c2a84cfe3353b697d973a99d2c88e04fc5bbd4"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/seed-43.log": {
+      "bytes": 661233,
+      "sha256": "cc2c02a712e457f90b93cf508efddc287c753a56bfc753e279be8ae170a31324"
+    },
+    ".project/optimization/benchmarks/performance-regression-1791247118892276530/sources.json": {
+      "bytes": 151604,
+      "sha256": "c7391939e996ca5b2698b1bf8e0d21bba1009384a6aa36635ede0bfdd9ab7a44"
+    },
+    ".project/optimization/evidence/architecture_regression-1791244307209520926.log": {
+      "bytes": 49305,
+      "sha256": "e683354aef7d596f07efa7ded8860a64d14ac09baae68993b0062d6bebcd90f4"
+    },
+    ".project/optimization/evidence/architecture_regression.json": {
+      "bytes": 500,
+      "sha256": "fad895be63e4379d56bdf8d9c3a960167ebf4cda07787e9b166ebf544f1ba789"
+    },
+    ".project/optimization/evidence/ecs_performance-1791245633300123257.log": {
+      "bytes": 8327,
+      "sha256": "de108af0f562449131c510246bbdf88181d615d340e9ae92463f89acea9775fa"
+    },
+    ".project/optimization/evidence/ecs_performance.json": {
+      "bytes": 475,
+      "sha256": "10564908792f531ea7dbaa80d4de30f1ab06666a781146c24849b1d97e05d637"
+    },
+    ".project/optimization/evidence/environment_lifetime-1791244271938987007.log": {
+      "bytes": 4189,
+      "sha256": "3bfa43e68463a1cfc8e4b8d1e650d6bc39472af471b1584f2121f0920a290946"
+    },
+    ".project/optimization/evidence/environment_lifetime.json": {
+      "bytes": 489,
+      "sha256": "c4a6977b5ed164f46865ed027c57a95653eaa99c441c965ea042afc4f46c0056"
+    },
+    ".project/optimization/evidence/framework-ctest.xml": {
+      "bytes": 663815,
+      "sha256": "7ae7b02c2fb5e59460c5942a15fb89dd3fe5a1777e8b0e080eb3272816c6c69f"
+    },
+    ".project/optimization/evidence/framework-pytest.xml": {
+      "bytes": 121189,
+      "sha256": "75b507e39ee0922d48ecc5fb2d7fc0b48f117397266312e68c37a8a1b58bb292"
+    },
+    ".project/optimization/evidence/framework_regression-1791244039981805902.log": {
+      "bytes": 191839,
+      "sha256": "1ae057f0ad1029ce6fbae2a51a3c1257be4b01092de0610908861d2dc6715913"
+    },
+    ".project/optimization/evidence/framework_regression.json": {
+      "bytes": 553,
+      "sha256": "737709867cbc21df64ae8f870f72c879b32a61a9aa6e99e6317ad7ec20ea3441"
+    },
+    ".project/optimization/evidence/input_contract-1791247662117708513.log": {
+      "bytes": 262,
+      "sha256": "a3119215ac393ee627eb38775d1b37201045705f177d67b94af2f71dc9e89bc9"
+    },
+    ".project/optimization/evidence/input_contract.json": {
+      "bytes": 472,
+      "sha256": "d07b29a98f9d117af780e6ea38954edbdb51d7e089feac2984b10e10fce745ea"
+    },
+    ".project/optimization/evidence/match_benchmark-1791245483658263755.log": {
+      "bytes": 4191,
+      "sha256": "1c26fb017e1dec8745bc109f9e4cb1acad9bdd61f98c0b32b104899e1de57885"
+    },
+    ".project/optimization/evidence/match_benchmark.json": {
+      "bytes": 475,
+      "sha256": "987b1960089b6b7f3d98a00eec8694978ab01c29c71eead3d6d66d1f20999a7c"
+    },
+    ".project/optimization/evidence/memory_budget-1791246540707962667.log": {
+      "bytes": 4044,
+      "sha256": "e3507676fec3226d638a5eed5202255597bb78b8300320811db1dffd14ebe76c"
+    },
+    ".project/optimization/evidence/memory_budget.json": {
+      "bytes": 468,
+      "sha256": "a07bd1bf7721282bc2f55b18141633e49a700a570b47b5b63878daf3f3235d82"
+    },
+    ".project/optimization/evidence/native_boundary-1791244033593300202.log": {
+      "bytes": 10612,
+      "sha256": "5031b5f0c452bdbdf5fba49898d7156a6999430f4dc3e9f55f8998837dfb8ca3"
+    },
+    ".project/optimization/evidence/native_boundary.json": {
+      "bytes": 473,
+      "sha256": "97451134a0f04c2004f674c0c86d3376a48904a1764594880c036ed38d87734b"
+    },
+    ".project/optimization/evidence/native_session_ports-1791248116236209352.log": {
+      "bytes": 4475,
+      "sha256": "27ec42f914b18c250616239b0279466f5c425ceaa22b482644252306a4fe0ae8"
+    },
+    ".project/optimization/evidence/native_session_ports.json": {
+      "bytes": 499,
+      "sha256": "2259935e5c542b62632a9c3410c16910235cc9ada8cb922bafde0f91b58e2731"
+    },
+    ".project/optimization/evidence/performance_regression-1791247118523639095.log": {
+      "bytes": 266,
+      "sha256": "455f0fe9466915c7d7c9c43660ac51d6a7f3d07af5ca02354d03452a13fbf620"
+    },
+    ".project/optimization/evidence/performance_regression.json": {
+      "bytes": 496,
+      "sha256": "0bd79936ab8f2d9ec4c65008a069bde25a6afbe2dd4b5d2dae6b1908d524d360"
+    },
+    ".project/optimization/evidence/quality_selftest-1791244029072554619.log": {
+      "bytes": 198,
+      "sha256": "daaf8b13b8e80f0f2e270f4a0e525576b74e6251963438381e242158787bd889"
+    },
+    ".project/optimization/evidence/quality_selftest.json": {
+      "bytes": 563,
+      "sha256": "5eb4b0cea63f4acf4173ad9b2fb3fda3232812d6fccb409a82feb65d91c08936"
+    },
+    ".project/optimization/evidence/simulation_contract-1791244289776809241.log": {
+      "bytes": 3121,
+      "sha256": "4458380319e0da66011d00dc7eb611e686c0df4917f0ba597091c3f35645663d"
+    },
+    ".project/optimization/evidence/simulation_contract.json": {
+      "bytes": 485,
+      "sha256": "573c6e9dd42c8a9363d08d9343a109aa9d28a64e3fd90e33e4386c76e0cd599e"
+    },
+    ".project/optimization/evidence/state_ownership-1791244269344143604.log": {
+      "bytes": 1419,
+      "sha256": "4f3b4a5f6de4a0600c1ce2dc64d6669fb158278c83b9430168ae832fd554a094"
+    },
+    ".project/optimization/evidence/state_ownership.json": {
+      "bytes": 473,
+      "sha256": "4938126ea78d0e226bfce4491597d64476576774bdc9ac41d2012a7ace014a79"
+    }
+  },
+  "milestone_states": {
+    "ms-19.1": "verified",
+    "ms-20.1": "verified",
+    "ms-21.1": "verified",
+    "ms-22.1": "verified",
+    "ms-23.1": "verified",
+    "ms-24.1": "stale",
+    "ms-25.1": "stale",
+    "ms-26.1": "failed"
+  },
+  "schema": "optimization-acceptance-archive-v1",
+  "source_commit": "cc460c73dceed303ba3675aedfdb8c7890380ac4",
+  "target": "ms-23.1"
+}
