@@ -1,0 +1,21 @@
+{
+  "schema": "football-render-gpu-current-v1",
+  "source_commit": "d49e896da4d1f38fab9af31b3c7fe9c1df09b4d1",
+  "gate": "render_regression",
+  "passed": false,
+  "assertions": 503,
+  "skipped": 0,
+  "product_acceptance": false,
+  "p95_budget_ms": 16.67,
+  "seed_p95_ms": {
+    "42": 22.017528,
+    "43": 23.246538
+  },
+  "files_sha256": {
+    "report.json": "e55a632293601304298675c4c75e0b972fa4ca3b7abffd45a2a8334df8dfc521",
+    "configure.log.gz": "0127c4fce08413bef418b7e627e1b7d91e65ea814522be51f0f68ebf9851e83b",
+    "build.log.gz": "ed2836dd403f5ccce66ef02140626585eb80f2e16b736127e839550743f33835",
+    "seed-42.log.gz": "2a2a646a267bf1e6ed70fcbbaf9fe9f54e61122ee1345c730b268a8f535506b3",
+    "seed-43.log.gz": "ebef6636797e82a86e9b92bab57936ce44ce6a9e93d291ee9073dbda391f6830"
+  }
+}

@@ -109,6 +109,8 @@ GFOOTBALL_PBR_AUTO_EXPOSURE=1 SDL_VIDEODRIVER=windows SDL_AUDIODRIVER=dummy \
 
 对种子 43 及重复轮次执行相同命令。该路径只验证原生性能。变更后的 Linux `render_images.py` 已在全新 Release 与 ASan/UBSan 构建中通过六种模式、两种配置共 12 个实际 GameEnv 捕获，**2088 项断言、零跳过**，两种配置的状态与 RGB 逐帧一致；[完整报告、命令、输入与源码哈希](evidence/render_native_windows_20261006/manifest.json)已归档。此图像检查不测量 1080p 帧预算，Linux 性能门禁仍需独立通过。
 
+在提交 `d49e896` 后，以同一 Mesa 26.2.2 D3D12 私有驱动和 WSLg Wayland 路径刷新正式 Linux `render_regression`。两个固定种子均保留 1920×1080、完整画质、真实窗口交换和 120 个测量帧；种子 42/43 的完整帧 p95 分别为 **22.018/23.247 ms**，交换间隔为 0，503 项断言、零跳过，失败项仅为两个种子超出 16.67 ms。见[当前源码正式报告、逐次日志和哈希清单](evidence/render_gpu_current_20261006/manifest.json)。相比此前 25.457/26.792 ms 的一轮虽更快，但仍不能以运行间波动代替稳定通过；Linux 产品门禁和 `ms-24.1` 继续失败。
+
 复现这台 WSL 设备上的正式检查：
 
 ```sh
