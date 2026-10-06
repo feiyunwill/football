@@ -5,13 +5,14 @@
       "id": "render-1080p-p95-20261006",
       "severity": "blocker",
       "status": "open",
-      "summary": "1920x1080 PBR + Bloom + FXAA + auto exposure exceeds the 16.67 ms p95 Linux frame budget on Arc/WSLg; current-code formal GPU run measured 22.018/23.247 ms for seeds 42/43",
+      "summary": "1920x1080 PBR + Bloom + FXAA + auto exposure exceeds the 16.67 ms p95 Linux frame budget on Arc/WSLg; current-source Wayland run measured 22.018/23.247 ms and formal default-SDL GPU gate measured 31.442/31.507 ms for seeds 42/43",
       "evidence": ".project/optimization/evidence/render_gpu_current_20261006/report.json",
       "related_evidence": [
         ".project/optimization/evidence/render_gpu_repeat_20261006/report.json",
         ".project/optimization/evidence/render_gpu_wayland_20261006.json",
         ".project/optimization/diagnostics/render-swap-interval-ab-1791229412562625558/report.json",
-        ".project/optimization/evidence/render_native_windows_20261006/manifest.json"
+        ".project/optimization/evidence/render_native_windows_20261006/manifest.json",
+        ".project/optimization/evidence/render_milestone_refresh_20261006.json"
       ],
       "closure_evidence": null
     }
