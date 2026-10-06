@@ -1,0 +1,19 @@
+{
+  "archive_sha256": "808592a61d9fcd13a8ce819575415e25ada3687ad7560aa6bc38f73373da71a8",
+  "command": "SDL_VIDEODRIVER=wayland python3 .project/checks/render_regression.py --gpu-driver-root /root/.cache/football-mesa-build-20260913-a/install-wayland",
+  "files": {
+    "build.log": "780603f853f240a729e427c774565be264b80ced7b7f66b76e2777135cdfe93f",
+    "configure.log": "975b2993fc01d58e032ef517f2ec9edca0a84efd6bed8a5e9d87ef1badc52e69",
+    "report.json": "16aa7d7bd9e9ad6dc5266121b6796de25ee09083622fa27dc52df0eb02c19f99",
+    "seed-42.log": "34ff0d8456c30028096afd58a3da0d57a67c60703b081adb45efb6688a46e34e",
+    "seed-43.log": "75c522f2cb403aa53d5ed0bccf3d1b4a9db5b53bce5cb189d58782e007bd471c"
+  },
+  "p95_ms": {
+    "42": 26.617836,
+    "43": 25.86312
+  },
+  "passed": false,
+  "report_sha256": "16aa7d7bd9e9ad6dc5266121b6796de25ee09083622fa27dc52df0eb02c19f99",
+  "schema": "render-gpu-current-v1",
+  "source_commit": "ec2417d6751cf48d4d461480028ef9708a5bf0fc"
+}

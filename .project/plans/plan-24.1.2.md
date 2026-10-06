@@ -1,5 +1,7 @@
 # plan-24.1.2 — 画质与帧预算
 
+2026-10-06 当前源码的正式 1080p PBR 真窗口渲染检查双种子 p95 为 26.618/25.863 ms，仍超预算；[原始报告](../optimization/evidence/render_gpu_after_ai_refresh_20261006.json)保留失败，计划不提升。
+
 2026-10-06 FXAA 两种固定邻域采样候选均未通过五帧精确图像对照，未合入；当前 1080p 完整帧预算仍未通过。见[逐帧差异证据](../optimization/diagnostics/fxaa-sampling-20261006/report.json)。
 
 2026-10-06 状态缓存隔离候选无稳定性能收益；交换调用计时又出现严重运行间漂移，尚不能形成可验收的 1080p 修复。产品代码、图像基线和 16.67ms 门禁未改，计划继续未通过。见[渲染诊断](../optimization/render-presentation-20261006.md)。
