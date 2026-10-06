@@ -1,15 +1,15 @@
 {
   "check": "network_regression",
-  "fingerprint": "0eb4a7deb3028638772f9713c3aee82324978579818fc6df49151aa84d53c0f1",
+  "fingerprint": "71bc98a15bc5a1b83d586fb7e16fd7afd6a668e23953d510be8b54cc76a5f864",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1791233964.1299577,
-  "duration_seconds": 12.707,
+  "started": 1791259927.3333123,
+  "duration_seconds": 12.269,
   "argv": [
     "python3",
     ".project/checks/network_regression.py"
   ],
-  "log": "network_regression-1791233964129981137.log",
-  "log_sha256": "7a3f91ce70d1ef863aef45e7efd825adac123f655d79dee0c89f138f8fcb69a8"
+  "log": "network_regression-1791259927333338781.log",
+  "log_sha256": "503c514b1612a6ba9c5a7c76d33c3594067d72463061e24ef57f972c0c07e36d"
 }

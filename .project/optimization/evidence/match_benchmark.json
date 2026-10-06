@@ -1,15 +1,15 @@
 {
   "check": "match_benchmark",
-  "fingerprint": "486577465cc9a3e3f1dd5a6ab604d4853951e154ad7380cb87ee842a9d8c1345",
+  "fingerprint": "248cfe29363a63c5c379835697b0a33d0945c275571ec73e0376e13bebf01b97",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1791245483.6582446,
-  "duration_seconds": 149.421,
+  "started": 1791256773.7024405,
+  "duration_seconds": 129.873,
   "argv": [
     "python3",
     ".project/checks/match_benchmark.py"
   ],
-  "log": "match_benchmark-1791245483658263755.log",
-  "log_sha256": "1c26fb017e1dec8745bc109f9e4cb1acad9bdd61f98c0b32b104899e1de57885"
+  "log": "match_benchmark-1791256773702460737.log",
+  "log_sha256": "517a10bce98bd1f02f93aeb2e8f2c2d5b44dea8251db56c796618be809fe91a0"
 }
