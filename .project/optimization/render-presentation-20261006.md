@@ -114,8 +114,9 @@ GFOOTBALL_PBR_AUTO_EXPOSURE=1 SDL_VIDEODRIVER=windows SDL_AUDIODRIVER=dummy \
 复现这台 WSL 设备上的正式检查：
 
 ```sh
-SDL_VIDEODRIVER=wayland python3 .project/checks/render_regression.py \
-  --gpu-driver-root /root/.cache/football-mesa-build-20260913-a/install-wayland
+python3 .project/checks/render_regression.py \
+  --gpu-driver-root /root/.cache/football-mesa-build-20260913-a/install-wayland \
+  --sdl-video-driver wayland
 ```
 
 私有驱动路径仅用于本机 D3D12 适配；其他 Linux GPU 应使用其实际驱动并保留相同的分辨率、画质、窗口交换和 16.67 ms 门禁。后续工作需要在产品目标显示路径上继续定位交换调用的等待来源和长尾，任何新方案都必须同时通过图像功能检查与两个种子的完整帧时间门禁。
