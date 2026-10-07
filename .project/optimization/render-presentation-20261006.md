@@ -126,3 +126,5 @@ python3 .project/checks/render_regression.py \
 ECS v12 与长赛 v10 参考刷新后，从 `quality_selftest` 开始完整运行 `task-24.1.2.2`。框架、架构、性能、手感、网络、PBR、HDR 后处理和图像回归均在当前源码上通过；最后的 `render_regression` 未通过。显式 Wayland、同一私有 Mesa 26.2.2 D3D12 驱动、Intel Arc 140T、1920×1080、PBR + Bloom + FXAA + 自动曝光、真实窗口交换、每种子 30 帧热身与 120 帧测量下，种子 42/43 的完整帧 p95 为 **23.885/24.814 ms**，均超过 **16.67 ms**。交换间隔为 0，`glFinish` p95 为 0.061/0.061 ms；503 项断言、零跳过，失败仅为两种子的帧时预算。此结果未达到产品门槛，`task-24.1.2.2` 与 `ms-24.1` 仍不得标记完成。
 
 [本轮正式报告](evidence/render_gpu_after_baseline_refresh_20261007.json)、[原始报告与四份日志归档](evidence/render_gpu_after_baseline_refresh_20261007.tar.gz)、[SHA-256 清单](evidence/render_gpu_after_baseline_refresh_20261007_manifest.json)和[质量编排失败记录](evidence/render_regression.json)保留了逐帧样本、设备与二进制身份、构建命令及门禁结果。
+
+随后在与正式报告相同哈希的引擎、基准和 D3D12 驱动上，用 GDB 断点核对环境光资源的生命周期。两个种子各渲染 150 帧：`CreateIBLResources` 均进入 150 次，`DestroyIBLResources` 均只在第 150 次进入之后触发一次；比赛帧内没有反复重建 IBL 资源。见[诊断计数与身份清单](evidence/render_ibl_rebuild_probe_20261007.json)、[GDB 脚本和原始日志归档](evidence/render_ibl_rebuild_probe_20261007.tar.gz)。调试器会影响帧时，此诊断仅用于排除候选原因，不用于 16.67 ms 性能验收；后续继续针对光照和后处理的实际成本寻找等画质改动。

@@ -1,0 +1,38 @@
+{
+  "schema": "render-ibl-rebuild-probe-v1",
+  "diagnostic_only": true,
+  "source_commit": "79cd976",
+  "formal_render_report_sha256": "de911f56c56582bfcd784fbda618a00a857b1fd915445c6534d837cdf5bde8b9",
+  "binaries": {
+    "engine_sha256": "78583e7937fcab457caf06d2c90515d8d87d8470a62e50e1b95ccdbaf3faf156",
+    "benchmark_sha256": "5947721613e8ef00ad74c1e23568ea475dbaf291dbfd96688f49d77d92e92c26",
+    "gallium_sha256": "27edc24790f98b0315b205e69805338dcbb9b7a0746804d7052a078d73e55bac"
+  },
+  "cases": [
+    {
+      "seed": 42,
+      "create_calls": 150,
+      "destroy_calls": 1,
+      "destroy_after_create_call": 150,
+      "renderer": "D3D12 (Intel(R) Arc(TM) 140T GPU (16GB))",
+      "frames": 150,
+      "diagnostic_p95_ms": 20.964874
+    },
+    {
+      "seed": 43,
+      "create_calls": 150,
+      "destroy_calls": 1,
+      "destroy_after_create_call": 150,
+      "renderer": "D3D12 (Intel(R) Arc(TM) 140T GPU (16GB))",
+      "frames": 150,
+      "diagnostic_p95_ms": 24.986942
+    }
+  ],
+  "files": {
+    "render_ibl_rebuild_probe_20261007.gdb": "5ffb71dbafc37aaffe001befcf3200949f74e1316be1e95e179072bd4e174824",
+    "render_ibl_rebuild_probe_20261007_seed42.log": "53cfbead9e0445957316368e387dcaef96d29939c7c20a3f968a95f456c7b2ac",
+    "render_ibl_rebuild_probe_20261007_seed43.log": "ddc7686402d104b49d77adcdb5f8f904b96e56780cc65435a5ad72e179d856bd"
+  },
+  "archive_sha256": "23a71cb916143af09397aec37ea94fe79fa124b10f6a56e7794e8895531e3a05",
+  "finding": "No IBL resource teardown/rebuild during either 150-frame benchmark; each sole teardown occurred after call 150."
+}
