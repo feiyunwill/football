@@ -20,4 +20,4 @@ python3 .project/checks/training_reliability.py
 python3 .project/checks/ai_regression.py
 ```
 
-`program.json` 中 `training_reliability` 的验收文字曾被错误编码为问号，已按原始提交 `601678ee` 恢复，并通过 `python3 .project/quality.py validate`。这些是当前源码的**直接检查**；正式 `ms-25.1` 仍为 `stale`，因为其依赖 `ms-24.1` 的 Linux 1080p 渲染门槛尚未通过。归档中的 `actual_product_acceptance=false` 不应改写为完成状态。
+`program.json` 中 `training_reliability` 的验收文字曾被错误编码为问号，已按原始提交 `601678ee` 恢复，并通过 `python3 .project/quality.py validate`。这些是当前源码的**直接检查**。在正式验收使用的 Wayland/D3D12 环境中，框架、架构、性能、手感、网络五个里程碑已重新验证；`ms-25.1` 因依赖的 `ms-24.1` Linux 1080p 渲染门槛失败而处于 `failed`，见[当前里程碑状态](evidence/milestone_status_wayland_20261007.json)。归档中的默认环境状态快照为 `stale`，不能代替目标环境的判定；归档中的 `actual_product_acceptance=false` 也不应改写为完成状态。

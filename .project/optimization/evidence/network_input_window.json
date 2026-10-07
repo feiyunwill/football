@@ -1,15 +1,15 @@
 {
   "check": "network_input_window",
-  "fingerprint": "1e68f3c4ec321350559f558568a84f28c87c1eda358d085af94908f17d6eda2a",
+  "fingerprint": "93c34e0f1833b9758e0ae1a601c3b64513c615231d0ff5c386997204fd8a51f5",
   "passed": true,
   "reason": "Structured assertions evaluated",
   "returncode": 0,
-  "started": 1791353749.884024,
-  "duration_seconds": 49.308,
+  "started": 1791359743.0577464,
+  "duration_seconds": 7.609,
   "argv": [
     "python3",
     ".project/checks/network_input_window.py"
   ],
-  "log": "network_input_window-1791353749884033775.log",
-  "log_sha256": "ffbc398ca5c74195c42a4454ed4cba4db2f3465c54e24029321f0f10a6ce507d"
+  "log": "network_input_window-1791359743057768428.log",
+  "log_sha256": "8935ca02a94f9391f8f893e72a36ebb69baf5b48601a4a03ba76a0625423b48c"
 }

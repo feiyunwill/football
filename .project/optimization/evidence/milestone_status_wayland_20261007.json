@@ -1,0 +1,77 @@
+{
+  "schema": "optimization-milestone-status-v1",
+  "source_head_at_capture": "c80bb4c",
+  "program_sha256": "4574cd5e23cbe704a96b68faa00b2bf5dae014e8f8d2ec39a5ae09cf9d49720c",
+  "environment": {
+    "FOOTBALL_RENDER_GPU_DRIVER_ROOT": "/root/.cache/football-mesa-build-20260913-a/install-wayland",
+    "FOOTBALL_RENDER_SDL_VIDEODRIVER": "wayland"
+  },
+  "milestones": {
+    "ms-19.1": {
+      "state": "verified",
+      "title": "框架与可复现验收"
+    },
+    "ms-20.1": {
+      "state": "verified",
+      "title": "架构与状态生命周期"
+    },
+    "ms-21.1": {
+      "state": "verified",
+      "title": "性能与容量"
+    },
+    "ms-22.1": {
+      "state": "verified",
+      "title": "输入与操作手感"
+    },
+    "ms-23.1": {
+      "state": "verified",
+      "title": "网络与会话可靠性"
+    },
+    "ms-24.1": {
+      "state": "failed",
+      "title": "渲染与图形质量"
+    },
+    "ms-25.1": {
+      "state": "failed",
+      "title": "AI 与训练工程"
+    },
+    "ms-26.1": {
+      "state": "failed",
+      "title": "产品发布验收"
+    }
+  },
+  "checks": {
+    "quality_selftest": "verified",
+    "native_boundary": "verified",
+    "framework_regression": "verified",
+    "state_ownership": "verified",
+    "environment_lifetime": "verified",
+    "simulation_contract": "verified",
+    "architecture_regression": "verified",
+    "match_benchmark": "verified",
+    "ecs_performance": "verified",
+    "memory_budget": "verified",
+    "performance_regression": "verified",
+    "input_contract": "verified",
+    "fixed_timestep": "verified",
+    "presentation_smoothing": "verified",
+    "feel_regression": "verified",
+    "network_input_window": "verified",
+    "network_reconnect": "verified",
+    "lobby_lifecycle": "verified",
+    "network_regression": "verified",
+    "pbr_pipeline": "verified",
+    "postprocessing": "verified",
+    "render_images": "verified",
+    "render_regression": "failed",
+    "tactical_integration": "stale",
+    "ai_decisions": "stale",
+    "training_reliability": "stale",
+    "ai_regression": "stale",
+    "product_journey": "stale",
+    "product_soak": "stale",
+    "product_package": "stale",
+    "product_release": "stale",
+    "native_session_ports": "verified"
+  }
+}

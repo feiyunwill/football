@@ -3,7 +3,7 @@
   "source_head_at_checks": "530042c",
   "program_sha256": "4574cd5e23cbe704a96b68faa00b2bf5dae014e8f8d2ec39a5ae09cf9d49720c",
   "baseline_sha256": "baef37cdfbf9873f7dd92db076e6053cc6871aea60be2ed0162f5e20ce2fa152",
-  "formal_milestone_state": "stale",
+  "formal_milestone_state": "failed",
   "formal_dependency": "ms-24.1 render budget remains failed",
   "checks": {
     "integration": {
@@ -685,5 +685,7 @@
       "bytes": 385
     }
   },
-  "archive_sha256": "b3b8c3ce740d94b418a1994ad9b840f910337fdd60415e886d3c14108c356c34"
+  "archive_sha256": "b3b8c3ce740d94b418a1994ad9b840f910337fdd60415e886d3c14108c356c34",
+  "default_environment_milestone_state_at_archive": "stale",
+  "target_environment_status_evidence": ".project/optimization/evidence/milestone_status_wayland_20261007.json"
 }
