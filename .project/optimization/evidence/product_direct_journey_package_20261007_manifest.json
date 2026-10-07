@@ -1,0 +1,181 @@
+{
+  "schema": "product-direct-journey-package-v1",
+  "source_head_at_checks": "ade8380",
+  "formal_release_status": "failed due to render dependency",
+  "checks": {
+    "journey": {
+      "passed": true,
+      "assertions": 24,
+      "report_sha256": "d6f6d74f455def5172c1a28d64ba8f5202fb3881fe367773874d22b217b9a6e7",
+      "stage": "product-journey-1791360097608298900"
+    },
+    "package": {
+      "passed": true,
+      "assertions": 24,
+      "report_sha256": "ec588d86a637f5cc843c19d61f03a2df230a33c2b04284fd25db1164bf929028",
+      "stage": "product-package-1791360316115082883"
+    }
+  },
+  "wheel_sha256": "14e73491749fbf8ff6ac17f6e3a3e15a6a836e2d8328bd56e3bfefe8a5f99438",
+  "wheel_bytes": 10964328,
+  "wheel_omitted_from_archive": true,
+  "files": {
+    "journey/build-binding.log": {
+      "sha256": "a59f5f40ebc71caeff2a867b62638e5c6904e38041ded8484baeb2b027d0579f",
+      "bytes": 11717
+    },
+    "journey/check-requirements.log": {
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "bytes": 30
+    },
+    "journey/configure-binding.log": {
+      "sha256": "b61b1eb95602a7599840bd41e89da66b6174f6c84b4c693a8b5f466d1b81f564",
+      "bytes": 1939
+    },
+    "journey/import-binding.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "journey/install-requirements.log": {
+      "sha256": "c1b34af372755e576253bb9d1d6ee1d74292c3382c3f91e2615d11e7f75a7c04",
+      "bytes": 3502
+    },
+    "journey/interactive-journey.log": {
+      "sha256": "228e8e1c54827a91d53ac25a3c2f5f055ad4ebf3aa9d5b16273373ae994be737",
+      "bytes": 3421
+    },
+    "journey/pybind11-dir.log": {
+      "sha256": "1ae4c378e39880715af21dd615ebab0616a7f0e97f6ac99f763df0438cb35e90",
+      "bytes": 107
+    },
+    "journey/report.json": {
+      "sha256": "d6f6d74f455def5172c1a28d64ba8f5202fb3881fe367773874d22b217b9a6e7",
+      "bytes": 3911
+    },
+    "journey/runtime/.football-recording-v1/guard": {
+      "sha256": "3aa45e195ee1f1d1526b65d88000abb8ff6070dc66efe211a930f1aae3cd341d",
+      "bytes": 32
+    },
+    "journey/runtime/.football-recording-v1/slot-0.json": {
+      "sha256": "95472fee916c1017ab36341d9567516473f78054e720386e6124a98a51221867",
+      "bytes": 256
+    },
+    "journey/runtime/.football-recording-v1/slot-0.lock": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "journey/runtime/match.replay": {
+      "sha256": "768c17c4f196a9c6bba886e34df89c8f1ae4847976dd5bd94ff90c105cccfb88",
+      "bytes": 35655
+    },
+    "journey/runtime/match.save": {
+      "sha256": "fcb1a03272545c4e4df3a176792943dc29243667a5e20ff20291efba358f9af7",
+      "bytes": 40144
+    },
+    "package/build-wheel.log": {
+      "sha256": "07c1ae93e404fad1e0ad27b95fd3c8dae3f2b2f68b5382b97bd002ffe144cf8a",
+      "bytes": 856
+    },
+    "package/check-build-requirements.log": {
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "bytes": 30
+    },
+    "package/clean-install-probe.log": {
+      "sha256": "8a37e624f11604aa7e9be43f69b1141811b320551e9aae55f6cf8ac4a97fd8a7",
+      "bytes": 281
+    },
+    "package/clean-runtime/.football-recording-v1/guard": {
+      "sha256": "3aa45e195ee1f1d1526b65d88000abb8ff6070dc66efe211a930f1aae3cd341d",
+      "bytes": 32
+    },
+    "package/compiler.log": {
+      "sha256": "0b52fa36f98d1a1ff3f77256f64c13ac7e2264cf7f072ea7943756a0ef378028",
+      "bytes": 228
+    },
+    "package/install-build-requirements.log": {
+      "sha256": "c1b34af372755e576253bb9d1d6ee1d74292c3382c3f91e2615d11e7f75a7c04",
+      "bytes": 3502
+    },
+    "package/installed-identity.log": {
+      "sha256": "2780adb8718e26d06d36ff6caef5dac84cd3475aa543dd6db6f8199bd8d6fd18",
+      "bytes": 668
+    },
+    "package/installed-local-match.log": {
+      "sha256": "d180d73f5e819f21c0fc4ca2bfb3adb781bb63c59c3ece0e988c4a9c40537f38",
+      "bytes": 542
+    },
+    "package/installed-probe/human-render.log": {
+      "sha256": "49ed6085d8198ccd8026c82300ca2a825417e888be2f44e856e044859370bcaf",
+      "bytes": 54
+    },
+    "package/installed-probe/install.log": {
+      "sha256": "d1bae41cc3161cca787324b73fbe7eac6746e76ec269f08b10c60d5094d7beb4",
+      "bytes": 2716
+    },
+    "package/installed-probe/loader-legacy_first.log": {
+      "sha256": "41a29f848a25407f423dd2e20d1fe2f9b8e92b8916bca9c4ba0a6acb92f3bf19",
+      "bytes": 90
+    },
+    "package/installed-probe/loader-package_first.log": {
+      "sha256": "caabd1b79ec5de2a025c1bb141310156643bbc651cce9a5ba35070f59e371fe7",
+      "bytes": 108
+    },
+    "package/installed-probe/native-tests.json": {
+      "sha256": "4d3a863698b775f2538139d8675a11597342b9a3f63fe12d046169ec7bfb49ed",
+      "bytes": 1247
+    },
+    "package/installed-probe/native-tests.log": {
+      "sha256": "fcbbe0f3d482f303af5a3bc34e1f339757e112def9c5ba45baab68be6a4821e1",
+      "bytes": 3792
+    },
+    "package/installed-probe/pip-check.log": {
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09",
+      "bytes": 30
+    },
+    "package/installed-probe/pip-freeze.log": {
+      "sha256": "72823369eea49c290848db9624002c4c4256e3f0eb13202d5bb66a5d1dc85ccd",
+      "bytes": 423
+    },
+    "package/installed-probe/registration.log": {
+      "sha256": "21d00a3d7eb7706d5f11cd3a032fb8a435ca48b136806d8b438f78fd24cb81b1",
+      "bytes": 614
+    },
+    "package/installed-probe/registration/data_first.log": {
+      "sha256": "a8b43826349242e6f3da502ea61cd66eaaf9b29431ff12a0f7a8e8fb38d47603",
+      "bytes": 820
+    },
+    "package/installed-probe/registration/gym_first.log": {
+      "sha256": "61fde788eb2bbf383d30b52880cda92fba8ea24747c857d37c107243feaba2fc",
+      "bytes": 819
+    },
+    "package/installed-probe/registration/report.json": {
+      "sha256": "483a065190cb1d8d1d77ea842321dd5f1566c4fb05fdf3e05a3992d189372b30",
+      "bytes": 3222
+    },
+    "package/installed-probe/report.json": {
+      "sha256": "4d558c06551930bce482cefb24dfa5c7e7945c0a13baf5ae0e997f636c3961ae",
+      "bytes": 103977
+    },
+    "package/installed-probe/terminal-rgb.png": {
+      "sha256": "2657269566dfd716519056f5284db27ef96e0538ad8276b5105a827088e5a976",
+      "bytes": 13437
+    },
+    "package/installed-probe/venv.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "package/missing-checkpoint-diagnostic.log": {
+      "sha256": "192712530d791e8eafe54bc6155d276fb6b25e9fae9e67ac6556fdf6d0797daf",
+      "bytes": 162
+    },
+    "package/report.json": {
+      "sha256": "ec588d86a637f5cc843c19d61f03a2df230a33c2b04284fd25db1164bf929028",
+      "bytes": 7074
+    },
+    "package/source-commit.log": {
+      "sha256": "8800a5291e2fe04d104d640c95388f7d97c33333c17acef7d76ba1897fd1d7ce",
+      "bytes": 41
+    }
+  },
+  "archive_sha256": "5ecf6950415be63f5f3532041443c84a6d8a11c2e71c51cd834f8fd0382a9d8e"
+}
