@@ -128,3 +128,11 @@ ECS v12 与长赛 v10 参考刷新后，从 `quality_selftest` 开始完整运�
 [本轮正式报告](evidence/render_gpu_after_baseline_refresh_20261007.json)、[原始报告与四份日志归档](evidence/render_gpu_after_baseline_refresh_20261007.tar.gz)、[SHA-256 清单](evidence/render_gpu_after_baseline_refresh_20261007_manifest.json)和[质量编排失败记录](evidence/render_regression.json)保留了逐帧样本、设备与二进制身份、构建命令及门禁结果。
 
 随后在与正式报告相同哈希的引擎、基准和 D3D12 驱动上，用 GDB 断点核对环境光资源的生命周期。两个种子各渲染 150 帧：`CreateIBLResources` 均进入 150 次，`DestroyIBLResources` 均只在第 150 次进入之后触发一次；比赛帧内没有反复重建 IBL 资源。见[诊断计数与身份清单](evidence/render_ibl_rebuild_probe_20261007.json)、[GDB 脚本和原始日志归档](evidence/render_ibl_rebuild_probe_20261007.tar.gz)。调试器会影响帧时，此诊断仅用于排除候选原因，不用于 16.67 ms 性能验收；后续继续针对光照和后处理的实际成本寻找等画质改动。
+
+## 2026-10-07：目标主机路径核对
+
+本机 `wsl.exe --version` 报告 WSL 2.7.12.0、WSLg 1.0.73.2；Windows 仅列出 Intel Arc 140T。Linux 子系统存在 `/dev/dxg`，不存在 `/dev/dri`，因此当前机器没有可直接运行原生 Linux DRM 图形驱动的设备节点。[主机与正式门禁身份记录](evidence/render_host_capability_20261007.json)同时关联了当前 1080p Wayland 失败报告和原生 Windows 对照清单。
+
+[WSLg 官方说明](https://github.com/microsoft/wslg/blob/main/README.md)记录其 D3D12 虚拟 GPU 到 Weston 的系统内存互操作开销；[帧率说明](https://github.com/microsoft/wslg/wiki/Controlling-WSLg-frame-rate)解释了 Weston 与 Windows DWM 的双重合成及混合刷新率显示器的限制。另有[上游问题报告](https://github.com/microsoft/wslg/issues/1498)在较新 WSLg 版本中描述分辨率相关的呈现读回瓶颈。这些资料与本机测量方向一致，但不能单独证明本项目每帧等待的精确成因。当前源码的 Wayland 正式门禁仍以 23.885/24.814 ms 判为失败；原生 Windows 诊断也不能替代 Linux x86_64 目标平台验收。
+
+若要区分 WSLg 呈现成本与引擎在原生 Linux 驱动上的成本，需要具备实际 Linux GPU 和显示输出的目标主机，按相同 1920×1080、完整画质、真实交换、双种子门槛运行现有检查。当前主机无法提供这项独立验证；在此之前保留渲染阻断问题及后续 AI／产品任务的失败状态。

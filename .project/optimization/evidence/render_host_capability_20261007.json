@@ -1,0 +1,41 @@
+{
+  "schema": "football-render-host-capability-v1",
+  "source_commit": "96bb4955c5fc4fada7cb7f51b2af27fb5c21e5fe",
+  "host": {
+    "wsl_version": "2.7.12.0",
+    "wslg_version": "1.0.73.2",
+    "windows_build": "10.0.26200.9457",
+    "gpu": "Intel(R) Arc(TM) 140T GPU (16GB)",
+    "linux_devices": {
+      "/dev/dxg": true,
+      "/dev/dri": false
+    },
+    "version_command": "wsl.exe --version",
+    "gpu_command": "Get-CimInstance Win32_VideoController"
+  },
+  "linux_render_gate": {
+    "report": ".project/optimization/evidence/render_gpu_after_baseline_refresh_20261007.json",
+    "report_sha256": "de911f56c56582bfcd784fbda618a00a857b1fd915445c6534d837cdf5bde8b9",
+    "p95_ms": [
+      23.885102,
+      24.81402
+    ],
+    "budget_ms": 16.67,
+    "passed": false,
+    "renderer": [
+      "D3D12 (Intel(R) Arc(TM) 140T GPU (16GB))",
+      "D3D12 (Intel(R) Arc(TM) 140T GPU (16GB))"
+    ]
+  },
+  "windows_native_diagnostic": {
+    "manifest": ".project/optimization/evidence/render_native_windows_20261006/manifest.json",
+    "manifest_sha256": "eaab58db232532364f92ed9f46eb43fdfbd84afd3172b87a75bf13fb389385ec",
+    "product_acceptance": false
+  },
+  "upstream_reference_urls": [
+    "https://github.com/microsoft/wslg/wiki/Controlling-WSLg-frame-rate",
+    "https://github.com/microsoft/wslg/blob/main/README.md",
+    "https://github.com/microsoft/wslg/issues/1498"
+  ],
+  "conclusion": "This host exposes WSL D3D12 only; native Linux DRM GPU acceptance cannot be run here. WSLg Wayland remains the measured Linux path and fails its p95 gate."
+}
