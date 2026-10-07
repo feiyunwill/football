@@ -1360,7 +1360,15 @@
         ".project/optimization/baselines/ecs_v10*",
         ".project/optimization/diagnostics/ecs_reference_refresh_v10.py",
         ".project/optimization/evidence/ecs_pass_buffer_preperf_reference_20261004.json.gz",
-        ".project/optimization/evidence/ecs_v10_preflight_20261004.json.gz"
+        ".project/optimization/evidence/ecs_v10_preflight_20261004.json.gz",
+        ".project/optimization/baselines/ecs_v11*",
+        ".project/optimization/diagnostics/ecs_reference_refresh_v11.py",
+        ".project/optimization/evidence/ecs_manual_fresh_preperf_reference_20261005.json.gz",
+        ".project/optimization/evidence/ecs_v11_preflight_20261005.json.gz",
+        ".project/optimization/baselines/ecs_v12*",
+        ".project/optimization/diagnostics/ecs_reference_refresh_v12.py",
+        ".project/optimization/evidence/ecs_assisted_angle_preperf_reference_20261007.json.gz",
+        ".project/optimization/evidence/ecs_v12_preflight_20261007.json.gz"
       ],
       "tools": [
         "python3",
@@ -1545,7 +1553,15 @@
         ".project/optimization/baselines/soak_v8*",
         ".project/optimization/baselines/ecs_v10*",
         ".project/optimization/diagnostics/soak_reference_refresh_v8.py",
-        ".project/optimization/evidence/soak_v8_validation_20261004.tar.gz"
+        ".project/optimization/evidence/soak_v8_validation_20261004.tar.gz",
+        ".project/optimization/baselines/soak_v9*",
+        ".project/optimization/baselines/ecs_v11*",
+        ".project/optimization/diagnostics/soak_reference_refresh_v9.py",
+        ".project/optimization/evidence/soak_v9_validation_20261005.tar.gz",
+        ".project/optimization/baselines/soak_v10*",
+        ".project/optimization/baselines/ecs_v12*",
+        ".project/optimization/diagnostics/soak_reference_refresh_v10.py",
+        ".project/optimization/evidence/soak_v10_validation_20261007.tar.gz"
       ],
       "tools": [
         "python3",

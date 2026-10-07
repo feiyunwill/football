@@ -1,0 +1,101 @@
+Running: cmake -S engine -B /tmp/football-optimization-native -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_ENABLE_SANITIZERS=OFF -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin
+CMake Warning (policy) at CMakeLists.txt:188 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.4s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: cmake --build /tmp/football-optimization-native -j 1 --target engine_match_benchmark engine_hotspot_profile engine_animation_query_contract engine_ai_reachability_contract
+[ 25%] Built target gamelib
+[ 32%] Built target menulib
+[ 36%] Built target datalib
+[ 44%] Built target gui2lib
+[ 53%] Built target baselib
+[ 63%] Built target systemsgraphicslib
+[ 65%] Built target loaderslib
+[ 69%] Built target typeslib
+[ 78%] Built target scenelib
+[ 84%] Built target utilslib
+[ 86%] Built target blunted2
+[ 98%] Built target football_engine
+[100%] Built target engine_match_benchmark
+[100%] Built target engine_hotspot_profile
+[ 25%] Built target gamelib
+[ 32%] Built target menulib
+[ 36%] Built target datalib
+[ 44%] Built target gui2lib
+[ 53%] Built target baselib
+[ 63%] Built target systemsgraphicslib
+[ 65%] Built target loaderslib
+[ 69%] Built target typeslib
+[ 78%] Built target scenelib
+[ 84%] Built target utilslib
+[ 86%] Built target blunted2
+[ 98%] Built target football_engine
+[100%] Built target engine_animation_query_contract
+[ 25%] Built target gamelib
+[ 33%] Built target menulib
+[ 37%] Built target datalib
+[ 45%] Built target gui2lib
+[ 54%] Built target baselib
+[ 64%] Built target systemsgraphicslib
+[ 66%] Built target loaderslib
+[ 70%] Built target typeslib
+[ 80%] Built target scenelib
+[ 86%] Built target utilslib
+[ 88%] Built target blunted2
+[100%] Built target football_engine
+[100%] Built target engine_ai_reachability_contract
+Running arrival-time differential contract: /tmp/football-optimization-native/bin/engine_ai_reachability_contract
+{"passed":true,"skipped":0,"assertions":1555846,"cached_cases":561280,"trajectory_bytes":1460,"cases":216640,"zero_results":11664,"fast_distance_cases":46855,"finite_timeout_cases":204535}
+
+Running: /usr/sbin/c++ --version
+Running: cmake -S engine/tests -B /tmp/football-optimization-query-tests -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/sbin/c++ -DENABLE_PCH=OFF -DENABLE_ASAN=ON -DENABLE_UBSAN=ON
+-- Using installed GoogleTest 1.18.0 at /usr/lib/cmake/GTest
+-- AddressSanitizer enabled
+-- UndefinedBehaviorSanitizer enabled
+-- Build type: Debug
+-- Unity build: ON
+-- PCH enabled: OFF
+-- Build targets: 56
+-- Configuring done (0.0s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-query-tests
+Running: cmake --build /tmp/football-optimization-query-tests -j 1 --target ecs_query_contract_test
+[100%] Built target ecs_query_contract_test
+Running: readelf -d /tmp/football-optimization-query-tests/ecs_query_contract_test
+{"seed": 42, "repetition": 0, "cpu_ratio": 1.012865150803488, "wall_ratio": 1.0135392897521638}
+{"seed": 43, "repetition": 0, "cpu_ratio": 0.7564907990248236, "wall_ratio": 0.7566632194732729}
+{"seed": 43, "repetition": 1, "cpu_ratio": 0.8043476586531518, "wall_ratio": 0.8042956661603405}
+{"seed": 42, "repetition": 1, "cpu_ratio": 0.9482656747666627, "wall_ratio": 0.948001539169386}
+{"seed": 42, "repetition": 2, "cpu_ratio": 0.8251739094474457, "wall_ratio": 0.8250602134227197}
+{"seed": 43, "repetition": 2, "cpu_ratio": 0.821488717432353, "wall_ratio": 0.8201800588330269}
+{"seed": 43, "repetition": 3, "cpu_ratio": 0.786980885685107, "wall_ratio": 0.7863776809241575}
+{"seed": 42, "repetition": 3, "cpu_ratio": 0.8271576505890325, "wall_ratio": 0.8259324962562355}
+{"seed": 42, "repetition": 4, "cpu_ratio": 0.794199677850965, "wall_ratio": 0.7942840265705958}
+{"seed": 43, "repetition": 4, "cpu_ratio": 0.8137890616008022, "wall_ratio": 0.8133193757457496}
+{"seed": 43, "repetition": 5, "cpu_ratio": 0.8142699653109261, "wall_ratio": 0.8144857302274966}
+{"seed": 42, "repetition": 5, "cpu_ratio": 0.8725322719571638, "wall_ratio": 0.8716245160130957}
+{"seed": 42, "repetition": 6, "cpu_ratio": 0.8079962749975935, "wall_ratio": 0.8078372334933693}
+{"seed": 43, "repetition": 6, "cpu_ratio": 0.8270971808536803, "wall_ratio": 0.8258155128774962}
+{"seed": 43, "repetition": 7, "cpu_ratio": 0.7923565274391557, "wall_ratio": 0.7922001456870538}
+{"seed": 42, "repetition": 7, "cpu_ratio": 0.7884204664415386, "wall_ratio": 0.7874991033119525}
+{"seed": 42, "repetition": 8, "cpu_ratio": 0.8088584564307175, "wall_ratio": 0.8086339762287675}
+{"seed": 43, "repetition": 8, "cpu_ratio": 0.8405306571740898, "wall_ratio": 0.8395726372981482}
+{"seed": 43, "repetition": 9, "cpu_ratio": 0.7556246908265076, "wall_ratio": 0.7556075408859745}
+{"seed": 42, "repetition": 9, "cpu_ratio": 0.8392571032861561, "wall_ratio": 0.8380167839171221}
+{"seed": 42, "repetition": 10, "cpu_ratio": 0.8155431858704766, "wall_ratio": 0.8145007449299829}
+{"seed": 43, "repetition": 10, "cpu_ratio": 0.8273969434407917, "wall_ratio": 0.8256933955318048}
+{"seed": 43, "repetition": 11, "cpu_ratio": 0.8009329350373598, "wall_ratio": 0.8007776157389412}
+{"seed": 42, "repetition": 11, "cpu_ratio": 0.8400858855052152, "wall_ratio": 0.8387363738393744}
+{"seed": 42, "repetition": 12, "cpu_ratio": 0.8135622578744369, "wall_ratio": 0.8135114801896898}
+{"seed": 43, "repetition": 12, "cpu_ratio": 0.8377309177079983, "wall_ratio": 0.8379519417251947}
+{"seed": 43, "repetition": 13, "cpu_ratio": 0.7819739193230204, "wall_ratio": 0.7812170857922363}
+{"seed": 42, "repetition": 13, "cpu_ratio": 0.8123920383164488, "wall_ratio": 0.8125368106429783}
+{"seed": 42, "repetition": 14, "cpu_ratio": 0.8513780807209473, "wall_ratio": 0.8503765415168394}
+{"seed": 43, "repetition": 14, "cpu_ratio": 0.829804714268189, "wall_ratio": 0.8301873597107512}
+{"passed": true, "assertions": 1590027, "skipped": 0, "failures": [], "artifact": ".project/optimization/benchmarks/ecs-comparison-1791352303276199211.json", "artifact_sha256": "9015bb750786a018d068045db0dbcf54f612830abd8651e22532e5f637fcceff", "comparisons": [{"seed": 42, "cpu": {"pairs": 15, "ratios": [1.012865150803488, 0.9482656747666627, 0.8251739094474457, 0.8271576505890325, 0.794199677850965, 0.8725322719571638, 0.8079962749975935, 0.7884204664415386, 0.8088584564307175, 0.8392571032861561, 0.8155431858704766, 0.8400858855052152, 0.8135622578744369, 0.8123920383164488, 0.8513780807209473], "geometric_ratio": 0.8419521320515163, "bootstrap_95_lower": 0.8178629890222665, "bootstrap_95_upper": 0.8742531250322121}, "wall": {"pairs": 15, "ratios": [1.0135392897521638, 0.948001539169386, 0.8250602134227197, 0.8259324962562355, 0.7942840265705958, 0.8716245160130957, 0.8078372334933693, 0.7874991033119525, 0.8086339762287675, 0.8380167839171221, 0.8145007449299829, 0.8387363738393744, 0.8135114801896898, 0.8125368106429783, 0.8503765415168394], "geometric_ratio": 0.8414337219570044, "bootstrap_95_lower": 0.8173198965924477, "bootstrap_95_upper": 0.8739207797638706}, "p99_ratio": 0.7430352858587846}, {"seed": 43, "cpu": {"pairs": 15, "ratios": [0.7564907990248236, 0.8043476586531518, 0.821488717432353, 0.786980885685107, 0.8137890616008022, 0.8142699653109261, 0.8270971808536803, 0.7923565274391557, 0.8405306571740898, 0.7556246908265076, 0.8273969434407917, 0.8009329350373598, 0.8377309177079983, 0.7819739193230204, 0.829804714268189], "geometric_ratio": 0.805627366718699, "bootstrap_95_lower": 0.7921685978666455, "bootstrap_95_upper": 0.8183628894436924}, "wall": {"pairs": 15, "ratios": [0.7566632194732729, 0.8042956661603405, 0.8201800588330269, 0.7863776809241575, 0.8133193757457496, 0.8144857302274966, 0.8258155128774962, 0.7922001456870538, 0.8395726372981482, 0.7556075408859745, 0.8256933955318048, 0.8007776157389412, 0.8379519417251947, 0.7812170857922363, 0.8301873597107512], "geometric_ratio": 0.8052021078786892, "bootstrap_95_lower": 0.7918310359816352, "bootstrap_95_upper": 0.8178654450260074}, "p99_ratio": 0.766702879545977}]}

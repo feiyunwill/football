@@ -1,0 +1,85 @@
+Running: cmake -S engine -B /tmp/football-optimization-native -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_ENABLE_SANITIZERS=OFF -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin
+CMake Warning (policy) at CMakeLists.txt:188 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.5s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: cmake --build /tmp/football-optimization-native -j 1 --target engine_match_benchmark engine_hotspot_profile engine_animation_query_contract engine_ai_reachability_contract
+[ 25%] Built target gamelib
+[ 32%] Built target menulib
+[ 36%] Built target datalib
+[ 44%] Built target gui2lib
+[ 53%] Built target baselib
+[ 63%] Built target systemsgraphicslib
+[ 65%] Built target loaderslib
+[ 69%] Built target typeslib
+[ 78%] Built target scenelib
+[ 84%] Built target utilslib
+[ 86%] Built target blunted2
+[ 98%] Built target football_engine
+[100%] Built target engine_match_benchmark
+[100%] Built target engine_hotspot_profile
+[ 25%] Built target gamelib
+[ 32%] Built target menulib
+[ 36%] Built target datalib
+[ 44%] Built target gui2lib
+[ 53%] Built target baselib
+[ 63%] Built target systemsgraphicslib
+[ 65%] Built target loaderslib
+[ 69%] Built target typeslib
+[ 78%] Built target scenelib
+[ 84%] Built target utilslib
+[ 86%] Built target blunted2
+[ 98%] Built target football_engine
+[100%] Linking CXX executable bin/engine_animation_query_contract
+[100%] Built target engine_animation_query_contract
+[ 25%] Built target gamelib
+[ 33%] Built target menulib
+[ 37%] Built target datalib
+[ 45%] Built target gui2lib
+[ 54%] Built target baselib
+[ 64%] Built target systemsgraphicslib
+[ 66%] Built target loaderslib
+[ 70%] Built target typeslib
+[ 80%] Built target scenelib
+[ 86%] Built target utilslib
+[ 88%] Built target blunted2
+[100%] Built target football_engine
+[100%] Linking CXX executable bin/engine_ai_reachability_contract
+[100%] Built target engine_ai_reachability_contract
+Running arrival-time differential contract: /tmp/football-optimization-native/bin/engine_ai_reachability_contract
+{"passed":true,"skipped":0,"assertions":1555846,"cached_cases":561280,"trajectory_bytes":1460,"cases":216640,"zero_results":11664,"fast_distance_cases":46855,"finite_timeout_cases":204535}
+
+Running: /usr/sbin/c++ --version
+Running: cmake -S engine/tests -B /tmp/football-optimization-query-tests -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=/usr/sbin/c++ -DENABLE_PCH=OFF -DENABLE_ASAN=ON -DENABLE_UBSAN=ON
+-- Using installed GoogleTest 1.18.0 at /usr/lib/cmake/GTest
+-- AddressSanitizer enabled
+-- UndefinedBehaviorSanitizer enabled
+-- Build type: Debug
+-- Unity build: ON
+-- PCH enabled: OFF
+-- Build targets: 56
+-- Configuring done (0.0s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-query-tests
+Running: cmake --build /tmp/football-optimization-query-tests -j 1 --target ecs_query_contract_test
+[100%] Built target ecs_query_contract_test
+Running: readelf -d /tmp/football-optimization-query-tests/ecs_query_contract_test
+Traceback (most recent call last):
+  File "/root/work_space/football/.project/checks/ecs_performance.py", line 383, in <module>
+    main()
+    ~~~~^^
+  File "/root/work_space/football/.project/checks/ecs_performance.py", line 308, in main
+    assertions += same_trajectory(pair["baseline"], pair["candidate"])
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/ecs_performance.py", line 57, in same_trajectory
+    require(left[field] == right[field], f"Optimization changed trajectory: {field}")
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/native_boundary.py", line 34, in require
+    raise RuntimeError(message)
+RuntimeError: Optimization changed trajectory: final_hash

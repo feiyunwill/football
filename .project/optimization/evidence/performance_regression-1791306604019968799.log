@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/root/work_space/football/.project/checks/performance_regression.py", line 379, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/root/work_space/football/.project/checks/performance_regression.py", line 344, in main
+    evaluated = assess(result, seed, cpu, reference=references[seed])
+  File "/root/work_space/football/.project/checks/soak_analysis.py", line 28, in assess
+    require(result[field] == reference[field], f'Long-match trajectory changed: {field}')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/native_boundary.py", line 34, in require
+    raise RuntimeError(message)
+RuntimeError: Long-match trajectory changed: warm_hash

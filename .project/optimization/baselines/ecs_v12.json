@@ -1,0 +1,46 @@
+{
+  "format": 12,
+  "id": "ecs-assisted-angle-current-gameplay-pre-selection-scratch-and-vector-length-20261007",
+  "source_commit": "0dcb71fea4ad8ce376ae5b72de8207cd6c4b57ed",
+  "semantic_patch": ".project/optimization/baselines/ecs_v12_perf_rollback.patch",
+  "semantic_patch_sha256": "f7e89dd663cb1ef614b5f0a822c6a83545e8dba8ade4231ca0d1a8f8397a2eb7",
+  "source_identity": "2c5aa0aceea250368bae73ebc44e70b6c733dbe4481778b13bfdd03ab36f289c",
+  "source_artifact": ".project/optimization/evidence/ecs_assisted_angle_preperf_reference_20261007.json.gz",
+  "artifact_sha256": "6ebd2aa91d7ab6c979606c72d65b69c9a587e8b07d988430376778652d9ca16d",
+  "artifact_uncompressed_sha256": "d95c33ea0476ac75abd1beb376aef4452cbc34a903cc05a3b998ddc9488896e0",
+  "validation_artifact": ".project/optimization/evidence/ecs_v12_preflight_20261007.json.gz",
+  "validation_artifact_sha256": "59f04796596e783cf3db61ca7725d5848b011ae0a7f5c9230cea6e23651773cc",
+  "measurement_contract": {
+    "seeds": [
+      42,
+      43
+    ],
+    "warmup_steps": 200,
+    "steady_steps": 2000,
+    "process_pairs_per_seed": 15,
+    "cpu_bootstrap_95_upper_below": 1.0,
+    "wall_geometric_ratio_below": 1.0,
+    "median_p99_ratio_max": 1.05,
+    "full_cache_allocations_each": 0,
+    "frame_allocation_count_must_decrease": true,
+    "frame_allocation_bytes_must_decrease": true
+  },
+  "binaries": {
+    "engine": {
+      "path": ".project/optimization/baselines/ecs_v12_engine.so.gz",
+      "compressed_sha256": "46c73d66fc7a9d40c865162cb8fc130df91b8b02d476ee508242da8208a87594",
+      "sha256": "7b63332b1a9537fb912cba7813fa7638c5de592be2a80e7d1a97e64d978ea558",
+      "compressed_bytes": 1159873,
+      "bytes": 3087760
+    },
+    "benchmark": {
+      "path": ".project/optimization/baselines/ecs_v12_match_benchmark.gz",
+      "compressed_sha256": "07b659706333c85ddd05a9b936f01ebad19266559e327e6b9763fab173114586",
+      "sha256": "8317094db9866a14ac8b51f0c3b9fd2e5ca1871de839cf74c038439d11c8099b",
+      "compressed_bytes": 88720,
+      "bytes": 205504
+    }
+  },
+  "derived_from_baseline_v11_sha256": "6ffc8f0dcf42b2f90e42c43ee5cffa7549860b82f27c07971d429834d61b77d2",
+  "generator_sha256": "edda0d10df74270caee55a116e21af1b20ebbf59fe8e147e2b7aa3f21f3a9f74"
+}
