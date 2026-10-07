@@ -136,3 +136,11 @@ ECS v12 与长赛 v10 参考刷新后，从 `quality_selftest` 开始完整运�
 [WSLg 官方说明](https://github.com/microsoft/wslg/blob/main/README.md)记录其 D3D12 虚拟 GPU 到 Weston 的系统内存互操作开销；[帧率说明](https://github.com/microsoft/wslg/wiki/Controlling-WSLg-frame-rate)解释了 Weston 与 Windows DWM 的双重合成及混合刷新率显示器的限制。另有[上游问题报告](https://github.com/microsoft/wslg/issues/1498)在较新 WSLg 版本中描述分辨率相关的呈现读回瓶颈。这些资料与本机测量方向一致，但不能单独证明本项目每帧等待的精确成因。当前源码的 Wayland 正式门禁仍以 23.885/24.814 ms 判为失败；原生 Windows 诊断也不能替代 Linux x86_64 目标平台验收。
 
 若要区分 WSLg 呈现成本与引擎在原生 Linux 驱动上的成本，需要具备实际 Linux GPU 和显示输出的目标主机，按相同 1920×1080、完整画质、真实交换、双种子门槛运行现有检查。当前主机无法提供这项独立验证；在此之前保留渲染阻断问题及后续 AI／产品任务的失败状态。
+
+## 2026-10-07：PBR 窗口清屏候选
+
+从 `GraphicsCamera_CameraInterpreter::OnPoke` 到 `RenderViewPBR` 核对了 PBR 画面路径：相机入口先清空窗口颜色，随后色调映射与 FXAA 将完整视口写回。隔离工作树中仅对 PBR 跳过入口清屏，传统渲染继续清屏。六种固定画质模式、每种五帧的实际捕获，其 RGB、模拟状态和渲染器身份全部与当前参考一致。
+
+在相同 Mesa 26.2.2 D3D12 驱动、Wayland、完整 1080p PBR＋Bloom＋FXAA＋自动曝光及真实窗口交换下，两种子两轮交替 A/B 的基线／候选 p95（ms）为：种子 42 **19.687/153.102、21.843/26.210**；种子 43 **22.703/25.540、37.366/20.135**。四次候选均超过 16.67 ms，三次慢于相邻基线，运行间波动明显。因此这项改动不合入，也不改变正式渲染门禁。
+
+[可验证原始归档](evidence/render_backclear_ab_20261007.tar.gz)和[哈希清单](evidence/render_backclear_ab_20261007_manifest.json)保存隔离补丁、30 帧 RGB／状态捕获、逐次 120 帧原始计时、构建与驱动身份及完整日志；归档 SHA-256 为 `73e6d1316ea8406cceda591c23cf5663d4096d8166db2b21c75a879a8a8c1b8f`。该对照只排除当前主机上的一个候选，不证明清屏在所有视口配置中可移除。
