@@ -116,7 +116,7 @@ def main():
     report['artifacts'] = {name: sha(stage / name) for name in ('_gameplayfootball.so', 'libfootball_engine.so')}
     run('python-integration', [args.python, '-m', 'unittest', 'gfootball.test_native_training',
                                'gfootball.test_gymnasium_native', 'gfootball.test_training_snapshot',
-                               'gfootball.test_training_resources', '-v'])
+                               'gfootball.test_training_resources', 'gfootball.test_training_workers', '-v'])
     run('configure-native', configure + ['-DBUILD_PYTHON_BINDINGS=OFF'])
     run('build-native', ['cmake', '--build', str(build), '--target',
                          'engine_native_training_contract', 'engine_training_snapshot_contract',

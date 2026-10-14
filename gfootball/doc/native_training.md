@@ -226,3 +226,63 @@ residual separately, and rejects divergent final digests. The feedback heuristic
 is not model inference. Raw evidence and the baseline interpretation are in
 `.project/native-training/PERFORMANCE.md`; timing-enabled results and normal
 throughput are separate, and host scheduling variation must be considered.
+
+For bounded process sampling, use `NativeWorkerPool`. Each spawned process owns
+one independent native C++ environment; scenario setup and the process protocol
+remain Python orchestration. The existing Python backend remains the default.
+Use a guarded entry point, including in scripts started from an IDE:
+
+```python
+from gfootball.training_workers import NativeWorkerPool
+
+def main():
+    with NativeWorkerPool({'env_name': '11_vs_11_easy_stochastic'},
+                          workers=2, base_seed=42) as pool:
+        current = pool.reset({0: 0, 1: 1})  # worker index -> global episode ID
+        following = pool.step({0: 0, 1: 0})
+        print(following[0].reward, following[0].observation.shape)
+
+if __name__ == '__main__':
+    main()
+```
+
+The pool supports 1..4 workers and the raw native numerical configuration,
+including right-team control, checkpoints, stacking and both discrete action
+sets. Single-player actions are integers; joint actions are integer lists,
+tuples or one-dimensional NumPy arrays. `reset` and `step` accept a nonempty
+dictionary selecting any subset of workers and return `WorkerTransition` values
+in worker order. Each value contains copied float32 observations and per-agent
+rewards, team-mean reward, score reward, terminated/truncated flags and its
+episode ID/seed. Truncated is false for this raw environment; external rollout
+length limits must retain their own bootstrap semantics. There is no auto-reset.
+
+`episode_seed(base_seed, episode_id)` uses a versioned SHA256 mapping to a uint64
+Gym seed, independent of worker assignment/count or completion order. The caller
+assigns global episode IDs (and owns uniqueness); resetting the same ID replays
+the same episode. The Gym seed still passes through the existing PCG64-to-engine
+seed mapping. `digests()` returns SHA256 of each reset worker's canonical kernel
+state bytes as a diagnostic, not a complete training checkpoint.
+
+Runtime frames contain at most 32 KiB, with at most 8 KiB JSON metadata plus
+little-endian float32 buffers. JSON environment configuration is at most 8 KiB.
+Spawn's internal startup uses Python multiprocessing serialization; the runtime
+protocol does not send Python objects or pickle snapshots. One synchronous round
+has at most one in-flight request/response per selected worker, without an
+unbounded task queue. These are per-pool limits, not an operating-system RSS quota.
+
+The pool belongs to its creating process and thread. Invalid actions or episode
+IDs reject the entire round before sending any command. A remote exception,
+broken/oversized/partial frame, worker exit or deadline failure closes the whole
+pool and raises `WorkerError`. Successful transitions on other workers cannot be
+rolled back; recreate the pool and explicitly decide what work to replay. Normal
+close requests native cleanup; failures terminate, then kill and reap children
+within bounded cleanup windows. The default startup deadline is 60 seconds and
+the default round deadline is 30 seconds (configurable up to 300 seconds);
+cleanup can add up to five seconds. Nonblocking parent framing preserves the
+deadline even when a worker stalls partway through a message. Always use a context
+manager or `close()`; there is no implicit background retry or restart.
+
+Worker protocol and real-process contracts run with
+`python -m unittest gfootball.test_training_workers -v` and are included in the
+isolated integration validator. Current process behavior is validated on
+Linux/WSL; platform delivery and 1/2/4-worker scaling are separate roadmap tasks.
