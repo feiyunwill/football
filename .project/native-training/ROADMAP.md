@@ -128,16 +128,19 @@ review 由当前执行者以单独审查轮次完成，明确证据范围；不�
 阶段 review：跨全部阶段重新核对支持矩阵、持续验收、交付产物、用户流程和
 既有产品门禁。发布和 push 必须另有授权。只有全部完成条件满足才关闭长期目标。
 
-## 下一步
+## 完成状态
 
-截至 2026-10-15，S0–S2 已完成并通过阶段 review，NT-3.1–NT-3.4 已完成。
-NT-3.2 候选通过正确性对照，但未显示稳定收益，已撤回并归档测量结论。
-有界进程采样、闭环重放及 1/2/4 worker 资源/吞吐验证已通过验收，S3 全局
-review 已通过且无阻断项。NT-4.1 已完成现有 RLtools 活跃路径审计并形成
-`PPO_DECISION.md`：保留旧 Gaussian 模型路径，新增独立 categorical PPO。
-NT-4.2 策略/共享环境动作接入和 NT-4.3 PPO update、独立数学参考、完整
-learner checkpoint已验收，Release和完整sanitizer均通过。NT-4.4原生CLI、
-多seed冻结评估、random/builtin-AI baseline及跨进程续训实验已完成，短实验
-不支持已学会足球的声明。接下来执行S4全局review，再进入S5。
-任务与提交的实时状态以 `state.json` 为准。
-新需求若改变长期目标，更新路线和验收标准，保留原提交与证据。
+截至2026-10-15，S0–S5的22个子任务均已独立提交，各阶段整体自审通过。
+S5-R1的环境身份/编译器缓存门禁缺口已单独修复并复验，未解决阻断项为零。
+`reviews/S5.md`逐条核对上述七项完成条件；最终ledger与保留产物复核在
+`evidence/s5-completion-audit-20261015-a/report.json`，执行状态以state.json为准。
+
+已交付共享C++数值环境、版本化恢复、预设batch/闭环采样、有界进程worker、
+独立categorical PPO真实更新/冻结评估/完整续训、Linux实际wheel安装与可迁移
+原生目录包、持续验收和使用/回滚说明。入口见MIGRATION.md、DELIVERY.md及
+QUALITY.md。默认Python backend及旧Gaussian模型路径保持原入口。
+
+NT-3.2候选无稳定收益，已撤回；短训练没有证明学会足球。当前实际安装平台为
+Linux/WSL、CPython3.14；其他版本和Windows/macOS的未验证范围在PLATFORMS.md。
+未推送或发布，也未提升现有产品里程碑状态。后续学习效果、更多平台或模型
+扩展若成为新目标，需另定阶段和验收，保留本路线提交与证据。
