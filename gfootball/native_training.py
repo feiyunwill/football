@@ -147,3 +147,40 @@ class NativeEnvironment:
     if self._native is not None:
       self._native.close()
     self._closed = True
+
+  def get_state(self):
+    """Return the C++ snapshot; Gym RNG and episode bookkeeping live in FootballEnv."""
+    self._check_open()
+    return self._native.get_state()
+
+  def set_state(self, state):
+    self._check_open()
+    if type(state) is not bytes:
+      raise TypeError('Native snapshot must be immutable bytes')
+    self._native.set_state(state)
+
+  def snapshot_config(self):
+    self._check_open()
+    return {'values': self._config._values, 'scenario_values': self._config._scenario_values}
+
+  def prepare_snapshot_config(self, config):
+    self._check_open()
+    if type(config) is not dict or set(config) != {'values', 'scenario_values'}:
+      raise ValueError('Invalid snapshot configuration')
+    dynamic = {'episode_number', 'game_engine_random_seed', 'reverse_team_processing'}
+    for key, current in (('values', self._config._values), ('scenario_values', self._config._scenario_values)):
+      saved = config[key]
+      if type(saved) is not dict:
+        raise ValueError('Invalid snapshot configuration dictionary')
+      if key == 'values' and set(saved) != set(current):
+        raise ValueError('Snapshot configuration keys do not match target')
+      if {k: v for k, v in saved.items() if k not in dynamic} != {k: v for k, v in current.items() if k not in dynamic}:
+        raise ValueError('Snapshot configuration does not match target')
+      for name in dynamic & saved.keys():
+        value = saved[name]
+        if name == 'reverse_team_processing':
+          if type(value) is not bool:
+            raise ValueError('Invalid reverse processing metadata')
+        elif type(value) is not int or not 0 <= value < (1 << (32 if name == 'game_engine_random_seed' else 63)):
+          raise ValueError('Invalid snapshot episode/seed metadata')
+    return config['values'], config['scenario_values']

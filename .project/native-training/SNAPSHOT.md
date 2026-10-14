@@ -72,6 +72,21 @@ set state 必须先完整解码、比较身份/选项并准备训练数据，再
 
 ## 证据及后续验收
 
+Python 外层为 FPTR v1：20 字节头（magic、version、JSON 字节数、native 字节数、
+body CRC32），后跟 UTF-8 JSON 和完整 FTRN bytes。JSON 最多 65536 字节，
+总长度最多 10098340 字节，拒绝重复 key、非有限数、过深/过大的集合及尾随数据。
+raw Gym 保存 PCG64、seed、episode/config 和 ready 标记；wrapper-aware helper
+还保存标准 TimeLimit/OrderEnforcing/PassiveEnvChecker 的显式值，包括 checker
+历史 float32 数组（有限数量的 base64 chunks）。不序列化可执行对象或 pickle。
+wrapper 顺序/配置、Gymnasium 版本必须匹配，未知 wrapper 拒绝。
+不覆盖 policy、space RNG、任意 callback 或 learner；这些为调用者状态。
+
+文件由同目录临时文件完成 write/flush/fsync 后 os.replace；POSIX 再同步目录。
+替换前失败/杀死 writer 保留旧目标；替换后的错误不承诺回退旧文件。
+writer 被杀死可能留下私人临时文件；普通异常会清理，清理失败保留主异常。
+读文件前检查 owner、路径与 regular-file/容量，read 多取一字节检测增长。
+路径上限 4096 字节。NT-2.3 的真实跨进程恢复和故障测试记录在对应证据目录。
+
 独立 `engine_training_snapshot_contract` 不链接 GameEnv/Python；覆盖 704 个
 flags×球队×人数组合、最大合法内核/历史、每处单字节损坏及每个截断位置，
 重新计算外层 CRC 后的非法字段/数组长度、嵌套损坏、NaN、超限及尾随数据。

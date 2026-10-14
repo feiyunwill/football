@@ -210,3 +210,85 @@ TimeLimit wrappers truncate a rollout without redefining the match outcome.
     # 2026-10-14: reject wrong-thread/fork calls before RNG, config or lifetime changes.
     if self._backend == 'native' and self._env is not None:
       self._env._check_open()
+
+  def _check_snapshot(self):
+    if self._backend != 'native':
+      raise ValueError('Training snapshots require backend=native')
+    self._check_backend_owner()
+    if self._closed or not self._has_reset:
+      raise gym.error.ResetNeeded('Reset before saving/restoring training state')
+
+  def get_state(self):
+    """Snapshot the raw native Gym environment, including PCG64 RNG and episode state."""
+    self._check_snapshot()
+    from gfootball import training_snapshot as snapshot
+    if type(self.np_random.bit_generator) is not np.random.PCG64:
+      raise ValueError('Training snapshots support the Gymnasium PCG64 generator')
+    if self._reverse_processing is not None and type(self._reverse_processing) is not bool:
+      raise ValueError('Snapshots require a boolean or default reverse processing policy')
+    return snapshot.encode({
+        'kind': 'native-gym-v1', 'config': self._env.snapshot_config(),
+        'needs_reset': self._needs_reset, 'rng': self.np_random.bit_generator.state,
+        'rng_seed': self.np_random_seed, 'reverse_processing': self._reverse_processing},
+        self._env.get_state())
+
+  def set_state(self, state):
+    self._check_snapshot()
+    from gfootball import training_snapshot as snapshot
+    import struct
+    import zlib
+    metadata, native = snapshot.decode(state)
+    if set(metadata) != {'kind', 'config', 'needs_reset', 'rng', 'rng_seed', 'reverse_processing'}:
+      raise ValueError('Invalid Gym snapshot metadata fields')
+    if metadata['kind'] != 'native-gym-v1' or type(metadata['needs_reset']) is not bool:
+      raise ValueError('Invalid Gym snapshot lifecycle')
+    if (type(metadata['reverse_processing']) is not type(self._reverse_processing) or
+        metadata['reverse_processing'] != self._reverse_processing):
+      raise ValueError('Snapshot reverse processing policy differs')
+    if type(metadata['rng_seed']) is not int or not -1 <= metadata['rng_seed'] < (1 << 256):
+      raise ValueError('Invalid Gym RNG seed metadata')
+    # Validate the native lifecycle before any Python or kernel mutation.
+    magic, version, length, checksum = struct.unpack_from('<4sIII', native)
+    if magic != b'FTRN' or version != 1 or len(native) != 16 + length or zlib.crc32(native[16:]) != checksum or length < 4:
+      raise ValueError('Invalid nested native snapshot envelope')
+    flags = struct.unpack_from('<I', native, 16)[0]
+    if flags & ~31 or metadata['needs_reset'] != (not bool(flags & 16)):
+      raise ValueError('Gym lifecycle disagrees with native snapshot')
+    values, scenario_values = self._env.prepare_snapshot_config(metadata['config'])
+    try:
+      generator = np.random.PCG64()
+      encoded_rng = metadata['rng']
+      if (type(encoded_rng) is not dict or set(encoded_rng) != {'bit_generator', 'state', 'has_uint32', 'uinteger'} or
+          encoded_rng['bit_generator'] != 'PCG64' or type(encoded_rng['state']) is not dict or
+          set(encoded_rng['state']) != {'state', 'inc'}):
+        raise ValueError('Invalid PCG64 state')
+      for key in ('state', 'inc'):
+        value = encoded_rng['state'][key]
+        if type(value) is not int or not 0 <= value < (1 << 128):
+          raise ValueError('Invalid PCG64 integer state')
+      if not encoded_rng['state']['inc'] & 1:
+        raise ValueError('Invalid PCG64 increment')
+      if (type(encoded_rng['has_uint32']) is not int or encoded_rng['has_uint32'] not in (0, 1) or
+          type(encoded_rng['uinteger']) is not int or not 0 <= encoded_rng['uinteger'] < (1 << 32)):
+        raise ValueError('Invalid PCG64 cached sample')
+      generator.state = encoded_rng
+      rng = np.random.Generator(generator)
+    except (TypeError, KeyError, OverflowError) as error:
+      raise ValueError('Invalid Gym RNG metadata') from error
+    self._env.set_state(native)
+    # All prepared values are owned references; no output transform after mutation.
+    self._env._config._values = values
+    self._env._config._scenario_values = scenario_values
+    self._np_random = rng
+    self._np_random_seed = metadata['rng_seed']
+    self._needs_reset = metadata['needs_reset']
+
+  def save_state(self, path):
+    self._check_snapshot()
+    from gfootball import training_snapshot as snapshot
+    snapshot.save(path, self.get_state())
+
+  def load_state(self, path):
+    self._check_snapshot()
+    from gfootball import training_snapshot as snapshot
+    self.set_state(snapshot.load(path))

@@ -24,7 +24,7 @@
 | ownership | Native Python adapter 仅创建者 thread/process 操作；拒绝后公开 RNG/config/lifetime 不变 | 错误线程与 Unix fork 合约；C++ 接口仅串行化对象，不承诺跨 fork |
 | failure | 构造/reset/step 输出处理失败，保留主异常并退款/关闭；非法 admission 保留活状态 | 真实资源 reservation、实际 native mutation 后错误注入、正常关闭/重复 close |
 | render | native 不支持 human/rgb_array；render_mode=None 返回 None | 构造拒绝；原有 Python 图形回归保留 |
-| 保存/恢复 | C++ get_state/set_state 提供版本化完整训练状态；目标先 reset 相同场景/seed/cadence/选项，要求相同构建与实际仿真数据；Python 接入待 NT-2.3 | NT-2.2：真实 kernel、奖励计数、终止历史、stack、scalar/batch 回放及失败回滚；digest 仍只代表 kernel |
+| 保存/恢复 | C++ 与 Python/Gym 支持版本化状态和原子文件；目标先 reset 相同场景/seed/cadence/选项，要求相同构建与实际仿真数据；wrapper-aware helper 支持 TimeLimit/OrderEnforcing/PassiveEnvChecker，其他 wrapper 明确拒绝 | NT-2.2/2.3：完整训练回放、PCG64/episode、标准 wrapper 截断/历史、故障回滚、旧文件保留、新进程恢复；digest 仍只代表 kernel |
 | 像素/SMM/raw | native 尚不支持 | 不列入 S1 默认任务；原有 Python 路径可用 |
 | 额外 player/录制 | native 不支持 extra_players、dump/video/recording factory options | 显式拒绝，无静默 fallback；后续独立定义范围 |
 

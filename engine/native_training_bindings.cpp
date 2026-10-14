@@ -1,4 +1,5 @@
 #include "src/training/native_training.hpp"
+#include "src/training/training_snapshot.hpp"
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -99,5 +100,19 @@ void BindNativeTraining(py::module_& module) {
         }
         return py::bytes(result);
       })
+      .def("get_state", [](NativeTrainingEnv& env) {
+        std::string result;
+        { py::gil_scoped_release release; result = env.get_state(); }
+        return py::bytes(result);
+      })
+      .def("set_state", [](NativeTrainingEnv& env, const py::bytes& bytes) {
+        // Check size before copying; released work never refers to Python storage.
+        const auto length = PyBytes_Size(bytes.ptr());
+        if (length < 0 || static_cast<size_t>(length) > football::training::snapshot::kMaxBytes)
+          throw py::value_error("Training snapshot exceeds byte budget");
+        std::string owned = bytes;
+        py::gil_scoped_release release;
+        env.set_state(owned);
+      }, py::arg("state").noconvert())
       .def("close", &NativeTrainingEnv::close, py::call_guard<py::gil_scoped_release>());
 }

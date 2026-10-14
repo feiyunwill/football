@@ -104,7 +104,7 @@ unstacked row strides at 115 rather than storing padded 460-value row structs.
 History contains at most 4×11×115 floats; output is bounded to 256×11 rows.
 
 Rendering, pixels/SMM, extra
-players, recording, Python state save/restore and `control_all_players` scenarios are
+players, recording and `control_all_players` scenarios are
 outside this backend's first implementation. Unsupported factory/configuration
 options raise an error; the backend does not silently switch to Python.
 
@@ -130,10 +130,50 @@ and does not cover the complete training state.
 
 Snapshot export/restore verifies runtime data files against the build manifest;
 this work is outside the stepping loop. The format is intended for the supported
-Linux little-endian ABI and identical build/resource inputs. Python integration
-and atomic file operations are the next S2 task; the C++ byte API does not yet
-save external Gym wrappers. Format and failure contracts are described in
+Linux little-endian ABI and identical build/resource inputs. The C++ byte API
+does not save external Gym wrappers. Format and failure contracts are described in
 `.project/native-training/SNAPSHOT.md`.
+
+The raw native `FootballEnv` provides `get_state()/set_state(bytes)` and
+`save_state(path)/load_state(path)`. Its Python envelope additionally stores the
+Gymnasium PCG64 generator, seed bookkeeping, episode configuration and the
+reset-needed flag. The target must reset a compatible scenario before loading:
+
+```python
+env.reset(seed=7)
+env.step(5)
+env.save_state('football-state.bin')
+# In another process, create the same native environment and reset(seed=7).
+other.reset(seed=7)
+other.load_state('football-state.bin')
+```
+
+For wrapped environments use the wrapper-aware functions, passing the outer
+environment. They preserve TimeLimit elapsed steps, OrderEnforcing flags and
+PassiveEnvChecker history, including the first-step observation check:
+
+```python
+from gfootball import training_snapshot
+training_snapshot.save_state(wrapped_env, 'football-state.bin')
+training_snapshot.load_state(other_wrapped_env, 'football-state.bin')
+```
+
+The target must have the same wrapper order, TimeLimit configuration and
+Gymnasium version. Unknown/custom/vector wrappers reject explicitly. Raw
+`env.unwrapped.save_state()` covers only the raw environment. Action-space and
+observation-space RNGs, policies, callbacks and external learner state remain
+caller-owned. Only the saved environment PCG64 generator is restored.
+
+The FPTR v1 envelope uses bounded JSON metadata and binary native bytes, without
+pickle. Metadata is at most 64 KiB; total files are at most 10,098,340 bytes and
+paths at most 4096 bytes. Reads reject non-regular files and oversized or corrupt
+data. Saving writes a private temporary file in the target directory, flushes
+and fsyncs it, then atomically replaces the target and syncs its directory on
+POSIX. Failures or process interruption before replacement keep the old target;
+errors after replacement may leave the complete new file in place. A killed
+writer can leave its private temporary file, which callers can remove after the
+writer has exited. No directory is created automatically. These file semantics
+are validated on Linux/WSL; other platforms remain part of S5 verification.
 
 Validation (with an extension built from this checkout):
 
