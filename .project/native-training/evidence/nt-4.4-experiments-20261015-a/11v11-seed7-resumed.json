@@ -1,0 +1,191 @@
+{
+  "mode": "native_categorical_ppo",
+  "scenario": "11v11",
+  "seed": 7,
+  "players": 1,
+  "features": 115,
+  "actions": 19,
+  "hidden": 16,
+  "cadence": 10,
+  "episode_limit": 128,
+  "evaluation_seed": 12345,
+  "evaluation_horizon": 96,
+  "start_version": 3,
+  "version": 6,
+  "total_transitions": 768,
+  "iterations": [
+    {
+      "version": 4,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "c05e85f8ce00975f9a65576b77e0ed5a1a7163d3360332919d99be05b1ffbc1e",
+      "loss": -0.017770584009572543,
+      "entropy": 2.8949241930322724,
+      "clip_fraction": 0,
+      "gradient_norm": 0.9001639239532848,
+      "parameter_delta": 0.09060280767662833,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 5,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "48a544a22c83df51105a0381b20050c403a09d9daeecc14092a131cc2d7a24b9",
+      "loss": -0.03250276210958081,
+      "entropy": 2.898943236513751,
+      "clip_fraction": 0,
+      "gradient_norm": 0.5559748118414923,
+      "parameter_delta": 0.10619667868857925,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 6,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "b4b2835f88870d130f7eb3c37e074f890919864af08ebdd8321b113756a92186",
+      "loss": -0.011864270607105647,
+      "entropy": 2.8647399491892678,
+      "clip_fraction": 0,
+      "gradient_norm": 1.0502536875639412,
+      "parameter_delta": 0.08698423631386491,
+      "optimizer_steps": 16
+    }
+  ],
+  "initial_evaluation": null,
+  "evaluation": {
+    "isolated": true,
+    "strategies": [
+      {
+        "name": "sample",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          }
+        ]
+      },
+      {
+        "name": "argmax",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          }
+        ]
+      },
+      {
+        "name": "uniform_random",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          }
+        ]
+      },
+      {
+        "name": "builtin_ai",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          }
+        ]
+      }
+    ]
+  },
+  "state_before_evaluation_sha256": "e536e30daca33099d60018ae49fa1dc06c18df1bdc0320dacd1a6e3ac72252c1",
+  "state_sha256": "e536e30daca33099d60018ae49fa1dc06c18df1bdc0320dacd1a6e3ac72252c1",
+  "checkpoint_bytes": 161885,
+  "wall_seconds": 10.889964866
+}

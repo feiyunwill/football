@@ -1,0 +1,376 @@
+{
+  "mode": "native_categorical_ppo",
+  "scenario": "empty_goal",
+  "seed": 42,
+  "players": 1,
+  "features": 115,
+  "actions": 19,
+  "hidden": 16,
+  "right_team": false,
+  "fixed_positions": true,
+  "checkpoint_rewards": false,
+  "ppo": {
+    "gamma": 0.99,
+    "lambda": 0.95,
+    "clip": 0.2,
+    "value_coefficient": 0.5,
+    "entropy_coefficient": 0.01,
+    "learning_rate": 0.0003,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "epsilon": 1e-08,
+    "max_gradient_norm": 0.5,
+    "epochs": 4,
+    "minibatch": 32,
+    "normalize_advantage": true
+  },
+  "cadence": 10,
+  "episode_limit": 128,
+  "evaluation_seed": 12345,
+  "evaluation_horizon": 96,
+  "start_version": 0,
+  "version": 6,
+  "total_transitions": 768,
+  "iterations": [
+    {
+      "version": 1,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "742487bb8272a610c85eddc912a12066c0a22620061d1b335f9b1fe325480b7a",
+      "loss": -0.05018231668645799,
+      "entropy": 2.7452365784801103,
+      "clip_fraction": 0.140625,
+      "gradient_norm": 0.8366889462141011,
+      "parameter_delta": 0.07992603000408582,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 2,
+      "transitions": 128,
+      "completed_episodes": 2,
+      "reward": 0,
+      "trajectory_sha256": "53c5a0a340ba2bdeb3f4239042f1175b873d70c793701b03d138aa5bfd0da459",
+      "loss": -0.03403458343411351,
+      "entropy": 2.7387962917020516,
+      "clip_fraction": 0,
+      "gradient_norm": 0.8962767415722976,
+      "parameter_delta": 0.06818914002337487,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 3,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "12920aad8f3d27ecbb111397f3975f86afeb667bfef96b3f1179bb977ccf6c38",
+      "loss": -0.024581345957451973,
+      "entropy": 2.6937489145872253,
+      "clip_fraction": 0.001953125,
+      "gradient_norm": 1.1287887211323264,
+      "parameter_delta": 0.07647794513295737,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 4,
+      "transitions": 128,
+      "completed_episodes": 2,
+      "reward": 0,
+      "trajectory_sha256": "eb24107758356b94bfc8ded1f721f88b560cb940d0cc2c6115eb0eb867998484",
+      "loss": 0.0026125599192571964,
+      "entropy": 2.711493134168666,
+      "clip_fraction": 0,
+      "gradient_norm": 0.9666578870993261,
+      "parameter_delta": 0.05943935810608839,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 5,
+      "transitions": 128,
+      "completed_episodes": 4,
+      "reward": 2,
+      "trajectory_sha256": "b25d11db7e630a2606b2c531fc49d1a299dacf643c74f6c95a63d6066f9f2bab",
+      "loss": -0.011219835851997336,
+      "entropy": 2.7137718832286244,
+      "clip_fraction": 0,
+      "gradient_norm": 1.084565931910528,
+      "parameter_delta": 0.07810882917133412,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 6,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "cfe7b8483d14a57d2c62ef35c41962cbe9630d3103ddd3aad4be95af66673c68",
+      "loss": -0.03415659596841333,
+      "entropy": 2.732924510275153,
+      "clip_fraction": 0,
+      "gradient_norm": 1.003521993094992,
+      "parameter_delta": 0.06075793353101943,
+      "optimizer_steps": 16
+    }
+  ],
+  "initial_evaluation": {
+    "isolated": true,
+    "strategies": [
+      {
+        "name": "sample",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 80,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 87,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          }
+        ]
+      },
+      {
+        "name": "argmax",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 75,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 75,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 75,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          }
+        ]
+      },
+      {
+        "name": "uniform_random",
+        "mean_reward": 0.6666666666666666,
+        "mean_score_delta": 0.6666666666666666,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 56,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 11,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 12,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          }
+        ]
+      },
+      {
+        "name": "builtin_ai",
+        "mean_reward": 1,
+        "mean_score_delta": 1,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 9,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 9,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 8,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          }
+        ]
+      }
+    ]
+  },
+  "evaluation": {
+    "isolated": true,
+    "strategies": [
+      {
+        "name": "sample",
+        "mean_reward": 0.3333333333333333,
+        "mean_score_delta": 0.3333333333333333,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 42,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 70,
+            "reward": -1,
+            "controlled_score_delta": -1,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 10,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          }
+        ]
+      },
+      {
+        "name": "argmax",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 56,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 56,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 56,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          }
+        ]
+      },
+      {
+        "name": "uniform_random",
+        "mean_reward": 0.6666666666666666,
+        "mean_score_delta": 0.6666666666666666,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 56,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 11,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 12,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          }
+        ]
+      },
+      {
+        "name": "builtin_ai",
+        "mean_reward": 1,
+        "mean_score_delta": 1,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 9,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 9,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 8,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          }
+        ]
+      }
+    ]
+  },
+  "state_before_evaluation_sha256": "1116ed9db361566de5f9d9db44e2885475686f0a2b6bf23e44a98bf350ad9896",
+  "state_sha256": "1116ed9db361566de5f9d9db44e2885475686f0a2b6bf23e44a98bf350ad9896",
+  "checkpoint_bytes": 102291,
+  "wall_seconds": 6.263485126
+}

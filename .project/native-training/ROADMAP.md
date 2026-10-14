@@ -136,8 +136,8 @@ NT-3.2 候选通过正确性对照，但未显示稳定收益，已撤回并归�
 review 已通过且无阻断项。NT-4.1 已完成现有 RLtools 活跃路径审计并形成
 `PPO_DECISION.md`：保留旧 Gaussian 模型路径，新增独立 categorical PPO。
 NT-4.2 策略/共享环境动作接入和 NT-4.3 PPO update、独立数学参考、完整
-learner checkpoint已验收，Release和完整sanitizer均通过。接下来执行
-NT-4.4：原生训练CLI、多seed冻结评估、random/builtin-AI baseline及跨进程
-续训实验。完成后执行S4全局review，再进入S5。
+learner checkpoint已验收，Release和完整sanitizer均通过。NT-4.4原生CLI、
+多seed冻结评估、random/builtin-AI baseline及跨进程续训实验已完成，短实验
+不支持已学会足球的声明。接下来执行S4全局review，再进入S5。
 任务与提交的实时状态以 `state.json` 为准。
 新需求若改变长期目标，更新路线和验收标准，保留原提交与证据。

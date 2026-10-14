@@ -1,0 +1,91 @@
+{
+  "mode": "native_categorical_ppo",
+  "scenario": "11v11",
+  "seed": 42,
+  "players": 1,
+  "features": 115,
+  "actions": 19,
+  "hidden": 16,
+  "cadence": 10,
+  "episode_limit": 128,
+  "evaluation_seed": 12345,
+  "evaluation_horizon": 96,
+  "start_version": 0,
+  "version": 3,
+  "total_transitions": 384,
+  "iterations": [
+    {
+      "version": 1,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "0cc935097309b0f96146724b147a796d16e1e957305830a2353cbf466b26573d",
+      "loss": -0.033144155250699164,
+      "entropy": 2.902423247184193,
+      "clip_fraction": 0,
+      "gradient_norm": 0.556269084475429,
+      "parameter_delta": 0.11160520300022123,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 2,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "1478eeb1f4d5a18839c6fc83028377405d91119385279f28e07ffa03a7f10462",
+      "loss": -0.032028324733618205,
+      "entropy": 2.9058145677940237,
+      "clip_fraction": 0,
+      "gradient_norm": 0.497513684031963,
+      "parameter_delta": 0.08145960766986106,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 3,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "b62aa5b78a64ac38ee79bbbe8c7dd345879500495163f4d686d36d6aa96a7316",
+      "loss": -0.018000228491358024,
+      "entropy": 2.870319201871287,
+      "clip_fraction": 0,
+      "gradient_norm": 0.6945152453633275,
+      "parameter_delta": 0.06529327309253857,
+      "optimizer_steps": 16
+    }
+  ],
+  "initial_evaluation": null,
+  "evaluation": {
+    "isolated": true,
+    "strategies": [
+      {
+        "name": "sample",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      },
+      {
+        "name": "argmax",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      },
+      {
+        "name": "uniform_random",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      },
+      {
+        "name": "builtin_ai",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      }
+    ]
+  },
+  "state_before_evaluation_sha256": "6e80e7e157a3313f330e26dc8a520bc35ef58975317312f29546a2a196499a95",
+  "state_sha256": "6e80e7e157a3313f330e26dc8a520bc35ef58975317312f29546a2a196499a95",
+  "checkpoint_bytes": 161849,
+  "wall_seconds": 2.85393931
+}

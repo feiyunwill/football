@@ -1,0 +1,209 @@
+{
+  "mode": "native_categorical_ppo",
+  "scenario": "empty_goal",
+  "seed": 7,
+  "players": 1,
+  "features": 115,
+  "actions": 19,
+  "hidden": 16,
+  "right_team": false,
+  "fixed_positions": true,
+  "checkpoint_rewards": false,
+  "ppo": {
+    "gamma": 0.99,
+    "lambda": 0.95,
+    "clip": 0.2,
+    "value_coefficient": 0.5,
+    "entropy_coefficient": 0.01,
+    "learning_rate": 0.0003,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "epsilon": 1e-08,
+    "max_gradient_norm": 0.5,
+    "epochs": 4,
+    "minibatch": 32,
+    "normalize_advantage": true
+  },
+  "cadence": 10,
+  "episode_limit": 128,
+  "evaluation_seed": 12345,
+  "evaluation_horizon": 96,
+  "start_version": 3,
+  "version": 6,
+  "total_transitions": 768,
+  "iterations": [
+    {
+      "version": 4,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "6cd16486c1c2af2ec7950c5c6149518d84253c5ca8ab8f20c9ba348e98b368e7",
+      "loss": -0.030890536196033908,
+      "entropy": 2.813104529207967,
+      "clip_fraction": 0,
+      "gradient_norm": 0.9479374115139362,
+      "parameter_delta": 0.0528666717602354,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 5,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "37457ebe38cf14f3bfba8aa01574350161cf064620018e0c22e728264a108e6b",
+      "loss": -0.03480017016692034,
+      "entropy": 2.8204912126096886,
+      "clip_fraction": 0.03515625,
+      "gradient_norm": 0.989722582518906,
+      "parameter_delta": 0.08056948986469793,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 6,
+      "transitions": 128,
+      "completed_episodes": 2,
+      "reward": 0,
+      "trajectory_sha256": "16de6700f6b92f86b19159f011b7b8e564bcf7fd7ba645ef27337d1147e186a8",
+      "loss": -0.024944790957118903,
+      "entropy": 2.828087592746427,
+      "clip_fraction": 0,
+      "gradient_norm": 0.9933022917815826,
+      "parameter_delta": 0.06009868698700595,
+      "optimizer_steps": 16
+    }
+  ],
+  "initial_evaluation": null,
+  "evaluation": {
+    "isolated": true,
+    "strategies": [
+      {
+        "name": "sample",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 80,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          }
+        ]
+      },
+      {
+        "name": "argmax",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 96,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": false,
+            "truncated": true
+          }
+        ]
+      },
+      {
+        "name": "uniform_random",
+        "mean_reward": 0.6666666666666666,
+        "mean_score_delta": 0.6666666666666666,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 56,
+            "reward": 0,
+            "controlled_score_delta": 0,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 11,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 12,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          }
+        ]
+      },
+      {
+        "name": "builtin_ai",
+        "mean_reward": 1,
+        "mean_score_delta": 1,
+        "episodes": [
+          {
+            "engine_seed": 1902238472,
+            "steps": 9,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 505744712,
+            "steps": 9,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          },
+          {
+            "engine_seed": 56148326,
+            "steps": 8,
+            "reward": 1,
+            "controlled_score_delta": 1,
+            "terminated": true,
+            "truncated": false
+          }
+        ]
+      }
+    ]
+  },
+  "state_before_evaluation_sha256": "8f2571be4ffd6c59929a6dacaa95a9f9f4b3c06eb857411ee97480ee80d1651e",
+  "state_sha256": "8f2571be4ffd6c59929a6dacaa95a9f9f4b3c06eb857411ee97480ee80d1651e",
+  "checkpoint_bytes": 102839,
+  "wall_seconds": 3.003775759
+}

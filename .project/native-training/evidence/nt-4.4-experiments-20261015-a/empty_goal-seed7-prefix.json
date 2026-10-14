@@ -1,0 +1,91 @@
+{
+  "mode": "native_categorical_ppo",
+  "scenario": "empty_goal",
+  "seed": 7,
+  "players": 1,
+  "features": 115,
+  "actions": 19,
+  "hidden": 16,
+  "cadence": 10,
+  "episode_limit": 128,
+  "evaluation_seed": 12345,
+  "evaluation_horizon": 96,
+  "start_version": 0,
+  "version": 3,
+  "total_transitions": 384,
+  "iterations": [
+    {
+      "version": 1,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "1e9b40ba95f0fb4c80fc6c823825d69429397e9f19b17b0e696d1059ff3dd692",
+      "loss": -0.017223964959862236,
+      "entropy": 2.77806655965863,
+      "clip_fraction": 0.009765625,
+      "gradient_norm": 0.960380096174542,
+      "parameter_delta": 0.09352146458434735,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 2,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "d9472421309382d1e3b9d05588d16f15bf44cb8fe68f4a1c4aba34ecf9bc0ab8",
+      "loss": -0.03453796626875935,
+      "entropy": 2.798802072648156,
+      "clip_fraction": 0,
+      "gradient_norm": 0.9327165057344687,
+      "parameter_delta": 0.06607462972744273,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 3,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "8cd9837bf6b383781fccc63b30e9306d7e9bf1e1e2446f77c7b0f573034fa1f3",
+      "loss": -0.021091087362663696,
+      "entropy": 2.811159275157099,
+      "clip_fraction": 0,
+      "gradient_norm": 0.8987718385108355,
+      "parameter_delta": 0.05947060938379393,
+      "optimizer_steps": 16
+    }
+  ],
+  "initial_evaluation": null,
+  "evaluation": {
+    "isolated": true,
+    "strategies": [
+      {
+        "name": "sample",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      },
+      {
+        "name": "argmax",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      },
+      {
+        "name": "uniform_random",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      },
+      {
+        "name": "builtin_ai",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      }
+    ]
+  },
+  "state_before_evaluation_sha256": "33e1f7aa7cd585f2ed7723b5189f5c83e3e53e3c3a2c36e50dcf95a30f27fdb2",
+  "state_sha256": "33e1f7aa7cd585f2ed7723b5189f5c83e3e53e3c3a2c36e50dcf95a30f27fdb2",
+  "checkpoint_bytes": 102243,
+  "wall_seconds": 1.695598857
+}

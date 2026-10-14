@@ -462,3 +462,50 @@ bytes, with shape/checksum/lifecycle/observation and file failure tests. They ar
 included in isolated native validation and the expanded full-engine sanitizer
 entry point. Multi-seed training/evaluation and frozen evaluation isolation
 remain NT-4.4; passing these contracts does not demonstrate learned football skill.
+
+The `native_ppo_train` executable provides real training, frozen evaluation and
+checkpoint resume without Python:
+
+```bash
+cmake --build /tmp/football-policy --target native_ppo_train --parallel 1
+GFOOTBALL_DATA_DIR="$PWD/engine/data" \
+GFOOTBALL_FONT="$PWD/engine/fonts/AlegreyaSansSC-ExtraBold.ttf" \
+  /tmp/football-policy/bin/native_ppo_train --scenario empty_goal --seed 42 \
+  --updates 6 --rollout 128 --hidden 16 --epochs 4 --minibatch 32 \
+  --episode-limit 128 --eval-seed 12345 --eval-episodes 3 --eval-steps 96 \
+  --save /tmp/football-trained.bin
+```
+
+Use `--help` for bounded numeric options and `--right`, `--v2`, `--compact`,
+`--stacked`, `--checkpoints`. The two builtin scenarios are deterministic native
+templates: `empty_goal` is a sparse two-left/one-right roster with ball x=.77,
+duration400 and score/out-of-play/possession-change endings; `11v11` uses the
+project's native default formation and duration3000. They are not an interpreter
+for Python scenario files; the sparse template intentionally uses deterministic
+native physics and explicitly controllable players. Training changes only the
+engine seed per episode, preserving other scenario settings.
+
+`--updates N` means N additional complete updates, including after `--load`.
+Load requires the same root seed, scenario, shape, horizon, cadence, reward and
+optimizer config. `--updates 0 --load FILE` evaluates frozen restored weights.
+`--no-initial-eval` skips the pre-training/pre-resume comparison. An evaluation
+count of zero disables episode sampling; `--save` runs after isolation checks.
+JSON stdout contains actual update metrics/trajectory hashes, version/counts,
+initial/final evaluations, full-state hashes and elapsed time.
+
+`EvaluatePpo` evaluates sampled model actions, argmax model actions, uniformly
+random configured actions, and native built-in-AI action19. It uses separate raw
+environments and RNGs, with the same explicit engine seeds for all strategies.
+The raw evaluation environments admit K=20 solely to allow the built-in-AI
+baseline; model/random use their trained/configured K. Full learner state bytes
+before/after evaluation must match, covering weights, moments, RNGs and the live
+training environment. Evaluated horizon endings remain truncated, and reported
+controlled score delta is a goal difference, not a match win-rate. Reward includes
+checkpoint shaping only if the training config enables it.
+
+The multi-seed experiment validator records full six-update runs, three-update
+prefixes, resumed suffixes in new processes, and evaluation-only restored runs.
+It compares exact iterations/trajectories, final checkpoint bytes and frozen
+evaluations across processes. Short reproducible updates and these baselines do
+not establish convergence or general football skill; report per-seed results and
+the workload limits alongside any training claim.

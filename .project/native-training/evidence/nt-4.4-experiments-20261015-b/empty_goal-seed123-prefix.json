@@ -1,0 +1,109 @@
+{
+  "mode": "native_categorical_ppo",
+  "scenario": "empty_goal",
+  "seed": 123,
+  "players": 1,
+  "features": 115,
+  "actions": 19,
+  "hidden": 16,
+  "right_team": false,
+  "fixed_positions": true,
+  "checkpoint_rewards": false,
+  "ppo": {
+    "gamma": 0.99,
+    "lambda": 0.95,
+    "clip": 0.2,
+    "value_coefficient": 0.5,
+    "entropy_coefficient": 0.01,
+    "learning_rate": 0.0003,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "epsilon": 1e-08,
+    "max_gradient_norm": 0.5,
+    "epochs": 4,
+    "minibatch": 32,
+    "normalize_advantage": true
+  },
+  "cadence": 10,
+  "episode_limit": 128,
+  "evaluation_seed": 12345,
+  "evaluation_horizon": 96,
+  "start_version": 0,
+  "version": 3,
+  "total_transitions": 384,
+  "iterations": [
+    {
+      "version": 1,
+      "transitions": 128,
+      "completed_episodes": 1,
+      "reward": 0,
+      "trajectory_sha256": "6795ac15e31c4c851afb2c566dd6db30936027e32bd8f1cef1793b63c85ec325",
+      "loss": -0.04164130610347376,
+      "entropy": 2.6307327963150633,
+      "clip_fraction": 0.033203125,
+      "gradient_norm": 0.956502856145825,
+      "parameter_delta": 0.09816140900529935,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 2,
+      "transitions": 128,
+      "completed_episodes": 2,
+      "reward": 1,
+      "trajectory_sha256": "a1950cb6415c360388ad6db9afa5c960d452534d1922d30f6ae917eeabbe9db4",
+      "loss": -0.011389732327993415,
+      "entropy": 2.59739504253242,
+      "clip_fraction": 0.013671875,
+      "gradient_norm": 0.9864121914924222,
+      "parameter_delta": 0.07542649438044001,
+      "optimizer_steps": 16
+    },
+    {
+      "version": 3,
+      "transitions": 128,
+      "completed_episodes": 3,
+      "reward": 2,
+      "trajectory_sha256": "81b3909ece4a6b0f5e48c1ce7ae91f23b36165aa52475a032a96146df742aff8",
+      "loss": -0.0007809385701632981,
+      "entropy": 2.58749039634779,
+      "clip_fraction": 0,
+      "gradient_norm": 1.0570818229940342,
+      "parameter_delta": 0.07358962118360256,
+      "optimizer_steps": 16
+    }
+  ],
+  "initial_evaluation": null,
+  "evaluation": {
+    "isolated": true,
+    "strategies": [
+      {
+        "name": "sample",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      },
+      {
+        "name": "argmax",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      },
+      {
+        "name": "uniform_random",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      },
+      {
+        "name": "builtin_ai",
+        "mean_reward": 0,
+        "mean_score_delta": 0,
+        "episodes": []
+      }
+    ]
+  },
+  "state_before_evaluation_sha256": "152778d6f17824a95e185517e6be2c3eac654b525d36d95c8ac8ce210af8ddfb",
+  "state_sha256": "152778d6f17824a95e185517e6be2c3eac654b525d36d95c8ac8ce210af8ddfb",
+  "checkpoint_bytes": 100839,
+  "wall_seconds": 1.805519283
+}

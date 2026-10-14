@@ -64,6 +64,7 @@ def main():
              GFOOTBALL_FONT=str(ROOT / 'engine/fonts/AlegreyaSansSC-ExtraBold.ttf'))
   env['GFOOTBALL_CATEGORICAL_CONTRACT'] = str(build / 'bin/categorical_policy_contract')
   env['GFOOTBALL_PPO_MATH_CONTRACT'] = str(build / 'bin/ppo_math_contract')
+  env['GFOOTBALL_NATIVE_PPO_TRAIN'] = str(build / 'bin/native_ppo_train')
   report = dict(passed=False, platform=platform.platform(), commands=[],
                 git_head=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip())
   before = source_fingerprint()
@@ -97,7 +98,8 @@ def main():
     run('configure-python', configure + ['-DBUILD_PYTHON_BINDINGS=ON',
         '-DPython_EXECUTABLE=' + args.python, '-Dpybind11_DIR=' + pybind_dir])
     run('build-python', ['cmake', '--build', str(build), '--target', 'game',
-                         'categorical_policy_contract', 'ppo_math_contract', 'native_policy_rollout', '--parallel', '1'])
+                         'categorical_policy_contract', 'ppo_math_contract', 'native_policy_rollout',
+                         'native_ppo_train', '--parallel', '1'])
     shutil.copy2(ROOT / 'engine/__init__.py', stage / '__init__.py')
     for name, destination in [('libgame.so', '_gameplayfootball.so'),
                               ('libfootball_engine.so', 'libfootball_engine.so')]:
@@ -121,7 +123,7 @@ def main():
                                'gfootball.test_gymnasium_native', 'gfootball.test_training_snapshot',
                                'gfootball.test_training_resources', 'gfootball.test_training_workers',
                                'gfootball.test_training_sampler', 'gfootball.test_categorical_policy',
-                               'gfootball.test_ppo_math', '-v'])
+                               'gfootball.test_ppo_math', 'gfootball.test_native_ppo_cli', '-v'])
     run('configure-native', configure + ['-DBUILD_PYTHON_BINDINGS=OFF'])
     run('build-native', ['cmake', '--build', str(build), '--target',
                          'engine_native_training_contract', 'engine_training_snapshot_contract',
@@ -137,6 +139,12 @@ def main():
     run('ppo-math-contract', [str(build / 'bin/ppo_math_contract')])
     run('ppo-checkpoint-contract', [str(build / 'bin/engine_ppo_checkpoint_contract')])
     run('native-policy-rollout', [str(build / 'bin/native_policy_rollout'), '42', '11', '32'])
+    run('native-ppo-train', [str(build / 'bin/native_ppo_train'), '--updates', '1', '--rollout', '8',
+                           '--hidden', '8', '--epochs', '2', '--minibatch', '4', '--eval-episodes', '1', '--eval-steps', '16'])
+    run('native-ppo-linkage', ['ldd', str(build / 'bin/native_ppo_train')])
+    ppo_linkage = (output / 'native-ppo-linkage.log').read_text()
+    if any(token in ppo_linkage for token in ('libpython', 'libgame.so', '_gameplayfootball', 'not found')):
+      raise RuntimeError('Native PPO executable has missing or Python adapter dependencies')
     run('native-policy-linkage', ['ldd', str(build / 'bin/native_policy_rollout')])
     policy_linkage = (output / 'native-policy-linkage.log').read_text()
     if any(token in policy_linkage for token in ('libpython', 'libgame.so', '_gameplayfootball', 'not found')):
