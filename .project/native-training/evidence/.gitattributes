@@ -1,2 +1,3 @@
-# Keep raw command logs byte-for-byte, including tool-emitted trailing blank lines.
-*.log whitespace=-blank-at-eof
+# Keep raw command logs byte-for-byte, including progress-line spaces and blank lines.
+# *.log whitespace=-blank-at-eof
+*.log whitespace=-blank-at-eof,-blank-at-eol
