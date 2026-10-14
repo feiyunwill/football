@@ -19,6 +19,10 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parents[2]
+ACCEPTANCE_FILES = ('.project/native-training/validate.py',
+                    '.project/native-training/quality.py',
+                    '.project/native-training/test_quality.py',
+                    '.github/workflows/native-training.yml')
 
 
 def sha(path):
@@ -67,6 +71,9 @@ def main():
   env['GFOOTBALL_NATIVE_PPO_TRAIN'] = str(build / 'bin/native_ppo_train')
   report = dict(passed=False, platform=platform.platform(), commands=[],
                 git_head=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip())
+  report['acceptance_schema'] = 1
+  report['runner_sha256'] = sha(Path(__file__))
+  report['acceptance_inputs'] = {name: sha(ROOT / name) for name in ACCEPTANCE_FILES}
   before = source_fingerprint()
   report['source_before'] = before
 
@@ -124,6 +131,9 @@ def main():
                                'gfootball.test_training_resources', 'gfootball.test_training_workers',
                                'gfootball.test_training_sampler', 'gfootball.test_categorical_policy',
                                'gfootball.test_ppo_math', 'gfootball.test_native_ppo_cli', '-v'])
+    integration = (output / 'python-integration.log').read_text()
+    if 'skipped' in integration or '\nOK\n' not in integration:
+      raise RuntimeError('Required Python integration tests were skipped or did not pass')
     run('configure-native', configure + ['-DBUILD_PYTHON_BINDINGS=OFF'])
     run('build-native', ['cmake', '--build', str(build), '--target',
                          'engine_native_training_contract', 'engine_training_snapshot_contract',
@@ -164,6 +174,8 @@ def main():
     report['source_after'] = source_fingerprint()
     if report['source_after'] != before:
       report.update(passed=False, error='Source changed during validation; rerun against stable sources')
+    if report['acceptance_inputs'] != {name: sha(ROOT / name) for name in ACCEPTANCE_FILES}:
+      report.update(passed=False, error='Acceptance infrastructure changed during validation')
     (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
   print(json.dumps(dict(passed=report['passed'], report=str(output / 'report.json'),
                         error=report.get('error')), indent=2))
