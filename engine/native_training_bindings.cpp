@@ -114,5 +114,6 @@ void BindNativeTraining(py::module_& module) {
         py::gil_scoped_release release;
         env.set_state(owned);
       }, py::arg("state").noconvert())
+      .def("is_closed", &NativeTrainingEnv::is_closed, py::call_guard<py::gil_scoped_release>())
       .def("close", &NativeTrainingEnv::close, py::call_guard<py::gil_scoped_release>());
 }

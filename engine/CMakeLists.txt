@@ -362,6 +362,11 @@ set_target_properties(engine_training_snapshot_contract PROPERTIES RUNTIME_OUTPU
 add_executable(engine_training_restore_contract EXCLUDE_FROM_ALL tests/engine_training_restore_contract.cpp)
 target_link_libraries(engine_training_restore_contract PRIVATE football_engine)
 set_target_properties(engine_training_restore_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+  add_executable(engine_training_soak_contract EXCLUDE_FROM_ALL tests/engine_training_soak_contract.cpp)
+  target_link_libraries(engine_training_soak_contract PRIVATE football_engine)
+  set_target_properties(engine_training_soak_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+endif()
 
 add_executable(engine_state_contract EXCLUDE_FROM_ALL ${ENGINE_STATE_CONTRACT_SOURCES})
 target_link_libraries(engine_state_contract PRIVATE football_engine)

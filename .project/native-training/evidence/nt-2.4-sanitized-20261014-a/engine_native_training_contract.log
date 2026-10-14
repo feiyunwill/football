@@ -1,0 +1,423 @@
+
+=================================================================
+==503785==ERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0550fcd in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:288
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551061 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:289
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05510f5 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:290
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551189 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:291
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df055121d in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:292
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05512b1 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:293
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551345 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:294
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05513d9 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:295
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df055146d in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:296
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0550f39 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:287
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0550fcd in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:288
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551061 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:289
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05510f5 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:290
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551189 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:291
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df055121d in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:292
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05512b1 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:293
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551345 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:294
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05513d9 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:295
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df055146d in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:296
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac1962 in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:112
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df055146d in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:296
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05513d9 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:295
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0550fcd in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:288
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551061 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:289
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05510f5 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:290
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551189 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:291
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df055121d in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:292
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05512b1 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:293
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551345 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:294
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05513d9 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:295
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df055146d in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:296
+    #2 0x733df053c58f in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0550f39 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:287
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0550fcd in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:288
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551061 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:289
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05510f5 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:290
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551189 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:291
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df055121d in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:292
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df05512b1 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:293
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+Direct leak of 240 byte(s) in 1 object(s) allocated from:
+    #0 0x733df1f2d2a1 in operator new(unsigned long) (/usr/lib/libasan.so.8+0x12d2a1) (BuildId: b8a4241051a1621937fdc46e867ba7ecb56d96ea)
+    #1 0x733df0551345 in TeamData::TeamData(int, std::vector<FormationEntry, std::allocator<FormationEntry> > const&) /root/work_space/football/engine/src/data/teamdata.cpp:294
+    #2 0x733df053c620 in MatchData::MatchData() /root/work_space/football/engine/src/data/matchdata.cpp:24
+    #3 0x733df000d6a7 in GameEnv::reset(ScenarioConfig&, bool) /root/work_space/football/engine/src/game_env.cpp:975
+    #4 0x733deff01046 in football::training::NativeTrainingEnv::reset(ScenarioConfig&, int) /root/work_space/football/engine/src/training/native_training.cpp:153
+    #5 0x6534c6ac19cb in main /root/work_space/football/engine/tests/engine_native_training_contract.cpp:113
+    #6 0x733dede27780  (/usr/lib/libc.so.6+0x27780) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #7 0x733dede278b8 in __libc_start_main (/usr/lib/libc.so.6+0x278b8) (BuildId: 503200d7fda94a5dc6058d7e0694e5d1dcb2e372)
+    #8 0x6534c6abd4a4 in _start (/tmp/football-native-sanitizers-20261014/bin/engine_native_training_contract+0x1b4a4) (BuildId: 8be6b1bd065f3907208e86def6d12a1c14684bf0)
+
+SUMMARY: AddressSanitizer: 9120 byte(s) leaked in 38 allocation(s).

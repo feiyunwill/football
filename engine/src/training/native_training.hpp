@@ -55,6 +55,7 @@ class NativeTrainingEnv {
   // Full training snapshot, including history/rewards. Target must already be reset.
   std::string get_state();
   void set_state(std::string_view state);
+  bool is_closed();
   void close();
 
  private:

@@ -402,4 +402,8 @@ void NativeTrainingEnv::close() {
   snapshot_available_ = false;
   env_.close();
 }
+bool NativeTrainingEnv::is_closed() {
+  std::lock_guard lock(mutex_);
+  return closed_;
+}
 }  // namespace football::training

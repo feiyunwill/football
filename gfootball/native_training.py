@@ -157,7 +157,16 @@ class NativeEnvironment:
     self._check_open()
     if type(state) is not bytes:
       raise TypeError('Native snapshot must be immutable bytes')
-    self._native.set_state(state)
+    try:
+      self._native.set_state(state)
+    except BaseException as error:
+      try:
+        if self._native.is_closed():
+          self.close()
+      except BaseException:
+        if hasattr(error, 'add_note'):
+          error.add_note('Native restore status/cleanup also failed.')
+      raise
 
   def snapshot_config(self):
     self._check_open()

@@ -22,6 +22,9 @@
 // 行为一致且避免引入整个 algorithm/string。
 // #include <boost/algorithm/string.hpp>
 #include <cctype>
+#include <array>
+#include <memory>
+#include <stdexcept>
 
 #include "../base/utils.hpp"
 #include "../main.hpp"
@@ -283,18 +286,15 @@ TeamData::TeamData(int teamDatabaseID, const std::vector<FormationEntry> &f) {
 
   tree = loader.Load(factoryTacticsString);
   // load players
-  playerData.push_back(new PlayerData(398, teamDatabaseID == 3));
-  playerData.push_back(new PlayerData(11, teamDatabaseID == 3));
-  playerData.push_back(new PlayerData(254, teamDatabaseID == 3));
-  playerData.push_back(new PlayerData(320, teamDatabaseID == 3));
-  playerData.push_back(new PlayerData(103, teamDatabaseID == 3));
-  playerData.push_back(new PlayerData(188, teamDatabaseID == 3));
-  playerData.push_back(new PlayerData(74, teamDatabaseID == 3));
-  playerData.push_back(new PlayerData(332, teamDatabaseID == 3));
-  playerData.push_back(new PlayerData(290, teamDatabaseID == 3));
-  playerData.push_back(new PlayerData(391, teamDatabaseID == 3));
-  playerData.push_back(new PlayerData(264, teamDatabaseID == 3));
+  // Preserve all eleven construction/RNG draws, including players omitted by sparse scenes.
+  // The old raw-pointer resize discarded the omitted objects without deleting them.
+  constexpr std::array<int, 11> ids{398, 11, 254, 320, 103, 188, 74, 332, 290, 391, 264};
+  if (player_count < 0 || player_count > ids.size()) throw std::invalid_argument("Team supports at most eleven players");
+  std::array<std::unique_ptr<PlayerData>, ids.size()> prepared;
+  for (size_t player = 0; player < ids.size(); ++player)
+    prepared[player] = std::make_unique<PlayerData>(ids[player], teamDatabaseID == 3);
   playerData.resize(player_count);
+  for (size_t player = 0; player < playerData.size(); ++player) playerData[player] = prepared[player].release();
 }
 
 TeamData::~TeamData() {

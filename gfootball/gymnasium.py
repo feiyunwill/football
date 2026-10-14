@@ -275,7 +275,12 @@ TimeLimit wrappers truncate a rollout without redefining the match outcome.
       rng = np.random.Generator(generator)
     except (TypeError, KeyError, OverflowError) as error:
       raise ValueError('Invalid Gym RNG metadata') from error
-    self._env.set_state(native)
+    try:
+      self._env.set_state(native)
+    except BaseException as error:
+      if self._env._closed:
+        self._abort(error)
+      raise
     # All prepared values are owned references; no output transform after mutation.
     self._env._config._values = values
     self._env._config._scenario_values = scenario_values
