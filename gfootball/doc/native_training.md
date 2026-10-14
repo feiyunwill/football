@@ -391,3 +391,74 @@ The engine contract compares 32 single/multi-player, left/right, action-set,
 layout and stacking combinations against direct C++ native transitions and kernel
 states. A separate sanitizer validator covers the standalone policy math, with
 ASan/UBSan/LSan; it does not claim full-engine sanitizer coverage.
+
+`engine/src/training/ppo_math.hpp` and `ppo_learner.hpp` add the native categorical
+PPO update and full learner checkpoint. `PpoLearner` owns a matching policy, Adam,
+sampling/shuffle/episode RNGs and one native environment. It takes a detached
+native `ScenarioConfig`, policy shape, PPO hyperparameters, root seed, cadence,
+episode horizon and checkpoint-reward setting. A collection/update contains
+1..256 joint transitions. Each rollout is collected under one frozen policy;
+old values/log-probs are verified against that policy before the first update.
+
+GAE bootstraps a live or horizon-truncated step from its final observation value,
+uses zero bootstrap for a match terminal, and cuts recursion at either episode
+boundary. Returns use unnormalized advantages; optional advantage normalization
+uses the rollout population standard deviation plus 1e-8. The combined objective
+is clipped joint categorical PPO, half-squared value error with value coefficient,
+and summed categorical entropy. Adam uses bias correction and explicit epsilon;
+minibatch gradients are averaged and globally norm-clipped. Epochs are bounded
+to 1..16 and minibatches to 1..256. A full update prepares model, optimizer and
+shuffle RNG on copies and commits together. If an iteration fails after sampling,
+the learner closes its progressed environment and requires a checkpoint restore;
+it does not silently retry already executed actions.
+
+For C++ callers, link the `football_ppo_learner` CMake target:
+
+```cpp
+PpoLearnerConfig config;
+config.scenario = frame_sync::MakeDefaultScenario(1, 0, 42);
+config.seed = 42;
+PpoLearner learner(config);
+auto metrics = learner.train(128);  // actual Adam/PPO parameter updates
+learner.save("/tmp/football-learner.bin");
+// Create another learner with exactly the same config, then:
+other.load("/tmp/football-learner.bin");
+```
+
+The `FPPO` v1 file is distinct from legacy RLtools TAR and environment-only
+FTRN/FPTR. Its little-endian payload has an exact length and SHA256 checksum,
+algorithm/policy/RNG versions, model/layout/action dimensions, all hyperparameters,
+parameters, Adam first/second moments and step, all live RNG states, policy and
+transition counters, base/current scenario identities, episode ID/step/return,
+and the complete native FTRN state plus current float32 observation and lifecycle.
+It is bounded to 32 MiB; internal model sizes, blobs and counters are validated
+before allocation/use. The checksum detects corruption, not authenticity.
+
+Saving/loading is supported at complete update boundaries (including the initial
+zero-update boundary), when no pending rollout is retained. Mid-rollout recovery
+is not represented by this format. Restore requires the same config/root seed,
+engine build/resources and ABI. It prepares a separate engine, resets the saved
+current scenario/seed, restores its full FTRN state and verifies the duplicated
+observation against the restored engine. Only then are the learner, optimizer,
+RNGs and environment committed together. Any validation or staging failure leaves
+the original target unchanged; a failed staging `NativePolicyEnvironment.restore`
+closes that staging adapter. `NativeTrainingEnv.current_observation()` returns a
+copy without advancing physics or appending another stacked frame.
+
+Checkpoint file I/O reuses the bounded native atomic-file helper: same-directory
+temporary, flush/fsync and atomic replacement; nonregular/symlink reads reject.
+Failures before publication retain the old target; failures after publication
+can leave the complete new checkpoint in place. Checkpoint file support is
+currently validated on Linux/POSIX. Borrowed policy/optimizer views must not be
+retained across train/restore; configuration access returns a detached scenario.
+The learner belongs to its creating process/thread.
+
+The standalone `ppo_math_contract` and NumPy reference verify full MLP/loss
+gradients by finite differences, both advantage signs and clipping branches,
+terminal/truncated/live GAE, population normalization, Adam's first two steps,
+and update failure atomicity/replay. `engine_ppo_checkpoint_contract` performs
+real parameter updates and compares resumed trajectories and complete state
+bytes, with shape/checksum/lifecycle/observation and file failure tests. They are
+included in isolated native validation and the expanded full-engine sanitizer
+entry point. Multi-seed training/evaluation and frozen evaluation isolation
+remain NT-4.4; passing these contracts does not demonstrate learned football skill.

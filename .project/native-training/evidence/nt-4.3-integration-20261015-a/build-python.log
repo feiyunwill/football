@@ -1,0 +1,39 @@
+[  4%] Built target datalib
+[ 10%] Built target utilslib
+[ 17%] Built target gui2lib
+[ 27%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 42%] Built target typeslib
+[ 53%] Built target scenelib
+[ 53%] Built target blunted2
+[ 78%] Built target gamelib
+[ 85%] Built target menulib
+[ 97%] Built target football_engine
+[100%] Building CXX object CMakeFiles/game.dir/native_training_bindings.cpp.o
+[100%] Linking CXX shared library libgame.so
+[100%] Built target game
+[ 50%] Built target football_categorical_policy
+[100%] Building CXX object CMakeFiles/categorical_policy_contract.dir/tests/categorical_policy_contract.cpp.o
+[100%] Linking CXX executable bin/categorical_policy_contract
+[100%] Built target categorical_policy_contract
+[ 33%] Built target football_categorical_policy
+[ 66%] Built target football_ppo_math
+[100%] Built target ppo_math_contract
+[  2%] Built target football_categorical_policy
+[  6%] Built target datalib
+[ 12%] Built target utilslib
+[ 18%] Built target gui2lib
+[ 28%] Built target baselib
+[ 38%] Built target systemsgraphicslib
+[ 40%] Built target loaderslib
+[ 42%] Built target typeslib
+[ 53%] Built target scenelib
+[ 53%] Built target blunted2
+[ 77%] Built target gamelib
+[ 83%] Built target menulib
+[ 95%] Built target football_engine
+[ 97%] Built target football_native_policy
+[100%] Building CXX object CMakeFiles/native_policy_rollout.dir/src/training/native_policy_rollout.cpp.o
+[100%] Linking CXX executable bin/native_policy_rollout
+[100%] Built target native_policy_rollout

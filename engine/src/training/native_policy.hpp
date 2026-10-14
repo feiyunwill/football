@@ -11,6 +11,11 @@ struct NativePolicyStep {
   double reward = 0;
   bool truncated = false;
 };
+struct NativePolicySnapshot {
+  std::string native;
+  ObservationBuffer observation;
+  bool terminated = false, truncated = false;
+};
 
 // Policy and sampling RNG remain caller-owned; this adapter owns one engine.
 class NativePolicyEnvironment {
@@ -24,6 +29,9 @@ class NativePolicyEnvironment {
   std::string kernel_state();
   void close();
   bool needs_reset() const;
+  NativePolicySnapshot snapshot();
+  // Used on a prepared staging owner. A failed restore closes this adapter.
+  void restore(const NativePolicySnapshot& state);
  private:
   void owner() const;
   void open() const;
@@ -34,5 +42,6 @@ class NativePolicyEnvironment {
   uint64_t process_;
   bool ready_ = false;
   bool closed_ = false;
+  bool terminated_ = false, truncated_ = false;
 };
 }  // namespace football::training

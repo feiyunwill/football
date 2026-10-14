@@ -14,6 +14,7 @@ class PolicyRng {
   explicit PolicyRng(uint64_t seed = 0) : state_(seed) {}
   uint64_t next();
   double uniform();
+  uint64_t index(uint64_t bound);
   uint64_t state() const { return state_; }
   void set_state(uint64_t state) { state_ = state; }
  private:

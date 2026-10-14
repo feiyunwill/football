@@ -1,0 +1,82 @@
+[ 22%] Built target gamelib
+[ 31%] Built target menulib
+[ 35%] Built target datalib
+[ 43%] Built target gui2lib
+[ 54%] Built target baselib
+[ 64%] Built target systemsgraphicslib
+[ 64%] Built target loaderslib
+[ 66%] Built target typeslib
+[ 75%] Built target scenelib
+[ 81%] Built target utilslib
+[ 83%] Built target blunted2
+[ 97%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_native_training_contract.dir/tests/engine_native_training_contract.cpp.o
+[100%] Linking CXX executable bin/engine_native_training_contract
+[100%] Built target engine_native_training_contract
+[100%] Built target engine_training_snapshot_contract
+[ 22%] Built target gamelib
+[ 31%] Built target menulib
+[ 35%] Built target datalib
+[ 43%] Built target gui2lib
+[ 54%] Built target baselib
+[ 64%] Built target systemsgraphicslib
+[ 64%] Built target loaderslib
+[ 66%] Built target typeslib
+[ 75%] Built target scenelib
+[ 81%] Built target utilslib
+[ 83%] Built target blunted2
+[ 97%] Built target football_engine
+[ 97%] Building CXX object CMakeFiles/engine_training_restore_contract.dir/tests/engine_training_restore_contract.cpp.o
+[100%] Linking CXX executable bin/engine_training_restore_contract
+[100%] Built target engine_training_restore_contract
+[ 23%] Built target gamelib
+[ 31%] Built target menulib
+[ 36%] Built target datalib
+[ 44%] Built target gui2lib
+[ 55%] Built target baselib
+[ 65%] Built target systemsgraphicslib
+[ 65%] Built target loaderslib
+[ 68%] Built target typeslib
+[ 76%] Built target scenelib
+[ 82%] Built target utilslib
+[ 85%] Built target blunted2
+[100%] Built target football_engine
+[100%] Building CXX object CMakeFiles/engine_training_soak_contract.dir/tests/engine_training_soak_contract.cpp.o
+[100%] Linking CXX executable bin/engine_training_soak_contract
+[100%] Built target engine_training_soak_contract
+[ 22%] Built target gamelib
+[ 30%] Built target menulib
+[ 34%] Built target datalib
+[ 42%] Built target gui2lib
+[ 53%] Built target baselib
+[ 63%] Built target systemsgraphicslib
+[ 63%] Built target loaderslib
+[ 65%] Built target typeslib
+[ 73%] Built target scenelib
+[ 79%] Built target utilslib
+[ 81%] Built target blunted2
+[ 95%] Built target football_engine
+[ 97%] Built target football_categorical_policy
+[ 97%] Built target football_native_policy
+[ 97%] Building CXX object CMakeFiles/engine_native_policy_contract.dir/tests/engine_native_policy_contract.cpp.o
+[100%] Linking CXX executable bin/engine_native_policy_contract
+[100%] Built target engine_native_policy_contract
+[ 21%] Built target gamelib
+[ 29%] Built target menulib
+[ 33%] Built target datalib
+[ 41%] Built target gui2lib
+[ 50%] Built target baselib
+[ 60%] Built target systemsgraphicslib
+[ 60%] Built target loaderslib
+[ 62%] Built target typeslib
+[ 70%] Built target scenelib
+[ 76%] Built target utilslib
+[ 78%] Built target blunted2
+[ 92%] Built target football_engine
+[ 94%] Built target football_categorical_policy
+[ 96%] Built target football_ppo_math
+[ 96%] Built target football_native_policy
+[ 98%] Built target football_ppo_learner
+[100%] Building CXX object CMakeFiles/engine_ppo_checkpoint_contract.dir/tests/engine_ppo_checkpoint_contract.cpp.o
+[100%] Linking CXX executable bin/engine_ppo_checkpoint_contract
+[100%] Built target engine_ppo_checkpoint_contract

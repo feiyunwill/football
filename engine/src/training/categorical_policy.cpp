@@ -16,6 +16,11 @@ uint64_t PolicyRng::next() {
   return value ^ (value >> 31);
 }
 double PolicyRng::uniform() { return static_cast<double>(next() >> 11) * 0x1.0p-53; }
+uint64_t PolicyRng::index(uint64_t bound) {
+  if (!bound) throw std::invalid_argument("Random index bound must be positive");
+  const uint64_t threshold = (uint64_t{0} - bound) % bound;
+  for (;;) { const uint64_t draw = next(); if (draw >= threshold) return draw % bound; }
+}
 
 void PolicySpec::validate() const {
   if (players < 1 || players > kMaxTrainingAgents ||

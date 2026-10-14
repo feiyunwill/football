@@ -366,9 +366,18 @@ set_target_properties(engine_training_restore_contract PROPERTIES RUNTIME_OUTPUT
 add_library(football_categorical_policy STATIC EXCLUDE_FROM_ALL ${FOOTBALL_CATEGORICAL_POLICY_SOURCES}
             src/training/categorical_policy.hpp)
 target_include_directories(football_categorical_policy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_library(football_ppo_math STATIC EXCLUDE_FROM_ALL src/training/ppo_math.cpp src/training/ppo_math.hpp)
+target_link_libraries(football_ppo_math PUBLIC football_categorical_policy)
 add_library(football_native_policy STATIC EXCLUDE_FROM_ALL ${FOOTBALL_NATIVE_POLICY_SOURCES}
             src/training/native_policy.hpp)
 target_link_libraries(football_native_policy PUBLIC football_categorical_policy football_engine)
+add_library(football_ppo_learner STATIC EXCLUDE_FROM_ALL src/training/ppo_learner.cpp src/training/ppo_learner.hpp)
+target_link_libraries(football_ppo_learner PUBLIC football_ppo_math football_native_policy)
+add_executable(ppo_math_contract EXCLUDE_FROM_ALL tests/ppo_math_contract.cpp)
+target_link_libraries(ppo_math_contract PRIVATE football_ppo_math)
+add_executable(engine_ppo_checkpoint_contract EXCLUDE_FROM_ALL tests/engine_ppo_checkpoint_contract.cpp)
+target_link_libraries(engine_ppo_checkpoint_contract PRIVATE football_ppo_learner)
+set_target_properties(ppo_math_contract engine_ppo_checkpoint_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 add_executable(categorical_policy_contract EXCLUDE_FROM_ALL tests/categorical_policy_contract.cpp)
 target_link_libraries(categorical_policy_contract PRIVATE football_categorical_policy)
 add_executable(engine_native_policy_contract EXCLUDE_FROM_ALL tests/engine_native_policy_contract.cpp)

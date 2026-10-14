@@ -311,6 +311,20 @@ std::string NativeTrainingEnv::get_state_digest() {
   return env_.get_state_digest();
 }
 
+ObservationBuffer NativeTrainingEnv::current_observation() {
+  std::lock_guard lock(mutex_);
+  require_open();
+  if (!snapshot_available_) throw std::logic_error("Reset before reading current observation");
+  if (!stacked_) return observations(info_);
+  ObservationBuffer result(env_.scenario_config.left_agents + env_.scenario_config.right_agents, observation_width());
+  for (size_t player = 0; player < result.size(); ++player)
+    for (size_t age = 0; age < kFrameStackFrames; ++age) {
+      const auto& row = history_[(history_next_ + age) % kFrameStackFrames][player];
+      std::copy(row.begin(), row.end(), result[player].begin() + age * kSimple115Features);
+    }
+  return result;
+}
+
 std::string NativeTrainingEnv::get_state() {
   std::lock_guard lock(mutex_);
   require_open();

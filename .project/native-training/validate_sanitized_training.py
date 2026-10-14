@@ -47,18 +47,22 @@ def main():
                      '-DFOOTBALL_ENABLE_SANITIZERS=ON',
                      f'-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY={build / "bin"}'])
     targets = ['engine_native_training_contract', 'engine_training_snapshot_contract',
-               'engine_training_restore_contract', 'engine_training_soak_contract']
+               'engine_training_restore_contract', 'engine_training_soak_contract',
+               'categorical_policy_contract', 'engine_native_policy_contract',
+               'ppo_math_contract', 'engine_ppo_checkpoint_contract']
     run('build', ['cmake', '--build', str(build), '--target', *targets, '--parallel', '1'])
     # Compiler flags and dependency records prove core instrumentation, not only test instrumentation.
     flags = list(build.glob('CMakeFiles/*/flags.make'))
     report['instrumented_targets'] = []
     for path in flags:
-      if path.parent.name in ('football_engine.dir', 'gamelib.dir', 'blunted2.dir', 'baselib.dir'):
+      if path.parent.name in ('football_engine.dir', 'gamelib.dir', 'blunted2.dir', 'baselib.dir',
+                             'football_categorical_policy.dir', 'football_native_policy.dir',
+                             'football_ppo_math.dir', 'football_ppo_learner.dir'):
         text = path.read_text()
         if '-fsanitize=address,undefined' not in text:
           raise RuntimeError(f'Uninstrumented core target: {path.parent.name}')
         report['instrumented_targets'].append(path.parent.name)
-    if len(report['instrumented_targets']) != 4:
+    if len(report['instrumented_targets']) != 8:
       raise RuntimeError('Missing core instrumentation evidence')
     run('linkage', ['ldd', str(build / 'bin/engine_training_restore_contract')])
     linkage = (output / 'linkage.log').read_text()

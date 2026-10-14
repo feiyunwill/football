@@ -1,4 +1,6 @@
 #include "training/native_policy.hpp"
+#include "training/training_snapshot.hpp"
+#include <cmath>
 #include <numeric>
 #include <stdexcept>
 #if defined(_WIN32)
@@ -41,6 +43,7 @@ ObservationBuffer NativePolicyEnvironment::reset(ScenarioConfig& scenario, int c
     auto result = env_.reset(scenario, cadence);
     observation_ = result;
     ready_ = true;
+    terminated_ = truncated_ = false;
     return result;
   } catch (...) {
     close();
@@ -65,6 +68,8 @@ NativePolicyStep NativePolicyEnvironment::step(const CategoricalPolicy& policy, 
     result.truncated = horizon && !result.following.terminated;
     observation_ = result.following.observations;
     ready_ = !result.following.terminated && !result.truncated;
+    terminated_ = result.following.terminated;
+    truncated_ = result.truncated;
     rng = proposed;
     return result;
   } catch (...) {
@@ -79,6 +84,28 @@ const ObservationBuffer& NativePolicyEnvironment::observation() const {
 }
 std::string NativePolicyEnvironment::kernel_state() { open(); return env_.get_state_digest(); }
 bool NativePolicyEnvironment::needs_reset() const { owner(); return !ready_; }
+NativePolicySnapshot NativePolicyEnvironment::snapshot() {
+  open();
+  if (observation_.size() == 0) throw std::logic_error("Reset before saving policy environment");
+  return {env_.get_state(), observation_, terminated_, truncated_};
+}
+void NativePolicyEnvironment::restore(const NativePolicySnapshot& state) {
+  open();
+  try {
+    if (state.observation.size() != spec_.players || state.observation.columns() != spec_.features ||
+        (state.terminated && state.truncated)) throw std::invalid_argument("Policy snapshot shape/lifecycle mismatch");
+    for (float value : state.observation.buffer())
+      if (!std::isfinite(value)) throw std::invalid_argument("Nonfinite policy snapshot observation");
+    auto prepared = state.observation;
+    const auto decoded = football::training::snapshot::Decode(state.native);
+    if (decoded.ready == state.terminated) throw std::invalid_argument("Policy snapshot/native lifecycle mismatch");
+    env_.set_state(state.native);
+    if (env_.current_observation() != prepared) throw std::invalid_argument("Policy snapshot observation disagrees with engine");
+    observation_ = std::move(prepared);
+    terminated_ = state.terminated; truncated_ = state.truncated;
+    ready_ = !terminated_ && !truncated_;
+  } catch (...) { close(); throw; }
+}
 void NativePolicyEnvironment::close() {
   owner();
   if (closed_) return;

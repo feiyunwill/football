@@ -54,6 +54,7 @@ class NativeTrainingEnv {
   TrainingTransition step(std::span<const int> actions);
   TrainingBatch step_many(std::span<const int> actions, size_t steps);
   std::string get_state_digest();
+  ObservationBuffer current_observation();
   // Full training snapshot, including history/rewards. Target must already be reset.
   std::string get_state();
   void set_state(std::string_view state);
