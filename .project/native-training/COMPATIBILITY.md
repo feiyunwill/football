@@ -10,7 +10,7 @@
 | 动作集 | default=19，v2=20（最后一个 built-in AI），索引映射为对应 backend action | v2、sticky release、右侧方向旋转对照；full 不支持 |
 | simple115v2 | float32；四个 team position/direction 块各固定 22 值、缺员 -1；末尾 ball/owner/active/mode | reset、scalar、batch 与 Python 逐值相等 |
 | simple115 | 支持；四个 team 块紧密排列，只在 88 值块末尾补 -1，尾部 27 值与 v2 一致 | NT-1.2：full/sparse/asymmetric、左右视角、reset/scalar/batch 与 Python 对照；full 两布局相同，sparse 不同 |
-| checkpoint rewards | 尚不支持；以后遵循 Python 的每 agent checkpoint 计数、持球和进球补齐规则 | NT-1.3 |
+| checkpoint rewards | 支持 scoring+checkpoints；每 agent 计数，持球且 active 对应 ball owner，十个距离阈值，进球补齐剩余 credit，reset 清零 | NT-1.3：左右单/多人真实密集奖励、部分 credit 后进球、batch 对照；C++ 阈值合约 |
 | scoring | 左侧比分差变化；右侧取反；joint mean 与 info.agent_rewards 保留 | 实际进球、单/多人、右侧对照 |
 | frame stack | 尚不支持；数值堆叠计划沿最后一维拼接，reset 填满历史 | NT-1.4 |
 | 球队视角 | 右侧 team 交换、x/y 坐标与方向旋转、owner 和动作方向翻转；z 保留 | sparse/完整场景对照，active 每玩家独立 |

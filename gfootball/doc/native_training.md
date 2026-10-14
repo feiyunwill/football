@@ -1,7 +1,7 @@
 # Native training backend
 
 The opt-in C++ backend implements headless `simple115`/`simple115v2` observations, joint
-discrete actions, scoring rewards and scenario termination. Python retains
+discrete actions, scoring/optional checkpoint rewards and scenario termination. Python retains
 scenario generation and Gymnasium seed/API handling. The default backend remains
 `python`.
 
@@ -77,10 +77,18 @@ Supported behavior:
 - Action sets `default` (19 actions) and `v2` (20, including built-in AI).
 - Scoring rewards, scenario score/possession/out-of-play termination and match
   clock termination. Gymnasium's external `TimeLimit` remains a truncation.
+- `rewards='scoring,checkpoints'` adds the same per-agent distance checkpoints as
+  Python. Only the active player holding the ball collects checkpoints; scoring
+  fills each agent's remaining credit. Episode reset clears all collected counts,
+  and right-team observations/rewards use its own perspective. Scalar and batch
+  transitions apply the same shaping; `info['score_reward']` remains unshaped.
+  C++ callers enable the optional fifth constructor argument `checkpoint_rewards`
+  (default false); the checkpoint component has ten fixed thresholds and a 0.1
+  reward per newly collected checkpoint, matching the Python wrapper defaults.
 - `info['agent_rewards']` and `info['score_reward']` retain their Python meanings.
 - Engines use the existing admission budget and creating-thread/process ownership.
 
-Rendering, pixels/SMM, stacking, checkpoint rewards, extra
+Rendering, pixels/SMM, stacking, extra
 players, recording, state save/restore and `control_all_players` scenarios are
 outside this backend's first implementation. Unsupported factory/configuration
 options raise an error; the backend does not silently switch to Python.

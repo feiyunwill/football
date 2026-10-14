@@ -9,6 +9,49 @@ void require(bool condition) {
 }
 int main(int, char**) {
   try {
+    football::training::CheckpointRewards checkpoints;
+    SharedInfo checkpoint_info{};
+    checkpoint_info.left_controllers = {ControllerInfo(0), ControllerInfo(1)};
+    checkpoint_info.right_controllers = {ControllerInfo(0), ControllerInfo(1)};
+    checkpoint_info.ball_owned_team = 0;
+    checkpoint_info.ball_owned_player = 1;
+    checkpoint_info.ball_position = Position(0.4f, 0.0f, 0.0f, true);
+    checkpoints.reset(2);
+    std::array<float, 2> rewards{};
+    checkpoints.apply(checkpoint_info, false, rewards);
+    require(rewards[0] == 0 && rewards[1] > 0.49f && rewards[1] < 0.51f);
+    require(checkpoints.collected()[0] == 0 && checkpoints.collected()[1] == 5);
+    rewards = {1.0f, 1.0f};
+    checkpoints.apply(checkpoint_info, false, rewards);
+    require(rewards[0] == 2.0f && rewards[1] == 1.5f);
+    checkpoints.reset(2);
+    checkpoint_info.ball_owned_team = 1;
+    rewards = {-1.0f, -1.0f};
+    checkpoints.apply(checkpoint_info, false, rewards);
+    require(rewards[0] == -1.0f && rewards[1] == -1.0f);
+    require(checkpoints.collected()[0] == 0 && checkpoints.collected()[1] == 0);
+    checkpoint_info.ball_owned_team = 0;
+    constexpr std::array<float, 10> goal_credit = {1.9f, 1.8f, 1.7f, 1.6f, 1.5f,
+                                                 1.4f, 1.3f, 1.2f, 1.1f, 1.0f};
+    for (int boundary = 0; boundary < 10; ++boundary) {
+      checkpoints.reset(1);
+      checkpoint_info.ball_owned_player = 0;
+      const double threshold = 0.99 - 0.8 / 9 * boundary;
+      checkpoint_info.ball_position = Position(1.0 - threshold - 1e-5, 0, 0, true);
+      std::array<float, 1> value{};
+      checkpoints.apply(checkpoint_info, false, value);
+      require(checkpoints.collected()[0] == boundary);
+      checkpoint_info.ball_position = Position(1.0 - threshold + 1e-5, 0, 0, true);
+      value[0] = 0;
+      checkpoints.apply(checkpoint_info, false, value);
+      require(checkpoints.collected()[0] == boundary + 1 && value[0] == 0.1f);
+      value[0] = 0;
+      checkpoints.apply(checkpoint_info, false, value);
+      require(value[0] == 0);
+      value[0] = 1;
+      checkpoints.apply(checkpoint_info, false, value);
+      require(value[0] == goal_credit[boundary] && checkpoints.collected()[0] == 10);
+    }
     auto scenario = frame_sync::MakeDefaultScenario(2, 0, 42);
     scenario->game_duration = 10;
     football::training::NativeTrainingEnv env(160, 90);
@@ -76,7 +119,8 @@ int main(int, char**) {
     // 2026-10-14: the native contract now covers bounded batches and terminal prefixes.
     // std::puts("Native training: joint admission, termination and deterministic reset passed");
     // std::puts("Native training: joint/batch admission, termination and deterministic reset passed");
-    std::puts("Native training: admission, termination, deterministic reset and both 115 layouts passed");
+    // std::puts("Native training: admission, termination, deterministic reset and both 115 layouts passed");
+    std::puts("Native training: admission, termination, reset, both layouts and checkpoint thresholds passed");
     return 0;
   } catch (const std::exception& error) {
     std::fprintf(stderr, "%s\n", error.what());

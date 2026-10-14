@@ -20,9 +20,11 @@ void BindNativeTraining(py::module_& module) {
       // 2026-10-14: the fourth optional argument selects compact simple115 packing.
       // .def(py::init<int, int, bool>(), py::arg("width") = 1280,
       //      py::arg("height") = 720, py::arg("builtin_ai_action") = false)
-      .def(py::init<int, int, bool, bool>(), py::arg("width") = 1280,
+      // 2026-10-14: optional dense checkpoint shaping uses native per-agent state.
+      // .def(py::init<int, int, bool, bool>(), py::arg("width") = 1280,
+      .def(py::init<int, int, bool, bool, bool>(), py::arg("width") = 1280,
            py::arg("height") = 720, py::arg("builtin_ai_action") = false,
-           py::arg("fixed_positions") = true)
+           py::arg("fixed_positions") = true, py::arg("checkpoint_rewards") = false)
       .def("reset", [](NativeTrainingEnv& env, ScenarioConfig& scenario, int physics_steps) {
         std::vector<football::training::Simple115> result;
         {

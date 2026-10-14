@@ -121,7 +121,9 @@ class NativeTrainingTest(unittest.TestCase):
 
   def test_reject_unsupported_options_without_leaking(self):
     before = ENGINE_POOL.stats()['leased']
-    for options in (dict(representation='pixels'), dict(rewards='scoring,checkpoints'),
+    # 2026-10-14: checkpoints are supported; scoring remains required.
+    # for options in (dict(representation='pixels'), dict(rewards='scoring,checkpoints'),
+    for options in (dict(representation='pixels'), dict(rewards='checkpoints'),
                     dict(stacked=True), dict(render_mode='human'), dict(extra_players=[]),
                     dict(other_config_options={'write_video': True}),
                     dict(env_name='tests.multiagent_wrapper')):
@@ -345,6 +347,124 @@ class NativeTrainingTest(unittest.TestCase):
       else:
         self.assertFalse(np.array_equal(origins['simple115'], origins['simple115v2']),
                          'Sparse layouts must use distinct padding positions')
+
+  @staticmethod
+  def checkpoint_wrapper(reference):
+    from gfootball.env.wrappers import CheckpointRewardWrapper
+    wrapper = reference._env
+    while not isinstance(wrapper, CheckpointRewardWrapper):
+      wrapper = wrapper.env
+    return wrapper
+
+  @staticmethod
+  def checkpoint_scene(builder, right=False, score_end=False):
+    from gfootball.env.scenario_builder import Role, Team
+    config = builder.config()
+    config.game_duration = 400
+    config.deterministic = True
+    config.end_episode_on_score = score_end
+    config.end_episode_on_possession_change = False
+    config.end_episode_on_out_of_play = False
+    config.offsides = False
+    builder.SetBallPosition(-0.4 if right else 0.4, 0.0)
+    builder.SetTeam(Team.e_Left)
+    if right:
+      builder.AddPlayer(0.5, 0.3, Role.e_PlayerRole_GK, lazy=True)
+    else:
+      builder.AddPlayer(-1.0, 0.0, Role.e_PlayerRole_GK, lazy=True)
+      builder.AddPlayer(0.38, 0.0, Role.e_PlayerRole_CF, lazy=True)
+    builder.SetTeam(Team.e_Right)
+    if right:
+      builder.AddPlayer(-1.0, 0.0, Role.e_PlayerRole_GK, lazy=True)
+      builder.AddPlayer(0.38, 0.0, Role.e_PlayerRole_CF, lazy=True)
+    else:
+      builder.AddPlayer(0.5, 0.3, Role.e_PlayerRole_GK, lazy=True)
+
+  def test_checkpoint_dense_rewards_match_python_and_reset_for_both_views(self):
+    for left, right, representation in ((1, 0, 'simple115'), (2, 0, 'simple115v2'),
+                                         (0, 1, 'simple115v2'), (0, 2, 'simple115')):
+      with self.subTest(left=left, right=right, representation=representation):
+        def build(builder):
+          self.checkpoint_scene(builder, right=bool(right))
+        with mock.patch('gfootball.scenarios.academy_empty_goal_close.build_scenario', build):
+          options = dict(env_name='academy_empty_goal_close', representation=representation,
+                         rewards='scoring,checkpoints', number_of_left_players_agent_controls=left,
+                         number_of_right_players_agent_controls=right)
+          reference, native = self.make('python', **options), self.make(**options)
+          reference.reset(seed=7)
+          native.reset(seed=7)
+          expected = []
+          action = 0 if left + right == 1 else np.zeros(left + right, dtype=np.int64)
+          for frame in range(10):
+            a, b = reference.step(action), native.step(action)
+            expected.append(a)
+            np.testing.assert_array_equal(a[0], b[0])
+            np.testing.assert_array_equal(a[4]['agent_rewards'], b[4]['agent_rewards'])
+            self.assertEqual(a[1:4], b[1:4])
+            self.assertEqual(a[4]['score_reward'], 0)
+            self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+          counts = self.checkpoint_wrapper(reference)._collected_checkpoints
+          self.assertEqual(max(counts.values()), 5)
+          self.assertTrue(any(row[1] > 0 for row in expected))
+          self.assertEqual(expected[-1][1], 0)
+          digest = self.digest(native, 'native')
+          invalid = np.zeros((2, left + right), dtype=np.int64)
+          invalid[-1, -1] = 19
+          with self.assertRaises(ValueError):
+            native.step_many(invalid)
+          self.assertEqual(digest, self.digest(native, 'native'))
+          a, b = reference.step(action), native.step(action)
+          np.testing.assert_array_equal(a[4]['agent_rewards'], b[4]['agent_rewards'])
+          reference.reset(seed=7)
+          native.reset(seed=7)
+          result = native.step_many(np.zeros((10, left + right), dtype=np.int64))
+          np.testing.assert_array_equal(result[0], np.stack([row[0] for row in expected]))
+          np.testing.assert_array_equal(result[1], [row[1] for row in expected])
+          np.testing.assert_array_equal(result[4]['agent_rewards'],
+                                        np.stack([row[4]['agent_rewards'] for row in expected]))
+          reference.close()
+          native.close()
+
+  def test_checkpoint_goal_fills_remaining_credit_for_each_agent(self):
+    for left, right in ((2, 0), (0, 2)):
+      with self.subTest(left=left, right=right):
+        def build(builder):
+          self.checkpoint_scene(builder, right=bool(right), score_end=True)
+        with mock.patch('gfootball.scenarios.academy_empty_goal_close.build_scenario', build):
+          options = dict(env_name='academy_empty_goal_close', rewards='checkpoints,scoring',
+                         number_of_left_players_agent_controls=left,
+                         number_of_right_players_agent_controls=right)
+          reference, native = self.make('python', **options), self.make(**options)
+          reference.reset(seed=7)
+          native.reset(seed=7)
+          # First claim only the five near midfield checkpoints, then shoot.
+          # Let the actual player acquire the ball before claiming partial credit.
+          for _ in range(10):
+            a = reference.step(np.zeros(2, dtype=np.int64))
+            b = native.step(np.zeros(2, dtype=np.int64))
+            np.testing.assert_array_equal(a[4]['agent_rewards'], b[4]['agent_rewards'])
+          initial = self.checkpoint_wrapper(reference)._collected_checkpoints
+          self.assertEqual(max(initial.values()), 5)
+          for frame in range(120):
+            before = dict(self.checkpoint_wrapper(reference)._collected_checkpoints)
+            action = np.full(2, 12 if frame % 5 == 0 else 5, dtype=np.int64)
+            a, b = reference.step(action), native.step(action)
+            np.testing.assert_array_equal(a[0], b[0])
+            np.testing.assert_array_equal(a[4]['agent_rewards'], b[4]['agent_rewards'])
+            self.assertEqual(a[1:4], b[1:4])
+            self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+            if b[2]:
+              self.assertEqual(b[4]['score_reward'], -1 if right else 1)
+              expected = np.array([1 + 0.1 * (10 - before.get(agent, 0)) for agent in range(2)],
+                                  dtype=np.float32)
+              np.testing.assert_array_equal(expected, b[4]['agent_rewards'])
+              self.assertTrue(any(0 < value < 10 for value in before.values()))
+              self.assertTrue(all(value == 10 for value in self.checkpoint_wrapper(reference)._collected_checkpoints.values()))
+              break
+          else:
+            self.fail('Checkpoint goal fixture did not score')
+          reference.close()
+          native.close()
 
   def test_goal_reward_and_score_termination_match_python(self):
     from gfootball.env.scenario_builder import Role, Team

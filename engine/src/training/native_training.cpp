@@ -56,8 +56,13 @@ Simple115 encode(const SharedInfo& info, bool right, int active, bool fixed_posi
 // 2026-10-14: layout is immutable across episodes, just like the action set.
 // NativeTrainingEnv::NativeTrainingEnv(int width, int height, bool builtin_ai_action)
 //     : builtin_ai_action_(builtin_ai_action) {
-NativeTrainingEnv::NativeTrainingEnv(int width, int height, bool builtin_ai_action, bool fixed_positions)
-    : builtin_ai_action_(builtin_ai_action), fixed_positions_(fixed_positions) {
+// 2026-10-14: checkpoint state is per-agent and reset per episode.
+// NativeTrainingEnv::NativeTrainingEnv(int width, int height, bool builtin_ai_action, bool fixed_positions)
+//     : builtin_ai_action_(builtin_ai_action), fixed_positions_(fixed_positions) {
+NativeTrainingEnv::NativeTrainingEnv(int width, int height, bool builtin_ai_action,
+                                   bool fixed_positions, bool checkpoint_rewards)
+    : builtin_ai_action_(builtin_ai_action), fixed_positions_(fixed_positions),
+      checkpoint_rewards_(checkpoint_rewards) {
   if (width < 1 || width > 8192 || height < 1 || height > 8192 ||
       static_cast<int64_t>(width) * height > 16777216)
     throw std::invalid_argument("Invalid training render dimensions");
@@ -124,6 +129,7 @@ std::vector<Simple115> NativeTrainingEnv::reset(ScenarioConfig& scenario, int ph
   previous_score_diff_ = 0;
   previous_game_mode_ = -1;
   previous_ball_owned_team_ = -1;
+  if (checkpoint_rewards_) checkpoints_.reset(scenario.left_agents + scenario.right_agents);
   auto result = observations(info_);
   ready_ = true;
   return result;
@@ -229,6 +235,7 @@ std::pair<bool, int> NativeTrainingEnv::advance(std::span<const int> actions,
     // result.rewards.assign(count, static_cast<float>(scenario.left_agents ? reward : -reward));
     write_observations(info_, output);
     std::fill(rewards.begin(), rewards.end(), static_cast<float>(scenario.left_agents ? reward : -reward));
+    if (checkpoint_rewards_) checkpoints_.apply(info_, scenario.right_agents != 0, rewards);
     ready_ = !terminated;
     return {terminated, reward};
   } catch (...) {

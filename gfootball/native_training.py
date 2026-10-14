@@ -1,7 +1,7 @@
 """Thin scenario/ownership adapter for the headless C++ training backend.
 
 The four-result interface is consumed by the existing Gymnasium adapter. Both
-115-feature layouts support scoring with single-team control; no silent fallback.
+115-feature layouts support scoring and optional checkpoints with single-team control.
 """
 import numpy as np
 from gymnasium import spaces
@@ -20,8 +20,12 @@ class NativeEnvironment:
     # 2026-10-14: compact simple115 and fixed-block simple115v2 share native semantics.
     # if representation != 'simple115v2' or rewards != 'scoring' or stacked or render:
     #   raise ValueError('Native training requires headless simple115v2/scoring without stacking')
-    if representation not in ('simple115', 'simple115v2') or rewards != 'scoring' or stacked or render:
-      raise ValueError('Native training requires headless simple115/simple115v2 with scoring and no stacking')
+    # 2026-10-14: require scoring, allow checkpoint shaping, reject unknown reward names.
+    reward_names = set(rewards.split(',')) if isinstance(rewards, str) else set()
+    if not reward_names or 'scoring' not in reward_names or reward_names - {'scoring', 'checkpoints'}:
+      raise ValueError('Native rewards require scoring and optionally checkpoints')
+    if representation not in ('simple115', 'simple115v2') or stacked or render:
+      raise ValueError('Native training requires headless simple115/simple115v2 without stacking')
     left, right = number_of_left_players_agent_controls, number_of_right_players_agent_controls
     if (type(left) is not int or type(right) is not int or
         not 0 <= left <= 11 or not 0 <= right <= 11 or (left == 0) == (right == 0)):
@@ -56,7 +60,8 @@ class NativeEnvironment:
     key = EngineKey.current(self._config['render_resolution_x'], self._config['render_resolution_y'])
     try:
       self._native = create_owned_engine(key, lambda: gfootball_engine.NativeTrainingEnv(
-          key.width, key.height, action_set == 'v2', representation == 'simple115v2'))
+          key.width, key.height, action_set == 'v2', representation == 'simple115v2',
+          'checkpoints' in reward_names))
       # Match FootballEnvCore's constructor reset, which does not increment the episode.
       self._config.NewScenario(inc=0)
       self._validate_scenario()

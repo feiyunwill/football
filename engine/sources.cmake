@@ -557,6 +557,7 @@ set(FOOTBALL_NATIVE_RECOVERY_SOURCES src/frame_sync/native_recovery_digest.cpp)
 # 2026-09-15: register the owned resource-loading callback in the shared engine.
 list(APPEND CORE_SOURCES src/game_load.cpp)
 list(APPEND CORE_HEADERS src/training/native_training.hpp)
+list(APPEND CORE_HEADERS src/training/checkpoint_reward.hpp)
 list(APPEND CORE_HEADERS src/game_load.hpp
   src/frame_sync/native_recovery_replay.hpp
   src/frame_sync/native_sdl_thread_state.hpp)

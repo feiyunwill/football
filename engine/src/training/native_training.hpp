@@ -2,6 +2,7 @@
 #pragma once
 
 #include "game_env.hpp"
+#include "training/checkpoint_reward.hpp"
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -35,7 +36,7 @@ class NativeTrainingEnv {
   // 2026-10-14: preserve the fixed layout default while adding legacy compact packing.
   // NativeTrainingEnv(int width, int height, bool builtin_ai_action = false);
   NativeTrainingEnv(int width, int height, bool builtin_ai_action = false,
-                    bool fixed_positions = true);
+                    bool fixed_positions = true, bool checkpoint_rewards = false);
   ~NativeTrainingEnv();
   NativeTrainingEnv() = delete;
   NativeTrainingEnv(const NativeTrainingEnv&) = delete;
@@ -61,6 +62,8 @@ class NativeTrainingEnv {
   bool ready_ = false;
   bool builtin_ai_action_;
   bool fixed_positions_;
+  bool checkpoint_rewards_;
+  CheckpointRewards checkpoints_;
   int previous_score_diff_ = 0;
   int previous_game_mode_ = -1;
   int previous_ball_owned_team_ = -1;
