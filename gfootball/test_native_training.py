@@ -1,5 +1,6 @@
 """C++ training parity against the maintained Python implementation."""
 import random
+import multiprocessing
 import threading
 import unittest
 from unittest import mock
@@ -170,6 +171,130 @@ class NativeTrainingTest(unittest.TestCase):
     env.step(0)
     env.close()
     self.assertEqual(leased - 1, ENGINE_POOL.stats()['leased'])
+
+  @unittest.skipUnless('fork' in multiprocessing.get_all_start_methods(), 'fork is Unix-specific')
+  def test_public_native_api_rejects_fork_before_touching_inherited_resources(self):
+    env = self.make()
+    env.reset(seed=3)
+    digest = self.digest(env, 'native')
+    rng_state = env.np_random.bit_generator.state
+    context = multiprocessing.get_context('fork')
+    receiver, sender = context.Pipe(duplex=False)
+    def child():
+      try:
+        for operation in (lambda: env.step(0), lambda: env.reset(seed=7), env.close,
+                          env.render, lambda: env.step_many([0])):
+          try:
+            operation()
+          except RuntimeError:
+            pass
+          else:
+            raise AssertionError('Inherited native operation was accepted')
+          if env._closed or env._needs_reset or env.np_random.bit_generator.state != rng_state:
+            raise AssertionError('Inherited ownership rejection changed public state')
+        sender.send(None)
+      except BaseException as error:
+        sender.send(repr(error))
+      finally:
+        sender.close()
+    process = context.Process(target=child)
+    try:
+      process.start()
+      sender.close()
+      self.assertTrue(receiver.poll(5), 'Child ownership rejection did not finish')
+      self.assertIsNone(receiver.recv())
+      process.join(5)
+      self.assertEqual(process.exitcode, 0)
+    finally:
+      if process.is_alive():
+        process.terminate()
+      process.join()
+      receiver.close()
+      sender.close()
+    self.assertEqual(digest, self.digest(env, 'native'))
+    env.step(0)
+
+  def test_constructor_and_mutating_reset_failure_refund_native_reservation(self):
+    from gfootball.owned_engine import OwnedEngine
+    invoke = OwnedEngine._invoke
+    class ResetFailure(RuntimeError):
+      pass
+    def reject_reset(owner, name, *args, **kwargs):
+      if name == 'reset':
+        raise ResetFailure('constructor reset failed')
+      return invoke(owner, name, *args, **kwargs)
+    leased = ENGINE_POOL.stats()['leased']
+    with mock.patch.object(OwnedEngine, '_invoke', reject_reset):
+      with self.assertRaisesRegex(ResetFailure, 'constructor reset failed'):
+        self.make()
+    self.assertEqual(leased, ENGINE_POOL.stats()['leased'])
+    env = self.make()
+    env.reset(seed=3)
+    def fail_after_mutation(owner, name, *args, **kwargs):
+      if name == 'reset':
+        invoke(owner, 'step', [0])
+        raise ResetFailure('mutating reset failed')
+      return invoke(owner, name, *args, **kwargs)
+    with mock.patch.object(OwnedEngine, '_invoke', fail_after_mutation):
+      with self.assertRaisesRegex(ResetFailure, 'mutating reset failed'):
+        env.reset(seed=7)
+    self.assertEqual(leased, ENGINE_POOL.stats()['leased'])
+    self.assertTrue(env._closed)
+    with self.assertRaises(RuntimeError):
+      env.reset(seed=3)
+
+  def test_independent_out_of_play_and_possession_termination_match_python(self):
+    from gfootball.env.scenario_builder import Role, Team
+    import gfootball.scenarios.academy_run_to_score as run_to_score
+    for flag in ('end_episode_on_out_of_play', 'end_episode_on_possession_change'):
+      with self.subTest(flag=flag):
+        possession = flag.endswith('possession_change')
+        def build(builder):
+          if possession:
+            run_to_score.build_scenario(builder)
+          else:
+            builder.SetBallPosition(0.0, 0.40)
+            builder.SetTeam(Team.e_Left)
+            builder.AddPlayer(-1.0, 0.0, Role.e_PlayerRole_GK, lazy=True)
+            builder.AddPlayer(0.0, 0.39, Role.e_PlayerRole_CF, lazy=True)
+            builder.SetTeam(Team.e_Right)
+            builder.AddPlayer(-1.0, 0.0, Role.e_PlayerRole_GK, lazy=True)
+          config = builder.config()
+          config.game_duration = 600
+          config.end_episode_on_score = False
+          config.end_episode_on_out_of_play = not possession
+          config.end_episode_on_possession_change = possession
+          config.offsides = False
+        with mock.patch('gfootball.scenarios.academy_empty_goal_close.build_scenario', build):
+          options = dict(env_name='academy_empty_goal_close', other_config_options=dict(
+              game_engine_random_seed=42, action_set='v2'))
+          reference, native = self.make('python', **options), self.make(**options)
+          np.testing.assert_array_equal(reference.reset(seed=7)[0], native.reset(seed=7)[0])
+          previous_owner, previous_mode = -1, -1
+          for frame in range(600):
+            a, b = reference.step(19 if possession else 7), native.step(19 if possession else 7)
+            np.testing.assert_array_equal(a[0], b[0])
+            self.assertEqual(a[1:4], b[1:4])
+            self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+            owner, mode = int(np.argmax(b[0][94:97])) - 1, int(np.argmax(b[0][108:115]))
+            if b[2]:
+              if possession:
+                self.assertNotEqual(owner, -1)
+                self.assertNotEqual(previous_owner, -1)
+                self.assertNotEqual(owner, previous_owner)
+              else:
+                self.assertEqual(previous_mode, 0)
+                self.assertNotEqual(mode, 0)
+              break
+            if owner != -1:
+              previous_owner = owner
+            previous_mode = mode
+          else:
+            self.fail('Scenario did not trigger ' + flag)
+          self.assertLess(frame, 599, 'Termination must occur before the match clock limit')
+          self.assertFalse(b[3])
+          reference.close()
+          native.close()
 
   def test_goal_reward_and_score_termination_match_python(self):
     from gfootball.env.scenario_builder import Role, Team

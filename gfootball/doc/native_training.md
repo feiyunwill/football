@@ -25,6 +25,9 @@ Rebuild the extension from this checkout before selecting the backend. It
 requires the `NativeTrainingEnv` binding, so an older installed extension cannot
 provide it.
 
+Current supported behavior and the staged expansion contract are recorded in
+the [compatibility matrix](../../.project/native-training/COMPATIBILITY.md).
+
 ## Predetermined action batches
 
 The raw native `FootballEnv` also offers `step_many(actions)`. One call executes
