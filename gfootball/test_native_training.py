@@ -552,6 +552,42 @@ class NativeTrainingTest(unittest.TestCase):
         native.step(np.zeros(2, dtype=np.int64))
         np.testing.assert_array_equal(snapshot, result[0])
 
+  def test_raw_native_reset_bounds_and_caller_scenario_ownership(self):
+    from gfootball.env.scenario_builder import Role
+    import gfootball_engine as engine
+    env = self.make()
+    env.reset(seed=7)
+    scenario = env._env._config.ScenarioConfig()
+    digest = self.digest(env, 'native')
+    for left, right in ((-1, 0), (0, -1)):
+      old_left, old_right = scenario.left_agents, scenario.right_agents
+      try:
+        scenario.left_agents, scenario.right_agents = left, right
+        with self.assertRaises(ValueError):
+          env._env._native.reset(scenario, 20)
+        self.assertEqual(digest, self.digest(env, 'native'))
+      finally:
+        scenario.left_agents, scenario.right_agents = old_left, old_right
+    # Oversized opaque vectors are rejected before making a deep scene copy.
+    original = len(scenario.left_team)
+    try:
+      while len(scenario.left_team) <= 11:
+        scenario.left_team.append(engine.FormationEntry(0, 0, Role.e_PlayerRole_CF, True, True))
+      with self.assertRaises(ValueError):
+        env._env._native.reset(scenario, 20)
+      self.assertEqual(digest, self.digest(env, 'native'))
+    finally:
+      while len(scenario.left_team) > original:
+        scenario.left_team.pop()
+    seed, duration = scenario.game_engine_random_seed, scenario.game_duration
+    env._env._native.reset(scenario, 10)
+    self.assertEqual((seed, duration), (scenario.game_engine_random_seed, scenario.game_duration))
+    # Modifying the caller's vectors after reset must not change the live scene.
+    digest = self.digest(env, 'native')
+    scenario.left_team.clear()
+    self.assertEqual(digest, self.digest(env, 'native'))
+    env.step(0)
+
   def test_goal_reward_and_score_termination_match_python(self):
     from gfootball.env.scenario_builder import Role, Team
     def goal_scenario(builder):

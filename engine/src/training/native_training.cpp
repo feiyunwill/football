@@ -138,6 +138,8 @@ ObservationBuffer NativeTrainingEnv::reset(ScenarioConfig& scenario, int physics
     throw std::invalid_argument("physics_steps_per_frame must be in [1, 1000]");
   if (scenario.control_all_players || scenario.real_time ||
       (scenario.left_agents == 0) == (scenario.right_agents == 0) ||
+      // 2026-10-14: signed counts must reject negatives before touching cadence/ready state.
+      scenario.left_agents < 0 || scenario.right_agents < 0 ||
       scenario.left_agents > 11 || scenario.right_agents > 11)
     throw std::invalid_argument("Native training requires single-team control without control_all_players or real_time");
   ready_ = false;

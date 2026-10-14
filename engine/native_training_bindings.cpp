@@ -30,11 +30,17 @@ void BindNativeTraining(py::module_& module) {
            py::arg("fixed_positions") = true, py::arg("checkpoint_rewards") = false,
            py::arg("stacked") = false)
       .def("reset", [](NativeTrainingEnv& env, ScenarioConfig& scenario, int physics_steps) {
+        // 2026-10-14: released work owns a bounded scene value, not mutable Python storage.
+        if (scenario.left_team.size() > football::training::kMaxTrainingAgents ||
+            scenario.right_team.size() > football::training::kMaxTrainingAgents)
+          throw py::value_error("Training teams must contain at most eleven players");
+        ScenarioConfig snapshot = scenario;
         // std::vector<football::training::Simple115> result;
         football::training::ObservationBuffer result;
         {
           py::gil_scoped_release release;
-          result = env.reset(scenario, physics_steps);
+          // result = env.reset(scenario, physics_steps);
+          result = env.reset(snapshot, physics_steps);
         }
         return observations(result);
       }, py::arg("scenario"), py::arg("physics_steps") = 10)

@@ -59,6 +59,13 @@ int main(int, char**) {
     auto initial = env.reset(*scenario, 10);
     require(initial.size() == 2 && initial[0].size() == 115);
     const auto digest = env.get_state_digest();
+    auto invalid_scenario = *scenario;
+    invalid_scenario.left_agents = -1;
+    try {
+      env.reset(invalid_scenario, 20);
+      throw std::runtime_error("Negative controlled-player count was accepted");
+    } catch (const std::invalid_argument&) {}
+    require(digest == env.get_state_digest());
     try {
       env.step(std::array<int, 2>{1, 19});
       throw std::runtime_error("Invalid joint input was accepted");
