@@ -509,3 +509,25 @@ It compares exact iterations/trajectories, final checkpoint bytes and frozen
 evaluations across processes. Short reproducible updates and these baselines do
 not establish convergence or general football skill; report per-seed results and
 the workload limits alongside any training claim.
+
+## Reproduction, delivery and rollback
+
+The staged delivery workflow is documented in
+`.project/native-training/DELIVERY.md`; it builds a clean committed-source wheel,
+installs it in a new environment, and validates a relocated Linux native package.
+For a one-command training/resume/evaluation check with that package, run:
+
+```sh
+python .project/native-training/reproduce_training.py \
+  --program /tmp/football-native-package/native_ppo_train \
+  --output /tmp/football-native-reproduction
+```
+
+This short functional run checks actual parameter updates, full/resumed checkpoint
+bytes and frozen evaluation. It does not demonstrate football skill. See
+`.project/native-training/MIGRATION.md` for configuration matching, opt-in Gym
+examples and rollback, `COMPATIBILITY.md` for backend behavior, `PLATFORMS.md` for
+verified Python/platform/ABI limits, and `QUALITY.md` for continuous acceptance.
+Existing Gym defaults remain `backend='python'`; switching back requires a new
+environment/episode. FPPO, native environment snapshots and legacy RLtools models
+have distinct formats and cannot be interchanged.

@@ -21,7 +21,7 @@
 | truncated | 环境本身 False；标准单步外部 TimeLimit 可截断 | 实际 TimeLimit 对照；batch 只用于 raw env，不执行外部 wrapper hooks |
 | batch | 预设 1..256 步；完整 admission；首个 terminal 前缀；不自动 reset | 非连续输入、非法 suffix、uint64/float/bool/shape/容量、返回数组寿命 |
 | seed | Gymnasium RNG 生成引擎 seed；显式 seed 重置 episode；reverse processing 与配置一致 | 重复序列/digest、Python/NumPy global RNG 不变 |
-| ownership | Native Python adapter 仅创建者 thread/process 操作；拒绝后公开 RNG/config/lifetime 不变 | 错误线程与 Unix fork 合约；C++ 接口仅串行化对象，不承诺跨 fork |
+| ownership | Native Python adapter 仅创建者 thread/process 操作；拒绝后公开 RNG/config/lifetime 不变 | 错误线程与 Unix fork 合约；C++ NativeTrainingEnv 串行化对象且不承诺跨 fork；新增 native policy adapter/PPO learner 也要求创建进程/线程 |
 | failure | 构造/reset/step 输出处理失败，保留主异常并退款/关闭；非法 admission 保留活状态 | 真实资源 reservation、实际 native mutation 后错误注入、正常关闭/重复 close |
 | render | native 不支持 human/rgb_array；render_mode=None 返回 None | 构造拒绝；原有 Python 图形回归保留 |
 | 保存/恢复 | C++ 与 Python/Gym 支持版本化状态和原子文件；目标先 reset 相同场景/seed/cadence/选项，要求相同构建与实际仿真数据；wrapper-aware helper 支持 TimeLimit/OrderEnforcing/PassiveEnvChecker，其他 wrapper 明确拒绝 | NT-2.2/2.3：完整训练回放、PCG64/episode、标准 wrapper 截断/历史、故障回滚、旧文件保留、新进程恢复；digest 仍只代表 kernel |
@@ -46,5 +46,8 @@
 测试验证真实触发原因，避免只靠两套实现同时返回 False。故障注入仅用于资源
 与错误边界；上述数值和终止对照执行真实 GameEnv。
 
-平台以当前 Linux/WSL 实际验收为准。Unix fork 合约在其他平台跳过并明确记录；
-Windows/macOS、wheel/ABI 与长期训练在 S5/S4 验收。
+平台以当前 Linux/WSL 实际验收为准。Unix fork 合约在其他平台跳过并明确记录。
+S4 已验证真实 categorical PPO 更新、完整 learner 恢复与独立冻结评估；短实验
+不支持已学会足球的声明。S5 已验证 CPython3.14 wheel 的干净构建/安装和 Linux
+原生包仓库外迁移，Windows/macOS 与其他 Python minor 的状态见 PLATFORMS.md。
+实际兼容范围与迁移/回滚见 MIGRATION.md；原有 Python backend 仍是默认。
