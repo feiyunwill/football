@@ -353,6 +353,11 @@ add_executable(engine_native_training_contract EXCLUDE_FROM_ALL ${ENGINE_NATIVE_
 target_link_libraries(engine_native_training_contract PRIVATE football_engine)
 set_target_properties(engine_native_training_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
+# Format validation runs without linking GameEnv or Python.
+add_executable(engine_training_snapshot_contract EXCLUDE_FROM_ALL tests/engine_training_snapshot_contract.cpp)
+target_include_directories(engine_training_snapshot_contract PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set_target_properties(engine_training_snapshot_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+
 add_executable(engine_state_contract EXCLUDE_FROM_ALL ${ENGINE_STATE_CONTRACT_SOURCES})
 target_link_libraries(engine_state_contract PRIVATE football_engine)
 set_target_properties(engine_state_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})

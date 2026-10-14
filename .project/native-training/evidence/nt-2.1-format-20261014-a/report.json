@@ -1,0 +1,114 @@
+{
+  "passed": true,
+  "commands": [
+    {
+      "name": "compiler",
+      "command": [
+        "c++",
+        "--version"
+      ],
+      "exit_code": 0,
+      "seconds": 0.0016310880000673933,
+      "sha256": "0b52fa36f98d1a1ff3f77256f64c13ac7e2264cf7f072ea7943756a0ef378028"
+    },
+    {
+      "name": "configure",
+      "command": [
+        "cmake",
+        "-S",
+        "/root/work_space/football/engine",
+        "-B",
+        "/tmp/football-native-assessment-20261014/native-only",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DCMAKE_CXX_STANDARD=23",
+        "-DBUILD_PYTHON_BINDINGS=OFF",
+        "-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-native-assessment-20261014/native-only/bin"
+      ],
+      "exit_code": 0,
+      "seconds": 0.75492725300046,
+      "sha256": "d57a0b55a494ae3af52973b98648cbe30079c8f6e4a4f85b670769cdf36ea88f"
+    },
+    {
+      "name": "build",
+      "command": [
+        "cmake",
+        "--build",
+        "/tmp/football-native-assessment-20261014/native-only",
+        "--target",
+        "engine_training_snapshot_contract",
+        "--parallel",
+        "1"
+      ],
+      "exit_code": 0,
+      "seconds": 2.517039824000676,
+      "sha256": "4b2dc6d6a72fb45d1d7dc9e47be110786844d7aff365fdac92e4f521b0ed5636"
+    },
+    {
+      "name": "format-contract",
+      "command": [
+        "/tmp/football-native-assessment-20261014/native-only/bin/engine_training_snapshot_contract"
+      ],
+      "exit_code": 0,
+      "seconds": 0.18947148400002334,
+      "sha256": "a62bc6854d506c22f8052892a87de9708df8e928dca74bda8eb0e9a57029cd4a"
+    },
+    {
+      "name": "linkage",
+      "command": [
+        "ldd",
+        "/tmp/football-native-assessment-20261014/native-only/bin/engine_training_snapshot_contract"
+      ],
+      "exit_code": 0,
+      "seconds": 0.005261387999780709,
+      "sha256": "021475feba64a31793ce3db5c7a12d0b3d645571ae44424d99b5126681e02c13"
+    },
+    {
+      "name": "sanitizer-build",
+      "command": [
+        "c++",
+        "-std=c++23",
+        "-g",
+        "-O1",
+        "-fno-omit-frame-pointer",
+        "-fsanitize=address,undefined",
+        "-I",
+        "/root/work_space/football/engine/src",
+        "/root/work_space/football/engine/tests/engine_training_snapshot_contract.cpp",
+        "-o",
+        "/tmp/football-native-assessment-20261014/native-only/bin/engine_training_snapshot_sanitized"
+      ],
+      "exit_code": 0,
+      "seconds": 4.221643482000218,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "sanitizer-contract",
+      "command": [
+        "/tmp/football-native-assessment-20261014/native-only/bin/engine_training_snapshot_sanitized"
+      ],
+      "exit_code": 0,
+      "seconds": 0.4245080170003348,
+      "sha256": "a62bc6854d506c22f8052892a87de9708df8e928dca74bda8eb0e9a57029cd4a"
+    }
+  ],
+  "source_sha256": {
+    "engine/src/training/training_snapshot.hpp": "8b91cb6ee497a27bf71cb8cd972d119d03a46f76d760537b4af1d1beb36d3f46",
+    "engine/src/training/observation_buffer.hpp": "9c1365f62548c6c55a9a210acf9bbe6adc66da010bf4bd12c52d8aa66bf5cc58",
+    "engine/src/base/snapshot_envelope.hpp": "533f5a364304fbf66b72733d233cd443530063b1eaf5ccff73b26a45711a84a0",
+    "engine/tests/engine_training_snapshot_contract.cpp": "42a0942ba4ed1f72d6132c436ae49541d7e0bc3901e8727520aa9d26fd7c3d48",
+    "engine/CMakeLists.txt": "e081ebcc5a07561d4b7fa5b8c20d50037178e755ac222d08211ec3cf23798422",
+    "engine/sources.cmake": "c00703507436565ecf8fdeb2cbc0c14cc9f32c683c1752e1812b7f8df3df397b",
+    ".project/native-training/validate_snapshot_format.py": "4eb4e46c13cd9f23e6176da7b4bac9f1f318752ec3de5e021a38e182f0fab1a7"
+  },
+  "source_sha256_after": {
+    "engine/src/training/training_snapshot.hpp": "8b91cb6ee497a27bf71cb8cd972d119d03a46f76d760537b4af1d1beb36d3f46",
+    "engine/src/training/observation_buffer.hpp": "9c1365f62548c6c55a9a210acf9bbe6adc66da010bf4bd12c52d8aa66bf5cc58",
+    "engine/src/base/snapshot_envelope.hpp": "533f5a364304fbf66b72733d233cd443530063b1eaf5ccff73b26a45711a84a0",
+    "engine/tests/engine_training_snapshot_contract.cpp": "42a0942ba4ed1f72d6132c436ae49541d7e0bc3901e8727520aa9d26fd7c3d48",
+    "engine/CMakeLists.txt": "e081ebcc5a07561d4b7fa5b8c20d50037178e755ac222d08211ec3cf23798422",
+    "engine/sources.cmake": "c00703507436565ecf8fdeb2cbc0c14cc9f32c683c1752e1812b7f8df3df397b",
+    ".project/native-training/validate_snapshot_format.py": "4eb4e46c13cd9f23e6176da7b4bac9f1f318752ec3de5e021a38e182f0fab1a7"
+  },
+  "artifact_sha256": "5e630f5aee0691a6c8de87e3a4804b0947ce04281c64415af7b11dcca8e760f9",
+  "error": null
+}
