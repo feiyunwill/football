@@ -719,5 +719,29 @@ class NativeTrainingTest(unittest.TestCase):
       env.step_many([0])
 
 
+  def test_optional_profiling_preserves_scalar_batch_and_disabled_counters(self):
+    env, control = self.make(), self.make()
+    env.reset(seed=42); control.reset(seed=42)
+    self.assertTrue(all(value == 0 for value in env._env._native.get_profile().values()))
+    for action in (5, 0, 13):
+      env.step(action); control.step(action)
+    self.assertTrue(all(value == 0 for value in env._env._native.get_profile().values()))
+    env._env._native.enable_profiling(True)
+    for action in (1, 5, 0):
+      a, b = env.step(action), control.step(action)
+      np.testing.assert_array_equal(a[0], b[0])
+      self.assertEqual(a[1:4], b[1:4])
+    env.step_many([0, 5, 1])
+    for action in (0, 5, 1): control.step(action)
+    self.assertEqual(self.digest(env, 'native'), self.digest(control, 'native'))
+    profile = env._env._native.get_profile()
+    self.assertEqual(profile['transitions'], 6)
+    self.assertGreaterEqual(profile['engine_calls'], 6)
+    self.assertGreater(profile['engine_ns'], 0)
+    self.assertGreater(profile['binding_output_ns'], 0)
+    with self.assertRaises(TypeError): env._env._native.enable_profiling(1)
+    env._env._native.enable_profiling(False)
+    self.assertTrue(all(value == 0 for value in env._env._native.get_profile().values()))
+
 if __name__ == '__main__':
   unittest.main()

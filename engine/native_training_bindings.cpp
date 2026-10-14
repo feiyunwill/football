@@ -46,18 +46,23 @@ void BindNativeTraining(py::module_& module) {
         return observations(result);
       }, py::arg("scenario"), py::arg("physics_steps") = 10)
       .def("step", [](NativeTrainingEnv& env, const std::vector<int>& actions) {
+        const bool profiling = env.profiling_enabled();
         football::training::TrainingTransition result;
         {
           py::gil_scoped_release release;
           result = env.step(actions);
         }
+        const auto output_start = profiling ? std::chrono::steady_clock::now() : std::chrono::steady_clock::time_point{};
         py::array_t<float> rewards(result.rewards.size());
         if (!result.rewards.empty())
           std::memcpy(rewards.mutable_data(), result.rewards.data(), result.rewards.size() * sizeof(float));
-        return py::make_tuple(observations(result.observations), rewards,
-                              result.terminated, result.score_reward);
+        auto tuple = py::make_tuple(observations(result.observations), rewards, result.terminated, result.score_reward);
+        if (profiling) env.record_binding_output(std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::steady_clock::now() - output_start).count());
+        return tuple;
       })
       .def("step_many", [](NativeTrainingEnv& env, const py::array& actions) {
+        const bool profiling = env.profiling_enabled();
         const char kind = actions.dtype().kind();
         if ((kind != 'i' && kind != 'u') || actions.ndim() != 2 ||
             actions.shape(0) < 1 || actions.shape(0) > football::training::kMaxTrainingBatchSteps ||
@@ -78,6 +83,7 @@ void BindNativeTraining(py::module_& module) {
           py::gil_scoped_release release;
           result = env.step_many(input, requested_steps);
         }
+        const auto output_start = profiling ? std::chrono::steady_clock::now() : std::chrono::steady_clock::time_point{};
         const auto steps = static_cast<py::ssize_t>(result.terminated.size());
         const auto players = static_cast<py::ssize_t>(result.players);
         // py::array_t<float> rows({steps, players, py::ssize_t{115}});
@@ -90,7 +96,10 @@ void BindNativeTraining(py::module_& module) {
         std::memcpy(rewards.mutable_data(), result.rewards.data(), result.rewards.size() * sizeof(float));
         std::memcpy(scores.mutable_data(), result.score_rewards.data(), result.score_rewards.size() * sizeof(int));
         for (py::ssize_t i = 0; i < steps; ++i) terminated.mutable_data()[i] = result.terminated[i] != 0;
-        return py::make_tuple(rows, rewards, terminated, scores);
+        auto tuple = py::make_tuple(rows, rewards, terminated, scores);
+        if (profiling) env.record_binding_output(std::chrono::duration_cast<std::chrono::nanoseconds>(
+            std::chrono::steady_clock::now() - output_start).count());
+        return tuple;
       }, py::arg("actions").noconvert())
       .def("get_state_digest", [](NativeTrainingEnv& env) {
         std::string result;
@@ -115,5 +124,20 @@ void BindNativeTraining(py::module_& module) {
         env.set_state(owned);
       }, py::arg("state").noconvert())
       .def("is_closed", &NativeTrainingEnv::is_closed, py::call_guard<py::gil_scoped_release>())
+      .def("enable_profiling", [](NativeTrainingEnv& env, const py::object& enabled) {
+        if (!PyBool_Check(enabled.ptr())) throw py::type_error("Profiling flag must be bool");
+        const bool flag = enabled.cast<bool>();
+        py::gil_scoped_release release; env.enable_profiling(flag);
+      })
+      .def("get_profile", [](NativeTrainingEnv& env) {
+        football::training::TrainingProfile p;
+        { py::gil_scoped_release release; p = env.get_profile(); }
+        py::dict result;
+        result["transitions"] = p.transitions; result["engine_calls"] = p.engine_calls;
+        result["action_ns"] = p.action_ns; result["engine_ns"] = p.engine_ns; result["info_ns"] = p.info_ns;
+        result["transition_ns"] = p.transition_ns; result["encoding_ns"] = p.encoding_ns; result["reward_ns"] = p.reward_ns;
+        result["binding_output_ns"] = p.binding_output_ns;
+        return result;
+      })
       .def("close", &NativeTrainingEnv::close, py::call_guard<py::gil_scoped_release>());
 }

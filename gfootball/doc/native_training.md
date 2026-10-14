@@ -210,3 +210,19 @@ The benchmark rotates the order of Python, native scalar and native batch modes,
 excludes reset and warmup, and checks final state digests. Add `--players 11` for
 joint-action workloads. It measures predetermined-action stepping, not policy
 inference or end-to-end PPO training.
+
+For optional native phase timing, call the owned native object's
+`enable_profiling(True)` after warmup, then `get_profile()` after a rollout.
+Enabling or disabling resets the counters; the default is disabled. Counts cover
+returned transitions and actual engine calls (including skipped stoppages), with
+nanosecond totals for action, engine step, get_info, termination/history, encoding,
+reward and NumPy output construction. They are diagnostic values, excluded from
+snapshots/digests. Disabled timing does not read the clock but retains flag checks.
+
+`python -m gfootball.profile_native_training --output profiles.json` measures
+1/11 players, cadence 2/10, rotating repeated raw/Gym/scalar/batch and observation
+feedback workloads. It reports wall time, policy time, phase timing and unclassified
+residual separately, and rejects divergent final digests. The feedback heuristic
+is not model inference. Raw evidence and the baseline interpretation are in
+`.project/native-training/PERFORMANCE.md`; timing-enabled results and normal
+throughput are separate, and host scheduling variation must be considered.

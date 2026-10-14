@@ -4,7 +4,9 @@
 #include "game_env.hpp"
 #include "training/checkpoint_reward.hpp"
 #include "training/observation_buffer.hpp"
+#include "training/training_profile.hpp"
 #include <array>
+#include <atomic>
 #include <cstddef>
 #include <cstdint>
 #include <mutex>
@@ -56,6 +58,10 @@ class NativeTrainingEnv {
   std::string get_state();
   void set_state(std::string_view state);
   bool is_closed();
+  void enable_profiling(bool enabled);
+  TrainingProfile get_profile();
+  bool profiling_enabled() const { return profiling_enabled_.load(std::memory_order_relaxed); }
+  void record_binding_output(uint64_t nanoseconds);
   void close();
 
  private:
@@ -74,6 +80,8 @@ class NativeTrainingEnv {
   bool closed_ = false;
   bool ready_ = false;
   bool snapshot_available_ = false;
+  std::atomic<bool> profiling_enabled_{false};
+  TrainingProfile profile_;
   std::string scenario_identity_;
   bool builtin_ai_action_;
   bool fixed_positions_;

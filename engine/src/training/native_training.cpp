@@ -232,6 +232,9 @@ std::pair<bool, int> NativeTrainingEnv::advance(std::span<const int> actions,
                                              std::span<float> rewards) {
   const auto& scenario = env_.scenario_config;
   try {
+    const bool profiling = profiling_enabled();
+    {
+    ProfileTimer timer(profile_.action_ns, profiling);
     size_t index = 0;
     for (bool left : {true, false}) {
       int agents = left ? scenario.left_agents : scenario.right_agents;
@@ -252,12 +255,18 @@ std::pair<bool, int> NativeTrainingEnv::advance(std::span<const int> actions,
         env_.action(action, left, player);
       }
     }
+    }
     do {
-      env_.step();
-      info_ = env_.get_info();
+      { ProfileTimer timer(profile_.engine_ns, profiling); env_.step(); }
+      { ProfileTimer timer(profile_.info_ns, profiling); info_ = env_.get_info(); }
+      if (profiling) ++profile_.engine_calls;
     } while (!info_.is_in_play);
     const int mode = static_cast<int>(info_.game_mode);
-    bool terminated =
+    bool terminated;
+    int reward;
+    {
+    ProfileTimer timer(profile_.transition_ns, profiling);
+    terminated =
         (scenario.end_episode_on_score && (info_.left_goals > 0 || info_.right_goals > 0)) ||
         (scenario.end_episode_on_out_of_play && mode != e_GameMode_Normal &&
          previous_game_mode_ == e_GameMode_Normal) ||
@@ -267,7 +276,7 @@ std::pair<bool, int> NativeTrainingEnv::advance(std::span<const int> actions,
     previous_game_mode_ = mode;
     if (info_.ball_owned_team != -1) previous_ball_owned_team_ = info_.ball_owned_team;
     int score = info_.left_goals - info_.right_goals;
-    int reward = score - previous_score_diff_;
+    reward = score - previous_score_diff_;
     previous_score_diff_ = score;
     if (mode == e_GameMode_Normal) env_.waiting_for_game_count = 0;
     else {
@@ -276,13 +285,18 @@ std::pair<bool, int> NativeTrainingEnv::advance(std::span<const int> actions,
       ++env_.waiting_for_game_count;
     }
     if (terminated) env_.state = game_done;
+    }
     // 2026-10-14: write into caller-owned buffers, without per-frame allocations.
     // TrainingTransition result{observations(info_), {}, terminated, reward};
     // result.rewards.assign(count, static_cast<float>(scenario.left_agents ? reward : -reward));
-    write_observations(info_, output);
-    std::fill(rewards.begin(), rewards.end(), static_cast<float>(scenario.left_agents ? reward : -reward));
-    if (checkpoint_rewards_) checkpoints_.apply(info_, scenario.right_agents != 0, rewards);
+    { ProfileTimer timer(profile_.encoding_ns, profiling); write_observations(info_, output); }
+    {
+      ProfileTimer timer(profile_.reward_ns, profiling);
+      std::fill(rewards.begin(), rewards.end(), static_cast<float>(scenario.left_agents ? reward : -reward));
+      if (checkpoint_rewards_) checkpoints_.apply(info_, scenario.right_agents != 0, rewards);
+    }
     ready_ = !terminated;
+    if (profiling) ++profile_.transitions;
     return {terminated, reward};
   } catch (...) {
     ready_ = false;
@@ -415,5 +429,20 @@ void NativeTrainingEnv::close() {
 bool NativeTrainingEnv::is_closed() {
   std::lock_guard lock(mutex_);
   return closed_;
+}
+void NativeTrainingEnv::enable_profiling(bool enabled) {
+  std::lock_guard lock(mutex_);
+  require_open();
+  profiling_enabled_ = enabled;
+  profile_ = {};
+}
+TrainingProfile NativeTrainingEnv::get_profile() {
+  std::lock_guard lock(mutex_);
+  require_open();
+  return profile_;
+}
+void NativeTrainingEnv::record_binding_output(uint64_t nanoseconds) {
+  std::lock_guard lock(mutex_);
+  if (profiling_enabled()) profile_.binding_output_ns += nanoseconds;
 }
 }  // namespace football::training

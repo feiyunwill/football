@@ -3,7 +3,7 @@
     "objective":  "兼容、可复现、可独立运行的 C++ 训练链路",
     "created":  "2026-10-14",
     "active_stage":  "S3",
-    "active_task":  "NT-3.1",
+    "active_task":  "NT-3.2",
     "stages":  [
                    {
                        "id":  "S0",
@@ -96,12 +96,13 @@
                        "tasks":  [
                                      {
                                          "id":  "NT-3.1",
-                                         "status":  "in_progress",
-                                         "commit":  null
+                                         "status":  "complete",
+                                         "commit":  null,
+                                         "evidence":  "evidence/nt-3.1-profile-20261015-a/report.json"
                                      },
                                      {
                                          "id":  "NT-3.2",
-                                         "status":  "pending",
+                                         "status":  "in_progress",
                                          "commit":  null
                                      },
                                      {
