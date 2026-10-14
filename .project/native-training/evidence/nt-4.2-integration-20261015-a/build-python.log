@@ -1,0 +1,34 @@
+[  4%] Built target datalib
+[ 14%] Built target scenelib
+[ 20%] Built target utilslib
+[ 26%] Built target gui2lib
+[ 36%] Built target baselib
+[ 46%] Built target systemsgraphicslib
+[ 48%] Built target loaderslib
+[ 51%] Built target typeslib
+[ 53%] Built target blunted2
+[ 77%] Built target gamelib
+[ 85%] Built target menulib
+[ 87%] Building CXX object CMakeFiles/football_engine.dir/src/training/snapshot_identity.cpp.o
+[ 87%] Linking CXX shared library libfootball_engine.so
+[ 97%] Built target football_engine
+[100%] Linking CXX shared library libgame.so
+[100%] Built target game
+Built target football_categorical_policy
+Built target categorical_policy_contract
+[  0%] Built target football_categorical_policy
+[  4%] Built target datalib
+[ 14%] Built target scenelib
+[ 20%] Built target utilslib
+[ 26%] Built target gui2lib
+[ 36%] Built target baselib
+[ 46%] Built target systemsgraphicslib
+[ 48%] Built target loaderslib
+[ 51%] Built target typeslib
+[ 53%] Built target blunted2
+[ 77%] Built target gamelib
+[ 85%] Built target menulib
+[ 97%] Built target football_engine
+[100%] Built target football_native_policy
+[100%] Linking CXX executable bin/native_policy_rollout
+[100%] Built target native_policy_rollout

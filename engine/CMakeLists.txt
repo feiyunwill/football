@@ -362,6 +362,22 @@ set_target_properties(engine_training_snapshot_contract PROPERTIES RUNTIME_OUTPU
 add_executable(engine_training_restore_contract EXCLUDE_FROM_ALL tests/engine_training_restore_contract.cpp)
 target_link_libraries(engine_training_restore_contract PRIVATE football_engine)
 set_target_properties(engine_training_restore_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+
+add_library(football_categorical_policy STATIC EXCLUDE_FROM_ALL ${FOOTBALL_CATEGORICAL_POLICY_SOURCES}
+            src/training/categorical_policy.hpp)
+target_include_directories(football_categorical_policy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+add_library(football_native_policy STATIC EXCLUDE_FROM_ALL ${FOOTBALL_NATIVE_POLICY_SOURCES}
+            src/training/native_policy.hpp)
+target_link_libraries(football_native_policy PUBLIC football_categorical_policy football_engine)
+add_executable(categorical_policy_contract EXCLUDE_FROM_ALL tests/categorical_policy_contract.cpp)
+target_link_libraries(categorical_policy_contract PRIVATE football_categorical_policy)
+add_executable(engine_native_policy_contract EXCLUDE_FROM_ALL tests/engine_native_policy_contract.cpp)
+target_link_libraries(engine_native_policy_contract PRIVATE football_native_policy)
+add_executable(native_policy_rollout EXCLUDE_FROM_ALL src/training/native_policy_rollout.cpp)
+target_link_libraries(native_policy_rollout PRIVATE football_native_policy)
+foreach(target categorical_policy_contract engine_native_policy_contract native_policy_rollout)
+  set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+endforeach()
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   add_executable(engine_training_soak_contract EXCLUDE_FROM_ALL tests/engine_training_soak_contract.cpp)
   target_link_libraries(engine_training_soak_contract PRIVATE football_engine)

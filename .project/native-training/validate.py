@@ -62,6 +62,7 @@ def main():
   env.update(PYTHONPATH=str(stage.parent) + os.pathsep + str(ROOT),
              GFOOTBALL_DATA_DIR=str(ROOT / 'engine/data'),
              GFOOTBALL_FONT=str(ROOT / 'engine/fonts/AlegreyaSansSC-ExtraBold.ttf'))
+  env['GFOOTBALL_CATEGORICAL_CONTRACT'] = str(build / 'bin/categorical_policy_contract')
   report = dict(passed=False, platform=platform.platform(), commands=[],
                 git_head=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip())
   before = source_fingerprint()
@@ -94,7 +95,8 @@ def main():
                  '-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=' + str(build / 'bin')]
     run('configure-python', configure + ['-DBUILD_PYTHON_BINDINGS=ON',
         '-DPython_EXECUTABLE=' + args.python, '-Dpybind11_DIR=' + pybind_dir])
-    run('build-python', ['cmake', '--build', str(build), '--target', 'game', '--parallel', '1'])
+    run('build-python', ['cmake', '--build', str(build), '--target', 'game',
+                         'categorical_policy_contract', 'native_policy_rollout', '--parallel', '1'])
     shutil.copy2(ROOT / 'engine/__init__.py', stage / '__init__.py')
     for name, destination in [('libgame.so', '_gameplayfootball.so'),
                               ('libfootball_engine.so', 'libfootball_engine.so')]:
@@ -117,16 +119,24 @@ def main():
     run('python-integration', [args.python, '-m', 'unittest', 'gfootball.test_native_training',
                                'gfootball.test_gymnasium_native', 'gfootball.test_training_snapshot',
                                'gfootball.test_training_resources', 'gfootball.test_training_workers',
-                               'gfootball.test_training_sampler', '-v'])
+                               'gfootball.test_training_sampler', 'gfootball.test_categorical_policy', '-v'])
     run('configure-native', configure + ['-DBUILD_PYTHON_BINDINGS=OFF'])
     run('build-native', ['cmake', '--build', str(build), '--target',
                          'engine_native_training_contract', 'engine_training_snapshot_contract',
-                         'engine_training_restore_contract', 'engine_training_soak_contract', '--parallel', '1'])
+                         'engine_training_restore_contract', 'engine_training_soak_contract',
+                         'engine_native_policy_contract', '--parallel', '1'])
     contract = build / 'bin/engine_native_training_contract'
     run('native-contract', [str(contract)])
     run('snapshot-format-contract', [str(build / 'bin/engine_training_snapshot_contract')])
     run('training-restore-contract', [str(build / 'bin/engine_training_restore_contract')])
     run('training-soak-contract', [str(build / 'bin/engine_training_soak_contract')])
+    run('categorical-policy-contract', [str(build / 'bin/categorical_policy_contract')])
+    run('native-policy-contract', [str(build / 'bin/engine_native_policy_contract')])
+    run('native-policy-rollout', [str(build / 'bin/native_policy_rollout'), '42', '11', '32'])
+    run('native-policy-linkage', ['ldd', str(build / 'bin/native_policy_rollout')])
+    policy_linkage = (output / 'native-policy-linkage.log').read_text()
+    if any(token in policy_linkage for token in ('libpython', 'libgame.so', '_gameplayfootball', 'not found')):
+      raise RuntimeError('Policy rollout has missing or Python adapter dependencies')
     run('native-linkage', ['ldd', str(contract)])
     linkage = (output / 'native-linkage.log').read_text()
     if any(token in linkage for token in ('libpython', 'libgame.so', '_gameplayfootball', 'not found')):

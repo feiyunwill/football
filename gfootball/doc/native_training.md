@@ -337,3 +337,57 @@ parent/worker CPU, sampled RSS and per-process lifetime high-water RSS. RSS sums
 double-count shared pages. Startup/warmup/close are outside collection timing;
 policy, transition/resource callbacks and hashing are included. This heuristic
 is not model inference, and the measurements do not promise a scaling ratio.
+
+The standalone C++ categorical inference API lives in
+`engine/src/training/categorical_policy.hpp` and `native_policy.hpp`. It is
+separate from the Python bindings and the legacy 147-feature Gaussian RLtools
+trainer. Build its contracts and inference-only example without Python:
+
+```bash
+cmake -S engine -B /tmp/football-policy -DBUILD_PYTHON_BINDINGS=OFF \
+  -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=23 \
+  -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-policy/bin
+cmake --build /tmp/football-policy --target categorical_policy_contract \
+  engine_native_policy_contract native_policy_rollout --parallel 1
+GFOOTBALL_DATA_DIR="$PWD/engine/data" \
+  /tmp/football-policy/bin/native_policy_rollout 42 11 128
+```
+
+`PolicySpec` fixes 1..11 players, 115/460 features, simple115 versus simple115v2,
+default/v2 actions and 1..64 tanh hidden units. A flattened joint observation feeds
+per-player categorical logits and one team value head. Parameters and arithmetic
+are float64; observations remain float32. The max-shifted categorical distribution
+uses native action indices, joint log-prob and entropy summed over players,
+inverse-CDF sampling or deterministic argmax. Argmax breaks ties toward the first
+index and does not advance the sampling RNG. No continuous action clipping or
+nearest-player remapping is applied. Model/observation dimensions and finite
+values are checked before sampling/engine mutation.
+
+`NativePolicyEnvironment` owns one matching `NativeTrainingEnv`. Call `reset` with
+a native `ScenarioConfig` and cadence, then `step(policy, rng, deterministic,
+horizon)`. A step returns copied pre/post observations, the decision/actions,
+native per-agent rewards, score reward, terminal flag and optional horizon
+truncation. The scalar team reward is a float64 mean of native float32 rewards;
+Gym's float32 mean can differ by rounding. The creating process/thread owns the
+adapter. Failed inference or identity validation preserves the live engine and
+RNG; an engine/output failure closes the adapter. Terminal or horizon truncation
+requires an explicit reset; terminal takes precedence. Sampling RNG commits only
+after a successful environment step. The current observation accessor is borrowed
+and valid until the next reset/step; copy it to retain a training sample.
+
+The versioned `PolicyRng` is SplitMix64 with a fixed 53-bit uniform mapping, with
+explicit state get/set. Policy initialization has its own local seeded stream;
+sampling is caller-owned. The example accepts `[seed] [players] [steps]`, controls
+the left team in `frame_sync::MakeDefaultScenario`, uses cadence10 and native
+engine seed `seed % 2000000001`. This native seed protocol is distinct from Gym's
+PCG64 seed conversion and arbitrary Python scenario discovery. The example reports
+`categorical_inference_only`; it performs no PPO updates or learner checkpointing.
+Those remain NT-4.3/4.4 tasks.
+
+The math contract checks probabilities/log-prob/entropy, shift invariance, seeded
+sample frequencies, RNG replay, finite/shape failures and maximum model dimensions;
+the isolated validator also checks its MLP and categorical output against NumPy.
+The engine contract compares 32 single/multi-player, left/right, action-set,
+layout and stacking combinations against direct C++ native transitions and kernel
+states. A separate sanitizer validator covers the standalone policy math, with
+ASan/UBSan/LSan; it does not claim full-engine sanitizer coverage.

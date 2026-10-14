@@ -135,6 +135,8 @@ NT-3.2 候选通过正确性对照，但未显示稳定收益，已撤回并归�
 有界进程采样、闭环重放及 1/2/4 worker 资源/吞吐验证已通过验收，S3 全局
 review 已通过且无阻断项。NT-4.1 已完成现有 RLtools 活跃路径审计并形成
 `PPO_DECISION.md`：保留旧 Gaussian 模型路径，新增独立 categorical PPO。
-接下来执行 NT-4.2 的策略/共享环境动作接入，再按决策完成 update 与恢复验收。
+NT-4.2 的 categorical 策略/共享环境动作接入已验收。接下来执行 NT-4.3，
+实现并验证 PPO update、独立数学参考和完整 learner checkpoint，再进行
+NT-4.4 的多 seed 训练/评估/恢复实验。
 任务与提交的实时状态以 `state.json` 为准。
 新需求若改变长期目标，更新路线和验收标准，保留原提交与证据。

@@ -561,6 +561,9 @@ list(APPEND CORE_HEADERS src/training/checkpoint_reward.hpp)
 list(APPEND CORE_HEADERS src/training/observation_buffer.hpp)
 list(APPEND CORE_HEADERS src/training/training_snapshot.hpp)
 list(APPEND CORE_HEADERS src/training/training_profile.hpp)
+# Standalone policy code is outside the shared simulation core and Python binding.
+set(FOOTBALL_CATEGORICAL_POLICY_SOURCES src/training/categorical_policy.cpp)
+set(FOOTBALL_NATIVE_POLICY_SOURCES src/training/native_policy.cpp)
 list(APPEND CORE_HEADERS src/training/snapshot_identity.hpp)
 list(APPEND CORE_SOURCES src/training/snapshot_identity.cpp)
 list(APPEND CORE_HEADERS src/game_load.hpp
