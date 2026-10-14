@@ -1,0 +1,29 @@
+CMake Warning (policy) at CMakeLists.txt:188 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.4s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-native-delivery-20261015-b/source/build/temp.linux-x86_64-cpython-314/cmake
+[  4%] Built target datalib
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 30%] Built target systemsgraphicslib
+[ 32%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 51%] Built target utilslib
+[ 51%] Built target blunted2
+[ 73%] Built target gamelib
+[ 81%] Built target menulib
+[ 93%] Built target football_engine
+[ 93%] Built target football_categorical_policy
+[ 93%] Built target football_ppo_math
+[ 93%] Built target football_native_policy
+[ 95%] Built target football_ppo_learner
+[ 97%] Built target football_ppo_evaluation
+[100%] Built target native_ppo_train
+{"package": "/tmp/football-native-delivery-20261015-b/native-package-nt-5.2-delivery-20261015-d", "files": 472}
