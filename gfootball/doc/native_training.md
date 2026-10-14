@@ -45,8 +45,9 @@ observations, rewards, terminated, truncated, info = env.step_many(
 ```
 
 Single-player input has shape `(steps,)` or `(steps, 1)`. Joint input has shape
-`(steps, players)`. Observations have shape `(completed_steps, 115)` or
-`(completed_steps, players, 115)`. Mean rewards, terminal flags, truncation flags
+`(steps, players)`. Observations have shape `(completed_steps, features)` or
+`(completed_steps, players, features)`, where features is 115 or 460 with stacking.
+Mean rewards, terminal flags, truncation flags
 and `info['score_reward']` have shape `(completed_steps,)`;
 `info['agent_rewards']` has shape `(completed_steps, players)`.
 
@@ -88,7 +89,21 @@ Supported behavior:
 - `info['agent_rewards']` and `info['score_reward']` retain their Python meanings.
 - Engines use the existing admission budget and creating-thread/process ownership.
 
-Rendering, pixels/SMM, stacking, extra
+`stacked=True` enables native four-frame history for either 115 layout. The
+observation shape becomes `(460,)` or `(players, 460)`, with oldest to newest
+frames concatenated on the last axis. Reset fills all four frames with the new
+initial observation. Each returned transition appends exactly one frame, including
+the terminal transition; batch returns the corresponding history at every step.
+Rewards and checkpoint state are independent of stacking. The flag must be a
+Python bool; the default is false. C++ callers use the sixth constructor argument.
+
+C++ `reset` and transitions now return an `ObservationBuffer`, a contiguous
+float32 matrix whose `size()` is the row count and `columns()` is 115 or 460.
+Indexed rows are spans; batch rows are ordered by step then player. This keeps
+unstacked row strides at 115 rather than storing padded 460-value row structs.
+History contains at most 4×11×115 floats; output is bounded to 256×11 rows.
+
+Rendering, pixels/SMM, extra
 players, recording, state save/restore and `control_all_players` scenarios are
 outside this backend's first implementation. Unsupported factory/configuration
 options raise an error; the backend does not silently switch to Python.

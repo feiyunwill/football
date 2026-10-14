@@ -3,6 +3,7 @@
 #include <array>
 #include <cstdio>
 #include <stdexcept>
+#include <algorithm>
 
 void require(bool condition) {
   if (!condition) throw std::runtime_error("Native training contract failed");
@@ -91,8 +92,11 @@ int main(int, char**) {
     require(batch.players == 2 && batch.terminated.size() < 32 && batch.terminated.back());
     require(batch.observations.size() == batch.terminated.size() * 2);
     require(end_digest == env.get_state_digest());
-    require(batch.observations[batch.observations.size() - 2] == final.observations[0]);
-    require(batch.observations.back() == final.observations[1]);
+    // 2026-10-14: shaped output rows are spans, not fixed-size array objects.
+    // require(batch.observations[batch.observations.size() - 2] == final.observations[0]);
+    // require(batch.observations.back() == final.observations[1]);
+    require(std::ranges::equal(batch.observations[batch.observations.size() - 2], final.observations[0]));
+    require(std::ranges::equal(batch.observations.back(), final.observations[1]));
     auto sparse = frame_sync::MakeDefaultScenario(1, 0, 42);
     sparse->left_team.resize(2);
     sparse->right_team.resize(1);
@@ -110,6 +114,34 @@ int main(int, char**) {
       require(a.rewards == b.rewards && a.terminated == b.terminated);
       require(fixed.get_state_digest() == compact.get_state_digest());
     }
+    football::training::NativeTrainingEnv stacked(160, 90, false, true, false, true);
+    auto stack_initial = stacked.reset(*scenario, 10);
+    auto plain_initial = env.reset(*scenario, 10);
+    require(stack_initial.size() == 2 && stack_initial.columns() == 460);
+    for (size_t player = 0; player < 2; ++player)
+      for (size_t age = 0; age < 4; ++age)
+        require(std::ranges::equal(stack_initial[player].subspan(age * 115, 115), plain_initial[player]));
+    std::vector<football::training::TrainingTransition> stack_frames;
+    for (int frame = 0; frame < 32; ++frame) {
+      auto a = env.step(std::array<int, 2>{0, 0});
+      auto b = stacked.step(std::array<int, 2>{0, 0});
+      const auto& previous = stack_frames.empty() ? stack_initial : stack_frames.back().observations;
+      for (size_t player = 0; player < 2; ++player) {
+        require(std::ranges::equal(b.observations[player].first(345), previous[player].subspan(115)));
+        require(std::ranges::equal(b.observations[player].last(115), a.observations[player]));
+      }
+      require(a.rewards == b.rewards && a.terminated == b.terminated);
+      require(env.get_state_digest() == stacked.get_state_digest());
+      stack_frames.push_back(std::move(b));
+      if (a.terminated) break;
+    }
+    require(stack_frames.back().terminated);
+    require(stack_initial == stacked.reset(*scenario, 10));
+    auto stack_batch = stacked.step_many(std::vector<int>(64, 0), 32);
+    require(stack_batch.terminated.size() == stack_frames.size() && stack_batch.observations.columns() == 460);
+    for (size_t frame = 0; frame < stack_frames.size(); ++frame)
+      for (size_t player = 0; player < 2; ++player)
+        require(std::ranges::equal(stack_batch.observations[frame * 2 + player], stack_frames[frame].observations[player]));
     env.close();
     env.close();
     try {
@@ -120,7 +152,8 @@ int main(int, char**) {
     // std::puts("Native training: joint admission, termination and deterministic reset passed");
     // std::puts("Native training: joint/batch admission, termination and deterministic reset passed");
     // std::puts("Native training: admission, termination, deterministic reset and both 115 layouts passed");
-    std::puts("Native training: admission, termination, reset, both layouts and checkpoint thresholds passed");
+    // std::puts("Native training: admission, termination, reset, both layouts and checkpoint thresholds passed");
+    std::puts("Native training: admission, termination, reset, layouts, checkpoints and frame stacks passed");
     return 0;
   } catch (const std::exception& error) {
     std::fprintf(stderr, "%s\n", error.what());

@@ -124,7 +124,9 @@ class NativeTrainingTest(unittest.TestCase):
     # 2026-10-14: checkpoints are supported; scoring remains required.
     # for options in (dict(representation='pixels'), dict(rewards='scoring,checkpoints'),
     for options in (dict(representation='pixels'), dict(rewards='checkpoints'),
-                    dict(stacked=True), dict(render_mode='human'), dict(extra_players=[]),
+                    # 2026-10-14: numeric frame stacking is supported; only boolean flags are valid.
+                    # dict(stacked=True),
+                    dict(stacked=1), dict(render_mode='human'), dict(extra_players=[]),
                     dict(other_config_options={'write_video': True}),
                     dict(env_name='tests.multiagent_wrapper')):
       with self.subTest(options=options), self.assertRaises(ValueError):
@@ -465,6 +467,90 @@ class NativeTrainingTest(unittest.TestCase):
             self.fail('Checkpoint goal fixture did not score')
           reference.close()
           native.close()
+
+  def test_native_frame_stack_matches_python_across_views_layouts_and_rewards(self):
+    for representation in ('simple115', 'simple115v2'):
+      for right in (False, True):
+        for players in (1, 2):
+          for rewards in ('scoring', 'scoring,checkpoints'):
+            with self.subTest(representation=representation, right=right, players=players, rewards=rewards):
+              def build(builder):
+                self.checkpoint_scene(builder, right=right)
+              with mock.patch('gfootball.scenarios.academy_empty_goal_close.build_scenario', build):
+                options = dict(env_name='academy_empty_goal_close', representation=representation,
+                               rewards=rewards, stacked=True,
+                               number_of_left_players_agent_controls=0 if right else players,
+                               number_of_right_players_agent_controls=players if right else 0)
+                reference, native = self.make('python', **options), self.make(**options)
+                a, b = reference.reset(seed=17)[0], native.reset(seed=17)[0]
+                np.testing.assert_array_equal(a, b)
+                self.assertEqual(b.shape, (460,) if players == 1 else (players, 460))
+                self.assertTrue(native.observation_space.contains(b))
+                for age in range(4):
+                  np.testing.assert_array_equal(b[..., age * 115:(age + 1) * 115], b[..., :115])
+                origin = b.copy()
+                previous = b.copy()
+                for frame in range(8):
+                  action = frame % 19 if players == 1 else np.full(players, frame % 19, dtype=np.int64)
+                  a, b = reference.step(action), native.step(action)
+                  np.testing.assert_array_equal(a[0], b[0])
+                  np.testing.assert_array_equal(b[0][..., :345], previous[..., 115:])
+                  np.testing.assert_array_equal(a[4]['agent_rewards'], b[4]['agent_rewards'])
+                  self.assertEqual(a[1:4], b[1:4])
+                  self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+                  previous = b[0].copy()
+                digest = self.digest(native, 'native')
+                invalid = np.zeros((2, players), dtype=np.int64)
+                invalid[-1, -1] = 19
+                with self.assertRaises(ValueError):
+                  native.step_many(invalid)
+                self.assertEqual(digest, self.digest(native, 'native'))
+                action = 0 if players == 1 else np.zeros(players, dtype=np.int64)
+                a, b = reference.step(action), native.step(action)
+                np.testing.assert_array_equal(a[0], b[0])
+                np.testing.assert_array_equal(a[4]['agent_rewards'], b[4]['agent_rewards'])
+                saved = b[0].copy()
+                np.testing.assert_array_equal(native.reset(seed=17)[0], origin)
+                reference.reset(seed=17)
+                actions = np.array([[(frame + player) % 19 for player in range(players)]
+                                    for frame in range(12)], dtype=np.int64)
+                expected = [reference.step(int(row[0]) if players == 1 else row) for row in actions]
+                result = native.step_many(actions)
+                np.testing.assert_array_equal(result[0], np.stack([row[0] for row in expected]))
+                np.testing.assert_array_equal(result[1], [row[1] for row in expected])
+                np.testing.assert_array_equal(result[4]['agent_rewards'],
+                                              np.stack([row[4]['agent_rewards'] for row in expected]))
+                np.testing.assert_array_equal(saved, b[0])
+                self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+                reference.close()
+                native.close()
+
+  def test_native_frame_stack_batch_keeps_terminal_history_and_checker(self):
+    for representation in ('simple115', 'simple115v2'):
+      with self.subTest(representation=representation):
+        options = dict(env_name='tests.second_half', stacked=True, representation=representation,
+                       rewards='scoring,checkpoints', number_of_left_players_agent_controls=2)
+        reference, native = self.make('python', **options), self.make(**options)
+        check_env(native, skip_render_check=True)
+        reference.reset(seed=9)
+        native.reset(seed=9)
+        expected = []
+        for _ in range(32):
+          expected.append(reference.step(np.zeros(2, dtype=np.int64)))
+          if expected[-1][2]:
+            break
+        result = native.step_many(np.zeros((32, 2), dtype=np.int64))
+        self.assertLess(len(expected), 32)
+        np.testing.assert_array_equal(result[0], np.stack([row[0] for row in expected]))
+        np.testing.assert_array_equal(result[2], [row[2] for row in expected])
+        np.testing.assert_array_equal(result[4]['agent_rewards'],
+                                      np.stack([row[4]['agent_rewards'] for row in expected]))
+        self.assertTrue(result[2][-1])
+        self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+        snapshot = result[0].copy()
+        native.reset(seed=9)
+        native.step(np.zeros(2, dtype=np.int64))
+        np.testing.assert_array_equal(snapshot, result[0])
 
   def test_goal_reward_and_score_termination_match_python(self):
     from gfootball.env.scenario_builder import Role, Team

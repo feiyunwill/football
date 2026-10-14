@@ -6,10 +6,11 @@
 
 namespace py = pybind11;
 namespace {
-py::array_t<float> observations(const std::vector<football::training::Simple115>& rows) {
-  static_assert(sizeof(football::training::Simple115) == 115 * sizeof(float));
-  py::array_t<float> result({static_cast<py::ssize_t>(rows.size()), py::ssize_t{115}});
-  if (!rows.empty()) std::memcpy(result.mutable_data(), rows.data(), rows.size() * sizeof(rows[0]));
+// 2026-10-14: shape comes from contiguous C++ storage, never a padded row struct.
+// py::array_t<float> observations(const std::vector<football::training::Simple115>& rows) {
+py::array_t<float> observations(const football::training::ObservationBuffer& rows) {
+  py::array_t<float> result({static_cast<py::ssize_t>(rows.size()), static_cast<py::ssize_t>(rows.columns())});
+  if (!rows.buffer().empty()) std::memcpy(result.mutable_data(), rows.buffer().data(), rows.buffer().size_bytes());
   return result;
 }
 }  // namespace
@@ -22,11 +23,15 @@ void BindNativeTraining(py::module_& module) {
       //      py::arg("height") = 720, py::arg("builtin_ai_action") = false)
       // 2026-10-14: optional dense checkpoint shaping uses native per-agent state.
       // .def(py::init<int, int, bool, bool>(), py::arg("width") = 1280,
-      .def(py::init<int, int, bool, bool, bool>(), py::arg("width") = 1280,
+      // 2026-10-14: optional native four-frame history.
+      // .def(py::init<int, int, bool, bool, bool>(), py::arg("width") = 1280,
+      .def(py::init<int, int, bool, bool, bool, bool>(), py::arg("width") = 1280,
            py::arg("height") = 720, py::arg("builtin_ai_action") = false,
-           py::arg("fixed_positions") = true, py::arg("checkpoint_rewards") = false)
+           py::arg("fixed_positions") = true, py::arg("checkpoint_rewards") = false,
+           py::arg("stacked") = false)
       .def("reset", [](NativeTrainingEnv& env, ScenarioConfig& scenario, int physics_steps) {
-        std::vector<football::training::Simple115> result;
+        // std::vector<football::training::Simple115> result;
+        football::training::ObservationBuffer result;
         {
           py::gil_scoped_release release;
           result = env.reset(scenario, physics_steps);
@@ -68,11 +73,13 @@ void BindNativeTraining(py::module_& module) {
         }
         const auto steps = static_cast<py::ssize_t>(result.terminated.size());
         const auto players = static_cast<py::ssize_t>(result.players);
-        py::array_t<float> rows({steps, players, py::ssize_t{115}});
+        // py::array_t<float> rows({steps, players, py::ssize_t{115}});
+        py::array_t<float> rows({steps, players, static_cast<py::ssize_t>(result.observations.columns())});
         py::array_t<float> rewards({steps, players});
         py::array_t<bool> terminated(steps);
         py::array_t<int> scores(steps);
-        std::memcpy(rows.mutable_data(), result.observations.data(), result.observations.size() * sizeof(result.observations[0]));
+        // std::memcpy(rows.mutable_data(), result.observations.data(), result.observations.size() * sizeof(result.observations[0]));
+        std::memcpy(rows.mutable_data(), result.observations.buffer().data(), result.observations.buffer().size_bytes());
         std::memcpy(rewards.mutable_data(), result.rewards.data(), result.rewards.size() * sizeof(float));
         std::memcpy(scores.mutable_data(), result.score_rewards.data(), result.score_rewards.size() * sizeof(int));
         for (py::ssize_t i = 0; i < steps; ++i) terminated.mutable_data()[i] = result.terminated[i] != 0;

@@ -1,7 +1,7 @@
 # NT-1.4：原生数值 frame stack
 
 依赖：NT-1.1 `339bfd1`、NT-1.2 `409f167`、NT-1.3 `fb48103` 已验收提交。
-当前状态：进入执行，尚未实现或验收；S1 review 保持 pending。
+当前状态：实现和验收通过，提交后登记 commit；S1 review 保持 pending。
 
 合同：对 simple115/simple115v2，stacked=True 按现有 FrameStack(k=4) 沿最后
 一维拼接，形状为 `(460,)` 或 `(agents, 460)`。reset 用同一个初始观测填满

@@ -12,7 +12,7 @@
 | simple115 | 支持；四个 team 块紧密排列，只在 88 值块末尾补 -1，尾部 27 值与 v2 一致 | NT-1.2：full/sparse/asymmetric、左右视角、reset/scalar/batch 与 Python 对照；full 两布局相同，sparse 不同 |
 | checkpoint rewards | 支持 scoring+checkpoints；每 agent 计数，持球且 active 对应 ball owner，十个距离阈值，进球补齐剩余 credit，reset 清零 | NT-1.3：左右单/多人真实密集奖励、部分 credit 后进球、batch 对照；C++ 阈值合约 |
 | scoring | 左侧比分差变化；右侧取反；joint mean 与 info.agent_rewards 保留 | 实际进球、单/多人、右侧对照 |
-| frame stack | 尚不支持；数值堆叠计划沿最后一维拼接，reset 填满历史 | NT-1.4 |
+| frame stack | 支持严格 bool stacked=True，四帧 oldest→newest，沿最后一维拼接为 460；reset 填满，terminal 追加一次，batch 每一步有自己的历史 | NT-1.4：两种布局×左右×单/多人×scoring/checkpoints 的 16 组合实际对照；invalid suffix 保持状态、输出寿命、终态与纯 C++ 合约 |
 | 球队视角 | 右侧 team 交换、x/y 坐标与方向旋转、owner 和动作方向翻转；z 保留 | sparse/完整场景对照，active 每玩家独立 |
 | 比赛时间结束 | native config.game_duration 按引擎 info.step 判断，作为 terminated | second_half 正常/批量终态对照 |
 | 进球结束 | 场景 end_episode_on_score 独立生效 | 真实 near-goal 进球结束与 Python 相等 |

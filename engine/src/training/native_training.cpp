@@ -60,9 +60,9 @@ Simple115 encode(const SharedInfo& info, bool right, int active, bool fixed_posi
 // NativeTrainingEnv::NativeTrainingEnv(int width, int height, bool builtin_ai_action, bool fixed_positions)
 //     : builtin_ai_action_(builtin_ai_action), fixed_positions_(fixed_positions) {
 NativeTrainingEnv::NativeTrainingEnv(int width, int height, bool builtin_ai_action,
-                                   bool fixed_positions, bool checkpoint_rewards)
+                                   bool fixed_positions, bool checkpoint_rewards, bool stacked)
     : builtin_ai_action_(builtin_ai_action), fixed_positions_(fixed_positions),
-      checkpoint_rewards_(checkpoint_rewards) {
+      checkpoint_rewards_(checkpoint_rewards), stacked_(stacked) {
   if (width < 1 || width > 8192 || height < 1 || height > 8192 ||
       static_cast<int64_t>(width) * height > 16777216)
     throw std::invalid_argument("Invalid training render dimensions");
@@ -75,16 +75,21 @@ void NativeTrainingEnv::require_open() const {
   if (closed_) throw std::logic_error("Native training environment is closed");
 }
 
-std::vector<Simple115> NativeTrainingEnv::observations(const SharedInfo& info) const {
+// 2026-10-14: expose dynamic feature width with one contiguous output allocation.
+// std::vector<Simple115> NativeTrainingEnv::observations(const SharedInfo& info) const {
+ObservationBuffer NativeTrainingEnv::observations(const SharedInfo& info, bool reset_stack) {
   // 2026-10-14: share direct output writing with bounded rollout buffers.
   // std::vector<Simple115> result;
   // result.reserve(scenario.left_agents + scenario.right_agents);
-  std::vector<Simple115> result(env_.scenario_config.left_agents + env_.scenario_config.right_agents);
-  write_observations(info, result);
+  // std::vector<Simple115> result(env_.scenario_config.left_agents + env_.scenario_config.right_agents);
+  // write_observations(info, result);
+  ObservationBuffer result(env_.scenario_config.left_agents + env_.scenario_config.right_agents, observation_width());
+  write_observations(info, result.buffer(), reset_stack);
   return result;
 }
 
-void NativeTrainingEnv::write_observations(const SharedInfo& info, std::span<Simple115> output) const {
+// void NativeTrainingEnv::write_observations(const SharedInfo& info, std::span<Simple115> output) const {
+void NativeTrainingEnv::write_observations(const SharedInfo& info, std::span<float> output, bool reset_stack) {
   const auto& scenario = env_.scenario_config;
   size_t index = 0;
   for (bool right : {false, true}) {
@@ -99,14 +104,34 @@ void NativeTrainingEnv::write_observations(const SharedInfo& info, std::span<Sim
     for (int i = 0; i < count; ++i) {
       const int active = i < static_cast<int>(controllers.size()) ? controllers[i].controlled_player : -1;
       if (active < -1 || active > 10) throw std::runtime_error("Invalid training active player");
-      auto& row = output[index++];
-      row = shared;
+      // 2026-10-14: encode once, then write plain output or the bounded ring.
+      // auto& row = output[index++];
+      // row = shared;
+      auto row = shared;
       if (active != -1) row[97 + active] = 1.0f;
+      if (!stacked_) {
+        std::copy(row.begin(), row.end(), output.begin() + index * kSimple115Features);
+      } else if (reset_stack) {
+        for (auto& frame : history_) frame[index] = row;
+      } else {
+        history_[history_next_][index] = row;
+      }
+      ++index;
+    }
+  }
+  if (stacked_) {
+    if (!reset_stack) history_next_ = (history_next_ + 1) % kFrameStackFrames;
+    for (size_t player = 0; player < index; ++player) {
+      for (size_t age = 0; age < kFrameStackFrames; ++age) {
+        const auto& row = history_[(history_next_ + age) % kFrameStackFrames][player];
+        std::copy(row.begin(), row.end(), output.begin() + player * observation_width() + age * kSimple115Features);
+      }
     }
   }
 }
 
-std::vector<Simple115> NativeTrainingEnv::reset(ScenarioConfig& scenario, int physics_steps) {
+// std::vector<Simple115> NativeTrainingEnv::reset(ScenarioConfig& scenario, int physics_steps) {
+ObservationBuffer NativeTrainingEnv::reset(ScenarioConfig& scenario, int physics_steps) {
   std::lock_guard lock(mutex_);
   require_open();
   if (physics_steps < 1 || physics_steps > 1000)
@@ -130,7 +155,12 @@ std::vector<Simple115> NativeTrainingEnv::reset(ScenarioConfig& scenario, int ph
   previous_game_mode_ = -1;
   previous_ball_owned_team_ = -1;
   if (checkpoint_rewards_) checkpoints_.reset(scenario.left_agents + scenario.right_agents);
-  auto result = observations(info_);
+  if (stacked_) {
+    for (auto& frame : history_) frame.resize(scenario.left_agents + scenario.right_agents);
+    history_next_ = 0;
+  }
+  // auto result = observations(info_);
+  auto result = observations(info_, true);
   ready_ = true;
   return result;
 }
@@ -143,8 +173,10 @@ TrainingTransition NativeTrainingEnv::step(std::span<const int> actions) {
   if (actions.size() != count) throw std::invalid_argument("Incorrect joint action count");
   validate_actions(actions);
   // 2026-10-14: scalar and batched stepping share one transition implementation.
-  TrainingTransition result{std::vector<Simple115>(count), std::vector<float>(count)};
-  auto [terminated, reward] = advance(actions, result.observations, result.rewards);
+  // TrainingTransition result{std::vector<Simple115>(count), std::vector<float>(count)};
+  // auto [terminated, reward] = advance(actions, result.observations, result.rewards);
+  TrainingTransition result{ObservationBuffer(count, observation_width()), std::vector<float>(count)};
+  auto [terminated, reward] = advance(actions, result.observations.buffer(), result.rewards);
   result.terminated = terminated;
   result.score_reward = reward;
   return result;
@@ -166,14 +198,16 @@ TrainingBatch NativeTrainingEnv::step_many(std::span<const int> actions, size_t 
   if (actions.size() != steps * count) throw std::invalid_argument("Incorrect batched joint action count");
   // Reject even an invalid suffix before the first transition mutates the match.
   validate_actions(actions);
-  TrainingBatch result{count, std::vector<Simple115>(steps * count),
+  // TrainingBatch result{count, std::vector<Simple115>(steps * count),
+  TrainingBatch result{count, ObservationBuffer(steps * count, observation_width()),
                        std::vector<float>(steps * count),
                        std::vector<uint8_t>(steps), std::vector<int>(steps)};
   size_t completed = 0;
   for (; completed < steps; ++completed) {
     const auto [terminated, reward] = advance(
         actions.subspan(completed * count, count),
-        std::span(result.observations).subspan(completed * count, count),
+        // std::span(result.observations).subspan(completed * count, count),
+        result.observations.buffer().subspan(completed * count * observation_width(), count * observation_width()),
         std::span(result.rewards).subspan(completed * count, count));
     result.terminated[completed] = terminated;
     result.score_rewards[completed] = reward;
@@ -187,7 +221,7 @@ TrainingBatch NativeTrainingEnv::step_many(std::span<const int> actions, size_t 
 }
 
 std::pair<bool, int> NativeTrainingEnv::advance(std::span<const int> actions,
-                                             std::span<Simple115> output,
+                                             std::span<float> output,
                                              std::span<float> rewards) {
   const auto& scenario = env_.scenario_config;
   try {
