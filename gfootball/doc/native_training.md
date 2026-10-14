@@ -286,3 +286,54 @@ Worker protocol and real-process contracts run with
 `python -m unittest gfootball.test_training_workers -v` and are included in the
 isolated integration validator. Current process behavior is validated on
 Linux/WSL; platform delivery and 1/2/4-worker scaling are separate roadmap tasks.
+
+`collect_episodes` supplies a closed-loop rollout and optional transition stream:
+
+```python
+from gfootball.training_sampler import collect_episodes
+
+def decide(observation, context):
+    # Read this episode's latest observation; context has episode_id, seed, step.
+    return 0
+
+def consume(event):
+    # event.observation -> event.actions -> event.following
+    # Persist/use the transition in a learner; retained storage is caller-owned.
+    pass
+
+# Inside the guarded main() and NativeWorkerPool context above:
+# result = collect_episodes(pool, range(8), decide, max_steps=256,
+#                           on_transition=consume)
+```
+
+The collector accepts 1..1024 unique global episode IDs and 1..4096 steps per
+episode. It assigns IDs in input order to free workers, resets explicitly, and
+returns summaries in input order. Policies and transition consumers run in the
+pool's owner thread. Each decision uses the preceding transition's observation,
+or the reset observation at step zero. Inputs and stream arrays are isolated
+copies, initially read-only; reusable policy action buffers are detached before
+the next decision. Callback exceptions or invalid policy actions close the pool.
+Callback execution time itself is outside IPC deadlines and is caller-owned.
+
+The stream includes pre/post observations, joint actions, per-agent/team rewards,
+episode/seed/step and terminated/truncated flags. Reaching the collection horizon
+sets truncated=true on its final transition; an engine terminal takes precedence
+and keeps truncated=false. A learner must bootstrap horizon truncation from the
+final observation, without treating it as a match terminal. There is no collector
+checkpoint or implicit policy RNG reset; replay requires a fixed policy with
+deterministic state per episode/step, independent of worker assignment/order.
+
+Only at most four current episode states and bounded summaries are retained by
+the collector. The caller controls storage retained by `on_transition`. Results
+include trajectory and final canonical kernel hashes, transition count, total
+wall time, policy time, callback time and final kernel hashing time. Total wall
+time includes reset, IPC, copying, encoding, validation and hashing.
+
+`python -m gfootball.benchmark_training_workers --output workers.json` runs
+rotating 1/2/4-worker workloads for 1/11 players and cadence 2/10. It verifies all
+episode trajectories, statuses, rewards and final kernel hashes across counts
+and repeats, and checks process/FD cleanup after each pool. Linux /proc reports
+parent/worker CPU, sampled RSS and per-process lifetime high-water RSS. RSS sums
+double-count shared pages. Startup/warmup/close are outside collection timing;
+policy, transition/resource callbacks and hashing are included. This heuristic
+is not model inference, and the measurements do not promise a scaling ratio.

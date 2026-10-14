@@ -65,3 +65,24 @@ pybind 开销。计时关闭时不调用 clock，但仍有 flag/branch 成本。
 语义/hash 对照的候选优化；不优先改不到 0.5% 的观测编码或 output copy。
 同 seed/scenario/actions 的原实现和候选交错测量，记录波动；无稳定收益则
 记录并停止扩展。进程隔离与闭环 worker 另属 NT-3.3/3.4。
+# NT-3.4 多进程闭环补充（2026-10-15）
+
+最终源码证据 `evidence/nt-3.4-workers-20261015-b/` 验证固定4个episode、
+128步horizon、三次轮换测量。每个episode逐步轨迹与最终kernel hash跨
+1/2/4 worker相同；正常关闭无worker PID或parent FD残留。
+
+中位端到端 transitions/s（包含reset、IPC、callback、复制及hash，排除
+startup/warmup/close；反馈为固定轻量heuristic，不是PPO inference）：
+
+| 玩家 | cadence | 1 worker | 2 workers | 4 workers |
+|---|---|---|---|---|
+| 1 | 2 | 773.7 | 1339.3 | 2433.3 |
+| 1 | 10 | 238.3 | 396.9 | 670.0 |
+| 11 | 2 | 781.9 | 1256.1 | 1910.3 |
+| 11 | 10 | 233.3 | 431.7 | 663.1 |
+
+WSL样本仍波动，1人/c2的4worker范围1752.3–2616.8 transitions/s；不承诺
+线性扩展。worker RSS单进程约144MiB，4进程RSS sum约576–577MiB，重复
+计算共享页；不含parent及multiprocessing resource tracker。所有CPU、
+RSS/HWM/FD、PID、退出码及逐次样本保留在workers.json。详细合约和限制
+见 `tasks/NT-3.4.md`。

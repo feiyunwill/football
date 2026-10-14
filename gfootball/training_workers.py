@@ -347,22 +347,26 @@ class NativeWorkerPool:
       self._shutdown()
       raise
 
+  def _prepare_action(self, action):
+    """Validate and detach a policy's possibly reusable action buffer."""
+    values = [action] if self._players == 1 else action
+    if isinstance(values, np.ndarray):
+      if values.shape != (self._players,):
+        raise ValueError('One action is required per controlled player')
+      values = list(values)
+    if type(values) not in (list, tuple) or len(values) != self._players:
+      raise ValueError('One action is required per controlled player')
+    values = [_integer(int(value) if isinstance(value, np.integer) else value,
+                       0, self._actions - 1, 'action') for value in values]
+    return values[0] if self._players == 1 else values
+
   def step(self, actions):
     self._selection(actions)
     arguments = {}
     for worker, action in actions.items():
       if worker not in self._episodes or self._episodes[worker][2]:
         raise ValueError(f'Reset worker {worker} before stepping')
-      values = [action] if self._players == 1 else action
-      if isinstance(values, np.ndarray):
-        if values.shape != (self._players,):
-          raise ValueError('One action is required per controlled player')
-        values = list(values)
-      if type(values) not in (list, tuple) or len(values) != self._players:
-        raise ValueError('One action is required per controlled player')
-      values = [_integer(int(value) if isinstance(value, np.integer) else value,
-                         0, self._actions - 1, 'action') for value in values]
-      arguments[worker] = {'action': values[0] if self._players == 1 else values}
+      arguments[worker] = {'action': self._prepare_action(action)}
     replies = self._request('step', arguments)
     try:
       result = {}

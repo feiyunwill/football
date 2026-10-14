@@ -3,7 +3,7 @@
     "objective":  "兼容、可复现、可独立运行的 C++ 训练链路",
     "created":  "2026-10-14",
     "active_stage":  "S3",
-    "active_task":  "NT-3.4",
+    "active_task":  "S3-review",
     "stages":  [
                    {
                        "id":  "S0",
@@ -92,7 +92,7 @@
                    {
                        "id":  "S3",
                        "status":  "in_progress",
-                       "review":  "pending",
+                       "review":  "in_progress",
                        "tasks":  [
                                      {
                                          "id":  "NT-3.1",
@@ -109,13 +109,14 @@
                                      {
                                          "id":  "NT-3.3",
                                          "status":  "complete",
-                                         "commit":  null,
+                                         "commit":  "3a38b2496cb59df64f6abc83b1e622d7b1517574",
                                          "evidence":  "evidence/nt-3.3-integration-20261015-b/report.json"
                                      },
                                      {
                                          "id":  "NT-3.4",
-                                         "status":  "in_progress",
-                                         "commit":  null
+                                         "status":  "complete",
+                                         "commit":  null,
+                                         "evidence":  "evidence/nt-3.4-integration-20261015-a/report.json"
                                      }
                                  ]
                    },

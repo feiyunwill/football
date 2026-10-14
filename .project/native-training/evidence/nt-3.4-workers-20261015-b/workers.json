@@ -1,0 +1,3412 @@
+{
+  "loaded_module": "/tmp/football-native-assessment-20261015/validation-stage/gfootball_engine/_gameplayfootball.so",
+  "policy": "fixed deterministic simple115v2 observation feedback heuristic",
+  "steps": 128,
+  "episode_ids": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "repeats": 3,
+  "resources": "Linux /proc; sampled RSS sums double-count shared pages; HWM sums are per-process lifetime maxima",
+  "timing": "collection includes resets, IPC, policy/callback copies, resource observations, trajectory/kernel hashing; excludes startup, warmup and close",
+  "workloads": [
+    {
+      "players": 1,
+      "cadence": 2,
+      "workers": 1,
+      "median_wall_ns": 661722843,
+      "median_transitions_per_second": 773.7378351316792,
+      "min_transitions_per_second": 730.118811292993,
+      "max_transitions_per_second": 849.7584857757873,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 339685289,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "5d7a5b0332785a2f477780c4760cbe1e41956ad6ff864e3e534abeba98db4e8a",
+                "kernel_sha256": "cbc2786db59b112403776fbc3d9397725d4da6e8e8d13aac111cd5d6d6673015"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f255ba1c9f6c22ffd61e44662ca4b9351da4b5346c2a982364c04e8b8fff4e38",
+                "kernel_sha256": "9471d50d26139b6ac0d834dbe62159a7079ab37d669d3c4f1aba95130be901b7"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "315b0c70951f3a90bf27f5b7bcfb7b2534398cfb2b4a6c8a334a054c01080814",
+                "kernel_sha256": "97b7dbe543775fd05f126ab11d0db04466d9beb89697bb85632caf6c7f39dd5d"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f33cf2a7d4f84da38b2369e7c81cd00c372eec263c578c10ff1fdcecd0c64584",
+                "kernel_sha256": "66a7f14e90ee006ded86e16fa623506eea69ac35fb95dda362cfb3e9943c6a31"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 602524139,
+            "policy_ns": 11529414,
+            "callback_ns": 8071518,
+            "digest_ns": 1888308
+          },
+          "parent_cpu_ns": 88280040,
+          "worker_cpu_seconds": 0.5,
+          "observed_resources": {
+            "parent_rss_bytes": 51826688,
+            "worker_rss_sum_bytes": 151220224,
+            "worker_hwm_sum_bytes": 151220224,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            281218
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 30497675,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 343887436,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "5d7a5b0332785a2f477780c4760cbe1e41956ad6ff864e3e534abeba98db4e8a",
+                "kernel_sha256": "cbc2786db59b112403776fbc3d9397725d4da6e8e8d13aac111cd5d6d6673015"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f255ba1c9f6c22ffd61e44662ca4b9351da4b5346c2a982364c04e8b8fff4e38",
+                "kernel_sha256": "9471d50d26139b6ac0d834dbe62159a7079ab37d669d3c4f1aba95130be901b7"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "315b0c70951f3a90bf27f5b7bcfb7b2534398cfb2b4a6c8a334a054c01080814",
+                "kernel_sha256": "97b7dbe543775fd05f126ab11d0db04466d9beb89697bb85632caf6c7f39dd5d"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f33cf2a7d4f84da38b2369e7c81cd00c372eec263c578c10ff1fdcecd0c64584",
+                "kernel_sha256": "66a7f14e90ee006ded86e16fa623506eea69ac35fb95dda362cfb3e9943c6a31"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 701255730,
+            "policy_ns": 15070194,
+            "callback_ns": 10593700,
+            "digest_ns": 2170682
+          },
+          "parent_cpu_ns": 112655924,
+          "worker_cpu_seconds": 0.57,
+          "observed_resources": {
+            "parent_rss_bytes": 51888128,
+            "worker_rss_sum_bytes": 150958080,
+            "worker_hwm_sum_bytes": 150958080,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            281664
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 32443326,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 406000933,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "5d7a5b0332785a2f477780c4760cbe1e41956ad6ff864e3e534abeba98db4e8a",
+                "kernel_sha256": "cbc2786db59b112403776fbc3d9397725d4da6e8e8d13aac111cd5d6d6673015"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f255ba1c9f6c22ffd61e44662ca4b9351da4b5346c2a982364c04e8b8fff4e38",
+                "kernel_sha256": "9471d50d26139b6ac0d834dbe62159a7079ab37d669d3c4f1aba95130be901b7"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "315b0c70951f3a90bf27f5b7bcfb7b2534398cfb2b4a6c8a334a054c01080814",
+                "kernel_sha256": "97b7dbe543775fd05f126ab11d0db04466d9beb89697bb85632caf6c7f39dd5d"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f33cf2a7d4f84da38b2369e7c81cd00c372eec263c578c10ff1fdcecd0c64584",
+                "kernel_sha256": "66a7f14e90ee006ded86e16fa623506eea69ac35fb95dda362cfb3e9943c6a31"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 661722843,
+            "policy_ns": 13611578,
+            "callback_ns": 8944580,
+            "digest_ns": 2840890
+          },
+          "parent_cpu_ns": 102924316,
+          "worker_cpu_seconds": 0.54,
+          "observed_resources": {
+            "parent_rss_bytes": 51892224,
+            "worker_rss_sum_bytes": 151248896,
+            "worker_hwm_sum_bytes": 151248896,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            281929
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 31118511,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    },
+    {
+      "players": 1,
+      "cadence": 2,
+      "workers": 2,
+      "median_wall_ns": 382286274,
+      "median_transitions_per_second": 1339.3104456583235,
+      "min_transitions_per_second": 1275.1379944624641,
+      "max_transitions_per_second": 1438.8064529446513,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 421192033,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "5d7a5b0332785a2f477780c4760cbe1e41956ad6ff864e3e534abeba98db4e8a",
+                "kernel_sha256": "cbc2786db59b112403776fbc3d9397725d4da6e8e8d13aac111cd5d6d6673015"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f255ba1c9f6c22ffd61e44662ca4b9351da4b5346c2a982364c04e8b8fff4e38",
+                "kernel_sha256": "9471d50d26139b6ac0d834dbe62159a7079ab37d669d3c4f1aba95130be901b7"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "315b0c70951f3a90bf27f5b7bcfb7b2534398cfb2b4a6c8a334a054c01080814",
+                "kernel_sha256": "97b7dbe543775fd05f126ab11d0db04466d9beb89697bb85632caf6c7f39dd5d"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f33cf2a7d4f84da38b2369e7c81cd00c372eec263c578c10ff1fdcecd0c64584",
+                "kernel_sha256": "66a7f14e90ee006ded86e16fa623506eea69ac35fb95dda362cfb3e9943c6a31"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 382286274,
+            "policy_ns": 10304612,
+            "callback_ns": 8866833,
+            "digest_ns": 1218283
+          },
+          "parent_cpu_ns": 77842131,
+          "worker_cpu_seconds": 0.57,
+          "observed_resources": {
+            "parent_rss_bytes": 51847168,
+            "worker_rss_sum_bytes": 301776896,
+            "worker_hwm_sum_bytes": 301776896,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            281249,
+            281250
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 38057834,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 371258348,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "5d7a5b0332785a2f477780c4760cbe1e41956ad6ff864e3e534abeba98db4e8a",
+                "kernel_sha256": "cbc2786db59b112403776fbc3d9397725d4da6e8e8d13aac111cd5d6d6673015"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f255ba1c9f6c22ffd61e44662ca4b9351da4b5346c2a982364c04e8b8fff4e38",
+                "kernel_sha256": "9471d50d26139b6ac0d834dbe62159a7079ab37d669d3c4f1aba95130be901b7"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "315b0c70951f3a90bf27f5b7bcfb7b2534398cfb2b4a6c8a334a054c01080814",
+                "kernel_sha256": "97b7dbe543775fd05f126ab11d0db04466d9beb89697bb85632caf6c7f39dd5d"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f33cf2a7d4f84da38b2369e7c81cd00c372eec263c578c10ff1fdcecd0c64584",
+                "kernel_sha256": "66a7f14e90ee006ded86e16fa623506eea69ac35fb95dda362cfb3e9943c6a31"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 355850503,
+            "policy_ns": 8814255,
+            "callback_ns": 8373150,
+            "digest_ns": 1439469
+          },
+          "parent_cpu_ns": 70036591,
+          "worker_cpu_seconds": 0.51,
+          "observed_resources": {
+            "parent_rss_bytes": 51875840,
+            "worker_rss_sum_bytes": 302018560,
+            "worker_hwm_sum_bytes": 302018560,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            281435,
+            281436
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 36526591,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 368981091,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "5d7a5b0332785a2f477780c4760cbe1e41956ad6ff864e3e534abeba98db4e8a",
+                "kernel_sha256": "cbc2786db59b112403776fbc3d9397725d4da6e8e8d13aac111cd5d6d6673015"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f255ba1c9f6c22ffd61e44662ca4b9351da4b5346c2a982364c04e8b8fff4e38",
+                "kernel_sha256": "9471d50d26139b6ac0d834dbe62159a7079ab37d669d3c4f1aba95130be901b7"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "315b0c70951f3a90bf27f5b7bcfb7b2534398cfb2b4a6c8a334a054c01080814",
+                "kernel_sha256": "97b7dbe543775fd05f126ab11d0db04466d9beb89697bb85632caf6c7f39dd5d"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f33cf2a7d4f84da38b2369e7c81cd00c372eec263c578c10ff1fdcecd0c64584",
+                "kernel_sha256": "66a7f14e90ee006ded86e16fa623506eea69ac35fb95dda362cfb3e9943c6a31"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 401525170,
+            "policy_ns": 10567544,
+            "callback_ns": 9660727,
+            "digest_ns": 1500495
+          },
+          "parent_cpu_ns": 84733069,
+          "worker_cpu_seconds": 0.55,
+          "observed_resources": {
+            "parent_rss_bytes": 51900416,
+            "worker_rss_sum_bytes": 301858816,
+            "worker_hwm_sum_bytes": 301858816,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            282186,
+            282187
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 46654838,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    },
+    {
+      "players": 1,
+      "cadence": 2,
+      "workers": 4,
+      "median_wall_ns": 210414297,
+      "median_transitions_per_second": 2433.2947299678976,
+      "min_transitions_per_second": 1752.3034833568645,
+      "max_transitions_per_second": 2616.8465826209485,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 434825297,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "5d7a5b0332785a2f477780c4760cbe1e41956ad6ff864e3e534abeba98db4e8a",
+                "kernel_sha256": "cbc2786db59b112403776fbc3d9397725d4da6e8e8d13aac111cd5d6d6673015"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f255ba1c9f6c22ffd61e44662ca4b9351da4b5346c2a982364c04e8b8fff4e38",
+                "kernel_sha256": "9471d50d26139b6ac0d834dbe62159a7079ab37d669d3c4f1aba95130be901b7"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "315b0c70951f3a90bf27f5b7bcfb7b2534398cfb2b4a6c8a334a054c01080814",
+                "kernel_sha256": "97b7dbe543775fd05f126ab11d0db04466d9beb89697bb85632caf6c7f39dd5d"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f33cf2a7d4f84da38b2369e7c81cd00c372eec263c578c10ff1fdcecd0c64584",
+                "kernel_sha256": "66a7f14e90ee006ded86e16fa623506eea69ac35fb95dda362cfb3e9943c6a31"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 210414297,
+            "policy_ns": 7313629,
+            "callback_ns": 9624640,
+            "digest_ns": 676056
+          },
+          "parent_cpu_ns": 58189583,
+          "worker_cpu_seconds": 0.54,
+          "observed_resources": {
+            "parent_rss_bytes": 51871744,
+            "worker_rss_sum_bytes": 603549696,
+            "worker_hwm_sum_bytes": 603549696,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            281311,
+            281312,
+            281313,
+            281314
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 56905097,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 424367274,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "5d7a5b0332785a2f477780c4760cbe1e41956ad6ff864e3e534abeba98db4e8a",
+                "kernel_sha256": "cbc2786db59b112403776fbc3d9397725d4da6e8e8d13aac111cd5d6d6673015"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f255ba1c9f6c22ffd61e44662ca4b9351da4b5346c2a982364c04e8b8fff4e38",
+                "kernel_sha256": "9471d50d26139b6ac0d834dbe62159a7079ab37d669d3c4f1aba95130be901b7"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "315b0c70951f3a90bf27f5b7bcfb7b2534398cfb2b4a6c8a334a054c01080814",
+                "kernel_sha256": "97b7dbe543775fd05f126ab11d0db04466d9beb89697bb85632caf6c7f39dd5d"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f33cf2a7d4f84da38b2369e7c81cd00c372eec263c578c10ff1fdcecd0c64584",
+                "kernel_sha256": "66a7f14e90ee006ded86e16fa623506eea69ac35fb95dda362cfb3e9943c6a31"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 195655337,
+            "policy_ns": 6797005,
+            "callback_ns": 9602989,
+            "digest_ns": 538235
+          },
+          "parent_cpu_ns": 54606610,
+          "worker_cpu_seconds": 0.52,
+          "observed_resources": {
+            "parent_rss_bytes": 51884032,
+            "worker_rss_sum_bytes": 603742208,
+            "worker_hwm_sum_bytes": 603742208,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            281497,
+            281498,
+            281499,
+            281500
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 47876171,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 434690433,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "5d7a5b0332785a2f477780c4760cbe1e41956ad6ff864e3e534abeba98db4e8a",
+                "kernel_sha256": "cbc2786db59b112403776fbc3d9397725d4da6e8e8d13aac111cd5d6d6673015"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f255ba1c9f6c22ffd61e44662ca4b9351da4b5346c2a982364c04e8b8fff4e38",
+                "kernel_sha256": "9471d50d26139b6ac0d834dbe62159a7079ab37d669d3c4f1aba95130be901b7"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "315b0c70951f3a90bf27f5b7bcfb7b2534398cfb2b4a6c8a334a054c01080814",
+                "kernel_sha256": "97b7dbe543775fd05f126ab11d0db04466d9beb89697bb85632caf6c7f39dd5d"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f33cf2a7d4f84da38b2369e7c81cd00c372eec263c578c10ff1fdcecd0c64584",
+                "kernel_sha256": "66a7f14e90ee006ded86e16fa623506eea69ac35fb95dda362cfb3e9943c6a31"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 292186830,
+            "policy_ns": 9737303,
+            "callback_ns": 13136009,
+            "digest_ns": 868638
+          },
+          "parent_cpu_ns": 79548810,
+          "worker_cpu_seconds": 0.71,
+          "observed_resources": {
+            "parent_rss_bytes": 51888128,
+            "worker_rss_sum_bytes": 603643904,
+            "worker_hwm_sum_bytes": 603643904,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            281725,
+            281726,
+            281727,
+            281728
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 51469928,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    },
+    {
+      "players": 1,
+      "cadence": 10,
+      "workers": 1,
+      "median_wall_ns": 2148799847,
+      "median_transitions_per_second": 238.27254116516139,
+      "min_transitions_per_second": 231.60300300669596,
+      "max_transitions_per_second": 240.59633319947844,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 342643311,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "82ac90ae63a31dfc71fbbd4488e27615328967f6fde2d05925f584f7cb870e27",
+                "kernel_sha256": "3362b073c2fde8c805635a5ba549d28f126afe190a78aa9d4afffbca111314b5"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8a7635fe60c0e531108153687ebd4d95280f75f07b11e81137aa766426a1bd64",
+                "kernel_sha256": "89b854958104352d992532b5ec1feab12e3f993e55d1cfbb79990e250d8813a3"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "9e097cb6ed503d43ad3e2ade1db48bfdfa433e1dd08bdc7df006584a900c9df9",
+                "kernel_sha256": "01b1694235c524e4adba447d9dafdc8e3bfc0282b8953b5b5cb5dd1e67f12fef"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "b268ffeb345bf60a2651507adcb36fcf2a4f1507203d7c47066d518304c59c6e",
+                "kernel_sha256": "723fcf19b3402a04ff54f59a7c29768f9a467c9a3dc353bf3f4928ee877ea1ad"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 2148799847,
+            "policy_ns": 19710450,
+            "callback_ns": 10446000,
+            "digest_ns": 2613044
+          },
+          "parent_cpu_ns": 137835097,
+          "worker_cpu_seconds": 2.0,
+          "observed_resources": {
+            "parent_rss_bytes": 51900416,
+            "worker_rss_sum_bytes": 150958080,
+            "worker_hwm_sum_bytes": 150958080,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            282248
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 34296448,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 377542769,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "82ac90ae63a31dfc71fbbd4488e27615328967f6fde2d05925f584f7cb870e27",
+                "kernel_sha256": "3362b073c2fde8c805635a5ba549d28f126afe190a78aa9d4afffbca111314b5"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8a7635fe60c0e531108153687ebd4d95280f75f07b11e81137aa766426a1bd64",
+                "kernel_sha256": "89b854958104352d992532b5ec1feab12e3f993e55d1cfbb79990e250d8813a3"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "9e097cb6ed503d43ad3e2ade1db48bfdfa433e1dd08bdc7df006584a900c9df9",
+                "kernel_sha256": "01b1694235c524e4adba447d9dafdc8e3bfc0282b8953b5b5cb5dd1e67f12fef"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "b268ffeb345bf60a2651507adcb36fcf2a4f1507203d7c47066d518304c59c6e",
+                "kernel_sha256": "723fcf19b3402a04ff54f59a7c29768f9a467c9a3dc353bf3f4928ee877ea1ad"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 2210679453,
+            "policy_ns": 18965727,
+            "callback_ns": 10575990,
+            "digest_ns": 3092170
+          },
+          "parent_cpu_ns": 137117094,
+          "worker_cpu_seconds": 2.06,
+          "observed_resources": {
+            "parent_rss_bytes": 51929088,
+            "worker_rss_sum_bytes": 150949888,
+            "worker_hwm_sum_bytes": 150949888,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            282694
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 35451411,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 347422945,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "82ac90ae63a31dfc71fbbd4488e27615328967f6fde2d05925f584f7cb870e27",
+                "kernel_sha256": "3362b073c2fde8c805635a5ba549d28f126afe190a78aa9d4afffbca111314b5"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8a7635fe60c0e531108153687ebd4d95280f75f07b11e81137aa766426a1bd64",
+                "kernel_sha256": "89b854958104352d992532b5ec1feab12e3f993e55d1cfbb79990e250d8813a3"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "9e097cb6ed503d43ad3e2ade1db48bfdfa433e1dd08bdc7df006584a900c9df9",
+                "kernel_sha256": "01b1694235c524e4adba447d9dafdc8e3bfc0282b8953b5b5cb5dd1e67f12fef"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "b268ffeb345bf60a2651507adcb36fcf2a4f1507203d7c47066d518304c59c6e",
+                "kernel_sha256": "723fcf19b3402a04ff54f59a7c29768f9a467c9a3dc353bf3f4928ee877ea1ad"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 2128045732,
+            "policy_ns": 17338831,
+            "callback_ns": 10300320,
+            "digest_ns": 2986507
+          },
+          "parent_cpu_ns": 125630572,
+          "worker_cpu_seconds": 1.99,
+          "observed_resources": {
+            "parent_rss_bytes": 51937280,
+            "worker_rss_sum_bytes": 151252992,
+            "worker_hwm_sum_bytes": 151252992,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            282896
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 31608819,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    },
+    {
+      "players": 1,
+      "cadence": 10,
+      "workers": 2,
+      "median_wall_ns": 1290075268,
+      "median_transitions_per_second": 396.8760681644197,
+      "min_transitions_per_second": 390.5619484647406,
+      "max_transitions_per_second": 450.2093374936053,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 364514729,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "82ac90ae63a31dfc71fbbd4488e27615328967f6fde2d05925f584f7cb870e27",
+                "kernel_sha256": "3362b073c2fde8c805635a5ba549d28f126afe190a78aa9d4afffbca111314b5"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8a7635fe60c0e531108153687ebd4d95280f75f07b11e81137aa766426a1bd64",
+                "kernel_sha256": "89b854958104352d992532b5ec1feab12e3f993e55d1cfbb79990e250d8813a3"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "9e097cb6ed503d43ad3e2ade1db48bfdfa433e1dd08bdc7df006584a900c9df9",
+                "kernel_sha256": "01b1694235c524e4adba447d9dafdc8e3bfc0282b8953b5b5cb5dd1e67f12fef"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "b268ffeb345bf60a2651507adcb36fcf2a4f1507203d7c47066d518304c59c6e",
+                "kernel_sha256": "723fcf19b3402a04ff54f59a7c29768f9a467c9a3dc353bf3f4928ee877ea1ad"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 1290075268,
+            "policy_ns": 14045737,
+            "callback_ns": 11500424,
+            "digest_ns": 1576593
+          },
+          "parent_cpu_ns": 106057827,
+          "worker_cpu_seconds": 2.1,
+          "observed_resources": {
+            "parent_rss_bytes": 51904512,
+            "worker_rss_sum_bytes": 302153728,
+            "worker_hwm_sum_bytes": 302153728,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            282279,
+            282280
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 42834331,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 430201166,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "82ac90ae63a31dfc71fbbd4488e27615328967f6fde2d05925f584f7cb870e27",
+                "kernel_sha256": "3362b073c2fde8c805635a5ba549d28f126afe190a78aa9d4afffbca111314b5"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8a7635fe60c0e531108153687ebd4d95280f75f07b11e81137aa766426a1bd64",
+                "kernel_sha256": "89b854958104352d992532b5ec1feab12e3f993e55d1cfbb79990e250d8813a3"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "9e097cb6ed503d43ad3e2ade1db48bfdfa433e1dd08bdc7df006584a900c9df9",
+                "kernel_sha256": "01b1694235c524e4adba447d9dafdc8e3bfc0282b8953b5b5cb5dd1e67f12fef"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "b268ffeb345bf60a2651507adcb36fcf2a4f1507203d7c47066d518304c59c6e",
+                "kernel_sha256": "723fcf19b3402a04ff54f59a7c29768f9a467c9a3dc353bf3f4928ee877ea1ad"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 1310931600,
+            "policy_ns": 13729703,
+            "callback_ns": 10757303,
+            "digest_ns": 1553741
+          },
+          "parent_cpu_ns": 106902718,
+          "worker_cpu_seconds": 2.14,
+          "observed_resources": {
+            "parent_rss_bytes": 51920896,
+            "worker_rss_sum_bytes": 302100480,
+            "worker_hwm_sum_bytes": 302100480,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            282465,
+            282466
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 38098187,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 388720088,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "82ac90ae63a31dfc71fbbd4488e27615328967f6fde2d05925f584f7cb870e27",
+                "kernel_sha256": "3362b073c2fde8c805635a5ba549d28f126afe190a78aa9d4afffbca111314b5"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8a7635fe60c0e531108153687ebd4d95280f75f07b11e81137aa766426a1bd64",
+                "kernel_sha256": "89b854958104352d992532b5ec1feab12e3f993e55d1cfbb79990e250d8813a3"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "9e097cb6ed503d43ad3e2ade1db48bfdfa433e1dd08bdc7df006584a900c9df9",
+                "kernel_sha256": "01b1694235c524e4adba447d9dafdc8e3bfc0282b8953b5b5cb5dd1e67f12fef"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "b268ffeb345bf60a2651507adcb36fcf2a4f1507203d7c47066d518304c59c6e",
+                "kernel_sha256": "723fcf19b3402a04ff54f59a7c29768f9a467c9a3dc353bf3f4928ee877ea1ad"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 1137248736,
+            "policy_ns": 12006443,
+            "callback_ns": 9906705,
+            "digest_ns": 1227007
+          },
+          "parent_cpu_ns": 92840162,
+          "worker_cpu_seconds": 1.99,
+          "observed_resources": {
+            "parent_rss_bytes": 51937280,
+            "worker_rss_sum_bytes": 301867008,
+            "worker_hwm_sum_bytes": 301867008,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            282927,
+            282928
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 40190316,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    },
+    {
+      "players": 1,
+      "cadence": 10,
+      "workers": 4,
+      "median_wall_ns": 764160717,
+      "median_transitions_per_second": 670.0161217525658,
+      "min_transitions_per_second": 646.4708328313662,
+      "max_transitions_per_second": 673.1857563334338,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 426644325,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "82ac90ae63a31dfc71fbbd4488e27615328967f6fde2d05925f584f7cb870e27",
+                "kernel_sha256": "3362b073c2fde8c805635a5ba549d28f126afe190a78aa9d4afffbca111314b5"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8a7635fe60c0e531108153687ebd4d95280f75f07b11e81137aa766426a1bd64",
+                "kernel_sha256": "89b854958104352d992532b5ec1feab12e3f993e55d1cfbb79990e250d8813a3"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "9e097cb6ed503d43ad3e2ade1db48bfdfa433e1dd08bdc7df006584a900c9df9",
+                "kernel_sha256": "01b1694235c524e4adba447d9dafdc8e3bfc0282b8953b5b5cb5dd1e67f12fef"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "b268ffeb345bf60a2651507adcb36fcf2a4f1507203d7c47066d518304c59c6e",
+                "kernel_sha256": "723fcf19b3402a04ff54f59a7c29768f9a467c9a3dc353bf3f4928ee877ea1ad"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 791992421,
+            "policy_ns": 10420838,
+            "callback_ns": 12594638,
+            "digest_ns": 738389
+          },
+          "parent_cpu_ns": 84002734,
+          "worker_cpu_seconds": 2.29,
+          "observed_resources": {
+            "parent_rss_bytes": 51920896,
+            "worker_rss_sum_bytes": 603332608,
+            "worker_hwm_sum_bytes": 603332608,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            282341,
+            282342,
+            282343,
+            282344
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 57741467,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 452591122,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "82ac90ae63a31dfc71fbbd4488e27615328967f6fde2d05925f584f7cb870e27",
+                "kernel_sha256": "3362b073c2fde8c805635a5ba549d28f126afe190a78aa9d4afffbca111314b5"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8a7635fe60c0e531108153687ebd4d95280f75f07b11e81137aa766426a1bd64",
+                "kernel_sha256": "89b854958104352d992532b5ec1feab12e3f993e55d1cfbb79990e250d8813a3"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "9e097cb6ed503d43ad3e2ade1db48bfdfa433e1dd08bdc7df006584a900c9df9",
+                "kernel_sha256": "01b1694235c524e4adba447d9dafdc8e3bfc0282b8953b5b5cb5dd1e67f12fef"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "b268ffeb345bf60a2651507adcb36fcf2a4f1507203d7c47066d518304c59c6e",
+                "kernel_sha256": "723fcf19b3402a04ff54f59a7c29768f9a467c9a3dc353bf3f4928ee877ea1ad"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 760562735,
+            "policy_ns": 9944935,
+            "callback_ns": 13022336,
+            "digest_ns": 821008
+          },
+          "parent_cpu_ns": 81441904,
+          "worker_cpu_seconds": 2.29,
+          "observed_resources": {
+            "parent_rss_bytes": 51924992,
+            "worker_rss_sum_bytes": 603541504,
+            "worker_hwm_sum_bytes": 603541504,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            282527,
+            282528,
+            282529,
+            282530
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 55233399,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 412944059,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "82ac90ae63a31dfc71fbbd4488e27615328967f6fde2d05925f584f7cb870e27",
+                "kernel_sha256": "3362b073c2fde8c805635a5ba549d28f126afe190a78aa9d4afffbca111314b5"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8a7635fe60c0e531108153687ebd4d95280f75f07b11e81137aa766426a1bd64",
+                "kernel_sha256": "89b854958104352d992532b5ec1feab12e3f993e55d1cfbb79990e250d8813a3"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "9e097cb6ed503d43ad3e2ade1db48bfdfa433e1dd08bdc7df006584a900c9df9",
+                "kernel_sha256": "01b1694235c524e4adba447d9dafdc8e3bfc0282b8953b5b5cb5dd1e67f12fef"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "b268ffeb345bf60a2651507adcb36fcf2a4f1507203d7c47066d518304c59c6e",
+                "kernel_sha256": "723fcf19b3402a04ff54f59a7c29768f9a467c9a3dc353bf3f4928ee877ea1ad"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 764160717,
+            "policy_ns": 10072550,
+            "callback_ns": 13114007,
+            "digest_ns": 912131
+          },
+          "parent_cpu_ns": 82811846,
+          "worker_cpu_seconds": 2.23,
+          "observed_resources": {
+            "parent_rss_bytes": 51937280,
+            "worker_rss_sum_bytes": 603500544,
+            "worker_hwm_sum_bytes": 603500544,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            282772,
+            282773,
+            282774,
+            282775
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 50781603,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    },
+    {
+      "players": 11,
+      "cadence": 2,
+      "workers": 1,
+      "median_wall_ns": 654806681,
+      "median_transitions_per_second": 781.9101650247212,
+      "min_transitions_per_second": 734.8294787793224,
+      "max_transitions_per_second": 789.6345426210557,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 385150064,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "fc402619ab66261d1926fec630c3e3fd0f82ab2b65b19a4e714612aba80ec1c6",
+                "kernel_sha256": "be55daad0244a2eaf535010a3104b835520318528b32697985c60e0c568633e7"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "24868bf2645702a7cc363e71184e4083457b3a17bd1759c0848d24facfd43eed",
+                "kernel_sha256": "c0b325c3d4bb1838158c6d700b383cd75885fec631213a2832e8a1cf2e3c911a"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "4cda626d7e7d6af2efb28993622ae154e84fc4d98cc3d336c0a00b83759f37ca",
+                "kernel_sha256": "4ac0fc31ebf172a0c25aeda35a5dab58d3d26625dfa13273cc3bc825134f5bea"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "88f34baffebe3e2553316224fd84a3d18fbb59c837b9775933fb65f93b438e14",
+                "kernel_sha256": "8ffe38216e69346241fe4ee21b7fb4643fbef0c1172d86e8fe844535ade6453b"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 654806681,
+            "policy_ns": 14257506,
+            "callback_ns": 8700684,
+            "digest_ns": 2080837
+          },
+          "parent_cpu_ns": 103772304,
+          "worker_cpu_seconds": 0.54,
+          "observed_resources": {
+            "parent_rss_bytes": 51941376,
+            "worker_rss_sum_bytes": 151306240,
+            "worker_hwm_sum_bytes": 151306240,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            282989
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 30037948,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 382868427,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "fc402619ab66261d1926fec630c3e3fd0f82ab2b65b19a4e714612aba80ec1c6",
+                "kernel_sha256": "be55daad0244a2eaf535010a3104b835520318528b32697985c60e0c568633e7"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "24868bf2645702a7cc363e71184e4083457b3a17bd1759c0848d24facfd43eed",
+                "kernel_sha256": "c0b325c3d4bb1838158c6d700b383cd75885fec631213a2832e8a1cf2e3c911a"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "4cda626d7e7d6af2efb28993622ae154e84fc4d98cc3d336c0a00b83759f37ca",
+                "kernel_sha256": "4ac0fc31ebf172a0c25aeda35a5dab58d3d26625dfa13273cc3bc825134f5bea"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "88f34baffebe3e2553316224fd84a3d18fbb59c837b9775933fb65f93b438e14",
+                "kernel_sha256": "8ffe38216e69346241fe4ee21b7fb4643fbef0c1172d86e8fe844535ade6453b"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 648401219,
+            "policy_ns": 13999029,
+            "callback_ns": 8437138,
+            "digest_ns": 1958853
+          },
+          "parent_cpu_ns": 101622313,
+          "worker_cpu_seconds": 0.54,
+          "observed_resources": {
+            "parent_rss_bytes": 52039680,
+            "worker_rss_sum_bytes": 151134208,
+            "worker_hwm_sum_bytes": 151134208,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            283392
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 30595329,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 384757961,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "fc402619ab66261d1926fec630c3e3fd0f82ab2b65b19a4e714612aba80ec1c6",
+                "kernel_sha256": "be55daad0244a2eaf535010a3104b835520318528b32697985c60e0c568633e7"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "24868bf2645702a7cc363e71184e4083457b3a17bd1759c0848d24facfd43eed",
+                "kernel_sha256": "c0b325c3d4bb1838158c6d700b383cd75885fec631213a2832e8a1cf2e3c911a"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "4cda626d7e7d6af2efb28993622ae154e84fc4d98cc3d336c0a00b83759f37ca",
+                "kernel_sha256": "4ac0fc31ebf172a0c25aeda35a5dab58d3d26625dfa13273cc3bc825134f5bea"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "88f34baffebe3e2553316224fd84a3d18fbb59c837b9775933fb65f93b438e14",
+                "kernel_sha256": "8ffe38216e69346241fe4ee21b7fb4643fbef0c1172d86e8fe844535ade6453b"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 696760289,
+            "policy_ns": 16233380,
+            "callback_ns": 9829288,
+            "digest_ns": 2132836
+          },
+          "parent_cpu_ns": 114017369,
+          "worker_cpu_seconds": 0.58,
+          "observed_resources": {
+            "parent_rss_bytes": 52056064,
+            "worker_rss_sum_bytes": 151142400,
+            "worker_hwm_sum_bytes": 151142400,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            283547
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 30065332,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    },
+    {
+      "players": 11,
+      "cadence": 2,
+      "workers": 2,
+      "median_wall_ns": 407616861,
+      "median_transitions_per_second": 1256.0815044400235,
+      "min_transitions_per_second": 1227.4369224600623,
+      "max_transitions_per_second": 1337.575925622983,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 385414709,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "fc402619ab66261d1926fec630c3e3fd0f82ab2b65b19a4e714612aba80ec1c6",
+                "kernel_sha256": "be55daad0244a2eaf535010a3104b835520318528b32697985c60e0c568633e7"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "24868bf2645702a7cc363e71184e4083457b3a17bd1759c0848d24facfd43eed",
+                "kernel_sha256": "c0b325c3d4bb1838158c6d700b383cd75885fec631213a2832e8a1cf2e3c911a"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "4cda626d7e7d6af2efb28993622ae154e84fc4d98cc3d336c0a00b83759f37ca",
+                "kernel_sha256": "4ac0fc31ebf172a0c25aeda35a5dab58d3d26625dfa13273cc3bc825134f5bea"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "88f34baffebe3e2553316224fd84a3d18fbb59c837b9775933fb65f93b438e14",
+                "kernel_sha256": "8ffe38216e69346241fe4ee21b7fb4643fbef0c1172d86e8fe844535ade6453b"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 382782009,
+            "policy_ns": 11944479,
+            "callback_ns": 9849803,
+            "digest_ns": 1708026
+          },
+          "parent_cpu_ns": 86352237,
+          "worker_cpu_seconds": 0.57,
+          "observed_resources": {
+            "parent_rss_bytes": 51957760,
+            "worker_rss_sum_bytes": 302551040,
+            "worker_hwm_sum_bytes": 302551040,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            283020,
+            283021
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 42797920,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 445069352,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "fc402619ab66261d1926fec630c3e3fd0f82ab2b65b19a4e714612aba80ec1c6",
+                "kernel_sha256": "be55daad0244a2eaf535010a3104b835520318528b32697985c60e0c568633e7"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "24868bf2645702a7cc363e71184e4083457b3a17bd1759c0848d24facfd43eed",
+                "kernel_sha256": "c0b325c3d4bb1838158c6d700b383cd75885fec631213a2832e8a1cf2e3c911a"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "4cda626d7e7d6af2efb28993622ae154e84fc4d98cc3d336c0a00b83759f37ca",
+                "kernel_sha256": "4ac0fc31ebf172a0c25aeda35a5dab58d3d26625dfa13273cc3bc825134f5bea"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "88f34baffebe3e2553316224fd84a3d18fbb59c837b9775933fb65f93b438e14",
+                "kernel_sha256": "8ffe38216e69346241fe4ee21b7fb4643fbef0c1172d86e8fe844535ade6453b"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 407616861,
+            "policy_ns": 12727662,
+            "callback_ns": 9764699,
+            "digest_ns": 1127031
+          },
+          "parent_cpu_ns": 88528707,
+          "worker_cpu_seconds": 0.6,
+          "observed_resources": {
+            "parent_rss_bytes": 52011008,
+            "worker_rss_sum_bytes": 302264320,
+            "worker_hwm_sum_bytes": 302264320,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            283206,
+            283207
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 46035464,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 402828758,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "fc402619ab66261d1926fec630c3e3fd0f82ab2b65b19a4e714612aba80ec1c6",
+                "kernel_sha256": "be55daad0244a2eaf535010a3104b835520318528b32697985c60e0c568633e7"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "24868bf2645702a7cc363e71184e4083457b3a17bd1759c0848d24facfd43eed",
+                "kernel_sha256": "c0b325c3d4bb1838158c6d700b383cd75885fec631213a2832e8a1cf2e3c911a"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "4cda626d7e7d6af2efb28993622ae154e84fc4d98cc3d336c0a00b83759f37ca",
+                "kernel_sha256": "4ac0fc31ebf172a0c25aeda35a5dab58d3d26625dfa13273cc3bc825134f5bea"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "88f34baffebe3e2553316224fd84a3d18fbb59c837b9775933fb65f93b438e14",
+                "kernel_sha256": "8ffe38216e69346241fe4ee21b7fb4643fbef0c1172d86e8fe844535ade6453b"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 417129378,
+            "policy_ns": 12805849,
+            "callback_ns": 10436762,
+            "digest_ns": 1344829
+          },
+          "parent_cpu_ns": 91124691,
+          "worker_cpu_seconds": 0.64,
+          "observed_resources": {
+            "parent_rss_bytes": 52056064,
+            "worker_rss_sum_bytes": 302288896,
+            "worker_hwm_sum_bytes": 302288896,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            283578,
+            283579
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 41597729,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    },
+    {
+      "players": 11,
+      "cadence": 2,
+      "workers": 4,
+      "median_wall_ns": 268026472,
+      "median_transitions_per_second": 1910.2590732157232,
+      "min_transitions_per_second": 1795.016587303035,
+      "max_transitions_per_second": 1927.3009436155762,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 464814255,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "fc402619ab66261d1926fec630c3e3fd0f82ab2b65b19a4e714612aba80ec1c6",
+                "kernel_sha256": "be55daad0244a2eaf535010a3104b835520318528b32697985c60e0c568633e7"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "24868bf2645702a7cc363e71184e4083457b3a17bd1759c0848d24facfd43eed",
+                "kernel_sha256": "c0b325c3d4bb1838158c6d700b383cd75885fec631213a2832e8a1cf2e3c911a"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "4cda626d7e7d6af2efb28993622ae154e84fc4d98cc3d336c0a00b83759f37ca",
+                "kernel_sha256": "4ac0fc31ebf172a0c25aeda35a5dab58d3d26625dfa13273cc3bc825134f5bea"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "88f34baffebe3e2553316224fd84a3d18fbb59c837b9775933fb65f93b438e14",
+                "kernel_sha256": "8ffe38216e69346241fe4ee21b7fb4643fbef0c1172d86e8fe844535ade6453b"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 285234133,
+            "policy_ns": 12136642,
+            "callback_ns": 13911900,
+            "digest_ns": 810239
+          },
+          "parent_cpu_ns": 86967594,
+          "worker_cpu_seconds": 0.75,
+          "observed_resources": {
+            "parent_rss_bytes": 52011008,
+            "worker_rss_sum_bytes": 603893760,
+            "worker_hwm_sum_bytes": 603893760,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            283082,
+            283083,
+            283084,
+            283085
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 55248123,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 476997139,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "fc402619ab66261d1926fec630c3e3fd0f82ab2b65b19a4e714612aba80ec1c6",
+                "kernel_sha256": "be55daad0244a2eaf535010a3104b835520318528b32697985c60e0c568633e7"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "24868bf2645702a7cc363e71184e4083457b3a17bd1759c0848d24facfd43eed",
+                "kernel_sha256": "c0b325c3d4bb1838158c6d700b383cd75885fec631213a2832e8a1cf2e3c911a"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "4cda626d7e7d6af2efb28993622ae154e84fc4d98cc3d336c0a00b83759f37ca",
+                "kernel_sha256": "4ac0fc31ebf172a0c25aeda35a5dab58d3d26625dfa13273cc3bc825134f5bea"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "88f34baffebe3e2553316224fd84a3d18fbb59c837b9775933fb65f93b438e14",
+                "kernel_sha256": "8ffe38216e69346241fe4ee21b7fb4643fbef0c1172d86e8fe844535ade6453b"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 265656488,
+            "policy_ns": 11017212,
+            "callback_ns": 12999934,
+            "digest_ns": 1025562
+          },
+          "parent_cpu_ns": 81688206,
+          "worker_cpu_seconds": 0.7,
+          "observed_resources": {
+            "parent_rss_bytes": 52039680,
+            "worker_rss_sum_bytes": 605061120,
+            "worker_hwm_sum_bytes": 605061120,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            283268,
+            283269,
+            283270,
+            283271
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 55143986,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 451618292,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "fc402619ab66261d1926fec630c3e3fd0f82ab2b65b19a4e714612aba80ec1c6",
+                "kernel_sha256": "be55daad0244a2eaf535010a3104b835520318528b32697985c60e0c568633e7"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "24868bf2645702a7cc363e71184e4083457b3a17bd1759c0848d24facfd43eed",
+                "kernel_sha256": "c0b325c3d4bb1838158c6d700b383cd75885fec631213a2832e8a1cf2e3c911a"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "4cda626d7e7d6af2efb28993622ae154e84fc4d98cc3d336c0a00b83759f37ca",
+                "kernel_sha256": "4ac0fc31ebf172a0c25aeda35a5dab58d3d26625dfa13273cc3bc825134f5bea"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "88f34baffebe3e2553316224fd84a3d18fbb59c837b9775933fb65f93b438e14",
+                "kernel_sha256": "8ffe38216e69346241fe4ee21b7fb4643fbef0c1172d86e8fe844535ade6453b"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 268026472,
+            "policy_ns": 11367248,
+            "callback_ns": 12809128,
+            "digest_ns": 703693
+          },
+          "parent_cpu_ns": 83209165,
+          "worker_cpu_seconds": 0.7,
+          "observed_resources": {
+            "parent_rss_bytes": 52056064,
+            "worker_rss_sum_bytes": 604569600,
+            "worker_hwm_sum_bytes": 604569600,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            283423,
+            283424,
+            283425,
+            283426
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 53693576,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    },
+    {
+      "players": 11,
+      "cadence": 10,
+      "workers": 1,
+      "median_wall_ns": 2194250493,
+      "median_transitions_per_second": 233.33707871246222,
+      "min_transitions_per_second": 231.97881890208996,
+      "max_transitions_per_second": 236.4614774305327,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 395512953,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8022cad7c0430fb20da19f4e4e3cfec92f2f30c9721e813c1102bb7aa4be15e4",
+                "kernel_sha256": "fe5e52e97336afe9ca514bd4a9dbaea63c820c17ca59fe6491b1ec0931484b09"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "727d78ebc41689b0807c1e396bc5e87fc30e64713ba4280c829d54c149b0bc1a",
+                "kernel_sha256": "d507b2b26da3da61153f2854dcc729591682a9efe59ec634b1c70892f01cf08e"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f706f32407207ecaa9a8d331d62f70a3c41b9e6490357f99e92993da0ec33969",
+                "kernel_sha256": "928699e197453e0e4dc53203e50d59b46babf2b9df4119545271fd39ce9435c5"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "6148ffde5dbc770041d43bc6913dd68c1147a0aa4cfbb8ed2dd0c25d86da743d",
+                "kernel_sha256": "bf65ce30fe486a24e64edd6f19958b87c9a6383105f7e003c6c0840e15ef57df"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 2194250493,
+            "policy_ns": 20156522,
+            "callback_ns": 10639890,
+            "digest_ns": 2425445
+          },
+          "parent_cpu_ns": 139952048,
+          "worker_cpu_seconds": 2.04,
+          "observed_resources": {
+            "parent_rss_bytes": 52056064,
+            "worker_rss_sum_bytes": 151183360,
+            "worker_hwm_sum_bytes": 151183360,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            283683
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 37469833,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 383820019,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8022cad7c0430fb20da19f4e4e3cfec92f2f30c9721e813c1102bb7aa4be15e4",
+                "kernel_sha256": "fe5e52e97336afe9ca514bd4a9dbaea63c820c17ca59fe6491b1ec0931484b09"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "727d78ebc41689b0807c1e396bc5e87fc30e64713ba4280c829d54c149b0bc1a",
+                "kernel_sha256": "d507b2b26da3da61153f2854dcc729591682a9efe59ec634b1c70892f01cf08e"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f706f32407207ecaa9a8d331d62f70a3c41b9e6490357f99e92993da0ec33969",
+                "kernel_sha256": "928699e197453e0e4dc53203e50d59b46babf2b9df4119545271fd39ce9435c5"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "6148ffde5dbc770041d43bc6913dd68c1147a0aa4cfbb8ed2dd0c25d86da743d",
+                "kernel_sha256": "bf65ce30fe486a24e64edd6f19958b87c9a6383105f7e003c6c0840e15ef57df"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 2165257553,
+            "policy_ns": 20261111,
+            "callback_ns": 11563790,
+            "digest_ns": 2683633
+          },
+          "parent_cpu_ns": 142059168,
+          "worker_cpu_seconds": 2.01,
+          "observed_resources": {
+            "parent_rss_bytes": 52084736,
+            "worker_rss_sum_bytes": 151166976,
+            "worker_hwm_sum_bytes": 151166976,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            284133
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 34224669,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 374416100,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8022cad7c0430fb20da19f4e4e3cfec92f2f30c9721e813c1102bb7aa4be15e4",
+                "kernel_sha256": "fe5e52e97336afe9ca514bd4a9dbaea63c820c17ca59fe6491b1ec0931484b09"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "727d78ebc41689b0807c1e396bc5e87fc30e64713ba4280c829d54c149b0bc1a",
+                "kernel_sha256": "d507b2b26da3da61153f2854dcc729591682a9efe59ec634b1c70892f01cf08e"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f706f32407207ecaa9a8d331d62f70a3c41b9e6490357f99e92993da0ec33969",
+                "kernel_sha256": "928699e197453e0e4dc53203e50d59b46babf2b9df4119545271fd39ce9435c5"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "6148ffde5dbc770041d43bc6913dd68c1147a0aa4cfbb8ed2dd0c25d86da743d",
+                "kernel_sha256": "bf65ce30fe486a24e64edd6f19958b87c9a6383105f7e003c6c0840e15ef57df"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 2207098055,
+            "policy_ns": 20503033,
+            "callback_ns": 11349244,
+            "digest_ns": 2530306
+          },
+          "parent_cpu_ns": 139901525,
+          "worker_cpu_seconds": 2.05,
+          "observed_resources": {
+            "parent_rss_bytes": 52105216,
+            "worker_rss_sum_bytes": 151187456,
+            "worker_hwm_sum_bytes": 151187456,
+            "worker_fds": 8
+          },
+          "worker_pids": [
+            284288
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 31891892,
+          "exit_codes": [
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    },
+    {
+      "players": 11,
+      "cadence": 10,
+      "workers": 2,
+      "median_wall_ns": 1186143911,
+      "median_transitions_per_second": 431.65082689532096,
+      "min_transitions_per_second": 419.9727104357588,
+      "max_transitions_per_second": 443.7188651106237,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 381290917,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8022cad7c0430fb20da19f4e4e3cfec92f2f30c9721e813c1102bb7aa4be15e4",
+                "kernel_sha256": "fe5e52e97336afe9ca514bd4a9dbaea63c820c17ca59fe6491b1ec0931484b09"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "727d78ebc41689b0807c1e396bc5e87fc30e64713ba4280c829d54c149b0bc1a",
+                "kernel_sha256": "d507b2b26da3da61153f2854dcc729591682a9efe59ec634b1c70892f01cf08e"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f706f32407207ecaa9a8d331d62f70a3c41b9e6490357f99e92993da0ec33969",
+                "kernel_sha256": "928699e197453e0e4dc53203e50d59b46babf2b9df4119545271fd39ce9435c5"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "6148ffde5dbc770041d43bc6913dd68c1147a0aa4cfbb8ed2dd0c25d86da743d",
+                "kernel_sha256": "bf65ce30fe486a24e64edd6f19958b87c9a6383105f7e003c6c0840e15ef57df"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 1153883777,
+            "policy_ns": 13451976,
+            "callback_ns": 9938231,
+            "digest_ns": 1262862
+          },
+          "parent_cpu_ns": 100373378,
+          "worker_cpu_seconds": 2.02,
+          "observed_resources": {
+            "parent_rss_bytes": 52064256,
+            "worker_rss_sum_bytes": 302252032,
+            "worker_hwm_sum_bytes": 302252032,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            283761,
+            283762
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 38541355,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 435970513,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8022cad7c0430fb20da19f4e4e3cfec92f2f30c9721e813c1102bb7aa4be15e4",
+                "kernel_sha256": "fe5e52e97336afe9ca514bd4a9dbaea63c820c17ca59fe6491b1ec0931484b09"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "727d78ebc41689b0807c1e396bc5e87fc30e64713ba4280c829d54c149b0bc1a",
+                "kernel_sha256": "d507b2b26da3da61153f2854dcc729591682a9efe59ec634b1c70892f01cf08e"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f706f32407207ecaa9a8d331d62f70a3c41b9e6490357f99e92993da0ec33969",
+                "kernel_sha256": "928699e197453e0e4dc53203e50d59b46babf2b9df4119545271fd39ce9435c5"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "6148ffde5dbc770041d43bc6913dd68c1147a0aa4cfbb8ed2dd0c25d86da743d",
+                "kernel_sha256": "bf65ce30fe486a24e64edd6f19958b87c9a6383105f7e003c6c0840e15ef57df"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 1186143911,
+            "policy_ns": 13862888,
+            "callback_ns": 10508677,
+            "digest_ns": 1322168
+          },
+          "parent_cpu_ns": 102621595,
+          "worker_cpu_seconds": 2.06,
+          "observed_resources": {
+            "parent_rss_bytes": 52080640,
+            "worker_rss_sum_bytes": 302436352,
+            "worker_hwm_sum_bytes": 302436352,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            283947,
+            283948
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 39950192,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 372848284,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8022cad7c0430fb20da19f4e4e3cfec92f2f30c9721e813c1102bb7aa4be15e4",
+                "kernel_sha256": "fe5e52e97336afe9ca514bd4a9dbaea63c820c17ca59fe6491b1ec0931484b09"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "727d78ebc41689b0807c1e396bc5e87fc30e64713ba4280c829d54c149b0bc1a",
+                "kernel_sha256": "d507b2b26da3da61153f2854dcc729591682a9efe59ec634b1c70892f01cf08e"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f706f32407207ecaa9a8d331d62f70a3c41b9e6490357f99e92993da0ec33969",
+                "kernel_sha256": "928699e197453e0e4dc53203e50d59b46babf2b9df4119545271fd39ce9435c5"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "6148ffde5dbc770041d43bc6913dd68c1147a0aa4cfbb8ed2dd0c25d86da743d",
+                "kernel_sha256": "bf65ce30fe486a24e64edd6f19958b87c9a6383105f7e003c6c0840e15ef57df"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 1219126832,
+            "policy_ns": 16632016,
+            "callback_ns": 11886872,
+            "digest_ns": 1410819
+          },
+          "parent_cpu_ns": 111509336,
+          "worker_cpu_seconds": 2.12,
+          "observed_resources": {
+            "parent_rss_bytes": 52113408,
+            "worker_rss_sum_bytes": 302292992,
+            "worker_hwm_sum_bytes": 302292992,
+            "worker_fds": 16
+          },
+          "worker_pids": [
+            284319,
+            284320
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 48422895,
+          "exit_codes": [
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    },
+    {
+      "players": 11,
+      "cadence": 10,
+      "workers": 4,
+      "median_wall_ns": 772127367,
+      "median_transitions_per_second": 663.1030343987277,
+      "min_transitions_per_second": 661.550282436166,
+      "max_transitions_per_second": 723.2215544793573,
+      "samples": [
+        {
+          "repeat": 0,
+          "startup_ns": 464904144,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8022cad7c0430fb20da19f4e4e3cfec92f2f30c9721e813c1102bb7aa4be15e4",
+                "kernel_sha256": "fe5e52e97336afe9ca514bd4a9dbaea63c820c17ca59fe6491b1ec0931484b09"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "727d78ebc41689b0807c1e396bc5e87fc30e64713ba4280c829d54c149b0bc1a",
+                "kernel_sha256": "d507b2b26da3da61153f2854dcc729591682a9efe59ec634b1c70892f01cf08e"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f706f32407207ecaa9a8d331d62f70a3c41b9e6490357f99e92993da0ec33969",
+                "kernel_sha256": "928699e197453e0e4dc53203e50d59b46babf2b9df4119545271fd39ce9435c5"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "6148ffde5dbc770041d43bc6913dd68c1147a0aa4cfbb8ed2dd0c25d86da743d",
+                "kernel_sha256": "bf65ce30fe486a24e64edd6f19958b87c9a6383105f7e003c6c0840e15ef57df"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 773939659,
+            "policy_ns": 12523584,
+            "callback_ns": 14481167,
+            "digest_ns": 815839
+          },
+          "parent_cpu_ns": 97954461,
+          "worker_cpu_seconds": 2.53,
+          "observed_resources": {
+            "parent_rss_bytes": 52080640,
+            "worker_rss_sum_bytes": 604663808,
+            "worker_hwm_sum_bytes": 604663808,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            283823,
+            283824,
+            283825,
+            283826
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 52365447,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 1,
+          "startup_ns": 476563852,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8022cad7c0430fb20da19f4e4e3cfec92f2f30c9721e813c1102bb7aa4be15e4",
+                "kernel_sha256": "fe5e52e97336afe9ca514bd4a9dbaea63c820c17ca59fe6491b1ec0931484b09"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "727d78ebc41689b0807c1e396bc5e87fc30e64713ba4280c829d54c149b0bc1a",
+                "kernel_sha256": "d507b2b26da3da61153f2854dcc729591682a9efe59ec634b1c70892f01cf08e"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f706f32407207ecaa9a8d331d62f70a3c41b9e6490357f99e92993da0ec33969",
+                "kernel_sha256": "928699e197453e0e4dc53203e50d59b46babf2b9df4119545271fd39ce9435c5"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "6148ffde5dbc770041d43bc6913dd68c1147a0aa4cfbb8ed2dd0c25d86da743d",
+                "kernel_sha256": "bf65ce30fe486a24e64edd6f19958b87c9a6383105f7e003c6c0840e15ef57df"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 772127367,
+            "policy_ns": 12662759,
+            "callback_ns": 13693291,
+            "digest_ns": 730410
+          },
+          "parent_cpu_ns": 97184697,
+          "worker_cpu_seconds": 2.48,
+          "observed_resources": {
+            "parent_rss_bytes": 52084736,
+            "worker_rss_sum_bytes": 604434432,
+            "worker_hwm_sum_bytes": 604434432,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            284009,
+            284010,
+            284011,
+            284012
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 51872107,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        },
+        {
+          "repeat": 2,
+          "startup_ns": 421346771,
+          "collection": {
+            "episodes": [
+              {
+                "episode_id": 0,
+                "seed": 14989153246443613000,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "8022cad7c0430fb20da19f4e4e3cfec92f2f30c9721e813c1102bb7aa4be15e4",
+                "kernel_sha256": "fe5e52e97336afe9ca514bd4a9dbaea63c820c17ca59fe6491b1ec0931484b09"
+              },
+              {
+                "episode_id": 1,
+                "seed": 13332156369504242641,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "727d78ebc41689b0807c1e396bc5e87fc30e64713ba4280c829d54c149b0bc1a",
+                "kernel_sha256": "d507b2b26da3da61153f2854dcc729591682a9efe59ec634b1c70892f01cf08e"
+              },
+              {
+                "episode_id": 2,
+                "seed": 4980446032947543453,
+                "steps": 128,
+                "reward": 0.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "f706f32407207ecaa9a8d331d62f70a3c41b9e6490357f99e92993da0ec33969",
+                "kernel_sha256": "928699e197453e0e4dc53203e50d59b46babf2b9df4119545271fd39ce9435c5"
+              },
+              {
+                "episode_id": 3,
+                "seed": 9035966217712170815,
+                "steps": 128,
+                "reward": -1.0,
+                "terminated": false,
+                "truncated": true,
+                "trajectory_sha256": "6148ffde5dbc770041d43bc6913dd68c1147a0aa4cfbb8ed2dd0c25d86da743d",
+                "kernel_sha256": "bf65ce30fe486a24e64edd6f19958b87c9a6383105f7e003c6c0840e15ef57df"
+              }
+            ],
+            "transitions": 512,
+            "wall_ns": 707943502,
+            "policy_ns": 10968775,
+            "callback_ns": 12712852,
+            "digest_ns": 719454
+          },
+          "parent_cpu_ns": 82654611,
+          "worker_cpu_seconds": 2.27,
+          "observed_resources": {
+            "parent_rss_bytes": 52101120,
+            "worker_rss_sum_bytes": 604352512,
+            "worker_hwm_sum_bytes": 604352512,
+            "worker_fds": 32
+          },
+          "worker_pids": [
+            284164,
+            284165,
+            284166,
+            284167
+          ],
+          "cpu_affinity": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "close_ns": 54449915,
+          "exit_codes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "parent_fds_before": 5,
+          "parent_fds_after": 5
+        }
+      ]
+    }
+  ]
+}
