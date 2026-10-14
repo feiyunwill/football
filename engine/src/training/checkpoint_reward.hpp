@@ -22,6 +22,13 @@ class CheckpointRewards {
     collected_.assign(agents, 0);
   }
   std::span<const uint8_t> collected() const { return collected_; }
+  void restore(std::span<const uint8_t> counts) {
+    if (counts.size() > 11) throw std::invalid_argument("Checkpoint state exceeds eleven agents");
+    for (auto value : counts) if (value > 10) throw std::invalid_argument("Invalid checkpoint state count");
+    std::vector<uint8_t> prepared(counts.begin(), counts.end());
+    collected_.swap(prepared);
+  }
+  void swap(CheckpointRewards& other) noexcept { collected_.swap(other.collected_); }
 
   void apply(const SharedInfo& info, bool right, std::span<float> rewards) {
     if (rewards.size() != collected_.size()) throw std::invalid_argument("Checkpoint reward size mismatch");

@@ -560,6 +560,8 @@ list(APPEND CORE_HEADERS src/training/native_training.hpp)
 list(APPEND CORE_HEADERS src/training/checkpoint_reward.hpp)
 list(APPEND CORE_HEADERS src/training/observation_buffer.hpp)
 list(APPEND CORE_HEADERS src/training/training_snapshot.hpp)
+list(APPEND CORE_HEADERS src/training/snapshot_identity.hpp)
+list(APPEND CORE_SOURCES src/training/snapshot_identity.cpp)
 list(APPEND CORE_HEADERS src/game_load.hpp
   src/frame_sync/native_recovery_replay.hpp
   src/frame_sync/native_sdl_thread_state.hpp)

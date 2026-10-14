@@ -419,10 +419,13 @@ SharedInfo GameEnv::get_info() {
   RequireInitializedMatch(*this);
   ValidateRuntimeConfig(game_config);
   GetTracker()->setDisabled(true);
+  // Snapshot restoration may rebuild observations; allocation failure must balance tracking.
+  struct RestoreObservationTracker {
+    ~RestoreObservationTracker() { GetTracker()->setDisabled(false); }
+  } restore_tracker;
   SharedInfo info;
   GetGameTask()->GetMatch()->GetState(&info);
   info.step = context->step;
-  GetTracker()->setDisabled(false);
   return info;
 }
 

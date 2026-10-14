@@ -37,10 +37,13 @@ history 存储顺序为 `[oldest..newest frame, player, feature]`，每帧 115 �
 
 ## 身份规则与恢复接口约束（NT-2.2 必须落实）
 
-compatibility 由环境生成，为当前引擎构建/资源/ABI 的 SHA256 标识，不能
+compatibility 由环境生成，为当前引擎构建/仿真数据资源/ABI 的 SHA256 标识，不能
 仅使用 Git HEAD（未提交源码或资源会改变行为）。构建输入和资源采用有序
 清单及内容哈希，加入工具链、编译选项与 ABI 标记。恢复前要求标识完全相等；
 格式 version 和内核 FSTA version 都独立验证。v1 不承诺跨构建或跨平台迁移。
+字体和显示设施不参与物理状态身份。导出/恢复时重新核对实际 data 文件清单和
+内容是否符合构建 manifest；每文件最多 64 MiB、全数据集最多 512 MiB、
+目录最多 16384 项。这些检查不出现在逐步采样热路径中。
 
 scenario 为 reset 输入的值身份，按字段序列编码，禁止 memcpy C++ 结构体、
 缓存或指针。首个 u32 为场景身份版本 1，然后编码：ball_position 三轴，

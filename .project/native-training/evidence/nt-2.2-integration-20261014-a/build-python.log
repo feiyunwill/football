@@ -1,0 +1,18 @@
+[  3%] Built target datalib
+[  5%] Built target loaderslib
+[  9%] Built target typeslib
+[ 19%] Built target scenelib
+[ 25%] Built target utilslib
+[ 33%] Built target gui2lib
+[ 43%] Built target baselib
+[ 50%] Built target systemsgraphicslib
+[ 52%] Built target blunted2
+[ 76%] Built target gamelib
+[ 84%] Built target menulib
+[ 84%] Building CXX object CMakeFiles/football_engine.dir/src/game_env.cpp.o
+[ 84%] Building CXX object CMakeFiles/football_engine.dir/src/training/snapshot_identity.cpp.o
+[ 86%] Linking CXX shared library libfootball_engine.so
+[ 98%] Built target football_engine
+[100%] Building CXX object CMakeFiles/game.dir/native_training_bindings.cpp.o
+[100%] Linking CXX shared library libgame.so
+[100%] Built target game

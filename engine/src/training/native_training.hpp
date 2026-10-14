@@ -52,6 +52,9 @@ class NativeTrainingEnv {
   TrainingTransition step(std::span<const int> actions);
   TrainingBatch step_many(std::span<const int> actions, size_t steps);
   std::string get_state_digest();
+  // Full training snapshot, including history/rewards. Target must already be reset.
+  std::string get_state();
+  void set_state(std::string_view state);
   void close();
 
  private:
@@ -69,6 +72,8 @@ class NativeTrainingEnv {
   std::mutex mutex_;
   bool closed_ = false;
   bool ready_ = false;
+  bool snapshot_available_ = false;
+  std::string scenario_identity_;
   bool builtin_ai_action_;
   bool fixed_positions_;
   bool checkpoint_rewards_;

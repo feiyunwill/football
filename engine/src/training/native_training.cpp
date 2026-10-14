@@ -1,4 +1,5 @@
 #include "training/native_training.hpp"
+#include "training/snapshot_identity.hpp"
 #include "gfootball_actions.h"
 #include <algorithm>
 #include <stdexcept>
@@ -142,7 +143,9 @@ ObservationBuffer NativeTrainingEnv::reset(ScenarioConfig& scenario, int physics
       scenario.left_agents < 0 || scenario.right_agents < 0 ||
       scenario.left_agents > 11 || scenario.right_agents > 11)
     throw std::invalid_argument("Native training requires single-team control without control_all_players or real_time");
+  auto identity = ScenarioIdentity(scenario);
   ready_ = false;
+  snapshot_available_ = false;
   env_.game_config.physics_steps_per_frame = physics_steps;
   // Match Core startup/reset order, including the initial default match.
   if (!env_.context) env_.start_game();
@@ -164,6 +167,8 @@ ObservationBuffer NativeTrainingEnv::reset(ScenarioConfig& scenario, int physics
   // auto result = observations(info_);
   auto result = observations(info_, true);
   ready_ = true;
+  scenario_identity_.swap(identity);
+  snapshot_available_ = true;
   return result;
 }
 
@@ -276,6 +281,7 @@ std::pair<bool, int> NativeTrainingEnv::advance(std::span<const int> actions,
     return {terminated, reward};
   } catch (...) {
     ready_ = false;
+    snapshot_available_ = false;
     throw;
   }
 }
@@ -285,10 +291,115 @@ std::string NativeTrainingEnv::get_state_digest() {
   require_open();
   return env_.get_state_digest();
 }
+
+std::string NativeTrainingEnv::get_state() {
+  std::lock_guard lock(mutex_);
+  require_open();
+  if (!snapshot_available_) throw std::logic_error("Reset before saving training state");
+  snapshot::State state;
+  state.compatibility = TrainingCompatibility(env_);
+  state.scenario = scenario_identity_;
+  state.kernel = env_.get_state("");
+  state.builtin_ai_action = builtin_ai_action_;
+  state.fixed_positions = fixed_positions_;
+  state.checkpoint_rewards = checkpoint_rewards_;
+  state.stacked = stacked_;
+  state.ready = ready_;
+  state.left_agents = env_.scenario_config.left_agents;
+  state.right_agents = env_.scenario_config.right_agents;
+  state.physics_steps = env_.game_config.physics_steps_per_frame;
+  state.previous_score_diff = previous_score_diff_;
+  state.previous_game_mode = previous_game_mode_;
+  state.previous_ball_owned_team = previous_ball_owned_team_;
+  if (checkpoint_rewards_) state.checkpoints.assign(checkpoints_.collected().begin(), checkpoints_.collected().end());
+  if (stacked_) {
+    const size_t players = state.left_agents + state.right_agents;
+    state.history.reserve(kFrameStackFrames * players * kSimple115Features);
+    for (size_t age = 0; age < kFrameStackFrames; ++age)
+      for (const auto& row : history_[(history_next_ + age) % kFrameStackFrames])
+        state.history.insert(state.history.end(), row.begin(), row.end());
+  }
+  return snapshot::Encode(state);
+}
+
+void NativeTrainingEnv::set_state(std::string_view bytes) {
+  std::lock_guard lock(mutex_);
+  require_open();
+  if (!snapshot_available_) throw std::logic_error("Reset before restoring training state");
+  auto state = snapshot::Decode(bytes);
+  snapshot::Require(state.compatibility == TrainingCompatibility(env_), "Incompatible training build or runtime dimensions");
+  snapshot::Require(state.scenario == scenario_identity_, "Training scenario identity mismatch");
+  snapshot::Require(state.builtin_ai_action == builtin_ai_action_ && state.fixed_positions == fixed_positions_ &&
+                    state.checkpoint_rewards == checkpoint_rewards_ && state.stacked == stacked_,
+                    "Training options mismatch");
+  snapshot::Require(state.left_agents == static_cast<uint32_t>(env_.scenario_config.left_agents) &&
+                    state.right_agents == static_cast<uint32_t>(env_.scenario_config.right_agents) &&
+                    state.physics_steps == static_cast<uint32_t>(env_.game_config.physics_steps_per_frame),
+                    "Training controller count or cadence mismatch");
+  // Prepare every allocating training object before entering the kernel transaction.
+  CheckpointRewards prepared_checkpoints;
+  prepared_checkpoints.restore(state.checkpoints);
+  std::array<std::vector<Simple115>, kFrameStackFrames> prepared_history;
+  const size_t players = state.left_agents + state.right_agents;
+  if (stacked_) for (size_t age = 0; age < kFrameStackFrames; ++age) {
+    prepared_history[age].resize(players);
+    for (size_t player = 0; player < players; ++player)
+      std::copy_n(state.history.begin() + (age * players + player) * kSimple115Features,
+                  kSimple115Features, prepared_history[age][player].begin());
+  }
+  const auto backup = env_.get_state("");
+  const auto backup_config = env_.scenario_config;
+  try {
+    snapshot::Require(env_.set_state(state.kernel).empty(), "Training kernel contains unexpected external state");
+    auto restored_info = env_.get_info();
+    snapshot::Require((state.ready && env_.state == game_running) || (!state.ready && env_.state == game_done),
+                      "Training readiness disagrees with kernel state");
+    // Incoming goal integers must not overflow while checking their difference.
+    snapshot::Require(restored_info.left_goals >= 0 && restored_info.right_goals >= 0 && restored_info.is_in_play &&
+                      int64_t(state.previous_score_diff) == int64_t(restored_info.left_goals) - restored_info.right_goals,
+                      "Training score history disagrees with kernel state");
+    snapshot::Require(state.previous_game_mode == -1 || state.previous_game_mode == static_cast<int>(restored_info.game_mode),
+                      "Training game-mode history disagrees with kernel state");
+    if (restored_info.ball_owned_team != -1 && state.previous_game_mode != -1)
+      snapshot::Require(state.previous_ball_owned_team == restored_info.ball_owned_team,
+                        "Training possession history disagrees with kernel state");
+    if (stacked_) {
+      const bool right = state.right_agents != 0;
+      const auto& controllers = right ? restored_info.right_controllers : restored_info.left_controllers;
+      for (size_t player = 0; player < players; ++player) {
+        const int active = player < controllers.size() ? controllers[player].controlled_player : -1;
+        snapshot::Require(prepared_history.back()[player] == encode(restored_info, right, active, fixed_positions_),
+                          "Newest frame disagrees with kernel observation");
+      }
+    }
+    // No throwing operations after this point: commit prepared owned data together.
+    static_assert(std::is_nothrow_move_assignable_v<SharedInfo>);
+    info_ = std::move(restored_info);
+    checkpoints_.swap(prepared_checkpoints);
+    history_.swap(prepared_history);
+    history_next_ = 0;
+    previous_score_diff_ = state.previous_score_diff;
+    previous_game_mode_ = state.previous_game_mode;
+    previous_ball_owned_team_ = state.previous_ball_owned_team;
+    ready_ = state.ready;
+  } catch (...) {
+    const auto failure = std::current_exception();
+    try {
+      env_.scenario_config = backup_config;
+      env_.set_state(backup);
+    } catch (...) {
+      closed_ = true; ready_ = snapshot_available_ = false;
+      env_.close();
+      throw std::runtime_error("Training snapshot rollback failed; environment was closed");
+    }
+    std::rethrow_exception(failure);
+  }
+}
 void NativeTrainingEnv::close() {
   std::lock_guard lock(mutex_);
   closed_ = true;
   ready_ = false;
+  snapshot_available_ = false;
   env_.close();
 }
 }  // namespace football::training

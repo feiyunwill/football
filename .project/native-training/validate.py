@@ -118,9 +118,12 @@ def main():
                                'gfootball.test_gymnasium_native', '-v'])
     run('configure-native', configure + ['-DBUILD_PYTHON_BINDINGS=OFF'])
     run('build-native', ['cmake', '--build', str(build), '--target',
-                         'engine_native_training_contract', '--parallel', '1'])
+                         'engine_native_training_contract', 'engine_training_snapshot_contract',
+                         'engine_training_restore_contract', '--parallel', '1'])
     contract = build / 'bin/engine_native_training_contract'
     run('native-contract', [str(contract)])
+    run('snapshot-format-contract', [str(build / 'bin/engine_training_snapshot_contract')])
+    run('training-restore-contract', [str(build / 'bin/engine_training_restore_contract')])
     run('native-linkage', ['ldd', str(contract)])
     linkage = (output / 'native-linkage.log').read_text()
     if any(token in linkage for token in ('libpython', 'libgame.so', '_gameplayfootball', 'not found')):

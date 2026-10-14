@@ -104,7 +104,7 @@ unstacked row strides at 115 rather than storing padded 460-value row structs.
 History contains at most 4×11×115 floats; output is bounded to 256×11 rows.
 
 Rendering, pixels/SMM, extra
-players, recording, state save/restore and `control_all_players` scenarios are
+players, recording, Python state save/restore and `control_all_players` scenarios are
 outside this backend's first implementation. Unsupported factory/configuration
 options raise an error; the backend does not silently switch to Python.
 
@@ -116,6 +116,24 @@ Python integrations must additionally preserve process/thread ownership. It
 returns one float32 observation and scoring reward per player plus the terminal
 flag and the left-minus-right score change. This is separate from the existing
 147-feature RLtools example and does not change its policy or checkpoints.
+
+C++ callers can save complete training state with `env.get_state()` and restore
+with `env.set_state(bytes)`. The target must first reset the same scenario, seed,
+cadence and constructor options, using the same engine build and simulation
+dataset. The versioned binary snapshot contains the engine, checkpoint counters,
+termination history and frame stack. Restore verifies identities before mutation,
+and rolls back if decoding or subsequent consistency checks fail. A normally
+finished match can restore a live snapshot; restoring a terminal snapshot preserves
+the requirement to reset before stepping. New, closed or failed environments
+cannot save/restore. The kernel-only `get_state_digest()` is still a diagnostic,
+and does not cover the complete training state.
+
+Snapshot export/restore verifies runtime data files against the build manifest;
+this work is outside the stepping loop. The format is intended for the supported
+Linux little-endian ABI and identical build/resource inputs. Python integration
+and atomic file operations are the next S2 task; the C++ byte API does not yet
+save external Gym wrappers. Format and failure contracts are described in
+`.project/native-training/SNAPSHOT.md`.
 
 Validation (with an extension built from this checkout):
 

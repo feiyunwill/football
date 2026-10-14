@@ -193,6 +193,7 @@ include_directories(${PROJECT_SOURCE_DIR}/src/cmake)
 
 # Include the sources
 include(sources.cmake)
+include(cmake/training_snapshot_identity.cmake)
 
 add_library(baselib OBJECT ${BASE_SOURCES} ${BASE_HEADERS}
    ${BASE_GEOMETRY_HEADERS} ${BASE_MATH_HEADERS})
@@ -248,6 +249,7 @@ add_library(football_engine SHARED ${CORE_SOURCES} ${CORE_HEADERS} ${AI_HEADERS}
 target_link_libraries(football_engine PRIVATE gamelib menulib datalib blunted2
                                       PUBLIC ${ENGINE_PLATFORM_LIBRARIES})
 target_include_directories(football_engine PUBLIC ${PROJECT_SOURCE_DIR}/src)
+target_include_directories(football_engine PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/generated)
 if(BUILD_PYTHON_BINDINGS)
   add_library(${OUTPUT_LIB_NAME} SHARED ${PYTHON_BINDING_SOURCES})
   target_link_libraries(${OUTPUT_LIB_NAME} PRIVATE football_engine pybind11::module ${Py_TARGETS})
@@ -357,6 +359,9 @@ set_target_properties(engine_native_training_contract PROPERTIES RUNTIME_OUTPUT_
 add_executable(engine_training_snapshot_contract EXCLUDE_FROM_ALL tests/engine_training_snapshot_contract.cpp)
 target_include_directories(engine_training_snapshot_contract PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 set_target_properties(engine_training_snapshot_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+add_executable(engine_training_restore_contract EXCLUDE_FROM_ALL tests/engine_training_restore_contract.cpp)
+target_link_libraries(engine_training_restore_contract PRIVATE football_engine)
+set_target_properties(engine_training_restore_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
 add_executable(engine_state_contract EXCLUDE_FROM_ALL ${ENGINE_STATE_CONTRACT_SOURCES})
 target_link_libraries(engine_state_contract PRIVATE football_engine)
