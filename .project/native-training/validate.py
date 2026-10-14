@@ -25,6 +25,31 @@ ACCEPTANCE_FILES = ('.project/native-training/validate.py',
                     '.github/workflows/native-training.yml')
 
 
+def runtime_identity(python):
+  """Fingerprint the target interpreter's dependencies and selected build tools."""
+  probe = '''import importlib.metadata as m, json, sys
+names = ('numpy', 'gymnasium', 'pybind11', 'opencv-python', 'absl-py', 'six', 'pygame-ce', 'psutil')
+versions = {}
+for name in names:
+  try: versions[name] = m.version(name)
+  except m.PackageNotFoundError: versions[name] = 'missing'
+print(json.dumps(dict(python=sys.version, executable=sys.executable, packages=versions)))
+'''
+  interpreter = json.loads(subprocess.check_output([python, '-I', '-c', probe], text=True))
+  tools = {}
+  for name, requested in (('cmake', 'cmake'), ('cxx', os.environ.get('CXX', 'c++')),
+                          ('cc', os.environ.get('CC', 'cc'))):
+    executable = shutil.which(requested)
+    if executable is None:
+      tools[name] = dict(requested=requested, missing=True)
+    else:
+      path = Path(executable).resolve()
+      tools[name] = dict(path=str(path), sha256=sha(path))
+  environment = {name: os.environ.get(name) for name in
+                 ('CC', 'CXX', 'CFLAGS', 'CXXFLAGS', 'CPPFLAGS', 'LDFLAGS', 'LIBGL_ALWAYS_SOFTWARE')}
+  return dict(platform=platform.platform(), interpreter=interpreter, tools=tools, environment=environment)
+
+
 def sha(path):
   with path.open('rb') as stream:
     return hashlib.file_digest(stream, 'sha256').hexdigest()
@@ -43,6 +68,24 @@ def source_fingerprint():
       manifest[name] = sha(path)
   digest = hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest()
   return dict(sha256=digest, files=len(manifest), manifest=manifest)
+
+
+def selected_compiler(build, key, requested):
+  selected = shutil.which(requested)
+  if selected is None:
+    raise RuntimeError('Missing compiler: ' + requested)
+  cache = build / 'CMakeCache.txt'
+  if cache.is_file():
+    for line in cache.read_text().splitlines():
+      if line.startswith(key + ':') and '=' in line:
+        previous = line.split('=', 1)[1]
+        if previous:
+          if Path(previous).resolve() != Path(selected).resolve():
+            raise RuntimeError('Cached compiler differs; use a new external build-root')
+          # Preserve aliases for the same compiler: changing c++ to g++ can make
+          # CMake reset its cache and discard the requested external output path.
+          return previous
+  return selected
 
 
 def main():
@@ -71,9 +114,10 @@ def main():
   env['GFOOTBALL_NATIVE_PPO_TRAIN'] = str(build / 'bin/native_ppo_train')
   report = dict(passed=False, platform=platform.platform(), commands=[],
                 git_head=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT).decode().strip())
-  report['acceptance_schema'] = 1
+  report['acceptance_schema'] = 2
   report['runner_sha256'] = sha(Path(__file__))
   report['acceptance_inputs'] = {name: sha(ROOT / name) for name in ACCEPTANCE_FILES}
+  report['environment_before'] = runtime_identity(args.python)
   before = source_fingerprint()
   report['source_before'] = before
 
@@ -101,6 +145,8 @@ def main():
     run('compiler-version', ['c++', '--version'])
     configure = ['cmake', '-S', str(ROOT / 'engine'), '-B', str(build),
                  '-DCMAKE_BUILD_TYPE=Release', '-DCMAKE_CXX_STANDARD=23',
+                 '-DCMAKE_CXX_COMPILER=' + selected_compiler(build, 'CMAKE_CXX_COMPILER', os.environ.get('CXX', 'c++')),
+                 '-DCMAKE_C_COMPILER=' + selected_compiler(build, 'CMAKE_C_COMPILER', os.environ.get('CC', 'cc')),
                  '-DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=' + str(build / 'bin')]
     run('configure-python', configure + ['-DBUILD_PYTHON_BINDINGS=ON',
         '-DPython_EXECUTABLE=' + args.python, '-Dpybind11_DIR=' + pybind_dir])
@@ -176,6 +222,9 @@ def main():
       report.update(passed=False, error='Source changed during validation; rerun against stable sources')
     if report['acceptance_inputs'] != {name: sha(ROOT / name) for name in ACCEPTANCE_FILES}:
       report.update(passed=False, error='Acceptance infrastructure changed during validation')
+    report['environment_after'] = runtime_identity(args.python)
+    if report['environment_after'] != report['environment_before']:
+      report.update(passed=False, error='Acceptance environment changed during validation')
     (output / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
   print(json.dumps(dict(passed=report['passed'], report=str(output / 'report.json'),
                         error=report.get('error')), indent=2))

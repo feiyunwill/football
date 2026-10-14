@@ -17,9 +17,11 @@ class QualityTest(unittest.TestCase):
     self.addCleanup(self.directory.cleanup)
     self.root = Path(self.directory.name)
     self.current = {'sha256': 'current', 'files': 1, 'manifest': {'source': 'hash'}}
-    self.report = dict(passed=True, acceptance_schema=1,
+    self.environment = {'interpreter': 'validated', 'tools': 'validated'}
+    self.report = dict(passed=True, acceptance_schema=2,
                        runner_sha256=quality.validate.sha(Path(quality.validate.__file__)),
                        source_before=self.current, source_after=self.current, commands=[])
+    self.report.update(environment_before=self.environment, environment_after=self.environment)
     self.report['acceptance_inputs'] = {name: quality.validate.sha(quality.validate.ROOT / name)
                                         for name in quality.validate.ACCEPTANCE_FILES}
     for name in sorted(quality.REQUIRED):
@@ -30,6 +32,9 @@ class QualityTest(unittest.TestCase):
     self.fingerprint = patch.object(quality.validate, 'source_fingerprint', return_value=self.current)
     self.fingerprint.start()
     self.addCleanup(self.fingerprint.stop)
+    self.runtime = patch.object(quality.validate, 'runtime_identity', return_value=self.environment)
+    self.runtime.start()
+    self.addCleanup(self.runtime.stop)
 
   def verify(self, report=None):
     path = self.root / 'report.json'
@@ -42,10 +47,17 @@ class QualityTest(unittest.TestCase):
   def test_failure_missing_duplicate_and_stale_rejected(self):
     for field, value in [('passed', False), ('acceptance_schema', 0),
                          ('runner_sha256', 'old'), ('acceptance_inputs', {}),
+                         ('environment_before', {}), ('environment_after', {}),
                          ('source_before', {}), ('source_after', {})]:
       with self.subTest(field=field):
         report = copy.deepcopy(self.report); report[field] = value
         with self.assertRaises(ValueError): self.verify(report)
+
+  def test_changed_runtime_dependencies_or_tools_rejected(self):
+    for environment in ({'interpreter': 'different', 'tools': 'validated'},
+                        {'interpreter': 'validated', 'tools': 'different'}):
+      with patch.object(quality.validate, 'runtime_identity', return_value=environment):
+        with self.assertRaises(ValueError): self.verify()
     for mode in ('missing', 'duplicate', 'failed', 'escape'):
       with self.subTest(mode=mode):
         report = copy.deepcopy(self.report)
@@ -54,6 +66,17 @@ class QualityTest(unittest.TestCase):
         elif mode == 'failed': report['commands'][0]['exit_code'] = 1
         else: report['commands'][0]['log'] = '../outside.log'
         with self.assertRaises(ValueError): self.verify(report)
+
+  def test_compiler_alias_preserves_cache_and_output_configuration(self):
+    compiler = self.root / 'compiler'; compiler.write_text('same compiler')
+    alias = self.root / 'alias'; alias.symlink_to(compiler)
+    (self.root / 'CMakeCache.txt').write_text('CMAKE_CXX_COMPILER:FILEPATH=' + str(alias) + '\n')
+    with patch.object(quality.validate.shutil, 'which', return_value=str(compiler)):
+      self.assertEqual(quality.validate.selected_compiler(self.root, 'CMAKE_CXX_COMPILER', 'c++'), str(alias))
+    other = self.root / 'different'; other.write_text('different compiler')
+    with patch.object(quality.validate.shutil, 'which', return_value=str(other)):
+      with self.assertRaises(RuntimeError):
+        quality.validate.selected_compiler(self.root, 'CMAKE_CXX_COMPILER', 'c++')
 
   def test_modified_or_missing_log_rejected(self):
     log = self.root / self.report['commands'][0]['log']

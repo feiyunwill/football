@@ -174,10 +174,19 @@
                                      {
                                          "id":  "NT-5.3",
                                          "status":  "complete",
-                                         "commit":  null,
+                                         "commit":  "888fd9ed21558b1a3544f02279e959d28dd24e1d",
                                          "evidence":  "evidence/nt-5.3-reproduction-20261015-a/report.json"
                                      }
-                                 ]
+                                 ],
+                       "review_fixes":  [
+                                            {
+                                                "id":  "S5-R1",
+                                                "status":  "complete",
+                                                "commit":  null,
+                                                "evidence":  "evidence/s5-review-integration-20261015-b/report.json",
+                                                "review_report":  "reviews/S5-R1.md"
+                                            }
+                                        ]
                    }
                ]
 }

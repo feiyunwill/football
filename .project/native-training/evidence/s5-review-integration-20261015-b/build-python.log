@@ -1,0 +1,58 @@
+[  4%] Built target datalib
+[ 14%] Built target systemsgraphicslib
+[ 16%] Built target loaderslib
+[ 18%] Built target typeslib
+[ 29%] Built target scenelib
+[ 35%] Built target utilslib
+[ 43%] Built target gui2lib
+[ 54%] Built target baselib
+[ 54%] Built target blunted2
+[ 77%] Built target gamelib
+[ 85%] Built target menulib
+[ 97%] Built target football_engine
+[ 97%] Building CXX object CMakeFiles/game.dir/ai.cpp.o
+[100%] Building CXX object CMakeFiles/game.dir/native_training_bindings.cpp.o
+[100%] Linking CXX shared library libgame.so
+[100%] Built target game
+[ 50%] Built target football_categorical_policy
+[ 50%] Linking CXX executable bin/categorical_policy_contract
+[100%] Built target categorical_policy_contract
+[ 33%] Built target football_categorical_policy
+[ 66%] Built target football_ppo_math
+[ 66%] Linking CXX executable bin/ppo_math_contract
+[100%] Built target ppo_math_contract
+[  2%] Built target football_categorical_policy
+[  6%] Built target datalib
+[ 16%] Built target systemsgraphicslib
+[ 18%] Built target loaderslib
+[ 20%] Built target typeslib
+[ 30%] Built target scenelib
+[ 36%] Built target utilslib
+[ 44%] Built target gui2lib
+[ 55%] Built target baselib
+[ 55%] Built target blunted2
+[ 77%] Built target gamelib
+[ 85%] Built target menulib
+[ 97%] Built target football_engine
+[100%] Built target football_native_policy
+[100%] Linking CXX executable bin/native_policy_rollout
+[100%] Built target native_policy_rollout
+[  1%] Built target football_categorical_policy
+[  5%] Built target datalib
+[ 15%] Built target systemsgraphicslib
+[ 16%] Built target loaderslib
+[ 18%] Built target typeslib
+[ 28%] Built target scenelib
+[ 33%] Built target utilslib
+[ 41%] Built target gui2lib
+[ 50%] Built target baselib
+[ 50%] Built target blunted2
+[ 71%] Built target gamelib
+[ 79%] Built target menulib
+[ 90%] Built target football_engine
+[ 92%] Built target football_native_policy
+[ 94%] Built target football_ppo_math
+[ 96%] Built target football_ppo_learner
+[ 98%] Built target football_ppo_evaluation
+[ 98%] Linking CXX executable bin/native_ppo_train
+[100%] Built target native_ppo_train

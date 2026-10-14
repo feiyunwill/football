@@ -22,16 +22,19 @@ ppo-math-contract ppo-checkpoint-contract native-policy-rollout native-ppo-train
 native-ppo-linkage native-policy-linkage native-linkage'''.split())
 
 
-def verify(path):
+def verify(path, python=sys.executable):
   path = Path(path).resolve()
   report = json.loads(path.read_text())
-  if report.get('passed') is not True or report.get('acceptance_schema') != 1:
+  if report.get('passed') is not True or report.get('acceptance_schema') != 2:
     raise ValueError('No passing current-schema acceptance')
   if report.get('runner_sha256') != validate.sha(Path(validate.__file__)):
     raise ValueError('Acceptance runner changed')
   if report.get('acceptance_inputs') != {name: validate.sha(validate.ROOT / name)
                                         for name in validate.ACCEPTANCE_FILES}:
     raise ValueError('Acceptance infrastructure changed')
+  environment = validate.runtime_identity(python)
+  if report.get('environment_before') != environment or report.get('environment_after') != environment:
+    raise ValueError('Acceptance environment changed; use the validated --python or rerun')
   current = validate.source_fingerprint()
   if report.get('source_before') != current or report.get('source_after') != current:
     raise ValueError('Source evidence is stale')
@@ -65,7 +68,7 @@ def main():
         parser.error('run requires --build-root outside the repository')
       subprocess.run([args.python, str(Path(validate.__file__)), '--python', args.python,
                       '--build-root', str(args.build_root), '--output', str(args.output)], check=True)
-    print(json.dumps(verify(args.output / 'report.json'), indent=2))
+    print(json.dumps(verify(args.output / 'report.json', args.python), indent=2))
   except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as error:
     print('native-training quality: ' + str(error), file=sys.stderr)
     return 1
