@@ -269,7 +269,12 @@ std::pair<bool, int> NativeTrainingEnv::advance(std::span<const int> actions,
     int score = info_.left_goals - info_.right_goals;
     int reward = score - previous_score_diff_;
     previous_score_diff_ = score;
-    env_.waiting_for_game_count = mode == e_GameMode_Normal ? 0 : env_.waiting_for_game_count + 1;
+    if (mode == e_GameMode_Normal) env_.waiting_for_game_count = 0;
+    else {
+      if (env_.waiting_for_game_count == std::numeric_limits<int>::max())
+        throw std::overflow_error("Training restart counter capacity exceeded");
+      ++env_.waiting_for_game_count;
+    }
     if (terminated) env_.state = game_done;
     // 2026-10-14: write into caller-owned buffers, without per-frame allocations.
     // TrainingTransition result{observations(info_), {}, terminated, reward};
@@ -352,6 +357,11 @@ void NativeTrainingEnv::set_state(std::string_view bytes) {
   try {
     snapshot::Require(env_.set_state(state.kernel).empty(), "Training kernel contains unexpected external state");
     auto restored_info = env_.get_info();
+    snapshot::Require(restored_info.step >= -1 && env_.waiting_for_game_count >= 0 &&
+                      int64_t(env_.waiting_for_game_count) <= int64_t(restored_info.step) + 1 &&
+                      (restored_info.game_mode != e_GameMode_Normal || env_.waiting_for_game_count == 0) &&
+                      (!state.ready || env_.waiting_for_game_count < std::numeric_limits<int>::max()),
+                      "Training restart counter disagrees with kernel step/mode");
     snapshot::Require((state.ready && env_.state == game_running) || (!state.ready && env_.state == game_done),
                       "Training readiness disagrees with kernel state");
     // Incoming goal integers must not overflow while checking their difference.

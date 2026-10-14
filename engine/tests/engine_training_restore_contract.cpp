@@ -139,6 +139,15 @@ int main(int, char**) {
       reject([&] { env.set_state(ts::Encode(state)); }); unchanged();
     };
     auto bad = original_state; bad.compatibility[0] ^= 1; reject_state(bad);
+    // Correct envelopes must not admit impossible restart bookkeeping.
+    for (uint32_t waiting : {0xffffffffu, 1u, 0x7fffffffu}) {
+      bad = original_state;
+      auto waiting_payload = std::string(ks::Decode(bad.kernel));
+      // Empty external-state length, GameState, then waiting_for_game_count.
+      ks::Write32(waiting_payload, 8, waiting);
+      bad.kernel = ks::Encode(waiting_payload);
+      reject_state(bad);
+    }
     bad = original_state; bad.scenario[0] ^= 1; reject_state(bad);
     bad = original_state; bad.physics_steps = 20; reject_state(bad);
     bad = original_state; bad.builtin_ai_action = true; reject_state(bad);
