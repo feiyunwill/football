@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""Alternate baseline/candidate processes and retain all paired samples."""
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import statistics
+import subprocess
+from validate import ROOT, source_fingerprint
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--python', required=True)
+parser.add_argument('--baseline', type=Path, required=True)
+parser.add_argument('--candidate', type=Path, required=True)
+parser.add_argument('--output', type=Path, required=True)
+parser.add_argument('--steps', type=int, default=512)
+parser.add_argument('--repeats', type=int, default=8)
+args = parser.parse_args()
+if not 32 <= args.steps <= 1024 or not 4 <= args.repeats <= 20: parser.error('Invalid comparison budget')
+output = args.output.resolve(); output.mkdir(parents=True, exist_ok=False)
+stages = {'baseline':args.baseline.resolve(), 'candidate':args.candidate.resolve()}
+report = {'passed':False, 'source_before':source_fingerprint(), 'workloads':[], 'commands':[]}
+report['baseline_manifest'] = json.loads((stages['baseline'] / 'baseline.json').read_text())
+
+def run(variant, players, cadence, feedback, verify, name):
+  stage = stages[variant]
+  env = dict(os.environ, PYTHONPATH=str(stage) + os.pathsep + str(ROOT),
+             GFOOTBALL_DATA_DIR=str(ROOT / 'engine/data'), GFOOTBALL_FONT=str(ROOT / 'engine/fonts/AlegreyaSansSC-ExtraBold.ttf'))
+  command = [args.python, str(ROOT / '.project/native-training/benchmark_candidate_rollout.py'),
+             '--players',str(players), '--cadence',str(cadence), '--steps',str(128 if verify else args.steps),
+             '--output',str(output / (name + '.json'))]
+  if feedback: command.append('--feedback')
+  if verify: command.append('--verify')
+  result = subprocess.run(command, cwd=ROOT, env=env, capture_output=True)
+  log = result.stdout + result.stderr; (output / (name + '.log')).write_bytes(log)
+  report['commands'].append({'argv':command, 'variant':variant, 'exit_code':result.returncode,
+                             'sha256':hashlib.sha256(log).hexdigest()})
+  if result.returncode: raise RuntimeError('Comparison process failed: ' + name)
+  data = json.loads((output / (name + '.json')).read_text())
+  expected = (stage / 'gfootball_engine/_gameplayfootball.so').resolve()
+  if Path(data['loaded_module']) != expected: raise RuntimeError('Wrong extension loaded')
+  return data
+
+try:
+  for players in (1, 11):
+    for cadence in (2, 10):
+      for feedback in (False, True):
+        prefix = f'p{players}-c{cadence}-feedback{int(feedback)}'
+        print(prefix, flush=True)
+        verified = {v:run(v, players,cadence,feedback,True,prefix + '-verify-' + v) for v in stages}
+        if verified['baseline']['trajectory_sha256'] != verified['candidate']['trajectory_sha256']:
+          raise RuntimeError('Per-step observations/rewards/kernel state changed: ' + prefix)
+        samples = {v:[] for v in stages}; cpu_samples = {v:[] for v in stages}; digest = None
+        for repeat in range(args.repeats):
+          order = ('baseline','candidate') if repeat % 2 == 0 else ('candidate','baseline')
+          for variant in order:
+            data = run(variant, players,cadence,feedback,False,f'{prefix}-r{repeat}-{variant}')
+            if digest is None: digest = data['final_sha256']
+            if digest != data['final_sha256']: raise RuntimeError('Timed rollout state changed')
+            samples[variant].append(data['elapsed_ns'])
+            cpu_samples[variant].append(data['cpu_ns'])
+        ratios = [a / b for a,b in zip(samples['baseline'], samples['candidate'])]
+        cpu_ratios = [a / b for a,b in zip(cpu_samples['baseline'], cpu_samples['candidate'])]
+        report['workloads'].append({'players':players,'cadence':cadence,'feedback':feedback,
+                                    'samples_ns':samples,'paired_speedups':ratios,
+                                    'median_speedup':statistics.median(ratios), 'final_sha256':digest,
+                                    'cpu_samples_ns':cpu_samples, 'paired_cpu_speedups':cpu_ratios,
+                                    'median_cpu_speedup':statistics.median(cpu_ratios), 'cpu_affinity':data['cpu_affinity'],
+                                    'verified_trajectory_sha256':verified['baseline']['trajectory_sha256']})
+  report['passed'] = True; report['error'] = None
+except Exception as error:
+  report['error'] = str(error)
+finally:
+  report['source_after'] = source_fingerprint()
+  if report['source_before'] != report['source_after']: report.update(passed=False,error='Source changed during comparison')
+  (output / 'report.json').write_text(json.dumps(report,indent=2) + '\n')
+print(json.dumps({'passed':report['passed'],'error':report.get('error')},indent=2))
+raise SystemExit(0 if report['passed'] else 1)

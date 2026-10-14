@@ -1,0 +1,53 @@
+diff --git a/engine/src/onthepitch/ball.cpp b/engine/src/onthepitch/ball.cpp
+--- a/engine/src/onthepitch/ball.cpp
++++ b/engine/src/onthepitch/ball.cpp
+@@ -556,7 +556,7 @@ BallSpatialInfo Ball::CalculatePrediction() {
+ }
+ 
+ Vector3 Ball::GetAveragePosition(unsigned int duration_ms) const {
+-  std::list<Vector3>::const_reverse_iterator iter = ballPosHistory.rbegin();
++  auto iter = ballPosHistory.rbegin();
+   unsigned int total = 0;
+   Vector3 averageVec;
+   while (iter != ballPosHistory.rend()) {
+diff --git a/engine/src/onthepitch/ball.hpp b/engine/src/onthepitch/ball.hpp
+--- a/engine/src/onthepitch/ball.hpp
++++ b/engine/src/onthepitch/ball.hpp
+@@ -24,6 +24,7 @@
+ 
+ #include "../gamedefines.hpp"
+ #include "../utils.hpp"
++#include <deque>
+ 
+ using namespace blunted;
+ 
+@@ -112,7 +113,8 @@ class Ball {
+     int valid_predictions = 0;
+     Quaternion orientPrediction;
+ 
+-    std::list<Vector3> ballPosHistory;
++    // Preserve chronological order while avoiding one allocation/cache miss per history node.
++    std::deque<Vector3> ballPosHistory;
+ 
+     Vector3 positionBuffer;
+     Quaternion orientationBuffer;
+diff --git a/engine/src/onthepitch/ecs_components.hpp b/engine/src/onthepitch/ecs_components.hpp
+--- a/engine/src/onthepitch/ecs_components.hpp
++++ b/engine/src/onthepitch/ecs_components.hpp
+@@ -24,6 +24,7 @@
+ #include "../data/playerdata.hpp"
+ 
+ #include <list>
++#include <deque>
+ 
+ class Player;
+ 
+@@ -36,7 +37,7 @@ struct BallComponent {
+   Vector3 predictions[ballPredictionSize_ms / 10 + cachedPredictions + 1];
+   int valid_predictions = 0;
+   Quaternion orientPrediction;
+-  std::list<Vector3> ballPosHistory;
++  std::deque<Vector3> ballPosHistory;
+   Vector3 positionBuffer;
+   Quaternion orientationBuffer;
+   bool ballTouchesNet = false;

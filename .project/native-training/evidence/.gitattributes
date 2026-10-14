@@ -1,3 +1,5 @@
 # Keep raw command logs byte-for-byte, including progress-line spaces and blank lines.
 # *.log whitespace=-blank-at-eof
 *.log whitespace=-blank-at-eof,-blank-at-eol
+# Unified diff context includes a single space on empty source lines.
+*.patch whitespace=-blank-at-eol

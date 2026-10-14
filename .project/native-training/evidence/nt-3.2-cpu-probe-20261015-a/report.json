@@ -1,0 +1,30 @@
+{
+  "experiment": "/tmp/football-nt3-engine-cpu-20261015-a.er",
+  "commands": [
+    {
+      "argv": [
+        "gprofng",
+        "display",
+        "text",
+        "-limit",
+        "40",
+        "-functions",
+        "/tmp/football-nt3-engine-cpu-20261015-a.er"
+      ],
+      "exit_code": 0,
+      "sha256": "7fc1b2cb55c303ed249ca1df0016f8a03832f21978d7c7c5075ac09c6d90faed"
+    },
+    {
+      "argv": [
+        "gprofng",
+        "display",
+        "text",
+        "-statistics",
+        "-overview",
+        "/tmp/football-nt3-engine-cpu-20261015-a.er"
+      ],
+      "exit_code": 0,
+      "sha256": "964b07a0f2dfc679f69daa8390c6bd2b5fd9fce126bed6115ad7b39153f43b97"
+    }
+  ]
+}

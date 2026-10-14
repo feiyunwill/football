@@ -1,0 +1,52 @@
+Experiment: /tmp/football-nt3-engine-cpu-20261015-a.er
+        Aggregated statistics for selected samples
+
+                                       Start Label: Total
+                                         End Label: Total
+                                 Start Time (sec.):  0.000
+                                   End Time (sec.): 17.400
+                                   Duration (sec.): 17.400
+                          Total Thread Time (sec.): 19.568
+                         Average number of Threads:  1.125
+
+                              Process Times (sec.):
+                                          User CPU: 18.635 ( 95.2%)
+                                        System CPU:  0.923 (  4.7%)
+                                          Trap CPU:  0.    (  0. %)
+                                         User Lock:  0.    (  0. %)
+                                   Data Page Fault:  0.    (  0. %)
+                                   Text Page Fault:  0.    (  0. %)
+                                 Kernel Page Fault:  0.    (  0. %)
+                                           Stopped:  0.    (  0. %)
+                                          Wait CPU:  0.    (  0. %)
+                                             Sleep:  0.010 (  0.1%)
+
+                                 Minor Page Faults:  30658
+                                 Major Page Faults:      0
+                                     Process swaps:      0
+                                      Input blocks:      0
+                                     Output blocks:      0
+                                     Messages sent:      0
+                                 Messages received:      0
+                                   Signals handled:      0
+                        Voluntary context switches:     74
+                      Involuntary context switches:    259
+                                      System calls:      0
+                                 Characters of I/O:      0
+
+Experiment(s):
+
+Experiment      :/tmp/football-nt3-engine-cpu-20261015-a.er
+  Target        : '/tmp/football-native-training-venv/bin/python .project/native-training/profile_engine_cpu.py --steps 4096 --players 1 --cadence 10 --collector'
+  Host          : DESKTOP-Q8P21MC (x86_64, Linux 6.18.33.2-microsoft-standard-WSL2)
+  Start Time    : Thu Oct 15 04:02:55 2026
+  Duration      : 17.400 Seconds
+
+Metrics:
+
+  Experiment Duration (Seconds): [17.400]
+  Clock Profiling
+    [X]Total CPU Time - totalcpu (Seconds): [*0.845]
+
+Notes: '*' indicates hot metrics, '[X]' indicates currently enabled metrics.
+       The metrics command can be used to change selections. The metric_list command lists all available metrics.

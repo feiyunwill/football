@@ -1,0 +1,47 @@
+Functions sorted by metric: Exclusive Total CPU Time
+
+Excl. Total   Incl. Total    Name
+CPU           CPU
+ sec.      %   sec.      %
+0.845 100.00  0.845 100.00   <Total>
+0.095  11.24  0.175  20.71   blunted::Node::RecursiveUpdateSpatialData(blunted::e_SpatialDataType, blunted::e_SystemType)
+0.065   7.69  0.065   7.69   Ball::Mirror()
+0.045   5.33  0.045   5.33   <static>@0x8a5d2 (<libm.so.6>)
+0.045   5.33  0.095  11.24   AnimCollection::CrudeSelection(std::vector<int, std::allocator<int> >&, CrudeSelectionQuery const&)
+0.040   4.73  0.065   7.69   blunted::Geometry::RecursiveUpdateSpatialData(blunted::e_SpatialDataType, blunted::e_SystemType)
+0.035   4.14  0.040   4.73   TimeNeeded AIReachabilityTrajectory::EstimateImpl<true>(blunted::Vector3 const&, blunted::Vector3 const&, blunted::Vector3 const&, float, bool, unsigned int, AIReachabilityTrajectory*)
+0.035   4.14  0.035   4.14   atan2f
+0.035   4.14  0.035   4.14   blunted::Quaternion::Normalize()
+0.025   2.96  0.190  22.49   HumanoidBase::Mirror()
+0.025   2.96  0.170  20.12   blunted::Animation::Apply(boost::intrusive_ptr<blunted::Node> const (&) [14], int, int, bool, float, blunted::Vector3 const&, blunted::radian, blunted::BiasedOffsets&, std::vector<blunted::MovementHistoryEntry, std::allocator<blunted::MovementHistoryEntry> >*, int, bool, bool)
+0.020   2.37  0.020   2.37   <static>@0x175a00 (<libc.so.6>)
+0.020   2.37  0.040   4.73   HumanoidBase::CalculatePhysicsVector(blunted::Animation*, bool, blunted::Vector3 const&, bool, blunted::Vector3 const&, std::vector<blunted::Vector3, std::allocator<blunted::Vector3> >&, blunted::radian&) const
+0.020   2.37  0.020   2.37   acosf
+0.020   2.37  0.040   4.73   blunted::Quaternion::GetSlerped(float, blunted::Quaternion const&) const
+0.020   2.37  0.020   2.37   blunted::Spatial::InvalidateSpatialData()
+0.015   1.78  0.020   2.37   Ball::CalculatePrediction()
+0.015   1.78  0.025   2.96   Humanoid::CalculateGeomOffsets()
+0.015   1.78  0.015   1.78   Match::CheckHumanoidCollision(Player*, Player*, std::vector<PlayerBounce, std::allocator<PlayerBounce> >&, std::vector<PlayerBounce, std::allocator<PlayerBounce> >&)
+0.015   1.78  0.015   1.78   SyncPlayerPhysicsSystem(Match*)
+0.015   1.78  0.050   5.92   blunted::Quaternion::GetNormalized() const
+0.015   1.78  0.015   1.78   blunted::intrusive_ptr_add_ref(blunted::RefCounted*)
+0.010   1.18  0.020   2.37   HumanoidBase::CalculateSpatialState()
+0.010   1.18  0.010   1.18   MentalImage::Mirror(bool, bool, bool)
+0.010   1.18  0.010   1.18   blunted::Animation::GetIncomingVelocity() const
+0.010   1.18  0.010   1.18   blunted::Spatial::InvalidateBoundingVolume()
+0.010   1.18  0.010   1.18   roundf
+0.005   0.59  0.005   0.59   <static>@0x9cf3e (<libc.so.6>)
+0.005   0.59  0.005   0.59   GetContext()
+0.005   0.59  0.005   0.59   GetGameConfig()
+0.005   0.59  0.005   0.59   HumanoidBase::GetMovementSimilarity(int, blunted::Vector3 const&, e_Velocity, float) const
+0.005   0.59  0.005   0.59   IController::GetReactionTime_ms()
+0.005   0.59  0.005   0.59   Match::GetAnimPositionCache(blunted::Animation*) const
+0.005   0.59  0.040   4.73   Match::PreparePutBuffers()
+0.005   0.59  0.005   0.59   Match::UpdateIngameCamera()
+0.005   0.59  0.005   0.59   MentalImage::GetBallPrediction(int) const
+0.005   0.59  0.055   6.51   Player::UpdatePossessionStats()
+0.005   0.59  0.010   1.18   PopulateCollisionResults(Match*)
+0.005   0.59  0.005   0.59   PyType_IsSubtype
+0.005   0.59  0.005   0.59   QuantizeDirection(blunted::Vector3&, float)
+
+Print limit set to 40
