@@ -255,7 +255,10 @@ set(BLUNTED_CORE_SOURCES
 #   src/game_env.hpp
 # )
 #
-set(PYTHON_BINDING_SOURCES ai.cpp)
+# 2026-10-14: bind the shared C++ training adapter separately from gameplay types.
+# set(PYTHON_BINDING_SOURCES ai.cpp)
+set(PYTHON_BINDING_SOURCES ai.cpp native_training_bindings.cpp)
+set(ENGINE_NATIVE_TRAINING_CONTRACT_SOURCES tests/engine_native_training_contract.cpp)
 # 2026-09-09: native acceptance links the same engine as shipping executables.
 set(ENGINE_STATE_CONTRACT_SOURCES tests/engine_state_contract.cpp)
 set(ENGINE_LIFETIME_CONTRACT_SOURCES tests/engine_lifetime_contract.cpp)
@@ -317,6 +320,7 @@ set(CORE_HEADERS
 )
 
 set(CORE_SOURCES
+   src/training/native_training.cpp
    src/cmake/backtrace.cpp
    src/cmake/file.cpp
    src/misc/perlin.cpp
@@ -552,6 +556,7 @@ set(FOOTBALL_NATIVE_RECOVERY_SOURCES src/frame_sync/native_recovery_digest.cpp)
 
 # 2026-09-15: register the owned resource-loading callback in the shared engine.
 list(APPEND CORE_SOURCES src/game_load.cpp)
+list(APPEND CORE_HEADERS src/training/native_training.hpp)
 list(APPEND CORE_HEADERS src/game_load.hpp
   src/frame_sync/native_recovery_replay.hpp
   src/frame_sync/native_sdl_thread_state.hpp)

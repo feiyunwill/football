@@ -31,6 +31,8 @@ PYBIND11_MAKE_OPAQUE(std::vector<FormationEntry>);
 #include <memory>
 
 namespace py = pybind11;
+// 2026-10-14: register headless training after ScenarioConfig and GameConfig.
+void BindNativeTraining(py::module_& module);
 using std::string;
 
 // 2026-04-02 pybind11：使 std::shared_ptr 成为合法 holder（否则 class_<T, std::shared_ptr<T>> 静态断言失败）
@@ -121,6 +123,7 @@ class GameEnv_Python : public GameEnv {
 };
 
 PYBIND11_MODULE(_gameplayfootball, m) {
+  // Registration is deferred until the gameplay types below are available.
   py::class_<std::vector<float>>(m, "FloatVec")
       .def(py::init<>())
       .def("__len__", [](const std::vector<float>& v) { return v.size(); })
@@ -423,4 +426,5 @@ PYBIND11_MODULE(_gameplayfootball, m) {
       .value("e_Left", e_Team::e_Left)
       .value("e_Right", e_Team::e_Right)
       .export_values();
+  BindNativeTraining(m);
 }

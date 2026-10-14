@@ -3,11 +3,11 @@
   "objective": "兼容、可复现、可独立运行的 C++ 训练链路",
   "created": "2026-10-14",
   "active_stage": "S0",
-  "active_task": "NT-0.1",
+  "active_task": "NT-0.2",
   "stages": [
     {"id": "S0", "status": "in_progress", "review": "pending", "tasks": [
-      {"id": "NT-0.1", "status": "in_progress", "commit": null},
-      {"id": "NT-0.2", "status": "pending", "commit": null},
+      {"id": "NT-0.1", "status": "complete", "commit": "ec32411d9331541409f70b57de63dd9569d08a5b"},
+      {"id": "NT-0.2", "status": "in_progress", "commit": null},
       {"id": "NT-0.3", "status": "pending", "commit": null}
     ]},
     {"id": "S1", "status": "pending", "review": "pending", "tasks": [

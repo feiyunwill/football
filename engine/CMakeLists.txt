@@ -348,6 +348,11 @@ target_link_libraries(standalone_game PRIVATE football_engine)
 set_target_properties(standalone_game PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
 # 2026-09-09: real-match contracts are distinct from header-only unit tests.
+# 2026-10-14: the shared training adapter must also run without Python bindings.
+add_executable(engine_native_training_contract EXCLUDE_FROM_ALL ${ENGINE_NATIVE_TRAINING_CONTRACT_SOURCES})
+target_link_libraries(engine_native_training_contract PRIVATE football_engine)
+set_target_properties(engine_native_training_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+
 add_executable(engine_state_contract EXCLUDE_FROM_ALL ${ENGINE_STATE_CONTRACT_SOURCES})
 target_link_libraries(engine_state_contract PRIVATE football_engine)
 set_target_properties(engine_state_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})

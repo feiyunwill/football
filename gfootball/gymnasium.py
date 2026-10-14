@@ -14,6 +14,9 @@ register_gymnasium_envs()
 class FootballEnv(gym.Env):
   """Joint-action football environment with a scalar team reward.
 
+backend='native' selects headless C++ simple115v2/scoring processing. It supports
+single-team control and rejects unsupported wrappers/configuration explicitly.
+
 For multiple controlled players on one team, reward is the mean of their
 individual rewards, also exposed as info['agent_rewards']. Opposing teams
 require separate policies and remain available through the legacy factory.
@@ -22,7 +25,15 @@ TimeLimit wrappers truncate a rollout without redefining the match outcome.
 """
   metadata = {'render_modes': ['human', 'rgb_array'], 'render_fps': 10}
 
-  def __init__(self, *, render_mode=None, **kwargs):
+  # 2026-10-14: opt-in C++ training keeps the established Python backend default.
+  # def __init__(self, *, render_mode=None, **kwargs):
+  def __init__(self, *, render_mode=None, backend='python', **kwargs):
+    if backend not in ('python', 'native'):
+      raise ValueError('backend must be python or native')
+    self._backend = backend
+    if backend == 'native':
+      kwargs = dict(kwargs)
+      kwargs.setdefault('representation', 'simple115v2')
     if render_mode not in (None, 'human', 'rgb_array'):
       raise ValueError('render_mode must be None, human or rgb_array')
     representation = kwargs.get('representation', 'extracted')
@@ -51,7 +62,12 @@ TimeLimit wrappers truncate a rollout without redefining the match outcome.
     if 'game_engine_random_seed' not in options:
       options['game_engine_random_seed'] = int(self.np_random.integers(0, 2000000001))
     kwargs = dict(kwargs, other_config_options=options)
-    from gfootball.env import create_environment
+    # 2026-10-14: both backends expose the same four-result internal protocol.
+    # from gfootball.env import create_environment
+    if backend == 'native':
+      from gfootball.native_training import NativeEnvironment as create_environment
+    else:
+      from gfootball.env import create_environment
     try:
       self._env = create_environment(
           render=render_mode is not None or representation.startswith('pixels'),
@@ -83,6 +99,7 @@ TimeLimit wrappers truncate a rollout without redefining the match outcome.
   def reset(self, *, seed=None, options=None):
     if self._closed:
       raise RuntimeError('Cannot reset a closed football environment')
+    self._check_backend_owner()
     if options is not None and (type(options) is not dict or options):
       raise ValueError('No per-reset options are supported; configure at creation')
     if seed is not None and (type(seed) is not int or seed < 0):
@@ -116,6 +133,7 @@ TimeLimit wrappers truncate a rollout without redefining the match outcome.
   def step(self, action):
     if self._closed or self._needs_reset:
       raise gym.error.ResetNeeded('Reset before stepping a new or finished match')
+    self._check_backend_owner()
     if not self.action_space.contains(action):
       raise ValueError('Action is outside the football action space')
     # 2026-09-10: abort a failed transition or output transform atomically.
@@ -140,11 +158,34 @@ TimeLimit wrappers truncate a rollout without redefining the match outcome.
       self._abort(error)
       raise
 
+  def step_many(self, actions):
+    """Execute up to 256 predetermined actions; stop at the first terminal step.
+
+    Returns arrays of observations, mean rewards, terminated, truncated, and
+    batched info. Call on the raw native FootballEnv, without external wrappers.
+    """
+    if self._backend != 'native':
+      raise ValueError('step_many requires backend=native')
+    if self._closed or self._needs_reset:
+      raise gym.error.ResetNeeded('Reset before stepping a new or finished match')
+    # Invalid batches preserve the live environment, including an invalid suffix.
+    values = self._env.validate_batch_actions(actions)
+    try:
+      observations, agent_rewards, terminated, scores = self._env.step_many(values)
+      self._needs_reset = bool(terminated[-1])
+      return (observations, agent_rewards.mean(axis=1), terminated,
+              np.zeros(terminated.shape, dtype=bool),
+              {'agent_rewards': agent_rewards, 'score_reward': scores})
+    except BaseException as error:
+      self._abort(error)
+      raise
+
   def render(self):
     # 2026-09-10: the final match image remains renderable until close/reset.
     # if self._closed or self._needs_reset:
     if self._closed or not self._has_reset:
       raise gym.error.ResetNeeded('Reset before rendering a football environment')
+    self._check_backend_owner()
     if self.render_mode is None:
       return None
     # 2026-09-10: human rendering returns None under the Gymnasium contract.
@@ -159,7 +200,13 @@ TimeLimit wrappers truncate a rollout without redefining the match outcome.
   def close(self):
     if self._closed:
       return
+    self._check_backend_owner()
     self._closed = True
     self._needs_reset = True
     if self._env is not None:
       self._env.close()
+
+  def _check_backend_owner(self):
+    # 2026-10-14: reject wrong-thread/fork calls before RNG, config or lifetime changes.
+    if self._backend == 'native' and self._env is not None:
+      self._env._check_open()

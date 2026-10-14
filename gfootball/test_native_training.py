@@ -1,0 +1,306 @@
+"""C++ training parity against the maintained Python implementation."""
+import random
+import threading
+import unittest
+from unittest import mock
+
+import gymnasium as gym
+from gymnasium.utils.env_checker import check_env
+import numpy as np
+
+from gfootball.engine_pool import ENGINE_POOL
+from gfootball.gymnasium import FootballEnv
+
+
+class NativeTrainingTest(unittest.TestCase):
+  def make(self, backend='native', **kwargs):
+    values = dict(env_name='11_vs_11_easy_stochastic', representation='simple115v2',
+                  other_config_options=dict(game_engine_random_seed=42,
+                                            render_resolution_x=160, render_resolution_y=90,
+                                            display_game_stats=False))
+    values.update(kwargs)
+    env = FootballEnv(backend=backend, **values)
+    self.addCleanup(env.close)
+    return env
+
+  @staticmethod
+  def digest(env, backend):
+    if backend == 'native':
+      return env._env._native.get_state_digest()
+    return env._env.unwrapped._env._env.get_state_digest()
+
+  def test_python_parity_for_both_teams_sparse_and_joint_actions(self):
+    for level, left, right, steps in (
+        ('11_vs_11_easy_stochastic', 1, 0, 40),
+        ('11_vs_11_easy_stochastic', 0, 2, 40),
+        ('11_vs_11_easy_stochastic', 11, 0, 16),
+        ('academy_empty_goal_close', 1, 0, 80),
+        ('tests.second_half', 2, 0, 32)):
+      with self.subTest(level=level, left=left, right=right):
+        options = dict(env_name=level, number_of_left_players_agent_controls=left,
+                       number_of_right_players_agent_controls=right)
+        reference, native = self.make('python', **options), self.make(**options)
+        a, b = reference.reset(seed=19)[0], native.reset(seed=19)[0]
+        np.testing.assert_array_equal(a, b)
+        self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+        for frame in range(steps):
+          value = frame % 19
+          action = value if left + right == 1 else np.array(
+              [(frame + player) % 19 for player in range(left + right)], dtype=np.int64)
+          a, b = reference.step(action), native.step(action)
+          np.testing.assert_array_equal(a[0], b[0])
+          self.assertEqual(a[1:4], b[1:4])
+          np.testing.assert_array_equal(a[4]['agent_rewards'], b[4]['agent_rewards'])
+          self.assertEqual(a[4]['score_reward'], b[4]['score_reward'])
+          self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+          if b[2]:
+            break
+        if level == 'tests.second_half':
+          self.assertTrue(b[2])
+        reference.close()
+        native.close()
+
+  def test_checker_seed_replay_invalid_action_and_lifetime(self):
+    before = ENGINE_POOL.stats()['leased']
+    env = self.make()
+    check_env(env, skip_render_check=True)
+    python_rng, numpy_rng = random.getstate(), np.random.get_state()
+    def rollout():
+      rows = [env.reset(seed=37)[0].copy()]
+      for action in (1, 5, 13, 0, 4, 0, 14, 18):
+        rows.append(env.step(action)[0].copy())
+      return rows, self.digest(env, 'native')
+    first, digest = rollout()
+    second, other = rollout()
+    np.testing.assert_array_equal(first, second)
+    self.assertEqual(digest, other)
+    self.assertEqual(python_rng, random.getstate())
+    after = np.random.get_state()
+    np.testing.assert_array_equal(numpy_rng[1], after[1])
+    self.assertEqual(numpy_rng[0], after[0])
+    self.assertEqual(numpy_rng[2:], after[2:])
+    for action in (-1, 19, 1.5, [0, 1]):
+      with self.assertRaises(ValueError):
+        env.step(action)
+    self.assertEqual(digest, self.digest(env, 'native'))
+    # Native joint validation must reject the entire batch before mutation.
+    with self.assertRaises(ValueError):
+      env._env._native.step([19])
+    self.assertEqual(digest, self.digest(env, 'native'))
+    env.close()
+    env.close()
+    self.assertEqual(ENGINE_POOL.stats()['leased'], before)
+    with self.assertRaises(RuntimeError):
+      env.reset()
+
+  def test_native_does_not_call_python_step_or_observation_conversion(self):
+    from gfootball.env import football_env_core, wrappers
+    env = self.make()
+    with mock.patch.object(football_env_core.FootballEnvCore, 'step', side_effect=AssertionError), \
+         mock.patch.object(wrappers.Simple115StateWrapper, 'convert_observation', side_effect=AssertionError):
+      env.reset(seed=2)
+      env.step(0)
+
+  def test_time_limit_and_finished_match(self):
+    raw = self.make(env_name='tests.second_half')
+    env = gym.wrappers.TimeLimit(raw, max_episode_steps=2)
+    env.reset(seed=2)
+    self.assertEqual(env.step(0)[2:4], (False, False))
+    self.assertEqual(env.step(0)[2:4], (False, True))
+    raw.reset(seed=2)
+    for _ in range(32):
+      result = raw.step(0)
+      if result[2]:
+        break
+    self.assertTrue(result[2])
+    self.assertFalse(result[3])
+    with self.assertRaises(gym.error.ResetNeeded):
+      raw.step(0)
+    self.assertIsNone(raw.render())
+
+  def test_reject_unsupported_options_without_leaking(self):
+    before = ENGINE_POOL.stats()['leased']
+    for options in (dict(representation='pixels'), dict(rewards='scoring,checkpoints'),
+                    dict(stacked=True), dict(render_mode='human'), dict(extra_players=[]),
+                    dict(other_config_options={'write_video': True}),
+                    dict(env_name='tests.multiagent_wrapper')):
+      with self.subTest(options=options), self.assertRaises(ValueError):
+        self.make(**options)
+    self.assertEqual(ENGINE_POOL.stats()['leased'], before)
+
+  def test_owned_engine_rejects_wrong_thread(self):
+    env = self.make()
+    env.reset(seed=3)
+    errors = []
+    def wrong_thread():
+      try:
+        env._env._native.step([0])
+      except RuntimeError as error:
+        errors.append(str(error))
+    thread = threading.Thread(target=wrong_thread)
+    thread.start()
+    thread.join()
+    self.assertEqual(len(errors), 1)
+    env.step(0)
+
+  def test_public_native_api_rejects_wrong_thread_before_mutating_lifetime(self):
+    env = self.make()
+    env.reset(seed=3)
+    digest = self.digest(env, 'native')
+    leased = ENGINE_POOL.stats()['leased']
+    rng_state = env.np_random.bit_generator.state
+    for operation in (lambda: env.step(0), lambda: env.reset(seed=7), env.close,
+                      env.render, lambda: env.step_many([0])):
+      errors = []
+      def invoke():
+        try:
+          operation()
+        except RuntimeError as error:
+          errors.append(str(error))
+      thread = threading.Thread(target=invoke)
+      thread.start()
+      thread.join(timeout=5)
+      self.assertFalse(thread.is_alive())
+      self.assertEqual(len(errors), 1)
+      self.assertFalse(env._closed)
+      self.assertFalse(env._needs_reset)
+      self.assertEqual(rng_state, env.np_random.bit_generator.state)
+      self.assertEqual(digest, self.digest(env, 'native'))
+      self.assertEqual(leased, ENGINE_POOL.stats()['leased'])
+    env.step(0)
+    env.close()
+    self.assertEqual(leased - 1, ENGINE_POOL.stats()['leased'])
+
+  def test_goal_reward_and_score_termination_match_python(self):
+    from gfootball.env.scenario_builder import Role, Team
+    def goal_scenario(builder):
+      builder.config().game_duration = 400
+      builder.config().deterministic = True
+      builder.config().end_episode_on_score = True
+      builder.config().offsides = False
+      builder.SetBallPosition(0.98, 0.0)
+      builder.SetTeam(Team.e_Left)
+      builder.AddPlayer(-1.0, 0.0, Role.e_PlayerRole_GK, lazy=True)
+      builder.AddPlayer(0.96, 0.0, Role.e_PlayerRole_CF, lazy=True)
+      builder.SetTeam(Team.e_Right)
+      builder.AddPlayer(0.5, 0.3, Role.e_PlayerRole_GK, lazy=True)
+    with mock.patch('gfootball.scenarios.academy_empty_goal_close.build_scenario', goal_scenario):
+      reference = self.make('python', env_name='academy_empty_goal_close')
+      native = self.make(env_name='academy_empty_goal_close')
+      np.testing.assert_array_equal(reference.reset(seed=7)[0], native.reset(seed=7)[0])
+      total = 0
+      for frame in range(120):
+        action = 12 if frame % 5 == 0 else 5
+        a, b = reference.step(action), native.step(action)
+        np.testing.assert_array_equal(a[0], b[0])
+        self.assertEqual(a[1:4], b[1:4])
+        self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+        total += b[1]
+        if b[2]:
+          break
+      self.assertEqual(total, 1.0)
+      self.assertTrue(b[2])
+
+  def test_v2_builtin_ai_and_cadence_match_python(self):
+    options = dict(game_engine_random_seed=42, action_set='v2', physics_steps_per_frame=2)
+    reference = self.make('python', other_config_options=options)
+    native = self.make(other_config_options=options)
+    np.testing.assert_array_equal(reference.reset(seed=8)[0], native.reset(seed=8)[0])
+    for action in (19, 0, 5, 12, 13, 14, 15, 16, 17, 18):
+      a, b = reference.step(action), native.step(action)
+      np.testing.assert_array_equal(a[0], b[0])
+      self.assertEqual(a[1:4], b[1:4])
+      self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+
+  def test_batch_matches_python_for_single_and_joint_right_actions(self):
+    for left, right in ((1, 0), (0, 2), (11, 0)):
+      with self.subTest(left=left, right=right):
+        options = dict(number_of_left_players_agent_controls=left,
+                       number_of_right_players_agent_controls=right)
+        reference, native = self.make('python', **options), self.make(**options)
+        reference.reset(seed=21)
+        native.reset(seed=21)
+        actions = np.array([[(frame + player) % 19 for player in range(left + right)]
+                            for frame in range(32)], dtype=np.int64)
+        expected = [reference.step(int(row[0]) if left + right == 1 else row) for row in actions]
+        # Accept noncontiguous NumPy inputs and the convenient single-player vector.
+        supplied = actions[:, 0]
+        if left + right > 1:
+          supplied = np.stack((actions, actions), axis=2)[:, :, 0]
+        result = native.step_many(supplied)
+        np.testing.assert_array_equal(result[0], np.stack([row[0] for row in expected]))
+        np.testing.assert_array_equal(result[1], [row[1] for row in expected])
+        np.testing.assert_array_equal(result[2], [row[2] for row in expected])
+        np.testing.assert_array_equal(result[3], [row[3] for row in expected])
+        np.testing.assert_array_equal(result[4]['agent_rewards'],
+                                      np.stack([row[4]['agent_rewards'] for row in expected]))
+        np.testing.assert_array_equal(result[4]['score_reward'], [row[4]['score_reward'] for row in expected])
+        self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+        previous = result[0].copy()
+        native.step(0 if left + right == 1 else np.zeros(left + right, dtype=np.int64))
+        np.testing.assert_array_equal(previous, result[0])
+
+  def test_batch_invalid_suffix_shape_type_and_capacity_preserve_state(self):
+    env = self.make()
+    env.reset(seed=5)
+    digest = self.digest(env, 'native')
+    invalid = ([], np.zeros(257, dtype=np.int64), [[0, 0]], [0, 0, 19],
+               [0.0, 1.0], [False, True], np.array([2**64 - 1], dtype=np.uint64))
+    for actions in invalid:
+      with self.subTest(actions=actions), self.assertRaises(ValueError):
+        env.step_many(actions)
+      self.assertEqual(digest, self.digest(env, 'native'))
+    for actions in (np.array([[0.5]]), np.array([[True]]),
+                    np.array([[2**64 - 1]], dtype=np.uint64), np.array([[0], [19]])):
+      with self.assertRaises(ValueError):
+        env._env._native.step_many(actions)
+      self.assertEqual(digest, self.digest(env, 'native'))
+    self.assertEqual(env.step_many(np.zeros(256, dtype=np.int64))[0].shape, (256, 115))
+
+  def test_batch_stops_at_terminal_and_reseeds(self):
+    reference, native = self.make('python', env_name='tests.second_half'), self.make(env_name='tests.second_half')
+    reference.reset(seed=9)
+    native.reset(seed=9)
+    expected = []
+    for _ in range(32):
+      expected.append(reference.step(0))
+      if expected[-1][2]:
+        break
+    first = native.step_many([0] * 32)
+    self.assertEqual(first[0].shape[0], len(expected))
+    self.assertLess(len(expected), 32)
+    np.testing.assert_array_equal(first[0], np.stack([row[0] for row in expected]))
+    self.assertTrue(first[2][-1])
+    self.assertFalse(first[2][:-1].any())
+    self.assertFalse(first[3].any())
+    self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+    with self.assertRaises(gym.error.ResetNeeded):
+      native.step_many([0])
+    native.reset(seed=9)
+    second = native.step_many([0] * 32)
+    for a, b in zip(first[:4], second[:4]):
+      np.testing.assert_array_equal(a, b)
+
+  def test_batch_rejects_python_backend_and_aborts_processing_failure(self):
+    reference = self.make('python')
+    reference.reset(seed=5)
+    digest = self.digest(reference, 'python')
+    with self.assertRaises(ValueError):
+      reference.step_many([0])
+    self.assertEqual(digest, self.digest(reference, 'python'))
+    env = self.make()
+    env.reset(seed=5)
+    leased = ENGINE_POOL.stats()['leased']
+    def fail_after_transition(actions):
+      env._env._native.step_many(actions)
+      raise RuntimeError('output failure')
+    with mock.patch.object(env._env, 'step_many', fail_after_transition):
+      with self.assertRaisesRegex(RuntimeError, 'output failure'):
+        env.step_many([0])
+    self.assertEqual(ENGINE_POOL.stats()['leased'], leased - 1)
+    with self.assertRaises(gym.error.ResetNeeded):
+      env.step_many([0])
+
+
+if __name__ == '__main__':
+  unittest.main()
