@@ -1,0 +1,2 @@
+# Keep raw command logs byte-for-byte, including tool-emitted trailing blank lines.
+*.log whitespace=-blank-at-eof

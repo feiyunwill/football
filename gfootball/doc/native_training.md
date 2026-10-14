@@ -89,6 +89,21 @@ flag and the left-minus-right score change. This is separate from the existing
 
 Validation (with an extension built from this checkout):
 
+For isolated build/staging plus full native and existing Gymnasium integration
+checks on Linux/WSL, use an interpreter with the project dependencies installed:
+
+```bash
+python .project/native-training/validate.py --python /path/to/venv/bin/python \
+  --build-root /tmp/football-native-validation --output /tmp/football-native-evidence
+```
+
+The build directory can be reused for incremental compilation. The output
+directory must be new, so previous evidence is preserved. This checks the staged
+extension path, configures bindings ON and OFF, and records logs, source/resource
+fingerprints and artifact hashes. It does not perform wheel installation tests.
+
+Individual checks:
+
 ```bash
 python -m unittest gfootball.test_native_training -v
 python -m gfootball.benchmark_native_training --steps 512 --repeats 3 --batch-size 32
