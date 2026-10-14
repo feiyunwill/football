@@ -1,6 +1,6 @@
 # 原生训练兼容性矩阵
 
-NT-1.1，2026-10-14。当前基线：S0 原生 simple115v2/scoring；未来支持项只有
+2026-10-14。NT-1.1 建立合同，NT-1.2 扩展两种 115 布局；未来支持项只有
 实现、验收并提交后才变为“支持”。实际调用使用 `backend='native'`。
 
 | 项目 | 当前行为/支持 | 验收与后续任务 |
@@ -9,7 +9,7 @@ NT-1.1，2026-10-14。当前基线：S0 原生 simple115v2/scoring；未来支�
 | 玩家数量 | 单侧单人 Discrete，多人 MultiDiscrete；另一侧内置 AI | 左 1/2/11 人、右 2 人实际逐帧对照 |
 | 动作集 | default=19，v2=20（最后一个 built-in AI），索引映射为对应 backend action | v2、sticky release、右侧方向旋转对照；full 不支持 |
 | simple115v2 | float32；四个 team position/direction 块各固定 22 值、缺员 -1；末尾 ball/owner/active/mode | reset、scalar、batch 与 Python 逐值相等 |
-| simple115 | 尚不支持；四个 team 块紧密排列，只在 88 值块末尾补 -1 | NT-1.2 |
+| simple115 | 支持；四个 team 块紧密排列，只在 88 值块末尾补 -1，尾部 27 值与 v2 一致 | NT-1.2：full/sparse/asymmetric、左右视角、reset/scalar/batch 与 Python 对照；full 两布局相同，sparse 不同 |
 | checkpoint rewards | 尚不支持；以后遵循 Python 的每 agent checkpoint 计数、持球和进球补齐规则 | NT-1.3 |
 | scoring | 左侧比分差变化；右侧取反；joint mean 与 info.agent_rewards 保留 | 实际进球、单/多人、右侧对照 |
 | frame stack | 尚不支持；数值堆叠计划沿最后一维拼接，reset 填满历史 | NT-1.4 |

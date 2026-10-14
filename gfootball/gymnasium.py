@@ -14,7 +14,7 @@ register_gymnasium_envs()
 class FootballEnv(gym.Env):
   """Joint-action football environment with a scalar team reward.
 
-backend='native' selects headless C++ simple115v2/scoring processing. It supports
+backend='native' selects headless C++ simple115/simple115v2 with scoring. It supports
 single-team control and rejects unsupported wrappers/configuration explicitly.
 
 For multiple controlled players on one team, reward is the mean of their

@@ -1,6 +1,6 @@
 # Native training backend
 
-The opt-in C++ backend implements headless `simple115v2` observations, joint
+The opt-in C++ backend implements headless `simple115`/`simple115v2` observations, joint
 discrete actions, scoring rewards and scenario termination. Python retains
 scenario generation and Gymnasium seed/API handling. The default backend remains
 `python`.
@@ -69,14 +69,18 @@ Supported behavior:
   use `MultiDiscrete`. The right team's observation and directional actions are
   rotated to its own perspective.
 - Observation shape is `(115,)` or `(players, 115)`, with float32 values. Each
-  team position/direction block has 22 values, padded with -1.
+  team position/direction block in `simple115v2` has 22 values, padded with -1.
+  Legacy `simple115` packs the four blocks without gaps, then pads the entire
+  88-value prefix with -1. Both layouts share the final 27 values and agree for
+  full 11v11 teams. The C++ constructor's optional `fixed_positions` argument
+  selects the layout (default true).
 - Action sets `default` (19 actions) and `v2` (20, including built-in AI).
 - Scoring rewards, scenario score/possession/out-of-play termination and match
   clock termination. Gymnasium's external `TimeLimit` remains a truncation.
 - `info['agent_rewards']` and `info['score_reward']` retain their Python meanings.
 - Engines use the existing admission budget and creating-thread/process ownership.
 
-Rendering, pixels/SMM/legacy simple115, stacking, checkpoint rewards, extra
+Rendering, pixels/SMM, stacking, checkpoint rewards, extra
 players, recording, state save/restore and `control_all_players` scenarios are
 outside this backend's first implementation. Unsupported factory/configuration
 options raise an error; the backend does not silently switch to Python.

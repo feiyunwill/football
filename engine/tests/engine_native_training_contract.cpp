@@ -50,6 +50,23 @@ int main(int, char**) {
     require(end_digest == env.get_state_digest());
     require(batch.observations[batch.observations.size() - 2] == final.observations[0]);
     require(batch.observations.back() == final.observations[1]);
+    auto sparse = frame_sync::MakeDefaultScenario(1, 0, 42);
+    sparse->left_team.resize(2);
+    sparse->right_team.resize(1);
+    football::training::NativeTrainingEnv fixed(160, 90);
+    football::training::NativeTrainingEnv compact(160, 90, false, false);
+    auto fixed_rows = fixed.reset(*sparse, 10);
+    auto compact_rows = compact.reset(*sparse, 10);
+    require(fixed_rows.size() == 1 && compact_rows.size() == 1);
+    require(fixed_rows[0][4] == -1.0f && compact_rows[0][4] != -1.0f);
+    require(fixed.get_state_digest() == compact.get_state_digest());
+    for (size_t i = 88; i < 115; ++i) require(fixed_rows[0][i] == compact_rows[0][i]);
+    for (int frame = 0; frame < 5; ++frame) {
+      auto a = fixed.step(std::array<int, 1>{frame});
+      auto b = compact.step(std::array<int, 1>{frame});
+      require(a.rewards == b.rewards && a.terminated == b.terminated);
+      require(fixed.get_state_digest() == compact.get_state_digest());
+    }
     env.close();
     env.close();
     try {
@@ -58,7 +75,8 @@ int main(int, char**) {
     } catch (const std::logic_error&) {}
     // 2026-10-14: the native contract now covers bounded batches and terminal prefixes.
     // std::puts("Native training: joint admission, termination and deterministic reset passed");
-    std::puts("Native training: joint/batch admission, termination and deterministic reset passed");
+    // std::puts("Native training: joint/batch admission, termination and deterministic reset passed");
+    std::puts("Native training: admission, termination, deterministic reset and both 115 layouts passed");
     return 0;
   } catch (const std::exception& error) {
     std::fprintf(stderr, "%s\n", error.what());

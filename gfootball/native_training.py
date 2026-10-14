@@ -1,7 +1,7 @@
 """Thin scenario/ownership adapter for the headless C++ training backend.
 
-The four-result interface is consumed by the existing Gymnasium adapter. Only
-simple115v2/scoring with single-team control is supported; no silent fallback.
+The four-result interface is consumed by the existing Gymnasium adapter. Both
+115-feature layouts support scoring with single-team control; no silent fallback.
 """
 import numpy as np
 from gymnasium import spaces
@@ -17,8 +17,11 @@ class NativeEnvironment:
                **unsupported):
     if unsupported:
       raise ValueError('Unsupported native training options: ' + ', '.join(sorted(unsupported)))
-    if representation != 'simple115v2' or rewards != 'scoring' or stacked or render:
-      raise ValueError('Native training requires headless simple115v2/scoring without stacking')
+    # 2026-10-14: compact simple115 and fixed-block simple115v2 share native semantics.
+    # if representation != 'simple115v2' or rewards != 'scoring' or stacked or render:
+    #   raise ValueError('Native training requires headless simple115v2/scoring without stacking')
+    if representation not in ('simple115', 'simple115v2') or rewards != 'scoring' or stacked or render:
+      raise ValueError('Native training requires headless simple115/simple115v2 with scoring and no stacking')
     left, right = number_of_left_players_agent_controls, number_of_right_players_agent_controls
     if (type(left) is not int or type(right) is not int or
         not 0 <= left <= 11 or not 0 <= right <= 11 or (left == 0) == (right == 0)):
@@ -53,7 +56,7 @@ class NativeEnvironment:
     key = EngineKey.current(self._config['render_resolution_x'], self._config['render_resolution_y'])
     try:
       self._native = create_owned_engine(key, lambda: gfootball_engine.NativeTrainingEnv(
-          key.width, key.height, action_set == 'v2'))
+          key.width, key.height, action_set == 'v2', representation == 'simple115v2'))
       # Match FootballEnvCore's constructor reset, which does not increment the episode.
       self._config.NewScenario(inc=0)
       self._validate_scenario()

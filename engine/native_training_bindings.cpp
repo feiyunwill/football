@@ -17,8 +17,12 @@ py::array_t<float> observations(const std::vector<football::training::Simple115>
 void BindNativeTraining(py::module_& module) {
   using football::training::NativeTrainingEnv;
   py::class_<NativeTrainingEnv>(module, "NativeTrainingEnv")
-      .def(py::init<int, int, bool>(), py::arg("width") = 1280,
-           py::arg("height") = 720, py::arg("builtin_ai_action") = false)
+      // 2026-10-14: the fourth optional argument selects compact simple115 packing.
+      // .def(py::init<int, int, bool>(), py::arg("width") = 1280,
+      //      py::arg("height") = 720, py::arg("builtin_ai_action") = false)
+      .def(py::init<int, int, bool, bool>(), py::arg("width") = 1280,
+           py::arg("height") = 720, py::arg("builtin_ai_action") = false,
+           py::arg("fixed_positions") = true)
       .def("reset", [](NativeTrainingEnv& env, ScenarioConfig& scenario, int physics_steps) {
         std::vector<football::training::Simple115> result;
         {

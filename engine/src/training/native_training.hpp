@@ -32,7 +32,10 @@ struct TrainingBatch {
 // Owns one headless engine. No Python objects or RL algorithm dependencies.
 class NativeTrainingEnv {
  public:
-  NativeTrainingEnv(int width, int height, bool builtin_ai_action = false);
+  // 2026-10-14: preserve the fixed layout default while adding legacy compact packing.
+  // NativeTrainingEnv(int width, int height, bool builtin_ai_action = false);
+  NativeTrainingEnv(int width, int height, bool builtin_ai_action = false,
+                    bool fixed_positions = true);
   ~NativeTrainingEnv();
   NativeTrainingEnv() = delete;
   NativeTrainingEnv(const NativeTrainingEnv&) = delete;
@@ -57,6 +60,7 @@ class NativeTrainingEnv {
   bool closed_ = false;
   bool ready_ = false;
   bool builtin_ai_action_;
+  bool fixed_positions_;
   int previous_score_diff_ = 0;
   int previous_game_mode_ = -1;
   int previous_ball_owned_team_ = -1;

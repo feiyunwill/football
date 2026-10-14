@@ -12,7 +12,9 @@ constexpr std::array<int, 20> kActions = {
     game_release_direction, game_release_sprint, game_sliding, game_dribble,
     game_release_dribble, game_builtin_ai};
 
-Simple115 encode(const SharedInfo& info, bool right, int active) {
+// 2026-10-14: both 115 layouts share ball/owner/active/mode encoding.
+// Simple115 encode(const SharedInfo& info, bool right, int active) {
+Simple115 encode(const SharedInfo& info, bool right, int active, bool fixed_positions) {
   Simple115 result{};
   std::fill_n(result.begin(), 88, -1.0f);
   const auto& left = right ? info.right_team : info.left_team;
@@ -23,12 +25,17 @@ Simple115 encode(const SharedInfo& info, bool right, int active) {
     for (size_t i = 0; i < players.size(); ++i) {
       for (int axis = 0; axis < 2; ++axis) {
         result[offset + i * 2 + axis] = sign * players[i].player_position.env_coord(axis);
-        result[offset + 22 + i * 2 + axis] = sign * players[i].player_direction.env_coord(axis);
+        // Legacy simple115 packs each team block immediately after its positions.
+        // result[offset + 22 + i * 2 + axis] = sign * players[i].player_direction.env_coord(axis);
+        const size_t direction_offset = offset + (fixed_positions ? 22 : players.size() * 2);
+        result[direction_offset + i * 2 + axis] = sign * players[i].player_direction.env_coord(axis);
       }
     }
   };
   team(left, 0);
-  team(other, 44);
+  // 2026-10-14: simple115 pads only the entire 88-feature prefix, not each team block.
+  // team(other, 44);
+  team(other, fixed_positions ? 44 : left.size() * 4);
   for (int axis = 0; axis < 3; ++axis) {
     const float rotation = axis == 2 ? 1.0f : sign;
     result[88 + axis] = rotation * info.ball_position.env_coord(axis);
@@ -46,8 +53,11 @@ Simple115 encode(const SharedInfo& info, bool right, int active) {
 }
 }  // namespace
 
-NativeTrainingEnv::NativeTrainingEnv(int width, int height, bool builtin_ai_action)
-    : builtin_ai_action_(builtin_ai_action) {
+// 2026-10-14: layout is immutable across episodes, just like the action set.
+// NativeTrainingEnv::NativeTrainingEnv(int width, int height, bool builtin_ai_action)
+//     : builtin_ai_action_(builtin_ai_action) {
+NativeTrainingEnv::NativeTrainingEnv(int width, int height, bool builtin_ai_action, bool fixed_positions)
+    : builtin_ai_action_(builtin_ai_action), fixed_positions_(fixed_positions) {
   if (width < 1 || width > 8192 || height < 1 || height > 8192 ||
       static_cast<int64_t>(width) * height > 16777216)
     throw std::invalid_argument("Invalid training render dimensions");
@@ -79,7 +89,8 @@ void NativeTrainingEnv::write_observations(const SharedInfo& info, std::span<Sim
     // 2026-10-14: team/ball/mode features are identical for every agent on a team.
     // output[index++] = encode(info, right, i < static_cast<int>(controllers.size())
     //                                       ? controllers[i].controlled_player : -1);
-    const auto shared = encode(info, right, -1);
+    // const auto shared = encode(info, right, -1);
+    const auto shared = encode(info, right, -1, fixed_positions_);
     for (int i = 0; i < count; ++i) {
       const int active = i < static_cast<int>(controllers.size()) ? controllers[i].controlled_player : -1;
       if (active < -1 || active > 10) throw std::runtime_error("Invalid training active player");

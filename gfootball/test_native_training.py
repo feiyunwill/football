@@ -296,6 +296,56 @@ class NativeTrainingTest(unittest.TestCase):
           reference.close()
           native.close()
 
+  def test_both_layouts_match_python_for_full_sparse_rotated_scalar_and_batch(self):
+    for level, left, right in (('11_vs_11_easy_stochastic', 2, 0),
+                               ('academy_empty_goal_close', 1, 0),
+                               ('academy_empty_goal_close', 0, 1),
+                               ('tests.second_half', 2, 0)):
+      origins = {}
+      for representation in ('simple115', 'simple115v2'):
+        with self.subTest(level=level, left=left, right=right, representation=representation):
+          options = dict(env_name=level, representation=representation,
+                         number_of_left_players_agent_controls=left,
+                         number_of_right_players_agent_controls=right)
+          reference, native = self.make('python', **options), self.make(**options)
+          a, b = reference.reset(seed=31)[0], native.reset(seed=31)[0]
+          np.testing.assert_array_equal(a, b)
+          self.assertEqual(b.dtype, np.float32)
+          self.assertTrue(np.isfinite(b).all())
+          origins[representation] = b.copy()
+          for frame in range(12):
+            action = frame % 19 if left + right == 1 else np.array(
+                [(frame + player) % 19 for player in range(left + right)], dtype=np.int64)
+            a, b = reference.step(action), native.step(action)
+            np.testing.assert_array_equal(a[0], b[0])
+            self.assertEqual(a[1:4], b[1:4])
+            self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+            if b[2]:
+              break
+          reference.reset(seed=31)
+          native.reset(seed=31)
+          actions = np.array([[(frame + player) % 19 for player in range(left + right)]
+                              for frame in range(16)], dtype=np.int64)
+          expected = []
+          for row in actions:
+            expected.append(reference.step(int(row[0]) if left + right == 1 else row))
+            if expected[-1][2]:
+              break
+          result = native.step_many(actions)
+          np.testing.assert_array_equal(result[0], np.stack([row[0] for row in expected]))
+          np.testing.assert_array_equal(result[1], [row[1] for row in expected])
+          np.testing.assert_array_equal(result[2], [row[2] for row in expected])
+          np.testing.assert_array_equal(result[4]['agent_rewards'],
+                                        np.stack([row[4]['agent_rewards'] for row in expected]))
+          self.assertEqual(self.digest(reference, 'python'), self.digest(native, 'native'))
+          reference.close()
+          native.close()
+      if level == '11_vs_11_easy_stochastic':
+        np.testing.assert_array_equal(origins['simple115'], origins['simple115v2'])
+      else:
+        self.assertFalse(np.array_equal(origins['simple115'], origins['simple115v2']),
+                         'Sparse layouts must use distinct padding positions')
+
   def test_goal_reward_and_score_termination_match_python(self):
     from gfootball.env.scenario_builder import Role, Team
     def goal_scenario(builder):
