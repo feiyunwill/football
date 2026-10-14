@@ -3,3 +3,5 @@
 *.log whitespace=-blank-at-eof,-blank-at-eol
 # Unified diff context includes a single space on empty source lines.
 *.patch whitespace=-blank-at-eol
+# Preserve audited vendor/engine source snapshots exactly, including source whitespace.
+nt-4.1-audit-*/sources/** -text -whitespace
