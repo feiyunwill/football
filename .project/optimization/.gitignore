@@ -1,0 +1,8 @@
+# Local regression archives and raw rendering captures; see ARTIFACTS.md.
+/evidence/*.tar.gz
+/diagnostics/**/*.tar.gz
+/diagnostics/**/*.rgb
+/diagnostics/**/*.state
+/diagnostics/**/data/
+/diagnostics/**/candidate-data/
+/diagnostics/**/sdl_present_floor
