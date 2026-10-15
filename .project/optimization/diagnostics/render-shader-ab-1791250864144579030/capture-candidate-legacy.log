@@ -1,8 +1,0 @@
-No DISPLAY defined, doing off-screen rendering
-shader compilation error (media/shaders/bloom.frag)
-Tue Oct  6 09:41:11 2026 [Warning] in [::LoadGLShader]: shader compilation error (media/shaders/bloom.frag)
-shader compilation info: 0:23(2): error: `this_is_deliberately_invalid_glsl' undeclared
-
-Tue Oct  6 09:41:11 2026 [Warning] in [::LoadGLShader]: shader compilation info (media/shaders/bloom.frag): 0:23(2): error: `this_is_deliberately_invalid_glsl' undeclared 
-MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.
-Could not compile fragment program: bloom

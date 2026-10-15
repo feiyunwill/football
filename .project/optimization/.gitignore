@@ -1,8 +1,23 @@
 # Local regression archives and raw rendering captures; see ARTIFACTS.md.
 /evidence/*.tar.gz
+/evidence/**/*.tar.gz
+/evidence/**/*.zip
+/evidence/*.zip
+/evidence/**/*.log
+/evidence/*.log
+/evidence/**/*.log.gz
+/evidence/*.xml
+/evidence/*.lock
 /diagnostics/**/*.tar.gz
+/diagnostics/**/*.zip
+/diagnostics/*.zip
+/diagnostics/**/*.log
+/diagnostics/*.log
+/diagnostics/**/*.txt
+/diagnostics/**/*.so
 /diagnostics/**/*.rgb
 /diagnostics/**/*.state
 /diagnostics/**/data/
 /diagnostics/**/candidate-data/
 /diagnostics/**/sdl_present_floor
+/artifact-inventory-*.json

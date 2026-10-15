@@ -53,6 +53,9 @@ engine/frame_sync_asio/build_fs_asio/
 # Agent coordination runtime state
 .agent-coordination/*.tmp
 .agent-coordination/*.lock
+.agent-coordination/agents.json
+.agent-coordination/active_milestone.json
+.agent-coordination/snapshots/
 
 # pytest
 .pytest_cache/
