@@ -1,5 +1,6 @@
-# Set the default behavior, in case people don't have core.autocrlf set.
-* text=auto
+# Keep text files as LF on every platform, including Windows Git.
+# Binary files remain unmodified; nested evidence rules preserve original bytes.
+* text=auto eol=lf
 
 # Bash scripts should always have LF line endings to support Docker on Windows
 *.sh text eol=lf
