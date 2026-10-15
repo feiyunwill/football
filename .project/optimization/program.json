@@ -644,7 +644,7 @@
         "中心坐标、进攻方向、控球者、体力、比分、剩余时间采用真实比赛状态"
       ],
       "depends_on": [
-        "ms-24.1"
+        "ms-23.1"
       ],
       "checks": [
         "tactical_integration"
@@ -736,7 +736,7 @@
         "plan-25.1.2"
       ],
       "depends_on": [
-        "ms-24.1"
+        "ms-23.1"
       ],
       "checks": [
         "ai_regression"
