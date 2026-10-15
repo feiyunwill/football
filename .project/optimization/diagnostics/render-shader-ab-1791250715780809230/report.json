@@ -1,0 +1,65 @@
+{
+  "schema": "football-render-shader-ab-v1",
+  "product_acceptance": false,
+  "runner_sha256": "1bce18eaa39b3d98a79058edd05204dfa2bed1a0e7aa7a9f5de2e6033e39edb8",
+  "shader": "bloom.frag",
+  "source_shader_sha256": "b40e083f8275b3bc6606c79aeacf73da5b8bf08a28be4e851a40ef2c1c5a72c3",
+  "candidate_shader_sha256": "e9af91ab151c45b792af5ac9eddbea6d6e7ef7eb19255fd169484f8e7f03e6c7",
+  "source_commit": "1dd7a4469930f0421caff106c812a1faa2866742",
+  "source_manifest_sha256": "aac9657e64d165f7bb96432fab27c39195e3326544e78fc2747b8d198b07713e",
+  "source_file_count": 465,
+  "capture_build": "/root/work_space/football/.project/optimization/benchmarks/render-images-1791181333866884679/build/release",
+  "benchmark_build": null,
+  "gpu_driver_root": null,
+  "capture_binary_sha256": "2aca5dd29ca3be62be702bc8f45c5df99dbdc463d1c6b3b270010295668e8385",
+  "capture_engine_sha256": "e3ca24c5d6b01d9ed4822c60dcbff4f0786d26e914a8b751d8dd7b1f110bc8b3",
+  "golden_sha256": "7336ab1defe7efc60d20bf88df7d6f6b1e29bac30ce1405931fbb00b7fca43b0",
+  "image_only": true,
+  "quality": "pbr+bloom+fxaa+auto_exposure",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "frame_budget_p95_ms": 16.67,
+  "seeds": [
+    42,
+    43
+  ],
+  "repeats": 2,
+  "captures": [
+    {
+      "case": "legacy",
+      "mode": "baseline",
+      "log_sha256": "1e79fce0b466cb9b5c28faf6bcf81ee2ed9e8fbe12d13c4bbdcd6fbcbd79d04b",
+      "frames": {
+        "0": {
+          "rgb_sha256": "edb627bbb6687fa165c2d51c9cecded96fa0e5eb2103c7a4697f95a627a32a50",
+          "state_sha256": "3a520d70738eeebc65c1f05a14481061884395a6c13aad25ab4dfcf340608a38"
+        },
+        "40": {
+          "rgb_sha256": "625f50beb453300a65bea126a3fdb0e7d1105c18c2a37c32e7789dbe3118fa95",
+          "state_sha256": "6b1c25d21cc1f914a6ad65b694e21a03093ecdf3e6ff3edc01992c89da06d8e3"
+        },
+        "80": {
+          "rgb_sha256": "35b22ad573cedeade83d42c144704601f813d29579fc9a631c90dd7ffef057e5",
+          "state_sha256": "d6d06c61590fb5b8266922ff5403a557c19ee2f33ef0504586d144cba7c23968"
+        },
+        "120": {
+          "rgb_sha256": "3b105ed35d298bfeea03f23d1d627b18d37ad6a096f51be2cd35b4eb309551a5",
+          "state_sha256": "4ad42c70c7be290934775fd39dae8e61991c3aa31ccf1fb7975f491db913a465"
+        },
+        "160": {
+          "rgb_sha256": "a5f39d504c98419ed00d8cdb13fc6928d3b64f31d4be9c2e84ef7593270ec0d2",
+          "state_sha256": "0f6b019e63d4d8505ee62d46b8df946f8b764237262e7c1d0a8986b51798a522"
+        }
+      }
+    }
+  ],
+  "runs": [],
+  "failures": [
+    "RuntimeError: legacy/candidate capture failed: /root/work_space/football/.project/optimization/diagnostics/render-shader-ab-1791250715780809230/capture-candidate-legacy.log"
+  ],
+  "image_equal": true,
+  "diagnostic_complete": false,
+  "budget_met": false
+}

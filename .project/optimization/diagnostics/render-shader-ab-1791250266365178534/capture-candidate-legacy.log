@@ -1,0 +1,6 @@
+No DISPLAY defined, doing off-screen rendering
+Tue Oct  6 09:31:12 2026 [ERROR] in [OpenGLRenderer3D::SetUniformInt]: Uniform location for shader 'bloom' not found: map_hdr
+Tue Oct  6 09:31:12 2026 [ERROR] in [OpenGLRenderer3D::SetUniformFloat2]: Uniform location for shader 'bloom' not found: outputSize
+Tue Oct  6 09:31:12 2026 [ERROR] in [OpenGLRenderer3D::SetUniformFloat]: Uniform location for shader 'bloom' not found: bloomThreshold
+{"passed":true,"skipped":0,"assertions":174,"actual_gameenv":true,"engine_frames":161,"images":5,"uncaptured_renders":5,"rejections":16,"headless_policy":true,"solid_colours":3,"odd_width":321,"in_play_frames":62,"product_acceptance":false}
+MESA-EGL: warning: Not allowed to force software rendering when API explicitly selects a hardware device.

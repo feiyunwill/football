@@ -1,0 +1,23 @@
+diff --git a/engine/src/systems/graphics/objects/graphics_camera.cpp b/engine/src/systems/graphics/objects/graphics_camera.cpp
+index 8a3e221..62724a2 100644
+--- a/engine/src/systems/graphics/objects/graphics_camera.cpp
++++ b/engine/src/systems/graphics/objects/graphics_camera.cpp
+@@ -205,7 +205,8 @@ void GraphicsCamera::SetPosition(const Vector3 &newPosition) {
+     Renderer3D *renderer = caller_->GetGraphicsScene()->GetGraphicsSystem()->GetRenderer3D();
+     auto viewID = caller_->view_id_;
+     auto &buffer = caller_->view_buffer_;
+-    renderer->ClearBuffer(Vector3(0, 0, 0), false, true);
++    static bool usePBR = (getenv("GFOOTBALL_USE_PBR") != nullptr);
++    if (!usePBR) renderer->ClearBuffer(Vector3(0, 0, 0), false, true);
+ 
+     View &view = renderer->GetView(viewID);
+ 
+@@ -248,8 +249,6 @@ void GraphicsCamera::SetPosition(const Vector3 &newPosition) {
+ 
+     // 2026-09-03 Phase 12-15: 使用 PBR 渲染管线
+     // 通过环境变量 GFOOTBALL_USE_PBR=1 启用 PBR 渲染管线
+-    static bool usePBR = (getenv("GFOOTBALL_USE_PBR") != nullptr);
+-    
+     if (usePBR) {
+       // 使用新的 PBR 渲染管线
+       renderer->RenderViewPBR(view, projectionMatrix, viewMatrix, inverseProjectionViewMatrix,

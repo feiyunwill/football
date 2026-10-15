@@ -3,3 +3,4 @@ evidence/*.log -text -whitespace
 diagnostics/**/*.log -text -whitespace
 diagnostics/*.log -text -whitespace
 diagnostics/**/*.txt -text -whitespace
+diagnostics/**/*.patch -text -whitespace
