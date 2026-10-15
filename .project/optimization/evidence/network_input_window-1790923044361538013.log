@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "/root/work_space/football/.project/checks/network_input_window.py", line 127, in <module>
+    main()
+    ~~~~^^
+  File "/root/work_space/football/.project/checks/network_input_window.py", line 74, in main
+    native = json.loads(run("native-window", [NATIVE_BUILD /
+                        ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                            "bin/engine_server_input_window_contract"]).strip().splitlines()[-1])
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/network_input_window.py", line 65, in run
+    log, record = command(output, name, argv, timeout)
+                  ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/.project/checks/network_input_window.py", line 34, in command
+    result = subprocess.run([str(value) for value in argv], cwd=ROOT,
+                            text=True, stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT, timeout=timeout)
+  File "/usr/lib/python3.14/subprocess.py", line 555, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 1039, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 1990, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/football-optimization-native/bin/engine_server_input_window_contract'

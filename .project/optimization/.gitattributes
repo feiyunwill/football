@@ -1,0 +1,5 @@
+# Preserve original evidence bytes, including tool-emitted trailing whitespace.
+evidence/*.log -text -whitespace
+diagnostics/**/*.log -text -whitespace
+diagnostics/*.log -text -whitespace
+diagnostics/**/*.txt -text -whitespace

@@ -1,0 +1,38 @@
+Running: cmake -S engine -B /tmp/football-optimization-native -DCMAKE_BUILD_TYPE=Release -DFOOTBALL_ENABLE_SANITIZERS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DFOOTBALL_RUNTIME_OUTPUT_DIRECTORY=/tmp/football-optimization-native/bin
+CMake Warning (policy) at CMakeLists.txt:173 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.9s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-optimization-native
+Running: /usr/sbin/c++ --version
+Running: cmake --build /tmp/football-optimization-native -j 1 --target engine_match_benchmark
+[  3%] Built target datalib
+[ 12%] Built target scenelib
+[ 18%] Built target utilslib
+[ 25%] Built target gui2lib
+[ 37%] Built target baselib
+[ 46%] Built target systemsgraphicslib
+[ 48%] Built target loaderslib
+[ 51%] Built target typeslib
+[ 51%] Built target blunted2
+[ 77%] Built target gamelib
+[ 87%] Built target menulib
+[ 98%] Built target football_engine
+[100%] Built target engine_match_benchmark
+Running: readelf -d /tmp/football-optimization-native/libfootball_engine.so
+{"seed": 42, "repetition": 0, "startup_ms": 188.387866, "steady_p50_ms": 3.353793, "steady_p95_ms": 4.833709, "steady_p99_ms": 6.975452, "hash": "177cf7205a3272f3"}
+{"seed": 43, "repetition": 0, "startup_ms": 162.38265, "steady_p50_ms": 2.944231, "steady_p95_ms": 3.855049, "steady_p99_ms": 4.475631, "hash": "67e83de1b8183383"}
+{"seed": 43, "repetition": 1, "startup_ms": 377.885414, "steady_p50_ms": 4.14572, "steady_p95_ms": 6.250947, "steady_p99_ms": 8.411695, "hash": "67e83de1b8183383"}
+{"seed": 42, "repetition": 1, "startup_ms": 252.725909, "steady_p50_ms": 3.616325, "steady_p95_ms": 5.368153, "steady_p99_ms": 8.080699, "hash": "177cf7205a3272f3"}
+{"seed": 42, "repetition": 2, "startup_ms": 186.980559, "steady_p50_ms": 2.694583, "steady_p95_ms": 3.528079, "steady_p99_ms": 4.112739, "hash": "177cf7205a3272f3"}
+{"seed": 43, "repetition": 2, "startup_ms": 161.105869, "steady_p50_ms": 3.163053, "steady_p95_ms": 4.229823, "steady_p99_ms": 5.045648, "hash": "67e83de1b8183383"}
+{"seed": 43, "repetition": 3, "startup_ms": 164.288869, "steady_p50_ms": 2.741705, "steady_p95_ms": 3.613857, "steady_p99_ms": 4.124549, "hash": "67e83de1b8183383"}
+{"seed": 42, "repetition": 3, "startup_ms": 173.5004, "steady_p50_ms": 2.717286, "steady_p95_ms": 3.597544, "steady_p99_ms": 4.258089, "hash": "177cf7205a3272f3"}
+{"seed": 42, "repetition": 4, "startup_ms": 158.942528, "steady_p50_ms": 2.86565, "steady_p95_ms": 3.907346, "steady_p99_ms": 4.612599, "hash": "177cf7205a3272f3"}
+{"seed": 43, "repetition": 4, "startup_ms": 212.665881, "steady_p50_ms": 4.251904, "steady_p95_ms": 8.566049, "steady_p99_ms": 12.410524, "hash": "67e83de1b8183383"}
+{"passed": true, "assertions": 563, "skipped": 0, "artifact": ".project/optimization/benchmarks/match-1790799588212032857.json", "artifact_sha256": "70b9448bec97bb099a661d7d332944398e3891ddf24e9c760f2c9dd5c6544f48", "source_identity": "6e95744347b87926e2a2fcfb35604ed61f44389e603ff261ad80018c3762ea5b", "runs": 10, "summary": [{"seed": 42, "processes": 5, "samples": 10000, "startup_p50_ms": 186.980559, "steady": {"count": 10000, "sum_ns": 31808047851, "max_ns": 13440355, "p50_ns": 2991292, "p95_ns": 4501418, "p99_ns": 5878848}, "per_process_p99_ns": [6975452, 8080699, 4112739, 4258089, 4612599], "active_frames": 10000, "stopped_frames": 0, "rss_max_observed_bytes": 89010176, "rss_max_growth_bytes": 40960, "final_hash": "177cf7205a3272f3", "input_hash": "b7f3bcf2014e649e"}, {"seed": 43, "processes": 5, "samples": 10000, "startup_p50_ms": 164.288869, "steady": {"count": 10000, "sum_ns": 36354888425, "max_ns": 23698208, "p50_ns": 3321655, "p95_ns": 5781924, "p99_ns": 9006889}, "per_process_p99_ns": [4475631, 8411695, 5045648, 4124549, 12410524], "active_frames": 9895, "stopped_frames": 105, "rss_max_observed_bytes": 88956928, "rss_max_growth_bytes": 40960, "final_hash": "67e83de1b8183383", "input_hash": "b7f3bcf2014e649e"}]}
