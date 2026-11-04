@@ -1,0 +1,29 @@
+{
+    "exit_code":  0,
+    "experiment":  "/tmp/football-o3-profile-20261015-a.er",
+    "command":  [
+                    "gprofng",
+                    "collect",
+                    "app",
+                    "-p",
+                    "100",
+                    "-y",
+                    "SIGUSR1",
+                    "-o",
+                    "/tmp/football-o3-profile-20261015-a.er",
+                    "/tmp/football-native-training-venv/bin/python",
+                    "/root/work_space/football/.project/native-training/profile_engine_cpu.py",
+                    "--collector",
+                    "--steps",
+                    "16384"
+                ],
+    "result":  {
+                   "resets":  5,
+                   "players":  1,
+                   "cadence":  10,
+                   "sha256":  "59b4894813811913f804cc4da6d43f64e3465fe6041dc49a30e0dd25d0941a02",
+                   "steps":  16384
+               },
+    "baseline_manifest":  "/tmp/football-o3-baseline-20261015-a/baseline.json",
+    "source_sha256":  "77856efdadd172e065bc9289b65deaa0339eddb5aa8b22f003f7f0759bb54c6c"
+}

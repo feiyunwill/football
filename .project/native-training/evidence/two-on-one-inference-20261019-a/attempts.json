@@ -1,0 +1,8 @@
+{
+  "validation_a": "Compile-only failure; no candidate episodes",
+  "validation_b": "Stopped before complete candidate aggregate to reduce duplicate serialized-restore instrumentation",
+  "validation_b_prefix_rows": 185,
+  "validation_b_prefix_equal": true,
+  "confirmation_a": "Executable permission failure before any episode; copy2 preserves mode in b",
+  "confirmation_a_b_cases_bytes_equal": true
+}

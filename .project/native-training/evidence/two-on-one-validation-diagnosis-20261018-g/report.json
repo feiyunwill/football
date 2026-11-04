@@ -1,0 +1,11 @@
+{
+  "scope": "Validation-only diagnosis after g rejection",
+  "source_sha256": "0a49f7b53720cb6bd7a89fa5fe0a71d57d28efd4648b209c696198a199a8f704",
+  "evaluation_seed": 88176,
+  "partition": 1,
+  "episodes": 64,
+  "logs": {
+    "trained.log": "5b5d988334865450fea90b6c1bd2b00776cf88a4ba47b66962846e25c8bd06b5",
+    "initial.log": "bcaea6b870683cf7df6ca9b97b606ac57d96f4893906cca878f34cb8ee147c4e"
+  }
+}

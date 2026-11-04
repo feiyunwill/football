@@ -1,5 +1,8 @@
 # C++ 训练链路长期计划
 
+后续工作见 [下一阶段优化计划](../optimization/next-optimization-plan-20261015.md) 与
+[执行状态](../optimization/next-optimization-state.json)；本路线 S0–S5 的历史验收记录保持原有含义。
+
 制定日期：2026-10-14。执行入口：[任务状态](state.json)。
 
 ## 长期目标与完成条件
@@ -144,3 +147,29 @@ NT-3.2候选无稳定收益，已撤回；短训练没有证明学会足球。�
 Linux/WSL、CPython3.14；其他版本和Windows/macOS的未验证范围在PLATFORMS.md。
 未推送或发布，也未提升现有产品里程碑状态。后续学习效果、更多平台或模型
 扩展若成为新目标，需另定阶段和验收，保留本路线提交与证据。
+
+PPO CPU follow-up: [retained optimization and current evidence](../optimization/ppo-optimization-report-20261015.md). Isolated update gains verified; full pipeline scaling, current wheel delivery, remote CI and GPU remain open.
+
+2026-10-17 current source and quality: [selective worker digests](../optimization/selected-digests-report-20261017.md). Full training scaling remains open.
+
+Sustained-training follow-up: [30-minute baseline and next decisions](../optimization/sustained-training-report-20261017.md). This is a single configuration duration/cost result, not scaling or learning acceptance.
+
+Matched worker baseline: [4,475-update equivalence and native CPU boundary diagnosis](../optimization/matched-workers-report-20261017.md). Native step/reset internal sampling is next; no new production performance claim.
+
+- [Historical actual-worker native CPU diagnosis](../optimization/native-hotspots-report-20261017.md):128-update learner/replay parity; profiling scope only.
+
+- [Rejected LTO candidate](../optimization/lto-report-20261017.md): primary fixed gate failed; original build retained.
+
+- [Retained headless subtree invalidation](../optimization/spatial-invalidation-report-20261017.md):20.54% isolated step CPU reduction; current pipeline follow-up below.
+
+2026-10-17 bounded PPO performance milestone: [80-run pipeline acceptance and current duration/resource evidence](../optimization/ppo-pipeline-report-20261017.md). Primary 2x worker target and all four median cost gates passed. The current 30-minute run verifies resources/checkpoint/cleanup under concurrent external compilation; isolated sustained throughput, learning generalization and refreshed delivery remain open.
+
+2026-10-18：约定的学习泛化、当前源码 30 分钟运行与安装后模型复现目标已完成，见 [最终报告](../optimization/generalization-delivery-report-20261018.md).
+
+2v1 配合进攻目标已通过学习、持续运行与交付复现验收，见 [最终报告](../optimization/two-on-one-report-20261018.md)。
+
+冻结五模型的 200 个新起点泛化与交付复现验证通过，见[报告](../optimization/two-on-one-broad-report-20261018.md)；原质量、安装与时长收据按同源码复用。
+
+2026-10-19：O20 确定性 balanced 推理通过新起点确认、状态恢复与归档复现，平均进球率 89.3%，见[验收报告](../optimization/two-on-one-inference-report-20261019.md)。独立适配器状态需要与引擎状态一同保存。
+
+2026-10-19：O21 正式 CLI 推理与恢复、当前源码质量、独立安装及归档复现已通过，见[验收报告](../optimization/two-on-one-cli-report-20261019.md)。FPPO 保留严格兼容性检查；仅策略 FPOL1 与推理会话 FIFS1 分别用于推理权重和断点恢复。

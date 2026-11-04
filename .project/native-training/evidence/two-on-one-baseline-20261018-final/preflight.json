@@ -1,0 +1,70 @@
+{
+  "foreign_mean_cores": 0.02999877092336048,
+  "foreign_p95_cores": 0.04027512789048583,
+  "index_mean_cores": 0.02799885286180312,
+  "index_p95_cores": 0.04027512789048583,
+  "compiler_seen": false,
+  "samples": [
+    {
+      "seconds": 1.000363183033187,
+      "foreign_cores": 0.03998547795283366,
+      "index_cores": 0.03998547795283366,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0014553099754266,
+      "foreign_cores": 0.029956404146218096,
+      "index_cores": 0.029956404146218096,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.002253009006381,
+      "foreign_cores": 0.02993256166897574,
+      "index_cores": 0.02993256166897574,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0011560060083866,
+      "foreign_cores": 0.019976906575969202,
+      "index_cores": 0.019976906575969202,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0010734619572759,
+      "foreign_cores": 0.02996783067382956,
+      "index_cores": 0.02996783067382956,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0011417750502005,
+      "foreign_cores": 0.019977190542265738,
+      "index_cores": 0.019977190542265738,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0022827449720353,
+      "foreign_cores": 0.01995444908168904,
+      "index_cores": 0.01995444908168904,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.002142773999367,
+      "foreign_cores": 0.03991447230654309,
+      "index_cores": 0.029935854229907317,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0011824590037577,
+      "foreign_cores": 0.02996456812662496,
+      "index_cores": 0.01997637875108331,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 0.9873589859926142,
+      "foreign_cores": 0.040512114203110336,
+      "index_cores": 0.040512114203110336,
+      "foreign_compilers": []
+    }
+  ],
+  "scope": "Read-only one-second /proc sampling; excludes wrapper and all descendant processes. Bounds observed WSL load, not physical host isolation; short-lived processes between samples may be missed."
+}

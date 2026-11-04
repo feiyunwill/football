@@ -1,0 +1,20 @@
+{
+  "primary_passed": false,
+  "full_matrix": false,
+  "retain": false,
+  "action": "reject",
+  "workloads": [
+    {
+      "players": 1,
+      "cadence": 10,
+      "feedback": false,
+      "speedup": 1.0528998927284117,
+      "cost_reduction": 0.050242091478735484,
+      "interval": [
+        0.7089179255581943,
+        1.6072839453531946
+      ]
+    }
+  ],
+  "limitation": "Paired bootstrap describes this machine/workload only; eight pairs give limited precision"
+}

@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "source_sha256": "7640b9befe4155bf3887f4f98e20fd056fc4d09127636c0d23da4a28a21fb96a",
+  "quality": {
+    "passed": true,
+    "report": "/root/work_space/football/.project/native-training/evidence/selected-digests-quality-20261017-a/report.json",
+    "source_sha256": "7640b9befe4155bf3887f4f98e20fd056fc4d09127636c0d23da4a28a21fb96a"
+  },
+  "updates": 4,
+  "transitions": 1024,
+  "replay_sha256": "628d7531752122b903b83e535f88773aa54136e431d4f43cd422436b9131a444",
+  "learner_payload_equal": true,
+  "single_seconds": 3.968575507,
+  "four_seconds": 1.18553859,
+  "observed_four_over_single_tps": 3.3474874124510787,
+  "stage_seconds": {
+    "single": {
+      "callback_ns": 0.118128384,
+      "collection_other_ns": 0.0794339,
+      "diagnostic_ns": 0.029128181,
+      "digest_ns": 0.017691462,
+      "iteration_ns": 3.962169154,
+      "native_update_ns": 0.333315885,
+      "policy_ns": 0.036181363,
+      "reset_ns": 0.608640813,
+      "step_rpc_ns": 2.735643571,
+      "update_bridge_ns": 0.003486964
+    },
+    "four": {
+      "callback_ns": 0.056883885,
+      "collection_other_ns": 0.029001815,
+      "diagnostic_ns": 0.025782197,
+      "digest_ns": 0.003935528,
+      "iteration_ns": 1.181927706,
+      "native_update_ns": 0.259812193,
+      "policy_ns": 0.020644598,
+      "reset_ns": 0.143555941,
+      "step_rpc_ns": 0.639360367,
+      "update_bridge_ns": 0.002546444
+    }
+  },
+  "cross_run_environment_equal": true,
+  "scope": "One historical four-worker run and one subsequent fixed-workload single-worker run; exploratory ratio, no independent repeats or interleaved order",
+  "all_configuration_twofold_accepted": false,
+  "receipts": {
+    "/root/work_space/football/.project/native-training/evidence/matched-smoke-w1-20261017-a/report.json": "5c894a407b1fd9ad0c562914b4f44c840775524344ecbce3cce143a50c9c49bf",
+    "/root/work_space/football/.project/native-training/evidence/matched-smoke-w4-20261017-a/report.json": "c7843345a1f2a3d74c2b9f230387915a8a552dea069c3cd6816aabbfeba22f2f"
+  },
+  "runner_sha256": "3279c0aa98f9ce008931079a7ce4d59e6906add72be0451618aaec8f9f96ff93"
+}

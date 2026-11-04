@@ -1,0 +1,771 @@
+{
+  "passed": true,
+  "source_sha256": "7640b9befe4155bf3887f4f98e20fd056fc4d09127636c0d23da4a28a21fb96a",
+  "updates": 128,
+  "numerical_prefix_equal": true,
+  "profile": {
+    "scope": "Independent gprofng per spawn process; actual pool includes imports, construction, warmup, resets, steps and close; excludes parent PPO. Instrumented, not speed evidence.",
+    "measured_worker_pids": [
+      "1869665",
+      "1869666",
+      "1869667",
+      "1869668"
+    ],
+    "profiles": {
+      "1869665": "/tmp/football-native-workers-20261017-d-profiles/worker-1869665.er",
+      "1869666": "/tmp/football-native-workers-20261017-d-profiles/worker-1869666.er",
+      "1869667": "/tmp/football-native-workers-20261017-d-profiles/worker-1869667.er",
+      "1869668": "/tmp/football-native-workers-20261017-d-profiles/worker-1869668.er"
+    },
+    "period_ms": 10,
+    "follow_descendants": false
+  },
+  "functions": [
+    {
+      "self_cpu_seconds": 12.83,
+      "self_percent": 100.0,
+      "inclusive_cpu_seconds": 12.83,
+      "inclusive_percent": 100.0,
+      "function": "<Total>"
+    },
+    {
+      "self_cpu_seconds": 1.13,
+      "self_percent": 8.81,
+      "inclusive_cpu_seconds": 1.13,
+      "inclusive_percent": 8.81,
+      "function": "blas_thread_server"
+    },
+    {
+      "self_cpu_seconds": 1.06,
+      "self_percent": 8.26,
+      "inclusive_cpu_seconds": 1.71,
+      "inclusive_percent": 13.33,
+      "function": "blunted::Node::RecursiveUpdateSpatialData(blunted::e_SpatialDataType, blunted::e_SystemType)"
+    },
+    {
+      "self_cpu_seconds": 0.9,
+      "self_percent": 7.01,
+      "inclusive_cpu_seconds": 0.9,
+      "inclusive_percent": 7.01,
+      "function": "sched_yield"
+    },
+    {
+      "self_cpu_seconds": 0.62,
+      "self_percent": 4.83,
+      "inclusive_cpu_seconds": 1.22,
+      "inclusive_percent": 9.51,
+      "function": "AnimCollection::CrudeSelection(std::vector<int, std::allocator<int> >&, CrudeSelectionQuery const&)"
+    },
+    {
+      "self_cpu_seconds": 0.61,
+      "self_percent": 4.75,
+      "inclusive_cpu_seconds": 0.61,
+      "inclusive_percent": 4.75,
+      "function": "<static>@0x8a5d2 (<libm.so.6>)"
+    },
+    {
+      "self_cpu_seconds": 0.56,
+      "self_percent": 4.36,
+      "inclusive_cpu_seconds": 0.56,
+      "inclusive_percent": 4.36,
+      "function": "atan2f"
+    },
+    {
+      "self_cpu_seconds": 0.44,
+      "self_percent": 3.43,
+      "inclusive_cpu_seconds": 0.73,
+      "inclusive_percent": 5.69,
+      "function": "HumanoidBase::PrepareFullbodyModel(std::map<blunted::Vector3, blunted::Vector3, std::less<blunted::Vector3>, std::allocator<std::pair<blunted::Vector3 const, blunted::Vector3> > >&)"
+    },
+    {
+      "self_cpu_seconds": 0.39,
+      "self_percent": 3.04,
+      "inclusive_cpu_seconds": 0.41,
+      "inclusive_percent": 3.2,
+      "function": "TimeNeeded AIReachabilityTrajectory::EstimateImpl<true>(blunted::Vector3 const&, blunted::Vector3 const&, blunted::Vector3 const&, float, bool, unsigned int, AIReachabilityTrajectory*)"
+    },
+    {
+      "self_cpu_seconds": 0.35,
+      "self_percent": 2.73,
+      "inclusive_cpu_seconds": 7.96,
+      "inclusive_percent": 62.04,
+      "function": "<static>@0x4d362 (<libpython3.14.so.1.0>)"
+    },
+    {
+      "self_cpu_seconds": 0.32,
+      "self_percent": 2.49,
+      "inclusive_cpu_seconds": 0.32,
+      "inclusive_percent": 2.49,
+      "function": "<static>@0xa0914 (<libc.so.6>)"
+    },
+    {
+      "self_cpu_seconds": 0.3,
+      "self_percent": 2.34,
+      "inclusive_cpu_seconds": 0.43,
+      "inclusive_percent": 3.35,
+      "function": "<static>@0xa5c2b (<libc.so.6>)"
+    },
+    {
+      "self_cpu_seconds": 0.24,
+      "self_percent": 1.87,
+      "inclusive_cpu_seconds": 0.24,
+      "inclusive_percent": 1.87,
+      "function": "<static>@0x175a00 (<libc.so.6>)"
+    },
+    {
+      "self_cpu_seconds": 0.2,
+      "self_percent": 1.56,
+      "inclusive_cpu_seconds": 0.52,
+      "inclusive_percent": 4.05,
+      "function": "blunted::Quaternion::GetSlerped(float, blunted::Quaternion const&) const"
+    },
+    {
+      "self_cpu_seconds": 0.18,
+      "self_percent": 1.4,
+      "inclusive_cpu_seconds": 0.18,
+      "inclusive_percent": 1.4,
+      "function": "blunted::Quaternion::Normalize()"
+    },
+    {
+      "self_cpu_seconds": 0.16,
+      "self_percent": 1.25,
+      "inclusive_cpu_seconds": 0.2,
+      "inclusive_percent": 1.56,
+      "function": "GetContext()"
+    },
+    {
+      "self_cpu_seconds": 0.16,
+      "self_percent": 1.25,
+      "inclusive_cpu_seconds": 0.52,
+      "inclusive_percent": 4.05,
+      "function": "blunted::Geometry::RecursiveUpdateSpatialData(blunted::e_SpatialDataType, blunted::e_SystemType)"
+    },
+    {
+      "self_cpu_seconds": 0.15,
+      "self_percent": 1.17,
+      "inclusive_cpu_seconds": 0.5,
+      "inclusive_percent": 3.9,
+      "function": "blunted::Animation::GetInterpolatedValues(blunted::KeyFrames const&, int, blunted::Quaternion&, blunted::Vector3&) const"
+    },
+    {
+      "self_cpu_seconds": 0.14,
+      "self_percent": 1.09,
+      "inclusive_cpu_seconds": 0.29,
+      "inclusive_percent": 2.26,
+      "function": "HumanoidBase::CalculatePhysicsVector(blunted::Animation*, bool, blunted::Vector3 const&, bool, blunted::Vector3 const&, std::vector<blunted::Vector3, std::allocator<blunted::Vector3> >&, blunted::radian&) const"
+    },
+    {
+      "self_cpu_seconds": 0.13,
+      "self_percent": 1.01,
+      "inclusive_cpu_seconds": 1.72,
+      "inclusive_percent": 13.41,
+      "function": "HumanoidBase::Mirror()"
+    },
+    {
+      "self_cpu_seconds": 0.13,
+      "self_percent": 1.01,
+      "inclusive_cpu_seconds": 0.13,
+      "inclusive_percent": 1.01,
+      "function": "blunted::Spatial::InvalidateBoundingVolume()"
+    },
+    {
+      "self_cpu_seconds": 0.13,
+      "self_percent": 1.01,
+      "inclusive_cpu_seconds": 0.13,
+      "inclusive_percent": 1.01,
+      "function": "malloc"
+    },
+    {
+      "self_cpu_seconds": 0.12,
+      "self_percent": 0.94,
+      "inclusive_cpu_seconds": 0.12,
+      "inclusive_percent": 0.94,
+      "function": "<static>@0xa43e4 (<libc.so.6>)"
+    },
+    {
+      "self_cpu_seconds": 0.12,
+      "self_percent": 0.94,
+      "inclusive_cpu_seconds": 0.12,
+      "inclusive_percent": 0.94,
+      "function": "blunted::Spatial::InvalidateSpatialData()"
+    },
+    {
+      "self_cpu_seconds": 0.11,
+      "self_percent": 0.86,
+      "inclusive_cpu_seconds": 1.28,
+      "inclusive_percent": 9.98,
+      "function": "blunted::Animation::Apply(boost::intrusive_ptr<blunted::Node> const (&) [14], int, int, bool, float, blunted::Vector3 const&, blunted::radian, blunted::BiasedOffsets&, std::vector<blunted::MovementHistoryEntry, std::allocator<blunted::MovementHistoryEntry> >*, int, bool, bool)"
+    },
+    {
+      "self_cpu_seconds": 0.1,
+      "self_percent": 0.78,
+      "inclusive_cpu_seconds": 0.15,
+      "inclusive_percent": 1.17,
+      "function": "HumanoidBase::GetMovementSimilarity(int, blunted::Vector3 const&, e_Velocity, float) const"
+    },
+    {
+      "self_cpu_seconds": 0.1,
+      "self_percent": 0.78,
+      "inclusive_cpu_seconds": 0.11,
+      "inclusive_percent": 0.86,
+      "function": "Match::GetAnimPositionCache(blunted::Animation*) const"
+    },
+    {
+      "self_cpu_seconds": 0.09,
+      "self_percent": 0.7,
+      "inclusive_cpu_seconds": 0.09,
+      "inclusive_percent": 0.7,
+      "function": "__tls_get_addr"
+    },
+    {
+      "self_cpu_seconds": 0.08,
+      "self_percent": 0.62,
+      "inclusive_cpu_seconds": 0.08,
+      "inclusive_percent": 0.62,
+      "function": "blunted::ModulateIntoRange(float, float, blunted::radian)"
+    },
+    {
+      "self_cpu_seconds": 0.08,
+      "self_percent": 0.62,
+      "inclusive_cpu_seconds": 0.29,
+      "inclusive_percent": 2.26,
+      "function": "blunted::Quaternion::GetNormalized() const"
+    },
+    {
+      "self_cpu_seconds": 0.07,
+      "self_percent": 0.55,
+      "inclusive_cpu_seconds": 0.09,
+      "inclusive_percent": 0.7,
+      "function": "MentalImage::Mirror(bool, bool, bool)"
+    },
+    {
+      "self_cpu_seconds": 0.06,
+      "self_percent": 0.47,
+      "inclusive_cpu_seconds": 0.21,
+      "inclusive_percent": 1.64,
+      "function": "Ball::CalculatePrediction()"
+    },
+    {
+      "self_cpu_seconds": 0.06,
+      "self_percent": 0.47,
+      "inclusive_cpu_seconds": 0.06,
+      "inclusive_percent": 0.47,
+      "function": "Ball::FillBallComponent(BallComponent&) const"
+    },
+    {
+      "self_cpu_seconds": 0.06,
+      "self_percent": 0.47,
+      "inclusive_cpu_seconds": 0.06,
+      "inclusive_percent": 0.47,
+      "function": "Ball::Mirror()"
+    },
+    {
+      "self_cpu_seconds": 0.06,
+      "self_percent": 0.47,
+      "inclusive_cpu_seconds": 0.51,
+      "inclusive_percent": 3.98,
+      "function": "Player::UpdatePossessionStats()"
+    },
+    {
+      "self_cpu_seconds": 0.06,
+      "self_percent": 0.47,
+      "inclusive_cpu_seconds": 0.06,
+      "inclusive_percent": 0.47,
+      "function": "blunted::Animation::GetIncomingVelocity() const"
+    },
+    {
+      "self_cpu_seconds": 0.06,
+      "self_percent": 0.47,
+      "inclusive_cpu_seconds": 0.06,
+      "inclusive_percent": 0.47,
+      "function": "blunted::intrusive_ptr_add_ref(blunted::RefCounted*)"
+    },
+    {
+      "self_cpu_seconds": 0.05,
+      "self_percent": 0.39,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "<static>@0x49a96 (<libc.so.6>)"
+    },
+    {
+      "self_cpu_seconds": 0.05,
+      "self_percent": 0.39,
+      "inclusive_cpu_seconds": 0.23,
+      "inclusive_percent": 1.79,
+      "function": "Match::SyncEcsFromOop()"
+    },
+    {
+      "self_cpu_seconds": 0.05,
+      "self_percent": 0.39,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "blunted::Quaternion::GetDotProduct(blunted::Quaternion const&) const"
+    },
+    {
+      "self_cpu_seconds": 0.05,
+      "self_percent": 0.39,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "blunted::Quaternion::operator*(blunted::Quaternion const&) const"
+    },
+    {
+      "self_cpu_seconds": 0.05,
+      "self_percent": 0.39,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "blunted::Vector3::Vector3(float, float, float)"
+    },
+    {
+      "self_cpu_seconds": 0.04,
+      "self_percent": 0.31,
+      "inclusive_cpu_seconds": 0.04,
+      "inclusive_percent": 0.31,
+      "function": "<static>@0x18957c (<libpython3.14.so.1.0>)"
+    },
+    {
+      "self_cpu_seconds": 0.04,
+      "self_percent": 0.31,
+      "inclusive_cpu_seconds": 0.93,
+      "inclusive_percent": 7.25,
+      "function": "<static>@0x39a987 (<libopenblasp-r0-59ffcd50.3.15.so>)"
+    },
+    {
+      "self_cpu_seconds": 0.04,
+      "self_percent": 0.31,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "CalculateMovementAtFrame(std::vector<blunted::Vector3, std::allocator<blunted::Vector3> > const&, unsigned int, unsigned int)"
+    },
+    {
+      "self_cpu_seconds": 0.04,
+      "self_percent": 0.31,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "GetGameConfig()"
+    },
+    {
+      "self_cpu_seconds": 0.04,
+      "self_percent": 0.31,
+      "inclusive_cpu_seconds": 2.19,
+      "inclusive_percent": 17.07,
+      "function": "Humanoid::Process()"
+    },
+    {
+      "self_cpu_seconds": 0.04,
+      "self_percent": 0.31,
+      "inclusive_cpu_seconds": 0.17,
+      "inclusive_percent": 1.33,
+      "function": "HumanoidBase::_KeepBestDirectionAnims(std::vector<int, std::allocator<int> >&, PlayerCommand const&, bool, blunted::radian, int, int)"
+    },
+    {
+      "self_cpu_seconds": 0.04,
+      "self_percent": 0.31,
+      "inclusive_cpu_seconds": 2.31,
+      "inclusive_percent": 18.0,
+      "function": "RunPlayerSystems(Match*, int)"
+    },
+    {
+      "self_cpu_seconds": 0.04,
+      "self_percent": 0.31,
+      "inclusive_cpu_seconds": 0.04,
+      "inclusive_percent": 0.31,
+      "function": "acosf"
+    },
+    {
+      "self_cpu_seconds": 0.04,
+      "self_percent": 0.31,
+      "inclusive_cpu_seconds": 0.38,
+      "inclusive_percent": 2.96,
+      "function": "operator new(unsigned long)"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "<static>@0x188be5 (<libpython3.14.so.1.0>)"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "<static>@0x1a392b (<libpython3.14.so.1.0>)"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.18,
+      "inclusive_percent": 1.4,
+      "function": "<static>@0x1d5f0b (<libpython3.14.so.1.0>)"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.28,
+      "inclusive_percent": 2.18,
+      "function": "HumanoidBase::CalculateSpatialState()"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.16,
+      "inclusive_percent": 1.25,
+      "function": "HumanoidBase::DirectionSimilarityRating(int) const"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "HumanoidBase::ForceIntoPreferredDirectionVec(blunted::Vector3 const&) const"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 5.09,
+      "inclusive_percent": 39.67,
+      "function": "Match::RunFramePipeline(bool)"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.06,
+      "inclusive_percent": 0.47,
+      "function": "Match::UpdateIngameCamera()"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "Player::GetStat(PlayerStat) const"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "PlayerBase::ExternalControllerActive()"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "PopulateCollisionResults(Match*)"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "PyArray_NewFromDescr"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.08,
+      "inclusive_percent": 0.62,
+      "function": "blunted::Quaternion::MakeSameNeighborhood(blunted::Quaternion const&)"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "blunted::Quaternion::scale(float)"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "blunted::Vector3::GetDotProduct(blunted::Vector3 const&) const"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "blunted::Vector3::Normalize()"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "free"
+    },
+    {
+      "self_cpu_seconds": 0.03,
+      "self_percent": 0.23,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "roundf"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "<static>@0x18cb4f (<libpython3.14.so.1.0>)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "<static>@0x18d657 (<libpython3.14.so.1.0>)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.04,
+      "inclusive_percent": 0.31,
+      "function": "<static>@0x1a3dc6 (<libpython3.14.so.1.0>)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "<static>@0x1b52f1 (<libpython3.14.so.1.0>)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.04,
+      "inclusive_percent": 0.31,
+      "function": "<static>@0x1d490d (<libpython3.14.so.1.0>)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 6.85,
+      "inclusive_percent": 53.39,
+      "function": "<static>@0x1e44e0 (<libpython3.14.so.1.0>)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "AIReachabilityTrajectory::GrowTo(unsigned int)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "AI_GetToBallMovement(Match*, MentalImage const*, Player*, blunted::Vector3 const&, float, blunted::Vector3&, float&, blunted::Vector3&, float)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.04,
+      "inclusive_percent": 0.31,
+      "function": "Humanoid::CalculateGeomOffsets()"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.06,
+      "inclusive_percent": 0.47,
+      "function": "HumanoidBase::CompareIncomingBodyDirectionSimilarity(int, int) const"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "HumanoidBase::FillHumanoidStateComponent(HumanoidStateComponent&) const"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "IController::GetReactionTime_ms()"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "Match::CheckForGoal(int, blunted::Vector3 const&)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "Match::CheckHumanoidCollision(Player*, Player*, std::vector<PlayerBounce, std::allocator<PlayerBounce> >&, std::vector<PlayerBounce, std::allocator<PlayerBounce> >&)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "Player::GetTeamID() const"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "PyArray_CanCastTypeTo"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "PyMem_Free"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.04,
+      "inclusive_percent": 0.31,
+      "function": "SyncPlayerPhysicsSystem(Match*)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.08,
+      "inclusive_percent": 0.62,
+      "function": "TeamAIController::CalculateDynamicRoles()"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.05,
+      "inclusive_percent": 0.39,
+      "function": "TeamAIController::GetAdaptedFormationPosition(Player*, bool)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "TimeNeeded AIReachabilityTrajectory::EstimateImpl<false>(blunted::Vector3 const&, blunted::Vector3 const&, blunted::Vector3 const&, float, bool, unsigned int, AIReachabilityTrajectory*)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.2,
+      "inclusive_percent": 1.56,
+      "function": "blunted::Animation::Load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.06,
+      "inclusive_percent": 0.47,
+      "function": "blunted::Quaternion::GetAngles(float&, float&, float&) const"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "blunted::Quaternion::operator*(float) const"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "blunted::Quaternion::operator+(blunted::Quaternion const&) const"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "blunted::Spatial::GetRotation() const"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.34,
+      "inclusive_percent": 2.65,
+      "function": "blunted::Vector3::GetAngle2D(blunted::Vector3 const&) const [clone .isra.0]"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "blunted::Vector3::Normalize(blunted::Vector3 const&)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.02,
+      "inclusive_percent": 0.16,
+      "function": "blunted::intrusive_ptr_release(blunted::RefCounted*)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.03,
+      "inclusive_percent": 0.23,
+      "function": "blunted::tokenize(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)"
+    },
+    {
+      "self_cpu_seconds": 0.02,
+      "self_percent": 0.16,
+      "inclusive_cpu_seconds": 0.12,
+      "inclusive_percent": 0.94,
+      "function": "recv"
+    }
+  ],
+  "receipts": {
+    "/root/work_space/football/.project/native-training/evidence/native-workers-20261017-d/report.json": "b0c189cc29021d9081cf2850cf1a856a11a89bfae4e9edb3f642d84ecb0be364",
+    "/root/work_space/football/.project/native-training/evidence/native-workers-20261017-d/native-profiles.json": "48d7b50e8ae60538de3b46d8b83470a7f09570cda7075a77a6902e8161ccc585",
+    "/root/work_space/football/.project/native-training/evidence/native-workers-20261017-d/functions.txt": "379a5295f1d3b870868d094559c0f70fe8570b4de8ef042815c9882a00f423f8",
+    ".project/native-training/evidence/sustained-ppo-20261017-a/report.json": "c6ed4ab9d6d721c461aaf023222d42724972962ba6e71f1a675f624e71139914"
+  },
+  "command": [
+    "/usr/sbin/gprofng",
+    "display",
+    "text",
+    "-limit",
+    "100",
+    "-functions",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869665.er",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869666.er",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869667.er",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869668.er"
+  ],
+  "scope": "CPU samples across actual four worker lifetimes, including imports/reset/warmup/step/close. Not phase-exclusive or end-to-end speed evidence. Inclusive rows overlap.",
+  "raw_profile_hashes": {
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869665.er/data.frameinfo": "523265cb5721d7040d6c3b9c83aa7cc506d7a7afce7dff9995e6efa55781c2e5",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869665.er/dyntext": "2f9174a440da8ec9d6c4efc57743eeab905481d29f32e7044002009a8f280cac",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869665.er/log.xml": "b9022056971f875c197ea56ce56de4ecfd872f2a73b942e5cb29f26301b2565d",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869665.er/map.xml": "37a6a63f0f7ee8090cbc83e9d089456030876f9ee574dac6e537567ea1b01c43",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869665.er/overview": "085762cd9e774319d112baec2722e0d5840155e133a173d5ffaf0f2a781c471d",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869665.er/profile": "25a87dc206a09c5803131c9873c5759a135e69642f02d11412e29cdcaa3cb4c8",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869666.er/data.frameinfo": "1bc04f0057ec856193b38d0080fc356b8b222772cdb0e923d138d39652e5e5ca",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869666.er/dyntext": "990d42e8180886d5578541c8ad5729e6f8fca3240a1528270555a0029bf5fb32",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869666.er/log.xml": "a852ebd92d4ba7e2696a3122c58111b14cc9e01457de94d210ad063f40f81b88",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869666.er/map.xml": "f6e555ce0e87def2771d3aae01a116dc32e99fa584e416b88a489a2cbf41a4d5",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869666.er/overview": "4bba7ebaea83848128e2f0bdce4bceb55d56539bf9c13eb45ef237b109aeba95",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869666.er/profile": "0cc03526f1bc3c1405723e73b517cceaaa1305f9030785a6d338dccace8344f5",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869667.er/data.frameinfo": "a5f7ab8abe0647e211ddf6e534886c72d18703f7d37a6a9dddd84d1103b82342",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869667.er/dyntext": "16a3702a0b5140c921558fc0c23a9ec4efef4f5a0199cb999731afe0e0b6f645",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869667.er/log.xml": "1fd7c6dc4248fd558ae515a2d6c2c4897ad6fc90079fcfaa45a3e3bb64c0a8cc",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869667.er/map.xml": "852429977f5e7ddfb6d2c4f5460fc550b20d535ed2d93add0a241757b666ba9e",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869667.er/overview": "f2bb10db2705d2d6b488ca6dc3633e2e94defab14c7e775efc3ce0fc42dac4ef",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869667.er/profile": "5ad0b74bc9252fc2bb5decce233a476f8319d06f231140223d814d8c05e710c3",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869668.er/data.frameinfo": "779c3a4c1916fc5d72983eb426a6b4a65216a887d85cfb36db1b6adcf2ae83d3",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869668.er/dyntext": "e361536ea336dc698d2be9f11b91c3ebbee27ecb27bae1e629f5bf371ecb83f5",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869668.er/log.xml": "0160c82c34f87caa1520376aa6a4f897299ab2df9c8d70541dee6cb2628958cd",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869668.er/map.xml": "f59bc5a3727bc0ee71e69f5391d287886e85c9f387cb390cede08611f125e548",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869668.er/overview": "a6c7397892151ae8ad7f84ac4599478b0adc687e5210637a14e1662b0f055326",
+    "/tmp/football-native-workers-20261017-d-profiles/worker-1869668.er/profile": "412801fefc7c5e3f727685a638798d86c90fd09e5ce565a3fddc22d3a3da49bf"
+  },
+  "runner_sha256": "23c5d7dcef299aac45c2e68c7251a99cc7666b34f91a5c901cdedaeb690b7f73"
+}

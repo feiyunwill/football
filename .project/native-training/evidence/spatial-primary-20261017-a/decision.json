@@ -1,0 +1,22 @@
+{
+  "accepted": false,
+  "primary_passed": true,
+  "complete_matrix": false,
+  "workloads": [
+    {
+      "players": 11,
+      "cadence": 2,
+      "feedback": false,
+      "primary": true,
+      "median_cpu_speedup": 1.258474404043909,
+      "cpu_reduction": 0.20538709664125254,
+      "paired_ci95": [
+        1.1468598534917331,
+        1.7847338053177122
+      ],
+      "passed": true
+    }
+  ],
+  "report_sha256": "622840d90e55abb181627c4de295b6d0b06f2a2b434045e8add96871afa143e7",
+  "note": "Engine-step CPU only. Bootstrap paired ratios; 8 pairs, 20000 draws, fixed seed42. No end-to-end training speedup claim."
+}

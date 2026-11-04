@@ -1,0 +1,38 @@
+{
+  "configurations": {
+    "sparse16": [
+      "--hidden",
+      "16"
+    ],
+    "sparse64": [
+      "--hidden",
+      "64"
+    ],
+    "checkpoints64": [
+      "--hidden",
+      "64",
+      "--checkpoints"
+    ]
+  },
+  "training_seeds": [
+    42,
+    123,
+    2026,
+    31415,
+    271828
+  ],
+  "tuning_seed": 77173,
+  "test_seeds": [
+    600001,
+    600002,
+    600003,
+    600004
+  ],
+  "updates": 390,
+  "rollout": 256,
+  "transitions_per_run": 99840,
+  "evaluation_episodes_per_batch": 50,
+  "evaluation_horizon": 256,
+  "selection": "pilot argmax scoring success, insertion order breaks ties",
+  "budget": "three pilots plus five independent training seeds; no adaptive sweep"
+}

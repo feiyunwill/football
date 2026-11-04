@@ -119,6 +119,24 @@ class WorkerPoolTest(unittest.TestCase):
       workers.NativeWorkerPool(self.config(representation='pixels'), workers=2)
     self.assertEqual({child.pid for child in multiprocessing.active_children()}, before)
 
+  def test_selected_digests_validate_before_ipc_and_preserve_state(self):
+    with workers.NativeWorkerPool(self.config(), workers=2) as pool:
+      self.assertEqual(pool.digests(), {})
+      pool.reset({0: 7})
+      with self.assertRaises(ValueError): pool.digests([1])
+      pool.reset({1: 8})
+      expected = pool.digests()
+      for selection in ([], [0, 0], [True], [-1], [2], [0, 1, 0], {0: None}, 0):
+        with mock.patch.object(pool, '_request', wraps=pool._request) as request:
+          with self.assertRaises(ValueError): pool.digests(selection)
+          request.assert_not_called()
+        self.assertEqual(pool.digests(), expected)
+      with mock.patch.object(pool, '_request', wraps=pool._request) as request:
+        self.assertEqual(pool.digests([1]), {1: expected[1]})
+        request.assert_called_once_with('digest', {1: {}})
+      self.assertEqual(pool.digests((1, 0)), expected)
+      pool.step({0: 0, 1: 0})
+
   def test_startup_deadline_reaps_every_child(self):
     before = {child.pid for child in multiprocessing.active_children()}
     start = time.monotonic()

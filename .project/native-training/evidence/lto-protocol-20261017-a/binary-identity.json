@@ -1,0 +1,12 @@
+{
+  "baseline": {
+    "path": "/tmp/football-lto-baseline-20261017-a/gfootball_engine/libfootball_engine.so",
+    "bytes": 3254600,
+    "sha256": "68fec6c3aaddb2a56be915261a6ef1d1bc7b5378ace5eb3bb20826b218846162"
+  },
+  "candidate": {
+    "path": "/tmp/football-lto-candidate-20261017-a/validation-stage/gfootball_engine/libfootball_engine.so",
+    "bytes": 2843280,
+    "sha256": "6b7578eda9dc5f9db1008e77e45393d257b1d18470dca246880157e8afb81333"
+  }
+}

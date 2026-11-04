@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "checked_at": "2026-10-18T13:46:16.127982+00:00",
+  "source_sha256": "791f505b9fa664af2598645286b792fc258743caa5d81c602ee3dd2c88c3826f",
+  "archive_manifest_sha256": "48c1bec42b06d7ed777325bcbcddb7ef8c5d5cc7b4551fa098ae4b22a6130149",
+  "archived_files_verified": 217,
+  "artifact_hashes_verified": {
+    "acceptance.json": "8a34cff9c2054ebc0d99883296720e3cb5283dd129c99ab4f55393b403b974ff",
+    "football-two-on-one-native.tar.gz": "3280b930258573dbf235279443ee541acb9d278e352f64f42ccac766192666ef",
+    "source.tar": "4f66477a7c488218b006cdc0760e451b4ae2312e3eb95acdf079fad22e78e910",
+    "gfootball-2.10.3-cp314-cp314-linux_x86_64.whl": "8f4500346c2b5e6e1a77ba737df438f27d99484e0aa54dbd3b04c4dd1c56b6fd"
+  },
+  "sha256sums_sha256": "19ebea04c3d3b11aa9ef1f369e82e23d98bc40638f301dbc93d1858cd8cd2b1f",
+  "native_tar_members_verified": 613,
+  "model_files_verified": 5,
+  "report_links_verified": true,
+  "current_quality_verified": true,
+  "git_diff_check_passed": true
+}

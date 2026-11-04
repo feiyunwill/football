@@ -1,0 +1,40 @@
+{
+  "minimum_seconds": 1800,
+  "smoke_only": false,
+  "preflight_seconds": 10,
+  "task": "2v1",
+  "learned_players": 1,
+  "native_agents": 2,
+  "fixed_teammate_action": 19,
+  "seed": 424242,
+  "hidden": 64,
+  "rollout": 256,
+  "epochs": 4,
+  "minibatch": 64,
+  "cadence": 10,
+  "episode_limit": 256,
+  "selected": "sparse64",
+  "maximum_foreign_mean_cores": 0.25,
+  "maximum_foreign_p95_cores": 0.25,
+  "maximum_index_mean_cores": 0.25,
+  "maximum_index_p95_cores": 0.25,
+  "foreign_compilers_allowed": 0,
+  "maximum_steady_rss_growth_bytes": 33554432,
+  "maximum_fd_range": 4,
+  "fd_gate": "After actual learner destruction equals process-global-cache-primed baseline; priming1024 transitions excluded from duration",
+  "snapshot_gate": "Actual final FPPO fresh-process frozen evaluation and resumed update bytes equal reference continuation",
+  "source_sha256": "791f505b9fa664af2598645286b792fc258743caa5d81c602ee3dd2c88c3826f",
+  "quality": {
+    "passed": true,
+    "report": "/tmp/football-two-on-one-quality-20261018-l/report.json",
+    "source_sha256": "791f505b9fa664af2598645286b792fc258743caa5d81c602ee3dd2c88c3826f"
+  },
+  "study_report_sha256": "ea21b60c4f3ee97a6e5ba5e53c02036bc993e2ff3937f7a07e3bcc0ebda20c66",
+  "tooling": {
+    "profile_two_on_one.py": "e585a6b907addbf00f21d3234d86eb9ce154dc5c2442022b0f5a2153d0961a97",
+    "soak_two_on_one.cpp": "7fcd9c3d22c652a708da93c54d7bf2cdc031f008c85e2ed35090559ab4817c17",
+    "profile_quiet_ppo.py": "ef2f9d94e54111123f063622529233c450bce9754c9ffaf16243ade5f4f75dc3",
+    "validate.py": "8b2914e19b87ba21c07a677467c407959b8ed2a69a2070b5581fb035dcbd0f16",
+    "quality.py": "9473b8d9229cb733492f9bfe99a86340695309ce4a43918c911db77f67439b6e"
+  }
+}

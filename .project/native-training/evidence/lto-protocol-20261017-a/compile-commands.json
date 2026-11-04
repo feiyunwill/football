@@ -1,0 +1,26 @@
+[
+  {
+    "directory": "/tmp/football-lto-candidate-20261017-a",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -flto=1 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/typeslib.dir/src/types/spatial.cpp.o -c /root/work_space/football/engine/src/types/spatial.cpp",
+    "file": "/root/work_space/football/engine/src/types/spatial.cpp",
+    "output": "CMakeFiles/typeslib.dir/src/types/spatial.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-lto-candidate-20261017-a",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -flto=1 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/objects/geometry.cpp.o -c /root/work_space/football/engine/src/scene/objects/geometry.cpp",
+    "file": "/root/work_space/football/engine/src/scene/objects/geometry.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/objects/geometry.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-lto-candidate-20261017-a",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -flto=1 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/scenelib.dir/src/scene/scene3d/node.cpp.o -c /root/work_space/football/engine/src/scene/scene3d/node.cpp",
+    "file": "/root/work_space/football/engine/src/scene/scene3d/node.cpp",
+    "output": "CMakeFiles/scenelib.dir/src/scene/scene3d/node.cpp.o"
+  },
+  {
+    "directory": "/tmp/football-lto-candidate-20261017-a",
+    "command": "/usr/sbin/c++  -I/usr/include/SDL2 -I/root/work_space/football/engine/src -I/root/work_space/football/engine/src/cmake -flto=1 -O3 -DNDEBUG -std=c++23 -fPIC -o CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoidbase.cpp.o -c /root/work_space/football/engine/src/onthepitch/player/humanoid/humanoidbase.cpp",
+    "file": "/root/work_space/football/engine/src/onthepitch/player/humanoid/humanoidbase.cpp",
+    "output": "CMakeFiles/gamelib.dir/src/onthepitch/player/humanoid/humanoidbase.cpp.o"
+  }
+]

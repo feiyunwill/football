@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "validation_passed": true,
+  "gates": {
+    "mean": true,
+    "versus_legacy": true,
+    "every_seed": true,
+    "cooperation": true,
+    "groups": true
+  },
+  "legacy_mean": 0.899,
+  "candidate_mean": 0.933,
+  "metadata": [
+    {
+      "configuration": "broad80",
+      "seed": 42,
+      "version": 8192,
+      "final_native_start_matches": true,
+      "conservative_starts": 42361
+    },
+    {
+      "configuration": "broad80",
+      "seed": 123,
+      "version": 8192,
+      "final_native_start_matches": true,
+      "conservative_starts": 38328
+    },
+    {
+      "configuration": "broad80",
+      "seed": 2026,
+      "version": 8192,
+      "final_native_start_matches": true,
+      "conservative_starts": 39179
+    },
+    {
+      "configuration": "broad80",
+      "seed": 31415,
+      "version": 8192,
+      "final_native_start_matches": true,
+      "conservative_starts": 39992
+    },
+    {
+      "configuration": "broad80",
+      "seed": 271828,
+      "version": 8192,
+      "final_native_start_matches": true,
+      "conservative_starts": 40320
+    }
+  ],
+  "report_sha256": "c2060d87f4d53adc1027c6a0cb4c09d6d62209fca6bf25f5077597c48333773e",
+  "protocol_sha256": "8e994b9ad9b69a4576f655bf1b3b472dacf6c18ba4d4bcd4c65cf9c86b516cd3",
+  "source_sha256": "579f89198b74c06875635efed1b780dfe5627329c842fc58446245bc20ee0113",
+  "confirmation_opened": false,
+  "auditor_sha256": "77eb5a6a5e4959ec75107747289bd2fc60a82d4fd2f63b6cccc539584db8808c"
+}

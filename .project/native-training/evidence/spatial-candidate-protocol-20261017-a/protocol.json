@@ -1,0 +1,20 @@
+{
+  "candidate": "Memoize completed headless Node/Geometry subtree invalidation; clear proof on any derived/AABB read or hierarchy mutation; fallback for render/tracker/custom dynamic types",
+  "baseline": "/tmp/football-spatial-baseline-20261017-a",
+  "primary": [
+    11,
+    2,
+    false
+  ],
+  "steps": 1024,
+  "pairs": 8,
+  "primary_cpu_reduction_min": 0.1,
+  "paired_ci95_lower_speedup_min": 1.0,
+  "other_cpu_regression_max": 0.03,
+  "requirements": [
+    "No root dirty-only early exit",
+    "Retain original dispatch/observer/tracker path when ineligible",
+    "Full quality, edge spatial contracts, eight-case trajectory parity before timing",
+    "Reject on any failed gate, restore only five archived source files"
+  ]
+}

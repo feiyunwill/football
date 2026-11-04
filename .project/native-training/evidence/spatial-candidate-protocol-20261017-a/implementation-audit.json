@@ -1,0 +1,12 @@
+{
+  "initial_protocol_unchanged": true,
+  "permanent_contract_added_before_timing": true,
+  "additional_archived_files": [
+    "engine/CMakeLists.txt",
+    ".project/native-training/validate.py",
+    ".project/native-training/quality.py"
+  ],
+  "new_file_absent_from_baseline": "engine/tests/engine_spatial_invalidation_contract.cpp",
+  "final_quality": "spatial-candidate-quality-20261017-b",
+  "note": "Implementation added a permanent 18-check contract and required quality command before the primary timing run; numeric thresholds, eight-pair budget and workload unchanged."
+}

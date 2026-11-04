@@ -1,0 +1,858 @@
+{
+  "passed": true,
+  "scope": "Instrumented child process CPU; excludes blocked waits and includes profiling distortion; not throughput/scaling evidence",
+  "measured_worker_pids": [
+    "1828742",
+    "1828743",
+    "1828744",
+    "1828745"
+  ],
+  "profiled_cpu_seconds": 89.92257082500004,
+  "top_self_cpu": [
+    {
+      "file": "/root/work_space/football/gfootball/owned_engine.py",
+      "line": 53,
+      "function": "_invoke",
+      "calls": 33884,
+      "self_cpu_seconds": 66.830846988,
+      "inclusive_cpu_seconds": 67.70664239400001
+    },
+    {
+      "file": "/tmp/football-native-training-venv/lib/python3.14/site-packages/gymnasium/spaces/multi_discrete.py",
+      "line": 249,
+      "function": "contains",
+      "calls": 65696,
+      "self_cpu_seconds": 1.754853634,
+      "inclusive_cpu_seconds": 4.252856921
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'recv' of '_socket.socket' objects>",
+      "calls": 67768,
+      "self_cpu_seconds": 1.37336103,
+      "inclusive_cpu_seconds": 1.37336103
+    },
+    {
+      "file": "/root/work_space/football/gfootball/training_workers.py",
+      "line": 70,
+      "function": "_read_exact",
+      "calls": 67768,
+      "self_cpu_seconds": 0.8738665520000001,
+      "inclusive_cpu_seconds": 2.5649004910000004
+    },
+    {
+      "file": "/root/work_space/football/gfootball/training_workers.py",
+      "line": 87,
+      "function": "_worker_main",
+      "calls": 4,
+      "self_cpu_seconds": 0.821862495,
+      "inclusive_cpu_seconds": 89.925224395
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'sendall' of '_socket.socket' objects>",
+      "calls": 33888,
+      "self_cpu_seconds": 0.8172247000000001,
+      "inclusive_cpu_seconds": 0.8172247000000001
+    },
+    {
+      "file": "/tmp/football-native-training-venv/lib/python3.14/site-packages/numpy/_core/_methods.py",
+      "line": 115,
+      "function": "_mean",
+      "calls": 32848,
+      "self_cpu_seconds": 0.815674994,
+      "inclusive_cpu_seconds": 1.657223764
+    },
+    {
+      "file": "/tmp/football-native-training-venv/lib/python3.14/site-packages/numpy/_core/fromnumeric.py",
+      "line": 86,
+      "function": "_wrapreduction_any_all",
+      "calls": 131396,
+      "self_cpu_seconds": 0.587311564,
+      "inclusive_cpu_seconds": 1.046545459
+    },
+    {
+      "file": "/root/work_space/football/gfootball/gymnasium.py",
+      "line": 133,
+      "function": "step",
+      "calls": 32848,
+      "self_cpu_seconds": 0.5615476420000001,
+      "inclusive_cpu_seconds": 61.199204553
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'reduce' of 'numpy.ufunc' objects>",
+      "calls": 164248,
+      "self_cpu_seconds": 0.559035865,
+      "inclusive_cpu_seconds": 0.559035865
+    },
+    {
+      "file": "/usr/lib/python3.14/json/encoder.py",
+      "line": 207,
+      "function": "iterencode",
+      "calls": 33888,
+      "self_cpu_seconds": 0.49793011500000006,
+      "inclusive_cpu_seconds": 0.49793011500000006
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.isinstance>",
+      "calls": 310284,
+      "self_cpu_seconds": 0.4967529970000001,
+      "inclusive_cpu_seconds": 0.763975413
+    },
+    {
+      "file": "/root/work_space/football/gfootball/training_workers.py",
+      "line": 45,
+      "function": "_encode",
+      "calls": 33888,
+      "self_cpu_seconds": 0.496150689,
+      "inclusive_cpu_seconds": 1.988081323
+    },
+    {
+      "file": "/root/work_space/football/.project/native-training/diagnose_worker_cpu.py",
+      "line": 34,
+      "function": "native_invoke",
+      "calls": 33884,
+      "self_cpu_seconds": 0.47519250200000007,
+      "inclusive_cpu_seconds": 68.417945992
+    },
+    {
+      "file": "/root/work_space/football/gfootball/native_training.py",
+      "line": 110,
+      "function": "step",
+      "calls": 32848,
+      "self_cpu_seconds": 0.462440883,
+      "inclusive_cpu_seconds": 54.821221846
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.len>",
+      "calls": 515664,
+      "self_cpu_seconds": 0.45008103900000007,
+      "inclusive_cpu_seconds": 0.45025690900000004
+    },
+    {
+      "file": "/root/work_space/football/gfootball/owned_engine.py",
+      "line": 47,
+      "function": "__setattr__",
+      "calls": 67772,
+      "self_cpu_seconds": 0.44999760600000005,
+      "inclusive_cpu_seconds": 0.44999760600000005
+    },
+    {
+      "file": "/root/work_space/football/gfootball/training_workers.py",
+      "line": 54,
+      "function": "_decode",
+      "calls": 33884,
+      "self_cpu_seconds": 0.449639287,
+      "inclusive_cpu_seconds": 2.293224978
+    },
+    {
+      "file": "/root/work_space/football/gfootball/owned_engine.py",
+      "line": 24,
+      "function": "_check_owner",
+      "calls": 134504,
+      "self_cpu_seconds": 0.447532929,
+      "inclusive_cpu_seconds": 0.966705086
+    },
+    {
+      "file": "/root/work_space/football/.project/native-training/diagnose_worker_cpu.py",
+      "line": 22,
+      "function": "call",
+      "calls": 33364,
+      "self_cpu_seconds": 0.374969033,
+      "inclusive_cpu_seconds": 77.619609056
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method numpy.array>",
+      "calls": 65700,
+      "self_cpu_seconds": 0.370246209,
+      "inclusive_cpu_seconds": 0.370246209
+    },
+    {
+      "file": "/root/work_space/football/gfootball/owned_engine.py",
+      "line": 31,
+      "function": "_resource",
+      "calls": 134500,
+      "self_cpu_seconds": 0.362672033,
+      "inclusive_cpu_seconds": 1.890424538
+    },
+    {
+      "file": "/tmp/football-native-training-venv/lib/python3.14/site-packages/numpy/_core/_methods.py",
+      "line": 73,
+      "function": "_count_reduce_items",
+      "calls": 32848,
+      "self_cpu_seconds": 0.36200498300000006,
+      "inclusive_cpu_seconds": 0.404807818
+    },
+    {
+      "file": "/tmp/football-native-training-venv/lib/python3.14/site-packages/numpy/_core/fromnumeric.py",
+      "line": 2586,
+      "function": "all",
+      "calls": 131392,
+      "self_cpu_seconds": 0.3519321,
+      "inclusive_cpu_seconds": 1.398358716
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method _imp.create_dynamic>",
+      "calls": 20,
+      "self_cpu_seconds": 0.324365424,
+      "inclusive_cpu_seconds": 0.324365424
+    },
+    {
+      "file": "/usr/lib/python3.14/json/__init__.py",
+      "line": 304,
+      "function": "loads",
+      "calls": 33888,
+      "self_cpu_seconds": 0.319017009,
+      "inclusive_cpu_seconds": 1.695771937
+    },
+    {
+      "file": "/root/work_space/football/gfootball/training_workers.py",
+      "line": 80,
+      "function": "_receive",
+      "calls": 33884,
+      "self_cpu_seconds": 0.31448575800000006,
+      "inclusive_cpu_seconds": 5.279452786
+    },
+    {
+      "file": "/usr/lib/python3.14/json/decoder.py",
+      "line": 340,
+      "function": "decode",
+      "calls": 33888,
+      "self_cpu_seconds": 0.302977654,
+      "inclusive_cpu_seconds": 0.8581533860000001
+    },
+    {
+      "file": "/usr/lib/python3.14/json/__init__.py",
+      "line": 185,
+      "function": "dumps",
+      "calls": 33888,
+      "self_cpu_seconds": 0.28032863,
+      "inclusive_cpu_seconds": 1.208384472
+    },
+    {
+      "file": "/usr/lib/python3.14/json/decoder.py",
+      "line": 351,
+      "function": "raw_decode",
+      "calls": 33888,
+      "self_cpu_seconds": 0.268172564,
+      "inclusive_cpu_seconds": 0.268172564
+    },
+    {
+      "file": "/usr/lib/python3.14/threading.py",
+      "line": 1470,
+      "function": "current_thread",
+      "calls": 134512,
+      "self_cpu_seconds": 0.259571924,
+      "inclusive_cpu_seconds": 0.374107984
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method posix.getpid>",
+      "calls": 269028,
+      "self_cpu_seconds": 0.25876456300000006,
+      "inclusive_cpu_seconds": 0.25876456300000006
+    },
+    {
+      "file": "/usr/lib/python3.14/json/__init__.py",
+      "line": 248,
+      "function": "detect_encoding",
+      "calls": 33884,
+      "self_cpu_seconds": 0.254169452,
+      "inclusive_cpu_seconds": 0.377062098
+    },
+    {
+      "file": "/usr/lib/python3.14/json/encoder.py",
+      "line": 185,
+      "function": "encode",
+      "calls": 33888,
+      "self_cpu_seconds": 0.23705187700000002,
+      "inclusive_cpu_seconds": 0.851012576
+    },
+    {
+      "file": "/root/work_space/football/gfootball/owned_engine.py",
+      "line": 39,
+      "function": "__getattr__",
+      "calls": 33884,
+      "self_cpu_seconds": 0.234937885,
+      "inclusive_cpu_seconds": 0.7257034290000001
+    },
+    {
+      "file": "/root/work_space/football/gfootball/engine_pool.py",
+      "line": 51,
+      "function": "resource",
+      "calls": 134500,
+      "self_cpu_seconds": 0.229800433,
+      "inclusive_cpu_seconds": 0.5610829930000001
+    },
+    {
+      "file": "/root/work_space/football/gfootball/engine_pool.py",
+      "line": 102,
+      "function": "_check_process",
+      "calls": 134512,
+      "self_cpu_seconds": 0.217741976,
+      "inclusive_cpu_seconds": 0.33135986
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method numpy.asarray>",
+      "calls": 99068,
+      "self_cpu_seconds": 0.20158012800000003,
+      "inclusive_cpu_seconds": 0.20158012800000003
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'match' of 're.Pattern' objects>",
+      "calls": 67780,
+      "self_cpu_seconds": 0.193339527,
+      "inclusive_cpu_seconds": 0.193339527
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method time.process_time_ns>",
+      "calls": 134496,
+      "self_cpu_seconds": 0.19004771,
+      "inclusive_cpu_seconds": 0.19004771
+    }
+  ],
+  "top_inclusive_cpu": [
+    {
+      "file": "/root/work_space/football/gfootball/training_workers.py",
+      "line": 87,
+      "function": "_worker_main",
+      "calls": 4,
+      "self_cpu_seconds": 0.821862495,
+      "inclusive_cpu_seconds": 89.925224395
+    },
+    {
+      "file": "/root/work_space/football/.project/native-training/diagnose_worker_cpu.py",
+      "line": 22,
+      "function": "call",
+      "calls": 33364,
+      "self_cpu_seconds": 0.374969033,
+      "inclusive_cpu_seconds": 77.619609056
+    },
+    {
+      "file": "/root/work_space/football/.project/native-training/diagnose_worker_cpu.py",
+      "line": 34,
+      "function": "native_invoke",
+      "calls": 33884,
+      "self_cpu_seconds": 0.47519250200000007,
+      "inclusive_cpu_seconds": 68.417945992
+    },
+    {
+      "file": "/root/work_space/football/gfootball/owned_engine.py",
+      "line": 53,
+      "function": "_invoke",
+      "calls": 33884,
+      "self_cpu_seconds": 66.830846988,
+      "inclusive_cpu_seconds": 67.70664239400001
+    },
+    {
+      "file": "/root/work_space/football/gfootball/gymnasium.py",
+      "line": 133,
+      "function": "step",
+      "calls": 32848,
+      "self_cpu_seconds": 0.5615476420000001,
+      "inclusive_cpu_seconds": 61.199204553
+    },
+    {
+      "file": "/root/work_space/football/gfootball/native_training.py",
+      "line": 110,
+      "function": "step",
+      "calls": 32848,
+      "self_cpu_seconds": 0.462440883,
+      "inclusive_cpu_seconds": 54.821221846
+    },
+    {
+      "file": "/root/work_space/football/gfootball/gymnasium.py",
+      "line": 99,
+      "function": "reset",
+      "calls": 516,
+      "self_cpu_seconds": 0.022711055,
+      "inclusive_cpu_seconds": 15.891399688
+    },
+    {
+      "file": "/root/work_space/football/gfootball/native_training.py",
+      "line": 104,
+      "function": "reset",
+      "calls": 516,
+      "self_cpu_seconds": 0.009862041,
+      "inclusive_cpu_seconds": 15.76479417
+    },
+    {
+      "file": "/root/work_space/football/gfootball/training_workers.py",
+      "line": 80,
+      "function": "_receive",
+      "calls": 33884,
+      "self_cpu_seconds": 0.31448575800000006,
+      "inclusive_cpu_seconds": 5.279452786
+    },
+    {
+      "file": "/tmp/football-native-training-venv/lib/python3.14/site-packages/gymnasium/spaces/multi_discrete.py",
+      "line": 249,
+      "function": "contains",
+      "calls": 65696,
+      "self_cpu_seconds": 1.754853634,
+      "inclusive_cpu_seconds": 4.252856921
+    },
+    {
+      "file": "/root/work_space/football/gfootball/gymnasium.py",
+      "line": 30,
+      "function": "__init__",
+      "calls": 4,
+      "self_cpu_seconds": 0.000181768,
+      "inclusive_cpu_seconds": 2.661262578
+    },
+    {
+      "file": "/root/work_space/football/gfootball/native_training.py",
+      "line": 14,
+      "function": "__init__",
+      "calls": 4,
+      "self_cpu_seconds": 0.0011886790000000002,
+      "inclusive_cpu_seconds": 2.6593066280000004
+    },
+    {
+      "file": "/root/work_space/football/gfootball/training_workers.py",
+      "line": 70,
+      "function": "_read_exact",
+      "calls": 67768,
+      "self_cpu_seconds": 0.8738665520000001,
+      "inclusive_cpu_seconds": 2.5649004910000004
+    },
+    {
+      "file": "/root/work_space/football/gfootball/training_workers.py",
+      "line": 54,
+      "function": "_decode",
+      "calls": 33884,
+      "self_cpu_seconds": 0.449639287,
+      "inclusive_cpu_seconds": 2.293224978
+    },
+    {
+      "file": "/root/work_space/football/gfootball/training_workers.py",
+      "line": 45,
+      "function": "_encode",
+      "calls": 33888,
+      "self_cpu_seconds": 0.496150689,
+      "inclusive_cpu_seconds": 1.988081323
+    },
+    {
+      "file": "/root/work_space/football/gfootball/owned_engine.py",
+      "line": 31,
+      "function": "_resource",
+      "calls": 134500,
+      "self_cpu_seconds": 0.362672033,
+      "inclusive_cpu_seconds": 1.890424538
+    },
+    {
+      "file": "<frozen importlib._bootstrap>",
+      "line": 1360,
+      "function": "_find_and_load",
+      "calls": 976,
+      "self_cpu_seconds": 0.018996680000000002,
+      "inclusive_cpu_seconds": 1.8577467950000002
+    },
+    {
+      "file": "<frozen importlib._bootstrap>",
+      "line": 1308,
+      "function": "_find_and_load_unlocked",
+      "calls": 360,
+      "self_cpu_seconds": 0.015312772000000002,
+      "inclusive_cpu_seconds": 1.848899003
+    },
+    {
+      "file": "<frozen importlib._bootstrap>",
+      "line": 483,
+      "function": "_call_with_frames_removed",
+      "calls": 968,
+      "self_cpu_seconds": 0.017114869,
+      "inclusive_cpu_seconds": 1.8448605980000001
+    },
+    {
+      "file": "<frozen importlib._bootstrap>",
+      "line": 914,
+      "function": "_load_unlocked",
+      "calls": 356,
+      "self_cpu_seconds": 0.006849397,
+      "inclusive_cpu_seconds": 1.8448169810000001
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.__import__>",
+      "calls": 244,
+      "self_cpu_seconds": 0.001484305,
+      "inclusive_cpu_seconds": 1.844481567
+    },
+    {
+      "file": "<frozen importlib._bootstrap_external>",
+      "line": 753,
+      "function": "exec_module",
+      "calls": 248,
+      "self_cpu_seconds": 0.0024516220000000005,
+      "inclusive_cpu_seconds": 1.843334137
+    },
+    {
+      "file": "<frozen importlib._bootstrap>",
+      "line": 1409,
+      "function": "_handle_fromlist",
+      "calls": 872,
+      "self_cpu_seconds": 0.00466773,
+      "inclusive_cpu_seconds": 1.8413204360000002
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<built-in method builtins.exec>",
+      "calls": 276,
+      "self_cpu_seconds": 0.05737247,
+      "inclusive_cpu_seconds": 1.83952386
+    },
+    {
+      "file": "/root/work_space/football/gfootball/env/__init__.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 4,
+      "self_cpu_seconds": 0.00030325100000000004,
+      "inclusive_cpu_seconds": 1.83879259
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'mean' of 'numpy.ndarray' objects>",
+      "calls": 32848,
+      "self_cpu_seconds": 0.128842338,
+      "inclusive_cpu_seconds": 1.7860661020000002
+    },
+    {
+      "file": "/usr/lib/python3.14/json/__init__.py",
+      "line": 304,
+      "function": "loads",
+      "calls": 33888,
+      "self_cpu_seconds": 0.319017009,
+      "inclusive_cpu_seconds": 1.695771937
+    },
+    {
+      "file": "/root/work_space/football/gfootball/env/football_env.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 4,
+      "self_cpu_seconds": 0.0005183060000000001,
+      "inclusive_cpu_seconds": 1.6908931950000001
+    },
+    {
+      "file": "/tmp/football-native-training-venv/lib/python3.14/site-packages/numpy/_core/_methods.py",
+      "line": 115,
+      "function": "_mean",
+      "calls": 32848,
+      "self_cpu_seconds": 0.815674994,
+      "inclusive_cpu_seconds": 1.657223764
+    },
+    {
+      "file": "/root/work_space/football/gfootball/env/football_env_core.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 4,
+      "self_cpu_seconds": 0.00046542800000000004,
+      "inclusive_cpu_seconds": 1.4729976910000002
+    },
+    {
+      "file": "/root/work_space/football/gfootball/env/observation_processor.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 4,
+      "self_cpu_seconds": 0.000769159,
+      "inclusive_cpu_seconds": 1.4539216380000002
+    },
+    {
+      "file": "/tmp/football-native-training-venv/lib/python3.14/site-packages/numpy/_core/fromnumeric.py",
+      "line": 2586,
+      "function": "all",
+      "calls": 131392,
+      "self_cpu_seconds": 0.3519321,
+      "inclusive_cpu_seconds": 1.398358716
+    },
+    {
+      "file": "~",
+      "line": 0,
+      "function": "<method 'recv' of '_socket.socket' objects>",
+      "calls": 67768,
+      "self_cpu_seconds": 1.37336103,
+      "inclusive_cpu_seconds": 1.37336103
+    },
+    {
+      "file": "/root/work_space/football/gfootball/native_training.py",
+      "line": 96,
+      "function": "_check_open",
+      "calls": 66732,
+      "self_cpu_seconds": 0.131239564,
+      "inclusive_cpu_seconds": 1.217569599
+    },
+    {
+      "file": "/usr/lib/python3.14/json/__init__.py",
+      "line": 185,
+      "function": "dumps",
+      "calls": 33888,
+      "self_cpu_seconds": 0.28032863,
+      "inclusive_cpu_seconds": 1.208384472
+    },
+    {
+      "file": "/tmp/football-native-training-venv/lib/python3.14/site-packages/cv2/__init__.py",
+      "line": 1,
+      "function": "<module>",
+      "calls": 4,
+      "self_cpu_seconds": 0.000151697,
+      "inclusive_cpu_seconds": 1.093014831
+    },
+    {
+      "file": "/tmp/football-native-training-venv/lib/python3.14/site-packages/cv2/__init__.py",
+      "line": 68,
+      "function": "bootstrap",
+      "calls": 4,
+      "self_cpu_seconds": 0.081878374,
+      "inclusive_cpu_seconds": 1.088341538
+    },
+    {
+      "file": "/tmp/football-native-training-venv/lib/python3.14/site-packages/numpy/_core/fromnumeric.py",
+      "line": 86,
+      "function": "_wrapreduction_any_all",
+      "calls": 131396,
+      "self_cpu_seconds": 0.587311564,
+      "inclusive_cpu_seconds": 1.046545459
+    },
+    {
+      "file": "/root/work_space/football/gfootball/owned_engine.py",
+      "line": 24,
+      "function": "_check_owner",
+      "calls": 134504,
+      "self_cpu_seconds": 0.447532929,
+      "inclusive_cpu_seconds": 0.966705086
+    },
+    {
+      "file": "/usr/lib/python3.14/json/decoder.py",
+      "line": 340,
+      "function": "decode",
+      "calls": 33888,
+      "self_cpu_seconds": 0.302977654,
+      "inclusive_cpu_seconds": 0.8581533860000001
+    }
+  ],
+  "step_reset_wrappers": [
+    {
+      "file": "/root/work_space/football/gfootball/gymnasium.py",
+      "line": 133,
+      "function": "step",
+      "calls": 32848,
+      "self_cpu_seconds": 0.5615476420000001,
+      "inclusive_cpu_seconds": 61.199204553
+    },
+    {
+      "file": "/root/work_space/football/gfootball/gymnasium.py",
+      "line": 99,
+      "function": "reset",
+      "calls": 516,
+      "self_cpu_seconds": 0.022711055,
+      "inclusive_cpu_seconds": 15.891399688
+    }
+  ],
+  "profiles": {
+    "worker-cpu/worker-1828742.pstats": "71117dfa2c61d7ad0f5a9b976f6c58ebda0514467490be65708a45d02b2bcf9e",
+    "worker-cpu/worker-1828743.pstats": "25af25c1c0aafd025d551b1830d618db4098d6d8b2288cc7029afcc4790bf483",
+    "worker-cpu/worker-1828744.pstats": "cd22a4a9acad617d96d0e7786665e3cba962d00f259dec0ece87dc3acbc97885",
+    "worker-cpu/worker-1828745.pstats": "966ed64163b4d35a75fddd2181547a7a9cb34443144c1879486946829e9f317c"
+  },
+  "worker_call_timings": {
+    "1828742": {
+      "calls": {
+        "step": {
+          "calls": 8212,
+          "wall_ns": 16054765857,
+          "cpu_ns": 15250149533
+        },
+        "reset": {
+          "calls": 129,
+          "wall_ns": 4053240350,
+          "cpu_ns": 3910566194
+        }
+      },
+      "native_calls": {
+        "reset": {
+          "calls": 130,
+          "wall_ns": 4140807448,
+          "cpu_ns": 4001882080
+        },
+        "step": {
+          "calls": 8212,
+          "wall_ns": 13525609564,
+          "cpu_ns": 12804650805
+        },
+        "get_state_digest": {
+          "calls": 129,
+          "wall_ns": 78864226,
+          "cpu_ns": 76805183
+        }
+      },
+      "schedstat_before": [
+        140944973,
+        39565680,
+        11
+      ],
+      "schedstat_after": [
+        22072977841,
+        1742044702,
+        17615
+      ],
+      "note": "Process CPU and cumulative call wall are not additive to parent RPC wall; includes profiling/warmup. Zero schedstat wait may mean accounting disabled."
+    },
+    "1828743": {
+      "calls": {
+        "step": {
+          "calls": 8212,
+          "wall_ns": 16231007783,
+          "cpu_ns": 15449264019
+        },
+        "reset": {
+          "calls": 129,
+          "wall_ns": 4183734942,
+          "cpu_ns": 3971081856
+        }
+      },
+      "native_calls": {
+        "reset": {
+          "calls": 130,
+          "wall_ns": 4284383478,
+          "cpu_ns": 4071460673
+        },
+        "step": {
+          "calls": 8212,
+          "wall_ns": 13668800952,
+          "cpu_ns": 12962122955
+        },
+        "get_state_digest": {
+          "calls": 129,
+          "wall_ns": 79167588,
+          "cpu_ns": 75740947
+        }
+      },
+      "schedstat_before": [
+        142393485,
+        49692829,
+        24
+      ],
+      "schedstat_after": [
+        22412077166,
+        1926140962,
+        17559
+      ],
+      "note": "Process CPU and cumulative call wall are not additive to parent RPC wall; includes profiling/warmup. Zero schedstat wait may mean accounting disabled."
+    },
+    "1828744": {
+      "calls": {
+        "step": {
+          "calls": 8212,
+          "wall_ns": 16258732892,
+          "cpu_ns": 15435853801
+        },
+        "reset": {
+          "calls": 129,
+          "wall_ns": 4205867660,
+          "cpu_ns": 4033350948
+        }
+      },
+      "native_calls": {
+        "reset": {
+          "calls": 130,
+          "wall_ns": 4293273734,
+          "cpu_ns": 4128943005
+        },
+        "step": {
+          "calls": 8212,
+          "wall_ns": 13683581874,
+          "cpu_ns": 12955883763
+        },
+        "get_state_digest": {
+          "calls": 129,
+          "wall_ns": 70289143,
+          "cpu_ns": 69682034
+        }
+      },
+      "schedstat_before": [
+        130536474,
+        60689894,
+        21
+      ],
+      "schedstat_after": [
+        22440139969,
+        1975399747,
+        17488
+      ],
+      "note": "Process CPU and cumulative call wall are not additive to parent RPC wall; includes profiling/warmup. Zero schedstat wait may mean accounting disabled."
+    },
+    "1828745": {
+      "calls": {
+        "step": {
+          "calls": 8212,
+          "wall_ns": 16078220991,
+          "cpu_ns": 15317250133
+        },
+        "reset": {
+          "calls": 129,
+          "wall_ns": 4146711164,
+          "cpu_ns": 3983549673
+        }
+      },
+      "native_calls": {
+        "reset": {
+          "calls": 130,
+          "wall_ns": 4255551045,
+          "cpu_ns": 4124719630
+        },
+        "step": {
+          "calls": 8212,
+          "wall_ns": 13442969308,
+          "cpu_ns": 12789454572
+        },
+        "get_state_digest": {
+          "calls": 129,
+          "wall_ns": 69365964,
+          "cpu_ns": 67780380
+        }
+      },
+      "schedstat_before": [
+        128822607,
+        53916015,
+        25
+      ],
+      "schedstat_after": [
+        22241840340,
+        2008263506,
+        17683
+      ],
+      "note": "Process CPU and cumulative call wall are not additive to parent RPC wall; includes profiling/warmup. Zero schedstat wait may mean accounting disabled."
+    }
+  },
+  "timing_files": {
+    "worker-cpu/worker-1828742-timings.json": "61a330fd94e50cd476b9fa9de68fb0ffeddfbd8f7e7815ce828e4710acb0743e",
+    "worker-cpu/worker-1828743-timings.json": "abd233a2f40a76929b2f462256615c561a58351e150f5aaa8a445c1843cc40fb",
+    "worker-cpu/worker-1828744-timings.json": "fa3630dbd4fe3a3f3fd453b26c89adb895906f453ad6fc3dec26d1eaeff352bc",
+    "worker-cpu/worker-1828745-timings.json": "ebb1b1ae3d000bc70e7ac18ca282d74745d07334601885063e262a2f064e0482"
+  },
+  "run_report_sha256": "07c8e5a35af972069102fb4cf175732cdebc3a0556a4d64463662b9bdc269817",
+  "runner_sha256": "ee2d558beca84f2b7b1e7d11748bcc9f4f86fbf743e63aff3729e1b742dcb56d",
+  "note": "Environment construction, warmup and shutdown inside worker entry are included; pre-profiler imports and the separate warmup worker are excluded."
+}

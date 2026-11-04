@@ -131,14 +131,60 @@ PolicyOutput CategoricalPolicy::forward(const ObservationBuffer& observation) co
   PolicyOutput output;
   output.hidden.resize(spec_.hidden);
   output.logits.resize(spec_.players * spec_.actions());
-  for (size_t hidden = 0; hidden < spec_.hidden; ++hidden) {
+  // Independent accumulators expose parallel work without reassociating any
+  // neuron's input sum. Keep the scalar tail for widths not divisible by four.
+  size_t hidden = 0;
+  for (; hidden + 4 <= spec_.hidden; hidden += 4) {
+    double a = parameters_[hidden_bias_offset() + hidden];
+    double b = parameters_[hidden_bias_offset() + hidden + 1];
+    double c = parameters_[hidden_bias_offset() + hidden + 2];
+    double d = parameters_[hidden_bias_offset() + hidden + 3];
+    const double* weights = parameters_.data() + hidden * input.size();
+    for (size_t i = 0; i < input.size(); ++i) {
+      const double x = input[i];
+      a += weights[i] * x;
+      b += weights[input.size() + i] * x;
+      c += weights[2 * input.size() + i] * x;
+      d += weights[3 * input.size() + i] * x;
+    }
+    finite(a, "Policy hidden preactivation overflowed");
+    finite(b, "Policy hidden preactivation overflowed");
+    finite(c, "Policy hidden preactivation overflowed");
+    finite(d, "Policy hidden preactivation overflowed");
+    output.hidden[hidden] = std::tanh(a);
+    output.hidden[hidden + 1] = std::tanh(b);
+    output.hidden[hidden + 2] = std::tanh(c);
+    output.hidden[hidden + 3] = std::tanh(d);
+  }
+  for (; hidden < spec_.hidden; ++hidden) {
     double value = parameters_[hidden_bias_offset() + hidden];
     for (size_t i = 0; i < input.size(); ++i)
       value += parameters_[hidden * input.size() + i] * input[i];
     finite(value, "Policy hidden preactivation overflowed");
     output.hidden[hidden] = std::tanh(value);
   }
-  for (size_t row = 0; row < spec_.outputs(); ++row) {
+  size_t row = 0;
+  for (; row + 4 <= spec_.outputs(); row += 4) {
+    double a = parameters_[output_bias_offset() + row];
+    double b = parameters_[output_bias_offset() + row + 1];
+    double c = parameters_[output_bias_offset() + row + 2];
+    double d = parameters_[output_bias_offset() + row + 3];
+    const double* weights = parameters_.data() + output_weights_offset() + row * spec_.hidden;
+    for (size_t h = 0; h < spec_.hidden; ++h) {
+      const double x = output.hidden[h];
+      a += weights[h] * x;
+      b += weights[spec_.hidden + h] * x;
+      c += weights[2 * spec_.hidden + h] * x;
+      d += weights[3 * spec_.hidden + h] * x;
+    }
+    const double values[]{a,b,c,d};
+    for (size_t lane = 0; lane < 4; ++lane) {
+      finite(values[lane], "Policy output overflowed");
+      if (row + lane < output.logits.size()) output.logits[row + lane] = values[lane];
+      else output.value = values[lane];
+    }
+  }
+  for (; row < spec_.outputs(); ++row) {
     double value = parameters_[output_bias_offset() + row];
     for (size_t hidden = 0; hidden < spec_.hidden; ++hidden)
       value += parameters_[output_weights_offset() + row * spec_.hidden + hidden] * output.hidden[hidden];

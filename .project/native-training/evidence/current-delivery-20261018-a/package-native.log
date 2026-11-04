@@ -1,0 +1,42 @@
+CMake Warning (policy) at CMakeLists.txt:188 (FIND_PACKAGE):
+  Policy CMP0167 is not set: The FindBoost module is removed.  Run "cmake
+  --help-policy CMP0167" for policy details.  Use the cmake_policy command to
+  set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Configuring done (0.6s)
+-- Generating done (0.1s)
+-- Build files have been written to: /tmp/football-current-delivery-20261018-a/source/build/temp.linux-x86_64-cpython-314/cmake
+[  3%] Built target datalib
+[ 11%] Built target gui2lib
+[ 20%] Built target baselib
+[ 30%] Built target systemsgraphicslib
+[ 32%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 49%] Built target utilslib
+[ 49%] Built target blunted2
+[ 69%] Built target gamelib
+[ 77%] Built target menulib
+[ 77%] Linking CXX shared library libfootball_engine.so
+[ 88%] Built target football_engine
+[ 88%] Building CXX object CMakeFiles/football_categorical_policy.dir/src/training/categorical_policy.cpp.o
+[ 90%] Linking CXX static library libfootball_categorical_policy.a
+[ 90%] Built target football_categorical_policy
+[ 90%] Building CXX object CMakeFiles/football_ppo_math.dir/src/training/ppo_math.cpp.o
+[ 92%] Linking CXX static library libfootball_ppo_math.a
+[ 92%] Built target football_ppo_math
+[ 92%] Building CXX object CMakeFiles/football_native_policy.dir/src/training/native_policy.cpp.o
+[ 94%] Linking CXX static library libfootball_native_policy.a
+[ 94%] Built target football_native_policy
+[ 96%] Building CXX object CMakeFiles/football_ppo_learner.dir/src/training/ppo_learner.cpp.o
+[ 96%] Linking CXX static library libfootball_ppo_learner.a
+[ 96%] Built target football_ppo_learner
+[ 98%] Building CXX object CMakeFiles/football_ppo_evaluation.dir/src/training/ppo_evaluation.cpp.o
+[ 98%] Linking CXX static library libfootball_ppo_evaluation.a
+[ 98%] Built target football_ppo_evaluation
+[100%] Building CXX object CMakeFiles/native_ppo_train.dir/src/training/native_ppo_train.cpp.o
+[100%] Linking CXX executable bin/native_ppo_train
+[100%] Built target native_ppo_train
+{"package": "/tmp/football-current-delivery-20261018-a/native-package", "files": 472}

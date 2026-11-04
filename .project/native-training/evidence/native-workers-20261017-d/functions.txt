@@ -1,0 +1,107 @@
+Functions sorted by metric: Exclusive Total CPU Time
+
+Excl. Total    Incl. Total     Name
+CPU            CPU
+  sec.      %    sec.      %
+12.830 100.00  12.830 100.00   <Total>
+ 1.130   8.81   1.130   8.81   blas_thread_server
+ 1.060   8.26   1.710  13.33   blunted::Node::RecursiveUpdateSpatialData(blunted::e_SpatialDataType, blunted::e_SystemType)
+ 0.900   7.01   0.900   7.01   sched_yield
+ 0.620   4.83   1.220   9.51   AnimCollection::CrudeSelection(std::vector<int, std::allocator<int> >&, CrudeSelectionQuery const&)
+ 0.610   4.75   0.610   4.75   <static>@0x8a5d2 (<libm.so.6>)
+ 0.560   4.36   0.560   4.36   atan2f
+ 0.440   3.43   0.730   5.69   HumanoidBase::PrepareFullbodyModel(std::map<blunted::Vector3, blunted::Vector3, std::less<blunted::Vector3>, std::allocator<std::pair<blunted::Vector3 const, blunted::Vector3> > >&)
+ 0.390   3.04   0.410   3.20   TimeNeeded AIReachabilityTrajectory::EstimateImpl<true>(blunted::Vector3 const&, blunted::Vector3 const&, blunted::Vector3 const&, float, bool, unsigned int, AIReachabilityTrajectory*)
+ 0.350   2.73   7.960  62.04   <static>@0x4d362 (<libpython3.14.so.1.0>)
+ 0.320   2.49   0.320   2.49   <static>@0xa0914 (<libc.so.6>)
+ 0.300   2.34   0.430   3.35   <static>@0xa5c2b (<libc.so.6>)
+ 0.240   1.87   0.240   1.87   <static>@0x175a00 (<libc.so.6>)
+ 0.200   1.56   0.520   4.05   blunted::Quaternion::GetSlerped(float, blunted::Quaternion const&) const
+ 0.180   1.40   0.180   1.40   blunted::Quaternion::Normalize()
+ 0.160   1.25   0.200   1.56   GetContext()
+ 0.160   1.25   0.520   4.05   blunted::Geometry::RecursiveUpdateSpatialData(blunted::e_SpatialDataType, blunted::e_SystemType)
+ 0.150   1.17   0.500   3.90   blunted::Animation::GetInterpolatedValues(blunted::KeyFrames const&, int, blunted::Quaternion&, blunted::Vector3&) const
+ 0.140   1.09   0.290   2.26   HumanoidBase::CalculatePhysicsVector(blunted::Animation*, bool, blunted::Vector3 const&, bool, blunted::Vector3 const&, std::vector<blunted::Vector3, std::allocator<blunted::Vector3> >&, blunted::radian&) const
+ 0.130   1.01   1.720  13.41   HumanoidBase::Mirror()
+ 0.130   1.01   0.130   1.01   blunted::Spatial::InvalidateBoundingVolume()
+ 0.130   1.01   0.130   1.01   malloc
+ 0.120   0.94   0.120   0.94   <static>@0xa43e4 (<libc.so.6>)
+ 0.120   0.94   0.120   0.94   blunted::Spatial::InvalidateSpatialData()
+ 0.110   0.86   1.280   9.98   blunted::Animation::Apply(boost::intrusive_ptr<blunted::Node> const (&) [14], int, int, bool, float, blunted::Vector3 const&, blunted::radian, blunted::BiasedOffsets&, std::vector<blunted::MovementHistoryEntry, std::allocator<blunted::MovementHistoryEntry> >*, int, bool, bool)
+ 0.100   0.78   0.150   1.17   HumanoidBase::GetMovementSimilarity(int, blunted::Vector3 const&, e_Velocity, float) const
+ 0.100   0.78   0.110   0.86   Match::GetAnimPositionCache(blunted::Animation*) const
+ 0.090   0.70   0.090   0.70   __tls_get_addr
+ 0.080   0.62   0.080   0.62   blunted::ModulateIntoRange(float, float, blunted::radian)
+ 0.080   0.62   0.290   2.26   blunted::Quaternion::GetNormalized() const
+ 0.070   0.55   0.090   0.70   MentalImage::Mirror(bool, bool, bool)
+ 0.060   0.47   0.210   1.64   Ball::CalculatePrediction()
+ 0.060   0.47   0.060   0.47   Ball::FillBallComponent(BallComponent&) const
+ 0.060   0.47   0.060   0.47   Ball::Mirror()
+ 0.060   0.47   0.510   3.98   Player::UpdatePossessionStats()
+ 0.060   0.47   0.060   0.47   blunted::Animation::GetIncomingVelocity() const
+ 0.060   0.47   0.060   0.47   blunted::intrusive_ptr_add_ref(blunted::RefCounted*)
+ 0.050   0.39   0.050   0.39   <static>@0x49a96 (<libc.so.6>)
+ 0.050   0.39   0.230   1.79   Match::SyncEcsFromOop()
+ 0.050   0.39   0.050   0.39   blunted::Quaternion::GetDotProduct(blunted::Quaternion const&) const
+ 0.050   0.39   0.050   0.39   blunted::Quaternion::operator*(blunted::Quaternion const&) const
+ 0.050   0.39   0.050   0.39   blunted::Vector3::Vector3(float, float, float)
+ 0.040   0.31   0.040   0.31   <static>@0x18957c (<libpython3.14.so.1.0>)
+ 0.040   0.31   0.930   7.25   <static>@0x39a987 (<libopenblasp-r0-59ffcd50.3.15.so>)
+ 0.040   0.31   0.050   0.39   CalculateMovementAtFrame(std::vector<blunted::Vector3, std::allocator<blunted::Vector3> > const&, unsigned int, unsigned int)
+ 0.040   0.31   0.050   0.39   GetGameConfig()
+ 0.040   0.31   2.190  17.07   Humanoid::Process()
+ 0.040   0.31   0.170   1.33   HumanoidBase::_KeepBestDirectionAnims(std::vector<int, std::allocator<int> >&, PlayerCommand const&, bool, blunted::radian, int, int)
+ 0.040   0.31   2.310  18.00   RunPlayerSystems(Match*, int)
+ 0.040   0.31   0.040   0.31   acosf
+ 0.040   0.31   0.380   2.96   operator new(unsigned long)
+ 0.030   0.23   0.030   0.23   <static>@0x188be5 (<libpython3.14.so.1.0>)
+ 0.030   0.23   0.030   0.23   <static>@0x1a392b (<libpython3.14.so.1.0>)
+ 0.030   0.23   0.180   1.40   <static>@0x1d5f0b (<libpython3.14.so.1.0>)
+ 0.030   0.23   0.280   2.18   HumanoidBase::CalculateSpatialState()
+ 0.030   0.23   0.160   1.25   HumanoidBase::DirectionSimilarityRating(int) const
+ 0.030   0.23   0.050   0.39   HumanoidBase::ForceIntoPreferredDirectionVec(blunted::Vector3 const&) const
+ 0.030   0.23   5.090  39.67   Match::RunFramePipeline(bool)
+ 0.030   0.23   0.060   0.47   Match::UpdateIngameCamera()
+ 0.030   0.23   0.030   0.23   Player::GetStat(PlayerStat) const
+ 0.030   0.23   0.030   0.23   PlayerBase::ExternalControllerActive()
+ 0.030   0.23   0.030   0.23   PopulateCollisionResults(Match*)
+ 0.030   0.23   0.050   0.39   PyArray_NewFromDescr
+ 0.030   0.23   0.080   0.62   blunted::Quaternion::MakeSameNeighborhood(blunted::Quaternion const&)
+ 0.030   0.23   0.030   0.23   blunted::Quaternion::scale(float)
+ 0.030   0.23   0.030   0.23   blunted::Vector3::GetDotProduct(blunted::Vector3 const&) const
+ 0.030   0.23   0.030   0.23   blunted::Vector3::Normalize()
+ 0.030   0.23   0.030   0.23   free
+ 0.030   0.23   0.030   0.23   roundf
+ 0.020   0.16   0.020   0.16   <static>@0x18cb4f (<libpython3.14.so.1.0>)
+ 0.020   0.16   0.020   0.16   <static>@0x18d657 (<libpython3.14.so.1.0>)
+ 0.020   0.16   0.040   0.31   <static>@0x1a3dc6 (<libpython3.14.so.1.0>)
+ 0.020   0.16   0.020   0.16   <static>@0x1b52f1 (<libpython3.14.so.1.0>)
+ 0.020   0.16   0.040   0.31   <static>@0x1d490d (<libpython3.14.so.1.0>)
+ 0.020   0.16   6.850  53.39   <static>@0x1e44e0 (<libpython3.14.so.1.0>)
+ 0.020   0.16   0.020   0.16   AIReachabilityTrajectory::GrowTo(unsigned int)
+ 0.020   0.16   0.050   0.39   AI_GetToBallMovement(Match*, MentalImage const*, Player*, blunted::Vector3 const&, float, blunted::Vector3&, float&, blunted::Vector3&, float)
+ 0.020   0.16   0.040   0.31   Humanoid::CalculateGeomOffsets()
+ 0.020   0.16   0.060   0.47   HumanoidBase::CompareIncomingBodyDirectionSimilarity(int, int) const
+ 0.020   0.16   0.020   0.16   HumanoidBase::FillHumanoidStateComponent(HumanoidStateComponent&) const
+ 0.020   0.16   0.050   0.39   IController::GetReactionTime_ms()
+ 0.020   0.16   0.020   0.16   Match::CheckForGoal(int, blunted::Vector3 const&)
+ 0.020   0.16   0.050   0.39   Match::CheckHumanoidCollision(Player*, Player*, std::vector<PlayerBounce, std::allocator<PlayerBounce> >&, std::vector<PlayerBounce, std::allocator<PlayerBounce> >&)
+ 0.020   0.16   0.020   0.16   Player::GetTeamID() const
+ 0.020   0.16   0.020   0.16   PyArray_CanCastTypeTo
+ 0.020   0.16   0.020   0.16   PyMem_Free
+ 0.020   0.16   0.040   0.31   SyncPlayerPhysicsSystem(Match*)
+ 0.020   0.16   0.080   0.62   TeamAIController::CalculateDynamicRoles()
+ 0.020   0.16   0.050   0.39   TeamAIController::GetAdaptedFormationPosition(Player*, bool)
+ 0.020   0.16   0.020   0.16   TimeNeeded AIReachabilityTrajectory::EstimateImpl<false>(blunted::Vector3 const&, blunted::Vector3 const&, blunted::Vector3 const&, float, bool, unsigned int, AIReachabilityTrajectory*)
+ 0.020   0.16   0.200   1.56   blunted::Animation::Load(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+ 0.020   0.16   0.060   0.47   blunted::Quaternion::GetAngles(float&, float&, float&) const
+ 0.020   0.16   0.020   0.16   blunted::Quaternion::operator*(float) const
+ 0.020   0.16   0.030   0.23   blunted::Quaternion::operator+(blunted::Quaternion const&) const
+ 0.020   0.16   0.020   0.16   blunted::Spatial::GetRotation() const
+ 0.020   0.16   0.340   2.65   blunted::Vector3::GetAngle2D(blunted::Vector3 const&) const [clone .isra.0]
+ 0.020   0.16   0.020   0.16   blunted::Vector3::Normalize(blunted::Vector3 const&)
+ 0.020   0.16   0.020   0.16   blunted::intrusive_ptr_release(blunted::RefCounted*)
+ 0.020   0.16   0.030   0.23   blunted::tokenize(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+ 0.020   0.16   0.120   0.94   recv
+
+Print limit set to 100

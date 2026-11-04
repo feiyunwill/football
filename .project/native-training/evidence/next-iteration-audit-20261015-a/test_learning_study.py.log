@@ -1,0 +1,11 @@
+test_identical_matched_results_have_zero_difference (__main__.LearningStudyTest.test_identical_matched_results_have_zero_difference) ... ok
+test_primary_screen_cannot_authorize_retention (__main__.LearningStudyTest.test_primary_screen_cannot_authorize_retention) ... ok
+test_secondary_regression_rejects_an_improved_primary (__main__.LearningStudyTest.test_secondary_regression_rejects_an_improved_primary) ... ok
+test_shared_episode_uncertainty_does_not_disappear_with_more_seeds (__main__.LearningStudyTest.test_shared_episode_uncertainty_does_not_disappear_with_more_seeds) ... ok
+test_success_requires_real_goal_not_shaped_reward (__main__.LearningStudyTest.test_success_requires_real_goal_not_shaped_reward) ... ok
+test_training_seed_variation_is_retained (__main__.LearningStudyTest.test_training_seed_variation_is_retained) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.035s
+
+OK

@@ -1,0 +1,54 @@
+{
+  "training_objective": "first completed learner pass bonus0.1 once/episode; positive goal/checkpoint rewards unlock after completed pass; schema3 tracking; evaluation uses raw score",
+  "revision": "b; validation-only revision; trial a stopped with zero confirmation logs",
+  "tasks": {
+    "2v1": [
+      0.5,
+      0.3
+    ]
+  },
+  "roster": "one fixed learning attacker, one engine-AI teammate, one engine-AI defender, two goalkeepers; all AI logic fixed",
+  "configs": {
+    "sparse64": [],
+    "checkpoints64": [
+      "--checkpoints"
+    ]
+  },
+  "pilot_seed": 7,
+  "pilot_updates": 390,
+  "final_training_seeds": [
+    42,
+    123,
+    2026,
+    31415,
+    271828
+  ],
+  "final_updates": 780,
+  "rollout": 256,
+  "hidden": 64,
+  "cadence": 10,
+  "episode_limit": 256,
+  "epochs": 4,
+  "minibatch": 64,
+  "validation_seed": 88173,
+  "validation_episodes": 32,
+  "test_seeds": [
+    800001,
+    800002,
+    800003,
+    800004
+  ],
+  "test_episodes_per_batch": 50,
+  "test_horizon": 256,
+  "selection": "sampled-policy validation scoring success; insertion-order ties; frozen before held-out evaluation",
+  "geometry": "12 starts/partition; attacker x=.44+.06*i,y=-.16+.16*j; ball x=attacker x+.02; each partition adds .0125*partition to attacker x/y; AI teammate x+.12 opposite wing, defender x+.15/y*.25",
+  "evaluation_partition": "confirmation",
+  "primary_policy": "sample",
+  "argmax_reporting": "Retained as secondary raw/batch results; no greedy-performance claim",
+  "cooperation_gate": "each final seed: at least10% confirmation episodes with completed_passes>0; decision-boundary approximation, requests are not kicks",
+  "pilot_gate": "validation success>=.3 and fraction episodes with completed_passes>0 >=.1; otherwise preserve pilots and stop before confirmation",
+  "success": "controlled_score_delta>0 before horizon; failures/truncations remain failures",
+  "gates": "task mean and per-training-seed minima in tasks; each seed beats initial and random; crossed paired bootstrap lower95>0 against both",
+  "statistics": "10000 crossed training-seed/shared-evaluation-column bootstrap draws, RNG20261015",
+  "scope": "Bounded fixed-attacker 2v1 with AI teammate/defender/GKs; not joint control or11v11; no confirmation-based retuning"
+}

@@ -1,0 +1,17 @@
+{
+  "failed_follow_attempts": [
+    "football-native-hotspots-20261017-a",
+    "football-native-workers-20261017-b"
+  ],
+  "failed_archiving_run": "native-workers-20261017-c",
+  "failed_archiving_exit_codes": [
+    -15,
+    -15,
+    -15,
+    -15
+  ],
+  "accepted_run": "native-workers-20261017-d",
+  "automatic_archiving": false,
+  "manual_binary_archive": "/tmp/football-native-workers-20261017-d-profiles/artifacts",
+  "production_shutdown_deadlines_unchanged": true
+}

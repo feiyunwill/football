@@ -1,0 +1,52 @@
+Experiment: /tmp/football-o3-profile-20261015-a.er
+        Aggregated statistics for selected samples
+
+                                       Start Label: Total
+                                         End Label: Total
+                                 Start Time (sec.):  0.000
+                                   End Time (sec.): 59.888
+                                   Duration (sec.): 59.888
+                          Total Thread Time (sec.): 62.058
+                         Average number of Threads:  1.036
+
+                              Process Times (sec.):
+                                          User CPU: 60.996 ( 98.3%)
+                                        System CPU:  1.031 (  1.7%)
+                                          Trap CPU:  0.    (  0. %)
+                                         User Lock:  0.    (  0. %)
+                                   Data Page Fault:  0.    (  0. %)
+                                   Text Page Fault:  0.    (  0. %)
+                                 Kernel Page Fault:  0.    (  0. %)
+                                           Stopped:  0.    (  0. %)
+                                          Wait CPU:  0.    (  0. %)
+                                             Sleep:  0.031 (  0.1%)
+
+                                 Minor Page Faults:  33911
+                                 Major Page Faults:      0
+                                     Process swaps:      0
+                                      Input blocks:      0
+                                     Output blocks:      0
+                                     Messages sent:      0
+                                 Messages received:      0
+                                   Signals handled:      0
+                        Voluntary context switches:     43
+                      Involuntary context switches:    481
+                                      System calls:      0
+                                 Characters of I/O:      0
+
+Experiment(s):
+
+Experiment      :/tmp/football-o3-profile-20261015-a.er
+  Target        : '/tmp/football-native-training-venv/bin/python /root/work_space/football/.project/native-training/profile_engine_cpu.py --collector --steps 16384'
+  Host          : DESKTOP-Q8P21MC (x86_64, Linux 6.18.33.2-microsoft-standard-WSL2)
+  Start Time    : Thu Oct 15 11:18:52 2026
+  Duration      : 59.888 Seconds
+
+Metrics:
+
+  Experiment Duration (Seconds): [59.888]
+  Clock Profiling
+    [X]Total CPU Time - totalcpu (Seconds): [*59.200]
+
+Notes: '*' indicates hot metrics, '[X]' indicates currently enabled metrics.
+       The metrics command can be used to change selections. The metric_list command lists all available metrics.

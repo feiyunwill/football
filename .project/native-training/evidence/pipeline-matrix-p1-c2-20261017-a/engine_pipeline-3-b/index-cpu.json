@@ -1,0 +1,102 @@
+{
+  "mean_cores": 0.03325977087496998,
+  "p95_cores": 0.0499322891992924,
+  "samples": [
+    {
+      "seconds": 1.0003304799902253,
+      "cpu_seconds": 0.02,
+      "cores": 0.019993392583814332
+    },
+    {
+      "seconds": 1.0011841990053654,
+      "cpu_seconds": 0.03,
+      "cores": 0.029964516049897454
+    },
+    {
+      "seconds": 1.0013660319964401,
+      "cpu_seconds": 0.05,
+      "cores": 0.04993179157506888
+    },
+    {
+      "seconds": 1.0019493160070851,
+      "cpu_seconds": 0.03,
+      "cores": 0.029941634292994377
+    },
+    {
+      "seconds": 1.0011357509938534,
+      "cpu_seconds": 0.04,
+      "cores": 0.03995462149892356
+    },
+    {
+      "seconds": 1.002094995987136,
+      "cpu_seconds": 0.02,
+      "cores": 0.019958187676906377
+    },
+    {
+      "seconds": 1.0020718800078612,
+      "cpu_seconds": 0.04,
+      "cores": 0.03991729615213452
+    },
+    {
+      "seconds": 1.0011028709996026,
+      "cpu_seconds": 0.04,
+      "cores": 0.03995593375939472
+    },
+    {
+      "seconds": 1.0015680840006098,
+      "cpu_seconds": 0.04,
+      "cores": 0.03993737484148471
+    },
+    {
+      "seconds": 1.0017330000118818,
+      "cpu_seconds": 0.03,
+      "cores": 0.029948099942443906
+    },
+    {
+      "seconds": 1.001935752981808,
+      "cpu_seconds": 0.02,
+      "cores": 0.019961359738365516
+    },
+    {
+      "seconds": 1.0013801200257149,
+      "cpu_seconds": 0.04,
+      "cores": 0.03994487128321743
+    },
+    {
+      "seconds": 1.0012554379936773,
+      "cpu_seconds": 0.02,
+      "cores": 0.01997492272309266
+    },
+    {
+      "seconds": 1.0012662450026255,
+      "cpu_seconds": 0.05,
+      "cores": 0.04993676781730407
+    },
+    {
+      "seconds": 1.0014065479917917,
+      "cpu_seconds": 0.03,
+      "cores": 0.02995786282820062
+    },
+    {
+      "seconds": 1.0012030620127916,
+      "cpu_seconds": 0.04,
+      "cores": 0.039951935344249824
+    },
+    {
+      "seconds": 1.0011325479717925,
+      "cpu_seconds": 0.03,
+      "cores": 0.02996606199726239
+    },
+    {
+      "seconds": 1.0011740890040528,
+      "cpu_seconds": 0.02,
+      "cores": 0.01997654575728741
+    },
+    {
+      "seconds": 0.9165117540105712,
+      "cpu_seconds": 0.04,
+      "cores": 0.04364373923734603
+    }
+  ],
+  "scope": "Read-only proc sampling each second across build/start/warmup/timed loop/close; no index or system settings changed"
+}

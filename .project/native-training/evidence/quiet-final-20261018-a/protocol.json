@@ -1,0 +1,22 @@
+{
+  "minimum_seconds": 1800,
+  "preflight_seconds": 10,
+  "maximum_foreign_mean_cores": 0.25,
+  "maximum_foreign_p95_cores": 0.25,
+  "maximum_index_mean_cores": 0.25,
+  "maximum_index_p95_cores": 0.25,
+  "foreign_compilers_allowed": 0,
+  "compiler_detection": "Interrupt run gracefully if a foreign compiler appears; retain rejected run",
+  "source_sha256": "9443b0308bd536d70df6cd567177fa17d3db071269b6f3becd84d9a404334029",
+  "quality": {
+    "passed": true,
+    "report": "/root/work_space/football/.project/native-training/evidence/generalization-quality-20261018-c/report.json",
+    "source_sha256": "9443b0308bd536d70df6cd567177fa17d3db071269b6f3becd84d9a404334029"
+  },
+  "tooling": {
+    "profile_quiet_ppo.py": "ef2f9d94e54111123f063622529233c450bce9754c9ffaf16243ade5f4f75dc3",
+    "profile_sustained_ppo.py": "5f24971f52cfa7f25bff5393314ad8adb41c11ed1c160b4a3d53b73c566f6450",
+    "analyze_sustained_ppo.py": "cdc1e2e696cf40bf4be79008a05fa18d276415a0e2651044b1ec7ce8d87dd24a",
+    "verify_sustained_checkpoint.py": "cef30d2e9e713bd98fb5214a1ca24b8ad73986b07a4237556b23e749f64f420d"
+  }
+}

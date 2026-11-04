@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "archive": "models-runtime.tar.gz",
+  "archive_sha256": "901260160e344ff0eac128ba81c65ca6c26d0ed3c1a5ec2b3e00671977530f86",
+  "bytes": 1542312,
+  "manifest": {
+    "source_sha256": "77856efdadd172e065bc9289b65deaa0339eddb5aa8b22f003f7f0759bb54c6c",
+    "scenario": "empty_goal",
+    "hidden": 16,
+    "epochs": 4,
+    "minibatch": 64,
+    "cadence": 10,
+    "episode_limit": 256,
+    "files": {
+      "runtime/native_ppo_train": "364f55e247715ffaa9062655fded28d57e2780f55907109bcdd3c706235b19ed",
+      "runtime/libfootball_engine.so": "2c0a41c99565f8aad1a74c350ae773cdecb7eed0bbfacb3d3bf65c100d77e915",
+      "models/sparse16-42.bin": "9d8ba92c43713672cde2068ab0006467522614802567f7381afa4713f92094a5",
+      "models/sparse16-123.bin": "d0ee9f3e1db761a86e41940e6a6a64ae70d066d12556d5bd1efe0075567482b1",
+      "models/sparse16-2026.bin": "ceb97381d27b12dd01fe6c903e2486c03d5b56503a9804c7fef987ebfced6d49",
+      "models/sparse16-31415.bin": "d5fb3e4c652c74c21328513182e33ead1b8d6bc5f2279c080f472915b484456e",
+      "models/sparse16-271828.bin": "6d84d1e3be7a3dfdc6c73089cf40f598517342b85ce817ae4f4ce9fcf0af3e30"
+    },
+    "scope": "FPPO checkpoints plus exact validated Linux runtime; requires matching repository data/fonts and host system libraries, not a cross-ABI package"
+  },
+  "probe": {
+    "argv": [
+      "/tmp/football-o2-model-runtime-probe-20261015-a/runtime/native_ppo_train",
+      "--scenario",
+      "empty_goal",
+      "--seed",
+      "42",
+      "--hidden",
+      "16",
+      "--epochs",
+      "4",
+      "--minibatch",
+      "64",
+      "--rollout",
+      "256",
+      "--episode-limit",
+      "256",
+      "--updates",
+      "0",
+      "--no-initial-eval",
+      "--eval-episodes",
+      "1",
+      "--eval-steps",
+      "256",
+      "--load",
+      "/tmp/football-o2-model-runtime-probe-20261015-a/models/sparse16-42.bin"
+    ],
+    "exit_code": 0,
+    "log": "models-runtime-probe.log",
+    "sha256": "9053a106d2353c8376538d7e9c1e3fcc67dc949007393a1925fc26527cd6fe9b"
+  },
+  "linkage": "\tlinux-vdso.so.1 (0x00007452d12ed000)\n\tlibfootball_engine.so => /tmp/football-o2-model-runtime-probe-20261015-a/runtime/libfootball_engine.so (0x00007452d0fdc000)\n\tlibSDL2_image-2.0.so.0 => /usr/lib/libSDL2_image-2.0.so.0 (0x00007452d0fb9000)\n\tlibSDL2_ttf-2.0.so.0 => /usr/lib/libSDL2_ttf-2.0.so.0 (0x00007452d0fa4000)\n\tlibSDL2_gfx-1.0.so.0 => /usr/lib/libSDL2_gfx-1.0.so.0 (0x00007452d0f91000)\n\tlibSDL2-2.0.so.0 => /usr/lib/libSDL2-2.0.so.0 (0x00007452d0f2b000)\n\tlibEGL.so.1 => /usr/lib/libEGL.so.1 (0x00007452d0f19000)\n\tlibOpenGL.so.0 => /usr/lib/libOpenGL.so.0 (0x00007452d0ef5000)\n\tlibGLX.so.0 => /usr/lib/libGLX.so.0 (0x00007452d0ec4000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007452d0a00000)\n\tlibm.so.6 => /usr/lib/libm.so.6 (0x00007452d0d8d000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007452d0d5e000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007452d0600000)\n\t/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007452d12ef000)\n\tlibpng16.so.16 => /usr/lib/libpng16.so.16 (0x00007452d0d21000)\n\tlibjxl.so.0.12 => /usr/lib/libjxl.so.0.12 (0x00007452d0000000)\n\tlibjpeg.so.8 => /usr/lib/libjpeg.so.8 (0x00007452d0958000)\n\tlibtiff.so.6 => /usr/lib/libtiff.so.6 (0x00007452d08c0000)\n\tlibavif.so.16 => /usr/lib/libavif.so.16 (0x00007452d0cd7000)\n\tlibwebpdemux.so.2 => /usr/lib/libwebpdemux.so.2 (0x00007452d08b9000)\n\tlibwebp.so.7 => /usr/lib/libwebp.so.7 (0x00007452d0832000)\n\tlibfreetype.so.6 => /usr/lib/libfreetype.so.6 (0x00007452d0530000)\n\tlibharfbuzz.so.0 => /usr/lib/libharfbuzz.so.0 (0x00007452cfec1000)\n\tlibGLdispatch.so.0 => /usr/lib/libGLdispatch.so.0 (0x00007452d04b7000)\n\tlibX11.so.6 => /usr/lib/libX11.so.6 (0x00007452cfd7f000)\n\tlibz.so.1 => /usr/lib/libz.so.1 (0x00007452d049c000)\n\tlibjxl_cms.so.0.12 => /usr/lib/libjxl_cms.so.0.12 (0x00007452d0473000)\n\tlibhwy.so.1 => /usr/lib/libhwy.so.1 (0x00007452d0823000)\n\tlibbrotlidec.so.1 => /usr/lib/libbrotlidec.so.1 (0x00007452d0464000)\n\tlibbrotlienc.so.1 => /usr/lib/libbrotlienc.so.1 (0x00007452cfcbf000)\n\tlibdeflate.so.0 => /usr/lib/libdeflate.so.0 (0x00007452d044c000)\n\tlibjbig.so.2.1 => /usr/lib/libjbig.so.2.1 (0x00007452d043e000)\n\tliblzma.so.5 => /usr/lib/liblzma.so.5 (0x00007452cfc8a000)\n\tlibzstd.so.1 => /usr/lib/libzstd.so.1 (0x00007452cfba4000)\n\tlibyuv.so => /usr/lib/libyuv.so (0x00007452cfafd000)\n\tlibsharpyuv.so.0 => /usr/lib/libsharpyuv.so.0 (0x00007452cfaf4000)\n\tlibdav1d.so.7 => /usr/lib/libdav1d.so.7 (0x00007452cf913000)\n\tlibrav1e.so.0.8 => /usr/lib/librav1e.so.0.8 (0x00007452cf400000)\n\tlibSvtAv1Enc.so.4 => /usr/lib/libSvtAv1Enc.so.4 (0x00007452c6e00000)\n\tlibaom.so.3 => /usr/lib/libaom.so.3 (0x00007452c6400000)\n\tlibbz2.so.1.0 => /usr/lib/libbz2.so.1.0 (0x00007452cf900000)\n\tlibglib-2.0.so.0 => /usr/lib/libglib-2.0.so.0 (0x00007452cf79d000)\n\tlibgraphite2.so.3 => /usr/lib/libgraphite2.so.3 (0x00007452cf77a000)\n\tlibxcb.so.1 => /usr/lib/libxcb.so.1 (0x00007452cf74f000)\n\tlibbrotlicommon.so.1 => /usr/lib/libbrotlicommon.so.1 (0x00007452cf72c000)\n\tlibpcre2-8.so.0 => /usr/lib/libpcre2-8.so.0 (0x00007452c6d4d000)\n\tlibXau.so.6 => /usr/lib/libXau.so.6 (0x00007452cf727000)\n\tlibXdmcp.so.6 => /usr/lib/libXdmcp.so.6 (0x00007452cf3f8000)\n"
+}

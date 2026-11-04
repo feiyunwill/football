@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "primary": {
+    "players": 11,
+    "cadence": 2
+  },
+  "pairs": 8,
+  "updates_per_run": 64,
+  "episodes_per_update": 4,
+  "horizon": 64,
+  "order": "AB on even pairs, BA on odd pairs; serial runs, independent worker lifetimes",
+  "comparisons": [
+    "archived-before-spatial vs retained, four workers",
+    "retained one vs four workers"
+  ],
+  "metrics": "joint transitions / measured full PPO loop seconds; includes collection, PPO, diagnostics and in-loop checkpoint/resource sampling; excludes build, startup, warmup, final checkpoint and shutdown (reported separately)",
+  "gates": {
+    "engine_pipeline": {
+      "median_speedup_min": 1.0,
+      "paired_bootstrap_95_lower_min": 1.0
+    },
+    "worker_scaling": {
+      "median_speedup_min": 2.0,
+      "paired_bootstrap_95_lower_min": 1.0
+    }
+  },
+  "bootstrap": {
+    "draws": 20000,
+    "seed": 42,
+    "statistic": "median paired duration ratio",
+    "interval": "percentile 2.5/97.5"
+  },
+  "parity": [
+    "all per-update metrics",
+    "cumulative replay",
+    "complete learner weights, Adam, shuffle RNG and version"
+  ],
+  "source_sha256": "0058952fa3c56c4506a32cd89744a61d265f85fea8f81af14010736b73448011",
+  "runner_sha256": "722148fd40563fdc9e6d1a70479f7675854752f4a77b3a28d9702ca92479892f",
+  "quality": ".project/native-training/evidence/spatial-candidate-quality-20261017-b/report.json",
+  "baseline": "/tmp/football-spatial-baseline-20261017-a",
+  "scope": "Primary gate only; matrix, thirty-minute current run, learning generalization and installable delivery remain required. Failed gates remain failed; no adaptive reruns.",
+  "environment_gate": {
+    "maximum_index_mean_cores": 0.25,
+    "maximum_index_p95_cores": 0.25
+  },
+  "retry_reason": "Batch a interrupted for major index contention; batch b rejected automatically by environmental gate (mean .290 cores,p95 1.653). Batch c writes all live evidence outside repository, then archives only after measurements. No performance, sample-count or environmental gate changes.",
+  "suite_sha256": "e013b54a95e4d4a9f3b20abcbec31387a369e3e00180bc69ef5f930c9109d90d"
+}

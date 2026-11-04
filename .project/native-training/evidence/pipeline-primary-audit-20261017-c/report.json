@@ -1,0 +1,190 @@
+{
+  "passed": true,
+  "audited_runs": 32,
+  "source_sha256": "0058952fa3c56c4506a32cd89744a61d265f85fea8f81af14010736b73448011",
+  "results": {
+    "engine_pipeline": {
+      "pairs": [
+        {
+          "ratio": 1.1347101552994687,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-0-a/report.json": "29be9b1ac7365f37fc380ba3d1cc3a4a1380955666182e4ee676ddd5f63eb9cf",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-0-b/report.json": "f554c3b18d38fe5ff74db30eaa27e3d62ad6b30424526e318f2d69c13ac97602"
+          }
+        },
+        {
+          "ratio": 1.094705776242491,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-1-b/report.json": "abe1970479ca270dfda3f3afac33e3528a57c35e86850f4858d7e9cce60ab167",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-1-a/report.json": "866cbd431988d81f376ab3b5a227d2b4a5fc3ef9a6659f3b51afade1627ece46"
+          }
+        },
+        {
+          "ratio": 1.0004496035912247,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-2-a/report.json": "109ec2ca47fc7a9717794b809f0e78a6cc7f232a5d73e87ab0e60df2d0807ea0",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-2-b/report.json": "021f49a758c386848fcd8a6667040e68a7af208aca10032134bf8f562da1d8ba"
+          }
+        },
+        {
+          "ratio": 1.1035617194763567,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-3-b/report.json": "c33585f662b36f702ad8de1f5b013d747039080b18f4cf9fa2c14dc8ad17f2db",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-3-a/report.json": "ddb5fb2cdbed29dd5003cdb9f99b15ab29547a4544d29762634dd14a6b2f0d44"
+          }
+        },
+        {
+          "ratio": 1.1098314480983729,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-4-a/report.json": "54fb2fc9d646ee898c7eab789d14be46b4960873488a6ab62daf9bf48409de1f",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-4-b/report.json": "7decbcce96cae9ddc2067041f11d29525f285d767d1ec529ed37d20b0d207eb9"
+          }
+        },
+        {
+          "ratio": 0.9540591496874045,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-5-b/report.json": "2543bf8f3fa52837ce0176ef68c6fdeb718cb9f3f104cbc63305e488f91f6ea4",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-5-a/report.json": "cd89c186d14d63207a15bfdcb4cf88a8889ae10b5a4a4e5663c53a893c061796"
+          }
+        },
+        {
+          "ratio": 1.0856707458288863,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-6-a/report.json": "59074c372a8fc0470cf3e298bd436d78d52bb64e526d8d5ffee924b97c71af72",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-6-b/report.json": "c2334f35218d0e305885faa361c7bb6391f7158d4353b10e5b2e7bbdce339578"
+          }
+        },
+        {
+          "ratio": 1.0580270749768008,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-7-b/report.json": "bb2995393c17a7f1baaa8e727a943c76b5c494cbdb13a6dd902679cc20b54186",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/engine_pipeline-7-a/report.json": "6ed37cedcd9a36c9eea420ef07f15acfaa77beca1b51cba6511812e4394f0fa6"
+          }
+        }
+      ],
+      "median_speedup": 1.0901882610356886,
+      "ci95": [
+        1.0004496035912247,
+        1.1098314480983729
+      ],
+      "accepted": true
+    },
+    "worker_scaling": {
+      "pairs": [
+        {
+          "ratio": 2.2433395127186206,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-0-a/report.json": "91422e84a7ccb8aa178aab710e151f7ac64c035c3765f4336bbf7256577b1a2d",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-0-b/report.json": "db11e67b336ca516a52573f6cf243dbd031eca98206a7b1f6cc376cc6b1982e8"
+          }
+        },
+        {
+          "ratio": 2.0576051678403764,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-1-b/report.json": "6cbf88e29c9be479b9b6570a58389b906357f3647a626e748ba83449197438fe",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-1-a/report.json": "d3ceaa9fb4ed475a3753576906474de195ba075c71572a26ac11f925597b475c"
+          }
+        },
+        {
+          "ratio": 2.1633267027296057,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-2-a/report.json": "114dd5407208ea516c87e5a50c77f88fe78cb4f1c43fe091e5ebc3905314e991",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-2-b/report.json": "4a8d42807dcccd7e8f54cf8cd445d2f125bc5c0e1dc27578c9584306b0b3bdfa"
+          }
+        },
+        {
+          "ratio": 2.2585504287006803,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-3-b/report.json": "3d91fb9a286907e3e9559eda9c8aed5be06080b79386d1e08d1de9a6fddba841",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-3-a/report.json": "bdc583389f55073940f203c2725f57f9326d0caf8a7f348370de8886b89ddd18"
+          }
+        },
+        {
+          "ratio": 2.2001945646009493,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-4-a/report.json": "ef0664758878aaffc72e70c7be8ad82b2f15f48dad3a7b192a63228befca2945",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-4-b/report.json": "61444da2c9654905340c192c77b20a07562c34d444fe8bb755cdbb558de84630"
+          }
+        },
+        {
+          "ratio": 2.2163106153093994,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-5-b/report.json": "f547e8e43ed7a517baca264a8b46453e75a1707b9c2441c35883cbdcdcd227e5",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-5-a/report.json": "6a279ae437d020635d7b54c06ad023e2ba187ef1dcf0d7f6d383e2cb49017678"
+          }
+        },
+        {
+          "ratio": 2.3796250391770415,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-6-a/report.json": "1ea3824ee804b80ac41b445c52b7fa350d96148e8e2406e5a4f630060abf384b",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-6-b/report.json": "529092b3012eb54371f2e1d9aaa1a9ea6724c4be8a27c8455dca99c765c003cf"
+          }
+        },
+        {
+          "ratio": 2.2040377016152792,
+          "replay_sha256": "0b1d31a120eb7495a33d2e3785d5fc788e4a7567dc5e3169c9f0bfd313702264",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-7-b/report.json": "0815001c2b7c584d663d52e715dc6fd1bd400455f9d3c2dffec9f6256fb65a63",
+            "/tmp/football-pipeline-primary-20261017-c/evidence/worker_scaling-7-a/report.json": "4b3ceaf81dc6543d588a65c37efc4e75c2cac70a6c200e66f12c20a04baa3e94"
+          }
+        }
+      ],
+      "median_speedup": 2.2101741584623396,
+      "ci95": [
+        2.1633267027296057,
+        2.2585504287006803
+      ],
+      "accepted": true
+    }
+  },
+  "all_primary_gates_passed": true,
+  "quality": {
+    "passed": true,
+    "report": "/root/work_space/football/.project/native-training/evidence/spatial-candidate-quality-20261017-b/report.json",
+    "source_sha256": "0058952fa3c56c4506a32cd89744a61d265f85fea8f81af14010736b73448011"
+  },
+  "baseline_source_sha256": "7640b9befe4155bf3887f4f98e20fd056fc4d09127636c0d23da4a28a21fb96a",
+  "baseline_artifacts": {
+    "_gameplayfootball.so": "3ae30dcb3d89224d3bc16fa9bbd54ab3138ce0aad20322a83550e500301040c0",
+    "libfootball_engine.so": "68fec6c3aaddb2a56be915261a6ef1d1bc7b5378ace5eb3bb20826b218846162"
+  },
+  "receipts": {
+    "/tmp/football-pipeline-primary-20261017-c/evidence/report.json": "d4f9e584b7c6fc30c5a23fe0714f7ddf06579c4974edb74739816cb453e16f3c",
+    "/tmp/football-pipeline-primary-20261017-c/evidence/protocol.json": "d5ade5d4d26ebec271e38a0ad3988f4abbc9bcedbf9c1c2d356528ce4830aa3d",
+    "/tmp/football-spatial-baseline-20261017-a/baseline.json": "904a369815aa373403438623c3f70398ef035163b210c0cd263eb66f8b5923eb",
+    "/root/work_space/football/.project/native-training/evidence/spatial-audit-20261017-b/report.json": "59a67a6b442bbe05cd9103737ba22b0ca566561b8d30b74447d48fdaf3a29249"
+  },
+  "auditor_sha256": "013c9b706f630c7b814d71132d8bcf59790276e0c106d97c9135ebacd4baea0d",
+  "scope": "Audit passing means evidence reconciles, even when a performance gate fails. No matrix or learning acceptance."
+}

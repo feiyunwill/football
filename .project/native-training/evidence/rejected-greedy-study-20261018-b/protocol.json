@@ -1,0 +1,68 @@
+{
+  "tasks": {
+    "varied_empty_goal": [
+      0.7,
+      0.5
+    ],
+    "varied_keeper": [
+      0.2,
+      0.1
+    ]
+  },
+  "goalkeeper": {
+    "varied_empty_goal": {
+      "position": [
+        1,
+        0.6
+      ],
+      "lazy": true,
+      "outside_shot_region": true
+    },
+    "varied_keeper": {
+      "position": [
+        1,
+        0
+      ],
+      "lazy": false,
+      "normal_engine_AI": true
+    }
+  },
+  "configs": {
+    "sparse64": [],
+    "checkpoints64": [
+      "--checkpoints"
+    ]
+  },
+  "pilot_seed": 7,
+  "pilot_updates": 390,
+  "final_training_seeds": [
+    42,
+    123,
+    2026,
+    31415,
+    271828
+  ],
+  "final_updates": 780,
+  "rollout": 256,
+  "hidden": 64,
+  "cadence": 10,
+  "episode_limit": 256,
+  "epochs": 4,
+  "minibatch": 64,
+  "validation_seed": 77173,
+  "validation_episodes": 32,
+  "test_seeds": [
+    600001,
+    600002,
+    600003,
+    600004
+  ],
+  "test_episodes_per_batch": 50,
+  "test_horizon": 256,
+  "selection": "argmax validation scoring success; insertion-order ties; frozen before held-out evaluation",
+  "geometry": "12 starts/partition; training x=.68+.05*i,y=-.10+.10*j; ball x=player x+.02; validation offsets(.0125,.0125),test offsets(.025,.025)",
+  "success": "controlled_score_delta>0 before horizon; failures/truncations remain failures",
+  "gates": "task mean and per-training-seed minima in tasks; each seed beats initial and random; crossed paired bootstrap lower95>0 against both",
+  "statistics": "10000 crossed training-seed/shared-evaluation-column bootstrap draws, RNG20261015",
+  "scope": "Two bounded one-agent shooting tasks; not11v11 football competence; no test-based retuning or sample replacement"
+}

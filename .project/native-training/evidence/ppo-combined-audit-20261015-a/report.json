@@ -1,0 +1,5 @@
+{
+  "passed": false,
+  "reason": "Audit incorrectly compared cross-build checkpoint envelope hashes; source/core identity intentionally differs. No production or restore guard changed. Corrected audit compares saved learner payload and validates per-build identity.",
+  "superseded_by": "../ppo-combined-audit-20261015-b/report.json"
+}

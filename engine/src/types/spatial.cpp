@@ -53,6 +53,7 @@ Spatial::Spatial(const Spatial &src) {
 
 void Spatial::SetLocalMode(e_LocalMode localMode) {
   DO_VALIDATION;
+  NoteSpatialDataRead();
   local_mode_ = localMode;
   InvalidateBoundingVolume();
 }
@@ -73,7 +74,10 @@ void Spatial::SetName(const std::string &name) {
 
   void Spatial::SetParent(Node *parent) {
     DO_VALIDATION;
+    NoteSpatialDataRead();
+    if (parent_) parent_->InvalidatePruningEligibility();
     parent_ = parent;
+    if (parent_) parent_->InvalidatePruningEligibility();
     InvalidateBoundingVolume();
   }
 
@@ -109,6 +113,7 @@ void Spatial::SetName(const std::string &name) {
   }
 
   Vector3 Spatial::GetDerivedPosition() const {
+    NoteSpatialDataRead();
     if (dirty_derived_position_) {
       DO_VALIDATION;
       if (local_mode_ == e_LocalMode_Relative) {
@@ -133,6 +138,7 @@ void Spatial::SetName(const std::string &name) {
   }
 
   Quaternion Spatial::GetDerivedRotation() const {
+    NoteSpatialDataRead();
     if (dirty_derived_rotation_) {
       DO_VALIDATION;
       if (local_mode_ == e_LocalMode_Relative) {
@@ -152,6 +158,7 @@ void Spatial::SetName(const std::string &name) {
   }
 
   Vector3 Spatial::GetDerivedScale() const {
+    NoteSpatialDataRead();
     if (dirty_derived_scale_) {
       DO_VALIDATION;
       if (local_mode_ == e_LocalMode_Relative) {
@@ -180,6 +187,17 @@ void Spatial::SetName(const std::string &name) {
     if (changed) if (parent_) parent_->InvalidateBoundingVolume();
   }
 
+  void Spatial::NoteSpatialDataRead() const {
+    subtree_invalidation_complete_ = false;
+    // A leaf does not own a subtree proof, so always inspect its parent first.
+    // A cleared ancestor already propagated the read to its own ancestors.
+    Node* ancestor = parent_;
+    while (ancestor && ancestor->subtree_invalidation_complete_) {
+      ancestor->subtree_invalidation_complete_ = false;
+      ancestor = ancestor->parent_;
+    }
+  }
+
   void Spatial::InvalidateSpatialData() {
     DO_VALIDATION;
     dirty_derived_position_ = true;
@@ -188,6 +206,7 @@ void Spatial::SetName(const std::string &name) {
   }
 
   AABB Spatial::GetAABB() const {
+    NoteSpatialDataRead();
     AABB tmp;
     tmp = aabb_.aabb;
     return tmp;

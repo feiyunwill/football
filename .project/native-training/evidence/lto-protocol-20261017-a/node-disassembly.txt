@@ -1,0 +1,67 @@
+Source file: (unknown)
+Object file: /tmp/football-native-assessment-20261015/validation-stage/gfootball_engine/libfootball_engine.so
+Load Object: /tmp/football-native-assessment-20261015/validation-stage/gfootball_engine/libfootball_engine.so
+
+   Excl. Total   Incl. Total
+   CPU           CPU
+    sec.      %   sec.      %
+                                        <Function: blunted::Node::RecursiveUpdateSpatialData(blunted::e_SpatialDataType, blunted::e_SystemType)>
+   0.090   0.    0.090   0.             [?]   2099e0:  push   %r14
+   0.      0.    0.      0.             [?]   2099e2:  push   %r13
+   0.      0.    0.      0.             [?]   2099e4:  mov    %edx,%r13d
+   0.010   0.    0.010   0.             [?]   2099e7:  push   %r12
+   0.      0.    0.      0.             [?]   2099e9:  mov    %esi,%r12d
+   0.      0.    0.      0.             [?]   2099ec:  push   %rbp
+   0.      0.    0.      0.             [?]   2099ed:  mov    %rdi,%rbp
+   0.      0.    0.      0.             [?]   2099f0:  push   %rbx
+   0.      0.    0.070   0.             [?]   2099f1:  mov    (%rdi),%rax
+   0.      0.    0.      0.             [?]   2099f4:  call   *0x78(%rax)
+   0.      0.    0.      0.             [?]   2099f7:  mov    0x0(%rbp),%rax
+   0.      0.    0.060   0.             [?]   2099fb:  mov    %rbp,%rdi
+   0.      0.    0.      0.             [?]   2099fe:  call   *0x70(%rax)
+   0.020   0.    0.020   0.             [?]   209a01:  mov    0xd0(%rbp),%rax
+   0.      0.    0.      0.             [?]   209a08:  mov    0xd8(%rbp),%rdx
+   0.010   0.    0.010   0.             [?]   209a0f:  sub    %rax,%rdx
+   0.      0.    0.      0.             [?]   209a12:  sar    $0x3,%rdx
+   0.      0.    0.      0.             [?]   209a16:  test   %edx,%edx
+   0.010   0.    0.010   0.             [?]   209a18:  jle    .+0x38 [ 0x209a50 ]
+   0.010   0.    0.010   0.             [?]   209a1a:  lea    -0x1(%rdx),%r14d
+   0.      0.    0.      0.             [?]   209a1e:  xor    %ebx,%ebx
+   0.      0.    0.      0.             [?]   209a20:  shl    $0x3,%r14
+   0.      0.    0.      0.             [?]   209a24:  jmp    .+0x17 [ 0x209a3b ]
+   0.      0.    0.      0.             [?]   209a26:  cs nopw 0x0(%rax,%rax,1)
+   0.      0.    0.      0.             [?]   209a30:  mov    0xd0(%rbp),%rax
+   0.      0.    0.      0.             [?]   209a37:  add    $0x8,%rbx
+## 0.190   0.    0.190   0.             [?]   209a3b:  mov    (%rax,%rbx,1),%rdi
+   0.      0.    0.      0.             [?]   209a3f:  mov    %r13d,%edx
+   0.      0.    0.      0.             [?]   209a42:  mov    %r12d,%esi
+## 0.230   0.    1.680   0.             [?]   209a45:  mov    (%rdi),%rax
+   0.      0.    0.      0.             [?]   209a48:  call   *0x68(%rax)
+   0.      0.    0.      0.             [?]   209a4b:  cmp    %rbx,%r14
+   0.020   0.    0.020   0.             [?]   209a4e:  jne    .-0x1e [ 0x209a30 ]
+   0.010   0.    0.010   0.             [?]   209a50:  mov    0xe8(%rbp),%rax
+   0.      0.    0.      0.             [?]   209a57:  mov    0xf0(%rbp),%rdx
+   0.020   0.    0.020   0.             [?]   209a5e:  sub    %rax,%rdx
+   0.010   0.    0.010   0.             [?]   209a61:  sar    $0x3,%rdx
+   0.      0.    0.      0.             [?]   209a65:  test   %edx,%edx
+   0.      0.    0.      0.             [?]   209a67:  jle    .+0x34 [ 0x209a9b ]
+   0.      0.    0.      0.             [?]   209a69:  lea    -0x1(%rdx),%r14d
+   0.      0.    0.      0.             [?]   209a6d:  xor    %ebx,%ebx
+   0.      0.    0.      0.             [?]   209a6f:  shl    $0x3,%r14
+   0.      0.    0.      0.             [?]   209a73:  jmp    .+0x10 [ 0x209a83 ]
+   0.      0.    0.      0.             [?]   209a75:  nopl   (%rax)
+   0.      0.    0.      0.             [?]   209a78:  mov    0xe8(%rbp),%rax
+   0.010   0.    0.010   0.             [?]   209a7f:  add    $0x8,%rbx
+## 0.240   0.    0.240   0.             [?]   209a83:  mov    (%rax,%rbx,1),%rdi
+   0.      0.    0.      0.             [?]   209a87:  mov    %r13d,%edx
+   0.010   0.    0.010   0.             [?]   209a8a:  mov    %r12d,%esi
+   0.170   0.    0.690   0.             [?]   209a8d:  mov    (%rdi),%rax
+   0.      0.    0.      0.             [?]   209a90:  call   *0xb0(%rax)
+   0.      0.    0.      0.             [?]   209a96:  cmp    %rbx,%r14
+   0.      0.    0.      0.             [?]   209a99:  jne    .-0x21 [ 0x209a78 ]
+   0.      0.    0.      0.             [?]   209a9b:  pop    %rbx
+   0.      0.    0.      0.             [?]   209a9c:  pop    %rbp
+   0.      0.    0.      0.             [?]   209a9d:  pop    %r12
+   0.      0.    0.      0.             [?]   209a9f:  pop    %r13
+   0.      0.    0.      0.             [?]   209aa1:  pop    %r14
+   0.      0.    0.      0.             [?]   209aa3:  ret

@@ -1,0 +1,70 @@
+{
+  "foreign_mean_cores": 0.6169719317256087,
+  "foreign_p95_cores": 2.980609227683767,
+  "index_mean_cores": 0.6159719772171393,
+  "index_p95_cores": 2.980609227683767,
+  "compiler_seen": false,
+  "samples": [
+    {
+      "seconds": 1.0004467209801078,
+      "foreign_cores": 0.04997767392452093,
+      "index_cores": 0.03998213913961675,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0013504429953173,
+      "foreign_cores": 0.0099865137824149,
+      "index_cores": 0.0099865137824149,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.001084289047867,
+      "foreign_cores": 0.03995667541445892,
+      "index_cores": 0.03995667541445892,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0010525489924476,
+      "foreign_cores": 0.0,
+      "index_cores": 0.0,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0010621219989844,
+      "foreign_cores": 0.029968170147217334,
+      "index_cores": 0.029968170147217334,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0011389830033295,
+      "foreign_cores": 0.02996586938409153,
+      "index_cores": 0.02996586938409153,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0011330340057611,
+      "foreign_cores": 0.03995472993229571,
+      "index_cores": 0.03995472993229571,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.0023276739520952,
+      "foreign_cores": 0.4090478699280085,
+      "index_cores": 0.4090478699280085,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 1.00126305205049,
+      "foreign_cores": 1.0287006974747142,
+      "index_cores": 1.0287006974747142,
+      "foreign_compilers": []
+    },
+    {
+      "seconds": 0.9895960689755157,
+      "foreign_cores": 4.577625297854817,
+      "index_cores": 4.577625297854817,
+      "foreign_compilers": []
+    }
+  ],
+  "scope": "Read-only one-second /proc sampling; excludes wrapper and all descendant processes. Bounds observed WSL load, not physical host isolation; short-lived processes between samples may be missed."
+}

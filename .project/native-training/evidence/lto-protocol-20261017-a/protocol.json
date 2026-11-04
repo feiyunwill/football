@@ -1,0 +1,23 @@
+{
+  "candidate": "GCC cross-translation-unit optimization with -flto=1; existing Release math flags retained",
+  "source_sha256": "7640b9befe4155bf3887f4f98e20fd056fc4d09127636c0d23da4a28a21fb96a",
+  "baseline": "/tmp/football-lto-baseline-20261017-a",
+  "candidate_build": "/tmp/football-lto-candidate-20261017-a",
+  "primary": {
+    "players": 11,
+    "cadence": 2,
+    "feedback": false
+  },
+  "repeats": 8,
+  "steps": 1024,
+  "order": "alternating baseline/candidate, serial, CPU affinity same minimum allowed CPU",
+  "acceptance": {
+    "primary_cpu_reduction_min": 0.1,
+    "paired_bootstrap_ci95_supports_positive_gain": true,
+    "other_cpu_regression_max": 0.03
+  },
+  "correctness": "128-step all-eight-case trajectory digests before timing; full native-training quality; no math/AI/RNG/guard removal",
+  "budget": "8 paired samples per configuration; reject on numerical mismatch or gate failure, no threshold relaxation",
+  "scope": "Direct engine-step CPU screen, not PPO end-to-end speed claim",
+  "source_modified": false
+}

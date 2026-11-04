@@ -1,0 +1,12 @@
+{
+  "rejected": true,
+  "reason": "Seed2026 cooperative_success and cooperation0<0.1; all-seed gate irreversibly failed; stop during seed31415; no seed replacement",
+  "failed_seed": 2026,
+  "metrics": {
+    "success": 0.865,
+    "initial": 0.71,
+    "random": 0.74,
+    "cooperation": 0.0,
+    "cooperative_success": 0.0
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "updates": 4,
+  "learner_and_replay_equal": true,
+  "step_counts": {
+    "baseline": {
+      "invalidations": 14843520,
+      "node_calls": 7696640
+    },
+    "candidate": {
+      "invalidations": 12099,
+      "node_calls": 555692
+    }
+  },
+  "scope": "Separate instrumented 4-update smoke, same actual-pool warmup. Work counts only, never throughput evidence."
+}

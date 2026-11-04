@@ -1,0 +1,1098 @@
+{
+  "files": [
+    {
+      "original": "/tmp/football-two-on-one-final-audit-20261018-l/audit_two_on_one_delivery.py",
+      "archived": ".project/native-training/evidence/two-on-one-audit-20261018-final/audit_two_on_one_delivery.py",
+      "sha256": "0c062c4365dd1e238097c2eac0227f04c2f6e2d6c9bd5dcf057d8095fc26c647"
+    },
+    {
+      "original": "/tmp/football-two-on-one-final-audit-20261018-l/report.json",
+      "archived": ".project/native-training/evidence/two-on-one-audit-20261018-final/report.json",
+      "sha256": "8a34cff9c2054ebc0d99883296720e3cb5283dd129c99ab4f55393b403b974ff"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/build-native.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/build-native.log",
+      "sha256": "997c799d087fd38f5c3871e98912c902faec4d92be67f69e8b683feed7d914bd"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/build-python.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/build-python.log",
+      "sha256": "21f53d55cac5c197ee59c1de0a4c966e7ba010d91c9d4a46bf19eb17165d4d46"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/categorical-policy-contract.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/categorical-policy-contract.log",
+      "sha256": "b031e9f441c3452b485844797e33440114a75dc2b2ea07ec2e12dc7204eee418"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/cmake-version.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/cmake-version.log",
+      "sha256": "f46066af33a13476fb604a1a1a24bb8d4dbddb6eb5855e0c24f9f7132784c9f0"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/compiler-version.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/compiler-version.log",
+      "sha256": "0b52fa36f98d1a1ff3f77256f64c13ac7e2264cf7f072ea7943756a0ef378028"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/configure-native.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/configure-native.log",
+      "sha256": "ceb7f7aeb0b79f4f09bb9369b479cdb9b7d0a430b5b914a84eb6f7a7cbd3b42b"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/configure-python.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/configure-python.log",
+      "sha256": "aca0fd5a51b117b19600336519a460bbc84e950dde5f3cd0668ea8661f81fe8e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/native-contract.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/native-contract.log",
+      "sha256": "4ced5106de2bbde326a417c7b3632dd3f0d9ba959c63e1dd04920ddd8f15b19b"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/native-linkage.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/native-linkage.log",
+      "sha256": "fb1bb7303ac5306f68874f602a0167697ef6d338fb80768634032c975aba562e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/native-policy-contract.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/native-policy-contract.log",
+      "sha256": "d7161c8b508d809ba9f000afe37d0746beef8a3ea9960617da2b5f367bed4ac5"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/native-policy-linkage.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/native-policy-linkage.log",
+      "sha256": "a3e05b6540dfa8be9774fa637e4777cc81e3a512834e3517de8703eee8043939"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/native-policy-rollout.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/native-policy-rollout.log",
+      "sha256": "b9a60ec89c0531cbbb2bf799030fa16b68b9a5245bd63c07f1e4b61815ca788b"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/native-ppo-linkage.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/native-ppo-linkage.log",
+      "sha256": "f04bf0bf993d317f92981c025fafebd70a435d503fedf23608be8aa564188dc4"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/native-ppo-train.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/native-ppo-train.log",
+      "sha256": "b3bda9529ea2dbef68cdd56fc2c57e655d3f2aae6eb6a4ac2a8a9c9c325dff70"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/ppo-checkpoint-contract.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/ppo-checkpoint-contract.log",
+      "sha256": "897500cf9a06b2f71a311482dbf02679440ab51860066d2be8d56664b265219f"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/ppo-math-contract.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/ppo-math-contract.log",
+      "sha256": "044cf67bc490768f0bfa03548598f5a7667cf85b6a5616d613ed2ba019537d6e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/python-environment.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/python-environment.log",
+      "sha256": "848a39dbabc063493d5cc4150024a8ab12d2b0c97174ffe63e8bccfa994038a6"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/python-integration.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/python-integration.log",
+      "sha256": "e3d38082d62c31151d7b99b27b0828e1c124383be01a6c8893b3ffe401def543"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/report.json",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/report.json",
+      "sha256": "c37333c0bab19086c839274dcb6b2f1b6d6ad72e65fade6736eda6ccf99cec71"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/snapshot-format-contract.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/snapshot-format-contract.log",
+      "sha256": "a62bc6854d506c22f8052892a87de9708df8e928dca74bda8eb0e9a57029cd4a"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/spatial-invalidation-contract.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/spatial-invalidation-contract.log",
+      "sha256": "100c7c0d11c3da0c7d743187ffa5fb21fb93dfd94c02a9a3c8fe1209a240ad07"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/staged-module.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/staged-module.log",
+      "sha256": "3d4f21e6151538c7d955989953c581c4f1510428e1391fec9bb3aca6050db9a3"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/training-restore-contract.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/training-restore-contract.log",
+      "sha256": "21e95b42c51d2de209b567dd4b79f28f5e67da2780d39d2201af99c38cc608ce"
+    },
+    {
+      "original": "/tmp/football-two-on-one-quality-20261018-l/training-soak-contract.log",
+      "archived": ".project/native-training/evidence/two-on-one-quality-20261018-final/training-soak-contract.log",
+      "sha256": "70c9dedf4c5dd3848852445f3b9d2aece4db1ca7b618cfeb8350a13be28d29ae"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/final-train-2v1-123.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/final-train-2v1-123.log",
+      "sha256": "b916f3f2b8fba65481f72306ede5f1190d9d769fef0c6dd12cb5032eb7ed7b13"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/final-train-2v1-2026.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/final-train-2v1-2026.log",
+      "sha256": "f3bb762661d8d63fbef744b210e1668d5b808443134947096eecb4b7cd150720"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/final-train-2v1-271828.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/final-train-2v1-271828.log",
+      "sha256": "fc69145a7ff09c6fcc96a4b1ca25b8d8bb092e73bbbd9c5a7d2914030e9cb9ab"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/final-train-2v1-31415.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/final-train-2v1-31415.log",
+      "sha256": "f091da046811e4b3082028b27437700027edc268b660a1332abc49329c21eb4b"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/final-train-2v1-42.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/final-train-2v1-42.log",
+      "sha256": "41b61b45a979fcf0ba8ad7ee39ad80ae74e890ee487d8d4acb7b8bdbacfeab9c"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-123-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-123-b0.log",
+      "sha256": "85aa78fe527cd820ff4aa1e7a20858e939b048e1f6a4859c0d07870d9849ec14"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-123-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-123-b1.log",
+      "sha256": "490ca1bf08be186d3c2cdbbaf9ed1ccfdd94307dd88d387c9732afb1e488f2ea"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-123-b2.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-123-b2.log",
+      "sha256": "1c355756288b1e658df5d477beba8855a8430616b3a5add5b572b243110d3c88"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-123-b3.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-123-b3.log",
+      "sha256": "034cb76d50eab21a1f0582c2d910bdbc0d3a36a7ffb69126c055b2f2bb1e42eb"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-2026-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-2026-b0.log",
+      "sha256": "bbad6a4d3c1c29aa45a850e10e5c49a44ab140094129cabbe5c061cc72acbe0e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-2026-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-2026-b1.log",
+      "sha256": "a1d6e12382a5edf89241fca2f2cd29bb8f560d4cd8a771e36d99be07fb6e64df"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-2026-b2.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-2026-b2.log",
+      "sha256": "92bdbd88ef0f0fd50cc76628d568d78dff41cb7e444b7b7286bbcd1cd4212b04"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-2026-b3.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-2026-b3.log",
+      "sha256": "620077dd9f6b6e82342b1ea66059a23c171be56f4fee964dbeb5519f2a409df0"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-271828-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-271828-b0.log",
+      "sha256": "93eb1c25d99b385dbe1ff058e9667e13d0c7f7e2c9aa868664abf6555baff349"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-271828-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-271828-b1.log",
+      "sha256": "fd4ddb1296e3062f408545d3221a21ff5a2e36d982211f08ce5edead172c430b"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-271828-b2.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-271828-b2.log",
+      "sha256": "00835c466cb5e8379e1b10107752c966982de917f37f33ae0947135d20445c8a"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-271828-b3.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-271828-b3.log",
+      "sha256": "d77d476bdf617da3a31189a1bf2dace5540ed4089c06cf66c0737629507d6955"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-31415-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-31415-b0.log",
+      "sha256": "1ae792293485a2060890796de1e1e234ee2472d786fd8ad23354f6fd3605dee8"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-31415-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-31415-b1.log",
+      "sha256": "c053956376a86acb077b049e6f263dc3ec7484f60d81feda11d03b59b1eada68"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-31415-b2.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-31415-b2.log",
+      "sha256": "a63fcd60d9bc20aeffdc5091bab339c2fdde6802945db0ee054105e2f0092dff"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-31415-b3.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-31415-b3.log",
+      "sha256": "95f91b273c62d9ae26aa54621b171a9f5ba41bbed6397c6413aaf30989d17b13"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-42-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-42-b0.log",
+      "sha256": "5d234765064580dd0a0548447faa78fb0dad3e1583cd37bfbbafb0ea1aff4d51"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-42-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-42-b1.log",
+      "sha256": "e003906faf4f8b55b4c8ee15fea43d5d9f9d447759d5f481ead1cd83982479e6"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-42-b2.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-42-b2.log",
+      "sha256": "eff78e696de53d6df20d709fdaed8cd7e1b14e09eac8a7119aa91f76e4a3938c"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/initial-2v1-42-b3.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/initial-2v1-42-b3.log",
+      "sha256": "b9731ed860824f001afd047a6cec41b8c3f60a3bd0793af6e9efba172e85dfb9"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/pilot-2v1-sparse64.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/pilot-2v1-sparse64.log",
+      "sha256": "eadef14990798bafb32663e2416906af31a9660c75728ec1aaab71edbe74478e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/progress.json",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/progress.json",
+      "sha256": "0d49a47bf7ac081f606f3fe8f14ce42b52dfb41fa8d04a9ad351712fce3d37b9"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/protocol.json",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/protocol.json",
+      "sha256": "65ece64c5d843e1d5fe70bfb7e25499b0a92d6f955840d051a5e9cc3907964bc"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/report.json",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/report.json",
+      "sha256": "ea21b60c4f3ee97a6e5ba5e53c02036bc993e2ff3937f7a07e3bcc0ebda20c66"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/reused-pilots/pilot-2v1-sparse64.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/reused-pilots/pilot-2v1-sparse64.log",
+      "sha256": "eadef14990798bafb32663e2416906af31a9660c75728ec1aaab71edbe74478e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/reused-pilots/progress.json",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/reused-pilots/progress.json",
+      "sha256": "0d5b8cd81907d0097dfa9ec4b3327c6e05ad20e6f7b49ce5cee6e2efd11dcb2f"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/reused-pilots/protocol.json",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/reused-pilots/protocol.json",
+      "sha256": "bedb304731062f0109f9c682832a7269f1f3babeed59c85c1e328b9edfd42209"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/reused-pilots/report.json",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/reused-pilots/report.json",
+      "sha256": "b686c6fa7b6f4dd80155de4b65aca956330c57f28e11bfb9bde14dce891b2bc0"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/reused-pilots/selection-2v1.json",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/reused-pilots/selection-2v1.json",
+      "sha256": "02145d9ee5782549dc128762d4c51f05a1c43474420f838dceb00dea9929266f"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/reused-pilots/validate.py",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/reused-pilots/validate.py",
+      "sha256": "8b2914e19b87ba21c07a677467c407959b8ed2a69a2070b5581fb035dcbd0f16"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/reused-pilots/validate_learning.py",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/reused-pilots/validate_learning.py",
+      "sha256": "fa641ac78a5831cadc2adfa1ec6f20b0498a89af1d9fc21e6210d18ed9a561cf"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/reused-pilots/validate_two_on_one.py",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/reused-pilots/validate_two_on_one.py",
+      "sha256": "24770b1f741ec51fd36e8994c574dfe0b0bc954390b3e6ddfc4646b3c7d40082"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/reused-pilots/validate_two_on_one_stability.py",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/reused-pilots/validate_two_on_one_stability.py",
+      "sha256": "a56da9882a03eea359a569178f8288ee7af1fb4e708f8703c378cb35e4b44bb6"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/reused-pilots/validation-pilot-2v1-sparse64.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/reused-pilots/validation-pilot-2v1-sparse64.log",
+      "sha256": "d3b8b277fd6c5b417bd1dc51e62f1bd2d65ce45644b6d94c216992821a654bcc"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/selection-2v1.json",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/selection-2v1.json",
+      "sha256": "02145d9ee5782549dc128762d4c51f05a1c43474420f838dceb00dea9929266f"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-123-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-123-b0.log",
+      "sha256": "cd1142c53fab8934ff9a01f279836063386fa408864db0690b5f2a1f412a7b5b"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-123-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-123-b1.log",
+      "sha256": "bd1e14bd0a8e7501b0e81c4ea2923f6a706224d5f7006a76b88c4cfbe33d6ee3"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-123-b2.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-123-b2.log",
+      "sha256": "b034b3f76a6cf5e045344bc8f0caed83cc000b10f426ddd15071b1c9355ce842"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-123-b3.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-123-b3.log",
+      "sha256": "d20b20866b66188f4c3b08a98a189096bd8272f8f61d78456a2da512ca3b6413"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-2026-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-2026-b0.log",
+      "sha256": "01f6a9ac6b85be6c050443a5fd06b7e850398222aad248f443f86ac71b70df98"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-2026-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-2026-b1.log",
+      "sha256": "496e98461e8cf56c690e9cd83faaa67730a3a5dcbd6bb696d16d629ee4ce6943"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-2026-b2.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-2026-b2.log",
+      "sha256": "aa2926c37ca66aeb7b67a72f65f6016ab19cb6a0feb798f92100a468de75887f"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-2026-b3.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-2026-b3.log",
+      "sha256": "944c75d8a2cff70cdc828f20ccbbdb5f1817a689df94c794bba2457721121fa5"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-271828-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-271828-b0.log",
+      "sha256": "71ac613ef53be4d98cce94a588274774d54a3da7c40eded5306e5c90877efeaa"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-271828-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-271828-b1.log",
+      "sha256": "e76efe5b8c5f40c84a6ca62831015be721ab6b691f7436c3cb167be9eb7e0aae"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-271828-b2.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-271828-b2.log",
+      "sha256": "1aa72a49c6968fe9a0d03676e7e60474591151873c33d73de46c3f7a0d609d6b"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-271828-b3.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-271828-b3.log",
+      "sha256": "41f266c6c82978d23c85a126c6dc1525f8a98d5c874b204c75910200f65099a0"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-31415-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-31415-b0.log",
+      "sha256": "0eb90c3a7393438503952125f53e0a829efb32ed5d6f0ba6d5093f8999f01a16"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-31415-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-31415-b1.log",
+      "sha256": "eaf93c5c4d410f84e7421b766f429b3b2fd20c38942ebc2d501d9de687e0d450"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-31415-b2.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-31415-b2.log",
+      "sha256": "c9cd931408d7a02c4ff8a07a41b9637cc1280d0c8c7a1a8884febb948a68ca09"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-31415-b3.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-31415-b3.log",
+      "sha256": "9a2ed2a9c35de028e8a86aff58b7d5fda18fd76f7db315573d829065dc1a4748"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-42-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-42-b0.log",
+      "sha256": "3838b9717adf2d94215bb00559ef2f946cde63e0e804432968d58278f96f6af1"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-42-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-42-b1.log",
+      "sha256": "31ab0f84d1be7281a8cd3e799c1a8f024596de64f374d9cbf80fe68a24f4a930"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-42-b2.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-42-b2.log",
+      "sha256": "185677f6c2834ec1870bba70948ed4cde1ebd288dcc3c874f12561c55f9961aa"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/test-2v1-42-b3.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/test-2v1-42-b3.log",
+      "sha256": "6adf4d8f85254e831302c60a90403d6d3178efc6ef0f44d639d231594efd595c"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validate.py",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validate.py",
+      "sha256": "8b2914e19b87ba21c07a677467c407959b8ed2a69a2070b5581fb035dcbd0f16"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validate_learning.py",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validate_learning.py",
+      "sha256": "fa641ac78a5831cadc2adfa1ec6f20b0498a89af1d9fc21e6210d18ed9a561cf"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validate_two_on_one.py",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validate_two_on_one.py",
+      "sha256": "24770b1f741ec51fd36e8994c574dfe0b0bc954390b3e6ddfc4646b3c7d40082"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validate_two_on_one_stability.py",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validate_two_on_one_stability.py",
+      "sha256": "a56da9882a03eea359a569178f8288ee7af1fb4e708f8703c378cb35e4b44bb6"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-pilot-2v1-sparse64.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-pilot-2v1-sparse64.log",
+      "sha256": "d3b8b277fd6c5b417bd1dc51e62f1bd2d65ce45644b6d94c216992821a654bcc"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/frozen-101-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/frozen-101-b0.log",
+      "sha256": "ea2cdc58921fb7fb02a3520f4872ce26072dfac8180da8287cd1101991d1d931"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/frozen-101-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/frozen-101-b1.log",
+      "sha256": "ec6e39d6405fed65cc4e978f8f63222ac925e42cb7056510af5f4841cce8a1f0"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/frozen-19-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/frozen-19-b0.log",
+      "sha256": "a5f025021b019932ee58250f12be6699497f4890d0ea62f018c21abddb4b3c95"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/frozen-19-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/frozen-19-b1.log",
+      "sha256": "5c445954a1f1d0743504b532e93068eb4503bb049d8b588aacc9f325d6d47454"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/initial-101-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/initial-101-b0.log",
+      "sha256": "10efe0e0c126a8484edf64647b86e9a1d0f9f3363b7add85fb195e470c0fe38e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/initial-101-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/initial-101-b1.log",
+      "sha256": "0bcf563194ac63ccdb8085a57d240eb4ea4489fc4c11dcfd0aba4d811bcbe4cd"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/initial-19-b0.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/initial-19-b0.log",
+      "sha256": "059cbc581f0b9a6455c81d407fa499b37aea570e8fd05d818ce2b54e338a0974"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/initial-19-b1.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/initial-19-b1.log",
+      "sha256": "6d210c76083035fc5f53b25dfedc0b0d11b9ce9c8b94c7755377eaa69d5dc1b7"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/progress.json",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/progress.json",
+      "sha256": "12560cd9d2c4aebe05899fb0e5e484d5b0e7d7e84153321c55b1de3e42a21b95"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/protocol.json",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/protocol.json",
+      "sha256": "cd466f3905c506769e6c224420455706479a9b5912687aa4fec5f8e3d9117fd0"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/report.json",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/report.json",
+      "sha256": "1efec73f5c349acf223ea3240a7542dd9631434415cfcdafd9650bb014460a5c"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/train-101.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/train-101.log",
+      "sha256": "f34410b3e45aecac2e6d51afe297551e0602a427e4e83f8ddba7d59d1adfe541"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/train-19.log",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/train-19.log",
+      "sha256": "8a2b74c5f7e02d23188c7faea587cb4dc1713df8df4907e21bc497384d937110"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/evidence/validation-stability/validate_two_on_one_stability.py",
+      "archived": ".project/native-training/evidence/two-on-one-study-20261018-final/validation-stability/validate_two_on_one_stability.py",
+      "sha256": "a56da9882a03eea359a569178f8288ee7af1fb4e708f8703c378cb35e4b44bb6"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/audit/audit_two_on_one.py",
+      "archived": ".project/native-training/evidence/two-on-one-learning-20261018-final/audit_two_on_one.py",
+      "sha256": "b9e749ee21e5739b82ac16bdb507eda0100a78e66d4d4a16259e30feea813c3e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-study-20261018-l/audit/report.json",
+      "archived": ".project/native-training/evidence/two-on-one-learning-20261018-final/report.json",
+      "sha256": "05430d18e239e07f06f78fc369fb788d3d9de27232c85de53966a02e3cf3862a"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/cli-resume.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/cli-resume.fppo",
+      "sha256": "73dbbb05ee262724d21c4cdf56bc46430e249f69c59e044e43e40ac36ee7012e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/compile.log",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/expected-resume.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/expected-resume.fppo",
+      "sha256": "73dbbb05ee262724d21c4cdf56bc46430e249f69c59e044e43e40ac36ee7012e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/final.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/final.fppo",
+      "sha256": "5b7d02c0f64a4dbfad6f5b179f75659ac3eee087044819baec3b777d3ed9f0ae"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/fresh-frozen.log",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/fresh-frozen.log",
+      "sha256": "fe0fcef4f1e09521b8124c20b4fb043c94b47d72fc85805a6b62ce519fb9d403"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/fresh-resume.log",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/fresh-resume.log",
+      "sha256": "027b9d00ed82c2e8932eb460287ab1e9046d207731748c16e390e4124506d9b6"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/host-load.json",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/host-load.json",
+      "sha256": "c910043fc5fb3446e3465499f536cbe17ca8315b5717fc00bac9e8aac9420de5"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/link.log",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/link.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/linkage.log",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/linkage.log",
+      "sha256": "3c8d902dd11da01d89fec0246b58dddefc7761926d1680fd0eed7681f4ded902"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/minute.jsonl",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/minute.jsonl",
+      "sha256": "8efa217e000561343b2c7a665f854ec5105c39712907c0eac896089f0442620a"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/native.json",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/native.json",
+      "sha256": "8b28d29f8ce0c4792a230ad36bb1c27dacf8a5ec46d4c578f4b0413dd68007af"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/preflight.json",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/preflight.json",
+      "sha256": "3eabe300ba82046b54d33bb99660eb34ea0ba2608137241a87242f369b3e787d"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/profile_quiet_ppo.py",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/profile_quiet_ppo.py",
+      "sha256": "ef2f9d94e54111123f063622529233c450bce9754c9ffaf16243ade5f4f75dc3"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/profile_two_on_one.py",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/profile_two_on_one.py",
+      "sha256": "e585a6b907addbf00f21d3234d86eb9ce154dc5c2442022b0f5a2153d0961a97"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/protocol.json",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/protocol.json",
+      "sha256": "295b72edfd95aff73f25ced0a547897746e05dfb084ca8368a427caf2054cce3"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/quality.py",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/quality.py",
+      "sha256": "9473b8d9229cb733492f9bfe99a86340695309ce4a43918c911db77f67439b6e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/report.json",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/report.json",
+      "sha256": "2ee22a32df6af608cd4ac1e9d15c7f9fb333afa7402207957b07e71d0e58a2a1"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/soak.log",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/soak.log",
+      "sha256": "a5dfc5eac983371e9e72e9c5ebe372c9db7f2d124cd065f90c023db1476339a6"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/soak_two_on_one.cpp",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/soak_two_on_one.cpp",
+      "sha256": "7fcd9c3d22c652a708da93c54d7bf2cdc031f008c85e2ed35090559ab4817c17"
+    },
+    {
+      "original": "/tmp/football-two-on-one-duration-20261018-l2/evidence/validate.py",
+      "archived": ".project/native-training/evidence/two-on-one-baseline-20261018-final/validate.py",
+      "sha256": "8b2914e19b87ba21c07a677467c407959b8ed2a69a2070b5581fb035dcbd0f16"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/build-native-contracts.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/build-native-contracts.log",
+      "sha256": "e50d9da0346ca30c2deaf3cd8bbb7f1613ba018cff5a40a0b2494df048c13057"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/build-wheel.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/build-wheel.log",
+      "sha256": "edb6f3e09bf895f9eb5400cd74cb8514b6b8d0547cf7cfd724e74b2a4aa64187"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/create-clean-venv.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/create-clean-venv.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/export-source.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/export-source.log",
+      "sha256": "05b73191bf437158e2672e5efdf863917567bff010e335fd873cdd5326b7c706"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/install-wheel.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/install-wheel.log",
+      "sha256": "406aac3ef154dffb0245763b94dafed14308118d7c40109d3f9f5c43f25740a8"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/installed-dependencies.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/installed-dependencies.log",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/installed-integration.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/installed-integration.log",
+      "sha256": "7e63d451f938b81beef98e673dd62f0eb2d15a7049106f634c6cd212bf9ef585"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/installed-probe.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/installed-probe.log",
+      "sha256": "ed697221ea1a5e2d8d029a7f10e63e808cefb7b27b91270aed774a2860adfbe9"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/package-native.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/package-native.log",
+      "sha256": "83bb321a1d6fcd47b52afcf0b66bfd6c5d0e4ad3fe943fb5f09a25d28b70e0e9"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/relocated-native-elf.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/relocated-native-elf.log",
+      "sha256": "771e0a02474b468d23225182d3ffcda02e9ea7d9c07dcfd4249fc8afd6a17732"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/relocated-native-frozen.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/relocated-native-frozen.log",
+      "sha256": "51b4f64dd5caff8d7093edade02e2ce5ad2962e331d920f92250b9e2fa077507"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/relocated-native-full.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/relocated-native-full.log",
+      "sha256": "88447c5616a94d215e69ed9e01a3d44af721c8e660cbefa319bf95997bfbb55a"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/relocated-native-linkage.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/relocated-native-linkage.log",
+      "sha256": "378dc31a5a3bee3b9ccfe72e82ac9767aa5e32467b9044b226684be7388524dd"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/relocated-native-prefix.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/relocated-native-prefix.log",
+      "sha256": "4f1ced71e4e254da1e7480d6157cc5acddb937f0baebe651c38716b6239bba9e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/relocated-native-resume.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/relocated-native-resume.log",
+      "sha256": "35122ef2dfb15fba53e0a3ea21e1f8b1290d9e3344eabcd7e16b272d9291fbf9"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/report.json",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/report.json",
+      "sha256": "ffac46eea5846406dc06b3b23df999da2922e79b9ce25d3c99d495d70b6aa85c"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/snapshot-inputs-after.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/snapshot-inputs-after.log",
+      "sha256": "97d9147a09127ffc8a0121f954c38c2e371972cd3ecd21352657d3900e0f5e70"
+    },
+    {
+      "original": "/tmp/football-two-on-one-delivery-20261018-l/evidence/snapshot-inputs-match.log",
+      "archived": ".project/native-training/evidence/two-on-one-delivery-20261018-final/snapshot-inputs-match.log",
+      "sha256": "97d9147a09127ffc8a0121f954c38c2e371972cd3ecd21352657d3900e0f5e70"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/2v1-123-delivered.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/2v1-123-delivered.fppo",
+      "sha256": "fbe31cad7f4fc9faba60cbd5eed0f68d96d99d58c0ef6d9c42951e40a1e9928f"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/2v1-123-reference.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/2v1-123-reference.fppo",
+      "sha256": "fbe31cad7f4fc9faba60cbd5eed0f68d96d99d58c0ef6d9c42951e40a1e9928f"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/2v1-2026-delivered.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/2v1-2026-delivered.fppo",
+      "sha256": "33f7741ed8f2e3a0d26fb73a999b7206aa9d478d5c282c9f079ebdba4440e277"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/2v1-2026-reference.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/2v1-2026-reference.fppo",
+      "sha256": "33f7741ed8f2e3a0d26fb73a999b7206aa9d478d5c282c9f079ebdba4440e277"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/2v1-271828-delivered.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/2v1-271828-delivered.fppo",
+      "sha256": "f88460d629ccbba9c398209ab16a4265ff58c86b18161a7b07609ddf6c3ff3cb"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/2v1-271828-reference.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/2v1-271828-reference.fppo",
+      "sha256": "f88460d629ccbba9c398209ab16a4265ff58c86b18161a7b07609ddf6c3ff3cb"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/2v1-31415-delivered.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/2v1-31415-delivered.fppo",
+      "sha256": "d2830b6af7fd56b5add0d277e23b09ad79c33fbde2be8834ad5850ba1d7ef70d"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/2v1-31415-reference.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/2v1-31415-reference.fppo",
+      "sha256": "d2830b6af7fd56b5add0d277e23b09ad79c33fbde2be8834ad5850ba1d7ef70d"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/2v1-42-delivered.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/2v1-42-delivered.fppo",
+      "sha256": "313ff9f6126de4418463d50c06f04f37a265229a9bca9a849d3281d161247c59"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/2v1-42-reference.fppo",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/2v1-42-reference.fppo",
+      "sha256": "313ff9f6126de4418463d50c06f04f37a265229a9bca9a849d3281d161247c59"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-123-b0.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-123-b0.json",
+      "sha256": "f98f8ac5663ffd2541f25f49c0de1345602ffb3898a8886fabb4b8e00832311a"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-123-b0.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-123-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-123-b1.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-123-b1.json",
+      "sha256": "aa180c1d6932875381a2a708b97b4f1320a011da931edd906d46083d48b1f86e"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-123-b1.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-123-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-123-b2.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-123-b2.json",
+      "sha256": "7430a671482e6017852e7f67e3ccd9b7ec3252db98f01abb2ab4e4c5950125c1"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-123-b2.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-123-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-123-b3.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-123-b3.json",
+      "sha256": "0c9d7635742cad1809924ccbcf66cb5c1bdb4e1cedadaf123d42c1e749affb1f"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-123-b3.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-123-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-2026-b0.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-2026-b0.json",
+      "sha256": "cb3205102b9e51655573ea9fa2996285c4fe5a95318a2bf9fb51be5a0d9afd7c"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-2026-b0.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-2026-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-2026-b1.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-2026-b1.json",
+      "sha256": "f0912eb8b1093c01ecfa202a77b302cdc5ef62eca857af7eba20df5afd189bb5"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-2026-b1.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-2026-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-2026-b2.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-2026-b2.json",
+      "sha256": "67b550a9c23f6ea1f2d550e9dd7c917f5cd2af2ed263f299f400f1d388354322"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-2026-b2.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-2026-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-2026-b3.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-2026-b3.json",
+      "sha256": "ddff72c160656c1dd7f6dbfa4f9933ae1b0e92de02d7112a4e8b1cdf73cf5289"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-2026-b3.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-2026-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-271828-b0.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-271828-b0.json",
+      "sha256": "9e24ead935a2d859da7634ae4d8959185cea13bec3f5d730e72e41a034648174"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-271828-b0.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-271828-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-271828-b1.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-271828-b1.json",
+      "sha256": "ed72383da6a742ce67280241289b2d7ce33d5cc7f74815afedb8c4efdf3f69eb"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-271828-b1.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-271828-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-271828-b2.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-271828-b2.json",
+      "sha256": "1a3e4655fdd9f52ad9a15586b8bea49ca0a4d580161273f701872f76ca6a386b"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-271828-b2.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-271828-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-271828-b3.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-271828-b3.json",
+      "sha256": "f1769a209aee461ea33bab82462caa0331c2e74d636ee3f8b401ad52723bac9a"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-271828-b3.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-271828-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-31415-b0.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-31415-b0.json",
+      "sha256": "c8ffec8d1ad3362175cf32bb3cf73960ebf64b725b8c9420e0b0e4ae73ad0547"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-31415-b0.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-31415-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-31415-b1.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-31415-b1.json",
+      "sha256": "ec83dfe363620763970332f9ccb60a9f84e5150e7e85e689aea00da66046752c"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-31415-b1.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-31415-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-31415-b2.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-31415-b2.json",
+      "sha256": "f192ce800d2d9f7ff5f69dd78903d06de99f9dc781c606e9c6a20e5ac5f6c1b1"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-31415-b2.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-31415-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-31415-b3.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-31415-b3.json",
+      "sha256": "4a8d6d9680c1459f35b0892ee63b08d3f72f28755202dfdf00b41c8b457845ce"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-31415-b3.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-31415-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-42-b0.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-42-b0.json",
+      "sha256": "174c5cd07d02441c81a9650cdf4e53e414a81be7d23f49fd8c1e2c01789acc13"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-42-b0.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-42-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-42-b1.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-42-b1.json",
+      "sha256": "f72c22d30e99a86142ed23afa2c55cef4413b04c9241516363bf94f75e5577fd"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-42-b1.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-42-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-42-b2.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-42-b2.json",
+      "sha256": "e668ddc32fc4ec801d492fefdd7111afec7c70047f25f14aeabaf2628439bcd8"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-42-b2.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-42-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-42-b3.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-42-b3.json",
+      "sha256": "2ec0abc72e00c8bd5c055466087d3f20e50ae88e7f26d4c553d3f94364e454be"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/frozen-2v1-42-b3.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/frozen-2v1-42-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/report.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/report.json",
+      "sha256": "22eedc059d87dd3bb6af7e6a0ad99c2a5c9ec6d629b76e57c45af99af1ce015d"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-delivered-2v1-123.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-delivered-2v1-123.json",
+      "sha256": "e28dc07c1bb1c3e68337bb40632415a6745b84b04aca04b386622bd80d749383"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-delivered-2v1-123.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-delivered-2v1-123.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-delivered-2v1-2026.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-delivered-2v1-2026.json",
+      "sha256": "722ee01f311d6c44040db7fb2fce7e44313fa4422c4c23d74f16148b1deb19fa"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-delivered-2v1-2026.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-delivered-2v1-2026.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-delivered-2v1-271828.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-delivered-2v1-271828.json",
+      "sha256": "3313ba16630d44be5f9b5e81afe49b6443201c160669cdd28d1295fe98cb6f74"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-delivered-2v1-271828.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-delivered-2v1-271828.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-delivered-2v1-31415.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-delivered-2v1-31415.json",
+      "sha256": "5218f8583f8b5c20b975050e9bba946e3d7c946b44184e6fb07649c68b8e6310"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-delivered-2v1-31415.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-delivered-2v1-31415.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-delivered-2v1-42.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-delivered-2v1-42.json",
+      "sha256": "eda42a0a6cc373d0b05ba8114acd261666929d13d9e472827c1f7609a184d1d6"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-delivered-2v1-42.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-delivered-2v1-42.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-reference-2v1-123.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-reference-2v1-123.json",
+      "sha256": "bf610bb8082eec0fb803d7a31a6baad4bad04b390436fcf1ec474a036fa44bbd"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-reference-2v1-123.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-reference-2v1-123.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-reference-2v1-2026.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-reference-2v1-2026.json",
+      "sha256": "b99d418a37637f1a3e54b33debf08b4a850f53e95219f02481ab865f2df58c64"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-reference-2v1-2026.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-reference-2v1-2026.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-reference-2v1-271828.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-reference-2v1-271828.json",
+      "sha256": "83873d946eb58849a97dcc4fc4edb6cf313dd4ff5c93aeb2431360011fb350cc"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-reference-2v1-271828.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-reference-2v1-271828.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-reference-2v1-31415.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-reference-2v1-31415.json",
+      "sha256": "76634d7ff4fe52c61678d75767e844af6f31f0835bb6da1d0872c87c24e4ff14"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-reference-2v1-31415.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-reference-2v1-31415.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-reference-2v1-42.json",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-reference-2v1-42.json",
+      "sha256": "ac4f391bfbf54499c76ca781a7e0df356742bb6b497bccf5ca346fc41043f8c4"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/resume-reference-2v1-42.stderr",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/resume-reference-2v1-42.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-two-on-one-model-replay-20261018-l/evidence/verify_two_on_one_delivery.py",
+      "archived": ".project/native-training/evidence/two-on-one-models-20261018-final/verify_two_on_one_delivery.py",
+      "sha256": "ff99f8f0de1664c47321bd5e3eaf6966720d7266f1fc26908977f8b33a9b3b0d"
+    }
+  ],
+  "artifacts": {
+    "path": "/root/work_space/football-artifacts/two-on-one-20261018-a",
+    "files": {
+      "acceptance.json": "8a34cff9c2054ebc0d99883296720e3cb5283dd129c99ab4f55393b403b974ff",
+      "football-two-on-one-native.tar.gz": "3280b930258573dbf235279443ee541acb9d278e352f64f42ccac766192666ef",
+      "source.tar": "4f66477a7c488218b006cdc0760e451b4ae2312e3eb95acdf079fad22e78e910",
+      "gfootball-2.10.3-cp314-cp314-linux_x86_64.whl": "8f4500346c2b5e6e1a77ba737df438f27d99484e0aa54dbd3b04c4dd1c56b6fd"
+    }
+  }
+}

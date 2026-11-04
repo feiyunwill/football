@@ -9,6 +9,92 @@ import unittest
 
 @unittest.skipUnless(os.environ.get('GFOOTBALL_NATIVE_PPO_TRAIN'), 'Build via isolated native validator')
 class NativePpoCliTest(unittest.TestCase):
+  def test_annealed_global_clock_resume_and_task_identity(self):
+    self._assert_annealed_resume('2v1_broad_annealed',5)
+
+  def test_reweighted_global_clock_resume_and_task_identity(self):
+    self._assert_annealed_resume('2v1_broad_reweighted',6)
+
+  def test_reweighted_lowlr_global_clock_resume_and_task_identity(self):
+    self._assert_annealed_resume('2v1_broad_reweighted_lowlr',7,.0002)
+
+  def _assert_annealed_resume(self,scenario,schema,base_learning_rate=.0003):
+    common=('--scenario',scenario,'--seed',19,'--hidden',3,'--epochs',1,'--minibatch',4,
+            '--rollout',4,'--episode-limit',3,'--cadence',2,'--eval-episodes',0,'--no-initial-eval')
+    with tempfile.TemporaryDirectory() as directory:
+      base=Path(directory);full,prefix,resumed=[base/n for n in ('full','prefix','resumed')]
+      a=self.run_cli(*common,'--updates',2,'--save',full,'--export-policy',base/'policy.fpol')
+      self.run_cli(*common,'--updates',1,'--save',prefix)
+      b=self.run_cli(*common,'--updates',1,'--load',prefix,'--save',resumed)
+      self.assertEqual(full.read_bytes(),resumed.read_bytes())
+      self.assertEqual(a['iterations'][1:],b['iterations'])
+      self.assertEqual(a['iterations'][0]['learning_rate'],base_learning_rate)
+      self.assertEqual(a['iterations'][1]['learning_rate'],base_learning_rate*(1-1/8192))
+      self.assertEqual(int.from_bytes(full.read_bytes()[44:48],'little'),schema)
+      legacy=list(common);legacy[1]={5:'2v1_broad',6:'2v1_broad_annealed',7:'2v1_broad_reweighted'}[schema]
+      self.run_cli(*legacy,'--updates',0,'--load',full,success=False)
+      self.run_cli(*legacy,'--updates',1,'--save',base/'constant')
+      self.run_cli(*common,'--updates',0,'--load',base/'constant',success=False)
+      self.run_cli('--scenario',scenario,'--v2',success=False)
+      self.run_cli('--scenario',scenario,'--right',success=False)
+
+  def test_broad_two_on_one_resume_and_task_identity(self):
+    common=('--scenario','2v1_broad','--seed',19,'--hidden',3,'--epochs',1,'--minibatch',4,
+            '--rollout',4,'--episode-limit',3,'--cadence',2,'--eval-episodes',1,'--eval-steps',2,
+            '--no-initial-eval')
+    with tempfile.TemporaryDirectory() as directory:
+      base=Path(directory);full,prefix,resumed=[base/n for n in ('full','prefix','resumed')]
+      a=self.run_cli(*common,'--updates',2,'--save',full,'--export-policy',base/'policy.fpol')
+      self.run_cli(*common,'--updates',1,'--save',prefix)
+      b=self.run_cli(*common,'--updates',1,'--load',prefix,'--save',resumed)
+      self.assertEqual(full.read_bytes(),resumed.read_bytes())
+      self.assertEqual(a['iterations'][1:],b['iterations'])
+      self.assertEqual(a['evaluation'],b['evaluation'])
+      self.assertTrue(a['fixed_teammate_builtin_ai'])
+      self.assertTrue(a['evaluation']['isolated'])
+      legacy=list(common);legacy[1]='2v1'
+      self.run_cli(*legacy,'--updates',0,'--load',full,success=False)
+      self.run_cli('--scenario','2v1_broad','--right',success=False)
+      self.run_cli('--scenario','2v1_broad','--v2',success=False)
+      self.run_cli('--scenario','2v1_broad','--players',2,success=False)
+
+  def test_portable_inference_resume_and_input_identity(self):
+    with tempfile.TemporaryDirectory() as directory:
+      base=Path(directory);policy=base/'policy.fpol';cases=base/'cases.txt';state=base/'session'
+      cases.write_text('0 0 0 12345 99 .5 0 .65 .2 .65 0\n1 1 0 12346 100 .4 0 .55 .2 .55 0\n')
+      self.run_cli('--scenario','2v1','--hidden',3,'--updates',0,'--eval-episodes',0,'--export-policy',policy)
+      def infer(*extra, success=True):
+        result=subprocess.run([os.environ['GFOOTBALL_NATIVE_PPO_TRAIN'],'--inference-mode','balanced',
+            '--policy',str(policy),'--inference-cases',str(cases),*map(str,extra)],capture_output=True,timeout=120)
+        if success:
+          self.assertEqual(result.returncode,0,result.stderr.decode())
+          return [json.loads(line) for line in result.stdout.splitlines()]
+        self.assertNotEqual(result.returncode,0)
+        return result
+      full=infer();prefix=infer('--inference-decisions',8,'--inference-state-out',state)
+      self.assertFalse(prefix[-1]['complete']);saved=state.read_bytes()
+      resumed=infer('--inference-state-in',state)
+      self.assertEqual(prefix[:-1]+resumed[:-1],full[:-1])
+      # A restored policy/case/mode mismatch must fail before output or overwrite.
+      original=cases.read_text();cases.write_text(original.replace('12345','12347'))
+      invalid=infer('--inference-state-in',state,success=False);self.assertEqual(invalid.stdout,b'')
+      cases.write_text(original);self.assertEqual(state.read_bytes(),saved)
+      corrupt=bytearray(saved);corrupt[-1]^=1;state.write_bytes(corrupt)
+      invalid=infer('--inference-state-in',state,success=False);self.assertEqual(invalid.stdout,b'')
+      state.write_bytes(saved.replace(b'FIFS1',b'FIFS9',1))
+      infer('--inference-state-in',state,success=False)
+      state.write_bytes(saved)
+      self.run_cli('--inference-mode','argmax','--policy',policy,'--inference-cases',cases,
+                   '--inference-state-in',state,success=False)
+      policy.write_bytes(policy.read_bytes()+b'garbage')
+      infer(success=False)
+
+  def test_inference_rejects_training_and_bad_options(self):
+    for args in (('--inference-mode','missing'),('--inference-mode','balanced','--updates',1),
+                 ('--inference-mode','balanced','--inference-decisions',0),
+                 ('--export-policy','unused'),('--scenario','2v1','--stacked','--export-policy','unused')):
+      self.run_cli(*args,success=False)
+
   def run_cli(self, *arguments, success=True):
     result = subprocess.run([os.environ['GFOOTBALL_NATIVE_PPO_TRAIN'], *map(str, arguments)],
                             capture_output=True, timeout=120)
@@ -19,7 +105,7 @@ class NativePpoCliTest(unittest.TestCase):
     return result
 
   def test_invalid_options_fail_before_training(self):
-    for args in (('--unknown', '1'), ('--updates', '-1'), ('--rollout', '257'),
+    for args in (('--unknown', '1'), ('--updates', '-1'), ('--updates', '2049'), ('--rollout', '257'),
                  ('--players', '0'), ('--hidden', '65'), ('--eval-episodes', '65'),
                  ('--eval-steps', '0'), ('--seed', '42garbage'), ('--seed', '1', '--seed', '2'),
                  ('--scenario', 'missing'), ('--scenario', 'empty_goal', '--players', '11')):
@@ -51,6 +137,37 @@ class NativePpoCliTest(unittest.TestCase):
       self.assertEqual(frozen['state_sha256'], baseline['state_sha256'])
       self.assertEqual(frozen['iterations'], [])
 
+  def test_variable_starts_have_disjoint_frozen_partitions(self):
+    points=[]
+    for partition in ('train','validation','test','confirmation'):
+      data=self.run_cli('--scenario','varied_empty_goal','--updates',0,'--no-initial-eval',
+                        '--eval-partition',partition,'--eval-episodes',8,'--eval-steps',2,'--hidden',3)
+      self.assertTrue(data['evaluation']['isolated'])
+      rows=data['evaluation']['strategies']
+      matched=[[(e['engine_seed'],e['start_index'],e['start_x'],e['start_y']) for e in row['episodes']] for row in rows]
+      self.assertTrue(all(row==matched[0] for row in matched))
+      points.append({(e['start_x'],e['start_y']) for e in rows[0]['episodes']})
+    self.assertTrue(all(points[i].isdisjoint(points[j]) for i in range(4) for j in range(i+1,4)))
+    self.run_cli('--eval-partition','unknown',success=False)
+    self.run_cli('--scenario','varied_keeper','--right',success=False)
+
+  def test_variable_scenarios_resume_across_episode_boundaries(self):
+    for scenario in ('varied_empty_goal','varied_keeper','2v1'):
+      common=('--scenario',scenario,'--seed',19,'--hidden',3,'--epochs',1,'--minibatch',4,
+              '--rollout',4,'--episode-limit',3,'--cadence',2,'--eval-episodes',1,'--eval-steps',2,
+              '--eval-partition','test')
+      with tempfile.TemporaryDirectory() as directory:
+        full,prefix,resumed=[Path(directory)/name for name in ('full','prefix','resumed')]
+        a=self.run_cli(*common,'--updates',2,'--save',full)
+        self.run_cli(*common,'--updates',1,'--save',prefix)
+        b=self.run_cli(*common,'--updates',1,'--load',prefix,'--save',resumed)
+        self.assertEqual(full.read_bytes(),resumed.read_bytes())
+        self.assertEqual(a['iterations'][1:],b['iterations'])
+        self.assertEqual(a['evaluation'],b['evaluation'])
+        other='varied_keeper' if scenario=='varied_empty_goal' else 'varied_empty_goal'
+        self.run_cli('--scenario',other,'--seed',19,'--hidden',3,'--epochs',1,'--minibatch',4,
+                     '--episode-limit',3,'--cadence',2,'--updates',0,'--load',full,success=False)
+
   def test_joint_right_stacked_v2_cli(self):
     report = self.run_cli('--scenario', '11v11', '--players', 11, '--right', '--stacked', '--compact', '--v2',
                           '--hidden', 2, '--epochs', 1, '--minibatch', 4, '--rollout', 4,
@@ -62,6 +179,30 @@ class NativePpoCliTest(unittest.TestCase):
     self.assertEqual(report['total_transitions'], 4)
     self.assertGreater(report['iterations'][0]['parameter_delta'], 0)
     self.assertTrue(report['evaluation']['isolated'])
+
+  def test_two_on_one_frozen_geometry_and_diagnostics(self):
+    starts=[]
+    for partition in ('train','validation','test','confirmation','replication','prospective','holdout'):
+      report=self.run_cli('--scenario','2v1','--updates',0,'--hidden',3,'--no-initial-eval',
+                          '--eval-partition',partition,'--eval-episodes',4,'--eval-steps',4)
+      self.assertEqual(report['players'],1)
+      self.assertEqual(report['native_agents'],2)
+      self.assertTrue(report['fixed_teammate_builtin_ai'])
+      self.assertTrue(report['evaluation']['isolated'])
+      strategies=report['evaluation']['strategies']
+      identities=[]
+      for strategy in strategies:
+        identities.append([(e['engine_seed'],e['start_index'],e['start_x'],e['start_y']) for e in strategy['episodes']])
+        for e in strategy['episodes']:
+          self.assertLessEqual(e['completed_passes'],e['pass_requests'])
+          self.assertLessEqual(e['pass_requests'],e['steps'])
+          self.assertGreaterEqual(e['turnovers'],0)
+      self.assertTrue(all(rows==identities[0] for rows in identities))
+      starts.append({(x,y) for _,_,x,y in identities[0]})
+    self.assertTrue(all(starts[i].isdisjoint(starts[j]) for i in range(len(starts)) for j in range(i+1,len(starts))))
+    self.run_cli('--scenario','2v1','--right',success=False)
+    self.run_cli('--scenario','2v1','--players',2,success=False)
+    self.run_cli('--scenario','2v1','--v2',success=False)
 
 
 if __name__ == '__main__': unittest.main()

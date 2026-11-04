@@ -380,9 +380,20 @@ class NativeWorkerPool:
       self._shutdown()
       raise
 
-  def digests(self):
+  def digests(self, workers=None):
+    """Hash reset workers, or a nonempty list/tuple of selected reset workers."""
     self._check_open()
-    replies = self._request('digest', {worker: {} for worker in self._episodes})
+    if workers is None:
+      selected = tuple(self._episodes)
+    else:
+      if type(workers) not in (list, tuple) or not 1 <= len(workers) <= len(self._channels):
+        raise ValueError('Select a nonempty bounded list or tuple of workers')
+      for worker in workers:
+        _integer(worker, 0, len(self._channels) - 1, 'worker')
+      if len(set(workers)) != len(workers) or any(worker not in self._episodes for worker in workers):
+        raise ValueError('Select unique workers that have been reset')
+      selected = workers
+    replies = self._request('digest', {worker: {} for worker in selected})
     try:
       result = {}
       for worker, (metadata, blob) in replies.items():

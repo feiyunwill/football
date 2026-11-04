@@ -1,0 +1,3802 @@
+[
+  {
+    "index": 0,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.445125,
+      0.063447
+    ],
+    "teammate": [
+      0.559692,
+      -0.224573
+    ],
+    "defender": [
+      0.589617,
+      0.010451
+    ],
+    "engine_seed": 1310374893,
+    "action_seed": 1376283077165634104
+  },
+  {
+    "index": 1,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.594288,
+      -0.166092
+    ],
+    "teammate": [
+      0.686145,
+      0.121654
+    ],
+    "defender": [
+      0.741448,
+      0.004915
+    ],
+    "engine_seed": 311672718,
+    "action_seed": 10173336424378314285
+  },
+  {
+    "index": 2,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.612967,
+      -0.085779
+    ],
+    "teammate": [
+      0.777334,
+      0.216082
+    ],
+    "defender": [
+      0.776503,
+      0.006942
+    ],
+    "engine_seed": 1158838897,
+    "action_seed": 3420335862121114130
+  },
+  {
+    "index": 3,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.651542,
+      -0.019999
+    ],
+    "teammate": [
+      0.748139,
+      0.165695
+    ],
+    "defender": [
+      0.797978,
+      -0.03006
+    ],
+    "engine_seed": 1066643124,
+    "action_seed": 14537592138503923207
+  },
+  {
+    "index": 4,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.460668,
+      -0.185379
+    ],
+    "teammate": [
+      0.640546,
+      0.234069
+    ],
+    "defender": [
+      0.632185,
+      -0.082037
+    ],
+    "engine_seed": 1769545618,
+    "action_seed": 7765451295049065068
+  },
+  {
+    "index": 5,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.521254,
+      0.064674
+    ],
+    "teammate": [
+      0.676112,
+      -0.204902
+    ],
+    "defender": [
+      0.716294,
+      0.043525
+    ],
+    "engine_seed": 1712602519,
+    "action_seed": 291866142348328529
+  },
+  {
+    "index": 6,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.491016,
+      -0.148119
+    ],
+    "teammate": [
+      0.613415,
+      0.159782
+    ],
+    "defender": [
+      0.652234,
+      0.004852
+    ],
+    "engine_seed": 351217637,
+    "action_seed": 11985574435205167686
+  },
+  {
+    "index": 7,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.455909,
+      0.04573
+    ],
+    "teammate": [
+      0.554502,
+      -0.254571
+    ],
+    "defender": [
+      0.603872,
+      0.023396
+    ],
+    "engine_seed": 140519938,
+    "action_seed": 4656121925358040747
+  },
+  {
+    "index": 8,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.450961,
+      0.146421
+    ],
+    "teammate": [
+      0.548203,
+      -0.235385
+    ],
+    "defender": [
+      0.582252,
+      -0.009683
+    ],
+    "engine_seed": 1642178432,
+    "action_seed": 16330694231809405584
+  },
+  {
+    "index": 9,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.666997,
+      0.056199
+    ],
+    "teammate": [
+      0.755777,
+      -0.175957
+    ],
+    "defender": [
+      0.847531,
+      -0.007203
+    ],
+    "engine_seed": 222520758,
+    "action_seed": 11307075969414106757
+  },
+  {
+    "index": 10,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.510129,
+      -0.050104
+    ],
+    "teammate": [
+      0.615908,
+      0.238934
+    ],
+    "defender": [
+      0.636007,
+      0.038217
+    ],
+    "engine_seed": 319269962,
+    "action_seed": 4409951010676411114
+  },
+  {
+    "index": 11,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.559589,
+      0.104494
+    ],
+    "teammate": [
+      0.690902,
+      -0.197201
+    ],
+    "defender": [
+      0.742914,
+      0.056128
+    ],
+    "engine_seed": 665466068,
+    "action_seed": 16103659312020555487
+  },
+  {
+    "index": 12,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.493601,
+      0.078219
+    ],
+    "teammate": [
+      0.66951,
+      -0.167103
+    ],
+    "defender": [
+      0.623312,
+      0.046596
+    ],
+    "engine_seed": 1253602082,
+    "action_seed": 8755066512184378052
+  },
+  {
+    "index": 13,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.603636,
+      -0.13125
+    ],
+    "teammate": [
+      0.752381,
+      0.239541
+    ],
+    "defender": [
+      0.786627,
+      -0.073561
+    ],
+    "engine_seed": 1110591555,
+    "action_seed": 2002030636702801705
+  },
+  {
+    "index": 14,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.585475,
+      -0.104861
+    ],
+    "teammate": [
+      0.71132,
+      0.133381
+    ],
+    "defender": [
+      0.778567,
+      -0.030602
+    ],
+    "engine_seed": 1535598824,
+    "action_seed": 12975189446076144414
+  },
+  {
+    "index": 15,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.670149,
+      -0.184091
+    ],
+    "teammate": [
+      0.826573,
+      0.142379
+    ],
+    "defender": [
+      0.842953,
+      -0.103866
+    ],
+    "engine_seed": 1716913051,
+    "action_seed": 6222193427896571651
+  },
+  {
+    "index": 16,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.505463,
+      -0.039968
+    ],
+    "teammate": [
+      0.595723,
+      0.221435
+    ],
+    "defender": [
+      0.672563,
+      -0.011569
+    ],
+    "engine_seed": 1870210133,
+    "action_seed": 17324804321068520296
+  },
+  {
+    "index": 17,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.532774,
+      -0.207669
+    ],
+    "teammate": [
+      0.635768,
+      0.180813
+    ],
+    "defender": [
+      0.702779,
+      -0.084883
+    ],
+    "engine_seed": 1893380830,
+    "action_seed": 10571812529269698397
+  },
+  {
+    "index": 18,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.473098,
+      -0.167584
+    ],
+    "teammate": [
+      0.607335,
+      0.240305
+    ],
+    "defender": [
+      0.617352,
+      -0.088834
+    ],
+    "engine_seed": 1411596810,
+    "action_seed": 936472883719990082
+  },
+  {
+    "index": 19,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.642626,
+      0.129756
+    ],
+    "teammate": [
+      0.739922,
+      -0.201516
+    ],
+    "defender": [
+      0.841432,
+      0.054673
+    ],
+    "engine_seed": 1606005647,
+    "action_seed": 12468078055439591351
+  },
+  {
+    "index": 20,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.443418,
+      0.070695
+    ],
+    "teammate": [
+      0.55707,
+      -0.132922
+    ],
+    "defender": [
+      0.641213,
+      0.049843
+    ],
+    "engine_seed": 897969372,
+    "action_seed": 5713951198139605916
+  },
+  {
+    "index": 21,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.447903,
+      0.125499
+    ],
+    "teammate": [
+      0.597352,
+      -0.150093
+    ],
+    "defender": [
+      0.633252,
+      0.003464
+    ],
+    "engine_seed": 671371429,
+    "action_seed": 16831489052611641217
+  },
+  {
+    "index": 22,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.492214,
+      0.035422
+    ],
+    "teammate": [
+      0.650026,
+      -0.231337
+    ],
+    "defender": [
+      0.615015,
+      0.046471
+    ],
+    "engine_seed": 1783047934,
+    "action_seed": 10078492854045408246
+  },
+  {
+    "index": 23,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.477406,
+      0.096647
+    ],
+    "teammate": [
+      0.627042,
+      -0.136875
+    ],
+    "defender": [
+      0.662013,
+      0.047592
+    ],
+    "engine_seed": 998103779,
+    "action_seed": 2729855928251185115
+  },
+  {
+    "index": 24,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.462391,
+      -0.004165
+    ],
+    "teammate": [
+      0.546683,
+      0.17499
+    ],
+    "defender": [
+      0.611271,
+      -0.050672
+    ],
+    "engine_seed": 1944612759,
+    "action_seed": 14279475472716624832
+  },
+  {
+    "index": 25,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.508987,
+      -0.129419
+    ],
+    "teammate": [
+      0.633499,
+      0.23547
+    ],
+    "defender": [
+      0.704656,
+      -0.074831
+    ],
+    "engine_seed": 695918812,
+    "action_seed": 6950014338573847605
+  },
+  {
+    "index": 26,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.584665,
+      0.204864
+    ],
+    "teammate": [
+      0.665763,
+      -0.194069
+    ],
+    "defender": [
+      0.733035,
+      0.047854
+    ],
+    "engine_seed": 1618337806,
+    "action_seed": 196987388038629402
+  },
+  {
+    "index": 27,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.627358,
+      0.039501
+    ],
+    "teammate": [
+      0.75915,
+      -0.257745
+    ],
+    "defender": [
+      0.79451,
+      0.022255
+    ],
+    "engine_seed": 1407636198,
+    "action_seed": 13600972832217351183
+  },
+  {
+    "index": 28,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.655209,
+      0.042263
+    ],
+    "teammate": [
+      0.77481,
+      -0.136262
+    ],
+    "defender": [
+      0.795813,
+      -0.029284
+    ],
+    "engine_seed": 1976898828,
+    "action_seed": 6703848165569937524
+  },
+  {
+    "index": 29,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.466367,
+      -0.038042
+    ],
+    "teammate": [
+      0.589526,
+      0.195009
+    ],
+    "defender": [
+      0.660199,
+      -0.068619
+    ],
+    "engine_seed": 176125154,
+    "action_seed": 18397556501375278169
+  },
+  {
+    "index": 30,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.602118,
+      -0.165329
+    ],
+    "teammate": [
+      0.754676,
+      0.203814
+    ],
+    "defender": [
+      0.751352,
+      -0.093304
+    ],
+    "engine_seed": 1041804533,
+    "action_seed": 11068099206906140750
+  },
+  {
+    "index": 31,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.441718,
+      0.051132
+    ],
+    "teammate": [
+      0.58554,
+      -0.21669
+    ],
+    "defender": [
+      0.585164,
+      -0.005009
+    ],
+    "engine_seed": 1388235432,
+    "action_seed": 4300435566200345779
+  },
+  {
+    "index": 32,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.577114,
+      -0.178275
+    ],
+    "teammate": [
+      0.684531,
+      0.240883
+    ],
+    "defender": [
+      0.697241,
+      -0.010437
+    ],
+    "engine_seed": 1578131664,
+    "action_seed": 15417718205092286616
+  },
+  {
+    "index": 33,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.554518,
+      0.203763
+    ],
+    "teammate": [
+      0.730072,
+      -0.194652
+    ],
+    "defender": [
+      0.739345,
+      0.098441
+    ],
+    "engine_seed": 1159749991,
+    "action_seed": 8520593632897477773
+  },
+  {
+    "index": 34,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.638549,
+      -0.133087
+    ],
+    "teammate": [
+      0.754663,
+      0.256174
+    ],
+    "defender": [
+      0.761449,
+      0.008192
+    ],
+    "engine_seed": 1716418909,
+    "action_seed": 1173082735325128946
+  },
+  {
+    "index": 35,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.533206,
+      0.002225
+    ],
+    "teammate": [
+      0.675372,
+      -0.256783
+    ],
+    "defender": [
+      0.693548,
+      0.033111
+    ],
+    "engine_seed": 999379088,
+    "action_seed": 12865709323387938023
+  },
+  {
+    "index": 36,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.61436,
+      0.001195
+    ],
+    "teammate": [
+      0.787493,
+      -0.151762
+    ],
+    "defender": [
+      0.746594,
+      0.059187
+    ],
+    "engine_seed": 903051997,
+    "action_seed": 3230369832422580428
+  },
+  {
+    "index": 37,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.619287,
+      -0.170482
+    ],
+    "teammate": [
+      0.770672,
+      0.213556
+    ],
+    "defender": [
+      0.808151,
+      -0.08689
+    ],
+    "engine_seed": 842006667,
+    "action_seed": 14780002424992382257
+  },
+  {
+    "index": 38,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.527412,
+      -0.018186
+    ],
+    "teammate": [
+      0.696275,
+      0.203845
+    ],
+    "defender": [
+      0.713505,
+      0.002048
+    ],
+    "engine_seed": 745199091,
+    "action_seed": 8008978633808460070
+  },
+  {
+    "index": 39,
+    "group": 0,
+    "group_name": "interpolation",
+    "attacker": [
+      0.557159,
+      -0.083455
+    ],
+    "teammate": [
+      0.71512,
+      0.192468
+    ],
+    "defender": [
+      0.693292,
+      -0.078788
+    ],
+    "engine_seed": 841616143,
+    "action_seed": 678356243559888139
+  },
+  {
+    "index": 40,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.386987,
+      0.184093
+    ],
+    "teammate": [
+      0.556637,
+      -0.241409
+    ],
+    "defender": [
+      0.575149,
+      0.024653
+    ],
+    "engine_seed": 703952001,
+    "action_seed": 12372108156106813808
+  },
+  {
+    "index": 41,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.330784,
+      0.067957
+    ],
+    "teammate": [
+      0.495763,
+      -0.244113
+    ],
+    "defender": [
+      0.470824,
+      0.012283
+    ],
+    "engine_seed": 482096961,
+    "action_seed": 5042893175102573925
+  },
+  {
+    "index": 42,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.34182,
+      -0.136322
+    ],
+    "teammate": [
+      0.423458,
+      0.164216
+    ],
+    "defender": [
+      0.46558,
+      -0.034291
+    ],
+    "engine_seed": 1685524832,
+    "action_seed": 16573372266565241162
+  },
+  {
+    "index": 43,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.360019,
+      -0.043536
+    ],
+    "teammate": [
+      0.476676,
+      0.144605
+    ],
+    "defender": [
+      0.491346,
+      -0.045347
+    ],
+    "engine_seed": 794829184,
+    "action_seed": 9243910926230619583
+  },
+  {
+    "index": 44,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.280922,
+      0.101147
+    ],
+    "teammate": [
+      0.433241,
+      -0.247887
+    ],
+    "defender": [
+      0.455433,
+      0.085164
+    ],
+    "engine_seed": 1647890686,
+    "action_seed": 2490879594829939108
+  },
+  {
+    "index": 45,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.376006,
+      -0.040271
+    ],
+    "teammate": [
+      0.507552,
+      0.247224
+    ],
+    "defender": [
+      0.509594,
+      -0.066732
+    ],
+    "engine_seed": 1642363850,
+    "action_seed": 15914014305348033929
+  },
+  {
+    "index": 46,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.415665,
+      -0.072581
+    ],
+    "teammate": [
+      0.553991,
+      0.135973
+    ],
+    "defender": [
+      0.567194,
+      -0.068373
+    ],
+    "engine_seed": 1133090673,
+    "action_seed": 9146341894697294334
+  },
+  {
+    "index": 47,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.292421,
+      0.139659
+    ],
+    "teammate": [
+      0.441278,
+      -0.120597
+    ],
+    "defender": [
+      0.43291,
+      0.019696
+    ],
+    "engine_seed": 64930467,
+    "action_seed": 2249217219424294371
+  },
+  {
+    "index": 48,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.313874,
+      -0.0606
+    ],
+    "teammate": [
+      0.416278,
+      0.140869
+    ],
+    "defender": [
+      0.490056,
+      -0.041555
+    ],
+    "engine_seed": 1244939652,
+    "action_seed": 13366499995753222600
+  },
+  {
+    "index": 49,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.341426,
+      -0.04147
+    ],
+    "teammate": [
+      0.501023,
+      0.258671
+    ],
+    "defender": [
+      0.533691,
+      0.034502
+    ],
+    "engine_seed": 1773007661,
+    "action_seed": 6595458620968079933
+  },
+  {
+    "index": 50,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.311767,
+      -0.037599
+    ],
+    "teammate": [
+      0.470433,
+      0.140726
+    ],
+    "defender": [
+      0.464397,
+      -0.048742
+    ],
+    "engine_seed": 363501972,
+    "action_seed": 17711615067895295522
+  },
+  {
+    "index": 51,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.362841,
+      0.142188
+    ],
+    "teammate": [
+      0.473914,
+      -0.245496
+    ],
+    "defender": [
+      0.497955,
+      -0.005203
+    ],
+    "engine_seed": 650411348,
+    "action_seed": 10814468574320552471
+  },
+  {
+    "index": 52,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.394943,
+      0.098139
+    ],
+    "teammate": [
+      0.489953,
+      -0.183829
+    ],
+    "defender": [
+      0.578085,
+      0.014576
+    ],
+    "engine_seed": 1020173785,
+    "action_seed": 3484998343446750844
+  },
+  {
+    "index": 53,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.312609,
+      -0.199503
+    ],
+    "teammate": [
+      0.437171,
+      0.239135
+    ],
+    "defender": [
+      0.469311,
+      -0.048288
+    ],
+    "engine_seed": 1454119710,
+    "action_seed": 15160727464981652065
+  },
+  {
+    "index": 54,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.34435,
+      0.154455
+    ],
+    "teammate": [
+      0.499362,
+      -0.128647
+    ],
+    "defender": [
+      0.473294,
+      0.044237
+    ],
+    "engine_seed": 1548984723,
+    "action_seed": 5524270818661563990
+  },
+  {
+    "index": 55,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.405094,
+      0.161643
+    ],
+    "teammate": [
+      0.48825,
+      -0.202126
+    ],
+    "defender": [
+      0.54871,
+      0.059389
+    ],
+    "engine_seed": 1738046015,
+    "action_seed": 17218014476173212347
+  },
+  {
+    "index": 56,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.342811,
+      0.178832
+    ],
+    "teammate": [
+      0.483622,
+      -0.175978
+    ],
+    "defender": [
+      0.488321,
+      0.025859
+    ],
+    "engine_seed": 1284158913,
+    "action_seed": 10320889946929231520
+  },
+  {
+    "index": 57,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.296632,
+      0.050431
+    ],
+    "teammate": [
+      0.38704,
+      -0.224868
+    ],
+    "defender": [
+      0.445672,
+      0.06325
+    ],
+    "engine_seed": 1292825038,
+    "action_seed": 2973378954863538837
+  },
+  {
+    "index": 58,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.422106,
+      -0.144664
+    ],
+    "teammate": [
+      0.533757,
+      0.184227
+    ],
+    "defender": [
+      0.551241,
+      -0.054546
+    ],
+    "engine_seed": 245407692,
+    "action_seed": 14666005362507173626
+  },
+  {
+    "index": 59,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.329013,
+      0.164591
+    ],
+    "teammate": [
+      0.503956,
+      -0.210791
+    ],
+    "defender": [
+      0.525187,
+      -0.000887
+    ],
+    "engine_seed": 1584498259,
+    "action_seed": 7336513235886820079
+  },
+  {
+    "index": 60,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.311385,
+      -0.111518
+    ],
+    "teammate": [
+      0.397258,
+      0.225636
+    ],
+    "defender": [
+      0.49046,
+      -0.025061
+    ],
+    "engine_seed": 720433233,
+    "action_seed": 439397090416903892
+  },
+  {
+    "index": 61,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.399416,
+      -0.207183
+    ],
+    "teammate": [
+      0.558618,
+      0.143286
+    ],
+    "defender": [
+      0.546254,
+      -0.0708
+    ],
+    "engine_seed": 58668778,
+    "action_seed": 11538656663555359545
+  },
+  {
+    "index": 62,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.372546,
+      -0.199078
+    ],
+    "teammate": [
+      0.489637,
+      0.244348
+    ],
+    "defender": [
+      0.548614,
+      -0.041402
+    ],
+    "engine_seed": 1800213781,
+    "action_seed": 4789279988574379822
+  },
+  {
+    "index": 63,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.373927,
+      -0.063321
+    ],
+    "teammate": [
+      0.54428,
+      0.156726
+    ],
+    "defender": [
+      0.497415,
+      -0.036939
+    ],
+    "engine_seed": 625880792,
+    "action_seed": 18212414561754176275
+  },
+  {
+    "index": 64,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.328366,
+      -0.202379
+    ],
+    "teammate": [
+      0.474077,
+      0.120141
+    ],
+    "defender": [
+      0.524163,
+      -0.040455
+    ],
+    "engine_seed": 709105492,
+    "action_seed": 11441364571236456312
+  },
+  {
+    "index": 65,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.328771,
+      -0.089984
+    ],
+    "teammate": [
+      0.505146,
+      0.125769
+    ],
+    "defender": [
+      0.466643,
+      -0.072173
+    ],
+    "engine_seed": 1777135979,
+    "action_seed": 4543114099138974573
+  },
+  {
+    "index": 66,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.352139,
+      0.189742
+    ],
+    "teammate": [
+      0.461568,
+      -0.245993
+    ],
+    "defender": [
+      0.512283,
+      0.030663
+    ],
+    "engine_seed": 549638010,
+    "action_seed": 15660401256367992658
+  },
+  {
+    "index": 67,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.376953,
+      -0.013408
+    ],
+    "teammate": [
+      0.518848,
+      0.166208
+    ],
+    "defender": [
+      0.54899,
+      0.019696
+    ],
+    "engine_seed": 1357422572,
+    "action_seed": 8907365415251389255
+  },
+  {
+    "index": 68,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.389438,
+      -0.117369
+    ],
+    "teammate": [
+      0.487413,
+      0.1316
+    ],
+    "defender": [
+      0.564942,
+      -0.018769
+    ],
+    "engine_seed": 1389406301,
+    "action_seed": 1559898515853682604
+  },
+  {
+    "index": 69,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.368375,
+      -0.138197
+    ],
+    "teammate": [
+      0.532464,
+      0.257913
+    ],
+    "defender": [
+      0.535504,
+      -0.057405
+    ],
+    "engine_seed": 1525721010,
+    "action_seed": 13252480539333862289
+  },
+  {
+    "index": 70,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.406889,
+      0.060977
+    ],
+    "teammate": [
+      0.531364,
+      -0.227242
+    ],
+    "defender": [
+      0.586298,
+      0.016819
+    ],
+    "engine_seed": 787971209,
+    "action_seed": 5778895206246727558
+  },
+  {
+    "index": 71,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.402728,
+      -0.039002
+    ],
+    "teammate": [
+      0.520996,
+      0.244971
+    ],
+    "defender": [
+      0.546005,
+      0.003721
+    ],
+    "engine_seed": 10421210,
+    "action_seed": 17472638726294125547
+  },
+  {
+    "index": 72,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.397321,
+      -0.081022
+    ],
+    "teammate": [
+      0.479588,
+      0.218406
+    ],
+    "defender": [
+      0.56277,
+      0.023173
+    ],
+    "engine_seed": 719796904,
+    "action_seed": 7819293495472175056
+  },
+  {
+    "index": 73,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.419187,
+      -0.19107
+    ],
+    "teammate": [
+      0.577971,
+      0.240111
+    ],
+    "defender": [
+      0.541183,
+      -0.031942
+    ],
+    "engine_seed": 913640150,
+    "action_seed": 1065171474340099013
+  },
+  {
+    "index": 74,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.305106,
+      0.009418
+    ],
+    "teammate": [
+      0.436258,
+      -0.16819
+    ],
+    "defender": [
+      0.501677,
+      0.033541
+    ],
+    "engine_seed": 1901128678,
+    "action_seed": 12614764750913473578
+  },
+  {
+    "index": 75,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.387727,
+      0.027241
+    ],
+    "teammate": [
+      0.527738,
+      -0.24132
+    ],
+    "defender": [
+      0.520145,
+      -0.043379
+    ],
+    "engine_seed": 625227800,
+    "action_seed": 5285294614490941471
+  },
+  {
+    "index": 76,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.35816,
+      0.102925
+    ],
+    "teammate": [
+      0.487824,
+      -0.125873
+    ],
+    "defender": [
+      0.55816,
+      0.01228
+    ],
+    "engine_seed": 251509179,
+    "action_seed": 16961023744649331716
+  },
+  {
+    "index": 77,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.319528,
+      0.020252
+    ],
+    "teammate": [
+      0.417876,
+      -0.259602
+    ],
+    "defender": [
+      0.457638,
+      0.055393
+    ],
+    "engine_seed": 491237813,
+    "action_seed": 9634913612685475945
+  },
+  {
+    "index": 78,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.283004,
+      0.212095
+    ],
+    "teammate": [
+      0.372185,
+      -0.253601
+    ],
+    "defender": [
+      0.452627,
+      0.083438
+    ],
+    "engine_seed": 1291602967,
+    "action_seed": 2881913084789070942
+  },
+  {
+    "index": 79,
+    "group": 1,
+    "group_name": "deeper_attack",
+    "attacker": [
+      0.435703,
+      0.078575
+    ],
+    "teammate": [
+      0.563713,
+      -0.164441
+    ],
+    "defender": [
+      0.631868,
+      0.009963
+    ],
+    "engine_seed": 1996065027,
+    "action_seed": 13837057057400461379
+  },
+  {
+    "index": 80,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.55309,
+      -0.311796
+    ],
+    "teammate": [
+      0.708397,
+      0.166623
+    ],
+    "defender": [
+      0.691213,
+      -0.099795
+    ],
+    "engine_seed": 323256201,
+    "action_seed": 7084025726026912936
+  },
+  {
+    "index": 81,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.670244,
+      -0.332519
+    ],
+    "teammate": [
+      0.781798,
+      0.229657
+    ],
+    "defender": [
+      0.869649,
+      -0.034482
+    ],
+    "engine_seed": 1350098936,
+    "action_seed": 2059281495004516509
+  },
+  {
+    "index": 82,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.645639,
+      -0.333008
+    ],
+    "teammate": [
+      0.788872,
+      0.214534
+    ],
+    "defender": [
+      0.83924,
+      -0.038205
+    ],
+    "engine_seed": 1699383362,
+    "action_seed": 13753279955717680258
+  },
+  {
+    "index": 83,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.497688,
+      0.317603
+    ],
+    "teammate": [
+      0.639657,
+      -0.241837
+    ],
+    "defender": [
+      0.652366,
+      0.098445
+    ],
+    "engine_seed": 376551344,
+    "action_seed": 6405804285634865399
+  },
+  {
+    "index": 84,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.668481,
+      0.274288
+    ],
+    "teammate": [
+      0.76531,
+      -0.15084
+    ],
+    "defender": [
+      0.806078,
+      0.095955
+    ],
+    "engine_seed": 1917394568,
+    "action_seed": 17954298067631367388
+  },
+  {
+    "index": 85,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.55624,
+      -0.334345
+    ],
+    "teammate": [
+      0.719242,
+      0.187
+    ],
+    "defender": [
+      0.68517,
+      -0.114424
+    ],
+    "engine_seed": 1635543963,
+    "action_seed": 11201262329728458945
+  },
+  {
+    "index": 86,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.526179,
+      0.255011
+    ],
+    "teammate": [
+      0.68004,
+      -0.133083
+    ],
+    "defender": [
+      0.72408,
+      0.119872
+    ],
+    "engine_seed": 81524411,
+    "action_seed": 3871809776930487606
+  },
+  {
+    "index": 87,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.553959,
+      -0.246508
+    ],
+    "teammate": [
+      0.670226,
+      0.147452
+    ],
+    "defender": [
+      0.693099,
+      -0.041398
+    ],
+    "engine_seed": 207124043,
+    "action_seed": 15547503576653166875
+  },
+  {
+    "index": 88,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.505167,
+      0.334629
+    ],
+    "teammate": [
+      0.63191,
+      -0.246176
+    ],
+    "defender": [
+      0.629827,
+      0.142735
+    ],
+    "engine_seed": 1175901694,
+    "action_seed": 8072805589338322176
+  },
+  {
+    "index": 89,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.540043,
+      0.320841
+    ],
+    "teammate": [
+      0.7005,
+      -0.17403
+    ],
+    "defender": [
+      0.701888,
+      0.078635
+    ],
+    "engine_seed": 55297594,
+    "action_seed": 1319795861625237877
+  },
+  {
+    "index": 90,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.474102,
+      0.286926
+    ],
+    "teammate": [
+      0.61683,
+      -0.168794
+    ],
+    "defender": [
+      0.628083,
+      0.012897
+    ],
+    "engine_seed": 1019253346,
+    "action_seed": 10131200427224026458
+  },
+  {
+    "index": 91,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.467747,
+      0.30614
+    ],
+    "teammate": [
+      0.616294,
+      -0.165632
+    ],
+    "defender": [
+      0.611822,
+      0.073707
+    ],
+    "engine_seed": 1761745228,
+    "action_seed": 3360194235036649807
+  },
+  {
+    "index": 92,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.55593,
+      -0.311599
+    ],
+    "teammate": [
+      0.72999,
+      0.205065
+    ],
+    "defender": [
+      0.737649,
+      -0.055581
+    ],
+    "engine_seed": 521644068,
+    "action_seed": 14480819389270738356
+  },
+  {
+    "index": 93,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.469807,
+      0.256113
+    ],
+    "teammate": [
+      0.571879,
+      -0.161708
+    ],
+    "defender": [
+      0.633123,
+      0.113884
+    ],
+    "engine_seed": 920766651,
+    "action_seed": 7583694851470377369
+  },
+  {
+    "index": 94,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.61236,
+      0.311795
+    ],
+    "teammate": [
+      0.743597,
+      -0.221716
+    ],
+    "defender": [
+      0.769356,
+      0.052812
+    ],
+    "engine_seed": 1134493354,
+    "action_seed": 812680062503443854
+  },
+  {
+    "index": 95,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.53336,
+      -0.33455
+    ],
+    "teammate": [
+      0.643302,
+      0.151166
+    ],
+    "defender": [
+      0.713149,
+      -0.069007
+    ],
+    "engine_seed": 1883294301,
+    "action_seed": 11929932043920792051
+  },
+  {
+    "index": 96,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.523242,
+      -0.283954
+    ],
+    "teammate": [
+      0.623416,
+      0.242532
+    ],
+    "defender": [
+      0.66982,
+      -0.108609
+    ],
+    "engine_seed": 1854915362,
+    "action_seed": 5175814257727002072
+  },
+  {
+    "index": 97,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.519367,
+      0.318659
+    ],
+    "teammate": [
+      0.611823,
+      -0.21055
+    ],
+    "defender": [
+      0.71364,
+      0.028493
+    ],
+    "engine_seed": 184848866,
+    "action_seed": 16148946618692915661
+  },
+  {
+    "index": 98,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.492613,
+      0.299344
+    ],
+    "teammate": [
+      0.645402,
+      -0.151209
+    ],
+    "defender": [
+      0.681843,
+      0.017956
+    ],
+    "engine_seed": 1492150909,
+    "action_seed": 9377922861829018162
+  },
+  {
+    "index": 99,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.640787,
+      0.288802
+    ],
+    "teammate": [
+      0.734345,
+      -0.225799
+    ],
+    "defender": [
+      0.787818,
+      0.025696
+    ],
+    "engine_seed": 1768735555,
+    "action_seed": 4354304187117022759
+  },
+  {
+    "index": 100,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.612948,
+      -0.247748
+    ],
+    "teammate": [
+      0.792272,
+      0.160611
+    ],
+    "defender": [
+      0.80378,
+      -0.017411
+    ],
+    "engine_seed": 927912016,
+    "action_seed": 16046895427597806092
+  },
+  {
+    "index": 101,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.48037,
+      0.257393
+    ],
+    "teammate": [
+      0.648541,
+      -0.213254
+    ],
+    "defender": [
+      0.625834,
+      0.106115
+    ],
+    "engine_seed": 723680089,
+    "action_seed": 8717433984192358001
+  },
+  {
+    "index": 102,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.560999,
+      0.300893
+    ],
+    "teammate": [
+      0.691198,
+      -0.138191
+    ],
+    "defender": [
+      0.702924,
+      0.064938
+    ],
+    "engine_seed": 1063242966,
+    "action_seed": 1802554489509225062
+  },
+  {
+    "index": 103,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.6333,
+      0.275169
+    ],
+    "teammate": [
+      0.769841,
+      -0.14697
+    ],
+    "defender": [
+      0.788847,
+      0.055774
+    ],
+    "engine_seed": 322264271,
+    "action_seed": 13495163313551654475
+  },
+  {
+    "index": 104,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.504925,
+      0.299851
+    ],
+    "teammate": [
+      0.646966,
+      -0.224879
+    ],
+    "defender": [
+      0.64043,
+      0.055117
+    ],
+    "engine_seed": 326321369,
+    "action_seed": 6165702153640131248
+  },
+  {
+    "index": 105,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.563511,
+      -0.24023
+    ],
+    "teammate": [
+      0.739448,
+      0.123866
+    ],
+    "defender": [
+      0.748834,
+      -0.048931
+    ],
+    "engine_seed": 439690240,
+    "action_seed": 17859419319765186213
+  },
+  {
+    "index": 106,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.61651,
+      0.290329
+    ],
+    "teammate": [
+      0.741416,
+      -0.127973
+    ],
+    "defender": [
+      0.765454,
+      0.036274
+    ],
+    "engine_seed": 1026790131,
+    "action_seed": 10511943469256258186
+  },
+  {
+    "index": 107,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.550256,
+      0.293742
+    ],
+    "teammate": [
+      0.674768,
+      -0.178236
+    ],
+    "defender": [
+      0.729485,
+      0.063037
+    ],
+    "engine_seed": 122571230,
+    "action_seed": 3618196596819693311
+  },
+  {
+    "index": 108,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.53489,
+      0.25108
+    ],
+    "teammate": [
+      0.694672,
+      -0.21788
+    ],
+    "defender": [
+      0.669386,
+      0.095701
+    ],
+    "engine_seed": 1352867589,
+    "action_seed": 12429601179698891492
+  },
+  {
+    "index": 109,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.51345,
+      -0.259913
+    ],
+    "teammate": [
+      0.615306,
+      0.133784
+    ],
+    "defender": [
+      0.701365,
+      -0.047074
+    ],
+    "engine_seed": 1631915780,
+    "action_seed": 5658590213251794633
+  },
+  {
+    "index": 110,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.489321,
+      0.220893
+    ],
+    "teammate": [
+      0.619498,
+      -0.141978
+    ],
+    "defender": [
+      0.673748,
+      0.067906
+    ],
+    "engine_seed": 572956003,
+    "action_seed": 16775846618511934270
+  },
+  {
+    "index": 111,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.466557,
+      0.2422
+    ],
+    "teammate": [
+      0.566237,
+      -0.203804
+    ],
+    "defender": [
+      0.605572,
+      0.00248
+    ],
+    "engine_seed": 814497209,
+    "action_seed": 9877604839425122083
+  },
+  {
+    "index": 112,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.479452,
+      -0.222908
+    ],
+    "teammate": [
+      0.650144,
+      0.22078
+    ],
+    "defender": [
+      0.678268,
+      -0.02248
+    ],
+    "engine_seed": 10255123,
+    "action_seed": 3124595498254637832
+  },
+  {
+    "index": 113,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.499894,
+      -0.257216
+    ],
+    "teammate": [
+      0.673432,
+      0.210747
+    ],
+    "defender": [
+      0.62039,
+      -0.008239
+    ],
+    "engine_seed": 1480934613,
+    "action_seed": 14223828649160087421
+  },
+  {
+    "index": 114,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.527826,
+      0.310419
+    ],
+    "teammate": [
+      0.618838,
+      -0.153703
+    ],
+    "defender": [
+      0.715596,
+      0.075369
+    ],
+    "engine_seed": 1000306867,
+    "action_seed": 7470837020470645602
+  },
+  {
+    "index": 115,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.667592,
+      0.24625
+    ],
+    "teammate": [
+      0.824823,
+      -0.164618
+    ],
+    "defender": [
+      0.860615,
+      0.088562
+    ],
+    "engine_seed": 1670157781,
+    "action_seed": 140214664580788055
+  },
+  {
+    "index": 116,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.46014,
+      -0.308763
+    ],
+    "teammate": [
+      0.587889,
+      0.217922
+    ],
+    "defender": [
+      0.659755,
+      -0.06952
+    ],
+    "engine_seed": 1654065702,
+    "action_seed": 11689834071601900476
+  },
+  {
+    "index": 117,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.652499,
+      -0.237182
+    ],
+    "teammate": [
+      0.79223,
+      0.16076
+    ],
+    "defender": [
+      0.836805,
+      -0.071566
+    ],
+    "engine_seed": 73981959,
+    "action_seed": 6648205774417586081
+  },
+  {
+    "index": 118,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.607138,
+      -0.23661
+    ],
+    "teammate": [
+      0.707353,
+      0.156679
+    ],
+    "defender": [
+      0.748785,
+      -0.023316
+    ],
+    "engine_seed": 957836145,
+    "action_seed": 18341914067138241430
+  },
+  {
+    "index": 119,
+    "group": 2,
+    "group_name": "wide_attack",
+    "attacker": [
+      0.485479,
+      0.26339
+    ],
+    "teammate": [
+      0.623644,
+      -0.207545
+    ],
+    "defender": [
+      0.616855,
+      0.076854
+    ],
+    "engine_seed": 918448756,
+    "action_seed": 11011335245173194747
+  },
+  {
+    "index": 120,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.662598,
+      0.091209
+    ],
+    "teammate": [
+      0.801301,
+      -0.198243
+    ],
+    "defender": [
+      0.774061,
+      0.035385
+    ],
+    "engine_seed": 1707100754,
+    "action_seed": 4114184327653030880
+  },
+  {
+    "index": 121,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.563398,
+      -0.041277
+    ],
+    "teammate": [
+      0.694879,
+      0.14306
+    ],
+    "defender": [
+      0.635389,
+      0.047694
+    ],
+    "engine_seed": 1545870553,
+    "action_seed": 15789904550047152085
+  },
+  {
+    "index": 122,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.606869,
+      0.188255
+    ],
+    "teammate": [
+      0.744178,
+      -0.191609
+    ],
+    "defender": [
+      0.715696,
+      0.065039
+    ],
+    "engine_seed": 1853919863,
+    "action_seed": 8460443235488755770
+  },
+  {
+    "index": 123,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.654431,
+      0.103551
+    ],
+    "teammate": [
+      0.818285,
+      -0.150887
+    ],
+    "defender": [
+      0.744642,
+      -0.013421
+    ],
+    "engine_seed": 330472148,
+    "action_seed": 1711075433876769839
+  },
+  {
+    "index": 124,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.665189,
+      -0.039859
+    ],
+    "teammate": [
+      0.760864,
+      0.242038
+    ],
+    "defender": [
+      0.76763,
+      0.020874
+    ],
+    "engine_seed": 741755083,
+    "action_seed": 12810348347214972948
+  },
+  {
+    "index": 125,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.625257,
+      -0.122496
+    ],
+    "teammate": [
+      0.745541,
+      0.247595
+    ],
+    "defender": [
+      0.739585,
+      -0.087521
+    ],
+    "engine_seed": 1577284569,
+    "action_seed": 5913197420967642233
+  },
+  {
+    "index": 126,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.639487,
+      0.123101
+    ],
+    "teammate": [
+      0.796046,
+      -0.250079
+    ],
+    "defender": [
+      0.739345,
+      -0.010021
+    ],
+    "engine_seed": 1302519915,
+    "action_seed": 14723502371829170286
+  },
+  {
+    "index": 127,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.651354,
+      0.21769
+    ],
+    "teammate": [
+      0.768339,
+      -0.224949
+    ],
+    "defender": [
+      0.719336,
+      0.087213
+    ],
+    "engine_seed": 35591246,
+    "action_seed": 7970501818161912915
+  },
+  {
+    "index": 128,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.571775,
+      -0.113728
+    ],
+    "teammate": [
+      0.741982,
+      0.178812
+    ],
+    "defender": [
+      0.644926,
+      -0.081112
+    ],
+    "engine_seed": 298073803,
+    "action_seed": 622999321711270072
+  },
+  {
+    "index": 129,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.485492,
+      0.002756
+    ],
+    "teammate": [
+      0.628791,
+      -0.202681
+    ],
+    "defender": [
+      0.573972,
+      0.053846
+    ],
+    "engine_seed": 273002764,
+    "action_seed": 12316742807390672045
+  },
+  {
+    "index": 130,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.569342,
+      0.011003
+    ],
+    "teammate": [
+      0.71175,
+      -0.14813
+    ],
+    "defender": [
+      0.675227,
+      -0.018636
+    ],
+    "engine_seed": 1566674786,
+    "action_seed": 5418492361192099986
+  },
+  {
+    "index": 131,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.652772,
+      0.118426
+    ],
+    "teammate": [
+      0.767259,
+      -0.149894
+    ],
+    "defender": [
+      0.76918,
+      -0.01574
+    ],
+    "engine_seed": 421388093,
+    "action_seed": 16535744239561845895
+  },
+  {
+    "index": 132,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.621198,
+      -0.086363
+    ],
+    "teammate": [
+      0.719201,
+      0.226612
+    ],
+    "defender": [
+      0.70331,
+      -0.042066
+    ],
+    "engine_seed": 1772198646,
+    "action_seed": 9764729295979227372
+  },
+  {
+    "index": 133,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.471247,
+      0.198207
+    ],
+    "teammate": [
+      0.601712,
+      -0.23482
+    ],
+    "defender": [
+      0.563705,
+      0.058148
+    ],
+    "engine_seed": 93963432,
+    "action_seed": 2435241739169342673
+  },
+  {
+    "index": 134,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.526101,
+      -0.052545
+    ],
+    "teammate": [
+      0.65517,
+      0.212446
+    ],
+    "defender": [
+      0.603396,
+      0.014415
+    ],
+    "engine_seed": 214337601,
+    "action_seed": 13983744128281354438
+  },
+  {
+    "index": 135,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.548562,
+      0.182769
+    ],
+    "teammate": [
+      0.670765,
+      -0.179114
+    ],
+    "defender": [
+      0.649092,
+      0.046947
+    ],
+    "engine_seed": 1648001914,
+    "action_seed": 8960117035460836651
+  },
+  {
+    "index": 136,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.679441,
+      -0.087101
+    ],
+    "teammate": [
+      0.794862,
+      0.146169
+    ],
+    "defender": [
+      0.761903,
+      0.031441
+    ],
+    "engine_seed": 1845262285,
+    "action_seed": 2189066770466683152
+  },
+  {
+    "index": 137,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.534855,
+      0.102403
+    ],
+    "teammate": [
+      0.633032,
+      -0.14985
+    ],
+    "defender": [
+      0.634097,
+      0.081927
+    ],
+    "engine_seed": 38178053,
+    "action_seed": 13306358368660272389
+  },
+  {
+    "index": 138,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.463801,
+      -0.177494
+    ],
+    "teammate": [
+      0.612816,
+      0.187123
+    ],
+    "defender": [
+      0.527805,
+      -0.058767
+    ],
+    "engine_seed": 1459018830,
+    "action_seed": 6556704307518910826
+  },
+  {
+    "index": 139,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.632922,
+      0.101512
+    ],
+    "teammate": [
+      0.717415,
+      -0.181277
+    ],
+    "defender": [
+      0.70408,
+      -0.021689
+    ],
+    "engine_seed": 1618453279,
+    "action_seed": 18088318206617292127
+  },
+  {
+    "index": 140,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.621207,
+      -0.201516
+    ],
+    "teammate": [
+      0.765879,
+      0.190994
+    ],
+    "defender": [
+      0.703163,
+      -0.094666
+    ],
+    "engine_seed": 1031393251,
+    "action_seed": 10758848113145612612
+  },
+  {
+    "index": 141,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.646375,
+      0.024529
+    ],
+    "teammate": [
+      0.740052,
+      -0.233407
+    ],
+    "defender": [
+      0.753404,
+      -0.004188
+    ],
+    "engine_seed": 1644302188,
+    "action_seed": 4005812237696533929
+  },
+  {
+    "index": 142,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.485452,
+      0.153834
+    ],
+    "teammate": [
+      0.621182,
+      -0.247692
+    ],
+    "defender": [
+      0.60006,
+      0.058599
+    ],
+    "engine_seed": 393683499,
+    "action_seed": 15121977927526646174
+  },
+  {
+    "index": 143,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.599951,
+      -0.191512
+    ],
+    "teammate": [
+      0.754639,
+      0.12456
+    ],
+    "defender": [
+      0.678025,
+      -0.052649
+    ],
+    "engine_seed": 1597357752,
+    "action_seed": 8351209403395710339
+  },
+  {
+    "index": 144,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.547836,
+      0.189343
+    ],
+    "teammate": [
+      0.660252,
+      -0.232121
+    ],
+    "defender": [
+      0.630143,
+      0.091169
+    ],
+    "engine_seed": 1237985946,
+    "action_seed": 17018525186346129896
+  },
+  {
+    "index": 145,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.602715,
+      -0.206457
+    ],
+    "teammate": [
+      0.709793,
+      0.219302
+    ],
+    "defender": [
+      0.674014,
+      -0.095019
+    ],
+    "engine_seed": 120454158,
+    "action_seed": 10264398698446755293
+  },
+  {
+    "index": 146,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.459321,
+      0.167062
+    ],
+    "teammate": [
+      0.549443,
+      -0.13797
+    ],
+    "defender": [
+      0.526202,
+      0.074498
+    ],
+    "engine_seed": 552498350,
+    "action_seed": 2934906460123697602
+  },
+  {
+    "index": 147,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.504889,
+      0.028604
+    ],
+    "teammate": [
+      0.598927,
+      -0.174161
+    ],
+    "defender": [
+      0.604744,
+      -0.020428
+    ],
+    "engine_seed": 426362130,
+    "action_seed": 14610644411970982455
+  },
+  {
+    "index": 148,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.527248,
+      0.207757
+    ],
+    "teammate": [
+      0.701584,
+      -0.241568
+    ],
+    "defender": [
+      0.628711,
+      0.080254
+    ],
+    "engine_seed": 1534772808,
+    "action_seed": 7713493082164522524
+  },
+  {
+    "index": 149,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.618435,
+      0.041892
+    ],
+    "teammate": [
+      0.701683,
+      -0.242535
+    ],
+    "defender": [
+      0.722544,
+      -0.010823
+    ],
+    "engine_seed": 1760340154,
+    "action_seed": 382897080194886145
+  },
+  {
+    "index": 150,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.540034,
+      0.042893
+    ],
+    "teammate": [
+      0.624869,
+      -0.181458
+    ],
+    "defender": [
+      0.600185,
+      -0.028584
+    ],
+    "engine_seed": 1331248308,
+    "action_seed": 12076640557291693686
+  },
+  {
+    "index": 151,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.494265,
+      -0.001836
+    ],
+    "teammate": [
+      0.650203,
+      0.243617
+    ],
+    "defender": [
+      0.592747,
+      -0.041399
+    ],
+    "engine_seed": 1867678314,
+    "action_seed": 4729138327095730779
+  },
+  {
+    "index": 152,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.539802,
+      0.142985
+    ],
+    "teammate": [
+      0.713829,
+      -0.133583
+    ],
+    "defender": [
+      0.600412,
+      0.073995
+    ],
+    "engine_seed": 126194280,
+    "action_seed": 16422881855762562624
+  },
+  {
+    "index": 153,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.558548,
+      -0.102324
+    ],
+    "teammate": [
+      0.732386,
+      0.185012
+    ],
+    "defender": [
+      0.624537,
+      -0.024918
+    ],
+    "engine_seed": 270947001,
+    "action_seed": 11258495456253246133
+  },
+  {
+    "index": 154,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.636658,
+      -0.142215
+    ],
+    "teammate": [
+      0.762165,
+      0.151239
+    ],
+    "defender": [
+      0.703116,
+      -0.087549
+    ],
+    "engine_seed": 1636098918,
+    "action_seed": 4487471699395638938
+  },
+  {
+    "index": 155,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.577093,
+      0.152099
+    ],
+    "teammate": [
+      0.670213,
+      -0.214317
+    ],
+    "defender": [
+      0.641062,
+      0.046067
+    ],
+    "engine_seed": 901739107,
+    "action_seed": 15604754432809497231
+  },
+  {
+    "index": 156,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.518816,
+      -0.045164
+    ],
+    "teammate": [
+      0.604622,
+      0.231594
+    ],
+    "defender": [
+      0.638763,
+      0.037565
+    ],
+    "engine_seed": 1555228483,
+    "action_seed": 8851727362018332404
+  },
+  {
+    "index": 157,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.672077,
+      -0.127642
+    ],
+    "teammate": [
+      0.809099,
+      0.230288
+    ],
+    "defender": [
+      0.776266,
+      -0.076657
+    ],
+    "engine_seed": 210741170,
+    "action_seed": 1953485720370334425
+  },
+  {
+    "index": 158,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.475604,
+      -0.05914
+    ],
+    "teammate": [
+      0.63915,
+      0.224544
+    ],
+    "defender": [
+      0.585328,
+      -0.022009
+    ],
+    "engine_seed": 1592090525,
+    "action_seed": 13052744907363337934
+  },
+  {
+    "index": 159,
+    "group": 3,
+    "group_name": "close_defender",
+    "attacker": [
+      0.594965,
+      0.175094
+    ],
+    "teammate": [
+      0.720106,
+      -0.19342
+    ],
+    "defender": [
+      0.661678,
+      0.095648
+    ],
+    "engine_seed": 619931050,
+    "action_seed": 6299709169353474867
+  },
+  {
+    "index": 160,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.608238,
+      0.000683
+    ],
+    "teammate": [
+      0.779045,
+      -0.24
+    ],
+    "defender": [
+      0.752472,
+      -0.056912
+    ],
+    "engine_seed": 1251599025,
+    "action_seed": 17416996206291935000
+  },
+  {
+    "index": 161,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.44726,
+      -0.073645
+    ],
+    "teammate": [
+      0.496913,
+      -0.282038
+    ],
+    "defender": [
+      0.568486,
+      -0.033183
+    ],
+    "engine_seed": 1570693444,
+    "action_seed": 10662843330079939341
+  },
+  {
+    "index": 162,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.497999,
+      -0.054886
+    ],
+    "teammate": [
+      0.526644,
+      0.191405
+    ],
+    "defender": [
+      0.685519,
+      -0.04735
+    ],
+    "engine_seed": 123119485,
+    "action_seed": 865409419758032754
+  },
+  {
+    "index": 163,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.609669,
+      -0.092274
+    ],
+    "teammate": [
+      0.667427,
+      0.299852
+    ],
+    "defender": [
+      0.804829,
+      -0.065301
+    ],
+    "engine_seed": 1598821440,
+    "action_seed": 12559144315508216679
+  },
+  {
+    "index": 164,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.521039,
+      -0.155679
+    ],
+    "teammate": [
+      0.590132,
+      0.06156
+    ],
+    "defender": [
+      0.693277,
+      -0.096461
+    ],
+    "engine_seed": 643213939,
+    "action_seed": 5228803408959483724
+  },
+  {
+    "index": 165,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.631891,
+      -0.097014
+    ],
+    "teammate": [
+      0.691996,
+      0.24
+    ],
+    "defender": [
+      0.811212,
+      -0.02239
+    ],
+    "engine_seed": 1288264889,
+    "action_seed": 16922555587686247345
+  },
+  {
+    "index": 166,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.513249,
+      -0.122015
+    ],
+    "teammate": [
+      0.719251,
+      0.057778
+    ],
+    "defender": [
+      0.670287,
+      -0.070234
+    ],
+    "engine_seed": 1345914846,
+    "action_seed": 9575044655886280614
+  },
+  {
+    "index": 167,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.673955,
+      0.164876
+    ],
+    "teammate": [
+      0.786308,
+      0.024445
+    ],
+    "defender": [
+      0.79937,
+      0.09142
+    ],
+    "engine_seed": 796026249,
+    "action_seed": 2677920118050136971
+  },
+  {
+    "index": 168,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.617639,
+      0.074225
+    ],
+    "teammate": [
+      0.758346,
+      -0.014114
+    ],
+    "defender": [
+      0.809553,
+      0.006633
+    ],
+    "engine_seed": 798919162,
+    "action_seed": 14375045332137918448
+  },
+  {
+    "index": 169,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.529922,
+      0.06812
+    ],
+    "teammate": [
+      0.604925,
+      -0.228238
+    ],
+    "defender": [
+      0.67686,
+      -0.002129
+    ],
+    "engine_seed": 1287813176,
+    "action_seed": 7027534477681048549
+  },
+  {
+    "index": 170,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.580793,
+      0.099877
+    ],
+    "teammate": [
+      0.709224,
+      -0.24
+    ],
+    "defender": [
+      0.755508,
+      0.081129
+    ],
+    "engine_seed": 615010517,
+    "action_seed": 274542573943568330
+  },
+  {
+    "index": 171,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.49214,
+      0.103075
+    ],
+    "teammate": [
+      0.554104,
+      0.228413
+    ],
+    "defender": [
+      0.627332,
+      0.066554
+    ],
+    "engine_seed": 1910607547,
+    "action_seed": 13553517944085295167
+  },
+  {
+    "index": 172,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.513484,
+      -0.084279
+    ],
+    "teammate": [
+      0.606208,
+      0.24
+    ],
+    "defender": [
+      0.690979,
+      -0.051839
+    ],
+    "engine_seed": 682567513,
+    "action_seed": 6799382703043873828
+  },
+  {
+    "index": 173,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.577713,
+      -0.135746
+    ],
+    "teammate": [
+      0.749091,
+      -0.0334
+    ],
+    "defender": [
+      0.77588,
+      -0.000895
+    ],
+    "engine_seed": 377587380,
+    "action_seed": 17898651209712207881
+  },
+  {
+    "index": 174,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.51175,
+      0.059252
+    ],
+    "teammate": [
+      0.657349,
+      -0.24
+    ],
+    "defender": [
+      0.699215,
+      0.066141
+    ],
+    "engine_seed": 1542830552,
+    "action_seed": 11145624293540791422
+  },
+  {
+    "index": 175,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.675558,
+      -0.022057
+    ],
+    "teammate": [
+      0.873079,
+      0.24
+    ],
+    "defender": [
+      0.874188,
+      0.053101
+    ],
+    "engine_seed": 772799466,
+    "action_seed": 3816167248313974883
+  },
+  {
+    "index": 176,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.441286,
+      -0.091471
+    ],
+    "teammate": [
+      0.528233,
+      -0.234705
+    ],
+    "defender": [
+      0.5797,
+      -0.058279
+    ],
+    "engine_seed": 1232212487,
+    "action_seed": 15364634504625101896
+  },
+  {
+    "index": 177,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.454599,
+      0.078343
+    ],
+    "teammate": [
+      0.651089,
+      0.280023
+    ],
+    "defender": [
+      0.592356,
+      -0.03998
+    ],
+    "engine_seed": 287086131,
+    "action_seed": 8593610721997691069
+  },
+  {
+    "index": 178,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.617021,
+      -0.015915
+    ],
+    "teammate": [
+      0.817318,
+      0.24
+    ],
+    "defender": [
+      0.785089,
+      0.005723
+    ],
+    "engine_seed": 1269225608,
+    "action_seed": 1264148995116930210
+  },
+  {
+    "index": 179,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.498617,
+      -0.16386
+    ],
+    "teammate": [
+      0.598638,
+      -0.288416
+    ],
+    "defender": [
+      0.636377,
+      -0.000419
+    ],
+    "engine_seed": 954102117,
+    "action_seed": 12957866161273442455
+  },
+  {
+    "index": 180,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.583551,
+      -0.043345
+    ],
+    "teammate": [
+      0.715693,
+      -0.207393
+    ],
+    "defender": [
+      0.768208,
+      -0.021239
+    ],
+    "engine_seed": 1560848921,
+    "action_seed": 3177320629259595004
+  },
+  {
+    "index": 181,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.582518,
+      -0.128142
+    ],
+    "teammate": [
+      0.644082,
+      0.037584
+    ],
+    "defender": [
+      0.731706,
+      -0.007549
+    ],
+    "engine_seed": 1752114323,
+    "action_seed": 14853040948664821985
+  },
+  {
+    "index": 182,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.540257,
+      0.018091
+    ],
+    "teammate": [
+      0.568193,
+      -0.192595
+    ],
+    "defender": [
+      0.70796,
+      0.058594
+    ],
+    "engine_seed": 1408587972,
+    "action_seed": 7523548822008685782
+  },
+  {
+    "index": 183,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.477106,
+      -0.007522
+    ],
+    "teammate": [
+      0.600413,
+      0.24
+    ],
+    "defender": [
+      0.626845,
+      0.013855
+    ],
+    "engine_seed": 340023599,
+    "action_seed": 770548414405959995
+  },
+  {
+    "index": 184,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.467785,
+      0.119343
+    ],
+    "teammate": [
+      0.662144,
+      0.30193
+    ],
+    "defender": [
+      0.646016,
+      -0.028759
+    ],
+    "engine_seed": 1285979383,
+    "action_seed": 11873449570050506016
+  },
+  {
+    "index": 185,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.488976,
+      0.212801
+    ],
+    "teammate": [
+      0.56891,
+      -0.185107
+    ],
+    "defender": [
+      0.665595,
+      0.00309
+    ],
+    "engine_seed": 357068551,
+    "action_seed": 4976333716638234901
+  },
+  {
+    "index": 186,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.629731,
+      0.123993
+    ],
+    "teammate": [
+      0.758283,
+      -0.002403
+    ],
+    "defender": [
+      0.752782,
+      0.073052
+    ],
+    "engine_seed": 821003022,
+    "action_seed": 16670068440623019386
+  },
+  {
+    "index": 187,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.453927,
+      -0.149177
+    ],
+    "teammate": [
+      0.572283,
+      0.24
+    ],
+    "defender": [
+      0.639428,
+      0.01106
+    ],
+    "engine_seed": 690653112,
+    "action_seed": 9339445646785933679
+  },
+  {
+    "index": 188,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.453301,
+      -0.112036
+    ],
+    "teammate": [
+      0.572893,
+      -0.304731
+    ],
+    "defender": [
+      0.646589,
+      0.005208
+    ],
+    "engine_seed": 813909829,
+    "action_seed": 2568439456342592852
+  },
+  {
+    "index": 189,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.633302,
+      -0.005026
+    ],
+    "teammate": [
+      0.749503,
+      0.296255
+    ],
+    "defender": [
+      0.830536,
+      -0.052306
+    ],
+    "engine_seed": 676138297,
+    "action_seed": 15991534438381734329
+  },
+  {
+    "index": 190,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.574083,
+      -0.006764
+    ],
+    "teammate": [
+      0.736516,
+      -0.100833
+    ],
+    "defender": [
+      0.698061,
+      0.040632
+    ],
+    "engine_seed": 757246183,
+    "action_seed": 9094418593589675438
+  },
+  {
+    "index": 191,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.664496,
+      0.071921
+    ],
+    "teammate": [
+      0.746986,
+      -0.24
+    ],
+    "defender": [
+      0.822402,
+      0.013369
+    ],
+    "engine_seed": 364799716,
+    "action_seed": 1763822600209056147
+  },
+  {
+    "index": 192,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.441288,
+      0.062123
+    ],
+    "teammate": [
+      0.598855,
+      -0.209951
+    ],
+    "defender": [
+      0.605864,
+      0.007989
+    ],
+    "engine_seed": 864330265,
+    "action_seed": 13439516674676743672
+  },
+  {
+    "index": 193,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.601864,
+      -0.146173
+    ],
+    "teammate": [
+      0.684124,
+      -0.231412
+    ],
+    "defender": [
+      0.740478,
+      -0.046322
+    ],
+    "engine_seed": 203055874,
+    "action_seed": 6110064121887152621
+  },
+  {
+    "index": 194,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.57516,
+      0.108022
+    ],
+    "teammate": [
+      0.619486,
+      0.015444
+    ],
+    "defender": [
+      0.726695,
+      0.086654
+    ],
+    "engine_seed": 1581497065,
+    "action_seed": 17659657269482411474
+  },
+  {
+    "index": 195,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.660059,
+      -0.033888
+    ],
+    "teammate": [
+      0.801562,
+      -0.246208
+    ],
+    "defender": [
+      0.847554,
+      0.049197
+    ],
+    "engine_seed": 4833825,
+    "action_seed": 10905521890968359367
+  },
+  {
+    "index": 196,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.611166,
+      -0.056828
+    ],
+    "teammate": [
+      0.65266,
+      0.24
+    ],
+    "defender": [
+      0.742065,
+      -0.005117
+    ],
+    "engine_seed": 1860427952,
+    "action_seed": 3558046220877419052
+  },
+  {
+    "index": 197,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.514823,
+      -0.045842
+    ],
+    "teammate": [
+      0.608477,
+      -0.192462
+    ],
+    "defender": [
+      0.674004,
+      -0.008883
+    ],
+    "engine_seed": 946328523,
+    "action_seed": 15251758533688405521
+  },
+  {
+    "index": 198,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.442866,
+      -0.065796
+    ],
+    "teammate": [
+      0.626857,
+      0.258128
+    ],
+    "defender": [
+      0.564222,
+      -0.023911
+    ],
+    "engine_seed": 1262852717,
+    "action_seed": 5616462980373621254
+  },
+  {
+    "index": 199,
+    "group": 4,
+    "group_name": "varied_support",
+    "attacker": [
+      0.510038,
+      0.163304
+    ],
+    "teammate": [
+      0.672203,
+      -0.24
+    ],
+    "defender": [
+      0.692549,
+      0.038556
+    ],
+    "engine_seed": 805817217,
+    "action_seed": 17151419437773006443
+  }
+]

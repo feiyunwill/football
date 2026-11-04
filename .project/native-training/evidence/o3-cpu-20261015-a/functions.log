@@ -1,0 +1,47 @@
+Functions sorted by metric: Exclusive Total CPU Time
+
+Excl. Total    Incl. Total     Name
+CPU            CPU
+  sec.      %    sec.      %
+59.200 100.00  59.200 100.00   <Total>
+ 5.500   9.29  10.300  17.40   blunted::Node::RecursiveUpdateSpatialData(blunted::e_SpatialDataType, blunted::e_SystemType)
+ 4.100   6.93   4.100   6.93   Ball::Mirror()
+ 3.100   5.24   3.100   5.24   <static>@0x8a5d2 (<libm.so.6>)
+ 3.100   5.24   6.700  11.32   AnimCollection::CrudeSelection(std::vector<int, std::allocator<int> >&, CrudeSelectionQuery const&)
+ 3.100   5.24   3.100   5.24   atan2f
+ 2.700   4.56   2.700   4.56   TimeNeeded AIReachabilityTrajectory::EstimateImpl<true>(blunted::Vector3 const&, blunted::Vector3 const&, blunted::Vector3 const&, float, bool, unsigned int, AIReachabilityTrajectory*)
+ 2.100   3.55   4.600   7.77   blunted::Geometry::RecursiveUpdateSpatialData(blunted::e_SpatialDataType, blunted::e_SystemType)
+ 2.100   3.55   4.400   7.43   blunted::Quaternion::GetNormalized() const
+ 2.100   3.55   2.100   3.55   blunted::Quaternion::Normalize()
+ 1.600   2.70  12.900  21.79   blunted::Animation::Apply(boost::intrusive_ptr<blunted::Node> const (&) [14], int, int, bool, float, blunted::Vector3 const&, blunted::radian, blunted::BiasedOffsets&, std::vector<blunted::MovementHistoryEntry, std::allocator<blunted::MovementHistoryEntry> >*, int, bool, bool)
+ 1.500   2.53   2.900   4.90   blunted::Animation::GetInterpolatedValues(blunted::KeyFrames const&, int, blunted::Quaternion&, blunted::Vector3&) const
+ 1.400   2.36   1.700   2.87   MentalImage::Mirror(bool, bool, bool)
+ 1.100   1.86   1.200   2.03   GetContext()
+ 1.000   1.69   1.900   3.21   HumanoidBase::CalculatePhysicsVector(blunted::Animation*, bool, blunted::Vector3 const&, bool, blunted::Vector3 const&, std::vector<blunted::Vector3, std::allocator<blunted::Vector3> >&, blunted::radian&) const
+ 1.000   1.69   2.100   3.55   blunted::Quaternion::GetSlerped(float, blunted::Quaternion const&) const
+ 0.900   1.52  10.200  17.23   HumanoidBase::Mirror()
+ 0.700   1.18   0.700   1.18   acosf
+ 0.700   1.18   0.700   1.18   blunted::Animation::GetIncomingVelocity() const
+ 0.700   1.18   0.700   1.18   blunted::intrusive_ptr_release(blunted::RefCounted*)
+ 0.600   1.01   0.600   1.01   <static>@0x175a00 (<libc.so.6>)
+ 0.600   1.01   1.200   2.03   HumanoidBase::GetMovementSimilarity(int, blunted::Vector3 const&, e_Velocity, float) const
+ 0.600   1.01   0.600   1.01   Match::GetAnimPositionCache(blunted::Animation*) const
+ 0.600   1.01   0.600   1.01   blunted::Spatial::InvalidateBoundingVolume()
+ 0.600   1.01   0.600   1.01   blunted::Spatial::InvalidateSpatialData()
+ 0.500   0.84   0.500   0.84   Ball::FillBallComponent(BallComponent&) const
+ 0.500   0.84   0.600   1.01   CalculateMovementAtFrame(std::vector<blunted::Vector3, std::allocator<blunted::Vector3> > const&, unsigned int, unsigned int)
+ 0.500   0.84   0.500   0.84   Match::CheckHumanoidCollision(Player*, Player*, std::vector<PlayerBounce, std::allocator<PlayerBounce> >&, std::vector<PlayerBounce, std::allocator<PlayerBounce> >&)
+ 0.500   0.84   0.500   0.84   Player::GetStat(PlayerStat) const
+ 0.500   0.84   3.400   5.74   Player::UpdatePossessionStats()
+ 0.500   0.84   0.500   0.84   PopulateCollisionResults(Match*)
+ 0.400   0.68  44.100  74.49   <static>@0x4d362 (<libpython3.14.so.1.0>)
+ 0.400   0.68   0.400   0.68   HumanoidBase::SetOffset(blunted::BodyPart, float, blunted::Quaternion const&, bool)
+ 0.400   0.68   1.200   2.03   TeamAIController::GetAdaptedFormationPosition(Player*, bool)
+ 0.400   0.68   0.400   0.68   blunted::ModulateIntoRange(float, float, blunted::radian)
+ 0.400   0.68   0.600   1.01   blunted::Quaternion::MakeSameNeighborhood(blunted::Quaternion const&)
+ 0.400   0.68   0.400   0.68   blunted::Quaternion::operator*(blunted::Quaternion const&) const
+ 0.400   0.68   0.400   0.68   blunted::Quaternion::scale(float)
+ 0.400   0.68   0.500   0.84   void std::__merge_sort_with_buffer<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int*, HumanoidBase::_KeepBestDirectionAnims(std::vector<int, std::allocator<int> >&, PlayerCommand const&, bool, blunted::radian, int, int)::{lambda(int, int)#1}>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int*, HumanoidBase::_KeepBestDirectionAnims(std::vector<int, std::allocator<int> >&, PlayerCommand const&, bool, blunted::radian, int, int)::{lambda(int, int)#1})
+ 0.300   0.51   0.400   0.68   <static>@0x49a96 (<libc.so.6>)
+
+Print limit set to 40

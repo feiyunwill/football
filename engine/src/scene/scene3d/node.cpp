@@ -20,6 +20,8 @@
 #include "../../main.hpp"
 #include "../../scene/objectfactory.hpp"
 #include "scene3d.hpp"
+#include "../objects/geometry.hpp"
+#include <typeinfo>
 
 namespace blunted {
 
@@ -62,6 +64,7 @@ Node::Node(const Node &source, const std::string &postfix,
 Node::~Node() { DO_VALIDATION; }
 
 void Node::Exit() {
+  InvalidatePruningEligibility();
   DO_VALIDATION;
   int objCount = objects_.size();
   for (int i = 0; i < objCount; i++) {
@@ -78,6 +81,7 @@ void Node::Exit() {
 }
 
 void Node::AddNode(boost::intrusive_ptr<Node> node) {
+  InvalidatePruningEligibility();
   DO_VALIDATION;
   nodes_.push_back(node);
   node->SetParent(this);
@@ -86,6 +90,7 @@ void Node::AddNode(boost::intrusive_ptr<Node> node) {
 }
 
 void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
+  InvalidatePruningEligibility();
   DO_VALIDATION;
   std::vector<boost::intrusive_ptr<Node> >::iterator nodeIter =
       find(nodes_.begin(), nodes_.end(), node);
@@ -107,6 +112,7 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
   }
 
   void Node::AddObject(boost::intrusive_ptr<Object> object) {
+    InvalidatePruningEligibility();
     DO_VALIDATION;
     assert(object.get());
     objects_.push_back(object);
@@ -133,6 +139,7 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
 
   void Node::DeleteObject(boost::intrusive_ptr<Object> object,
                           bool exitObject) {
+    InvalidatePruningEligibility();
     DO_VALIDATION;
     std::vector < boost::intrusive_ptr<Object> >::iterator objIter = find(objects_.begin(), objects_.end(), object);
     if (objIter != objects_.end()) {
@@ -180,6 +187,7 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
   }
 
   void Node::ProcessState(EnvState* state) {
+    NoteSpatialDataRead();
     state->process(position_);
     state->process(rotation_);
     state->process(scale_);
@@ -209,10 +217,38 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
     }
   }
 
+  void Node::InvalidatePruningEligibility() {
+    for (Node* node = this; node; node = node->parent_) {
+      node->pruning_eligibility_ = -1;
+      node->subtree_invalidation_complete_ = false;
+    }
+  }
+
+  bool Node::CanPruneHeadlessInvalidation() const {
+    if (pruning_eligibility_ != -1) return pruning_eligibility_ == 1;
+    bool eligible = typeid(*this) == typeid(Node);
+    for (const auto& node : nodes_) {
+      if (node->parent_ != this || !node->CanPruneHeadlessInvalidation())
+        eligible = false;
+    }
+    for (const auto& object : objects_) {
+      if (object->parent_ != this || typeid(*object) != typeid(Geometry))
+        eligible = false;
+    }
+    pruning_eligibility_ = eligible ? 1 : 0;
+    return eligible;
+  }
+
   void Node::RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
                                         e_SystemType excludeSystem) {
     DO_VALIDATION;
 
+    // GetGraphicsSystem is also the existing null-safe context lookup. Trees
+    // used outside a selected environment retain the original update path.
+    const bool canReuse = GetGraphicsSystem() && !GetGameConfig().render &&
+                          !GetTracker()->enabled() && CanPruneHeadlessInvalidation();
+    if (canReuse && subtree_invalidation_complete_) return;
+    NoteSpatialDataRead();
     InvalidateSpatialData();
     InvalidateBoundingVolume();
     int nodesSize = nodes_.size();
@@ -226,9 +262,13 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
       DO_VALIDATION;
       objects_[i]->RecursiveUpdateSpatialData(spatialDataType, excludeSystem);
     }
+    // Exact Geometry in headless mode has no callbacks or derived reads. Other
+    // dynamic types, rendering and active tracker verification never cache.
+    if (canReuse) subtree_invalidation_complete_ = true;
   }
 
   AABB Node::GetAABB() const {
+    NoteSpatialDataRead();
     AABB tmp;
     if (aabb_.dirty == true) {
       DO_VALIDATION;

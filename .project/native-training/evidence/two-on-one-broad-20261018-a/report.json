@@ -1,0 +1,517 @@
+{
+  "passed": true,
+  "agreed_next_goal_complete": true,
+  "source_sha256": "791f505b9fa664af2598645286b792fc258743caa5d81c602ee3dd2c88c3826f",
+  "completed_at": "2026-10-18T14:25:53.405512+00:00",
+  "quality": {
+    "passed": true,
+    "report": "/root/work_space/football/.project/native-training/evidence/two-on-one-quality-20261018-final/report.json",
+    "source_sha256": "791f505b9fa664af2598645286b792fc258743caa5d81c602ee3dd2c88c3826f"
+  },
+  "generalization_passed": true,
+  "success_mean": 0.874,
+  "seeds": [
+    {
+      "seed": 42,
+      "success": 0.875,
+      "initial": 0.68,
+      "random": 0.68,
+      "builtin_ai": 0.98,
+      "argmax": 0.87,
+      "cooperation": 0.845,
+      "cooperative_success": 0.78,
+      "groups": {
+        "interpolation": {
+          "trained_sample": 0.825,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.625,
+          "uniform_random": 0.625,
+          "builtin_ai": 1.0
+        },
+        "deeper_attack": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.975,
+          "initial_sample": 0.725,
+          "uniform_random": 0.775,
+          "builtin_ai": 1.0
+        },
+        "wide_attack": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.575,
+          "uniform_random": 0.55,
+          "builtin_ai": 0.925
+        },
+        "close_defender": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.675,
+          "uniform_random": 0.725,
+          "builtin_ai": 1.0
+        },
+        "varied_support": {
+          "trained_sample": 0.875,
+          "trained_argmax": 0.825,
+          "initial_sample": 0.8,
+          "uniform_random": 0.725,
+          "builtin_ai": 0.975
+        }
+      }
+    },
+    {
+      "seed": 123,
+      "success": 0.795,
+      "initial": 0.66,
+      "random": 0.68,
+      "builtin_ai": 0.98,
+      "argmax": 0.18,
+      "cooperation": 0.645,
+      "cooperative_success": 0.59,
+      "groups": {
+        "interpolation": {
+          "trained_sample": 0.725,
+          "trained_argmax": 0.2,
+          "initial_sample": 0.575,
+          "uniform_random": 0.625,
+          "builtin_ai": 1.0
+        },
+        "deeper_attack": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.325,
+          "initial_sample": 0.8,
+          "uniform_random": 0.775,
+          "builtin_ai": 1.0
+        },
+        "wide_attack": {
+          "trained_sample": 0.725,
+          "trained_argmax": 0.0,
+          "initial_sample": 0.6,
+          "uniform_random": 0.55,
+          "builtin_ai": 0.925
+        },
+        "close_defender": {
+          "trained_sample": 0.825,
+          "trained_argmax": 0.2,
+          "initial_sample": 0.725,
+          "uniform_random": 0.725,
+          "builtin_ai": 1.0
+        },
+        "varied_support": {
+          "trained_sample": 0.725,
+          "trained_argmax": 0.175,
+          "initial_sample": 0.6,
+          "uniform_random": 0.725,
+          "builtin_ai": 0.975
+        }
+      }
+    },
+    {
+      "seed": 2026,
+      "success": 0.885,
+      "initial": 0.625,
+      "random": 0.68,
+      "builtin_ai": 0.98,
+      "argmax": 0.89,
+      "cooperation": 0.885,
+      "cooperative_success": 0.825,
+      "groups": {
+        "interpolation": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.6,
+          "uniform_random": 0.625,
+          "builtin_ai": 1.0
+        },
+        "deeper_attack": {
+          "trained_sample": 1.0,
+          "trained_argmax": 1.0,
+          "initial_sample": 0.575,
+          "uniform_random": 0.775,
+          "builtin_ai": 1.0
+        },
+        "wide_attack": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.65,
+          "uniform_random": 0.55,
+          "builtin_ai": 0.925
+        },
+        "close_defender": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.625,
+          "uniform_random": 0.725,
+          "builtin_ai": 1.0
+        },
+        "varied_support": {
+          "trained_sample": 0.875,
+          "trained_argmax": 0.9,
+          "initial_sample": 0.675,
+          "uniform_random": 0.725,
+          "builtin_ai": 0.975
+        }
+      }
+    },
+    {
+      "seed": 31415,
+      "success": 0.835,
+      "initial": 0.715,
+      "random": 0.68,
+      "builtin_ai": 0.98,
+      "argmax": 0.36,
+      "cooperation": 0.475,
+      "cooperative_success": 0.435,
+      "groups": {
+        "interpolation": {
+          "trained_sample": 0.775,
+          "trained_argmax": 0.4,
+          "initial_sample": 0.625,
+          "uniform_random": 0.625,
+          "builtin_ai": 1.0
+        },
+        "deeper_attack": {
+          "trained_sample": 0.95,
+          "trained_argmax": 0.725,
+          "initial_sample": 0.85,
+          "uniform_random": 0.775,
+          "builtin_ai": 1.0
+        },
+        "wide_attack": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.3,
+          "initial_sample": 0.75,
+          "uniform_random": 0.55,
+          "builtin_ai": 0.925
+        },
+        "close_defender": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.025,
+          "initial_sample": 0.675,
+          "uniform_random": 0.725,
+          "builtin_ai": 1.0
+        },
+        "varied_support": {
+          "trained_sample": 0.75,
+          "trained_argmax": 0.35,
+          "initial_sample": 0.675,
+          "uniform_random": 0.725,
+          "builtin_ai": 0.975
+        }
+      }
+    },
+    {
+      "seed": 271828,
+      "success": 0.98,
+      "initial": 0.77,
+      "random": 0.68,
+      "builtin_ai": 0.98,
+      "argmax": 0.915,
+      "cooperation": 0.9,
+      "cooperative_success": 0.895,
+      "groups": {
+        "interpolation": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.925,
+          "initial_sample": 0.675,
+          "uniform_random": 0.625,
+          "builtin_ai": 1.0
+        },
+        "deeper_attack": {
+          "trained_sample": 1.0,
+          "trained_argmax": 0.9,
+          "initial_sample": 0.85,
+          "uniform_random": 0.775,
+          "builtin_ai": 1.0
+        },
+        "wide_attack": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.975,
+          "initial_sample": 0.775,
+          "uniform_random": 0.55,
+          "builtin_ai": 0.925
+        },
+        "close_defender": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.975,
+          "initial_sample": 0.75,
+          "uniform_random": 0.725,
+          "builtin_ai": 1.0
+        },
+        "varied_support": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.8,
+          "initial_sample": 0.8,
+          "uniform_random": 0.725,
+          "builtin_ai": 0.975
+        }
+      }
+    }
+  ],
+  "groups": {
+    "interpolation": {
+      "trained_sample": 0.8300000000000001,
+      "trained_argmax": 0.645,
+      "initial_sample": 0.62,
+      "uniform_random": 0.625,
+      "builtin_ai": 1.0
+    },
+    "deeper_attack": {
+      "trained_sample": 0.9800000000000001,
+      "trained_argmax": 0.7849999999999999,
+      "initial_sample": 0.76,
+      "uniform_random": 0.775,
+      "builtin_ai": 1.0
+    },
+    "wide_attack": {
+      "trained_sample": 0.85,
+      "trained_argmax": 0.595,
+      "initial_sample": 0.67,
+      "uniform_random": 0.55,
+      "builtin_ai": 0.925
+    },
+    "close_defender": {
+      "trained_sample": 0.8699999999999999,
+      "trained_argmax": 0.58,
+      "initial_sample": 0.6900000000000001,
+      "uniform_random": 0.725,
+      "builtin_ai": 1.0
+    },
+    "varied_support": {
+      "trained_sample": 0.8400000000000001,
+      "trained_argmax": 0.61,
+      "initial_sample": 0.7100000000000001,
+      "uniform_random": 0.725,
+      "builtin_ai": 0.975
+    }
+  },
+  "versus_initial": {
+    "mean": 0.184,
+    "low": 0.118,
+    "high": 0.25
+  },
+  "versus_random": {
+    "mean": 0.194,
+    "low": 0.104,
+    "high": 0.284
+  },
+  "primary_episodes": 1000,
+  "distinct_geometries": 200,
+  "strategy_episodes": 5000,
+  "delivered_replayed_episodes": 1000,
+  "persistent_archive_replayed_episodes": 1000,
+  "reused_receipts": {
+    "/root/work_space/football/.project/native-training/evidence/two-on-one-audit-20261018-final/report.json": "8a34cff9c2054ebc0d99883296720e3cb5283dd129c99ab4f55393b403b974ff",
+    "/root/work_space/football/.project/native-training/evidence/two-on-one-quality-20261018-final/report.json": "c37333c0bab19086c839274dcb6b2f1b6d6ad72e65fade6736eda6ccf99cec71",
+    "/root/work_space/football/.project/native-training/evidence/two-on-one-baseline-20261018-final/report.json": "2ee22a32df6af608cd4ac1e9d15c7f9fb333afa7402207957b07e71d0e58a2a1",
+    "/root/work_space/football/.project/native-training/evidence/two-on-one-delivery-20261018-final/report.json": "ffac46eea5846406dc06b3b23df999da2922e79b9ce25d3c99d495d70b6aa85c"
+  },
+  "reused_duration_seconds": 1800.173151796,
+  "scope": "Five bounded geometry families,200 distinct geometries; selected models frozen. Not arbitrary starts or11v11.",
+  "resources": "Previous exact-source30-minute training/77-installed-test/resume receipts reused; no new training/speed claim",
+  "auditor_sha256": "5be15569792c1a8d203e90245c4b2b90305b4f6a8f6001f96e44d76e99d333fe",
+  "finalizer_sha256": "e697e4cfe591138d70c1b4214ef02ad5dcbf1f0a59e3d249dfc516f71271b2d2",
+  "archive_sha256": "5a107bf02f1f56c8b757633b88a64ce776249d3e1345f77dcda514cbdefb06fd",
+  "archive": "/root/work_space/football-artifacts/two-on-one-broad-20261018-a/football-two-on-one-broad-native.tar.gz",
+  "archived_receipts": [
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/31415-uniform_random.log",
+      "sha256": "f339bd88c43e9430e9d3d480e233c60d4028917e554776c5209f8672c66d35a7"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/31415-trained_sample.log",
+      "sha256": "bc1df36555f448508dc9cb06864969926046633c4a24a9cb79a31ab16461d12c"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/evaluate_two_on_one_generalization.cpp",
+      "sha256": "008ff783e809b2fd3eada225a3b11fa2c503ca8cf2ebbc8160c88936de039fe9"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/report.json",
+      "sha256": "6153f7e373c7548bbe3d1ad0510a4bf6a723034572d7a9b1f648f96fb142755c"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/link.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/42-builtin_ai.log",
+      "sha256": "2e92401c148ca74e3a3ac50824ef82e681ccb2e56bc17a9a2125cb4e8c91e406"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/legacy-uniform_random.log",
+      "sha256": "6f2bd50730522724fbafeaba48658604aac10f85f0510d81960e800b6abc8d9c"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/42-trained_argmax.log",
+      "sha256": "eb3f72325a817fb0595bdbd163f5bf6838d7a368bb4bee1a16df2e739d82db77"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/assess_two_on_one_generalization.py",
+      "sha256": "17e3de9a2c3c0bdd541baf0fe59e9ce68cf18f0c18782fac2efb6f89d4e941cc"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/2026-builtin_ai.log",
+      "sha256": "2e92401c148ca74e3a3ac50824ef82e681ccb2e56bc17a9a2125cb4e8c91e406"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/123-trained_argmax.log",
+      "sha256": "b952eee91c9487eda6e809a33e004cc9aefde4cd3205c37384ddd052e9f3fe96"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/42-initial_sample.log",
+      "sha256": "779bbf7673ec779a0a4c1d80518854c280756dee57ac968ab4854874ac685854"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/cases.txt",
+      "sha256": "64cff8c18839381f3aec4eedc08fcbe726885c52f5e20e30278102087de47391"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/compile.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/2026-trained_sample.log",
+      "sha256": "4ee9cc2921267fd5a4c950b3b4cc2aa345b4bd1f22de383947bd23508dee9555"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/42-uniform_random.log",
+      "sha256": "f339bd88c43e9430e9d3d480e233c60d4028917e554776c5209f8672c66d35a7"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/123-initial_sample.log",
+      "sha256": "ac6595126dd99bf8a9f5594c1999831e29e9f08db6b0cbd5559dabbe14e52f13"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/271828-uniform_random.log",
+      "sha256": "f339bd88c43e9430e9d3d480e233c60d4028917e554776c5209f8672c66d35a7"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/progress.json",
+      "sha256": "896b74b2be2d0f13d9a0ead9f41ea2a68daaf221ea17794e92a49a675ebc1987"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/legacy-trained_argmax.log",
+      "sha256": "4683bc1c74f7e7a7a94ce71440f5da8fba0941d0fdfff3a16de2263f1a7a4140"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/271828-trained_sample.log",
+      "sha256": "fee0aba97e7222a7da34093a00f798cccc1da9e737a17553a5fe371ceaae45f2"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/123-uniform_random.log",
+      "sha256": "f339bd88c43e9430e9d3d480e233c60d4028917e554776c5209f8672c66d35a7"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/31415-trained_argmax.log",
+      "sha256": "edb7df609e009b53037a953ec6f23f484d5978ea3663f3343f137609b2ae2ac4"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/271828-initial_sample.log",
+      "sha256": "bf77db7ccfa7461a23c84c512b3f15f62c628dc0b67027c482ab589b3ae056a9"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/legacy-trained_sample.log",
+      "sha256": "b679c79b0f309c535a23f39937dc888e0f2ece4331cd1aef80dc3ad6fb81acbc"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/271828-trained_argmax.log",
+      "sha256": "7477e6e6f699672afdfdba5efdbdd5224b9bac0fb0242e00f5db0ffa600e6122"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/2026-uniform_random.log",
+      "sha256": "f339bd88c43e9430e9d3d480e233c60d4028917e554776c5209f8672c66d35a7"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/271828-builtin_ai.log",
+      "sha256": "2e92401c148ca74e3a3ac50824ef82e681ccb2e56bc17a9a2125cb4e8c91e406"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/31415-builtin_ai.log",
+      "sha256": "2e92401c148ca74e3a3ac50824ef82e681ccb2e56bc17a9a2125cb4e8c91e406"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/2026-initial_sample.log",
+      "sha256": "e6ed5f947250971bd937b05ea2e97b96983e019c8639bef64e3dda1043931671"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/31415-initial_sample.log",
+      "sha256": "4621838d9b4a85717cbf6d92fc109f945800b21fc4cfb9ea05a0d14d1c6e6557"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/123-trained_sample.log",
+      "sha256": "f6bbff747d73cc1bacc0bb5755fce92044cba3fc65bd2cbfeb26618724ec1c3a"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/123-builtin_ai.log",
+      "sha256": "2e92401c148ca74e3a3ac50824ef82e681ccb2e56bc17a9a2125cb4e8c91e406"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/protocol.json",
+      "sha256": "5a6f0e4a508f9dc7495cf160b0b17e956540aa6d9865c84a36e944191b814462"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/42-trained_sample.log",
+      "sha256": "5034e29ba6b3386e903d3467789052bbfeab65e0c44b4191b4a39aea78463f49"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/legacy-builtin_ai.log",
+      "sha256": "99d3f27c1b01e5f0e61dc9aea71edfc9b0fdecae4f99ab54ccd8766ccf09b818"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/2026-trained_argmax.log",
+      "sha256": "431cf2c61fc43d96e2d6224fe1dd8e4acfae1f2b5c290165e9cbcd9f00b20a7b"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/legacy-initial_sample.log",
+      "sha256": "2d763472349de552c4c0449c0c6535e620e6130785c54aca7a5c0fcd29f2e350"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/cases.json",
+      "sha256": "9f417a53f8ef4c3d045ecf9124d1f3e73ec0bc661952ef3780ac4bf495b6b7fa"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/assessment/legacy.txt",
+      "sha256": "b2532bbad3c2e590257f34dab266f9eb752f020dd41f9d7394af68f010aa8035"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/audit/report.json",
+      "sha256": "71b6fe47a8d9fb78c22a0233dea421b71ae57f8a54a3e68b4f26264ea5e3a5fa"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/audit/audit_two_on_one_generalization.py",
+      "sha256": "5be15569792c1a8d203e90245c4b2b90305b4f6a8f6001f96e44d76e99d333fe"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/delivery/linkage.log",
+      "sha256": "176af03292b44b72b5f94a4c838dfbad6140b43eca3b2a59fd89c5538bed5d23"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/delivery/31415-trained_sample.log",
+      "sha256": "bc1df36555f448508dc9cb06864969926046633c4a24a9cb79a31ab16461d12c"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/delivery/report.json",
+      "sha256": "adc2b6cd6334dcad405a143896351700fa654317ce05388587a839887ad87c43"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/delivery/2026-trained_sample.log",
+      "sha256": "4ee9cc2921267fd5a4c950b3b4cc2aa345b4bd1f22de383947bd23508dee9555"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/delivery/271828-trained_sample.log",
+      "sha256": "fee0aba97e7222a7da34093a00f798cccc1da9e737a17553a5fe371ceaae45f2"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/delivery/verify_two_on_one_generalization_delivery.py",
+      "sha256": "d0e3840226c1c3bd0a76c75c939bf99d2f600a0f5c0b79c3c9a387f4dc09f0b8"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/delivery/123-trained_sample.log",
+      "sha256": "f6bbff747d73cc1bacc0bb5755fce92044cba3fc65bd2cbfeb26618724ec1c3a"
+    },
+    {
+      "path": ".project/native-training/evidence/two-on-one-broad-20261018-a/delivery/42-trained_sample.log",
+      "sha256": "5034e29ba6b3386e903d3467789052bbfeab65e0c44b4191b4a39aea78463f49"
+    }
+  ]
+}

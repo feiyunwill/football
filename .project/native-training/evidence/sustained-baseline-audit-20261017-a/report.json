@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "source_sha256": "7640b9befe4155bf3887f4f98e20fd056fc4d09127636c0d23da4a28a21fb96a",
+  "quality": {
+    "passed": true,
+    "report": "/root/work_space/football/.project/native-training/evidence/selected-digests-quality-20261017-a/report.json",
+    "source_sha256": "7640b9befe4155bf3887f4f98e20fd056fc4d09127636c0d23da4a28a21fb96a"
+  },
+  "duration_seconds": 1800.167185803,
+  "transitions": 1145600,
+  "updates": 4475,
+  "receipts": {
+    "sustained-ppo-20261017-a/report.json": "c6ed4ab9d6d721c461aaf023222d42724972962ba6e71f1a675f624e71139914",
+    "sustained-ppo-analysis-20261017-a/report.json": "af543d5dd80285ac2f347be825af5e43341abb78efc5b7fec2715996030b0b15",
+    "sustained-checkpoint-load-20261017-a/report.json": "3b6fa18e5bc7f176d1fdbb6fe8d6af92d9019405c2fa9122b37af95fdd761b81",
+    "selected-digests-quality-20261017-a/report.json": "368f7b6e5aac1fef18b51bd8a6dff888fb9441aa4b23e58530ce8a136e0d4cdd"
+  },
+  "runner_sha256": "1145c701891dfdce7fd7cd4157a7d20dd8ee6490eed6d097fa658c71cc7a12a9",
+  "remaining": [
+    "Matched single-worker duration baseline and independent repeated scaling runs",
+    "Step RPC decomposition into engine, IPC and scheduling",
+    "Variable-start/keeper learning study, current wheel delivery, remote CI; GPU deferred"
+  ]
+}

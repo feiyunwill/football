@@ -11,8 +11,9 @@ void check(bool condition, const char* message) { if (!condition) throw std::inv
 void finite(double value) { check(std::isfinite(value), "Nonfinite PPO arithmetic"); }
 void sample_values(const PpoSample& sample) {
   for (double value : {sample.old_log_probability, sample.old_value, sample.reward,
-                       sample.next_value, sample.advantage, sample.target}) finite(value);
+                       sample.next_value, sample.entropy_multiplier, sample.advantage, sample.target}) finite(value);
   check(sample.old_log_probability <= 0, "Old categorical log probability must be nonpositive");
+  check(sample.entropy_multiplier > 0 && sample.entropy_multiplier <= 10, "Invalid PPO entropy multiplier");
   check(!sample.terminated || !sample.truncated, "Terminal takes precedence over truncation");
 }
 void optimizer_values(const AdamState& state, size_t count) {
@@ -64,13 +65,16 @@ std::vector<PpoSample> PrepareAdvantages(std::span<const PpoSample> samples, con
   }
   return result;
 }
-PpoGradient LossGradient(const CategoricalPolicy& policy, const PpoSample& sample, const PpoParameters& parameters) {
+namespace {
+// Scratch storage belongs to one update; no shared or checkpointed state.
+void loss_gradient(const CategoricalPolicy& policy, const PpoSample& sample,
+                   const PpoParameters& parameters, PpoGradient& result,
+                   std::vector<double>& derivative, std::vector<double>& hidden_derivative) {
   parameters.validate(); sample_values(sample);
   auto output = policy.forward(sample.observation);
   const auto& spec = policy.spec();
   CategoricalDistribution distribution(output.logits, spec.players, spec.actions());
   const double log_probability = distribution.log_probability(sample.actions);
-  PpoGradient result;
   result.ratio = std::exp(log_probability - sample.old_log_probability); finite(result.ratio);
   const double clipped_ratio = std::clamp(result.ratio, 1 - parameters.clip, 1 + parameters.clip);
   result.clipped = result.ratio != clipped_ratio;
@@ -80,12 +84,12 @@ PpoGradient LossGradient(const CategoricalPolicy& policy, const PpoSample& sampl
   const double error = output.value - sample.target;
   result.value_loss = .5 * error * error;
   result.entropy = distribution.entropy();
-  result.loss = result.policy_loss + parameters.value_coefficient * result.value_loss -
-                parameters.entropy_coefficient * result.entropy;
+  const double entropy_coefficient = parameters.entropy_coefficient * sample.entropy_multiplier;
+  result.loss = result.policy_loss + parameters.value_coefficient * result.value_loss - entropy_coefficient * result.entropy;
   finite(result.loss); finite(result.policy_loss); finite(result.value_loss);
   const double coefficient = saturated ? 0 : -sample.advantage * result.ratio;
   finite(coefficient);
-  std::vector<double> derivative(spec.outputs());
+  derivative.resize(spec.outputs());
   for (size_t player = 0; player < spec.players; ++player) {
     double entropy = 0;
     for (size_t action = 0; action < spec.actions(); ++action) {
@@ -96,12 +100,13 @@ PpoGradient LossGradient(const CategoricalPolicy& policy, const PpoSample& sampl
       const size_t index = player * spec.actions() + action;
       const double probability = distribution.probabilities()[index];
       derivative[index] = coefficient * ((static_cast<int>(action) == sample.actions[player] ? 1.0 : 0.0) - probability) +
-                          parameters.entropy_coefficient * probability * (distribution.log_probabilities()[index] + entropy);
+                          entropy_coefficient * probability * (distribution.log_probabilities()[index] + entropy);
     }
   }
   derivative.back() = parameters.value_coefficient * error;
-  result.gradient.assign(policy.parameters().size(), 0);
-  std::vector<double> hidden_derivative(spec.hidden);
+  // All parameter entries are overwritten below; retain capacity across samples.
+  result.gradient.resize(policy.parameters().size());
+  hidden_derivative.assign(spec.hidden, 0);
   for (size_t row = 0; row < spec.outputs(); ++row) {
     result.gradient[policy.output_bias_offset() + row] = derivative[row];
     for (size_t hidden = 0; hidden < spec.hidden; ++hidden) {
@@ -117,6 +122,12 @@ PpoGradient LossGradient(const CategoricalPolicy& policy, const PpoSample& sampl
     for (size_t i = 0; i < input.size(); ++i) result.gradient[hidden * input.size() + i] = delta * input[i];
   }
   for (double value : result.gradient) finite(value);
+}
+}  // namespace
+PpoGradient LossGradient(const CategoricalPolicy& policy, const PpoSample& sample, const PpoParameters& parameters) {
+  PpoGradient result;
+  std::vector<double> derivative, hidden_derivative;
+  loss_gradient(policy, sample, parameters, result, derivative, hidden_derivative);
   return result;
 }
 void AdamStep(CategoricalPolicy& policy, AdamState& state, std::span<const double> gradient,
@@ -156,13 +167,17 @@ PpoUpdate UpdatePpo(CategoricalPolicy& policy, AdamState& optimizer, PolicyRng& 
   std::vector<size_t> order(samples.size()); std::iota(order.begin(), order.end(), 0);
   PpoUpdate result;
   size_t evaluated = 0, batches = 0;
+  PpoGradient value;
+  std::vector<double> derivative, hidden_derivative;
+  std::vector<double> gradient(policy.parameters().size());
   for (size_t epoch = 0; epoch < parameters.epochs; ++epoch) {
     for (size_t i = order.size(); i > 1; --i) std::swap(order[i - 1], order[proposed_rng.index(i)]);
     for (size_t offset = 0; offset < order.size(); offset += parameters.minibatch) {
       const size_t count = std::min(parameters.minibatch, order.size() - offset);
-      std::vector<double> gradient(policy.parameters().size());
+      std::fill(gradient.begin(), gradient.end(), 0);
       for (size_t i = 0; i < count; ++i) {
-        auto value = LossGradient(proposed_policy, prepared[order[offset + i]], parameters);
+        loss_gradient(proposed_policy, prepared[order[offset + i]], parameters,
+                      value, derivative, hidden_derivative);
         result.loss += value.loss; result.entropy += value.entropy; result.clip_fraction += value.clipped;
         for (size_t j = 0; j < gradient.size(); ++j) gradient[j] += value.gradient[j] / count;
         ++evaluated;

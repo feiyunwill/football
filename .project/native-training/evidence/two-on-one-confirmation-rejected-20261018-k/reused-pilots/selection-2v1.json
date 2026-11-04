@@ -1,0 +1,18 @@
+{
+  "pilots": {
+    "sparse64": {
+      "cooperative_success": 0.75,
+      "cooperation": 0.75,
+      "success": 0.9375,
+      "checkpoint_sha256": "6ba23218508bc8f18fccf5dacef7bb75ab3fcb7273ad6ec588a93da7867cb56a"
+    },
+    "checkpoints64": {
+      "cooperative_success": 0.875,
+      "cooperation": 0.9375,
+      "success": 0.90625,
+      "checkpoint_sha256": "9be40d02db5c06f993abc36d1f8903a614d37c5eb483eb00844093d744429b41"
+    }
+  },
+  "selected": "sparse64",
+  "final": []
+}

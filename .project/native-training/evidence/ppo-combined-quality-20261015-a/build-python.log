@@ -1,0 +1,63 @@
+[  8%] Built target gui2lib
+[ 18%] Built target baselib
+[ 29%] Built target systemsgraphicslib
+[ 31%] Built target loaderslib
+[ 33%] Built target typeslib
+[ 43%] Built target scenelib
+[ 50%] Built target utilslib
+[ 50%] Built target blunted2
+[ 72%] Built target gamelib
+[ 81%] Built target menulib
+[ 85%] Built target datalib
+[ 87%] Building CXX object CMakeFiles/football_engine.dir/src/training/snapshot_identity.cpp.o
+[ 87%] Linking CXX shared library libfootball_engine.so
+[ 97%] Built target football_engine
+[ 97%] Linking CXX shared library libgame.so
+[100%] Built target game
+[  0%] Building CXX object CMakeFiles/football_categorical_policy.dir/src/training/categorical_policy.cpp.o
+[ 50%] Linking CXX static library libfootball_categorical_policy.a
+[ 50%] Built target football_categorical_policy
+[100%] Building CXX object CMakeFiles/categorical_policy_contract.dir/tests/categorical_policy_contract.cpp.o
+[100%] Linking CXX executable bin/categorical_policy_contract
+[100%] Built target categorical_policy_contract
+[ 33%] Built target football_categorical_policy
+[ 33%] Building CXX object CMakeFiles/football_ppo_math.dir/src/training/ppo_math.cpp.o
+[ 66%] Linking CXX static library libfootball_ppo_math.a
+[ 66%] Built target football_ppo_math
+[ 66%] Linking CXX executable bin/ppo_math_contract
+[100%] Built target ppo_math_contract
+[  2%] Built target football_categorical_policy
+[ 10%] Built target gui2lib
+[ 20%] Built target baselib
+[ 30%] Built target systemsgraphicslib
+[ 32%] Built target loaderslib
+[ 34%] Built target typeslib
+[ 44%] Built target scenelib
+[ 51%] Built target utilslib
+[ 51%] Built target blunted2
+[ 73%] Built target gamelib
+[ 81%] Built target menulib
+[ 85%] Built target datalib
+[ 97%] Built target football_engine
+[100%] Built target football_native_policy
+[100%] Linking CXX executable bin/native_policy_rollout
+[100%] Built target native_policy_rollout
+[  1%] Built target football_categorical_policy
+[  9%] Built target gui2lib
+[ 18%] Built target baselib
+[ 28%] Built target systemsgraphicslib
+[ 30%] Built target loaderslib
+[ 32%] Built target typeslib
+[ 41%] Built target scenelib
+[ 47%] Built target utilslib
+[ 47%] Built target blunted2
+[ 67%] Built target gamelib
+[ 75%] Built target menulib
+[ 79%] Built target datalib
+[ 90%] Built target football_engine
+[ 92%] Built target football_native_policy
+[ 94%] Built target football_ppo_math
+[ 96%] Built target football_ppo_learner
+[ 98%] Built target football_ppo_evaluation
+[ 98%] Linking CXX executable bin/native_ppo_train
+[100%] Built target native_ppo_train

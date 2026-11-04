@@ -1,0 +1,6 @@
+{
+  "initial_failure": "RTLD_NEXT did not find Python RTLD_LOCAL extension symbols; initial smoke failed",
+  "accepted_resolution": "Explicit existing-engine handle with RTLD_NOLOAD and dlsym; every original method called",
+  "counter_scope": "Creating engine thread; other threads not aggregated; includes actual-pool warmup",
+  "old_probe_abi": "Matches archived baseline only; never load it into a changed engine/header layout"
+}

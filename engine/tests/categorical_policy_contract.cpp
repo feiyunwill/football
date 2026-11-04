@@ -1,5 +1,6 @@
 #include "training/categorical_policy.hpp"
 #include <array>
+#include <bit>
 #include <cmath>
 #include <cstdio>
 #include <limits>
@@ -16,8 +17,43 @@ void array(std::span<const double> values) {
   for (size_t i = 0; i < values.size(); ++i) std::printf("%s%.17g", i ? "," : "", values[i]);
   std::printf("]");
 }
+// Independent scalar oracle: blocking must preserve each neuron's sum order,
+// including widths with a scalar tail and both observation/action layouts.
+void forward_scalar_contract() {
+  for (size_t players : {1u, 11u}) for (size_t features : {115u, 460u})
+    for (size_t width : {1u, 3u, 4u, 7u, 16u, 64u}) for (bool builtin : {false, true}) {
+      PolicySpec spec{players, features, width, true, builtin};
+      CategoricalPolicy policy(spec, 73);
+      ObservationBuffer observation(players, features);
+      for (size_t i=0; i<observation.buffer().size(); ++i)
+        observation.buffer()[i]=(int(i%31)-15)*.07f;
+      const auto actual=policy.forward(observation);
+      std::vector<double> hidden(width);
+      for (size_t h=0; h<width; ++h) {
+        double sum=policy.parameters()[policy.hidden_bias_offset()+h];
+        for (size_t i=0; i<observation.buffer().size(); ++i)
+          sum+=policy.parameters()[h*observation.buffer().size()+i]*observation.buffer()[i];
+        hidden[h]=std::tanh(sum);
+        require(std::bit_cast<uint64_t>(hidden[h])==std::bit_cast<uint64_t>(actual.hidden[h]));
+      }
+      for (size_t row=0; row<spec.outputs(); ++row) {
+        double sum=policy.parameters()[policy.output_bias_offset()+row];
+        for (size_t h=0; h<width; ++h)
+          sum+=policy.parameters()[policy.output_weights_offset()+row*width+h]*hidden[h];
+        const double value=row<actual.logits.size()?actual.logits[row]:actual.value;
+        require(std::bit_cast<uint64_t>(sum)==std::bit_cast<uint64_t>(value));
+      }
+    }
+  PolicySpec spec; spec.hidden=4;
+  CategoricalPolicy policy(spec,7); ObservationBuffer input(1);
+  auto weights=policy.parameters(); weights[0]=std::numeric_limits<double>::max();
+  policy.set_parameters(weights); input[0][0]=2;
+  PolicyRng rng(13); const auto before=rng.state();
+  rejects([&] { policy.decide(input,rng); }); require(rng.state()==before);
+}
 int main() {
   try {
+    forward_scalar_contract();
     PolicyRng gold(0);
     require(gold.next() == UINT64_C(0xe220a8397b1dcdaf));
     require(gold.next() == UINT64_C(0x6e789e6aa1b965f4));

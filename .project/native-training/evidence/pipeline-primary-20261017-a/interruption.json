@@ -1,0 +1,5 @@
+{
+  "status": "interrupted_environmental_contention",
+  "reason": "codebase-memory process observed at 749 percent CPU and 30.6 percent memory during timing; no performance acceptance; raw runs retained",
+  "action": "stop scheduling new runs; let already running child complete and reap its workers; retry only after isolation under unchanged numeric gates"
+}

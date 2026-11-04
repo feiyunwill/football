@@ -1,0 +1,26 @@
+{
+  "passed": true,
+  "scope": "Read-only source and historical receipt/artifact integrity audit only",
+  "verified_at": "2026-10-19T17:22:55.475270+00:00",
+  "source_sha256": "c1d57094a4eb3976a35ba3061d93bbea984d134a9f191af7a28bef9e4adf5ae8",
+  "historical_quality_receipt_integrity": true,
+  "current_runtime_verified": false,
+  "missing_runtime": "/tmp/football-native-training-venv/bin/python",
+  "integrity_files": 227,
+  "artifacts": [
+    {
+      "name": "acceptance.json",
+      "sha256": "a0d8da67eba742481b27cec1276af9f8a60fcedd65cc6bf9da9550c0bba27b10"
+    },
+    {
+      "name": "football-o21-native-inference.tar.gz",
+      "sha256": "b4fece2556bde0045bbc816eab30527c305125d585f4ce6494aa2899006e90aa"
+    },
+    {
+      "name": "gfootball-2.10.3-cp314-cp314-linux_x86_64.whl",
+      "sha256": "83a8338a07dff0b4c6d633704eb4b42c63827c5d7e0c1f7de3f3b72033b007a7"
+    }
+  ],
+  "missing_context_document": "docs/art_pipeline/??????.md",
+  "next_task": "Recreate isolated runtime in persistent external artifact directory; revalidate environment before training"
+}

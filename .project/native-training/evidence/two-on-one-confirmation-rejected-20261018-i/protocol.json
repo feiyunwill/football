@@ -1,0 +1,58 @@
+{
+  "training_objective": "raw goal/checkpoint rewards always preserved; first outfield teammate pass bonus0.5 once/episode; historical pass marker -1/+1 in padding slot21, consistent training/bootstrap/eval; raw engine snapshots unchanged; schema3 tracking",
+  "revision": "i; h validation superseded for weak worst-seed margin; add native sticky state in unused slots28..37; replication4/seeds900001..900004 still unopened",
+  "observation": "primary simple115 plus historical pass bit21 and current native sticky flags28..37; dimensions unchanged; train/bootstrap/eval consistent",
+  "fixed_teammate": "native slot2 always builtin19; primary learner slot1 actions0..18, one-row PPO projection; both native slots snapshotted",
+  "curriculum": "none; all training and evaluation are the actual full task; no goal masking or synthetic finishing practice",
+  "tasks": {
+    "2v1": [
+      0.5,
+      0.3
+    ]
+  },
+  "roster": "one fixed learning attacker, second native slot fixed builtinAI19 teammate, one engine-AI defender, two goalkeepers; AI logic fixed",
+  "configs": {
+    "sparse64": [],
+    "checkpoints64": [
+      "--checkpoints"
+    ]
+  },
+  "pilot_seed": 7,
+  "pilot_updates": 1024,
+  "final_training_seeds": [
+    42,
+    123,
+    2026,
+    31415,
+    271828
+  ],
+  "final_updates": 1024,
+  "rollout": 256,
+  "hidden": 64,
+  "cadence": 10,
+  "episode_limit": 256,
+  "epochs": 4,
+  "minibatch": 64,
+  "validation_seed": 88173,
+  "validation_episodes": 32,
+  "test_seeds": [
+    900001,
+    900002,
+    900003,
+    900004
+  ],
+  "test_episodes_per_batch": 50,
+  "test_horizon": 256,
+  "selection": "sampled-policy validation scoring success; insertion-order ties; frozen before held-out evaluation",
+  "geometry": "12 starts/partition; attacker x=.44+.06*i,y=-.16+.16*j; ball x=attacker x+.02; each partition adds .0125*partition to attacker x/y; AI teammate x+.12 opposite wing, defender x+.15/y*.25",
+  "evaluation_partition": "replication",
+  "primary_policy": "sample",
+  "pilot_only": false,
+  "argmax_reporting": "Retained as secondary raw/batch results; no greedy-performance claim",
+  "cooperation_gate": "each final seed: at least10% confirmation episodes with completed_passes>0, and at least10% jointly completed pass and score; decision-boundary approximation, requests are not kicks",
+  "pilot_gate": "validation success>=.3, fraction episodes with completed_passes>0>=.1, jointly completed pass and score>=.1; otherwise preserve pilots and stop before confirmation",
+  "success": "controlled_score_delta>0 before horizon; failures/truncations remain failures",
+  "gates": "task mean and per-training-seed minima in tasks; each seed beats initial and random; crossed paired bootstrap lower95>0 against both",
+  "statistics": "10000 crossed training-seed/shared-evaluation-column bootstrap draws, RNG20261015",
+  "scope": "Bounded fixed-attacker 2v1 with AI teammate/defender/GKs; not joint control or11v11; no confirmation-based retuning"
+}

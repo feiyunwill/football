@@ -21,6 +21,13 @@ int main() {
     CategoricalDistribution distribution(output.logits,2,19);
     sample.old_value = output.value;
     PpoParameters parameters;
+    sample.old_log_probability = distribution.log_probability(sample.actions); sample.advantage = 0;
+    const auto unit_entropy = LossGradient(policy,sample,parameters);
+    sample.entropy_multiplier = 2.5;
+    const auto boosted_entropy = LossGradient(policy,sample,parameters);
+    require(std::abs(boosted_entropy.loss-unit_entropy.loss+1.5*parameters.entropy_coefficient*unit_entropy.entropy)<1e-12);
+    sample.entropy_multiplier = 0; rejects([&] { LossGradient(policy,sample,parameters); });
+    sample.entropy_multiplier = 1;
     std::printf("{\"parameters\":"); array(weights);
     std::printf(",\"input\":[");
     for (size_t i=0; i<sample.observation.buffer().size(); ++i)

@@ -1,0 +1,31 @@
+{
+  "minimum_duration_seconds": 1800,
+  "requested_duration_seconds": 1800,
+  "players": 11,
+  "cadence": 2,
+  "workers": 4,
+  "hidden": 16,
+  "episodes_per_update": 4,
+  "horizon": 64,
+  "epochs": 4,
+  "minibatch": 64,
+  "source_sha256": "0058952fa3c56c4506a32cd89744a61d265f85fea8f81af14010736b73448011",
+  "checks": [
+    "current full quality receipt",
+    "source/environment/artifacts/tool hashes stable",
+    "positive finite PPO updates",
+    "disjoint phase costs reconcile",
+    "minute TPS",
+    "RSS and FD trend reported without invented acceptance threshold",
+    "complete checkpoint state restores in fresh process",
+    "all workers exit zero and reaped",
+    "parent FD returns to initial"
+  ],
+  "scope": "Current-source duration/resource/checkpoint baseline only. Not statistical scaling or football competence.",
+  "tools": {
+    "profile_sustained_ppo.py": "5f24971f52cfa7f25bff5393314ad8adb41c11ed1c160b4a3d53b73c566f6450",
+    "analyze_sustained_ppo.py": "cdc1e2e696cf40bf4be79008a05fa18d276415a0e2651044b1ec7ce8d87dd24a",
+    "verify_sustained_checkpoint.py": "cef30d2e9e713bd98fb5214a1ca24b8ad73986b07a4237556b23e749f64f420d"
+  },
+  "quality": ".project/native-training/evidence/spatial-candidate-quality-20261017-b/report.json"
+}

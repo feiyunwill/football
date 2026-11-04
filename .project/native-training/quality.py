@@ -17,7 +17,7 @@ import validate
 REQUIRED = frozenset('''python-environment cmake-version compiler-version
 configure-python build-python staged-module python-integration configure-native
 build-native native-contract snapshot-format-contract training-restore-contract
-training-soak-contract categorical-policy-contract native-policy-contract
+training-soak-contract spatial-invalidation-contract categorical-policy-contract native-policy-contract
 ppo-math-contract ppo-checkpoint-contract native-policy-rollout native-ppo-train
 native-ppo-linkage native-policy-linkage native-linkage'''.split())
 

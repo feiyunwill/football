@@ -1,0 +1,823 @@
+{
+  "files": [
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/build-native-contracts.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/build-native-contracts.log",
+      "sha256": "cebb4c8a3563ec47158afe85ce54dee532b6fe522fc611bd33f93c0df1652450"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/build-wheel.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/build-wheel.log",
+      "sha256": "2ce72f7574f2ebb1eff9526179493e0053c602d70ea124f8423f5938346bf83e"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/create-clean-venv.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/create-clean-venv.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/export-source.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/export-source.log",
+      "sha256": "b786ab68ceb369dd7500bbe623b34dc47291e49aae7873ae70a923bb70112a40"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/install-wheel.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/install-wheel.log",
+      "sha256": "406aac3ef154dffb0245763b94dafed14308118d7c40109d3f9f5c43f25740a8"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/installed-dependencies.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/installed-dependencies.log",
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/installed-integration.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/installed-integration.log",
+      "sha256": "7ddadaefe40a248cd723edb300db28a4ca49ab8b0f5f01a6ecd57d0656c6fb7d"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/installed-probe.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/installed-probe.log",
+      "sha256": "ec0889afb262d9b268f82af801d72b7877c49e809d06b028d8233555873c2d35"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/package-native.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/package-native.log",
+      "sha256": "927c1788398eb7a33caad3fc8330e1c42e964502956a022ac8ddbdca918307b2"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/relocated-native-elf.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/relocated-native-elf.log",
+      "sha256": "52b79f4e34f4db0f8cd974ba4c804a182433597a7dd63db08ae257f5b99f0a5e"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/relocated-native-frozen.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/relocated-native-frozen.log",
+      "sha256": "45eb6025cbd3f7ccc34f034f914cb4cbf6c9202185504a3862bcb96d13b29d05"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/relocated-native-full.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/relocated-native-full.log",
+      "sha256": "96b9ec6ab148dd35056ddd5be3807e481556891c1ea7296bfcbd5d3913b8204f"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/relocated-native-linkage.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/relocated-native-linkage.log",
+      "sha256": "b0d4b422c1fd34b6254f9f33803e864fb7a07c999d0aec1a50ced01032d1431a"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/relocated-native-prefix.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/relocated-native-prefix.log",
+      "sha256": "e965bab38763c79b798f2ca839698a67ae8ef74056372ae1532b21f935ee19bc"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/relocated-native-resume.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/relocated-native-resume.log",
+      "sha256": "0888ef20b324ff3c686599dffea19be787615659b0f6a1baad2adbd8a3ef46f1"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/report.json",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/report.json",
+      "sha256": "7aa00da3498e486f6da851deae74ffb1b0e513f23225f948eeb32b4a67f56754"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/snapshot-inputs-after.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/snapshot-inputs-after.log",
+      "sha256": "eb98788b97227fb18ad7e176e6553b3e0e672406ff0e5d2351ecd8fe3c57ee07"
+    },
+    {
+      "original": "/tmp/football-current-delivery-evidence-20261018-a/snapshot-inputs-match.log",
+      "archived": ".project/native-training/evidence/current-delivery-20261018-a/snapshot-inputs-match.log",
+      "sha256": "eb98788b97227fb18ad7e176e6553b3e0e672406ff0e5d2351ecd8fe3c57ee07"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-123-b0.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-123-b0.json",
+      "sha256": "7ddcfa0548443992f9ed4df459ee568ae7142476ade1d8a968fb0c651d7ce096"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-123-b0.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-123-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-123-b1.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-123-b1.json",
+      "sha256": "f84e10f1131c0fb43b53f817e56d24535d78938962093215153ca458eb742668"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-123-b1.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-123-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-123-b2.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-123-b2.json",
+      "sha256": "6738b2880166db8f2af4b72479a2495c6dd07d835b21d349534391ef68452f24"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-123-b2.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-123-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-123-b3.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-123-b3.json",
+      "sha256": "bd782dbda3809ff00eefae0afde308b2f2fadac24ca9b54e1ccc57ab218387c8"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-123-b3.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-123-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b0.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b0.json",
+      "sha256": "611d9030f85404cd987ba4723a49b059b9f1c04cb44b9294962c8d05adf63d04"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b0.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b1.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b1.json",
+      "sha256": "78edecb6325659a9abfe007d97420e6ee51a3acd793cb7800a11ea0ed50376e4"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b1.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b2.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b2.json",
+      "sha256": "2eed923e5718f963a91acf0affac41b8bed50257a479f946919387072fe124b2"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b2.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b3.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b3.json",
+      "sha256": "bd8031e47ec76e12930742f23654c6fd4ef95853432944b367a53efbf93d5f78"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b3.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-2026-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b0.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b0.json",
+      "sha256": "bb76b02868f7b9564c5433d20c5f7e219905cbe2729b8a30a49448675eb29424"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b0.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b1.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b1.json",
+      "sha256": "b7206855e87b2673b9a545a93ad403798e1fd9323a5f2c03d10a01373ea64ff7"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b1.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b2.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b2.json",
+      "sha256": "62550ab3eaba937db59e28b78abdadc4d2e883b2bd80075dea8b37f41243d1c5"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b2.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b3.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b3.json",
+      "sha256": "6178376e89dc48b35c491bfbf1229497adc16874314daedcc97f2f2ee07650a1"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b3.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-271828-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b0.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b0.json",
+      "sha256": "9b4c3ed5edf2c23ecbc19bfc1a14a42d8ec67c28f2976303c86903a79f879ad9"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b0.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b1.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b1.json",
+      "sha256": "ba8ecdb16fb82f953fe3bf7684408b9a7b2e7c19bdec9482f5ead66b74ee0b5b"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b1.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b2.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b2.json",
+      "sha256": "8e84e5d512a74c3ce6beace032c1122c1710153920fa936abbacc355007119e2"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b2.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b3.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b3.json",
+      "sha256": "7f244b27b8c68a5f648c74e5a311571ba692fc955b64bbceb13cd247148ce8d4"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b3.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-31415-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-42-b0.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-42-b0.json",
+      "sha256": "7c78853864ca93dd9e2e5ca0454896ee3b3dea08ae7dca623fad5bcbc40157b8"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-42-b0.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-42-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-42-b1.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-42-b1.json",
+      "sha256": "3344fb182ecf48252538bf9ac437f1da80e5d3bdd6f27c640f2f197ebd414a8c"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-42-b1.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-42-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-42-b2.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-42-b2.json",
+      "sha256": "15713420905b98a68622a580090aa8873dba5d03c6a1cdb03dfdfedb0b6d2499"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-42-b2.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-42-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-42-b3.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-42-b3.json",
+      "sha256": "71559cac7697a2a43af709e3f5cdd6ec85aba04161656b98ffb479f166929a2d"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_empty_goal-42-b3.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_empty_goal-42-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-123-b0.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-123-b0.json",
+      "sha256": "fe26abcb56ea795c6b7c8deb183795732c454a0c9dec6a03b933f9f507204404"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-123-b0.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-123-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-123-b1.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-123-b1.json",
+      "sha256": "1fdb746cf1225aa1501033bfe9f4fe6ca2826cf2efa1ac8bdd0c40355720d1c1"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-123-b1.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-123-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-123-b2.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-123-b2.json",
+      "sha256": "4f08d10c5adca7be55bc4935c9f2a5dd19141debf8e179a9c1f0c753d4c967c4"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-123-b2.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-123-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-123-b3.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-123-b3.json",
+      "sha256": "4bfba322ddbf9b73f4cbec2ad3b5fda105e649a35005763b83381ca7dd6a0f49"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-123-b3.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-123-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-2026-b0.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-2026-b0.json",
+      "sha256": "59c423ec5937ce3e4e456cb97693dd4fee93a830b49f50f30b3ea56d42e68fc4"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-2026-b0.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-2026-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-2026-b1.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-2026-b1.json",
+      "sha256": "228a207167504c50b1ee7f95374f72869ba90612820d87cf40143ee47b473fb6"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-2026-b1.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-2026-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-2026-b2.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-2026-b2.json",
+      "sha256": "743c6de6f747cbeb0d07d6fac238747cca803b77c2ce525da0d311f7edc6bb03"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-2026-b2.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-2026-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-2026-b3.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-2026-b3.json",
+      "sha256": "c2d093f93694955b76ce8b932e9a838ed9fb427431cbb5be4c3f7119f45a8266"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-2026-b3.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-2026-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-271828-b0.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-271828-b0.json",
+      "sha256": "b14cb9065162e4c161d7bf397878ff21cb230afec615cde2008ab09a160fadea"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-271828-b0.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-271828-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-271828-b1.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-271828-b1.json",
+      "sha256": "b233d035abc7333b7b45c4de5d4cfd5bf2ac0a1f591216b509a6174a8658496a"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-271828-b1.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-271828-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-271828-b2.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-271828-b2.json",
+      "sha256": "6bf8eece8ebce3dbe5efa3c93197c17ff1b36eb9133c676754306ee92c189d01"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-271828-b2.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-271828-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-271828-b3.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-271828-b3.json",
+      "sha256": "6be28a94394cf016004b5c1b3dbdcb73423f67f57fe0f0289228bf09b57e70cf"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-271828-b3.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-271828-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-31415-b0.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-31415-b0.json",
+      "sha256": "7ec82e240573b1e79e7230a62e958f01aa40b3a06bde77b3b5a55c49e3538928"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-31415-b0.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-31415-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-31415-b1.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-31415-b1.json",
+      "sha256": "f73d9266f89435d7af9ddf583461cbbe2573a3952f2c52b92eba3cc90320796d"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-31415-b1.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-31415-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-31415-b2.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-31415-b2.json",
+      "sha256": "3c384f1c71f6995f1c5dc4f7955c764df4fde14ae538f4450edf891065010d7b"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-31415-b2.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-31415-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-31415-b3.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-31415-b3.json",
+      "sha256": "b98c279acc6919f34eb2ac0250d83ed8a276679784e121c8aa5016b039c7d3f1"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-31415-b3.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-31415-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-42-b0.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-42-b0.json",
+      "sha256": "543f42ba6b3b1bfe9e5f8252a277fec7ba913822bb4f1faba06a4798198102d7"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-42-b0.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-42-b0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-42-b1.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-42-b1.json",
+      "sha256": "f16f15a24d070e30d40c70e1249580fda442999d6361dbf6efd867bf30bb76fd"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-42-b1.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-42-b1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-42-b2.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-42-b2.json",
+      "sha256": "e7023d5b769e21de34b06242dd29e35427a2531b9bd590d0b11a38f39d2bd49f"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-42-b2.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-42-b2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-42-b3.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-42-b3.json",
+      "sha256": "f4d5c963e8ef40ddb47997ea6434f7d0337b021bfb6a15d4cd3f9179ca834ad6"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/frozen-varied_keeper-42-b3.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/frozen-varied_keeper-42-b3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/report.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/report.json",
+      "sha256": "1927779751d17c6d8ab8406c4a3bc0f2bf503826287bcaf9a36ecb13ac3556a8"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_empty_goal-123.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_empty_goal-123.json",
+      "sha256": "0ba962bee556ca27cd3f357910f78979d94c15c0b243732e33c5e30ea57c89f3"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_empty_goal-123.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_empty_goal-123.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_empty_goal-2026.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_empty_goal-2026.json",
+      "sha256": "7dc6ae750e69ce970f4b901aeacb147799a5d119e0e924e5cb43f22a0d90520e"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_empty_goal-2026.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_empty_goal-2026.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_empty_goal-271828.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_empty_goal-271828.json",
+      "sha256": "02af4f2a83d87a7613a275c814943b6600ef6ea866fecbaa3843a34b8b1e55b5"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_empty_goal-271828.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_empty_goal-271828.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_empty_goal-31415.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_empty_goal-31415.json",
+      "sha256": "7848e54b45e3e2eedb3f417630d7a5298a898dc18520fa4e42049c4ed2c8b47e"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_empty_goal-31415.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_empty_goal-31415.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_empty_goal-42.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_empty_goal-42.json",
+      "sha256": "6c37bc1f5b7765ea765b1694af6ce054379d31f5798899290083a6ba41b35832"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_empty_goal-42.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_empty_goal-42.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_keeper-123.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_keeper-123.json",
+      "sha256": "6410df7f5a11c910faf0fe74329246af60957653104d6a37a2eaca632f6127e2"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_keeper-123.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_keeper-123.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_keeper-2026.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_keeper-2026.json",
+      "sha256": "69cfb767493761647522b339274c49ee328a21afa0494df799d320c428d524ad"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_keeper-2026.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_keeper-2026.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_keeper-271828.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_keeper-271828.json",
+      "sha256": "1045ff4049b39847377f93d1917b9c8b7cc0ac57827214bb0d974a1ddd4bf26d"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_keeper-271828.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_keeper-271828.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_keeper-31415.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_keeper-31415.json",
+      "sha256": "2cf252c224977235b0fedb34b6e999c1affc4c3e1e0a421dd628d21c9fb15940"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_keeper-31415.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_keeper-31415.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_keeper-42.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_keeper-42.json",
+      "sha256": "d2d65899ed8ca311ac6127f426afb54e6c707c54a6d377d9cefae13bacf88d7a"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-delivered-varied_keeper-42.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-delivered-varied_keeper-42.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_empty_goal-123.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_empty_goal-123.json",
+      "sha256": "b56d49484ec1346da6f8c030655c5eb3388f6b9b68285d0f1b200cc4da3b8b38"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_empty_goal-123.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_empty_goal-123.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_empty_goal-2026.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_empty_goal-2026.json",
+      "sha256": "5e41c6633c87aa3d83b3c0768b10ab5a654653da2d196363a5e6d80642729158"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_empty_goal-2026.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_empty_goal-2026.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_empty_goal-271828.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_empty_goal-271828.json",
+      "sha256": "6ff0a2d91ec769d4dc83388afd069e053173fceb6e1f02fa2cca69034bfddeab"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_empty_goal-271828.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_empty_goal-271828.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_empty_goal-31415.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_empty_goal-31415.json",
+      "sha256": "6d86b00adc066ba8296a73fc19765e0ab4c946b15d95e91ad1bdf5384368f76d"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_empty_goal-31415.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_empty_goal-31415.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_empty_goal-42.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_empty_goal-42.json",
+      "sha256": "ac3e293312379a86c7157aef24ed30ec0c97275486d7332581aba7dddb1189a8"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_empty_goal-42.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_empty_goal-42.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_keeper-123.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_keeper-123.json",
+      "sha256": "b738166ccdefe0977bac8a7d7815e403b26891a72d74bd68f3d7d8c6e0a96ca8"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_keeper-123.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_keeper-123.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_keeper-2026.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_keeper-2026.json",
+      "sha256": "f1a1de860aa727de535d9f4588e66e0422a51b02a97bcee906c2bffaabda5a32"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_keeper-2026.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_keeper-2026.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_keeper-271828.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_keeper-271828.json",
+      "sha256": "fb1b9550d0b807f0a49260d3016878773e10811bbf2252a7df337b576315d295"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_keeper-271828.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_keeper-271828.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_keeper-31415.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_keeper-31415.json",
+      "sha256": "688b6db69f688344453d78d66ebff2e8f8324b6774895e12bee52e3228de095d"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_keeper-31415.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_keeper-31415.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_keeper-42.json",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_keeper-42.json",
+      "sha256": "7ea5d90a821afb54be48b7bf511e65e0f9315b27f5b894e0d0315c3e15bfcd7b"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/resume-reference-varied_keeper-42.stderr",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/resume-reference-varied_keeper-42.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_empty_goal-123-delivered.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_empty_goal-123-delivered.fppo",
+      "sha256": "3c283fdf8037cdc7ca420dd4d130f8ead6d5cf959695b1972b1052407311272f"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_empty_goal-123-reference.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_empty_goal-123-reference.fppo",
+      "sha256": "3c283fdf8037cdc7ca420dd4d130f8ead6d5cf959695b1972b1052407311272f"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_empty_goal-2026-delivered.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_empty_goal-2026-delivered.fppo",
+      "sha256": "8ab7f24f314419b8af3f2629fe7e597180ccd063b9bf8936ea63629669bfe43e"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_empty_goal-2026-reference.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_empty_goal-2026-reference.fppo",
+      "sha256": "8ab7f24f314419b8af3f2629fe7e597180ccd063b9bf8936ea63629669bfe43e"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_empty_goal-271828-delivered.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_empty_goal-271828-delivered.fppo",
+      "sha256": "836bc656a98d2b877895e7293b13025e2475a9ed3c14416cfe9babb49a1598ed"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_empty_goal-271828-reference.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_empty_goal-271828-reference.fppo",
+      "sha256": "836bc656a98d2b877895e7293b13025e2475a9ed3c14416cfe9babb49a1598ed"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_empty_goal-31415-delivered.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_empty_goal-31415-delivered.fppo",
+      "sha256": "f6d09d0b49ce04f921a489df4d60f6fbd037a244f062ef01175de8689fd5af93"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_empty_goal-31415-reference.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_empty_goal-31415-reference.fppo",
+      "sha256": "f6d09d0b49ce04f921a489df4d60f6fbd037a244f062ef01175de8689fd5af93"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_empty_goal-42-delivered.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_empty_goal-42-delivered.fppo",
+      "sha256": "1b9f2122345452fa389660257ee978454f88df43b89a7c97da34534be9f2cc06"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_empty_goal-42-reference.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_empty_goal-42-reference.fppo",
+      "sha256": "1b9f2122345452fa389660257ee978454f88df43b89a7c97da34534be9f2cc06"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_keeper-123-delivered.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_keeper-123-delivered.fppo",
+      "sha256": "5eee48c54a7fcbef5cf0f6a5e300b7c9c5f587d84e78df4deea52e23bbeb34aa"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_keeper-123-reference.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_keeper-123-reference.fppo",
+      "sha256": "5eee48c54a7fcbef5cf0f6a5e300b7c9c5f587d84e78df4deea52e23bbeb34aa"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_keeper-2026-delivered.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_keeper-2026-delivered.fppo",
+      "sha256": "7739e24a6d7733260527d058deee7603c547e321fa993bbf8940228d35030751"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_keeper-2026-reference.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_keeper-2026-reference.fppo",
+      "sha256": "7739e24a6d7733260527d058deee7603c547e321fa993bbf8940228d35030751"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_keeper-271828-delivered.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_keeper-271828-delivered.fppo",
+      "sha256": "d105e5c4b64915f75265b6f02dba0290a56dc6202a301cc971f5cbc205005d6c"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_keeper-271828-reference.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_keeper-271828-reference.fppo",
+      "sha256": "d105e5c4b64915f75265b6f02dba0290a56dc6202a301cc971f5cbc205005d6c"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_keeper-31415-delivered.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_keeper-31415-delivered.fppo",
+      "sha256": "e6116a6e55bd5d244c3d49798cda0580143e57f4eb964fa819bd523434cd05f8"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_keeper-31415-reference.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_keeper-31415-reference.fppo",
+      "sha256": "e6116a6e55bd5d244c3d49798cda0580143e57f4eb964fa819bd523434cd05f8"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_keeper-42-delivered.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_keeper-42-delivered.fppo",
+      "sha256": "cc80ea670f1e5f8002b7fcd5684da002a779624fda6ab2b4b78af40a3c7eb23d"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/varied_keeper-42-reference.fppo",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/varied_keeper-42-reference.fppo",
+      "sha256": "cc80ea670f1e5f8002b7fcd5684da002a779624fda6ab2b4b78af40a3c7eb23d"
+    },
+    {
+      "original": "/tmp/football-learned-delivery-20261018-a/verify_learned_delivery.py",
+      "archived": ".project/native-training/evidence/learned-delivery-20261018-a/verify_learned_delivery.py",
+      "sha256": "7f8cafe49a50052ac724db73bc0191f5c2416e069755bc90c0043adcc8ff8cfe"
+    },
+    {
+      "original": "/tmp/football-learning-delivery-audit-20261018-a/audit_learning_delivery.py",
+      "archived": ".project/native-training/evidence/learning-delivery-audit-20261018-a/audit_learning_delivery.py",
+      "sha256": "6424792208f414e2520edca81cf7d7e3207853c95b2ef37aa7b3be99e14d79d4"
+    },
+    {
+      "original": "/tmp/football-learning-delivery-audit-20261018-a/report.json",
+      "archived": ".project/native-training/evidence/learning-delivery-audit-20261018-a/report.json",
+      "sha256": "619436d2c7c1f1bded22e852a5fac61da8651bf9304c0356dc89423a15152809"
+    }
+  ],
+  "artifacts": {
+    "path": "/root/work_space/football-artifacts/native-training-20261018-a",
+    "files": {
+      "acceptance.json": "619436d2c7c1f1bded22e852a5fac61da8651bf9304c0356dc89423a15152809",
+      "source.tar": "1bbdc014098cf15c7b2062c3d0356dc755619d7e1877d00091509c8af367d6bc",
+      "football-native-with-models.tar.gz": "8a16acef6127a05b13852d2850a62bcbfded1b524d58318b72773b6bf7f6486e",
+      "gfootball-2.10.3-cp314-cp314-linux_x86_64.whl": "2ecf7145bac1076327a7875eaa174253368496a7c5b59391bcb55315486d9d5a"
+    }
+  }
+}

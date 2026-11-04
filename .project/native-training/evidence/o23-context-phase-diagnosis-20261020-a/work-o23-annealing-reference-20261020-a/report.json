@@ -1,0 +1,32 @@
+{
+  "passed": true,
+  "url": "https://raw.githubusercontent.com/vwxyzjn/cleanrl/master/cleanrl/ppo.py",
+  "sha256": "d8dfbb7ac0b21e747b77d6e6673e566db4d6cdacc83bcebcd19cf87ad0e459ae",
+  "scope": "Public source snapshot only;not executed or installed. master URL may move;bytes and hash retained.",
+  "excerpt": [
+    {
+      "line": 187,
+      "text": "        if args.anneal_lr:"
+    },
+    {
+      "line": 188,
+      "text": "            frac = 1.0 - (iteration - 1.0) / args.num_iterations"
+    },
+    {
+      "line": 189,
+      "text": "            lrnow = frac * args.learning_rate"
+    },
+    {
+      "line": 190,
+      "text": "            optimizer.param_groups[0][\"lr\"] = lrnow"
+    },
+    {
+      "line": 191,
+      "text": ""
+    },
+    {
+      "line": 192,
+      "text": "        for step in range(0, args.num_steps):"
+    }
+  ]
+}

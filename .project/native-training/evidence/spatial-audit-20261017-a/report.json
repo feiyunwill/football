@@ -1,0 +1,155 @@
+{
+  "passed": true,
+  "decision": "retain_spatial_subtree_invalidation",
+  "source_sha256": "0058952fa3c56c4506a32cd89744a61d265f85fea8f81af14010736b73448011",
+  "source_delta": [
+    "engine/CMakeLists.txt",
+    "engine/src/scene/objects/geometry.cpp",
+    "engine/src/scene/scene3d/node.cpp",
+    "engine/src/scene/scene3d/node.hpp",
+    "engine/src/types/spatial.cpp",
+    "engine/src/types/spatial.hpp",
+    "engine/tests/engine_spatial_invalidation_contract.cpp"
+  ],
+  "quality": {
+    "passed": true,
+    "report": "/root/work_space/football/.project/native-training/evidence/spatial-candidate-quality-20261017-b/report.json",
+    "source_sha256": "0058952fa3c56c4506a32cd89744a61d265f85fea8f81af14010736b73448011"
+  },
+  "performance": {
+    "accepted": true,
+    "primary_passed": true,
+    "complete_matrix": true,
+    "workloads": [
+      {
+        "players": 11,
+        "cadence": 2,
+        "feedback": false,
+        "primary": true,
+        "median_cpu_speedup": 1.258474404043909,
+        "cpu_reduction": 0.20538709664125254,
+        "paired_ci95": [
+          1.1468598534917331,
+          1.7847338053177122
+        ],
+        "passed": true
+      },
+      {
+        "players": 1,
+        "cadence": 2,
+        "feedback": false,
+        "primary": false,
+        "median_cpu_speedup": 1.3508434822597488,
+        "cpu_reduction": 0.2597217863263054,
+        "paired_ci95": [
+          0.9083090982302992,
+          1.854658856240298
+        ],
+        "passed": true
+      },
+      {
+        "players": 1,
+        "cadence": 2,
+        "feedback": true,
+        "primary": false,
+        "median_cpu_speedup": 1.2639154049672996,
+        "cpu_reduction": 0.20880780780904218,
+        "paired_ci95": [
+          0.874568276776785,
+          2.318820453515554
+        ],
+        "passed": true
+      },
+      {
+        "players": 1,
+        "cadence": 10,
+        "feedback": false,
+        "primary": false,
+        "median_cpu_speedup": 1.358763885307717,
+        "cpu_reduction": 0.2640369597595452,
+        "paired_ci95": [
+          0.8100697678107128,
+          1.9011238355605555
+        ],
+        "passed": true
+      },
+      {
+        "players": 1,
+        "cadence": 10,
+        "feedback": true,
+        "primary": false,
+        "median_cpu_speedup": 1.2027538496243138,
+        "cpu_reduction": 0.16857468357939154,
+        "paired_ci95": [
+          0.7304928090975649,
+          2.2398642530771604
+        ],
+        "passed": true
+      },
+      {
+        "players": 11,
+        "cadence": 2,
+        "feedback": true,
+        "primary": false,
+        "median_cpu_speedup": 1.267416338504567,
+        "cpu_reduction": 0.21099328640507609,
+        "paired_ci95": [
+          1.1507105346585265,
+          1.3676137737493048
+        ],
+        "passed": true
+      },
+      {
+        "players": 11,
+        "cadence": 10,
+        "feedback": false,
+        "primary": false,
+        "median_cpu_speedup": 1.678605350085375,
+        "cpu_reduction": 0.40426735804866865,
+        "paired_ci95": [
+          1.5633758819590071,
+          2.1924039162733844
+        ],
+        "passed": true
+      },
+      {
+        "players": 11,
+        "cadence": 10,
+        "feedback": true,
+        "primary": false,
+        "median_cpu_speedup": 1.3178525296585355,
+        "cpu_reduction": 0.2411897556860123,
+        "paired_ci95": [
+          1.0943771946228653,
+          1.456309260568347
+        ],
+        "passed": true
+      }
+    ],
+    "report_sha256": "7d24ed8eddb2a69f1344b842586dee0f26e40869c3ed3ee16ae8903ac632cd7a",
+    "note": "Engine-step CPU only. Bootstrap paired ratios; 8 pairs, 20000 draws, fixed seed42. No end-to-end training speedup claim."
+  },
+  "trajectory_cases": 8,
+  "actual_ppo_updates": 128,
+  "actual_ppo_transitions": 32768,
+  "learner_and_replay_equal": true,
+  "worker_exit_codes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "workers_reaped": true,
+  "parent_fds_before": 6,
+  "parent_fds_after": 6,
+  "whole_training_speedup_proven": false,
+  "receipts": {
+    ".project/native-training/evidence/spatial-primary-20261017-a/report.json": "622840d90e55abb181627c4de295b6d0b06f2a2b434045e8add96871afa143e7",
+    ".project/native-training/evidence/spatial-matrix-20261017-a/report.json": "7d24ed8eddb2a69f1344b842586dee0f26e40869c3ed3ee16ae8903ac632cd7a",
+    ".project/native-training/evidence/spatial-matrix-20261017-a/decision.json": "6dd9bcfab73af871aaa72612693d406e7e9b727025066d677a3a94bbc4656669",
+    ".project/native-training/evidence/spatial-candidate-quality-20261017-b/report.json": "317891cc62eb5cbcbe3ddf65490c58e77d5bf4f1a73eaa9032792eda494c6b26",
+    ".project/native-training/evidence/spatial-ppo-20261017-a/report.json": "c8c4ab01d1aac0c9d3deb6067c856081245e43c8b411742d11d9f1e23d8e26d0",
+    ".project/native-training/evidence/native-workers-20261017-d/report.json": "b0c189cc29021d9081cf2850cf1a856a11a89bfae4e9edb3f642d84ecb0be364"
+  },
+  "runner_sha256": "864ae7214a117612d9da39d0316732dc566028d7fbf8f0b0574299255d714673"
+}

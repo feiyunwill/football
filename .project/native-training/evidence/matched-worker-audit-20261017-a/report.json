@@ -1,0 +1,52 @@
+{
+  "passed": true,
+  "quality": {
+    "passed": true,
+    "report": "/root/work_space/football/.project/native-training/evidence/selected-digests-quality-20261017-a/report.json",
+    "source_sha256": "7640b9befe4155bf3887f4f98e20fd056fc4d09127636c0d23da4a28a21fb96a"
+  },
+  "source_sha256": "7640b9befe4155bf3887f4f98e20fd056fc4d09127636c0d23da4a28a21fb96a",
+  "observed_speedup": 1.9414574279421772,
+  "updates": 4475,
+  "profiled_updates_equal": 128,
+  "profiled_cpu_seconds": 89.92257082500004,
+  "native_call_totals": {
+    "reset": {
+      "calls": 520,
+      "wall_ns": 16974015705,
+      "cpu_ns": 16327005388
+    },
+    "step": {
+      "calls": 32848,
+      "wall_ns": 54320961698,
+      "cpu_ns": 51512112095
+    },
+    "get_state_digest": {
+      "calls": 516,
+      "wall_ns": 297686921,
+      "cpu_ns": 290008544
+    }
+  },
+  "environment_call_totals": {
+    "step": {
+      "calls": 32848,
+      "wall_ns": 64622727523,
+      "cpu_ns": 61452517486
+    },
+    "reset": {
+      "calls": 516,
+      "wall_ns": 16589554116,
+      "cpu_ns": 15898548671
+    }
+  },
+  "scheduler_runqueue_wait_sum_seconds": 7.447984499,
+  "note": "CPU/wall/runqueue sums span four instrumented workers and cannot be added to parent RPC wall. One historical pair is not a statistical scaling gate.",
+  "all_configuration_twofold_accepted": false,
+  "receipts": {
+    "matched-worker-comparison-20261017-a/report.json": "75fddb52e5db8ceafdf5e34d28a4b09ce476f111bccee8e1667f027d388a5720",
+    "matched-w1-checkpoint-load-20261017-a/report.json": "d9793e14d858ed75eb900123119e0d69688f99214bf526d3d7bea6f6fe4a5f53",
+    "worker-cpu-20261017-b/cpu-analysis.json": "c073bccfd02aa47365ace30805e2d865848e2edbbf023b6bfdc1780ad581f657",
+    "worker-cpu-20261017-b/report.json": "07c8e5a35af972069102fb4cf175732cdebc3a0556a4d64463662b9bdc269817"
+  },
+  "runner_sha256": "4bac5c83209a6eee39ac6bc99bcb226624f4c5c48e6e5970b5c5fa12f6410bc1"
+}

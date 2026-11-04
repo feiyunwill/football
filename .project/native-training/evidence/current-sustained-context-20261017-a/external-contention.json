@@ -1,0 +1,42 @@
+{
+  "observed_unix_seconds": 1792220105.0913548,
+  "reason": "Concurrent build in a different project; do not terminate or change other project. Throughput observation is under contention, not isolated sustained performance proof.",
+  "processes": [
+    {
+      "pid": 2050679,
+      "comm": "cmake",
+      "cwd": "/mnt/d/work_space/king_football_art/Build/art_pipeline_opencv_linux/build_current",
+      "elapsed_seconds": 248.02999999999884
+    },
+    {
+      "pid": 2050680,
+      "comm": "make",
+      "cwd": "/mnt/d/work_space/king_football_art/Build/art_pipeline_opencv_linux/build_current",
+      "elapsed_seconds": 248.0
+    },
+    {
+      "pid": 2050683,
+      "comm": "make",
+      "cwd": "/mnt/d/work_space/king_football_art/Build/art_pipeline_opencv_linux/build_current",
+      "elapsed_seconds": 247.61999999999534
+    },
+    {
+      "pid": 2050987,
+      "comm": "cmake",
+      "cwd": "/mnt/d/work_space/king_football_art",
+      "elapsed_seconds": 195.88000000000466
+    },
+    {
+      "pid": 2051816,
+      "comm": "make",
+      "cwd": "/mnt/d/work_space/king_football_art/Build/art_pipeline_opencv_linux/build_current",
+      "elapsed_seconds": 15.230000000010477
+    },
+    {
+      "pid": 2051821,
+      "comm": "cc1plus",
+      "cwd": "/mnt/d/work_space/king_football_art/Build/art_pipeline_opencv_linux/build_current/modules/flann",
+      "elapsed_seconds": 15.169999999983702
+    }
+  ]
+}

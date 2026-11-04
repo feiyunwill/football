@@ -4,6 +4,7 @@ from itertools import repeat
 import multiprocessing
 import os
 import unittest
+from unittest import mock
 
 import numpy as np
 
@@ -20,6 +21,19 @@ def config(cadence=2):
 
 
 class TrainingSamplerTest(unittest.TestCase):
+  def test_partial_final_batch_hashes_only_finished_workers(self):
+    with NativeWorkerPool(config(), workers=4) as pool:
+      with mock.patch.object(pool, '_request', wraps=pool._request) as request:
+        actual = collect_episodes(pool, (0, 1, 2, 3, 4), lambda obs, ctx: 0, max_steps=2)
+      selections = [tuple(call.args[1]) for call in request.call_args_list if call.args[0] == 'digest']
+      self.assertEqual(selections, [(0, 1, 2, 3), (0,)])
+      # Reproduce the previous all-worker request behavior against real engines.
+      original = pool.digests
+      with mock.patch.object(pool, 'digests', side_effect=lambda selected: original()):
+        baseline = collect_episodes(pool, (0, 1, 2, 3, 4), lambda obs, ctx: 0, max_steps=2)
+      self.assertEqual(actual.episodes, baseline.episodes)
+      self.assertEqual(actual.transitions, baseline.transitions)
+
   def test_latest_observation_stream_and_worker_count_replay(self):
     episodes = (9, 2, 7, 0, 5)
     expected = {}

@@ -1,0 +1,16 @@
+spatial probe missing symbol: _ZN7blunted7Spatial21InvalidateSpatialDataEv
+Traceback (most recent call last):
+  File "/root/work_space/football/.project/native-training/diagnose_spatial_invalidation.py", line 71, in <module>
+    if __name__=='__main__': raise SystemExit(main())
+                                              ~~~~^^
+  File "/root/work_space/football/.project/native-training/diagnose_spatial_invalidation.py", line 51, in main
+    code=profile_matched_ppo.main()
+  File "/root/work_space/football/.project/native-training/profile_matched_ppo.py", line 86, in main
+    with NativeWorkerPool(kwargs,workers=1,base_seed=42) as warm:
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/work_space/football/gfootball/training_workers.py", line 223, in __init__
+    replies = self._exchange({i: None for i in range(workers)}, 0, 'startup',
+                             max(0, startup_deadline - time.monotonic()))
+  File "/root/work_space/football/gfootball/training_workers.py", line 284, in _exchange
+    raise WorkerError(f'Worker {worker} exited during {operation}')
+gfootball.training_workers.WorkerError: Worker 0 exited during startup

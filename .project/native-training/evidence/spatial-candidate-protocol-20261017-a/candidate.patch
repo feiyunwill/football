@@ -1,0 +1,422 @@
+diff --git a/.project/native-training/quality.py b/.project/native-training/quality.py
+index 83ea64c..6705ff7 100644
+--- a/.project/native-training/quality.py
++++ b/.project/native-training/quality.py
+@@ -17,7 +17,7 @@ import validate
+ REQUIRED = frozenset('''python-environment cmake-version compiler-version
+ configure-python build-python staged-module python-integration configure-native
+ build-native native-contract snapshot-format-contract training-restore-contract
+-training-soak-contract categorical-policy-contract native-policy-contract
++training-soak-contract spatial-invalidation-contract categorical-policy-contract native-policy-contract
+ ppo-math-contract ppo-checkpoint-contract native-policy-rollout native-ppo-train
+ native-ppo-linkage native-policy-linkage native-linkage'''.split())
+ 
+diff --git a/.project/native-training/validate.py b/.project/native-training/validate.py
+index 485873c..04bec12 100644
+--- a/.project/native-training/validate.py
++++ b/.project/native-training/validate.py
+@@ -184,11 +184,13 @@ def main():
+     run('build-native', ['cmake', '--build', str(build), '--target',
+                          'engine_native_training_contract', 'engine_training_snapshot_contract',
+                          'engine_training_restore_contract', 'engine_training_soak_contract',
++                         'engine_spatial_invalidation_contract',
+                          'engine_native_policy_contract', 'engine_ppo_checkpoint_contract', '--parallel', '1'])
+     contract = build / 'bin/engine_native_training_contract'
+     run('native-contract', [str(contract)])
+     run('snapshot-format-contract', [str(build / 'bin/engine_training_snapshot_contract')])
+     run('training-restore-contract', [str(build / 'bin/engine_training_restore_contract')])
++    run('spatial-invalidation-contract', [str(build / 'bin/engine_spatial_invalidation_contract')])
+     run('training-soak-contract', [str(build / 'bin/engine_training_soak_contract')])
+     run('categorical-policy-contract', [str(build / 'bin/categorical_policy_contract')])
+     run('native-policy-contract', [str(build / 'bin/engine_native_policy_contract')])
+diff --git a/engine/CMakeLists.txt b/engine/CMakeLists.txt
+index 4195015..0a6cee5 100644
+--- a/engine/CMakeLists.txt
++++ b/engine/CMakeLists.txt
+@@ -363,6 +363,11 @@ add_executable(engine_training_restore_contract EXCLUDE_FROM_ALL tests/engine_tr
+ target_link_libraries(engine_training_restore_contract PRIVATE football_engine)
+ set_target_properties(engine_training_restore_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+ 
++# Keep subtree cache read/topology/observer edge cases in native acceptance.
++add_executable(engine_spatial_invalidation_contract EXCLUDE_FROM_ALL tests/engine_spatial_invalidation_contract.cpp)
++target_link_libraries(engine_spatial_invalidation_contract PRIVATE football_engine)
++set_target_properties(engine_spatial_invalidation_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
++
+ add_library(football_categorical_policy STATIC EXCLUDE_FROM_ALL ${FOOTBALL_CATEGORICAL_POLICY_SOURCES}
+             src/training/categorical_policy.hpp)
+ target_include_directories(football_categorical_policy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+diff --git a/engine/src/scene/objects/geometry.cpp b/engine/src/scene/objects/geometry.cpp
+index 8c99ff0..d6e552d 100644
+--- a/engine/src/scene/objects/geometry.cpp
++++ b/engine/src/scene/objects/geometry.cpp
+@@ -165,6 +165,7 @@ void Geometry::RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
+ }
+ 
+   AABB Geometry::GetAABB() const {
++    NoteSpatialDataRead();
+     // 2026-04-02 对齐 Spatial 成员名 aabb_
+     // if (aabb.dirty == true) {
+     if (aabb_.dirty == true) {
+diff --git a/engine/src/scene/scene3d/node.cpp b/engine/src/scene/scene3d/node.cpp
+index 8758153..667cee9 100644
+--- a/engine/src/scene/scene3d/node.cpp
++++ b/engine/src/scene/scene3d/node.cpp
+@@ -20,6 +20,8 @@
+ #include "../../main.hpp"
+ #include "../../scene/objectfactory.hpp"
+ #include "scene3d.hpp"
++#include "../objects/geometry.hpp"
++#include <typeinfo>
+ 
+ namespace blunted {
+ 
+@@ -62,6 +64,7 @@ Node::Node(const Node &source, const std::string &postfix,
+ Node::~Node() { DO_VALIDATION; }
+ 
+ void Node::Exit() {
++  InvalidatePruningEligibility();
+   DO_VALIDATION;
+   int objCount = objects_.size();
+   for (int i = 0; i < objCount; i++) {
+@@ -78,6 +81,7 @@ void Node::Exit() {
+ }
+ 
+ void Node::AddNode(boost::intrusive_ptr<Node> node) {
++  InvalidatePruningEligibility();
+   DO_VALIDATION;
+   nodes_.push_back(node);
+   node->SetParent(this);
+@@ -86,6 +90,7 @@ void Node::AddNode(boost::intrusive_ptr<Node> node) {
+ }
+ 
+ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
++  InvalidatePruningEligibility();
+   DO_VALIDATION;
+   std::vector<boost::intrusive_ptr<Node> >::iterator nodeIter =
+       find(nodes_.begin(), nodes_.end(), node);
+@@ -107,6 +112,7 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
+   }
+ 
+   void Node::AddObject(boost::intrusive_ptr<Object> object) {
++    InvalidatePruningEligibility();
+     DO_VALIDATION;
+     assert(object.get());
+     objects_.push_back(object);
+@@ -133,6 +139,7 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
+ 
+   void Node::DeleteObject(boost::intrusive_ptr<Object> object,
+                           bool exitObject) {
++    InvalidatePruningEligibility();
+     DO_VALIDATION;
+     std::vector < boost::intrusive_ptr<Object> >::iterator objIter = find(objects_.begin(), objects_.end(), object);
+     if (objIter != objects_.end()) {
+@@ -180,6 +187,7 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
+   }
+ 
+   void Node::ProcessState(EnvState* state) {
++    NoteSpatialDataRead();
+     state->process(position_);
+     state->process(rotation_);
+     state->process(scale_);
+@@ -209,10 +217,38 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
+     }
+   }
+ 
++  void Node::InvalidatePruningEligibility() {
++    for (Node* node = this; node; node = node->parent_) {
++      node->pruning_eligibility_ = -1;
++      node->subtree_invalidation_complete_ = false;
++    }
++  }
++
++  bool Node::CanPruneHeadlessInvalidation() const {
++    if (pruning_eligibility_ != -1) return pruning_eligibility_ == 1;
++    bool eligible = typeid(*this) == typeid(Node);
++    for (const auto& node : nodes_) {
++      if (node->parent_ != this || !node->CanPruneHeadlessInvalidation())
++        eligible = false;
++    }
++    for (const auto& object : objects_) {
++      if (object->parent_ != this || typeid(*object) != typeid(Geometry))
++        eligible = false;
++    }
++    pruning_eligibility_ = eligible ? 1 : 0;
++    return eligible;
++  }
++
+   void Node::RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
+                                         e_SystemType excludeSystem) {
+     DO_VALIDATION;
+ 
++    // GetGraphicsSystem is also the existing null-safe context lookup. Trees
++    // used outside a selected environment retain the original update path.
++    const bool canReuse = GetGraphicsSystem() && !GetGameConfig().render &&
++                          !GetTracker()->enabled() && CanPruneHeadlessInvalidation();
++    if (canReuse && subtree_invalidation_complete_) return;
++    NoteSpatialDataRead();
+     InvalidateSpatialData();
+     InvalidateBoundingVolume();
+     int nodesSize = nodes_.size();
+@@ -226,9 +262,13 @@ void Node::DeleteNode(boost::intrusive_ptr<Node> node) {
+       DO_VALIDATION;
+       objects_[i]->RecursiveUpdateSpatialData(spatialDataType, excludeSystem);
+     }
++    // Exact Geometry in headless mode has no callbacks or derived reads. Other
++    // dynamic types, rendering and active tracker verification never cache.
++    if (canReuse) subtree_invalidation_complete_ = true;
+   }
+ 
+   AABB Node::GetAABB() const {
++    NoteSpatialDataRead();
+     AABB tmp;
+     if (aabb_.dirty == true) {
+       DO_VALIDATION;
+diff --git a/engine/src/scene/scene3d/node.hpp b/engine/src/scene/scene3d/node.hpp
+index 54390d9..2ab58c3 100644
+--- a/engine/src/scene/scene3d/node.hpp
++++ b/engine/src/scene/scene3d/node.hpp
+@@ -105,6 +105,13 @@ namespace blunted {
+                                       e_SystemType excludeSystem =
+                                           e_SystemType_None) override;
+ 
++    private:
++      friend class Spatial;
++      bool CanPruneHeadlessInvalidation() const;
++      void InvalidatePruningEligibility();
++      // -1 unknown, 0 custom objects/types, 1 exact Node/Geometry tree.
++      mutable int pruning_eligibility_ = -1;
++
+     protected:
+       mutable std::vector < boost::intrusive_ptr<Node> > nodes_;
+       mutable std::vector < boost::intrusive_ptr<Object> > objects_;
+diff --git a/engine/src/types/spatial.cpp b/engine/src/types/spatial.cpp
+index b62c89a..be19529 100644
+--- a/engine/src/types/spatial.cpp
++++ b/engine/src/types/spatial.cpp
+@@ -53,6 +53,7 @@ Spatial::Spatial(const Spatial &src) {
+ 
+ void Spatial::SetLocalMode(e_LocalMode localMode) {
+   DO_VALIDATION;
++  NoteSpatialDataRead();
+   local_mode_ = localMode;
+   InvalidateBoundingVolume();
+ }
+@@ -73,7 +74,10 @@ void Spatial::SetName(const std::string &name) {
+ 
+   void Spatial::SetParent(Node *parent) {
+     DO_VALIDATION;
++    NoteSpatialDataRead();
++    if (parent_) parent_->InvalidatePruningEligibility();
+     parent_ = parent;
++    if (parent_) parent_->InvalidatePruningEligibility();
+     InvalidateBoundingVolume();
+   }
+ 
+@@ -109,6 +113,7 @@ void Spatial::SetName(const std::string &name) {
+   }
+ 
+   Vector3 Spatial::GetDerivedPosition() const {
++    NoteSpatialDataRead();
+     if (dirty_derived_position_) {
+       DO_VALIDATION;
+       if (local_mode_ == e_LocalMode_Relative) {
+@@ -133,6 +138,7 @@ void Spatial::SetName(const std::string &name) {
+   }
+ 
+   Quaternion Spatial::GetDerivedRotation() const {
++    NoteSpatialDataRead();
+     if (dirty_derived_rotation_) {
+       DO_VALIDATION;
+       if (local_mode_ == e_LocalMode_Relative) {
+@@ -152,6 +158,7 @@ void Spatial::SetName(const std::string &name) {
+   }
+ 
+   Vector3 Spatial::GetDerivedScale() const {
++    NoteSpatialDataRead();
+     if (dirty_derived_scale_) {
+       DO_VALIDATION;
+       if (local_mode_ == e_LocalMode_Relative) {
+@@ -180,6 +187,17 @@ void Spatial::SetName(const std::string &name) {
+     if (changed) if (parent_) parent_->InvalidateBoundingVolume();
+   }
+ 
++  void Spatial::NoteSpatialDataRead() const {
++    subtree_invalidation_complete_ = false;
++    // A leaf does not own a subtree proof, so always inspect its parent first.
++    // A cleared ancestor already propagated the read to its own ancestors.
++    Node* ancestor = parent_;
++    while (ancestor && ancestor->subtree_invalidation_complete_) {
++      ancestor->subtree_invalidation_complete_ = false;
++      ancestor = ancestor->parent_;
++    }
++  }
++
+   void Spatial::InvalidateSpatialData() {
+     DO_VALIDATION;
+     dirty_derived_position_ = true;
+@@ -188,6 +206,7 @@ void Spatial::SetName(const std::string &name) {
+   }
+ 
+   AABB Spatial::GetAABB() const {
++    NoteSpatialDataRead();
+     AABB tmp;
+     tmp = aabb_.aabb;
+     return tmp;
+diff --git a/engine/src/types/spatial.hpp b/engine/src/types/spatial.hpp
+index 567aa14..2684248 100644
+--- a/engine/src/types/spatial.hpp
++++ b/engine/src/types/spatial.hpp
+@@ -72,6 +72,7 @@ constexpr bool SnapshotEnumValid(e_LocalMode, int64_t value) {
+   */
+ 
+   class Spatial : public RefCounted {
++    friend class Node;
+ 
+     public:
+       Spatial(const std::string &name);
+@@ -115,6 +116,10 @@ constexpr bool SnapshotEnumValid(e_LocalMode, int64_t value) {
+       virtual AABB GetAABB() const;
+ 
+     protected:
++      // A completed headless subtree invalidation may be reused until a read.
++      // This is an execution cache, never part of a snapshot.
++      void NoteSpatialDataRead() const;
++      mutable bool subtree_invalidation_complete_ = false;
+       // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
+       std::string name_;
+       Node *parent_ = nullptr;
+diff --git a/engine/tests/engine_spatial_invalidation_contract.cpp b/engine/tests/engine_spatial_invalidation_contract.cpp
+new file mode 100644
+index 0000000..26e5e24
+--- /dev/null
++++ b/engine/tests/engine_spatial_invalidation_contract.cpp
+@@ -0,0 +1,129 @@
++// Behavioral edge checks for headless subtree invalidation reuse.
++#include "frame_sync/default_scenario.hpp"
++#include "game_env.hpp"
++#include "scene/objects/geometry.hpp"
++#include <cmath>
++#include <climits>
++#include <iostream>
++#include <stdexcept>
++using namespace blunted;
++namespace {
++int checks=0;
++void Require(bool ok,const char* message) { ++checks; if(!ok) throw std::runtime_error(message); }
++void Near(const Vector3& got,const Vector3& want,const char* message) {
++  Require((got-want).GetLength()<0.001f,message);
++}
++struct Observer final:IGeometryInterpreter {
++  int moves=0,rotations=0;
++  e_SystemType GetSystemType() const override { return e_SystemType_Graphics; }
++  void OnLoad(boost::intrusive_ptr<Geometry>) override {}
++  void OnUpdateGeometry(boost::intrusive_ptr<Geometry>,bool) override {}
++  void OnUnload() override {}
++  void OnMove(const Vector3&) override { ++moves; }
++  void OnRotate(const Quaternion&) override { ++rotations; }
++  void OnPoke() override {}
++};
++struct CustomObject final:Object {
++  int updates=0;
++  CustomObject():Object("custom",e_ObjectType_Geometry) {}
++  void RecursiveUpdateSpatialData(e_SpatialDataType type,e_SystemType exclude=e_SystemType_None) override {
++    ++updates; Object::RecursiveUpdateSpatialData(type,exclude);
++  }
++};
++struct CustomNode final:Node {
++  int updates=0;
++  CustomNode():Node("custom-node") {}
++  void RecursiveUpdateSpatialData(e_SpatialDataType type,e_SystemType exclude=e_SystemType_None) override {
++    ++updates; Node::RecursiveUpdateSpatialData(type,exclude);
++  }
++};
++void Run(GameEnv& env) {
++  ContextHolder selected(&env);
++  boost::intrusive_ptr<Node> root(new Node("root")), middle(new Node("middle")), leaf(new Node("leaf"));
++  root->AddNode(middle); middle->AddNode(leaf);
++  middle->SetPosition(Vector3(1,0,0)); leaf->SetPosition(Vector3(2,0,0));
++  root->SetPosition(Vector3(10,0,0)); root->SetPosition(Vector3(20,0,0));
++  Near(leaf->GetDerivedPosition(),Vector3(23,0,0),"Repeated root updates lost descendant position");
++  root->SetPosition(Vector3(30,0,0));
++  Near(leaf->GetDerivedPosition(),Vector3(33,0,0),"Independent descendant read did not revoke reuse");
++
++  root->RecursiveUpdateSpatialData(e_SpatialDataType_Both);
++  leaf->SetLocalMode(e_LocalMode_Absolute); leaf->SetPosition(Vector3(4,5,6));
++  Near(leaf->GetDerivedPosition(),Vector3(4,5,6),"Absolute child fixture failed");
++  leaf->SetPosition(Vector3(7,8,9),false); root->SetPosition(Vector3(40,0,0));
++  Near(leaf->GetDerivedPosition(),Vector3(7,8,9),"Absolute-child read did not revoke ancestor reuse");
++  leaf->SetLocalMode(e_LocalMode_Relative); leaf->SetPosition(Vector3(2,0,0));
++
++  root->SetScale(Vector3(2)); root->SetScale(Vector3(3));
++  Near(leaf->GetDerivedScale(),Vector3(3),"Scale-only read/update invalidation failed");
++  root->SetScale(Vector3(4));
++  Near(leaf->GetDerivedScale(),Vector3(4),"Scale-only descendant read did not revoke reuse");
++  root->SetScale(Vector3(1));
++  Quaternion turn; turn.SetAngleAxis(0.5f,Vector3(0,0,1));
++  root->SetRotation(turn); (void)leaf->GetDerivedRotation();
++  Quaternion turn2; turn2.SetAngleAxis(1.f,Vector3(0,0,1)); root->SetRotation(turn2);
++  const auto got=leaf->GetDerivedRotation();
++  Require(std::fabs(std::fabs(got.GetDotProduct(turn2))-1.f)<0.001f,"Rotation-only descendant read did not revoke reuse");
++  root->SetRotation(Quaternion(QUATERNION_IDENTITY)); root->SetPosition(Vector3(0));
++
++  boost::intrusive_ptr<Geometry> geometry(new Geometry("box"));
++  boost::intrusive_ptr<Resource<GeometryData>> mesh(new Resource<GeometryData>("box-data"));
++  mesh->GetResource()->AddTriangleMesh(Material{},new float[9]{-1,-1,0, 1,-1,0, 0,1,1},9,{0,3,6});
++  geometry->SetGeometryData(mesh);
++  root->AddObject(geometry);
++  const auto before=geometry->GetAABB(); root->SetPosition(Vector3(32,0,0));
++  const auto after=geometry->GetAABB();
++  Require(std::fabs(after.minxyz.coords[0]-before.minxyz.coords[0]-32.f)<0.01f,"Geometry AABB read did not revoke reuse");
++  const auto root_before=root->GetAABB(); root->SetPosition(Vector3(64,0,0)); const auto root_after=root->GetAABB();
++  Require(std::fabs(root_after.minxyz.coords[0]-root_before.minxyz.coords[0]-32.f)<0.01f,"Node AABB read did not revoke reuse");
++
++  boost::intrusive_ptr<CustomObject> custom(new CustomObject);
++  root->AddObject(custom); int n=custom->updates;
++  root->SetPosition(Vector3(1)); root->SetPosition(Vector3(2));
++  Require(custom->updates==n+2,"Custom dynamic object update was skipped after topology change");
++  root->DeleteObject(custom,false);
++  boost::intrusive_ptr<CustomNode> custom_node(new CustomNode);
++  root->AddNode(custom_node); n=custom_node->updates;
++  root->SetPosition(Vector3(3)); root->SetPosition(Vector3(4));
++  Require(custom_node->updates==n+2,"Custom dynamic node update was skipped");
++  root->DeleteNode(custom_node);
++
++  boost::intrusive_ptr<Node> other(new Node("other"));
++  root->DeleteObject(geometry,false); other->AddObject(geometry);
++  other->SetPosition(Vector3(50,0,0));
++  Near(geometry->GetDerivedPosition(),Vector3(50,0,0),"Reparented geometry retained old ancestor cache");
++  other->SetPosition(Vector3(60,0,0));
++  Near(geometry->GetDerivedPosition(),Vector3(60,0,0),"Reparented geometry read did not revoke new ancestor reuse");
++  other->DeleteObject(geometry,false); root->AddObject(geometry);
++
++  boost::intrusive_ptr<Observer> observer(new Observer); geometry->Attach(observer);
++  env.game_config.render=true;
++  n=observer->moves; const int rotations=observer->rotations;
++  root->SetPosition(Vector3(5)); root->SetPosition(Vector3(6));
++  Require(observer->moves==n+2 && observer->rotations==rotations,"Position observer notifications changed in rendering mode");
++  root->RecursiveUpdateSpatialData(e_SpatialDataType_Both);
++  Require(observer->rotations==rotations+1,"Rotation observer notification lost");
++  n=observer->moves; root->RecursiveUpdateSpatialData(e_SpatialDataType_Both,e_SystemType_Graphics);
++  Require(observer->moves==n,"Excluded rendering observer was called");
++  env.game_config.render=false;
++  root->SetPosition(Vector3(7)); root->SetPosition(Vector3(8));
++  Require(observer->moves==n,"Headless mode emitted rendering notifications");
++
++  const auto disabled=GetContext().tracker_disabled;
++  GetTracker()->setup(LONG_MAX,LONG_MAX);
++  root->SetPosition(Vector3(9)); root->SetPosition(Vector3(10));
++  Near(geometry->GetDerivedPosition(),Vector3(10),"Active-tracker fallback changed state");
++  GetContext().tracker_disabled=disabled;
++  geometry->Detach(observer);
++  root->Exit(); other->Exit();
++}
++}
++int main(int, char**) {
++  try {
++    GameEnv env; env.game_config.render=false;
++    auto scenario=frame_sync::MakeDefaultScenario(1,1,42); env.start_game(*scenario);
++    Run(env); env.close();
++    std::cout<<"Spatial invalidation behavior: "<<checks<<" checks passed\n";
++    return 0;
++  } catch(const std::exception& error) { std::cerr<<error.what()<<'\n'; return 1; }
++}

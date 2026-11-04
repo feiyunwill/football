@@ -16,11 +16,19 @@ parser.add_argument('--candidate', type=Path, required=True)
 parser.add_argument('--output', type=Path, required=True)
 parser.add_argument('--steps', type=int, default=512)
 parser.add_argument('--repeats', type=int, default=8)
+parser.add_argument('--primary-only', action='store_true',
+                    help='Screen the pre-registered 1-player/cadence10/predetermined primary before the full matrix')
 args = parser.parse_args()
 if not 32 <= args.steps <= 1024 or not 4 <= args.repeats <= 20: parser.error('Invalid comparison budget')
 output = args.output.resolve(); output.mkdir(parents=True, exist_ok=False)
 stages = {'baseline':args.baseline.resolve(), 'candidate':args.candidate.resolve()}
 report = {'passed':False, 'source_before':source_fingerprint(), 'workloads':[], 'commands':[]}
+report['scope'] = 'primary_only' if args.primary_only else 'full_matrix'
+report['validator_sha256'] = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+report['probe_sha256'] = hashlib.sha256((ROOT / '.project/native-training/benchmark_candidate_rollout.py').read_bytes()).hexdigest()
+report['artifacts'] = {variant:{name:hashlib.sha256((stage / 'gfootball_engine' / name).read_bytes()).hexdigest()
+                              for name in ('_gameplayfootball.so', 'libfootball_engine.so')}
+                       for variant,stage in stages.items()}
 report['baseline_manifest'] = json.loads((stages['baseline'] / 'baseline.json').read_text())
 
 def run(variant, players, cadence, feedback, verify, name):
@@ -46,6 +54,7 @@ try:
   for players in (1, 11):
     for cadence in (2, 10):
       for feedback in (False, True):
+        if args.primary_only and (players, cadence, feedback) != (1, 10, False): continue
         prefix = f'p{players}-c{cadence}-feedback{int(feedback)}'
         print(prefix, flush=True)
         verified = {v:run(v, players,cadence,feedback,True,prefix + '-verify-' + v) for v in stages}

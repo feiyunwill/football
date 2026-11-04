@@ -1,0 +1,125 @@
+{
+  "passed": true,
+  "learning_passed": true,
+  "tasks": {
+    "varied_empty_goal": {
+      "learning_passed": true,
+      "success_mean": 0.893,
+      "versus_initial": {
+        "mean": 0.785,
+        "low": 0.699,
+        "high": 0.867
+      },
+      "versus_random": {
+        "mean": 0.773,
+        "low": 0.712,
+        "high": 0.83
+      },
+      "seeds": [
+        {
+          "seed": 42,
+          "success": 0.915,
+          "initial": 0.015,
+          "random": 0.12,
+          "checkpoint": "/tmp/football-generalization-study-20261018-c/work/final-train-varied_empty_goal-42.fppo",
+          "checkpoint_sha256": "a1549efbee56bc34fd6e10191ffd0760505fb3435c532b7509de9de0420177e0"
+        },
+        {
+          "seed": 123,
+          "success": 0.885,
+          "initial": 0.035,
+          "random": 0.12,
+          "checkpoint": "/tmp/football-generalization-study-20261018-c/work/final-train-varied_empty_goal-123.fppo",
+          "checkpoint_sha256": "ec2af4751805c4de31eff844a544422483ec8704fd3561e7723ee92410c9c518"
+        },
+        {
+          "seed": 2026,
+          "success": 0.875,
+          "initial": 0.2,
+          "random": 0.12,
+          "checkpoint": "/tmp/football-generalization-study-20261018-c/work/final-train-varied_empty_goal-2026.fppo",
+          "checkpoint_sha256": "a6aed810c16f0dd29d05971b7c92a1e42395766a2b9314dc46e67529e57be151"
+        },
+        {
+          "seed": 31415,
+          "success": 0.875,
+          "initial": 0.155,
+          "random": 0.12,
+          "checkpoint": "/tmp/football-generalization-study-20261018-c/work/final-train-varied_empty_goal-31415.fppo",
+          "checkpoint_sha256": "3a8afa59d8fe54189fe52d7b4a935a3881067893e28e93eeb9a1a410feed4ad6"
+        },
+        {
+          "seed": 271828,
+          "success": 0.915,
+          "initial": 0.135,
+          "random": 0.12,
+          "checkpoint": "/tmp/football-generalization-study-20261018-c/work/final-train-varied_empty_goal-271828.fppo",
+          "checkpoint_sha256": "eb052e2a4ba144efad999e8874546937677d46cf065e05f1254d243bbd90658b"
+        }
+      ]
+    },
+    "varied_keeper": {
+      "learning_passed": true,
+      "success_mean": 0.922,
+      "versus_initial": {
+        "mean": 0.796,
+        "low": 0.727975,
+        "high": 0.861
+      },
+      "versus_random": {
+        "mean": 0.817,
+        "low": 0.763,
+        "high": 0.868
+      },
+      "seeds": [
+        {
+          "seed": 42,
+          "success": 0.895,
+          "initial": 0.055,
+          "random": 0.105,
+          "checkpoint": "/tmp/football-generalization-study-20261018-c/work/final-train-varied_keeper-42.fppo",
+          "checkpoint_sha256": "383435bbd43c00c6d6357d594eef9329772a08b904f83105bae439639a5817a5"
+        },
+        {
+          "seed": 123,
+          "success": 0.925,
+          "initial": 0.05,
+          "random": 0.105,
+          "checkpoint": "/tmp/football-generalization-study-20261018-c/work/final-train-varied_keeper-123.fppo",
+          "checkpoint_sha256": "ff764719658a36779ba61559bb338435b6f1f1975d5fb811f1c0a83e98eeb466"
+        },
+        {
+          "seed": 2026,
+          "success": 0.94,
+          "initial": 0.2,
+          "random": 0.105,
+          "checkpoint": "/tmp/football-generalization-study-20261018-c/work/final-train-varied_keeper-2026.fppo",
+          "checkpoint_sha256": "f29744bf140ed33fb08b93d0a80206a56ed470c35cfde70a95a615d0540a4579"
+        },
+        {
+          "seed": 31415,
+          "success": 0.925,
+          "initial": 0.115,
+          "random": 0.105,
+          "checkpoint": "/tmp/football-generalization-study-20261018-c/work/final-train-varied_keeper-31415.fppo",
+          "checkpoint_sha256": "5f1a8dff4b483ee8df2f1280ea1558cdff220e79c90645853f8d50de9e8f28ba"
+        },
+        {
+          "seed": 271828,
+          "success": 0.925,
+          "initial": 0.21,
+          "random": 0.105,
+          "checkpoint": "/tmp/football-generalization-study-20261018-c/work/final-train-varied_keeper-271828.fppo",
+          "checkpoint_sha256": "beb738b420f8fbb426ce1fc3214f2c3c65952c7059a13dc3d28b8d656d1b0740"
+        }
+      ]
+    }
+  },
+  "source_sha256": "9443b0308bd536d70df6cd567177fa17d3db071269b6f3becd84d9a404334029",
+  "report_sha256": "028cd5a1f85b3efd5d8d622496c6443c2ff2f6cd3f48dda11bae0516f22454da",
+  "protocol_sha256": "91086e498400b13b0d211028fbad67902d642a6ab630de951993f33df86cbbf3",
+  "raw_commands": 98,
+  "auditor_sha256": "eb2408a90fa9ab000512cac64f99fc11f084d20879949159c9d2c0169f921d34",
+  "primary_policy": "sample",
+  "scope": "Both preregistered bounded shooting tasks; five independent training seeds/task,200 held-out episodes/seed. Not general11v11 competence."
+}

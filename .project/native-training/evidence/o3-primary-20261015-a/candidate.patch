@@ -1,0 +1,67 @@
+diff --git a/engine/src/onthepitch/ball.cpp b/engine/src/onthepitch/ball.cpp
+index 207ef14..ddc27c6 100755
+--- a/engine/src/onthepitch/ball.cpp
++++ b/engine/src/onthepitch/ball.cpp
+@@ -60,9 +60,8 @@ void Ball::Mirror() {
+   for (auto &a : predictions) {
+     a.Mirror();
+   }
+-  for (auto &a : ballPosHistory) {
+-    a.Mirror();
+-  }
++  for (auto part : {ballPosHistory.array_one(), ballPosHistory.array_two()})
++    for (size_t i = 0; i < part.second; ++i) part.first[i].Mirror();
+   positionBuffer.Mirror();
+ }
+ 
+@@ -556,7 +555,7 @@ BallSpatialInfo Ball::CalculatePrediction() {
+ }
+ 
+ Vector3 Ball::GetAveragePosition(unsigned int duration_ms) const {
+-  std::list<Vector3>::const_reverse_iterator iter = ballPosHistory.rbegin();
++  auto iter = ballPosHistory.rbegin();
+   unsigned int total = 0;
+   Vector3 averageVec;
+   while (iter != ballPosHistory.rend()) {
+diff --git a/engine/src/onthepitch/ball.hpp b/engine/src/onthepitch/ball.hpp
+index 3ce544e..1db8341 100755
+--- a/engine/src/onthepitch/ball.hpp
++++ b/engine/src/onthepitch/ball.hpp
+@@ -24,6 +24,7 @@
+ 
+ #include "../gamedefines.hpp"
+ #include "../utils.hpp"
++#include <boost/circular_buffer.hpp>
+ 
+ using namespace blunted;
+ 
+@@ -112,7 +113,7 @@ class Ball {
+     int valid_predictions = 0;
+     Quaternion orientPrediction;
+ 
+-    std::list<Vector3> ballPosHistory;
++    boost::circular_buffer<Vector3> ballPosHistory{1001};
+ 
+     Vector3 positionBuffer;
+     Quaternion orientationBuffer;
+diff --git a/engine/src/onthepitch/ecs_components.hpp b/engine/src/onthepitch/ecs_components.hpp
+index ef6f4e8..4350361 100644
+--- a/engine/src/onthepitch/ecs_components.hpp
++++ b/engine/src/onthepitch/ecs_components.hpp
+@@ -24,6 +24,7 @@
+ #include "../data/playerdata.hpp"
+ 
+ #include <list>
++#include <boost/circular_buffer.hpp>
+ 
+ class Player;
+ 
+@@ -36,7 +37,7 @@ struct BallComponent {
+   Vector3 predictions[ballPredictionSize_ms / 10 + cachedPredictions + 1];
+   int valid_predictions = 0;
+   Quaternion orientPrediction;
+-  std::list<Vector3> ballPosHistory;
++  boost::circular_buffer<Vector3> ballPosHistory{1001};
+   Vector3 positionBuffer;
+   Quaternion orientationBuffer;
+   bool ballTouchesNet = false;

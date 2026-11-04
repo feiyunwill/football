@@ -1,0 +1,242 @@
+{
+  "passed": true,
+  "numerical_learner_and_replay_equal": true,
+  "phases": {
+    "other": {
+      "node_calls": 3900,
+      "root_bbox_dirty": 1400,
+      "root_dirty_partial_descendant": 0,
+      "root_fully_dirty": 1400,
+      "root_fully_dirty_partial_descendant": 0,
+      "reads_during_update": 0,
+      "invalidations": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        7900
+      ],
+      "roots": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1400
+      ],
+      "reads": [
+        0,
+        0,
+        0
+      ],
+      "misses": [
+        0,
+        0,
+        0
+      ],
+      "fully_dirty_invalidation_fraction": 1.0
+    },
+    "step": {
+      "node_calls": 228840048,
+      "root_bbox_dirty": 16346664,
+      "root_dirty_partial_descendant": 0,
+      "root_fully_dirty": 16331725,
+      "root_fully_dirty_partial_descendant": 0,
+      "reads_during_update": 0,
+      "invalidations": [
+        181948,
+        0,
+        0,
+        0,
+        153410,
+        0,
+        0,
+        440999270
+      ],
+      "roots": [
+        14939,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        16331725
+      ],
+      "reads": [
+        473830,
+        794248,
+        487428
+      ],
+      "misses": [
+        335358,
+        335358,
+        181948
+      ],
+      "fully_dirty_invalidation_fraction": 0.9992401276067556
+    },
+    "reset": {
+      "node_calls": 68153264,
+      "root_bbox_dirty": 5964740,
+      "root_dirty_partial_descendant": 0,
+      "root_fully_dirty": 5883112,
+      "root_fully_dirty_partial_descendant": 0,
+      "reads_during_update": 17292,
+      "invalidations": [
+        724540,
+        0,
+        0,
+        0,
+        68120,
+        0,
+        85728,
+        131589532
+      ],
+      "roots": [
+        81628,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        5883112
+      ],
+      "reads": [
+        988324,
+        962132,
+        678640
+      ],
+      "misses": [
+        458188,
+        372408,
+        282800
+      ],
+      "fully_dirty_invalidation_fraction": 0.9933690511634817
+    },
+    "digest": {
+      "node_calls": 0,
+      "root_bbox_dirty": 0,
+      "root_dirty_partial_descendant": 0,
+      "root_fully_dirty": 0,
+      "root_fully_dirty_partial_descendant": 0,
+      "reads_during_update": 0,
+      "invalidations": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "roots": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reads": [
+        0,
+        0,
+        0
+      ],
+      "misses": [
+        0,
+        0,
+        0
+      ],
+      "fully_dirty_invalidation_fraction": null
+    },
+    "close": {
+      "node_calls": 0,
+      "root_bbox_dirty": 0,
+      "root_dirty_partial_descendant": 0,
+      "root_fully_dirty": 0,
+      "root_fully_dirty_partial_descendant": 0,
+      "reads_during_update": 0,
+      "invalidations": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "roots": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reads": [
+        0,
+        0,
+        0
+      ],
+      "misses": [
+        0,
+        0,
+        0
+      ],
+      "fully_dirty_invalidation_fraction": null
+    },
+    "unused": {
+      "node_calls": 0,
+      "root_bbox_dirty": 0,
+      "root_dirty_partial_descendant": 0,
+      "root_fully_dirty": 0,
+      "root_fully_dirty_partial_descendant": 0,
+      "reads_during_update": 0,
+      "invalidations": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "roots": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "reads": [
+        0,
+        0,
+        0
+      ],
+      "misses": [
+        0,
+        0,
+        0
+      ],
+      "fully_dirty_invalidation_fraction": null
+    }
+  },
+  "reference": "/root/work_space/football/.project/native-training/evidence/native-workers-20261017-d",
+  "scope": "Instrumented baseline, diagnostic counts only; absence of partial descendants does not prove pruning safe"
+}

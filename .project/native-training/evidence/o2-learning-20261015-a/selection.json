@@ -1,0 +1,20 @@
+{
+  "selected": "sparse16",
+  "pilots": {
+    "sparse16": {
+      "success": 1.0,
+      "seconds": 116.195126209,
+      "checkpoint_sha256": "4a37cb86c402e2eafe620cf13b4d7e522fa459776accd48142c29b8093737ec9"
+    },
+    "sparse64": {
+      "success": 1.0,
+      "seconds": 147.254311021,
+      "checkpoint_sha256": "46c2925e68eb10569feb37199549c511b608f498fc9a299090f06fdd759e4187"
+    },
+    "checkpoints64": {
+      "success": 1.0,
+      "seconds": 143.461362234,
+      "checkpoint_sha256": "fc11745dbd33f9b356d03b504c2887cdd93ee189731008f17e5b31bd3934443b"
+    }
+  }
+}

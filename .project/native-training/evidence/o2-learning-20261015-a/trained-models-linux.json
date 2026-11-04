@@ -1,0 +1,59 @@
+{
+  "passed": true,
+  "archive": "trained-models-linux.tar.gz",
+  "sha256": "f20bf28b1558fc1dd46bb82ed626ae28bb1d9efaf0edb7c791cd05c12ba90af8",
+  "bytes": 1547040,
+  "manifest": {
+    "source_sha256": "77856efdadd172e065bc9289b65deaa0339eddb5aa8b22f003f7f0759bb54c6c",
+    "scenario": "empty_goal",
+    "hidden": 16,
+    "epochs": 4,
+    "minibatch": 64,
+    "cadence": 10,
+    "episode_limit": 256,
+    "files": {
+      "runtime/native_ppo_train": "364f55e247715ffaa9062655fded28d57e2780f55907109bcdd3c706235b19ed",
+      "runtime/libfootball_engine.so": "2c0a41c99565f8aad1a74c350ae773cdecb7eed0bbfacb3d3bf65c100d77e915",
+      "models/sparse16-42.bin": "9d8ba92c43713672cde2068ab0006467522614802567f7381afa4713f92094a5",
+      "models/sparse16-123.bin": "d0ee9f3e1db761a86e41940e6a6a64ae70d066d12556d5bd1efe0075567482b1",
+      "models/sparse16-2026.bin": "ceb97381d27b12dd01fe6c903e2486c03d5b56503a9804c7fef987ebfced6d49",
+      "models/sparse16-31415.bin": "d5fb3e4c652c74c21328513182e33ead1b8d6bc5f2279c080f472915b484456e",
+      "models/sparse16-271828.bin": "6d84d1e3be7a3dfdc6c73089cf40f598517342b85ce817ae4f4ce9fcf0af3e30",
+      "LICENSE": "25e8791da26f7e74c4baf19eafd7d137b64a46952ef840ed01c172b680cf4046",
+      "README.txt": "b8ae910cc3a97b6ee80f51584f0cbdfe4feaf0a041278eab069a2046f8fa917e"
+    },
+    "scope": "FPPO checkpoints plus exact validated Linux runtime; requires matching repository data/fonts and host system libraries, not a cross-ABI package"
+  },
+  "runtime_probe": {
+    "argv": [
+      "/tmp/football-o2-model-runtime-probe-20261015-a/runtime/native_ppo_train",
+      "--scenario",
+      "empty_goal",
+      "--seed",
+      "42",
+      "--hidden",
+      "16",
+      "--epochs",
+      "4",
+      "--minibatch",
+      "64",
+      "--rollout",
+      "256",
+      "--episode-limit",
+      "256",
+      "--updates",
+      "0",
+      "--no-initial-eval",
+      "--eval-episodes",
+      "1",
+      "--eval-steps",
+      "256",
+      "--load",
+      "/tmp/football-o2-model-runtime-probe-20261015-a/models/sparse16-42.bin"
+    ],
+    "exit_code": 0,
+    "log": "models-runtime-probe.log",
+    "sha256": "9053a106d2353c8376538d7e9c1e3fcc67dc949007393a1925fc26527cd6fe9b"
+  },
+  "validation": "Runtime/model bytes equal the extracted and successfully evaluated original archive; final archive adds project LICENSE and usage README"
+}

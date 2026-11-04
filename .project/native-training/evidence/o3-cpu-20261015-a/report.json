@@ -1,0 +1,30 @@
+{
+  "experiment": "/tmp/football-o3-profile-20261015-a.er",
+  "commands": [
+    {
+      "argv": [
+        "gprofng",
+        "display",
+        "text",
+        "-limit",
+        "40",
+        "-functions",
+        "/tmp/football-o3-profile-20261015-a.er"
+      ],
+      "exit_code": 0,
+      "sha256": "d1826496df821086bc67b6ef7ed4251511b44e7a268a19f21057afd8461f21d4"
+    },
+    {
+      "argv": [
+        "gprofng",
+        "display",
+        "text",
+        "-statistics",
+        "-overview",
+        "/tmp/football-o3-profile-20261015-a.er"
+      ],
+      "exit_code": 0,
+      "sha256": "516cf1a1aaebaabc774355aa98e598a3224318b2745b6157a13e02be29ecd6fe"
+    }
+  ]
+}

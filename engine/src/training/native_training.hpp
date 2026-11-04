@@ -16,6 +16,9 @@
 
 namespace football::training {
 using Simple115 = std::array<float, kSimple115Features>;
+struct TrainingPossession {
+  int team=-1, player=-1, controlled_player=-1;
+};
 struct TrainingTransition {
   // 2026-10-14: contiguous shaped output supports 115 and 460 without padded strides.
   // std::vector<Simple115> observations;
@@ -55,6 +58,10 @@ class NativeTrainingEnv {
   TrainingBatch step_many(std::span<const int> actions, size_t steps);
   std::string get_state_digest();
   ObservationBuffer current_observation();
+  // Read-only metadata at decision boundaries, including a terminal boundary.
+  TrainingPossession possession();
+  // Primary slot in the first active bank:8 model-relative directions,sprint,dribble.
+  std::array<uint8_t,10> sticky_actions();
   // Full training snapshot, including history/rewards. Target must already be reset.
   std::string get_state();
   void set_state(std::string_view state);

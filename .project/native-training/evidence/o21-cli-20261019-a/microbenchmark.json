@@ -1,0 +1,104 @@
+{
+  "contract_passed": true,
+  "o20_equal_decisions": 10000,
+  "controller_bytes": 176,
+  "serialized_controller_bytes": 410,
+  "measurements": [
+    {
+      "mode": "argmax",
+      "repeat": 0,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 4731.8654
+    },
+    {
+      "mode": "sample",
+      "repeat": 0,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 4057.40655
+    },
+    {
+      "mode": "balanced",
+      "repeat": 0,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 4008.9603
+    },
+    {
+      "mode": "argmax",
+      "repeat": 1,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 4045.55285
+    },
+    {
+      "mode": "sample",
+      "repeat": 1,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 3835.83195
+    },
+    {
+      "mode": "balanced",
+      "repeat": 1,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 2948.6085
+    },
+    {
+      "mode": "argmax",
+      "repeat": 2,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 2812.262
+    },
+    {
+      "mode": "sample",
+      "repeat": 2,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 2652.39265
+    },
+    {
+      "mode": "balanced",
+      "repeat": 2,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 2896.9583
+    },
+    {
+      "mode": "argmax",
+      "repeat": 3,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 2595.7581
+    },
+    {
+      "mode": "sample",
+      "repeat": 3,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 2604.47825
+    },
+    {
+      "mode": "balanced",
+      "repeat": 3,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 2639.0527
+    },
+    {
+      "mode": "argmax",
+      "repeat": 4,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 2616.80635
+    },
+    {
+      "mode": "sample",
+      "repeat": 4,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 2844.1859
+    },
+    {
+      "mode": "balanced",
+      "repeat": 4,
+      "decisions": 20000,
+      "nanoseconds_per_decision": 2873.8704
+    }
+  ],
+  "checksum": 2509950,
+  "source_sha256": "c1d57094a4eb3976a35ba3061d93bbea984d134a9f191af7a28bef9e4adf5ae8",
+  "tool_sha256": "4125044e397f6f72eb0ef0cb0b151b7c52c7933c4885965a29dd34a7e5b1c550",
+  "binary_sha256": "1b1485871ef0f469daae4928ea419ec730cfff74146467b06fceb8fd84bc6370",
+  "policy_sha256": "233f8bc5918be55a6ce53eb89dc50e91ca11bc364ff8eefad1a98d29d79577af",
+  "scope": "Synthetic observation; forward+distribution+action choice,5 repeats x20000 decisions/mode; modes interleaved in fixed order"
+}

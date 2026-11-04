@@ -1,0 +1,599 @@
+{
+  "passed": true,
+  "scope": "one sustained four-worker duration baseline; not a scaling or learning-success gate",
+  "source_sha256": "0058952fa3c56c4506a32cd89744a61d265f85fea8f81af14010736b73448011",
+  "duration_seconds": 1800.021971916,
+  "updates": 7265,
+  "transitions": 1859840,
+  "aggregate_tps": 1033.2318321760972,
+  "stage_fractions_of_iteration": {
+    "callback_ns": 0.05059105854328974,
+    "collection_other_ns": 0.025883072303860916,
+    "diagnostic_ns": 0.0237233858555924,
+    "digest_ns": 0.004064876525287935,
+    "native_update_ns": 0.24396361419894472,
+    "policy_ns": 0.01842962721984807,
+    "reset_ns": 0.11389070165678804,
+    "step_rpc_ns": 0.5169109778843545,
+    "update_bridge_ns": 0.0020785826998338756
+  },
+  "iteration_fraction_of_session": 0.9975375107270041,
+  "checkpoint_fraction_of_session": 0.0016837851522300406,
+  "minute_windows": [
+    {
+      "end_seconds": 60.082922719,
+      "duration_seconds": 60.082922719,
+      "transitions": 74496,
+      "tps": 1239.8864207789638,
+      "stage_ns_per_transition": {
+        "callback_ns": 41795.00344984965,
+        "collection_other_ns": 21048.89086662371,
+        "diagnostic_ns": 20062.94217139175,
+        "digest_ns": 3181.51198722079,
+        "native_update_ns": 202909.2598931486,
+        "policy_ns": 15674.481475515464,
+        "reset_ns": 91198.59176331614,
+        "step_rpc_ns": 407582.61471756874,
+        "update_bridge_ns": 2003.7089776632301
+      }
+    },
+    {
+      "end_seconds": 120.235450062,
+      "duration_seconds": 60.152527342999996,
+      "transitions": 56576,
+      "tps": 940.5423595486516,
+      "stage_ns_per_transition": {
+        "callback_ns": 54665.46604567308,
+        "collection_other_ns": 27924.888733738688,
+        "diagnostic_ns": 25555.827170531673,
+        "digest_ns": 4048.527396776018,
+        "native_update_ns": 258100.349582862,
+        "policy_ns": 19770.166890554297,
+        "reset_ns": 118173.8454998586,
+        "step_rpc_ns": 550243.7329786482,
+        "update_bridge_ns": 2004.9678485576924
+      }
+    },
+    {
+      "end_seconds": 180.34568855,
+      "duration_seconds": 60.11023848800001,
+      "transitions": 71424,
+      "tps": 1188.2168794631982,
+      "stage_ns_per_transition": {
+        "callback_ns": 43678.117243503584,
+        "collection_other_ns": 22253.288236447133,
+        "diagnostic_ns": 20993.311869959678,
+        "digest_ns": 3253.8753640232976,
+        "native_update_ns": 211821.98774921594,
+        "policy_ns": 16145.637152777777,
+        "reset_ns": 97267.6164594534,
+        "step_rpc_ns": 421997.36949764786,
+        "update_bridge_ns": 1898.8694696460573
+      }
+    },
+    {
+      "end_seconds": 240.444500027,
+      "duration_seconds": 60.098811477,
+      "transitions": 70656,
+      "tps": 1175.6638486443326,
+      "stage_ns_per_transition": {
+        "callback_ns": 44229.943203691124,
+        "collection_other_ns": 22340.6298828125,
+        "diagnostic_ns": 21108.772701539856,
+        "digest_ns": 3378.891785552536,
+        "native_update_ns": 214076.4418166893,
+        "policy_ns": 16551.639407835144,
+        "reset_ns": 95769.67888077446,
+        "step_rpc_ns": 429030.01607789856,
+        "update_bridge_ns": 1812.1110450634058
+      }
+    },
+    {
+      "end_seconds": 300.485579612,
+      "duration_seconds": 60.04107958499998,
+      "transitions": 67584,
+      "tps": 1125.629326906448,
+      "stage_ns_per_transition": {
+        "callback_ns": 47192.43017578125,
+        "collection_other_ns": 23869.12831439394,
+        "diagnostic_ns": 21890.093705610794,
+        "digest_ns": 3521.9329723011365,
+        "native_update_ns": 222482.9512310606,
+        "policy_ns": 17237.868844696968,
+        "reset_ns": 100439.7724461411,
+        "step_rpc_ns": 447462.69689571497,
+        "update_bridge_ns": 1901.2733931107955
+      }
+    },
+    {
+      "end_seconds": 360.596844086,
+      "duration_seconds": 60.111264473999995,
+      "transitions": 60928,
+      "tps": 1013.587062810054,
+      "stage_ns_per_transition": {
+        "callback_ns": 52369.67560070904,
+        "collection_other_ns": 26882.909171481093,
+        "diagnostic_ns": 23900.855173319327,
+        "digest_ns": 3927.9552586659665,
+        "native_update_ns": 244623.17412355568,
+        "policy_ns": 18967.893907563026,
+        "reset_ns": 110955.18909204307,
+        "step_rpc_ns": 500420.7783121061,
+        "update_bridge_ns": 1926.517299107143
+      }
+    },
+    {
+      "end_seconds": 420.82294538,
+      "duration_seconds": 60.226101294000046,
+      "transitions": 35840,
+      "tps": 595.0908199261193,
+      "stage_ns_per_transition": {
+        "callback_ns": 80209.64503348214,
+        "collection_other_ns": 42787.13758370536,
+        "diagnostic_ns": 34871.4615234375,
+        "digest_ns": 7455.4537388392855,
+        "native_update_ns": 367059.9591238839,
+        "policy_ns": 27027.095200892858,
+        "reset_ns": 186744.9387276786,
+        "step_rpc_ns": 927776.3174665179,
+        "update_bridge_ns": 2376.7423828125
+      }
+    },
+    {
+      "end_seconds": 481.206254248,
+      "duration_seconds": 60.38330886799997,
+      "transitions": 43520,
+      "tps": 720.728969906837,
+      "stage_ns_per_transition": {
+        "callback_ns": 64033.765625,
+        "collection_other_ns": 33610.69147518383,
+        "diagnostic_ns": 29179.47265625,
+        "digest_ns": 6338.365464154412,
+        "native_update_ns": 305961.51123621326,
+        "policy_ns": 22269.701309742646,
+        "reset_ns": 163363.140234375,
+        "step_rpc_ns": 756131.7319623162,
+        "update_bridge_ns": 2204.852734375
+      }
+    },
+    {
+      "end_seconds": 541.40455265,
+      "duration_seconds": 60.198298402000034,
+      "transitions": 45056,
+      "tps": 748.4596939787098,
+      "stage_ns_per_transition": {
+        "callback_ns": 65229.91463955966,
+        "collection_other_ns": 34604.64515269886,
+        "diagnostic_ns": 28745.24913441051,
+        "digest_ns": 5293.867697975852,
+        "native_update_ns": 304422.20649857953,
+        "policy_ns": 22775.367919921875,
+        "reset_ns": 147128.70552201706,
+        "step_rpc_ns": 718203.4019886364,
+        "update_bridge_ns": 2329.1135031960225
+      }
+    },
+    {
+      "end_seconds": 601.669347919,
+      "duration_seconds": 60.26479526899993,
+      "transitions": 59904,
+      "tps": 994.0131669345349,
+      "stage_ns_per_transition": {
+        "callback_ns": 52900.15241052351,
+        "collection_other_ns": 27090.620826655984,
+        "diagnostic_ns": 23762.96713074252,
+        "digest_ns": 3895.8223157051284,
+        "native_update_ns": 241431.23093616453,
+        "policy_ns": 18865.71534455128,
+        "reset_ns": 110896.01432291667,
+        "step_rpc_ns": 522160.87146100425,
+        "update_bridge_ns": 2137.22015224359
+      }
+    },
+    {
+      "end_seconds": 661.896853662,
+      "duration_seconds": 60.22750574300005,
+      "transitions": 64000,
+      "tps": 1062.6373981532251,
+      "stage_ns_per_transition": {
+        "callback_ns": 49325.7814375,
+        "collection_other_ns": 25043.56153125,
+        "diagnostic_ns": 22902.259015625,
+        "digest_ns": 3727.994984375,
+        "native_update_ns": 231812.26875,
+        "policy_ns": 17979.709171875,
+        "reset_ns": 105478.490625,
+        "step_rpc_ns": 479981.689390625,
+        "update_bridge_ns": 2000.508734375
+      }
+    },
+    {
+      "end_seconds": 722.139538383,
+      "duration_seconds": 60.24268472099993,
+      "transitions": 61184,
+      "tps": 1015.6253872708288,
+      "stage_ns_per_transition": {
+        "callback_ns": 51255.554573091,
+        "collection_other_ns": 26387.291040141212,
+        "diagnostic_ns": 23571.94132452929,
+        "digest_ns": 3969.4029975156905,
+        "native_update_ns": 241841.26327144352,
+        "policy_ns": 18646.859146182007,
+        "reset_ns": 111269.12101202928,
+        "step_rpc_ns": 502849.06684754184,
+        "update_bridge_ns": 2080.796809623431
+      }
+    },
+    {
+      "end_seconds": 782.282039914,
+      "duration_seconds": 60.14250153100011,
+      "transitions": 21248,
+      "tps": 353.29425047356636,
+      "stage_ns_per_transition": {
+        "callback_ns": 73994.78172063253,
+        "collection_other_ns": 39523.79395707831,
+        "diagnostic_ns": 53767.64274284639,
+        "digest_ns": 11910.107398343374,
+        "native_update_ns": 654116.3001223644,
+        "policy_ns": 24642.793627635543,
+        "reset_ns": 383965.3378670934,
+        "step_rpc_ns": 1578196.8663403615,
+        "update_bridge_ns": 3628.070971385542
+      }
+    },
+    {
+      "end_seconds": 842.470096816,
+      "duration_seconds": 60.18805690199997,
+      "transitions": 63232,
+      "tps": 1050.5738722045185,
+      "stage_ns_per_transition": {
+        "callback_ns": 50571.92143218624,
+        "collection_other_ns": 25849.767886513157,
+        "diagnostic_ns": 22951.119338309716,
+        "digest_ns": 3707.3611304402834,
+        "native_update_ns": 234065.8447147014,
+        "policy_ns": 18422.36149418016,
+        "reset_ns": 106637.18761070345,
+        "step_rpc_ns": 484936.5188353998,
+        "update_bridge_ns": 1921.4914442054655
+      }
+    },
+    {
+      "end_seconds": 902.692985461,
+      "duration_seconds": 60.22288864500001,
+      "transitions": 62208,
+      "tps": 1032.9627389131358,
+      "stage_ns_per_transition": {
+        "callback_ns": 51040.10707626029,
+        "collection_other_ns": 25943.27756880144,
+        "diagnostic_ns": 23138.17544367284,
+        "digest_ns": 3839.8183352623455,
+        "native_update_ns": 236900.37596450618,
+        "policy_ns": 18492.31756365741,
+        "reset_ns": 107897.18840020576,
+        "step_rpc_ns": 496209.727494856,
+        "update_bridge_ns": 1932.4720775462963
+      }
+    },
+    {
+      "end_seconds": 962.790000653,
+      "duration_seconds": 60.09701519199996,
+      "transitions": 66816,
+      "tps": 1111.8023047656195,
+      "stage_ns_per_transition": {
+        "callback_ns": 46870.04911997126,
+        "collection_other_ns": 23844.64077466475,
+        "diagnostic_ns": 21856.24268139368,
+        "digest_ns": 3560.9936392480845,
+        "native_update_ns": 221147.6097341954,
+        "policy_ns": 17223.920827346745,
+        "reset_ns": 101460.45031130269,
+        "step_rpc_ns": 458984.02816690615,
+        "update_bridge_ns": 1934.637332375479
+      }
+    },
+    {
+      "end_seconds": 1022.808310602,
+      "duration_seconds": 60.01830994900001,
+      "transitions": 67840,
+      "tps": 1130.3217311124954,
+      "stage_ns_per_transition": {
+        "callback_ns": 46024.31898584906,
+        "collection_other_ns": 23320.62362912736,
+        "diagnostic_ns": 21426.750958136792,
+        "digest_ns": 3691.364814268868,
+        "native_update_ns": 218735.8475678066,
+        "policy_ns": 16964.703847287736,
+        "reset_ns": 98734.88918042452,
+        "step_rpc_ns": 451294.0377505896,
+        "update_bridge_ns": 2006.573054245283
+      }
+    },
+    {
+      "end_seconds": 1082.934896241,
+      "duration_seconds": 60.12658563899993,
+      "transitions": 81664,
+      "tps": 1358.2011872470312,
+      "stage_ns_per_transition": {
+        "callback_ns": 37568.58495787618,
+        "collection_other_ns": 18806.25051430251,
+        "diagnostic_ns": 18548.02951116771,
+        "digest_ns": 2960.4103521747647,
+        "native_update_ns": 186074.792393221,
+        "policy_ns": 14309.631624706113,
+        "reset_ns": 84509.44292466693,
+        "step_rpc_ns": 369705.2529021356,
+        "update_bridge_ns": 1781.133632934953
+      }
+    },
+    {
+      "end_seconds": 1143.005236782,
+      "duration_seconds": 60.07034054100018,
+      "transitions": 75520,
+      "tps": 1257.1928062977247,
+      "stage_ns_per_transition": {
+        "callback_ns": 41326.36228813559,
+        "collection_other_ns": 20889.27507944915,
+        "diagnostic_ns": 19907.015439618644,
+        "digest_ns": 3159.3516684322035,
+        "native_update_ns": 201652.81820709744,
+        "policy_ns": 15512.739631885594,
+        "reset_ns": 90297.32800582628,
+        "step_rpc_ns": 398755.3429157839,
+        "update_bridge_ns": 1884.909878177966
+      }
+    },
+    {
+      "end_seconds": 1203.140539148,
+      "duration_seconds": 60.135302365999905,
+      "transitions": 67840,
+      "tps": 1128.122705480172,
+      "stage_ns_per_transition": {
+        "callback_ns": 46678.661630306604,
+        "collection_other_ns": 23711.42165389151,
+        "diagnostic_ns": 21521.609433962265,
+        "digest_ns": 3502.186394457547,
+        "native_update_ns": 222247.4016509434,
+        "policy_ns": 17162.81823408019,
+        "reset_ns": 98008.88391804245,
+        "step_rpc_ns": 449287.2934404481,
+        "update_bridge_ns": 1853.4736880896226
+      }
+    },
+    {
+      "end_seconds": 1263.313182199,
+      "duration_seconds": 60.17264305100002,
+      "transitions": 68864,
+      "tps": 1144.4403388036906,
+      "stage_ns_per_transition": {
+        "callback_ns": 44583.5813197026,
+        "collection_other_ns": 22753.74080796933,
+        "diagnostic_ns": 21574.556676928438,
+        "digest_ns": 3617.2342007434945,
+        "native_update_ns": 219751.91496282528,
+        "policy_ns": 16399.530088289965,
+        "reset_ns": 98538.73562383829,
+        "step_rpc_ns": 442320.9355396143,
+        "update_bridge_ns": 1937.5886965613383
+      }
+    },
+    {
+      "end_seconds": 1323.375019969,
+      "duration_seconds": 60.06183777000001,
+      "transitions": 61440,
+      "tps": 1022.945721962047,
+      "stage_ns_per_transition": {
+        "callback_ns": 49759.41547851563,
+        "collection_other_ns": 25445.518131510416,
+        "diagnostic_ns": 23090.649658203125,
+        "digest_ns": 3940.3524576822915,
+        "native_update_ns": 241780.1606933594,
+        "policy_ns": 18142.914111328126,
+        "reset_ns": 114747.73972981771,
+        "step_rpc_ns": 494345.5709635417,
+        "update_bridge_ns": 2197.0421875
+      }
+    },
+    {
+      "end_seconds": 1383.516437196,
+      "duration_seconds": 60.14141722699992,
+      "transitions": 53504,
+      "tps": 889.636501216002,
+      "stage_ns_per_transition": {
+        "callback_ns": 55142.34855337919,
+        "collection_other_ns": 28516.27020409689,
+        "diagnostic_ns": 24105.44480786483,
+        "digest_ns": 4598.840423145933,
+        "native_update_ns": 252896.53526839116,
+        "policy_ns": 19736.621934808612,
+        "reset_ns": 121934.05500523325,
+        "step_rpc_ns": 612073.6740804426,
+        "update_bridge_ns": 2044.8235645933014
+      }
+    },
+    {
+      "end_seconds": 1443.530280591,
+      "duration_seconds": 60.013843395000094,
+      "transitions": 72960,
+      "tps": 1215.7195052446596,
+      "stage_ns_per_transition": {
+        "callback_ns": 42762.07601425439,
+        "collection_other_ns": 21456.190076754385,
+        "diagnostic_ns": 20509.69568256579,
+        "digest_ns": 3250.79414747807,
+        "native_update_ns": 209414.3852247807,
+        "policy_ns": 15884.984923245614,
+        "reset_ns": 93735.45357730263,
+        "step_rpc_ns": 411200.0246025219,
+        "update_bridge_ns": 1966.086800986842
+      }
+    },
+    {
+      "end_seconds": 1504.022960738,
+      "duration_seconds": 60.492680146999874,
+      "transitions": 57600,
+      "tps": 952.1813194593043,
+      "stage_ns_per_transition": {
+        "callback_ns": 52787.99815972222,
+        "collection_other_ns": 27280.511944444443,
+        "diagnostic_ns": 23818.7075,
+        "digest_ns": 4322.477690972222,
+        "native_update_ns": 244870.87913194444,
+        "policy_ns": 18827.966875,
+        "reset_ns": 116272.11315972223,
+        "step_rpc_ns": 557245.5296701388,
+        "update_bridge_ns": 2060.401909722222
+      }
+    },
+    {
+      "end_seconds": 1564.170533937,
+      "duration_seconds": 60.147573199000135,
+      "transitions": 66816,
+      "tps": 1110.8677615127906,
+      "stage_ns_per_transition": {
+        "callback_ns": 46128.555824952105,
+        "collection_other_ns": 23447.65393019636,
+        "diagnostic_ns": 21832.002559267243,
+        "digest_ns": 3674.3404124760536,
+        "native_update_ns": 223629.1534213362,
+        "policy_ns": 17075.29138230364,
+        "reset_ns": 103091.76665768678,
+        "step_rpc_ns": 455910.711566092,
+        "update_bridge_ns": 2002.1102280890805
+      }
+    },
+    {
+      "end_seconds": 1624.440557511,
+      "duration_seconds": 60.27002357399988,
+      "transitions": 70656,
+      "tps": 1172.3240810292393,
+      "stage_ns_per_transition": {
+        "callback_ns": 43950.984700520836,
+        "collection_other_ns": 22353.64352638134,
+        "diagnostic_ns": 20785.607535099636,
+        "digest_ns": 3576.97412817029,
+        "native_update_ns": 212420.65531589673,
+        "policy_ns": 16380.418803781702,
+        "reset_ns": 96947.34084861865,
+        "step_rpc_ns": 432490.6491876132,
+        "update_bridge_ns": 1886.5157099184783
+      }
+    },
+    {
+      "end_seconds": 1684.517896411,
+      "duration_seconds": 60.077338900000086,
+      "transitions": 52992,
+      "tps": 882.063036916569,
+      "stage_ns_per_transition": {
+        "callback_ns": 56991.600449124395,
+        "collection_other_ns": 29736.002377717392,
+        "diagnostic_ns": 25182.97142964976,
+        "digest_ns": 4779.218466938406,
+        "native_update_ns": 259893.800366093,
+        "policy_ns": 20607.419723731884,
+        "reset_ns": 127677.88654891304,
+        "step_rpc_ns": 602716.1284722222,
+        "update_bridge_ns": 2218.1934820350243
+      }
+    },
+    {
+      "end_seconds": 1744.547307583,
+      "duration_seconds": 60.02941117199998,
+      "transitions": 70656,
+      "tps": 1177.0230395489314,
+      "stage_ns_per_transition": {
+        "callback_ns": 42748.869381227356,
+        "collection_other_ns": 21730.241437386776,
+        "diagnostic_ns": 20719.463966259056,
+        "digest_ns": 3624.243447124094,
+        "native_update_ns": 208026.64024286685,
+        "policy_ns": 15826.825266077898,
+        "reset_ns": 98391.28068387682,
+        "step_rpc_ns": 433506.44882246375,
+        "update_bridge_ns": 1921.5640285326087
+      }
+    }
+  ],
+  "minute_tps": {
+    "p10": 742.9135491643352,
+    "median": 1062.6373981532251,
+    "p90": 1220.5528883515203,
+    "minimum": 353.29425047356636,
+    "maximum": 1358.2011872470312
+  },
+  "memory": {
+    "parent_rss_first": 51507200,
+    "parent_rss_last": 64057344,
+    "parent_rss_peak": 65613824,
+    "worker_rss_sum_first": 556638208,
+    "worker_rss_sum_last": 553824256,
+    "worker_rss_sum_peak": 556687360,
+    "note": "RSS sum double-counts shared pages; instrumentation retains bounded per-window metadata"
+  },
+  "fds": {
+    "parent_min": 17,
+    "parent_max": 19,
+    "worker_sum_min": 32,
+    "worker_sum_max": 32,
+    "parent_before": 5,
+    "parent_after": 5
+  },
+  "worker_cpu_seconds": 3247.34,
+  "workers_reaped": true,
+  "runner_sha256": "cdc1e2e696cf40bf4be79008a05fa18d276415a0e2651044b1ec7ce8d87dd24a",
+  "receipts": {
+    "report.json": "5d3c5c77b87f930329079dae7b3c32377bbf74974353832c51b0b785d2f96aa0",
+    "iterations.jsonl": "116d15908b7fd51442b1357ac417c19c96afdda9a841ff8168d90110e304e0c8",
+    "resources.jsonl": "a6829e7b9681440b27525b54c89c96b11a884e41f4c725c272c3a1ec7ebbe161",
+    "latest-checkpoint.json": "5e0745be4af54e1c84a45d9742eb008e5ae9a451afa6ed5c9bc14e528a9d5742"
+  },
+  "last_five_vs_first_five_minute_tps_ratio": 0.9448855323685772,
+  "first_last_five_minute_unit_costs": {
+    "callback_ns": {
+      "first_ns_per_transition": 45902.23486218069,
+      "last_ns_per_transition": 47906.24391629016,
+      "last_over_first": 1.0436582022667613
+    },
+    "collection_other_ns": {
+      "first_ns_per_transition": 23270.292105911907,
+      "last_ns_per_transition": 24562.61655057731,
+      "last_over_first": 1.0555353769855378
+    },
+    "diagnostic_ns": {
+      "first_ns_per_transition": 21749.281737180692,
+      "last_ns_per_transition": 22269.587691390563,
+      "last_over_first": 1.0239229028570815
+    },
+    "digest_ns": {
+      "first_ns_per_transition": 3449.0910646365514,
+      "last_ns_per_transition": 3942.48562374498,
+      "last_over_first": 1.1430506037278028
+    },
+    "native_update_ns": {
+      "first_ns_per_transition": 220139.52181454265,
+      "last_ns_per_transition": 227553.91734751506,
+      "last_over_first": 1.0336804380778963
+    },
+    "policy_ns": {
+      "first_ns_per_transition": 16945.27694167919,
+      "last_ns_per_transition": 17548.497063253013,
+      "last_over_first": 1.0355981270562846
+    },
+    "reset_ns": {
+      "first_ns_per_transition": 99730.58328148478,
+      "last_ns_per_transition": 107157.39647966868,
+      "last_over_first": 1.0744687632801873
+    },
+    "step_rpc_ns": {
+      "first_ns_per_transition": 446649.2174146553,
+      "last_ns_per_transition": 488474.1988265562,
+      "last_over_first": 1.0936416762442727
+    },
+    "update_bridge_ns": {
+      "first_ns_per_transition": 1921.8937740655522,
+      "last_ns_per_transition": 2005.0901669176708,
+      "last_over_first": 1.0432887571492184
+    }
+  },
+  "minute_costs_csv_sha256": "11aadf8cc8c2eee9202dcffab2b58e6c063c8e76b2865bada8674f37619edf5e"
+}

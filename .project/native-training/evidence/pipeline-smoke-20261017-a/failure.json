@@ -1,0 +1,10 @@
+{
+  "passed": false,
+  "status": "failed_before_timed_loop",
+  "error": "ValueError: action must be an integer in [0, 18]",
+  "cause": "Parameterized runner returned a one-element action list where the existing single-player worker API requires a scalar.",
+  "fix": "Runner policy unwraps actions[0] for one player; production API unchanged.",
+  "receipt_kind": "Reconstructed from observed tool traceback; not an archived original stderr log.",
+  "performance_accepted": false,
+  "followup": "pipeline-smoke-20261017-b passed two actual PPO updates"
+}

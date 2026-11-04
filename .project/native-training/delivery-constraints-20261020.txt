@@ -1,0 +1,14 @@
+# Local O25 installation constraints matching the recovered O22/O23 runtime.
+# Does not pin gfootball: install the newly built current-source wheel explicitly.
+# Set PIP_CONSTRAINT only in the delivery subprocess environment.
+absl-py==2.5.1
+cloudpickle==3.1.2
+Farama-Notifications==0.0.6
+gymnasium==1.4.0
+numpy==2.5.4
+opencv-python==5.0.0.93
+psutil==7.2.2
+pybind11==3.1.0
+pygame-ce==2.5.8
+six==1.17.0
+typing_extensions==4.16.0

@@ -165,6 +165,7 @@ void Geometry::RecursiveUpdateSpatialData(e_SpatialDataType spatialDataType,
 }
 
   AABB Geometry::GetAABB() const {
+    NoteSpatialDataRead();
     // 2026-04-02 对齐 Spatial 成员名 aabb_
     // if (aabb.dirty == true) {
     if (aabb_.dirty == true) {

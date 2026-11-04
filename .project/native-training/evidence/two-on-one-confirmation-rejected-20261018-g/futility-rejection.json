@@ -1,0 +1,15 @@
+{
+  "rejected": true,
+  "criterion": "Each seed must strictly beat its own untrained sample baseline",
+  "observed": {
+    "seed": 42,
+    "success": 0.73,
+    "initial": 0.74,
+    "random": 0.715,
+    "cooperation": 0.39,
+    "cooperative_success": 0.36
+  },
+  "remaining_schedule_stopped": true,
+  "no_seed_replacement": true,
+  "next_trial_requires_new_registration_confirmation_geometry_and_seeds": true
+}

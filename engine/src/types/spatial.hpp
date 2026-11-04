@@ -72,6 +72,7 @@ constexpr bool SnapshotEnumValid(e_LocalMode, int64_t value) {
   */
 
   class Spatial : public RefCounted {
+    friend class Node;
 
     public:
       Spatial(const std::string &name);
@@ -115,6 +116,10 @@ constexpr bool SnapshotEnumValid(e_LocalMode, int64_t value) {
       virtual AABB GetAABB() const;
 
     protected:
+      // A completed headless subtree invalidation may be reused until a read.
+      // This is an execution cache, never part of a snapshot.
+      void NoteSpatialDataRead() const;
+      mutable bool subtree_invalidation_complete_ = false;
       // 2025-03-17 Google 规范：Class data members 末尾下划线（cpp-google-style）
       std::string name_;
       Node *parent_ = nullptr;

@@ -138,7 +138,7 @@ def collect_episodes(pool, episode_ids, policy, *, max_steps=256, on_transition=
           finished.append(worker)
       if finished:
         tick = time.perf_counter_ns()
-        digests = pool.digests()
+        digests = pool.digests(finished)
         digest_ns += time.perf_counter_ns() - tick
         for worker in finished:
           transition = current.pop(worker)

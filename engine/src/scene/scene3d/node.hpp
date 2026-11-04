@@ -105,6 +105,13 @@ namespace blunted {
                                       e_SystemType excludeSystem =
                                           e_SystemType_None) override;
 
+    private:
+      friend class Spatial;
+      bool CanPruneHeadlessInvalidation() const;
+      void InvalidatePruningEligibility();
+      // -1 unknown, 0 custom objects/types, 1 exact Node/Geometry tree.
+      mutable int pruning_eligibility_ = -1;
+
     protected:
       mutable std::vector < boost::intrusive_ptr<Node> > nodes_;
       mutable std::vector < boost::intrusive_ptr<Object> > objects_;

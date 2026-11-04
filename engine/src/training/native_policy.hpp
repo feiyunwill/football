@@ -2,6 +2,7 @@
 #include "training/categorical_policy.hpp"
 #include "training/native_training.hpp"
 #include <thread>
+#include <optional>
 
 namespace football::training {
 struct NativePolicyStep {
@@ -21,12 +22,15 @@ struct NativePolicySnapshot {
 class NativePolicyEnvironment {
  public:
   explicit NativePolicyEnvironment(PolicySpec spec, bool checkpoint_rewards = false,
-                                   int width = 160, int height = 90);
+                                   int width = 160, int height = 90, bool fixed_teammate = false);
   ObservationBuffer reset(ScenarioConfig& scenario, int cadence = 10);
   NativePolicyStep step(const CategoricalPolicy& policy, PolicyRng& rng,
-                       bool deterministic = false, bool horizon = false);
+                       bool deterministic = false, bool horizon = false,
+                       std::optional<bool> cooperation_phase = std::nullopt);
   const ObservationBuffer& observation() const;
   std::string kernel_state();
+  TrainingPossession possession() { open(); return env_.possession(); }
+  std::array<uint8_t,10> sticky_actions() { open(); return env_.sticky_actions(); }
   void close();
   bool needs_reset() const;
   NativePolicySnapshot snapshot();
@@ -36,6 +40,7 @@ class NativePolicyEnvironment {
   void owner() const;
   void open() const;
   PolicySpec spec_;
+  bool fixed_teammate_ = false;
   NativeTrainingEnv env_;
   ObservationBuffer observation_;
   std::thread::id thread_;

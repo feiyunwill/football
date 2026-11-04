@@ -1,0 +1,991 @@
+{
+  "passed": true,
+  "scope": "Instrumented actual worker lifetimes, all original methods/guards execute. Phase set around OwnedEngine invocation. Includes pool warmup/construction; not throughput evidence. Dirty flags alone do not prove pruning safe.",
+  "measured_worker_pids": [
+    "1977057",
+    "1977058",
+    "1977059",
+    "1977060"
+  ],
+  "workers": {
+    "1977057": {
+      "origin": "/tmp/football-native-assessment-20261015/validation-stage/gfootball_engine/libfootball_engine.so",
+      "pid": 1977057,
+      "phases": [
+        {
+          "phase": 0,
+          "node_calls": 650,
+          "root_bbox_dirty": 350,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 350,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            675
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            350
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 1,
+          "node_calls": 138123,
+          "root_bbox_dirty": 137440,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 137379,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            722,
+            0,
+            0,
+            0,
+            595,
+            0,
+            0,
+            66
+          ],
+          "roots": [
+            61,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            137379
+          ],
+          "reads": [
+            1851,
+            3107,
+            1917
+          ],
+          "misses": [
+            1317,
+            1317,
+            722
+          ]
+        },
+        {
+          "phase": 2,
+          "node_calls": 83986,
+          "root_bbox_dirty": 70393,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 68958,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 231,
+          "invalidations": [
+            14851,
+            0,
+            0,
+            0,
+            910,
+            0,
+            5932,
+            17182
+          ],
+          "roots": [
+            1435,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            68958
+          ],
+          "reads": [
+            29089,
+            27253,
+            23464
+          ],
+          "misses": [
+            16091,
+            10146,
+            8948
+          ]
+        },
+        {
+          "phase": 3,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 4,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 5,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "1977058": {
+      "origin": "/tmp/football-native-assessment-20261015/validation-stage/gfootball_engine/libfootball_engine.so",
+      "pid": 1977058,
+      "phases": [
+        {
+          "phase": 0,
+          "node_calls": 650,
+          "root_bbox_dirty": 350,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 350,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            675
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            350
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 1,
+          "node_calls": 138080,
+          "root_bbox_dirty": 137440,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 137385,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            680,
+            0,
+            0,
+            0,
+            580,
+            0,
+            0,
+            45
+          ],
+          "roots": [
+            55,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            137385
+          ],
+          "reads": [
+            1785,
+            2990,
+            1830
+          ],
+          "misses": [
+            1260,
+            1260,
+            680
+          ]
+        },
+        {
+          "phase": 2,
+          "node_calls": 83986,
+          "root_bbox_dirty": 70393,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 68958,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 231,
+          "invalidations": [
+            14851,
+            0,
+            0,
+            0,
+            910,
+            0,
+            5932,
+            17182
+          ],
+          "roots": [
+            1435,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            68958
+          ],
+          "reads": [
+            29089,
+            27253,
+            23464
+          ],
+          "misses": [
+            16091,
+            10146,
+            8948
+          ]
+        },
+        {
+          "phase": 3,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 4,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 5,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "1977059": {
+      "origin": "/tmp/football-native-assessment-20261015/validation-stage/gfootball_engine/libfootball_engine.so",
+      "pid": 1977059,
+      "phases": [
+        {
+          "phase": 0,
+          "node_calls": 650,
+          "root_bbox_dirty": 350,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 350,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            675
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            350
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 1,
+          "node_calls": 138947,
+          "root_bbox_dirty": 137440,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 137311,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            1602,
+            0,
+            0,
+            0,
+            1371,
+            0,
+            0,
+            102
+          ],
+          "roots": [
+            129,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            137311
+          ],
+          "reads": [
+            4215,
+            7059,
+            4317
+          ],
+          "misses": [
+            2973,
+            2973,
+            1602
+          ]
+        },
+        {
+          "phase": 2,
+          "node_calls": 83986,
+          "root_bbox_dirty": 70393,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 68958,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 231,
+          "invalidations": [
+            14851,
+            0,
+            0,
+            0,
+            910,
+            0,
+            5932,
+            17182
+          ],
+          "roots": [
+            1435,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            68958
+          ],
+          "reads": [
+            29089,
+            27253,
+            23464
+          ],
+          "misses": [
+            16091,
+            10146,
+            8948
+          ]
+        },
+        {
+          "phase": 3,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 4,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 5,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "1977060": {
+      "origin": "/tmp/football-native-assessment-20261015/validation-stage/gfootball_engine/libfootball_engine.so",
+      "pid": 1977060,
+      "phases": [
+        {
+          "phase": 0,
+          "node_calls": 650,
+          "root_bbox_dirty": 350,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 350,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            675
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            350
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 1,
+          "node_calls": 140542,
+          "root_bbox_dirty": 137440,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 137176,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            3300,
+            0,
+            0,
+            0,
+            2838,
+            0,
+            0,
+            198
+          ],
+          "roots": [
+            264,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            137176
+          ],
+          "reads": [
+            8712,
+            14586,
+            8910
+          ],
+          "misses": [
+            6138,
+            6138,
+            3300
+          ]
+        },
+        {
+          "phase": 2,
+          "node_calls": 83986,
+          "root_bbox_dirty": 70393,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 68958,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 231,
+          "invalidations": [
+            14851,
+            0,
+            0,
+            0,
+            910,
+            0,
+            5932,
+            17182
+          ],
+          "roots": [
+            1435,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            68958
+          ],
+          "reads": [
+            29089,
+            27253,
+            23464
+          ],
+          "misses": [
+            16091,
+            10146,
+            8948
+          ]
+        },
+        {
+          "phase": 3,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 4,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "phase": 5,
+          "node_calls": 0,
+          "root_bbox_dirty": 0,
+          "root_dirty_partial_descendant": 0,
+          "root_fully_dirty": 0,
+          "root_fully_dirty_partial_descendant": 0,
+          "reads_during_update": 0,
+          "invalidations": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "roots": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "reads": [
+            0,
+            0,
+            0
+          ],
+          "misses": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  },
+  "probe_sha256": "b625686e5dc784c5a2e78504df5a6c73aef76def099fde076fde08ba51ccd642",
+  "probe_source_sha256": "d72bb2fe9bd132d566596fa1b82858d5a71f743221a5f2e60307acafb9e752dc",
+  "probe_library": "/tmp/football-spatial-probe-current-20261017-a/spatial_probe.so",
+  "files": {
+    "/tmp/football-spatial-current-smoke-20261017-a-counters/spatial-1977057.json": "f8c6b075e10bbca83456db2890bd0e1862a43b2a9aad988f5324ca2bea060304",
+    "/tmp/football-spatial-current-smoke-20261017-a-counters/spatial-1977058.json": "b2e3715dd84b5b04bc71c5ed9e5bc908bbfab3a369ded7f43f4fb71934f765d7",
+    "/tmp/football-spatial-current-smoke-20261017-a-counters/spatial-1977059.json": "d70feda1606b4050ed242e98fad0a47c080f7e873d020ed8dc0659922d54a1f6",
+    "/tmp/football-spatial-current-smoke-20261017-a-counters/spatial-1977060.json": "a1645df34bb62c3f8fe32a436ee447de68445f6a54757fa3f987d7bc1779a60c"
+  },
+  "phase_names": [
+    "other",
+    "step",
+    "reset",
+    "digest",
+    "close",
+    "unused"
+  ],
+  "dirty_mask": "position=1 rotation=2 scale=4; 7 means all three dirty on entry",
+  "root_counter_scope": "Outermost intercepted Node update; includes every cause, not just Mirror. Partial descendant refers to transform flags, not full observer/AABB semantics."
+}

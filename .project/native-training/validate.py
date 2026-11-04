@@ -184,11 +184,13 @@ def main():
     run('build-native', ['cmake', '--build', str(build), '--target',
                          'engine_native_training_contract', 'engine_training_snapshot_contract',
                          'engine_training_restore_contract', 'engine_training_soak_contract',
+                         'engine_spatial_invalidation_contract',
                          'engine_native_policy_contract', 'engine_ppo_checkpoint_contract', '--parallel', '1'])
     contract = build / 'bin/engine_native_training_contract'
     run('native-contract', [str(contract)])
     run('snapshot-format-contract', [str(build / 'bin/engine_training_snapshot_contract')])
     run('training-restore-contract', [str(build / 'bin/engine_training_restore_contract')])
+    run('spatial-invalidation-contract', [str(build / 'bin/engine_spatial_invalidation_contract')])
     run('training-soak-contract', [str(build / 'bin/engine_training_soak_contract')])
     run('categorical-policy-contract', [str(build / 'bin/categorical_policy_contract')])
     run('native-policy-contract', [str(build / 'bin/engine_native_policy_contract')])

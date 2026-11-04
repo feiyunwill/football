@@ -1,0 +1,208 @@
+{
+  "passed": false,
+  "scope": "isolated CPU UpdatePpo; not engine or end-to-end throughput",
+  "protocol": {
+    "pairs": 8,
+    "repeats": 12,
+    "minimum_median_reduction": 0.1,
+    "confidence": 0.95,
+    "criterion": "all four workload medians >=10% reduction and paired bootstrap lower speedup >1",
+    "floating_point": "exact raw bytes of model, Adam, RNG, update metrics and public gradients"
+  },
+  "baseline_sha256": "c03839aab56bd0eefcfd2dc78bcdd7a9a4e3c455bdb8f085c13d85db2d62bd1d",
+  "candidate_sha256": "3946722978517487282bb8f00a8c151d74a22be554f2b8460694340a6391b735",
+  "workloads": [
+    {
+      "players": 1,
+      "hidden": 16,
+      "pairs": [
+        {
+          "baseline": 0.026842,
+          "candidate": 0.024792
+        },
+        {
+          "candidate": 0.025773,
+          "baseline": 0.032277
+        },
+        {
+          "baseline": 0.028759,
+          "candidate": 0.026324
+        },
+        {
+          "candidate": 0.02397,
+          "baseline": 0.030611
+        },
+        {
+          "baseline": 0.026064,
+          "candidate": 0.024594
+        },
+        {
+          "candidate": 0.024749,
+          "baseline": 0.030918
+        },
+        {
+          "baseline": 0.026869,
+          "candidate": 0.023868
+        },
+        {
+          "candidate": 0.02488,
+          "baseline": 0.032395
+        }
+      ],
+      "state_sha256": "2e4d7dbcc85bcedd353117d3c161b3e6036181bfe7687dc23a16790dc8936f3b",
+      "median_cpu_reduction": 0.15560891745043037,
+      "median_speedup": 1.1874978978655775,
+      "speedup_ci95": [
+        1.0826879638593094,
+        1.2770546516478931
+      ],
+      "accepted": true
+    },
+    {
+      "players": 1,
+      "hidden": 64,
+      "pairs": [
+        {
+          "baseline": 0.108555,
+          "candidate": 0.098452
+        },
+        {
+          "candidate": 0.09712,
+          "baseline": 0.105482
+        },
+        {
+          "baseline": 0.109446,
+          "candidate": 0.107436
+        },
+        {
+          "candidate": 0.10108,
+          "baseline": 0.102978
+        },
+        {
+          "baseline": 0.120424,
+          "candidate": 0.10708
+        },
+        {
+          "candidate": 0.102472,
+          "baseline": 0.113586
+        },
+        {
+          "baseline": 0.113653,
+          "candidate": 0.112622
+        },
+        {
+          "candidate": 0.121281,
+          "baseline": 0.114435
+        }
+      ],
+      "state_sha256": "7ac69b5ffed6db84ca0d8ec1133e28e08f415d9fc0efe2a4f0dd2db092112c12",
+      "median_cpu_reduction": 0.04885265508575265,
+      "median_speedup": 1.0524384383420182,
+      "speedup_ci95": [
+        1.0091545168794729,
+        1.1084588960886879
+      ],
+      "accepted": false
+    },
+    {
+      "players": 11,
+      "hidden": 16,
+      "pairs": [
+        {
+          "baseline": 0.330731,
+          "candidate": 0.341089
+        },
+        {
+          "candidate": 0.350752,
+          "baseline": 0.352638
+        },
+        {
+          "baseline": 0.340343,
+          "candidate": 0.29592
+        },
+        {
+          "candidate": 0.297153,
+          "baseline": 0.334633
+        },
+        {
+          "baseline": 0.336017,
+          "candidate": 0.291493
+        },
+        {
+          "candidate": 0.292752,
+          "baseline": 0.333117
+        },
+        {
+          "baseline": 0.324289,
+          "candidate": 0.302822
+        },
+        {
+          "candidate": 0.297723,
+          "baseline": 0.330861
+        }
+      ],
+      "state_sha256": "8746c00f7cfad2e0a1c059283ff5a42b81640e1e98def70e770db9eeba5cdc89",
+      "median_cpu_reduction": 0.10608008129646063,
+      "median_speedup": 1.118717556716622,
+      "speedup_ci95": [
+        1.0202611944564914,
+        1.150118275209516
+      ],
+      "accepted": true
+    },
+    {
+      "players": 11,
+      "hidden": 64,
+      "pairs": [
+        {
+          "baseline": 1.294391,
+          "candidate": 1.339832
+        },
+        {
+          "candidate": 2.113463,
+          "baseline": 1.607768
+        },
+        {
+          "baseline": 1.677596,
+          "candidate": 2.051593
+        },
+        {
+          "candidate": 1.598566,
+          "baseline": 1.409924
+        },
+        {
+          "baseline": 1.372535,
+          "candidate": 1.737725
+        },
+        {
+          "candidate": 2.339753,
+          "baseline": 1.511586
+        },
+        {
+          "baseline": 2.331499,
+          "candidate": 1.421803
+        },
+        {
+          "candidate": 1.32928,
+          "baseline": 1.476017
+        }
+      ],
+      "state_sha256": "23d4a9c1d14d4299ef0c0ebf7df01266bc0e8a31fe556d34e19ec66c41bd361a",
+      "median_cpu_reduction": -0.1783660686348938,
+      "median_speedup": 0.8498485412470997,
+      "speedup_ci95": [
+        0.7607268260669812,
+        1.1103883305247952
+      ],
+      "accepted": false
+    }
+  ],
+  "inputs": {
+    ".project/native-training/benchmark_ppo_fusion.py": "545e0b0b44c057a43be0a77437da93e6579298d6b4b9eb430faa517f86d25d8b",
+    ".project/native-training/ppo_fusion_probe.cpp": "3887aa44940cf20ee431f073a876a4b62a20bb117f081c74c951f5e5fda2e25f",
+    "engine/src/training/categorical_policy.cpp": "81db949d30591c3a00c5bdad77773a4b6bee7e48da94cf64cd5fb0d7c83ac885",
+    "engine/src/training/ppo_math.hpp": "97ea59cbc1febbcc1bfe2e9c2ce3e56aeecb0440414e8c320ecb12a4b3f98641",
+    "engine/src/training/categorical_policy.hpp": "6ea2628c20288a8411eda5bfddee3a992a310563c8d6d2dbb63314c83fcf55d2"
+  },
+  "candidate_unchanged": true
+}

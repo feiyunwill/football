@@ -531,3 +531,165 @@ verified Python/platform/ABI limits, and `QUALITY.md` for continuous acceptance.
 Existing Gym defaults remain `backend='python'`; switching back requires a new
 environment/episode. FPPO, native environment snapshots and legacy RLtools models
 have distinct formats and cannot be interchanged.
+
+## Native engine performance evidence
+
+The headless engine reuses completed Node/Geometry subtree invalidation until a
+transform/AABB read or hierarchy change revokes it. Rendering, active tracker
+verification and custom dynamic types retain the original update path. No new
+runtime option or snapshot field is required; rebuild the native artifacts to use
+the source change.
+
+The 2026-10-17 local acceptance measured a 20.54% median CPU cost reduction for
+11-player/cadence-2 predetermined engine stepping. All eight workload regression
+gates and trajectory checks passed, as did exact 128-update four-worker learner
+and replay comparison. This particular measurement covers engine stepping. See the
+[measurement report](../../.project/optimization/spatial-invalidation-report-20261017.md)
+and current [quality receipt](../../.project/native-training/evidence/spatial-candidate-quality-20261017-b/report.json).
+
+
+The subsequent [PPO pipeline acceptance](../../.project/optimization/ppo-pipeline-report-20261017.md)
+uses eight alternating pairs of 64 real updates per comparison, the production
+Python pool/collector and a diagnostic bridge to production C++ PPO math. Primary
+four/one-worker throughput is 2.2102x (95% interval 2.1633-2.2586). Primary retained/
+archived-engine pipeline throughput is 1.0902x (1.00045-1.10983); the lower bound
+is close to one. All four configuration median cost gates passed; the
+11-player/cadence-10 interval includes regression. These loop timings include
+PPO diagnostics and in-loop saves, and exclude startup/warmup/final save/close.
+They do not establish shipped native CLI or general hardware speedups.
+
+Current-source training also completed 1800 seconds, 7265 updates and 1859840 joint
+transitions, with fresh-process learner checkpoint load, parent FD 5-to-5 and all
+workers reaped. A separate project's compilation overlapped this run: its 1033.23
+transitions/s is a resource/duration observation under contention, not an isolated
+sustained-throughput or learning proof. Current-source wheel delivery and the
+multi-seed held-out learning roadmap remain open. Full receipts are linked in the
+report and its [completion audit](../../.project/native-training/evidence/pipeline-completion-audit-20261017-b/report.json).
+
+## Varied-start shooting tasks
+
+The native CLI also accepts `--scenario varied_empty_goal` and
+`--scenario varied_keeper`. Both control one left-side outfield player and sample
+12 training starts from a fixed grid. The empty task parks a lazy goalkeeper
+outside the shooting area; the keeper task uses the normal engine AI goalkeeper.
+These are bounded shooting tasks, not full 11v11 training.
+
+```sh
+./native_ppo_train --scenario varied_empty_goal --seed 42 --hidden 64 \
+  --cadence 10 --episode-limit 256 --rollout 256 --epochs 4 --minibatch 64 \
+  --updates 780 --no-initial-eval --eval-episodes 0 \
+  --save varied-empty-seed42.fppo
+```
+
+Use `--eval-partition validation` for configuration selection. The current
+registered study uses `--eval-partition confirmation` with fresh geometries and
+seeds; `test` retains the earlier exploratory partition. Default evaluation uses
+`train`. All four fixed geometry sets are disjoint. Episode JSON includes engine seed,
+start index and normalized ball start coordinates, so paired evaluation can be
+checked. With the same scenario/seed/policy/PPO configuration, load the model with
+`--updates 0 --no-initial-eval --eval-partition confirmation --eval-seed 700001
+--eval-episodes 50 --eval-steps 256` for frozen evaluation.
+
+Variable-task FPPO payloads identify their scenario variation explicitly and
+restore the sampled current scene and episode RNG. Loading into a different task
+or configuration is rejected; this is not an implicit fine-tuning/weight-transfer
+interface. Fixed-task payload encoding remains unchanged. All checkpoints still
+require the same source/build/ABI and runtime resources.
+
+The [registered five-seed study and final-source delivery target](../../.project/optimization/generalization-plan-20261018.md)
+defines the learning gates. Protocol execution alone does not establish learning;
+use its separate learning decision and audit receipts.
+
+The confirmation study evaluates the trained categorical sampling policy as its
+primary deployment mode. Argmax outcomes remain reported separately. An earlier
+greedy-policy trial failed one training seed and is retained as rejected evidence;
+its results do not establish performance for the sampled-policy confirmation run.
+# 2v1 配合进攻任务
+
+`native_ppo_train --scenario 2v1` 使用一个固定可控前锋、一个引擎 AI 队友，
+对抗一个引擎 AI 后卫及门将；双方另有必要的门将阵容，因此“2v1”不包含门将。
+仅支持一个左侧学习球员，禁止切换到 AI 队友；`--right`、`--players 2` 和 `--v2` 被拒绝。
+底层固定两个控制槽（球员 1/2），第二槽始终执行内置 AI 动作 19。学习球员只输出
+0–18 动作，策略观测、概率及 PPO 损失只包含第一槽；第二槽完整保留在原生快照内。
+普通未绑定控制器的 AI 队友在人工队伍里不会执行持球进攻，不能用它代替该固定 AI 槽。
+七个 `--eval-partition` 各有 12 个有限起点。当前 2v1 独立确认使用 `holdout`
+（索引6，偏移 .075）；`confirmation`、`replication`、`prospective` 保留已拒绝试验的数据，不用于新一轮确认。
+
+评估 JSON 增加 `pass_requests`、`completed_passes`、`teammate_transfers` 和
+`turnovers`。它们是决策边界观测：只有持球的可控球员请求动作 9–11 后，
+30 次决策内由前场 AI 队友（索引 2）持球、期间未被对方控球，才计为一次完成传球；
+传给己方门将不计入完成传球。
+射门或超时取消待完成请求。动作请求不等于实际触球；cadence 内的短暂触球可能未被观测。
+这些指标用于识别配合行为，不能用单独的进球率代替配合验收。
+
+本任务的学习效果与安装交付仍需独立验收；此前单人射门任务的结果不适用于 2v1。
+当前验证协议为每个模型 2048 次更新，每次 256 个转移；CLI 接受 `--updates 0..2048`。
+
+2v1 的 PPO 训练始终保留真实进球和检查点奖励，首次传给前场 AI 队友另奖励 2，
+每回合至多一次。策略可显式看到本回合是否已经完成前场传球的历史标志：
+观测到该传球后实际进球时，再按真实正向 `score_reward` 额外奖励 2 倍；
+检查点本身不触发这项进球奖励，丢球及未配合进球的原始奖励保持不变。
+2v1 专用策略视图把未使用的左队第 11 人 y 坐标填充槽（索引 21）设为 -1/+1。
+标志完全由过去的持球观测计算；训练、bootstrap 和冻结评估使用同一变换。
+该策略视图还在空闲槽28–37提供第一槽的8个持续方向位、冲刺和盘带位，取自原生
+控制器当前状态，避免把仍保持的按键当成已释放；输入维度不变，恢复时从原生状态重建。
+原生 simple115 输出及快照仍保持原始填充值，其他任务不使用该视图。
+训练和评估均为完整任务，没有奖励门控、课程混合或伪造的完成传球计数。
+评估继续报告原始进球和传球指标，不把训练奖励当作进球率。
+FPPO 内层 schema3 保存待完成传球、持球者、计数及时间窗口，恢复时校验原生持球状态，
+禁止用旧 schema2 的 2v1 状态恢复新奖励任务；单人变起点任务仍使用 schema2。
+
+## 2v1 独立推理与恢复
+
+正式 `native_ppo_train` 提供 `--inference-mode balanced|argmax|sample|uniform_random|builtin_ai`。
+此入口只做固定 simple115、19 动作的 2v1 推理，拒绝训练参数。balanced 为确定性概率额度
+分配控制器，每回合重置；原有 argmax、采样和默认训练评估行为保持原定义。
+
+先在与 FPPO 快照兼容的构建中使用 `--scenario 2v1 ... --load MODEL.fppo --updates 0
+--eval-episodes 0 --export-policy POLICY.fpol` 导出策略。FPOL1 只含版本化策略权重、任务视图
+和原模型 SHA256；不包含优化器或训练环境，不能用于训练续跑。FPPO 继续严格校验源码、
+构建、ABI 与资源；旧模型必须在旧兼容构建中导出，不能直接改写快照身份。
+
+```sh
+native_ppo_train --inference-mode balanced --policy POLICY.fpol --inference-cases cases.txt
+native_ppo_train --inference-mode balanced --policy POLICY.fpol --inference-cases cases.txt \
+  --inference-decisions 8 --inference-state-out session.fifs
+native_ppo_train --inference-mode balanced --policy POLICY.fpol --inference-cases cases.txt \
+  --inference-state-in session.fifs
+```
+
+场景文件每行是 `index group 0 engine_seed action_seed ax ay tx ty dx dy`，index 从 0 连续递增，
+group 为 0–4；坐标为有界 2v1 场景中的学习球员、AI 队友和后卫位置。
+每回合使用 cadence10、最多256次决策，第二槽始终执行内置AI动作19。
+输出为每个已完成回合一行 JSON，末行 summary 表示本次调用是否完成全部场景。
+分段运行时拼接回合行，忽略各段 summary。
+
+FIFS1 推理快照包含原生环境、控制器 DIC1 状态、动作 RNG、配合指标与累计回报，绑定策略
+文件、完整场景文件与推理模式的哈希。恢复还要求相同源码、构建、ABI、资源和场景；
+损坏、模式或输入不匹配时拒绝恢复。只有预算耗尽并暂停时才写 session，完整运行不写它。
+推理快照独立于 FPPO，禁止将它作为训练检查点使用。
+
+## 实验性扩大起点训练
+
+`--scenario 2v1_broad` 是独立训练任务：20%回合使用原2v1训练起点，80%从插值、更靠后、
+边路、近防守及队友变化五类连续几何分布均匀选类后采样。每回合几何由引擎种子确定，
+可精确重建；训练不读取验证坐标。奖励、策略观测、19动作及固定AI队友与2v1一致。
+原 `--scenario 2v1` 仍使用原12点分布。
+
+FPPO内层schema4只接受2v1_broad，schema3仍对应原2v1。两任务的完整快照不能互相恢复，
+源码/构建/ABI/资源校验继续生效。两种任务均可显式导出FPOL1，供同一固定2v1策略视图
+推理。扩大训练分布本身不代表学习效果已经通过；需要单独的五种子验证和新场景确认。
+
+`--scenario 2v1_broad_annealed` 保留 broad80 的几何、奖励和策略视图，使用独立任务标识5、
+FPPO内层schema5。每次更新的有效学习率为
+`base_lr * max(0.1, 1 - global_update_version / 8192)`；默认从0.0003退火至0.00003，
+8192更新后保持下限。时钟取完整检查点的累计更新数，分段进程不会重启调度。
+每条iteration记录实际 `learning_rate`，顶层 `ppo.learning_rate` 仍为基础学习率。
+原有任务继续使用固定学习率；两种broad任务的完整FPPO互相拒绝，原有源码/构建/ABI/资源
+守卫保持。新任务同样可显式导出供推理使用的FPOL1，不代表已经通过学习质量确认。
+
+`--scenario 2v1_broad_reweighted` 使用独立任务标识6和FPPO内层schema6。
+它沿用任务5的奖励、策略视图、各家族内部几何和全局学习率调度，只修改训练家族概率：
+旧离散起点20%，第五类连续起点40%，其他四类各10%。任务4和5的采样序列保持原样。
+任务5和6的完整FPPO不能互相恢复，源码/构建/ABI/资源守卫继续生效；FPOL仍仅供推理。
+重加权是针对困难家族的实验假设，尚未通过独立学习确认。

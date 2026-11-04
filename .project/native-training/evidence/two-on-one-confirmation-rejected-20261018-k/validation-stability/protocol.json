@@ -1,0 +1,23 @@
+{
+  "training_seeds": [
+    19,
+    101
+  ],
+  "evaluation_seeds": [
+    88174,
+    88175
+  ],
+  "episodes_per_batch": 32,
+  "selected": "sparse64",
+  "updates": 2048,
+  "rollout": 256,
+  "hidden": 64,
+  "epochs": 4,
+  "minibatch": 64,
+  "cadence": 10,
+  "episode_limit": 256,
+  "partition": "validation",
+  "primary_policy": "sample",
+  "gates": "each seed: success>=.5, cooperation>=.1, joint pass-and-score>=.1; strictly beat own untrained sample and random",
+  "scope": "Validation only. No confirmation seeds or partitions opened. These seeds are not the final five training seeds."
+}

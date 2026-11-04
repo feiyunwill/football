@@ -172,6 +172,29 @@ ObservationBuffer NativeTrainingEnv::reset(ScenarioConfig& scenario, int physics
   return result;
 }
 
+TrainingPossession NativeTrainingEnv::possession() {
+  std::lock_guard lock(mutex_);
+  require_open();
+  if(!snapshot_available_) throw std::logic_error("Reset before reading possession");
+  const auto& controllers=env_.scenario_config.left_agents ? info_.left_controllers : info_.right_controllers;
+  return {info_.ball_owned_team,info_.ball_owned_player,
+          controllers.empty() ? -1 : controllers[0].controlled_player};
+}
+
+std::array<uint8_t,10> NativeTrainingEnv::sticky_actions() {
+  std::lock_guard lock(mutex_);require_open();
+  if(!snapshot_available_) throw std::logic_error("Reset before reading sticky actions");
+  const bool left=env_.scenario_config.left_agents>0;
+  std::array<uint8_t,10> result{};
+  for(int i=0;i<8;++i) {
+    const int direction=left ? i+1 : 1+(i+4)%8;
+    result[i]=env_.sticky_action_state(kActions[direction],left,0);
+  }
+  result[8]=env_.sticky_action_state(game_sprint,left,0);
+  result[9]=env_.sticky_action_state(game_dribble,left,0);
+  return result;
+}
+
 TrainingTransition NativeTrainingEnv::step(std::span<const int> actions) {
   std::lock_guard lock(mutex_);
   require_open();

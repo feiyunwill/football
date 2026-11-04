@@ -15,7 +15,7 @@ struct PpoParameters {
 struct PpoSample {
   ObservationBuffer observation;
   std::vector<int> actions;
-  double old_log_probability = 0, old_value = 0, reward = 0, next_value = 0;
+  double old_log_probability = 0, old_value = 0, reward = 0, next_value = 0, entropy_multiplier = 1;
   bool terminated = false, truncated = false;
   uint64_t policy_version = 0;
   double advantage = 0, target = 0;

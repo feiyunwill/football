@@ -1,0 +1,293 @@
+{
+  "passed": true,
+  "agreed_next_goal_complete": true,
+  "source_sha256": "c1d57094a4eb3976a35ba3061d93bbea984d134a9f191af7a28bef9e4adf5ae8",
+  "quality": {
+    "passed": true,
+    "report": "/root/work_space/football-artifacts/work-o21-quality-20261019-a/report.json",
+    "source_sha256": "c1d57094a4eb3976a35ba3061d93bbea984d134a9f191af7a28bef9e4adf5ae8"
+  },
+  "primary_episodes_byte_equal": 1000,
+  "baseline_episodes_byte_equal": 2000,
+  "new_process_resumes": 5,
+  "installed_session_resume": true,
+  "all_five_modes_resume": true,
+  "episode_boundary_resume": true,
+  "installed_integration_test_count": 79,
+  "relocated_replayed_episodes": 1000,
+  "archive_replayed_episodes": 1000,
+  "strict_old_fppo_rejected": true,
+  "micro_median_nanoseconds": {
+    "balanced": 2896.9583,
+    "argmax": 2812.262,
+    "sample": 2844.1859
+  },
+  "controller_bytes": 176,
+  "serialized_controller_bytes": 410,
+  "micro_scope": "Synthetic primary observation,hidden64,5 repeats x20000 decisions; forward+distribution+action. No isolated engine speedup claim.",
+  "process_costs": [
+    {
+      "seed": 42,
+      "modes": {
+        "balanced": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 9367,
+          "cli_wall_seconds": 9.319556721951813,
+          "cpu_seconds": 9.250637999999999,
+          "maximum_rss_kib": 81708,
+          "decision_tps": 1005.0907226023355,
+          "engine_wall_seconds": 9.240478726
+        },
+        "argmax": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 9875,
+          "cli_wall_seconds": 9.5190107919625,
+          "cpu_seconds": 9.515532,
+          "maximum_rss_kib": 81704,
+          "decision_tps": 1037.397710310202,
+          "engine_wall_seconds": 9.504640647
+        },
+        "sample": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 9451,
+          "cli_wall_seconds": 9.32082027301658,
+          "cpu_seconds": 9.298718000000001,
+          "maximum_rss_kib": 81776,
+          "decision_tps": 1013.9665526391798,
+          "engine_wall_seconds": 9.286469485
+        }
+      },
+      "new_process_resume_bytes_equal": true
+    },
+    {
+      "seed": 123,
+      "modes": {
+        "balanced": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 9600,
+          "cli_wall_seconds": 9.421187759027816,
+          "cpu_seconds": 9.351562000000001,
+          "maximum_rss_kib": 81708,
+          "decision_tps": 1018.9797980409463,
+          "engine_wall_seconds": 9.340164293
+        },
+        "argmax": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 10980,
+          "cli_wall_seconds": 10.021230826037936,
+          "cpu_seconds": 9.981424,
+          "maximum_rss_kib": 81768,
+          "decision_tps": 1095.6737940284656,
+          "engine_wall_seconds": 9.971958185
+        },
+        "sample": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 9969,
+          "cli_wall_seconds": 10.121029664005619,
+          "cpu_seconds": 10.025891,
+          "maximum_rss_kib": 81756,
+          "decision_tps": 984.9788342636425,
+          "engine_wall_seconds": 10.016742694
+        }
+      },
+      "new_process_resume_bytes_equal": true
+    },
+    {
+      "seed": 2026,
+      "modes": {
+        "balanced": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 9406,
+          "cli_wall_seconds": 9.01840187801281,
+          "cpu_seconds": 8.959501,
+          "maximum_rss_kib": 81660,
+          "decision_tps": 1042.9785817077156,
+          "engine_wall_seconds": 8.949977252
+        },
+        "argmax": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 9406,
+          "cli_wall_seconds": 9.319577215996105,
+          "cpu_seconds": 9.257617,
+          "maximum_rss_kib": 81648,
+          "decision_tps": 1009.2732515650558,
+          "engine_wall_seconds": 9.247630946
+        },
+        "sample": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 9407,
+          "cli_wall_seconds": 9.218267760996241,
+          "cpu_seconds": 9.195008000000001,
+          "maximum_rss_kib": 81616,
+          "decision_tps": 1020.4737206487222,
+          "engine_wall_seconds": 9.182758635
+        }
+      },
+      "new_process_resume_bytes_equal": true
+    },
+    {
+      "seed": 31415,
+      "modes": {
+        "balanced": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 9677,
+          "cli_wall_seconds": 9.619843779015355,
+          "cpu_seconds": 9.548328,
+          "maximum_rss_kib": 81616,
+          "decision_tps": 1005.9414915977457,
+          "engine_wall_seconds": 9.536919327
+        },
+        "argmax": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 30618,
+          "cli_wall_seconds": 23.852488106989767,
+          "cpu_seconds": 23.819965,
+          "maximum_rss_kib": 81704,
+          "decision_tps": 1283.6396715790693,
+          "engine_wall_seconds": 23.809916997
+        },
+        "sample": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 10197,
+          "cli_wall_seconds": 9.81993091799086,
+          "cpu_seconds": 9.731890000000002,
+          "maximum_rss_kib": 81504,
+          "decision_tps": 1038.3983436500882,
+          "engine_wall_seconds": 9.72265809
+        }
+      },
+      "new_process_resume_bytes_equal": true
+    },
+    {
+      "seed": 271828,
+      "modes": {
+        "balanced": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 10571,
+          "cli_wall_seconds": 10.12182734295493,
+          "cpu_seconds": 10.078710000000001,
+          "maximum_rss_kib": 81596,
+          "decision_tps": 1044.376636927887,
+          "engine_wall_seconds": 10.069248094
+        },
+        "argmax": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 11054,
+          "cli_wall_seconds": 11.123596218996681,
+          "cpu_seconds": 11.104749,
+          "maximum_rss_kib": 81756,
+          "decision_tps": 993.7433706126598,
+          "engine_wall_seconds": 11.094803197
+        },
+        "sample": {
+          "episodes": 200,
+          "bytes_equal": true,
+          "decisions": 10974,
+          "cli_wall_seconds": 11.427193085954059,
+          "cpu_seconds": 11.339528,
+          "maximum_rss_kib": 81628,
+          "decision_tps": 960.3408218846753,
+          "engine_wall_seconds": 11.328821889
+        }
+      },
+      "new_process_resume_bytes_equal": true
+    }
+  ],
+  "archive": "/root/work_space/football-artifacts/o21-cli-20261019-a/football-o21-native-inference.tar.gz",
+  "archive_sha256": "b4fece2556bde0045bbc816eab30527c305125d585f4ce6494aa2899006e90aa",
+  "wheel": {
+    "name": "gfootball-2.10.3-cp314-cp314-linux_x86_64.whl",
+    "sha256": "83a8338a07dff0b4c6d633704eb4b42c63827c5d7e0c1f7de3f3b72033b007a7",
+    "metadata": "Wheel-Version: 1.0\nGenerator: setuptools (84.0.0)\nRoot-Is-Purelib: false\nTag: cp314-cp314-linux_x86_64\n\n",
+    "files": 758
+  },
+  "commands": [
+    {
+      "name": "relocated-reproduction",
+      "argv": [
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/native-o21/reproduce-inference.sh",
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/relocated-replayed"
+      ],
+      "exit_code": 0,
+      "sha256": "59324878b8fa57df3d52138643dea90a82105e04905f6004e04837e29f315acd"
+    },
+    {
+      "name": "archive-reproduction",
+      "argv": [
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/extracted/football-o21/reproduce-inference.sh",
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/archive-replayed"
+      ],
+      "exit_code": 0,
+      "sha256": "59324878b8fa57df3d52138643dea90a82105e04905f6004e04837e29f315acd"
+    },
+    {
+      "name": "installed-inference-full",
+      "argv": [
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/extracted/football-o21/native_ppo_train",
+        "--inference-mode",
+        "balanced",
+        "--policy",
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/extracted/football-o21/inference/42.fpol",
+        "--inference-cases",
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/one-case.txt"
+      ],
+      "exit_code": 0,
+      "sha256": "2dbf634fc131d5e28cf5705981192e0375300cdf84d913aab706f3f31f70dbc9"
+    },
+    {
+      "name": "installed-inference-prefix",
+      "argv": [
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/extracted/football-o21/native_ppo_train",
+        "--inference-mode",
+        "balanced",
+        "--policy",
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/extracted/football-o21/inference/42.fpol",
+        "--inference-cases",
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/one-case.txt",
+        "--inference-decisions",
+        "8",
+        "--inference-state-out",
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/installed.fifs"
+      ],
+      "exit_code": 0,
+      "sha256": "beae230a0351f1b6bfb7a20c2aed32859aee5f8d7f6d7562ee0f2720cff5bf3c"
+    },
+    {
+      "name": "installed-inference-resumed",
+      "argv": [
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/extracted/football-o21/native_ppo_train",
+        "--inference-mode",
+        "balanced",
+        "--policy",
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/extracted/football-o21/inference/42.fpol",
+        "--inference-cases",
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/one-case.txt",
+        "--inference-state-in",
+        "/root/work_space/football-artifacts/work-o21-finalize-20261019-a/installed.fifs"
+      ],
+      "exit_code": 0,
+      "sha256": "687da98cdaf42d8e4810bb661963813655139b832bbe9b87e0582fc4128a2958"
+    }
+  ],
+  "receipts": {
+    "/root/work_space/football-artifacts/work-o21-parity-20261019-b/report.json": "9391816bf2b29e194f561fad130c16a4681c100b9fc6f16ff9d152ef22d105c7",
+    "/root/work_space/football-artifacts/work-o21-quality-20261019-a/report.json": "06a99dd3ce0752a4cc8355e468edce1b0f7c3463279ef104b5b81c6f2a1b93a5",
+    "/root/work_space/football-artifacts/work-o21-installed-evidence-20261019-a/report.json": "e74666488551abbf7055e8ea8fcf53c3bf9b132ed89ff3531e32e233a5505397",
+    "/root/work_space/football-artifacts/work-o21-micro-20261019-a/report.json": "9eb71de5482b14aa425472450edf3830d21062f7fb7e1216a4a30610e8a55d45"
+  },
+  "scope": "Official inference-only fixed-simple115 2v1 CLI. O20 cases are parity regression, not new learning confirmation. No new30-minute training claim."
+}

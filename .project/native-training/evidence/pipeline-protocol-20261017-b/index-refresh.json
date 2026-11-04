@@ -1,0 +1,17 @@
+{
+  "previous_nodes": 178415,
+  "retained_nodes": 34730,
+  "retained_edges": 129552,
+  "mode": "full",
+  "project": "root-work_space-football",
+  "excluded": [
+    ".project/native-training/evidence/",
+    ".project/optimization/diagnostics/"
+  ],
+  "logfile": "/root/.cache/codebase-memory-mcp/logs/root-work_space-football-1792216621.log",
+  "quiet_probe": {
+    "seconds": 5.002,
+    "index_cpu_cores": 0.03598
+  },
+  "note": "Historical evidence read directly when needed. Current source remains graph-first; coverage still best effort."
+}

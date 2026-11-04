@@ -1,0 +1,21 @@
+{
+  "configurations": [
+    [
+      1,
+      2
+    ],
+    [
+      1,
+      10
+    ],
+    [
+      11,
+      10
+    ]
+  ],
+  "pairs": 8,
+  "updates_per_run": 64,
+  "primary_reused": "/tmp/football-pipeline-primary-20261017-c/evidence",
+  "gate": "median candidate cost <=1.03 * baseline cost",
+  "source_sha256": "0058952fa3c56c4506a32cd89744a61d265f85fea8f81af14010736b73448011"
+}

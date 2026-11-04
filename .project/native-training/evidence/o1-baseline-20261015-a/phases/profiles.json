@@ -1,0 +1,5134 @@
+{
+  "policy": "deterministic observation feedback heuristic",
+  "batch_size": 32,
+  "workloads": [
+    {
+      "players": 1,
+      "cadence": 2,
+      "steps": 256,
+      "repeats": 8,
+      "instrumented": false,
+      "digests": {
+        "predetermined": "a567f5a9afa928db884d690f840bb785a66877cdcd392f70eafc044a1b173e9a",
+        "feedback": "4c747bb016e21df78adadfe2604de88837bbe6d588daad07891973d7141fc0cc"
+      },
+      "results": {
+        "python": {
+          "median_ns": 547901573.0,
+          "min_ns": 386709425,
+          "max_ns": 636538688,
+          "median_steps_per_second": 467.2372057599477,
+          "samples": [
+            {
+              "wall_ns": 500389876,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 386709425,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 636538688,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 582433266,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 632682267,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 585648393,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 513369880,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 500786048,
+              "policy_ns": 0,
+              "profile": null
+            }
+          ]
+        },
+        "raw_native": {
+          "median_ns": 317601691.0,
+          "min_ns": 208286162,
+          "max_ns": 994233557,
+          "median_steps_per_second": 806.0410484401357,
+          "samples": [
+            {
+              "wall_ns": 259827754,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 228600408,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 994233557,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 313274445,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 330114132,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 322010141,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 321928937,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 208286162,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "native": {
+          "median_ns": 274387938.0,
+          "min_ns": 235461775,
+          "max_ns": 823930137,
+          "median_steps_per_second": 932.9856183401181,
+          "samples": [
+            {
+              "wall_ns": 267948143,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 235461775,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 250919600,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 325106693,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 823930137,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 333002890,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 280827733,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 235948591,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "native_batch": {
+          "median_ns": 249516586.0,
+          "min_ns": 231350311,
+          "max_ns": 1429210021,
+          "median_steps_per_second": 1025.9838999239914,
+          "samples": [
+            {
+              "wall_ns": 241704455,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 231350311,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 235144005,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1429210021,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 374806757,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 302149067,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 244398346,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 254634826,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "closed_python": {
+          "median_ns": 510757661.0,
+          "min_ns": 416705997,
+          "max_ns": 2201520200,
+          "median_steps_per_second": 501.21617265374704,
+          "samples": [
+            {
+              "wall_ns": 429334783,
+              "policy_ns": 7117289,
+              "profile": null
+            },
+            {
+              "wall_ns": 437465472,
+              "policy_ns": 7292282,
+              "profile": null
+            },
+            {
+              "wall_ns": 478498385,
+              "policy_ns": 7952193,
+              "profile": null
+            },
+            {
+              "wall_ns": 2201520200,
+              "policy_ns": 32957269,
+              "profile": null
+            },
+            {
+              "wall_ns": 1226104835,
+              "policy_ns": 23572539,
+              "profile": null
+            },
+            {
+              "wall_ns": 543016937,
+              "policy_ns": 8947252,
+              "profile": null
+            },
+            {
+              "wall_ns": 416705997,
+              "policy_ns": 6635060,
+              "profile": null
+            },
+            {
+              "wall_ns": 554386328,
+              "policy_ns": 9063041,
+              "profile": null
+            }
+          ]
+        },
+        "closed_native": {
+          "median_ns": 300446656.5,
+          "min_ns": 242899761,
+          "max_ns": 781423976,
+          "median_steps_per_second": 852.064732496033,
+          "samples": [
+            {
+              "wall_ns": 249069052,
+              "policy_ns": 6194637,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 253245093,
+              "policy_ns": 6378622,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 290909916,
+              "policy_ns": 7927778,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 781423976,
+              "policy_ns": 33837574,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 528878120,
+              "policy_ns": 16923995,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 400903500,
+              "policy_ns": 10944570,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 242899761,
+              "policy_ns": 6243180,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 309983397,
+              "policy_ns": 7817156,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "players": 1,
+      "cadence": 2,
+      "steps": 256,
+      "repeats": 8,
+      "instrumented": true,
+      "digests": {
+        "predetermined": "a567f5a9afa928db884d690f840bb785a66877cdcd392f70eafc044a1b173e9a",
+        "feedback": "4c747bb016e21df78adadfe2604de88837bbe6d588daad07891973d7141fc0cc"
+      },
+      "results": {
+        "python": {
+          "median_ns": 490770918.0,
+          "min_ns": 407385411,
+          "max_ns": 729455494,
+          "median_steps_per_second": 521.6283007217636,
+          "samples": [
+            {
+              "wall_ns": 551501973,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 544585567,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 481003359,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 500538477,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 729455494,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 419811510,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 407385411,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 458117829,
+              "policy_ns": 0,
+              "profile": null
+            }
+          ]
+        },
+        "raw_native": {
+          "median_ns": 272616140.5,
+          "min_ns": 222134641,
+          "max_ns": 327804280,
+          "median_steps_per_second": 939.0493150202894,
+          "samples": [
+            {
+              "wall_ns": 315331349,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 144391,
+                "engine_ns": 304924854,
+                "info_ns": 1644104,
+                "transition_ns": 16621,
+                "encoding_ns": 307091,
+                "reward_ns": 12034,
+                "binding_output_ns": 1048506
+              }
+            },
+            {
+              "wall_ns": 297186591,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 141282,
+                "engine_ns": 286996436,
+                "info_ns": 1514212,
+                "transition_ns": 15149,
+                "encoding_ns": 239491,
+                "reward_ns": 10643,
+                "binding_output_ns": 1053397
+              }
+            },
+            {
+              "wall_ns": 277161382,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 129232,
+                "engine_ns": 267753970,
+                "info_ns": 1431829,
+                "transition_ns": 28477,
+                "encoding_ns": 214553,
+                "reward_ns": 9802,
+                "binding_output_ns": 934921
+              }
+            },
+            {
+              "wall_ns": 268070899,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 112191,
+                "engine_ns": 259964688,
+                "info_ns": 1284071,
+                "transition_ns": 13597,
+                "encoding_ns": 204160,
+                "reward_ns": 9281,
+                "binding_output_ns": 792199
+              }
+            },
+            {
+              "wall_ns": 327804280,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 155518,
+                "engine_ns": 316194097,
+                "info_ns": 1675730,
+                "transition_ns": 16473,
+                "encoding_ns": 297079,
+                "reward_ns": 11127,
+                "binding_output_ns": 1168182
+              }
+            },
+            {
+              "wall_ns": 222134641,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 116753,
+                "engine_ns": 215525749,
+                "info_ns": 1069011,
+                "transition_ns": 11057,
+                "encoding_ns": 163562,
+                "reward_ns": 8141,
+                "binding_output_ns": 608864
+              }
+            },
+            {
+              "wall_ns": 260331321,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 126616,
+                "engine_ns": 251505249,
+                "info_ns": 1331176,
+                "transition_ns": 13581,
+                "encoding_ns": 202137,
+                "reward_ns": 8948,
+                "binding_output_ns": 919643
+              }
+            },
+            {
+              "wall_ns": 234262515,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 133537,
+                "engine_ns": 226853159,
+                "info_ns": 1108938,
+                "transition_ns": 11296,
+                "encoding_ns": 201811,
+                "reward_ns": 8932,
+                "binding_output_ns": 718484
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 131384.5,
+            "engine_ns": 263859329.0,
+            "info_ns": 1381502.5,
+            "transition_ns": 14373.0,
+            "encoding_ns": 209356.5,
+            "reward_ns": 9541.5,
+            "binding_output_ns": 927282.0
+          },
+          "unattributed_ns": 6441284.5
+        },
+        "native": {
+          "median_ns": 283284080.0,
+          "min_ns": 226135118,
+          "max_ns": 342004901,
+          "median_steps_per_second": 903.6865043739839,
+          "samples": [
+            {
+              "wall_ns": 342004901,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 210168,
+                "engine_ns": 313838768,
+                "info_ns": 1727405,
+                "transition_ns": 19373,
+                "encoding_ns": 268411,
+                "reward_ns": 13602,
+                "binding_output_ns": 1356427
+              }
+            },
+            {
+              "wall_ns": 307271086,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 175705,
+                "engine_ns": 284130801,
+                "info_ns": 1509160,
+                "transition_ns": 16425,
+                "encoding_ns": 232008,
+                "reward_ns": 12167,
+                "binding_output_ns": 1123296
+              }
+            },
+            {
+              "wall_ns": 308025946,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 189884,
+                "engine_ns": 283246893,
+                "info_ns": 1641326,
+                "transition_ns": 17871,
+                "encoding_ns": 229132,
+                "reward_ns": 11936,
+                "binding_output_ns": 1174935
+              }
+            },
+            {
+              "wall_ns": 268128978,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 145768,
+                "engine_ns": 248885560,
+                "info_ns": 1241156,
+                "transition_ns": 17061,
+                "encoding_ns": 189119,
+                "reward_ns": 9990,
+                "binding_output_ns": 862376
+              }
+            },
+            {
+              "wall_ns": 298439182,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 171753,
+                "engine_ns": 275691168,
+                "info_ns": 1440236,
+                "transition_ns": 14833,
+                "encoding_ns": 217617,
+                "reward_ns": 10507,
+                "binding_output_ns": 961053
+              }
+            },
+            {
+              "wall_ns": 226135118,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 129548,
+                "engine_ns": 209722629,
+                "info_ns": 981653,
+                "transition_ns": 12044,
+                "encoding_ns": 153884,
+                "reward_ns": 8117,
+                "binding_output_ns": 626054
+              }
+            },
+            {
+              "wall_ns": 258721289,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 141633,
+                "engine_ns": 239648091,
+                "info_ns": 1335141,
+                "transition_ns": 12822,
+                "encoding_ns": 246305,
+                "reward_ns": 12000,
+                "binding_output_ns": 804865
+              }
+            },
+            {
+              "wall_ns": 236754691,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 131617,
+                "engine_ns": 219203490,
+                "info_ns": 1117086,
+                "transition_ns": 11578,
+                "encoding_ns": 172939,
+                "reward_ns": 9548,
+                "binding_output_ns": 813320
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 158760.5,
+            "engine_ns": 262288364.0,
+            "info_ns": 1387688.5,
+            "transition_ns": 15629.0,
+            "encoding_ns": 223374.5,
+            "reward_ns": 11221.5,
+            "binding_output_ns": 911714.5
+          },
+          "unattributed_ns": 18354981.5
+        },
+        "native_batch": {
+          "median_ns": 255872288.0,
+          "min_ns": 198583121,
+          "max_ns": 300839331,
+          "median_steps_per_second": 1000.4991240004857,
+          "samples": [
+            {
+              "wall_ns": 300839331,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 126824,
+                "engine_ns": 296367061,
+                "info_ns": 1731598,
+                "transition_ns": 50690,
+                "encoding_ns": 234304,
+                "reward_ns": 10808,
+                "binding_output_ns": 154959
+              }
+            },
+            {
+              "wall_ns": 295785285,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 113093,
+                "engine_ns": 290877729,
+                "info_ns": 2171874,
+                "transition_ns": 15202,
+                "encoding_ns": 218306,
+                "reward_ns": 13123,
+                "binding_output_ns": 160436
+              }
+            },
+            {
+              "wall_ns": 267133884,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 132509,
+                "engine_ns": 263095044,
+                "info_ns": 1427108,
+                "transition_ns": 16484,
+                "encoding_ns": 250686,
+                "reward_ns": 11073,
+                "binding_output_ns": 150758
+              }
+            },
+            {
+              "wall_ns": 260998667,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 95718,
+                "engine_ns": 257002278,
+                "info_ns": 1379750,
+                "transition_ns": 12916,
+                "encoding_ns": 224473,
+                "reward_ns": 9917,
+                "binding_output_ns": 150685
+              }
+            },
+            {
+              "wall_ns": 250745909,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 104788,
+                "engine_ns": 247021800,
+                "info_ns": 1207724,
+                "transition_ns": 11651,
+                "encoding_ns": 176722,
+                "reward_ns": 8939,
+                "binding_output_ns": 151157
+              }
+            },
+            {
+              "wall_ns": 198583121,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 74100,
+                "engine_ns": 195349101,
+                "info_ns": 953816,
+                "transition_ns": 9578,
+                "encoding_ns": 140806,
+                "reward_ns": 7251,
+                "binding_output_ns": 142710
+              }
+            },
+            {
+              "wall_ns": 229841480,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 83678,
+                "engine_ns": 226329719,
+                "info_ns": 1152490,
+                "transition_ns": 10857,
+                "encoding_ns": 180842,
+                "reward_ns": 8240,
+                "binding_output_ns": 145137
+              }
+            },
+            {
+              "wall_ns": 214427625,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 76954,
+                "engine_ns": 210939941,
+                "info_ns": 1043732,
+                "transition_ns": 10044,
+                "encoding_ns": 195660,
+                "reward_ns": 8303,
+                "binding_output_ns": 137999
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 100253.0,
+            "engine_ns": 252012039.0,
+            "info_ns": 1293737.0,
+            "transition_ns": 12283.5,
+            "encoding_ns": 206983.0,
+            "reward_ns": 9428.0,
+            "binding_output_ns": 150721.5
+          },
+          "unattributed_ns": 2056675.0
+        },
+        "closed_python": {
+          "median_ns": 501262299.5,
+          "min_ns": 382925289,
+          "max_ns": 559484181,
+          "median_steps_per_second": 510.71066037752155,
+          "samples": [
+            {
+              "wall_ns": 528914030,
+              "policy_ns": 9079250,
+              "profile": null
+            },
+            {
+              "wall_ns": 559484181,
+              "policy_ns": 9777565,
+              "profile": null
+            },
+            {
+              "wall_ns": 515297597,
+              "policy_ns": 8714710,
+              "profile": null
+            },
+            {
+              "wall_ns": 487227002,
+              "policy_ns": 8347917,
+              "profile": null
+            },
+            {
+              "wall_ns": 558483715,
+              "policy_ns": 9772542,
+              "profile": null
+            },
+            {
+              "wall_ns": 382925289,
+              "policy_ns": 6244256,
+              "profile": null
+            },
+            {
+              "wall_ns": 416039981,
+              "policy_ns": 7044725,
+              "profile": null
+            },
+            {
+              "wall_ns": 449918105,
+              "policy_ns": 7301673,
+              "profile": null
+            }
+          ]
+        },
+        "closed_native": {
+          "median_ns": 289275169.0,
+          "min_ns": 242622045,
+          "max_ns": 360501535,
+          "median_steps_per_second": 884.9705312936832,
+          "samples": [
+            {
+              "wall_ns": 328179316,
+              "policy_ns": 8795029,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 214334,
+                "engine_ns": 293957834,
+                "info_ns": 1652424,
+                "transition_ns": 18135,
+                "encoding_ns": 262426,
+                "reward_ns": 13350,
+                "binding_output_ns": 1068813
+              }
+            },
+            {
+              "wall_ns": 352599309,
+              "policy_ns": 9332723,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 218512,
+                "engine_ns": 315101305,
+                "info_ns": 2060567,
+                "transition_ns": 19945,
+                "encoding_ns": 286200,
+                "reward_ns": 15024,
+                "binding_output_ns": 1245603
+              }
+            },
+            {
+              "wall_ns": 286569420,
+              "policy_ns": 7245101,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 167148,
+                "engine_ns": 258053702,
+                "info_ns": 1483316,
+                "transition_ns": 15789,
+                "encoding_ns": 247472,
+                "reward_ns": 12125,
+                "binding_output_ns": 918751
+              }
+            },
+            {
+              "wall_ns": 291980918,
+              "policy_ns": 7691105,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 182345,
+                "engine_ns": 262709747,
+                "info_ns": 1549473,
+                "transition_ns": 16739,
+                "encoding_ns": 290847,
+                "reward_ns": 12076,
+                "binding_output_ns": 939780
+              }
+            },
+            {
+              "wall_ns": 360501535,
+              "policy_ns": 10407198,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 248440,
+                "engine_ns": 319552677,
+                "info_ns": 1962989,
+                "transition_ns": 21083,
+                "encoding_ns": 320787,
+                "reward_ns": 13858,
+                "binding_output_ns": 1333401
+              }
+            },
+            {
+              "wall_ns": 242630435,
+              "policy_ns": 6148797,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 136579,
+                "engine_ns": 219894017,
+                "info_ns": 1164124,
+                "transition_ns": 13378,
+                "encoding_ns": 178938,
+                "reward_ns": 9223,
+                "binding_output_ns": 746533
+              }
+            },
+            {
+              "wall_ns": 242622045,
+              "policy_ns": 6092354,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 139395,
+                "engine_ns": 219382947,
+                "info_ns": 1261211,
+                "transition_ns": 12882,
+                "encoding_ns": 181055,
+                "reward_ns": 9796,
+                "binding_output_ns": 697465
+              }
+            },
+            {
+              "wall_ns": 266460884,
+              "policy_ns": 6797443,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 154206,
+                "engine_ns": 240229205,
+                "info_ns": 1323595,
+                "transition_ns": 14949,
+                "encoding_ns": 195997,
+                "reward_ns": 17336,
+                "binding_output_ns": 822515
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 174746.5,
+            "engine_ns": 260381724.5,
+            "info_ns": 1516394.5,
+            "transition_ns": 16264.0,
+            "encoding_ns": 254949.0,
+            "reward_ns": 12737.5,
+            "binding_output_ns": 929265.5
+          },
+          "unattributed_ns": 18507411.0
+        }
+      }
+    },
+    {
+      "players": 1,
+      "cadence": 10,
+      "steps": 256,
+      "repeats": 8,
+      "instrumented": false,
+      "digests": {
+        "predetermined": "d00a07ab25c28dbdcc3cd2c4fbc0f4014845bab1f481a66c342d8b0c698c30cb",
+        "feedback": "80ece3aa70468f5241f4317cc2feebad98114795575f35fefc065ebdf6157c6e"
+      },
+      "results": {
+        "python": {
+          "median_ns": 1598708043.0,
+          "min_ns": 1381753171,
+          "max_ns": 1812916574,
+          "median_steps_per_second": 160.12930010636094,
+          "samples": [
+            {
+              "wall_ns": 1417770418,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1640060116,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1419239233,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1686998561,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1557355970,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1381753171,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1812916574,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1705729206,
+              "policy_ns": 0,
+              "profile": null
+            }
+          ]
+        },
+        "raw_native": {
+          "median_ns": 1157649150.0,
+          "min_ns": 1055572111,
+          "max_ns": 1386579106,
+          "median_steps_per_second": 221.13781191823102,
+          "samples": [
+            {
+              "wall_ns": 1165405471,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1196344081,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1240700526,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1098305350,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1149892829,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1055572111,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1386579106,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1085143205,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "native": {
+          "median_ns": 1237114890.0,
+          "min_ns": 1139709258,
+          "max_ns": 1377755927,
+          "median_steps_per_second": 206.93308444456602,
+          "samples": [
+            {
+              "wall_ns": 1169370316,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1377755927,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1303974899,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1295774143,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1156324894,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1139709258,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1316655668,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1178455637,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "native_batch": {
+          "median_ns": 1132800321.0,
+          "min_ns": 1014904177,
+          "max_ns": 1428194297,
+          "median_steps_per_second": 225.98863652687825,
+          "samples": [
+            {
+              "wall_ns": 1040495465,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1428194297,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1314533421,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1168221318,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1014904177,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1023915497,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1111254379,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1154346263,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "closed_python": {
+          "median_ns": 1359873107.0,
+          "min_ns": 1209209865,
+          "max_ns": 1563290899,
+          "median_steps_per_second": 188.25285880147933,
+          "samples": [
+            {
+              "wall_ns": 1243042297,
+              "policy_ns": 9207083,
+              "profile": null
+            },
+            {
+              "wall_ns": 1417465043,
+              "policy_ns": 10350746,
+              "profile": null
+            },
+            {
+              "wall_ns": 1334719462,
+              "policy_ns": 9504146,
+              "profile": null
+            },
+            {
+              "wall_ns": 1374465585,
+              "policy_ns": 9234672,
+              "profile": null
+            },
+            {
+              "wall_ns": 1563290899,
+              "policy_ns": 12017988,
+              "profile": null
+            },
+            {
+              "wall_ns": 1474489155,
+              "policy_ns": 10439506,
+              "profile": null
+            },
+            {
+              "wall_ns": 1209209865,
+              "policy_ns": 8363943,
+              "profile": null
+            },
+            {
+              "wall_ns": 1345280629,
+              "policy_ns": 9416874,
+              "profile": null
+            }
+          ]
+        },
+        "closed_native": {
+          "median_ns": 1196091621.5,
+          "min_ns": 1035158891,
+          "max_ns": 1238808044,
+          "median_steps_per_second": 214.03042659805138,
+          "samples": [
+            {
+              "wall_ns": 1210422551,
+              "policy_ns": 13488570,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1215125703,
+              "policy_ns": 12667776,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1102871951,
+              "policy_ns": 11459675,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1182121243,
+              "policy_ns": 12673320,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1238808044,
+              "policy_ns": 13057902,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1035158891,
+              "policy_ns": 9465598,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1113138432,
+              "policy_ns": 10440527,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1210062000,
+              "policy_ns": 11915003,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "players": 1,
+      "cadence": 10,
+      "steps": 256,
+      "repeats": 8,
+      "instrumented": true,
+      "digests": {
+        "predetermined": "d00a07ab25c28dbdcc3cd2c4fbc0f4014845bab1f481a66c342d8b0c698c30cb",
+        "feedback": "80ece3aa70468f5241f4317cc2feebad98114795575f35fefc065ebdf6157c6e"
+      },
+      "results": {
+        "python": {
+          "median_ns": 1682379347.5,
+          "min_ns": 1369446432,
+          "max_ns": 3492467938,
+          "median_steps_per_second": 152.16544376891787,
+          "samples": [
+            {
+              "wall_ns": 1621176669,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1743582026,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1886653536,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 3492467938,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 2007450383,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1524687260,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1371766220,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1369446432,
+              "policy_ns": 0,
+              "profile": null
+            }
+          ]
+        },
+        "raw_native": {
+          "median_ns": 1287476320.0,
+          "min_ns": 1049567298,
+          "max_ns": 1635199148,
+          "median_steps_per_second": 198.83860854233032,
+          "samples": [
+            {
+              "wall_ns": 1325775098,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 240692,
+                "engine_ns": 1304785243,
+                "info_ns": 2042893,
+                "transition_ns": 22474,
+                "encoding_ns": 367691,
+                "reward_ns": 14499,
+                "binding_output_ns": 2588975
+              }
+            },
+            {
+              "wall_ns": 1122660153,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 172189,
+                "engine_ns": 1106164176,
+                "info_ns": 1788390,
+                "transition_ns": 18229,
+                "encoding_ns": 301586,
+                "reward_ns": 13072,
+                "binding_output_ns": 2056855
+              }
+            },
+            {
+              "wall_ns": 1313856953,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 200271,
+                "engine_ns": 1294337848,
+                "info_ns": 2291974,
+                "transition_ns": 23609,
+                "encoding_ns": 356265,
+                "reward_ns": 14344,
+                "binding_output_ns": 2415834
+              }
+            },
+            {
+              "wall_ns": 1635199148,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 250466,
+                "engine_ns": 1609392375,
+                "info_ns": 2632494,
+                "transition_ns": 29156,
+                "encoding_ns": 454796,
+                "reward_ns": 17061,
+                "binding_output_ns": 3032262
+              }
+            },
+            {
+              "wall_ns": 1366924579,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 213914,
+                "engine_ns": 1345329602,
+                "info_ns": 2311185,
+                "transition_ns": 24422,
+                "encoding_ns": 389720,
+                "reward_ns": 14529,
+                "binding_output_ns": 2517123
+              }
+            },
+            {
+              "wall_ns": 1250474427,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 196907,
+                "engine_ns": 1231588262,
+                "info_ns": 1872848,
+                "transition_ns": 22883,
+                "encoding_ns": 361221,
+                "reward_ns": 12923,
+                "binding_output_ns": 2312570
+              }
+            },
+            {
+              "wall_ns": 1049567298,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 153221,
+                "engine_ns": 1036105072,
+                "info_ns": 1601814,
+                "transition_ns": 18003,
+                "encoding_ns": 319741,
+                "reward_ns": 12286,
+                "binding_output_ns": 1498206
+              }
+            },
+            {
+              "wall_ns": 1261095687,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 188124,
+                "engine_ns": 1242679685,
+                "info_ns": 2000482,
+                "transition_ns": 24077,
+                "encoding_ns": 341517,
+                "reward_ns": 13600,
+                "binding_output_ns": 2166963
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 198589.0,
+            "engine_ns": 1268508766.5,
+            "info_ns": 2021687.5,
+            "transition_ns": 23246.0,
+            "encoding_ns": 358743.0,
+            "reward_ns": 13972.0,
+            "binding_output_ns": 2364202.0
+          },
+          "unattributed_ns": 14161810.5
+        },
+        "native": {
+          "median_ns": 1272477717.5,
+          "min_ns": 1085586566,
+          "max_ns": 2199188739,
+          "median_steps_per_second": 201.18230478955323,
+          "samples": [
+            {
+              "wall_ns": 1261221543,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 219726,
+                "engine_ns": 1221980209,
+                "info_ns": 1826953,
+                "transition_ns": 25880,
+                "encoding_ns": 359684,
+                "reward_ns": 13620,
+                "binding_output_ns": 2195238
+              }
+            },
+            {
+              "wall_ns": 1131221011,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 191148,
+                "engine_ns": 1099977607,
+                "info_ns": 1637805,
+                "transition_ns": 18671,
+                "encoding_ns": 301507,
+                "reward_ns": 12464,
+                "binding_output_ns": 1633683
+              }
+            },
+            {
+              "wall_ns": 1233421714,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 241012,
+                "engine_ns": 1192968144,
+                "info_ns": 1880523,
+                "transition_ns": 20547,
+                "encoding_ns": 336636,
+                "reward_ns": 13385,
+                "binding_output_ns": 2165946
+              }
+            },
+            {
+              "wall_ns": 2199188739,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 529694,
+                "engine_ns": 2131712173,
+                "info_ns": 2988868,
+                "transition_ns": 37761,
+                "encoding_ns": 512480,
+                "reward_ns": 20020,
+                "binding_output_ns": 3735666
+              }
+            },
+            {
+              "wall_ns": 1452480304,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 315341,
+                "engine_ns": 1399235633,
+                "info_ns": 2361349,
+                "transition_ns": 28466,
+                "encoding_ns": 421013,
+                "reward_ns": 15804,
+                "binding_output_ns": 2983475
+              }
+            },
+            {
+              "wall_ns": 1283733892,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 236571,
+                "engine_ns": 1241825472,
+                "info_ns": 1976490,
+                "transition_ns": 27068,
+                "encoding_ns": 345353,
+                "reward_ns": 13835,
+                "binding_output_ns": 2341156
+              }
+            },
+            {
+              "wall_ns": 1085586566,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 199278,
+                "engine_ns": 1056291187,
+                "info_ns": 1564101,
+                "transition_ns": 20385,
+                "encoding_ns": 269510,
+                "reward_ns": 12059,
+                "binding_output_ns": 1551681
+              }
+            },
+            {
+              "wall_ns": 1323934843,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 278151,
+                "engine_ns": 1279064431,
+                "info_ns": 2250460,
+                "transition_ns": 23600,
+                "encoding_ns": 404293,
+                "reward_ns": 15026,
+                "binding_output_ns": 2356631
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 238791.5,
+            "engine_ns": 1231902840.5,
+            "info_ns": 1928506.5,
+            "transition_ns": 24740.0,
+            "encoding_ns": 352518.5,
+            "reward_ns": 13727.5,
+            "binding_output_ns": 2268197.0
+          },
+          "unattributed_ns": 36381734.0
+        },
+        "native_batch": {
+          "median_ns": 1213322862.0,
+          "min_ns": 1093766962,
+          "max_ns": 1403259941,
+          "median_steps_per_second": 210.9908318862618,
+          "samples": [
+            {
+              "wall_ns": 1345699942,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 201590,
+                "engine_ns": 1340180979,
+                "info_ns": 2269326,
+                "transition_ns": 27229,
+                "encoding_ns": 426446,
+                "reward_ns": 15496,
+                "binding_output_ns": 279335
+              }
+            },
+            {
+              "wall_ns": 1192240058,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 156083,
+                "engine_ns": 1187716627,
+                "info_ns": 1868390,
+                "transition_ns": 23957,
+                "encoding_ns": 333541,
+                "reward_ns": 12712,
+                "binding_output_ns": 150537
+              }
+            },
+            {
+              "wall_ns": 1093766962,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 134530,
+                "engine_ns": 1089320829,
+                "info_ns": 1661542,
+                "transition_ns": 21253,
+                "encoding_ns": 298969,
+                "reward_ns": 12945,
+                "binding_output_ns": 144054
+              }
+            },
+            {
+              "wall_ns": 1206557607,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 140902,
+                "engine_ns": 1202035215,
+                "info_ns": 1820762,
+                "transition_ns": 25312,
+                "encoding_ns": 329494,
+                "reward_ns": 13020,
+                "binding_output_ns": 148778
+              }
+            },
+            {
+              "wall_ns": 1211917342,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 146476,
+                "engine_ns": 1207373824,
+                "info_ns": 1742259,
+                "transition_ns": 21144,
+                "encoding_ns": 336967,
+                "reward_ns": 12807,
+                "binding_output_ns": 147173
+              }
+            },
+            {
+              "wall_ns": 1403259941,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 176794,
+                "engine_ns": 1398186522,
+                "info_ns": 2082428,
+                "transition_ns": 26415,
+                "encoding_ns": 400380,
+                "reward_ns": 14853,
+                "binding_output_ns": 153550
+              }
+            },
+            {
+              "wall_ns": 1223946760,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 144974,
+                "engine_ns": 1219147329,
+                "info_ns": 2078236,
+                "transition_ns": 26039,
+                "encoding_ns": 329918,
+                "reward_ns": 13175,
+                "binding_output_ns": 151005
+              }
+            },
+            {
+              "wall_ns": 1214728382,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 167113,
+                "engine_ns": 1210127419,
+                "info_ns": 1865523,
+                "transition_ns": 23196,
+                "encoding_ns": 349967,
+                "reward_ns": 13880,
+                "binding_output_ns": 162945
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 151279.5,
+            "engine_ns": 1208750621.5,
+            "info_ns": 1866956.5,
+            "transition_ns": 24634.5,
+            "encoding_ns": 335254.0,
+            "reward_ns": 13097.5,
+            "binding_output_ns": 150771.0
+          },
+          "unattributed_ns": 2096388.0
+        },
+        "closed_python": {
+          "median_ns": 1500171216.0,
+          "min_ns": 1340621390,
+          "max_ns": 1956464920,
+          "median_steps_per_second": 170.64718831400376,
+          "samples": [
+            {
+              "wall_ns": 1340621390,
+              "policy_ns": 9322891,
+              "profile": null
+            },
+            {
+              "wall_ns": 1602903162,
+              "policy_ns": 14438414,
+              "profile": null
+            },
+            {
+              "wall_ns": 1364778234,
+              "policy_ns": 9770456,
+              "profile": null
+            },
+            {
+              "wall_ns": 1514126421,
+              "policy_ns": 10727938,
+              "profile": null
+            },
+            {
+              "wall_ns": 1956464920,
+              "policy_ns": 14408757,
+              "profile": null
+            },
+            {
+              "wall_ns": 1377906933,
+              "policy_ns": 9769175,
+              "profile": null
+            },
+            {
+              "wall_ns": 1565809298,
+              "policy_ns": 10825965,
+              "profile": null
+            },
+            {
+              "wall_ns": 1486216011,
+              "policy_ns": 10772351,
+              "profile": null
+            }
+          ]
+        },
+        "closed_native": {
+          "median_ns": 1163936274.0,
+          "min_ns": 1032705155,
+          "max_ns": 4241444562,
+          "median_steps_per_second": 219.9433128071752,
+          "samples": [
+            {
+              "wall_ns": 1032705155,
+              "policy_ns": 9871559,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 211956,
+                "engine_ns": 992129620,
+                "info_ns": 1622639,
+                "transition_ns": 18408,
+                "encoding_ns": 283328,
+                "reward_ns": 12189,
+                "binding_output_ns": 1595909
+              }
+            },
+            {
+              "wall_ns": 1308652333,
+              "policy_ns": 13558277,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 314133,
+                "engine_ns": 1249437626,
+                "info_ns": 2202170,
+                "transition_ns": 26077,
+                "encoding_ns": 373280,
+                "reward_ns": 14850,
+                "binding_output_ns": 2423675
+              }
+            },
+            {
+              "wall_ns": 1136523253,
+              "policy_ns": 11561431,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 255099,
+                "engine_ns": 1085973437,
+                "info_ns": 1814098,
+                "transition_ns": 25211,
+                "encoding_ns": 343868,
+                "reward_ns": 13163,
+                "binding_output_ns": 2226797
+              }
+            },
+            {
+              "wall_ns": 4241444562,
+              "policy_ns": 33848690,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 887283,
+                "engine_ns": 4069619653,
+                "info_ns": 5030095,
+                "transition_ns": 67349,
+                "encoding_ns": 3595865,
+                "reward_ns": 26123,
+                "binding_output_ns": 5580936
+              }
+            },
+            {
+              "wall_ns": 1424301288,
+              "policy_ns": 15009342,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 363933,
+                "engine_ns": 1359244211,
+                "info_ns": 2243293,
+                "transition_ns": 61716,
+                "encoding_ns": 470089,
+                "reward_ns": 15919,
+                "binding_output_ns": 2958885
+              }
+            },
+            {
+              "wall_ns": 1191349295,
+              "policy_ns": 13785511,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 278829,
+                "engine_ns": 1139213687,
+                "info_ns": 1825252,
+                "transition_ns": 24130,
+                "encoding_ns": 338354,
+                "reward_ns": 13331,
+                "binding_output_ns": 1952078
+              }
+            },
+            {
+              "wall_ns": 1065382558,
+              "policy_ns": 9916460,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 205955,
+                "engine_ns": 1024466600,
+                "info_ns": 1643792,
+                "transition_ns": 20291,
+                "encoding_ns": 300142,
+                "reward_ns": 12344,
+                "binding_output_ns": 1718771
+              }
+            },
+            {
+              "wall_ns": 1129987485,
+              "policy_ns": 10757352,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 220188,
+                "engine_ns": 1083049610,
+                "info_ns": 1892828,
+                "transition_ns": 23050,
+                "encoding_ns": 301208,
+                "reward_ns": 13387,
+                "binding_output_ns": 1961286
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 266964.0,
+            "engine_ns": 1112593562.0,
+            "info_ns": 1859040.0,
+            "transition_ns": 24670.5,
+            "encoding_ns": 341111.0,
+            "reward_ns": 13359.0,
+            "binding_output_ns": 2094041.5
+          },
+          "unattributed_ns": 34114136.0
+        }
+      }
+    },
+    {
+      "players": 11,
+      "cadence": 2,
+      "steps": 256,
+      "repeats": 8,
+      "instrumented": false,
+      "digests": {
+        "predetermined": "7eb9b0c50946854abbdb14bc0f77b668bc7e17fbf6323db8ae5baf67861828fd",
+        "feedback": "0adca3dd6a5c4f46169858968bf050ace607396184ee48cc96f23e345df8ef20"
+      },
+      "results": {
+        "python": {
+          "median_ns": 668550383.0,
+          "min_ns": 619618526,
+          "max_ns": 1107285935,
+          "median_steps_per_second": 382.91803656030515,
+          "samples": [
+            {
+              "wall_ns": 968579838,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 661150859,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 619618526,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 675949907,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 620491701,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 648045151,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 808749163,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1107285935,
+              "policy_ns": 0,
+              "profile": null
+            }
+          ]
+        },
+        "raw_native": {
+          "median_ns": 231799580.5,
+          "min_ns": 215545197,
+          "max_ns": 375315598,
+          "median_steps_per_second": 1104.4023438170113,
+          "samples": [
+            {
+              "wall_ns": 324688552,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 229474308,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 218016729,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 231059029,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 215545197,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 232540132,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 338412712,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 375315598,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "native": {
+          "median_ns": 253529226.5,
+          "min_ns": 235746797,
+          "max_ns": 416282216,
+          "median_steps_per_second": 1009.7455174462893,
+          "samples": [
+            {
+              "wall_ns": 299761316,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 244713287,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 258478938,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 248579515,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 235746797,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 247356102,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 362655155,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 416282216,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "native_batch": {
+          "median_ns": 235666129.5,
+          "min_ns": 207407505,
+          "max_ns": 377897506,
+          "median_steps_per_second": 1086.2825325944855,
+          "samples": [
+            {
+              "wall_ns": 254577659,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 242444322,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 228887937,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 217338855,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 212216154,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 207407505,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 322869017,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 377897506,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "closed_python": {
+          "median_ns": 617619529.5,
+          "min_ns": 596168472,
+          "max_ns": 995107168,
+          "median_steps_per_second": 414.49466503633283,
+          "samples": [
+            {
+              "wall_ns": 725214475,
+              "policy_ns": 8134237,
+              "profile": null
+            },
+            {
+              "wall_ns": 635193933,
+              "policy_ns": 6883546,
+              "profile": null
+            },
+            {
+              "wall_ns": 596168472,
+              "policy_ns": 6435391,
+              "profile": null
+            },
+            {
+              "wall_ns": 598087456,
+              "policy_ns": 6223538,
+              "profile": null
+            },
+            {
+              "wall_ns": 597313583,
+              "policy_ns": 6383915,
+              "profile": null
+            },
+            {
+              "wall_ns": 600045126,
+              "policy_ns": 6173051,
+              "profile": null
+            },
+            {
+              "wall_ns": 958587182,
+              "policy_ns": 11500181,
+              "profile": null
+            },
+            {
+              "wall_ns": 995107168,
+              "policy_ns": 11848496,
+              "profile": null
+            }
+          ]
+        },
+        "closed_native": {
+          "median_ns": 230709491.5,
+          "min_ns": 211322312,
+          "max_ns": 381256314,
+          "median_steps_per_second": 1109.6205809980731,
+          "samples": [
+            {
+              "wall_ns": 236617455,
+              "policy_ns": 6488703,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 226539693,
+              "policy_ns": 5401846,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 211322312,
+              "policy_ns": 5239186,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 229676030,
+              "policy_ns": 5402342,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 220335661,
+              "policy_ns": 5708476,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 231742953,
+              "policy_ns": 5557216,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 368781648,
+              "policy_ns": 9799234,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 381256314,
+              "policy_ns": 9530442,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "players": 11,
+      "cadence": 2,
+      "steps": 256,
+      "repeats": 8,
+      "instrumented": true,
+      "digests": {
+        "predetermined": "7eb9b0c50946854abbdb14bc0f77b668bc7e17fbf6323db8ae5baf67861828fd",
+        "feedback": "0adca3dd6a5c4f46169858968bf050ace607396184ee48cc96f23e345df8ef20"
+      },
+      "results": {
+        "python": {
+          "median_ns": 683402694.5,
+          "min_ns": 650783877,
+          "max_ns": 745752265,
+          "median_steps_per_second": 374.5961232817469,
+          "samples": [
+            {
+              "wall_ns": 745752265,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 740824631,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 702965173,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 655110228,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 650783877,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 663383123,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 663840216,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 743256981,
+              "policy_ns": 0,
+              "profile": null
+            }
+          ]
+        },
+        "raw_native": {
+          "median_ns": 236176925.0,
+          "min_ns": 223125177,
+          "max_ns": 279989493,
+          "median_steps_per_second": 1083.933157314162,
+          "samples": [
+            {
+              "wall_ns": 279989493,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 276369,
+                "engine_ns": 270894919,
+                "info_ns": 1819184,
+                "transition_ns": 12849,
+                "encoding_ns": 291743,
+                "reward_ns": 9643,
+                "binding_output_ns": 900145
+              }
+            },
+            {
+              "wall_ns": 246444273,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 236027,
+                "engine_ns": 239766139,
+                "info_ns": 1088132,
+                "transition_ns": 10122,
+                "encoding_ns": 209669,
+                "reward_ns": 8228,
+                "binding_output_ns": 657839
+              }
+            },
+            {
+              "wall_ns": 238778695,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 226031,
+                "engine_ns": 232682907,
+                "info_ns": 1087644,
+                "transition_ns": 9394,
+                "encoding_ns": 199721,
+                "reward_ns": 7266,
+                "binding_output_ns": 584121
+              }
+            },
+            {
+              "wall_ns": 224549323,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 206701,
+                "engine_ns": 219005124,
+                "info_ns": 958052,
+                "transition_ns": 8514,
+                "encoding_ns": 240361,
+                "reward_ns": 6656,
+                "binding_output_ns": 539639
+              }
+            },
+            {
+              "wall_ns": 223125177,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 206773,
+                "engine_ns": 217684834,
+                "info_ns": 955454,
+                "transition_ns": 8364,
+                "encoding_ns": 222423,
+                "reward_ns": 6740,
+                "binding_output_ns": 510328
+              }
+            },
+            {
+              "wall_ns": 239041890,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 224982,
+                "engine_ns": 232685161,
+                "info_ns": 1108971,
+                "transition_ns": 9644,
+                "encoding_ns": 201225,
+                "reward_ns": 6838,
+                "binding_output_ns": 601865
+              }
+            },
+            {
+              "wall_ns": 233575155,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 218211,
+                "engine_ns": 227809614,
+                "info_ns": 979276,
+                "transition_ns": 8646,
+                "encoding_ns": 185191,
+                "reward_ns": 6584,
+                "binding_output_ns": 627370
+              }
+            },
+            {
+              "wall_ns": 231729827,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 220364,
+                "engine_ns": 226143295,
+                "info_ns": 944146,
+                "transition_ns": 8617,
+                "encoding_ns": 215833,
+                "reward_ns": 7135,
+                "binding_output_ns": 507203
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 222673.0,
+            "engine_ns": 230246260.5,
+            "info_ns": 1033460.0,
+            "transition_ns": 9020.0,
+            "encoding_ns": 212751.0,
+            "reward_ns": 6986.5,
+            "binding_output_ns": 592993.0
+          },
+          "unattributed_ns": 3860937.0
+        },
+        "native": {
+          "median_ns": 249244312.0,
+          "min_ns": 239862393,
+          "max_ns": 267784378,
+          "median_steps_per_second": 1027.1046827339435,
+          "samples": [
+            {
+              "wall_ns": 267784378,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 289932,
+                "engine_ns": 245977288,
+                "info_ns": 1178786,
+                "transition_ns": 11842,
+                "encoding_ns": 242723,
+                "reward_ns": 9430,
+                "binding_output_ns": 767984
+              }
+            },
+            {
+              "wall_ns": 259861908,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 312188,
+                "engine_ns": 238757952,
+                "info_ns": 1287756,
+                "transition_ns": 11691,
+                "encoding_ns": 266830,
+                "reward_ns": 8684,
+                "binding_output_ns": 810046
+              }
+            },
+            {
+              "wall_ns": 249548756,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 263027,
+                "engine_ns": 230812647,
+                "info_ns": 1129473,
+                "transition_ns": 10701,
+                "encoding_ns": 221895,
+                "reward_ns": 8231,
+                "binding_output_ns": 660312
+              }
+            },
+            {
+              "wall_ns": 240273818,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 258720,
+                "engine_ns": 222155400,
+                "info_ns": 1045122,
+                "transition_ns": 10594,
+                "encoding_ns": 257890,
+                "reward_ns": 7733,
+                "binding_output_ns": 641971
+              }
+            },
+            {
+              "wall_ns": 239862393,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 252769,
+                "engine_ns": 222142078,
+                "info_ns": 1068939,
+                "transition_ns": 9257,
+                "encoding_ns": 212366,
+                "reward_ns": 25554,
+                "binding_output_ns": 600476
+              }
+            },
+            {
+              "wall_ns": 254414869,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 279883,
+                "engine_ns": 235680513,
+                "info_ns": 1053069,
+                "transition_ns": 11175,
+                "encoding_ns": 230278,
+                "reward_ns": 8221,
+                "binding_output_ns": 649933
+              }
+            },
+            {
+              "wall_ns": 244264832,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 293381,
+                "engine_ns": 226307503,
+                "info_ns": 1076525,
+                "transition_ns": 10633,
+                "encoding_ns": 220011,
+                "reward_ns": 7727,
+                "binding_output_ns": 634363
+              }
+            },
+            {
+              "wall_ns": 248939868,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 250231,
+                "engine_ns": 230460630,
+                "info_ns": 1096813,
+                "transition_ns": 11457,
+                "encoding_ns": 220235,
+                "reward_ns": 8230,
+                "binding_output_ns": 670673
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 271455.0,
+            "engine_ns": 230636638.5,
+            "info_ns": 1086669.0,
+            "transition_ns": 10938.0,
+            "encoding_ns": 226086.5,
+            "reward_ns": 8230.5,
+            "binding_output_ns": 655122.5
+          },
+          "unattributed_ns": 16332034.5
+        },
+        "native_batch": {
+          "median_ns": 226456347.0,
+          "min_ns": 218771677,
+          "max_ns": 232491917,
+          "median_steps_per_second": 1130.4606975754139,
+          "samples": [
+            {
+              "wall_ns": 230272959,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 206897,
+                "engine_ns": 226651157,
+                "info_ns": 1014649,
+                "transition_ns": 11258,
+                "encoding_ns": 254638,
+                "reward_ns": 8386,
+                "binding_output_ns": 241530
+              }
+            },
+            {
+              "wall_ns": 232491917,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 281536,
+                "engine_ns": 228750228,
+                "info_ns": 994771,
+                "transition_ns": 9959,
+                "encoding_ns": 260213,
+                "reward_ns": 9161,
+                "binding_output_ns": 245698
+              }
+            },
+            {
+              "wall_ns": 231800983,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 205596,
+                "engine_ns": 228316002,
+                "info_ns": 957134,
+                "transition_ns": 9455,
+                "encoding_ns": 232485,
+                "reward_ns": 8454,
+                "binding_output_ns": 222168
+              }
+            },
+            {
+              "wall_ns": 221780932,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 207950,
+                "engine_ns": 218146220,
+                "info_ns": 974574,
+                "transition_ns": 10510,
+                "encoding_ns": 245914,
+                "reward_ns": 8705,
+                "binding_output_ns": 264418
+              }
+            },
+            {
+              "wall_ns": 219659497,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 195260,
+                "engine_ns": 216168484,
+                "info_ns": 985639,
+                "transition_ns": 9046,
+                "encoding_ns": 226344,
+                "reward_ns": 8039,
+                "binding_output_ns": 229020
+              }
+            },
+            {
+              "wall_ns": 227293085,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 199361,
+                "engine_ns": 223647285,
+                "info_ns": 1017623,
+                "transition_ns": 9932,
+                "encoding_ns": 236887,
+                "reward_ns": 7356,
+                "binding_output_ns": 243454
+              }
+            },
+            {
+              "wall_ns": 218771677,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 187482,
+                "engine_ns": 215402362,
+                "info_ns": 893604,
+                "transition_ns": 8432,
+                "encoding_ns": 224251,
+                "reward_ns": 8574,
+                "binding_output_ns": 234314
+              }
+            },
+            {
+              "wall_ns": 225619609,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 196702,
+                "engine_ns": 221985621,
+                "info_ns": 993193,
+                "transition_ns": 10238,
+                "encoding_ns": 255524,
+                "reward_ns": 8198,
+                "binding_output_ns": 235900
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 202478.5,
+            "engine_ns": 222816453.0,
+            "info_ns": 989416.0,
+            "transition_ns": 9945.5,
+            "encoding_ns": 241400.5,
+            "reward_ns": 8420.0,
+            "binding_output_ns": 238715.0
+          },
+          "unattributed_ns": 1903542.5
+        },
+        "closed_python": {
+          "median_ns": 637270175.5,
+          "min_ns": 614485237,
+          "max_ns": 698884612,
+          "median_steps_per_second": 401.7134487725607,
+          "samples": [
+            {
+              "wall_ns": 644060789,
+              "policy_ns": 7085095,
+              "profile": null
+            },
+            {
+              "wall_ns": 698884612,
+              "policy_ns": 7782150,
+              "profile": null
+            },
+            {
+              "wall_ns": 643481613,
+              "policy_ns": 7053927,
+              "profile": null
+            },
+            {
+              "wall_ns": 644523239,
+              "policy_ns": 6703667,
+              "profile": null
+            },
+            {
+              "wall_ns": 618629323,
+              "policy_ns": 6756196,
+              "profile": null
+            },
+            {
+              "wall_ns": 630151635,
+              "policy_ns": 6547417,
+              "profile": null
+            },
+            {
+              "wall_ns": 614485237,
+              "policy_ns": 6508573,
+              "profile": null
+            },
+            {
+              "wall_ns": 631058738,
+              "policy_ns": 6737332,
+              "profile": null
+            }
+          ]
+        },
+        "closed_native": {
+          "median_ns": 231924855.5,
+          "min_ns": 215687353,
+          "max_ns": 288843434,
+          "median_steps_per_second": 1103.8057971324251,
+          "samples": [
+            {
+              "wall_ns": 230761368,
+              "policy_ns": 5863177,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 287320,
+                "engine_ns": 206004153,
+                "info_ns": 1167816,
+                "transition_ns": 11503,
+                "encoding_ns": 231102,
+                "reward_ns": 8797,
+                "binding_output_ns": 652142
+              }
+            },
+            {
+              "wall_ns": 288843434,
+              "policy_ns": 7683266,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 294511,
+                "engine_ns": 255174619,
+                "info_ns": 1440101,
+                "transition_ns": 13595,
+                "encoding_ns": 306584,
+                "reward_ns": 10262,
+                "binding_output_ns": 1018810
+              }
+            },
+            {
+              "wall_ns": 258111179,
+              "policy_ns": 6494542,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 284047,
+                "engine_ns": 231138485,
+                "info_ns": 1161265,
+                "transition_ns": 11776,
+                "encoding_ns": 255254,
+                "reward_ns": 9532,
+                "binding_output_ns": 725661
+              }
+            },
+            {
+              "wall_ns": 227065546,
+              "policy_ns": 5328558,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 231071,
+                "engine_ns": 205162011,
+                "info_ns": 984885,
+                "transition_ns": 10325,
+                "encoding_ns": 206041,
+                "reward_ns": 8345,
+                "binding_output_ns": 563599
+              }
+            },
+            {
+              "wall_ns": 228027645,
+              "policy_ns": 5536478,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 218034,
+                "engine_ns": 204889235,
+                "info_ns": 1082087,
+                "transition_ns": 10891,
+                "encoding_ns": 206913,
+                "reward_ns": 8217,
+                "binding_output_ns": 595514
+              }
+            },
+            {
+              "wall_ns": 215687353,
+              "policy_ns": 4748777,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 198638,
+                "engine_ns": 195682349,
+                "info_ns": 985831,
+                "transition_ns": 9453,
+                "encoding_ns": 186671,
+                "reward_ns": 7384,
+                "binding_output_ns": 522792
+              }
+            },
+            {
+              "wall_ns": 233088343,
+              "policy_ns": 5503103,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 245832,
+                "engine_ns": 209394787,
+                "info_ns": 1179919,
+                "transition_ns": 11117,
+                "encoding_ns": 208236,
+                "reward_ns": 8012,
+                "binding_output_ns": 642509
+              }
+            },
+            {
+              "wall_ns": 238532640,
+              "policy_ns": 5939806,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 256,
+                "action_ns": 268759,
+                "engine_ns": 213154167,
+                "info_ns": 1136581,
+                "transition_ns": 11560,
+                "encoding_ns": 237777,
+                "reward_ns": 8641,
+                "binding_output_ns": 714492
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 257295.5,
+            "engine_ns": 207699470.0,
+            "info_ns": 1148923.0,
+            "transition_ns": 11310.0,
+            "encoding_ns": 219669.0,
+            "reward_ns": 8493.0,
+            "binding_output_ns": 647325.5
+          },
+          "unattributed_ns": 16215093.0
+        }
+      }
+    },
+    {
+      "players": 11,
+      "cadence": 10,
+      "steps": 256,
+      "repeats": 8,
+      "instrumented": false,
+      "digests": {
+        "predetermined": "c65e3b303b089fb504d1ea112c5c5c7fda527a3030f7e40fc6d98b1fd77488f7",
+        "feedback": "872a2c0b339e69a8e766f70ce6cad951e6666f5449340bf0708cc2eda5ce8c9e"
+      },
+      "results": {
+        "python": {
+          "median_ns": 1649313090.0,
+          "min_ns": 1361997538,
+          "max_ns": 2002767077,
+          "median_steps_per_second": 155.21613303875495,
+          "samples": [
+            {
+              "wall_ns": 1978165129,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1383699566,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1556444744,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1528468300,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1361997538,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1742181436,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1769687775,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 2002767077,
+              "policy_ns": 0,
+              "profile": null
+            }
+          ]
+        },
+        "raw_native": {
+          "median_ns": 934420909.5,
+          "min_ns": 876047437,
+          "max_ns": 1057982278,
+          "median_steps_per_second": 273.9664720655526,
+          "samples": [
+            {
+              "wall_ns": 945479381,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 881338558,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 923162200,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 923362438,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 876047437,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1057982278,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1043311734,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 947313398,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "native": {
+          "median_ns": 961948252.0,
+          "min_ns": 829145594,
+          "max_ns": 1119878769,
+          "median_steps_per_second": 266.1265816199019,
+          "samples": [
+            {
+              "wall_ns": 900283026,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1023613478,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 848239636,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 889151982,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 829145594,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1038318324,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1119878769,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1073638416,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "native_batch": {
+          "median_ns": 906808480.0,
+          "min_ns": 826609974,
+          "max_ns": 1081231390,
+          "median_steps_per_second": 282.3087847612541,
+          "samples": [
+            {
+              "wall_ns": 826609974,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1024317445,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 852152831,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 861780089,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 839596145,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 951836871,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1012081202,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1081231390,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        },
+        "closed_python": {
+          "median_ns": 1532113908.5,
+          "min_ns": 1422808757,
+          "max_ns": 1863354565,
+          "median_steps_per_second": 167.08940411006,
+          "samples": [
+            {
+              "wall_ns": 1422808757,
+              "policy_ns": 8173610,
+              "profile": null
+            },
+            {
+              "wall_ns": 1563417124,
+              "policy_ns": 9418542,
+              "profile": null
+            },
+            {
+              "wall_ns": 1444446219,
+              "policy_ns": 8036402,
+              "profile": null
+            },
+            {
+              "wall_ns": 1500810693,
+              "policy_ns": 8282454,
+              "profile": null
+            },
+            {
+              "wall_ns": 1445779979,
+              "policy_ns": 7809642,
+              "profile": null
+            },
+            {
+              "wall_ns": 1772315558,
+              "policy_ns": 11272579,
+              "profile": null
+            },
+            {
+              "wall_ns": 1723479637,
+              "policy_ns": 10893849,
+              "profile": null
+            },
+            {
+              "wall_ns": 1863354565,
+              "policy_ns": 11179826,
+              "profile": null
+            }
+          ]
+        },
+        "closed_native": {
+          "median_ns": 1096045472.5,
+          "min_ns": 940529006,
+          "max_ns": 1311099436,
+          "median_steps_per_second": 233.5669517580166,
+          "samples": [
+            {
+              "wall_ns": 1032967288,
+              "policy_ns": 9212902,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1178787634,
+              "policy_ns": 11502009,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1022263727,
+              "policy_ns": 9616248,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1020358171,
+              "policy_ns": 9424865,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 940529006,
+              "policy_ns": 7488256,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1159123657,
+              "policy_ns": 12047018,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1187902759,
+              "policy_ns": 11491879,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            },
+            {
+              "wall_ns": 1311099436,
+              "policy_ns": 14110522,
+              "profile": {
+                "transitions": 0,
+                "engine_calls": 0,
+                "action_ns": 0,
+                "engine_ns": 0,
+                "info_ns": 0,
+                "transition_ns": 0,
+                "encoding_ns": 0,
+                "reward_ns": 0,
+                "binding_output_ns": 0
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "players": 11,
+      "cadence": 10,
+      "steps": 256,
+      "repeats": 8,
+      "instrumented": true,
+      "digests": {
+        "predetermined": "c65e3b303b089fb504d1ea112c5c5c7fda527a3030f7e40fc6d98b1fd77488f7",
+        "feedback": "872a2c0b339e69a8e766f70ce6cad951e6666f5449340bf0708cc2eda5ce8c9e"
+      },
+      "results": {
+        "python": {
+          "median_ns": 1554188540.5,
+          "min_ns": 1483529067,
+          "max_ns": 1737814026,
+          "median_steps_per_second": 164.71618039188598,
+          "samples": [
+            {
+              "wall_ns": 1565693374,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1737814026,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1666268705,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1493856025,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1483529067,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1688581401,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1521191181,
+              "policy_ns": 0,
+              "profile": null
+            },
+            {
+              "wall_ns": 1542683707,
+              "policy_ns": 0,
+              "profile": null
+            }
+          ]
+        },
+        "raw_native": {
+          "median_ns": 905520096.5,
+          "min_ns": 872048706,
+          "max_ns": 1139249739,
+          "median_steps_per_second": 282.71045666406144,
+          "samples": [
+            {
+              "wall_ns": 888640817,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 259674,
+                "engine_ns": 877038282,
+                "info_ns": 1680458,
+                "transition_ns": 16557,
+                "encoding_ns": 307411,
+                "reward_ns": 9918,
+                "binding_output_ns": 1354851
+              }
+            },
+            {
+              "wall_ns": 922399376,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 337806,
+                "engine_ns": 910516816,
+                "info_ns": 1510976,
+                "transition_ns": 16505,
+                "encoding_ns": 319471,
+                "reward_ns": 9283,
+                "binding_output_ns": 1277666
+              }
+            },
+            {
+              "wall_ns": 1039828532,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 336258,
+                "engine_ns": 1024060209,
+                "info_ns": 1830037,
+                "transition_ns": 22187,
+                "encoding_ns": 351388,
+                "reward_ns": 10576,
+                "binding_output_ns": 1899421
+              }
+            },
+            {
+              "wall_ns": 886849817,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 268068,
+                "engine_ns": 875630206,
+                "info_ns": 1492164,
+                "transition_ns": 16876,
+                "encoding_ns": 316897,
+                "reward_ns": 9198,
+                "binding_output_ns": 1273435
+              }
+            },
+            {
+              "wall_ns": 872048706,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 239062,
+                "engine_ns": 861921057,
+                "info_ns": 1316795,
+                "transition_ns": 23929,
+                "encoding_ns": 277081,
+                "reward_ns": 8668,
+                "binding_output_ns": 1124205
+              }
+            },
+            {
+              "wall_ns": 1139249739,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 335595,
+                "engine_ns": 1121734398,
+                "info_ns": 2080319,
+                "transition_ns": 29257,
+                "encoding_ns": 487260,
+                "reward_ns": 11273,
+                "binding_output_ns": 2151027
+              }
+            },
+            {
+              "wall_ns": 877864030,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 257796,
+                "engine_ns": 866758396,
+                "info_ns": 1479365,
+                "transition_ns": 16288,
+                "encoding_ns": 308293,
+                "reward_ns": 9241,
+                "binding_output_ns": 1211150
+              }
+            },
+            {
+              "wall_ns": 923970446,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 254040,
+                "engine_ns": 912882037,
+                "info_ns": 1447394,
+                "transition_ns": 15555,
+                "encoding_ns": 337768,
+                "reward_ns": 9861,
+                "binding_output_ns": 1241708
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 263871.0,
+            "engine_ns": 893777549.0,
+            "info_ns": 1501570.0,
+            "transition_ns": 16716.5,
+            "encoding_ns": 318184.0,
+            "reward_ns": 9572.0,
+            "binding_output_ns": 1275550.5
+          },
+          "unattributed_ns": 7908319.5
+        },
+        "native": {
+          "median_ns": 908856325.0,
+          "min_ns": 889521256,
+          "max_ns": 1066450033,
+          "median_steps_per_second": 281.6726835234381,
+          "samples": [
+            {
+              "wall_ns": 920108644,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 306796,
+                "engine_ns": 887207460,
+                "info_ns": 1575979,
+                "transition_ns": 17565,
+                "encoding_ns": 327815,
+                "reward_ns": 9961,
+                "binding_output_ns": 1462702
+              }
+            },
+            {
+              "wall_ns": 895506960,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 379245,
+                "engine_ns": 866116188,
+                "info_ns": 1405974,
+                "transition_ns": 15639,
+                "encoding_ns": 295934,
+                "reward_ns": 9752,
+                "binding_output_ns": 1317150
+              }
+            },
+            {
+              "wall_ns": 934104143,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 315980,
+                "engine_ns": 900928207,
+                "info_ns": 1635440,
+                "transition_ns": 16535,
+                "encoding_ns": 318732,
+                "reward_ns": 9985,
+                "binding_output_ns": 1399608
+              }
+            },
+            {
+              "wall_ns": 890047291,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 285999,
+                "engine_ns": 860425602,
+                "info_ns": 1586593,
+                "transition_ns": 38865,
+                "encoding_ns": 296034,
+                "reward_ns": 9683,
+                "binding_output_ns": 1352657
+              }
+            },
+            {
+              "wall_ns": 889521256,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 318287,
+                "engine_ns": 858957170,
+                "info_ns": 1439523,
+                "transition_ns": 17168,
+                "encoding_ns": 319062,
+                "reward_ns": 9350,
+                "binding_output_ns": 1319605
+              }
+            },
+            {
+              "wall_ns": 1066450033,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 406970,
+                "engine_ns": 1025204463,
+                "info_ns": 1921558,
+                "transition_ns": 20986,
+                "encoding_ns": 376508,
+                "reward_ns": 11761,
+                "binding_output_ns": 1922833
+              }
+            },
+            {
+              "wall_ns": 897604006,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 282752,
+                "engine_ns": 867860946,
+                "info_ns": 1486458,
+                "transition_ns": 14985,
+                "encoding_ns": 289090,
+                "reward_ns": 9706,
+                "binding_output_ns": 1317904
+              }
+            },
+            {
+              "wall_ns": 936994473,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 298663,
+                "engine_ns": 904247477,
+                "info_ns": 1636175,
+                "transition_ns": 17802,
+                "encoding_ns": 348208,
+                "reward_ns": 10109,
+                "binding_output_ns": 1447021
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 311388.0,
+            "engine_ns": 877534203.0,
+            "info_ns": 1581286.0,
+            "transition_ns": 17366.5,
+            "encoding_ns": 318897.0,
+            "reward_ns": 9856.5,
+            "binding_output_ns": 1376132.5
+          },
+          "unattributed_ns": 28065054.5
+        },
+        "native_batch": {
+          "median_ns": 901743643.0,
+          "min_ns": 825040391,
+          "max_ns": 1059968925,
+          "median_steps_per_second": 283.89443273291806,
+          "samples": [
+            {
+              "wall_ns": 866467747,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 229988,
+                "engine_ns": 862279080,
+                "info_ns": 1436672,
+                "transition_ns": 15233,
+                "encoding_ns": 377623,
+                "reward_ns": 10735,
+                "binding_output_ns": 248901
+              }
+            },
+            {
+              "wall_ns": 880511905,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 268797,
+                "engine_ns": 876154184,
+                "info_ns": 1491955,
+                "transition_ns": 15518,
+                "encoding_ns": 369351,
+                "reward_ns": 14031,
+                "binding_output_ns": 268952
+              }
+            },
+            {
+              "wall_ns": 1059968925,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 301069,
+                "engine_ns": 1055027501,
+                "info_ns": 1841044,
+                "transition_ns": 25156,
+                "encoding_ns": 453664,
+                "reward_ns": 18319,
+                "binding_output_ns": 265166
+              }
+            },
+            {
+              "wall_ns": 922975381,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 249398,
+                "engine_ns": 918504516,
+                "info_ns": 1630066,
+                "transition_ns": 16974,
+                "encoding_ns": 396404,
+                "reward_ns": 11034,
+                "binding_output_ns": 248065
+              }
+            },
+            {
+              "wall_ns": 842388686,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 216244,
+                "engine_ns": 838116479,
+                "info_ns": 1459335,
+                "transition_ns": 15531,
+                "encoding_ns": 344741,
+                "reward_ns": 12597,
+                "binding_output_ns": 265678
+              }
+            },
+            {
+              "wall_ns": 1059936504,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 280405,
+                "engine_ns": 1054861158,
+                "info_ns": 1957006,
+                "transition_ns": 23147,
+                "encoding_ns": 425830,
+                "reward_ns": 13077,
+                "binding_output_ns": 272929
+              }
+            },
+            {
+              "wall_ns": 825040391,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 206341,
+                "engine_ns": 821019150,
+                "info_ns": 1353402,
+                "transition_ns": 12272,
+                "encoding_ns": 316327,
+                "reward_ns": 10838,
+                "binding_output_ns": 242449
+              }
+            },
+            {
+              "wall_ns": 953685184,
+              "policy_ns": 0,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 247586,
+                "engine_ns": 949103646,
+                "info_ns": 1631111,
+                "transition_ns": 17827,
+                "encoding_ns": 458736,
+                "reward_ns": 12783,
+                "binding_output_ns": 257819
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 248492.0,
+            "engine_ns": 897329350.0,
+            "info_ns": 1561010.5,
+            "transition_ns": 16252.5,
+            "encoding_ns": 387013.5,
+            "reward_ns": 12690.0,
+            "binding_output_ns": 261492.5
+          },
+          "unattributed_ns": 1942396.5
+        },
+        "closed_python": {
+          "median_ns": 1499365247.0,
+          "min_ns": 1413867955,
+          "max_ns": 1861036845,
+          "median_steps_per_second": 170.73891802695624,
+          "samples": [
+            {
+              "wall_ns": 1413867955,
+              "policy_ns": 8178437,
+              "profile": null
+            },
+            {
+              "wall_ns": 1750560523,
+              "policy_ns": 10174626,
+              "profile": null
+            },
+            {
+              "wall_ns": 1861036845,
+              "policy_ns": 10804121,
+              "profile": null
+            },
+            {
+              "wall_ns": 1432486324,
+              "policy_ns": 7363424,
+              "profile": null
+            },
+            {
+              "wall_ns": 1418136673,
+              "policy_ns": 7842559,
+              "profile": null
+            },
+            {
+              "wall_ns": 1771021830,
+              "policy_ns": 10259285,
+              "profile": null
+            },
+            {
+              "wall_ns": 1430224605,
+              "policy_ns": 7508864,
+              "profile": null
+            },
+            {
+              "wall_ns": 1566244170,
+              "policy_ns": 8687369,
+              "profile": null
+            }
+          ]
+        },
+        "closed_native": {
+          "median_ns": 999774495.5,
+          "min_ns": 969898056,
+          "max_ns": 1214014234,
+          "median_steps_per_second": 256.0577421731199,
+          "samples": [
+            {
+              "wall_ns": 1006047386,
+              "policy_ns": 9327735,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 331815,
+                "engine_ns": 965315141,
+                "info_ns": 1657562,
+                "transition_ns": 16327,
+                "encoding_ns": 324370,
+                "reward_ns": 10412,
+                "binding_output_ns": 1467721
+              }
+            },
+            {
+              "wall_ns": 1214014234,
+              "policy_ns": 12570806,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 416803,
+                "engine_ns": 1154339424,
+                "info_ns": 2028173,
+                "transition_ns": 22321,
+                "encoding_ns": 433747,
+                "reward_ns": 11694,
+                "binding_output_ns": 2352927
+              }
+            },
+            {
+              "wall_ns": 1128077108,
+              "policy_ns": 10679607,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 393114,
+                "engine_ns": 1079025212,
+                "info_ns": 1813462,
+                "transition_ns": 20759,
+                "encoding_ns": 399681,
+                "reward_ns": 11670,
+                "binding_output_ns": 1781333
+              }
+            },
+            {
+              "wall_ns": 976602532,
+              "policy_ns": 8292598,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 299125,
+                "engine_ns": 937925949,
+                "info_ns": 1484441,
+                "transition_ns": 16376,
+                "encoding_ns": 301225,
+                "reward_ns": 9850,
+                "binding_output_ns": 1363363
+              }
+            },
+            {
+              "wall_ns": 993501605,
+              "policy_ns": 8948333,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 305653,
+                "engine_ns": 954096822,
+                "info_ns": 1509103,
+                "transition_ns": 16265,
+                "encoding_ns": 325944,
+                "reward_ns": 10543,
+                "binding_output_ns": 1385748
+              }
+            },
+            {
+              "wall_ns": 969898056,
+              "policy_ns": 8386290,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 323228,
+                "engine_ns": 933419218,
+                "info_ns": 1525530,
+                "transition_ns": 13324,
+                "encoding_ns": 297954,
+                "reward_ns": 10606,
+                "binding_output_ns": 1216862
+              }
+            },
+            {
+              "wall_ns": 987510782,
+              "policy_ns": 8607681,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 372926,
+                "engine_ns": 948938911,
+                "info_ns": 1489943,
+                "transition_ns": 16526,
+                "encoding_ns": 304209,
+                "reward_ns": 9951,
+                "binding_output_ns": 1525930
+              }
+            },
+            {
+              "wall_ns": 1012435356,
+              "policy_ns": 9005778,
+              "profile": {
+                "transitions": 256,
+                "engine_calls": 277,
+                "action_ns": 325344,
+                "engine_ns": 972790737,
+                "info_ns": 1604754,
+                "transition_ns": 15327,
+                "encoding_ns": 348287,
+                "reward_ns": 10258,
+                "binding_output_ns": 1385890
+              }
+            }
+          ],
+          "median_phase_ns": {
+            "action_ns": 328579.5,
+            "engine_ns": 959705981.5,
+            "info_ns": 1565142.0,
+            "transition_ns": 16351.5,
+            "encoding_ns": 325157.0,
+            "reward_ns": 10477.5,
+            "binding_output_ns": 1426805.5
+          },
+          "unattributed_ns": 26929293.0
+        }
+      }
+    }
+  ]
+}

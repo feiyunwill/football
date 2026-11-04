@@ -1,0 +1,17 @@
+{
+  "scope": "Independent gprofng per spawn process; actual pool includes imports, construction, warmup, resets, steps and close; excludes parent PPO. Instrumented, not speed evidence.",
+  "measured_worker_pids": [
+    "1869665",
+    "1869666",
+    "1869667",
+    "1869668"
+  ],
+  "profiles": {
+    "1869665": "/tmp/football-native-workers-20261017-d-profiles/worker-1869665.er",
+    "1869666": "/tmp/football-native-workers-20261017-d-profiles/worker-1869666.er",
+    "1869667": "/tmp/football-native-workers-20261017-d-profiles/worker-1869667.er",
+    "1869668": "/tmp/football-native-workers-20261017-d-profiles/worker-1869668.er"
+  },
+  "period_ms": 10,
+  "follow_descendants": false
+}

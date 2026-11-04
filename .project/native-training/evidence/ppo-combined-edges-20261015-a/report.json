@@ -1,0 +1,31 @@
+{
+  "passed": true,
+  "rows": [
+    {
+      "players": 1,
+      "hidden": 1,
+      "samples": 1,
+      "state_sha256": "53763ecbd2f25ff16d3efa7583b7f9680c9c1b666b008854fab39dee060fa6b2"
+    },
+    {
+      "players": 2,
+      "hidden": 3,
+      "samples": 6,
+      "state_sha256": "16e08fdb69dd08f3b5d4e08e200cb3b40572d9bf00e9eef393d066eae5d96000"
+    },
+    {
+      "players": 11,
+      "hidden": 7,
+      "samples": 65,
+      "state_sha256": "894ef9e7ba846f8888c08fa18da01f5fcc6b8804f0775ca1286b0e4797735e22"
+    },
+    {
+      "players": 11,
+      "hidden": 64,
+      "samples": 256,
+      "state_sha256": "ecb1f04dc7f199dc95638d4fade08f0a88ee262a3eb0368885ac06e627fc5c64"
+    }
+  ],
+  "experiment_sha256": "5ca728d02c6abade0171f8c1533485ffef50d176bcfe74eca703a27bb0a28aad",
+  "runner_sha256": "e0fa3affad0a53a8b146fc191baa3d5334c25ccd3ae999ab815eb3058ba3a784"
+}

@@ -1,0 +1,46 @@
+{
+  "retrieved_utc": "2026-10-15T04:00:35.449016+00:00",
+  "scope": "Public project provenance; design practices only, no upstream algorithm implementation copied",
+  "references": [
+    {
+      "repository": "google-research/football",
+      "branch": "master",
+      "commit": "3d9e754720a95621bba6475c4d3b0d56fe919014",
+      "commit_date": "2025-06-17T08:34:25Z",
+      "license": "Apache-2.0",
+      "readme": "https://github.com/google-research/football/blob/3d9e754720a95621bba6475c4d3b0d56fe919014/README.md"
+    },
+    {
+      "repository": "vwxyzjn/cleanrl",
+      "branch": "master",
+      "commit": "fe8d8a03c41a7ef5b523e2e354bd01c363e786bb",
+      "commit_date": "2026-04-20T10:57:15Z",
+      "license": "NOASSERTION",
+      "readme": "https://github.com/vwxyzjn/cleanrl/blob/fe8d8a03c41a7ef5b523e2e354bd01c363e786bb/README.md"
+    },
+    {
+      "repository": "Farama-Foundation/Gymnasium",
+      "branch": "main",
+      "commit": "57c1610e80214db72c1c7410d6b65bb1a989e233",
+      "commit_date": "2026-10-14T19:53:17Z",
+      "license": "MIT",
+      "readme": "https://github.com/Farama-Foundation/Gymnasium/blob/57c1610e80214db72c1c7410d6b65bb1a989e233/README.md"
+    },
+    {
+      "repository": "rl-tools/rl-tools",
+      "branch": "main",
+      "commit": "b32d9985c65a5e098a6bbf190fd994962d288b99",
+      "commit_date": "2026-03-23T20:51:50Z",
+      "license": "MIT",
+      "readme": "https://github.com/rl-tools/rl-tools/blob/b32d9985c65a5e098a6bbf190fd994962d288b99/README.md"
+    },
+    {
+      "repository": "wolfpld/tracy",
+      "branch": "master",
+      "commit": "fd23005a67e25f53dd420df6350a2f5907afedc3",
+      "commit_date": "2026-10-15T00:05:34Z",
+      "license": "NOASSERTION",
+      "readme": "https://github.com/wolfpld/tracy/blob/fd23005a67e25f53dd420df6350a2f5907afedc3/README.md"
+    }
+  ]
+}

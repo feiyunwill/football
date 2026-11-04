@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "validation_passed": false,
+  "gates": {
+    "mean": false,
+    "every_seed": true,
+    "groups": true,
+    "cooperation": true,
+    "improvement": false
+  },
+  "baseline_mean": 0.96,
+  "candidate_mean": 0.959,
+  "paired": [
+    {
+      "seed": 42,
+      "gained": 0,
+      "lost": 0
+    },
+    {
+      "seed": 123,
+      "gained": 0,
+      "lost": 0
+    },
+    {
+      "seed": 2026,
+      "gained": 0,
+      "lost": 1
+    },
+    {
+      "seed": 31415,
+      "gained": 0,
+      "lost": 0
+    },
+    {
+      "seed": 271828,
+      "gained": 0,
+      "lost": 0
+    }
+  ],
+  "report_sha256": "695a6420a408ec72f810a5e031ca333808736e75bf82ba462541a3f1959a1d53",
+  "auditor_sha256": "954ff9644b859fae362e6c13cdda9421d97efc7c776435fc8258549d0380298e",
+  "interpretation": "Single reset rule rejected;no new confirmation opened. Does not support this phase-reset intervention as the main improvement mechanism."
+}

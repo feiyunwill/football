@@ -1,0 +1,111 @@
+{
+  "passed": true,
+  "source_sha256": "0058952fa3c56c4506a32cd89744a61d265f85fea8f81af14010736b73448011",
+  "archived_files": 822,
+  "audited_fixed_workload_runs": 80,
+  "results": {
+    "primary": {
+      "engine_pipeline": {
+        "median_speedup": 1.0901882610356886,
+        "ci95": [
+          1.0004496035912247,
+          1.1098314480983729
+        ],
+        "median_cost_ratio": 0.9172885152613364,
+        "accepted": true
+      },
+      "worker_scaling": {
+        "median_speedup": 2.2101741584623396,
+        "ci95": [
+          2.1633267027296057,
+          2.2585504287006803
+        ],
+        "median_cost_ratio": 0.45245652020336613,
+        "accepted": true
+      }
+    },
+    "p1-c2": {
+      "engine_pipeline": {
+        "median_speedup": 1.1273347404289997,
+        "ci95": [
+          1.1145280101310115,
+          1.1608380666708802
+        ],
+        "median_cost_ratio": 0.887063701593658,
+        "accepted": true
+      }
+    },
+    "p1-c10": {
+      "engine_pipeline": {
+        "median_speedup": 1.1925403385389903,
+        "ci95": [
+          1.1545305269887391,
+          1.3363933672862183
+        ],
+        "median_cost_ratio": 0.8385460589965539,
+        "accepted": true
+      }
+    },
+    "p11-c10": {
+      "engine_pipeline": {
+        "median_speedup": 1.1571595142556452,
+        "ci95": [
+          0.5803672208357841,
+          1.4570087772726865
+        ],
+        "median_cost_ratio": 0.8645028463864765,
+        "accepted": true
+      }
+    }
+  },
+  "quality": {
+    "passed": true,
+    "report": "/root/work_space/football/.project/native-training/evidence/spatial-candidate-quality-20261017-b/report.json",
+    "source_sha256": "0058952fa3c56c4506a32cd89744a61d265f85fea8f81af14010736b73448011"
+  },
+  "bounded_pipeline_performance_milestone_passed": true,
+  "scope": "64 PPO updates/run, four complete horizon64 episodes/update, fixed seed42, hidden16, eight alternating pairs. Primary2x scaling plus median cost nonregression across1/11 players x cadence2/10. Includes diagnostics and in-loop saves; excludes startup/warmup/final save/close.",
+  "sustained": {
+    "duration_seconds": 1800.021971916,
+    "updates": 7265,
+    "transitions": 1859840,
+    "tps": 1033.2318321760972,
+    "memory": {
+      "parent_rss_first": 51507200,
+      "parent_rss_last": 64057344,
+      "parent_rss_peak": 65613824,
+      "worker_rss_sum_first": 556638208,
+      "worker_rss_sum_last": 553824256,
+      "worker_rss_sum_peak": 556687360,
+      "note": "RSS sum double-counts shared pages; instrumentation retains bounded per-window metadata"
+    },
+    "fds": {
+      "parent_min": 17,
+      "parent_max": 19,
+      "worker_sum_min": 32,
+      "worker_sum_max": 32,
+      "parent_before": 5,
+      "parent_after": 5
+    },
+    "minute_tps": {
+      "p10": 742.9135491643352,
+      "median": 1062.6373981532251,
+      "p90": 1220.5528883515203,
+      "minimum": 353.29425047356636,
+      "maximum": 1358.2011872470312
+    },
+    "frozen_checkpoint_verified": true,
+    "workers_reaped": true,
+    "concurrent_external_build_observed": true,
+    "isolated_throughput_proven": false
+  },
+  "long_term_goal_complete": false,
+  "learning_generalization_proven": false,
+  "current_installable_delivery_verified": false,
+  "interrupted_batches": [
+    "pipeline-primary-20261017-a",
+    "pipeline-primary-20261017-b"
+  ],
+  "manifest_sha256": "24965b0b3b4a82aa2fad4927d6b5eb7f1c553d727a5dae6e9f4a25704bc8cffa",
+  "auditor_sha256": "230dd10760587432997bbf23e547abcf7acdeaf7050b0b1454249c12ba66b280"
+}

@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "design": "One broad80 candidate vs legacy baseline; no parameter sweep",
+  "pilot_report_sha256": "b390b0a60bf7dbc256409b559db2d380a92f760b8e0a5065f7db7cc6873cb27f",
+  "pilot_source_sha256": "c1d57094a4eb3976a35ba3061d93bbea984d134a9f191af7a28bef9e4adf5ae8",
+  "frozen_at": "2026-10-19T17:38:18.624853+00:00",
+  "seeds": [
+    42,
+    123,
+    2026,
+    31415,
+    271828
+  ],
+  "configurations": [
+    "legacy",
+    "broad80"
+  ],
+  "updates": 2048,
+  "rollout": 256,
+  "transitions_per_run": 524288,
+  "hidden": 64,
+  "epochs": 4,
+  "minibatch": 64,
+  "cadence": 10,
+  "episode_limit": 256,
+  "max_wall_seconds_per_training_run": 1283,
+  "max_total_training_wall_seconds": 12830,
+  "max_child_rss_bytes": 536870912,
+  "max_study_output_bytes": 2147483648,
+  "rationale": "2x measured64-update process cost scaled to2048 updates +120s; minimum600s, maximum3600s. No training result used.",
+  "source_and_tools_freeze_required_before_training": true,
+  "new_confirmation_opened": false
+}

@@ -1,0 +1,799 @@
+{
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-2026-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-2026-b1.log",
+    "sha256": "c76eaab4448d46aef3334fc02afc7052caa525137246e461d0ec194217fb83b2"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-123-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-123-b1.log",
+    "sha256": "83220bdabcb2f07d88d037a35fbd915ddb782c1b9e8820409d64025d09b45645"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-42-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-42-b3.log",
+    "sha256": "1b342de8ed599fb653c538744f6f5a533a7cd1d5d7b4c42e3247ca66369b3f30"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-2026-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-2026-b0.log",
+    "sha256": "936d5cb81b05f5d7548de9fd903b63780ffef9e4f2e787c004d30d5f0547262d"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-2026-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-2026-b3.log",
+    "sha256": "2d4417cc2e6409d71d5e78e90390d8f9f4322447f7221117869579069ed29bf7"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/final-train-varied_empty_goal-271828.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/final-train-varied_empty_goal-271828.log",
+    "sha256": "c796674191c3ad6db4f9289aeac751ff770960ac249bb7c00e01ff9cc3cc2c8c"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/pilot-varied_empty_goal-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/pilot-varied_empty_goal-sparse64.log",
+    "sha256": "be821a7e295233d1428740bb542d6d75d68d4c0cfb87847b82af6f5b5271834e"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/final-train-varied_keeper-31415.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/final-train-varied_keeper-31415.log",
+    "sha256": "c2433d11cd36385d169cfbf5fb180cf3f361bf80be3e70d439a521b8526db7a9"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/pilot-varied_empty_goal-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/pilot-varied_empty_goal-checkpoints64.log",
+    "sha256": "08a44b4ae7fd38489b0fa2b3fda6cb900608c8fffc655684d0be345f2630f848"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/pilot-varied_keeper-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/pilot-varied_keeper-checkpoints64.log",
+    "sha256": "e34bdca9ad33c8a21a0a6234b1b16ce67c12a7c0f700c732bc8a8b14dbb070cd"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-42-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-42-b2.log",
+    "sha256": "b2aba3806aa4f7f964e5d1d90cdc83d247a4b1a2d1220df9b7f0a1a7f0f8ae6a"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-271828-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-271828-b1.log",
+    "sha256": "d8dd6e5cec9de622f867934204a839e5e31005a64e58370bf1e8d4c36137c96e"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/final-train-varied_keeper-2026.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/final-train-varied_keeper-2026.log",
+    "sha256": "2402ac4902de9e3f293bd6448ace0dede5d591609c6862df422efb059a604e22"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-2026-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-2026-b0.log",
+    "sha256": "52267f2bc5777f3a9a3bbfdb4e464e756ba5b1f516af523d092b31449e2abcc5"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-42-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-42-b1.log",
+    "sha256": "0fd959ea8566637db3236ba5cc65bb5559d8c0d0a2623d1b6ae4e3eb95cbd3ca"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-31415-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-31415-b1.log",
+    "sha256": "f7118f941e7fa7e92a16eeedb3fd6212864cf8358f2e808635d0ee3aac74819e"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/validation-pilot-varied_keeper-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/validation-pilot-varied_keeper-checkpoints64.log",
+    "sha256": "6d442d3678872d3bd85a1a1f31bb9fbbc036a20fea41709b146ac69cebae5edf"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-271828-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-271828-b3.log",
+    "sha256": "ef50b6bd503ba7934e59cadb88b99da65d5b38c7ee3615f2eac76b661ca6962e"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-123-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-123-b3.log",
+    "sha256": "317fa887cdfcbc063eb4c11993c29c42aac3814986cf8e48b4ec283ef5a66361"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-42-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-42-b3.log",
+    "sha256": "793c92a54e2eef7096d2068c9d0e1a30d87d75db499f006e5a5812ccb0a7d4b8"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-2026-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-2026-b2.log",
+    "sha256": "c371a6194193885abd1964f37251e3fe6c57d17bbfb88eeef8ac64b9a052adf8"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-123-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-123-b3.log",
+    "sha256": "c9f27bc5d6589a311c671c6350ca7d60668bc7912671974d9871f09746c7c77f"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-31415-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-31415-b2.log",
+    "sha256": "04519947d7b5fb5b62249dbc598d31c46f680a9d1e2cdebcfc4f570f09e9d05c"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-31415-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-31415-b2.log",
+    "sha256": "51f338274ea1b48a88378d9f63a38183e2359a72cb9ca7d47cfdf44a2a171f0b"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/report.json": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/report.json",
+    "sha256": "028cd5a1f85b3efd5d8d622496c6443c2ff2f6cd3f48dda11bae0516f22454da"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-271828-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-271828-b0.log",
+    "sha256": "733fa5a16e18dc08390bc8ac15b9e23c279795512e53135778e9c89c0a6f8b3c"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/final-train-varied_empty_goal-2026.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/final-train-varied_empty_goal-2026.log",
+    "sha256": "19f26c4ba01e3624eebb8a93dcc8c016831d74672f4dd479ad033b5fbfd62c55"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-31415-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-31415-b0.log",
+    "sha256": "e14e3ce0cfe14acfb994bcfac7e9b1f02f2da8c6ff90873b1697e67507e65e83"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-2026-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-2026-b3.log",
+    "sha256": "731cd8cf4df9b3b88bc8319a993deb587d42afe541c9780ec1758c060f744999"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-123-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-123-b1.log",
+    "sha256": "8f97395fd579cbe6c3eb2abbdef7c3f1ec57edc127170e5232e9b85c1e5b6cf2"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-31415-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-31415-b2.log",
+    "sha256": "9e3c96653279fc10667f86306dbcc4529fcb3da6a5a04d0fa08c60f2f047a15a"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-2026-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-2026-b3.log",
+    "sha256": "c1dc0fc02138db2c96baf4a8572824ef18d690729543401792bd4ca935a2018f"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-31415-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-31415-b3.log",
+    "sha256": "5efc3d2b5ea3e8a65e6465f2bb7912b35aaf9c69216f413c5e439741bf8dc6bc"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-31415-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-31415-b0.log",
+    "sha256": "200f04e16db3319064ac77703efc248a6bdf158723b3e521f5e5153916ddad41"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/final-train-varied_empty_goal-31415.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/final-train-varied_empty_goal-31415.log",
+    "sha256": "3fac063c987bcc88852f8bb9508d206afe0bb0685e1fbdf355b7a1b62c2d55ac"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-42-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-42-b0.log",
+    "sha256": "6ac3c27e955044701fb774d99e9d22e6e7428d662cd47d6d5044dd024e0879d9"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-271828-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-271828-b0.log",
+    "sha256": "72763f37ade17d43485c2732083c6bd32334c6098f081b3b3bd23ffbe9bb57b4"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-123-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-123-b1.log",
+    "sha256": "c41d980230f69ba10b66401a10676652c889740e25a750f9e8f0ca2215c1bd3b"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/selection-varied_empty_goal.json": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/selection-varied_empty_goal.json",
+    "sha256": "cef5d150bf5646ea4d65cd7c6ef0cf2a0b6c2764e32af5405430ff80804f0656"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-42-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-42-b0.log",
+    "sha256": "ed08d8d0065fc4c55702de8f6755b524245d80c2bb88eadd25b3cb44c28815f1"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-271828-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-271828-b3.log",
+    "sha256": "918c964ecc5f9bf2af9e1b71a16ecb87f89fdec45426ff12b8e6478e1d2b58e1"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-123-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-123-b2.log",
+    "sha256": "09ceb357b5c2cc996c630cbeb9bf12844e494a34ea2d9c01961f83e53a153638"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-42-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-42-b2.log",
+    "sha256": "41b5660dccafc161142c083f99ac5f640b4567eb8dd4f66e70f5a1eb71e12e20"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-123-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-123-b2.log",
+    "sha256": "5f1f69fd582cf12ec9caedd858a1e1e2e74b94ba8eb46b84d7e79540eba97210"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-123-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-123-b0.log",
+    "sha256": "5b7b5f3c392f37d69e3f26588c093c5370e2855c49fd617e1c84bbb2d2f6ee44"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-42-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-42-b0.log",
+    "sha256": "6dcbd214e4f44a32b4c5c2cf6ce38a8f4d34cdeca79e2555aa7a4d76976cfa77"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-271828-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-271828-b2.log",
+    "sha256": "2de7ab6cf39cee0ee1fd3917454af871040ce36d66ddcf2cdbd745818f5671ab"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/pilot-varied_keeper-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/pilot-varied_keeper-sparse64.log",
+    "sha256": "f4e30b205248c287a9c15bd2052046c5eae96eb8b4608f7ef92c1843d94ab3fd"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-42-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-42-b1.log",
+    "sha256": "93ba1e47ed73e32c2ff3a783fd60d6e009df5f5caf77685593332df59a3283d0"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-271828-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-271828-b3.log",
+    "sha256": "2f51ade6ddcd8da4724a03b189ee49e10aca5f90a12bfdcf1c4659c4d24ab3cd"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/validation-pilot-varied_keeper-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/validation-pilot-varied_keeper-sparse64.log",
+    "sha256": "f6ecf84437608a2d110c88a6f96e2e1f46cc6b5c347f7dbfc1c52478b6272676"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-271828-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-271828-b2.log",
+    "sha256": "61006ce4418a1cd4230f1e2b1f0ba2e94c306702892380caf84d35ce379c9ac6"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/final-train-varied_keeper-123.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/final-train-varied_keeper-123.log",
+    "sha256": "5a81a9296988c02c6fe13e96749a7fd641aaec79c8dcbcbd6295ee0a5586ca6e"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-31415-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-31415-b3.log",
+    "sha256": "8b09ef93a4c13ce2acda75c736e7cd7ec11e85dac5c59554415129149a715f55"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-42-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-42-b0.log",
+    "sha256": "c1d506c5c86e64b8840164f73c55db6a290ba9d2e4a472b083b7d460516c3b85"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-42-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-42-b1.log",
+    "sha256": "ce1095fd56ccd077c3671e42e6d2a7b99d2142eff9e722834a21deebe1b41339"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/validate_sampling_generalization.py": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/validate_sampling_generalization.py",
+    "sha256": "fe5ae2440f030145932175ce97bd37939acea9dd3562416051880bc00f94a72f"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-271828-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-271828-b1.log",
+    "sha256": "c67c7751bdb0a0b0bfe668e01a2072f49cc131396da7e6fff30b682d740f6947"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-31415-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-31415-b0.log",
+    "sha256": "2166ff158ae17d1dc8af5752597738e902b951585724851e5bbd984b6ba19112"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/progress.json": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/progress.json",
+    "sha256": "4b8319de314049fb5b7b24539ff50e37d4ded8fa7326efd00da4179760799f2e"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/final-train-varied_empty_goal-123.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/final-train-varied_empty_goal-123.log",
+    "sha256": "a34735ac1318353308c2d4073b8f53e95d8104634d03b47e12d78d8bc376ab71"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/validate_learning.py": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/validate_learning.py",
+    "sha256": "fa641ac78a5831cadc2adfa1ec6f20b0498a89af1d9fc21e6210d18ed9a561cf"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/final-train-varied_keeper-271828.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/final-train-varied_keeper-271828.log",
+    "sha256": "93861db846b819c45b5c25bb62df517034eba2e85cef52b26d11d78f0b721771"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-31415-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-31415-b0.log",
+    "sha256": "0cf6cc3562e4ed44828676cb2021823374de2ee2da209cab1441d5b3b3cf6154"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-2026-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-2026-b2.log",
+    "sha256": "064dce97c22e7f6f04de8c8aff9473b2a87f1d729510acf0a29d7debea2994dd"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-42-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-42-b2.log",
+    "sha256": "a55a9158b66a084d41d82bc9a7fa77103071554d71eab5aa2d18ca7fee73a68b"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-31415-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-31415-b1.log",
+    "sha256": "5a0ce6a338dedd5322e8ae76e2a093ad8fe8499b5d462059590441918d8fe7cc"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-2026-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-2026-b0.log",
+    "sha256": "e93b65aa0f7021d4de053ef0a5b1a56b705f29114098934e857cb296b17259b0"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-123-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-123-b0.log",
+    "sha256": "9304d15f5ffb4f8ed7d2cf29b58f5eefc36c398f7287268b72c1a4a18b524c16"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-123-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-123-b3.log",
+    "sha256": "bfe59166ee2f548038b2cc3e891273c353080c36c14d088063994f2dabb2663d"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-42-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-42-b2.log",
+    "sha256": "4f69330ccb0c45db0a79ee191a066635fa8111b6c85061847b082dae74ba36ae"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-271828-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-271828-b0.log",
+    "sha256": "9bda70c1422115ad2b563972cad9737a8a95beb9a6750dd3b569f09460c1e274"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-271828-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-271828-b2.log",
+    "sha256": "8a5bc2297d8a10edf0f94cdf4c26ff35549caec1d053a12feb03fdb7bfe196f9"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-271828-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-271828-b1.log",
+    "sha256": "0f856efaf1c6a6f9381e51e2614e9bbba7da5469307b39032f5e17cafc69a45f"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-31415-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-31415-b1.log",
+    "sha256": "718ed0e0cc4b6f7f841c10b53763d30a04ff59101e2e58c01576602f162b67b7"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-2026-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-2026-b1.log",
+    "sha256": "adfc0eecf1ab71f346e14838b2d7c5ca25ff54d4074ad5d2575b56a54aa4ee30"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-123-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-123-b0.log",
+    "sha256": "6b16ab764089da90bcc7d95f6f5fd1dfd8a88bdf41d421308c6b081d69aa53fb"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/selection-varied_keeper.json": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/selection-varied_keeper.json",
+    "sha256": "770ab3a4054e7c88fbf8a8abe2c1d2d9aca7e428c4c243d2feb435f10fb1d4f5"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-42-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-42-b1.log",
+    "sha256": "83dc2cbbe5921517f6e0ddfbb5fb930fec65def039b76d83bb3cc4ec463bef4f"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/final-train-varied_keeper-42.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/final-train-varied_keeper-42.log",
+    "sha256": "f9ab80255944adcb5641b0c4b2f7eda076bf73716f13f5d1a8b10bf69b56bef4"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/validation-pilot-varied_empty_goal-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/validation-pilot-varied_empty_goal-sparse64.log",
+    "sha256": "df3fe9b1a5d97d46efd5d60fa23ac0b374e3fed559fb6c06e8bacfa46909dc34"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/final-train-varied_empty_goal-42.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/final-train-varied_empty_goal-42.log",
+    "sha256": "d669f6cc2c8d1d826b121e9d65a7a00ed68bf698c741a55f6af0d4aeda32f165"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/validation-pilot-varied_empty_goal-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/validation-pilot-varied_empty_goal-checkpoints64.log",
+    "sha256": "f7c7d3f520eace7380cc14a81ccb2a85f138e08315ab33d629fd281698b88de2"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-31415-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-31415-b2.log",
+    "sha256": "feec015e6c27595cae02918ff0277a1cc80f91380b66e03287eb72c3b7fbdb36"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-42-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-42-b3.log",
+    "sha256": "8a46aa1c197277d53fb6148c43a3e422cbc145377baddb7e0254b3e446c7e787"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-271828-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-271828-b0.log",
+    "sha256": "3e7d50d6a13309084e9918b1e20884bed4418f917fdf5607c5853add5122b444"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-2026-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-2026-b2.log",
+    "sha256": "625d9dfacbda4010721692b354515e97a8b95f8c8d7f41129bfc5e3177fb6fa6"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/protocol.json": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/protocol.json",
+    "sha256": "91086e498400b13b0d211028fbad67902d642a6ab630de951993f33df86cbbf3"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-123-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-123-b3.log",
+    "sha256": "54abffe0d67666a3c624707b371fe36a937da07206ac0d7a74a5d11f527902e5"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-123-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-123-b2.log",
+    "sha256": "39e60ebcabe7e8c234042ae1657ba8c069322b0cb4f6ce23bd1335e86453171b"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-2026-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-2026-b2.log",
+    "sha256": "70926b4d99265eb3ea86764d3aea5d547cae16f5f20229cfae5e51e5d26662c2"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-271828-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-271828-b1.log",
+    "sha256": "52d56aff2893f2a696ed403893a5b79a1eb043d9a7268518d10aa96a67096102"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-123-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-123-b1.log",
+    "sha256": "5826891dc4e00ee9a22384d8a07f4469b3ff5f61b534b47fd8c5cedbc45abbbd"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-271828-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-271828-b3.log",
+    "sha256": "c839026b27c4aa65e1acc3229f93806310404b8e1357ae6f50d0e6e4a2f96040"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-271828-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-271828-b2.log",
+    "sha256": "f9cf95a33206f58536a3503abe1bac55e829ea736061b1a27b7294ebbf4c19f6"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-123-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-123-b0.log",
+    "sha256": "ec788a5b1895fa1d380eae3722bc7fd00ffd8f4307522b620c9e678ba82c67d8"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-2026-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-2026-b3.log",
+    "sha256": "4e1599342528139d1effad7e0599efb219ff24853f29b4554c5997fd1f46fe58"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-31415-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-31415-b3.log",
+    "sha256": "8f84d151fbd9c62ecd6e08efc3d8174ae1d677855263d3d27ed56185b0a0870d"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_keeper-2026-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_keeper-2026-b0.log",
+    "sha256": "b4bdd6c8e55ca1cd2d00eb190f8a19e743f177b387d76d5ee129f4c30ba43040"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-31415-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-31415-b3.log",
+    "sha256": "2a1f23a5ce3d9f74d10ca0a3acefa7b4b2245d3af93e5d84488bca53c3a5e6e1"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-42-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-42-b3.log",
+    "sha256": "24d0a7ee7ed60ba4e143e115d3d6c99ada4ba643f7e713020fdc6b4457bd4403"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-31415-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-31415-b1.log",
+    "sha256": "a3e4606191de023fe1583e7ab513c79d9cbb40959eb27d3c0629cb187248f30b"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/test-varied_empty_goal-123-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/test-varied_empty_goal-123-b2.log",
+    "sha256": "1eeb3cb2bd7c2c9064a70975dc8a99d6f91d943c70b16dc868ac44b4d0e45c1e"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_empty_goal-2026-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_empty_goal-2026-b1.log",
+    "sha256": "4a44c75a0a443283b69bce895fa9b6a8c828287cc85ecd7a4f3305c02a094880"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/validate.py": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/validate.py",
+    "sha256": "8b2914e19b87ba21c07a677467c407959b8ed2a69a2070b5581fb035dcbd0f16"
+  },
+  ".project/native-training/evidence/sampled-confirmation-20261018-c/initial-varied_keeper-2026-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-c/evidence/initial-varied_keeper-2026-b1.log",
+    "sha256": "03e7682750c993b5bcaf4bff484e9f61763571d2ced95073ae2e470e212a0e82"
+  },
+  ".project/native-training/evidence/sampled-confirmation-audit-20261018-c/audit_sampling_generalization.py": {
+    "origin": "/tmp/football-generalization-study-20261018-c/audit/audit_sampling_generalization.py",
+    "sha256": "eb2408a90fa9ab000512cac64f99fc11f084d20879949159c9d2c0169f921d34"
+  },
+  ".project/native-training/evidence/sampled-confirmation-audit-20261018-c/report.json": {
+    "origin": "/tmp/football-generalization-study-20261018-c/audit/report.json",
+    "sha256": "9faa7446ed9158dd8ed1db111c25cf285dfe644ec1938a59f54ee6921c4e30ac"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/report.json": {
+    "origin": "/tmp/football-quiet-final-20261018-a/report.json",
+    "sha256": "e805584bca8df80764ac8de55b23e8012260bb2671fecd85b5530b39f263b4c9"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/run.log": {
+    "origin": "/tmp/football-quiet-final-20261018-a/run.log",
+    "sha256": "9df673328369a04b676f59715bc906a461cd44555124c7d59e79888305ec1944"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/host-load.json": {
+    "origin": "/tmp/football-quiet-final-20261018-a/host-load.json",
+    "sha256": "a74c53a0cd3de403f57c37b58fd028d1088ceb8f3e05731d16148a1c40e1db97"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/preflight.json": {
+    "origin": "/tmp/football-quiet-final-20261018-a/preflight.json",
+    "sha256": "51115230d3cb64fe32f85a9e328613b63d608704ea4b21e1cac388f1506cfb75"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/protocol.json": {
+    "origin": "/tmp/football-quiet-final-20261018-a/protocol.json",
+    "sha256": "4f3151a9c238aa0745514dece6f01a6e825dcb3be0a29053d2f54f5243eea281"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/profile_quiet_ppo.py": {
+    "origin": "/tmp/football-quiet-final-20261018-a/profile_quiet_ppo.py",
+    "sha256": "ef2f9d94e54111123f063622529233c450bce9754c9ffaf16243ade5f4f75dc3"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/evidence/iterations.jsonl": {
+    "origin": "/tmp/football-quiet-final-20261018-a/evidence/iterations.jsonl",
+    "sha256": "a2eab7c0e18bc0ecfc7b82c65b704b5fb3605ddb145302bdf6595428a1d5dc88"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/evidence/build-core.log": {
+    "origin": "/tmp/football-quiet-final-20261018-a/evidence/build-core.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/evidence/report.json": {
+    "origin": "/tmp/football-quiet-final-20261018-a/evidence/report.json",
+    "sha256": "ce8ccb4cd99278d67dab37aa1357ec5bd4246b48f0aa457c81dfff886d5a540c"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/evidence/resources.jsonl": {
+    "origin": "/tmp/football-quiet-final-20261018-a/evidence/resources.jsonl",
+    "sha256": "8689e06bd08dc92e8ea4843bd9762d5b5a649e4acfbf35bf35bec88d1d76244c"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/evidence/progress.json": {
+    "origin": "/tmp/football-quiet-final-20261018-a/evidence/progress.json",
+    "sha256": "9130ec67897388806fe23a1c4b6316d56f2b55e8bfdecefc9451527e1f0b3162"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/evidence/latest-checkpoint.json": {
+    "origin": "/tmp/football-quiet-final-20261018-a/evidence/latest-checkpoint.json",
+    "sha256": "870f674163d6175069de1eea2d07b1146a97b2fb812aff088ae76f010fa12ebe"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/evidence/ppo_worker_core.cpp": {
+    "origin": "/tmp/football-quiet-final-20261018-a/evidence/ppo_worker_core.cpp",
+    "sha256": "795db2083b52ca1be0a73ce3245b250d36e52435ae57f94d341cded074d7d44e"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/evidence/profile_sustained_ppo.py": {
+    "origin": "/tmp/football-quiet-final-20261018-a/evidence/profile_sustained_ppo.py",
+    "sha256": "5f24971f52cfa7f25bff5393314ad8adb41c11ed1c160b4a3d53b73c566f6450"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/frozen/verify_sustained_checkpoint.py": {
+    "origin": "/tmp/football-quiet-final-20261018-a/frozen/verify_sustained_checkpoint.py",
+    "sha256": "cef30d2e9e713bd98fb5214a1ca24b8ad73986b07a4237556b23e749f64f420d"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/frozen/report.json": {
+    "origin": "/tmp/football-quiet-final-20261018-a/frozen/report.json",
+    "sha256": "9c273b35073f42beddd188e54e75568aafafb2d2b0c0b24ae29625c2fa6d3b6d"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/analysis/analyze_sustained_ppo.py": {
+    "origin": "/tmp/football-quiet-final-20261018-a/analysis/analyze_sustained_ppo.py",
+    "sha256": "cdc1e2e696cf40bf4be79008a05fa18d276415a0e2651044b1ec7ce8d87dd24a"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/analysis/report.json": {
+    "origin": "/tmp/football-quiet-final-20261018-a/analysis/report.json",
+    "sha256": "aeabb07aa3bbc12f6d7c79fca156ea952f86a6e780a5a55ae8ae6ac3c9c1383b"
+  },
+  ".project/native-training/evidence/quiet-final-20261018-a/analysis/minute-costs.csv": {
+    "origin": "/tmp/football-quiet-final-20261018-a/analysis/minute-costs.csv",
+    "sha256": "04f80d8e022deb2e784b9f5675f97dd66fb622c03fa2e20ffdbfd222fce13dd5"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/pilot-varied_empty_goal-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/pilot-varied_empty_goal-sparse64.log",
+    "sha256": "2450c57fbc4f6c7447e0ab7ff64e12394bc131d83b84a65155cdbbdd6f2e0cab"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/pilot-varied_empty_goal-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/pilot-varied_empty_goal-checkpoints64.log",
+    "sha256": "8bbca821c1bba6ff4ad055916f6c8caeeaef5ef2b36a858beab964f25970df1e"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/pilot-varied_keeper-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/pilot-varied_keeper-checkpoints64.log",
+    "sha256": "f3567876938c9c9234c4bb949fd75848af80f625dde08ab9776c639fec01dd5f"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/validation-pilot-varied_keeper-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/validation-pilot-varied_keeper-checkpoints64.log",
+    "sha256": "9ee057dcf0c106ae569789e97668c60256c96f69173cd70083cb95630f79376e"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/report.json": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/report.json",
+    "sha256": "9ca30931b91532ca1629543b8c93225616f16107e0d3d8e7388d9b7bf767612a"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/selection-varied_empty_goal.json": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/selection-varied_empty_goal.json",
+    "sha256": "b092f5a57f1d7c3e32a41c9266fdb63ec2787854007850f49b1a42b9fca303f2"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/pilot-varied_keeper-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/pilot-varied_keeper-sparse64.log",
+    "sha256": "62d94c2a52205b881c9a6834594c48e5213b258abec0148ee5b6662cfcf3459e"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/validation-pilot-varied_keeper-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/validation-pilot-varied_keeper-sparse64.log",
+    "sha256": "49623674590c1d277b46b79a5cf4e087f9a2f8bd4acc0a67b1cfdcc60e266f05"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/progress.json": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/progress.json",
+    "sha256": "6a0569d56556634d018117a95a707a245c3d746ffdd31df66b4c9528ab7659a9"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/validate_learning.py": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/validate_learning.py",
+    "sha256": "fa641ac78a5831cadc2adfa1ec6f20b0498a89af1d9fc21e6210d18ed9a561cf"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/selection-varied_keeper.json": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/selection-varied_keeper.json",
+    "sha256": "91ce399e7259dba6770a6f0a6c05f98d3ee75c7249c7c72782f6d5076ae57278"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/validate_generalization.py": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/validate_generalization.py",
+    "sha256": "0f37f2d1458984246dd728bbc0031eb5bcbf4cdb0e56ec7ba1feed3bebd213f3"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/validation-pilot-varied_empty_goal-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/validation-pilot-varied_empty_goal-sparse64.log",
+    "sha256": "e789b6d17953f932404807dcdc0dfacd315eb08a1b0e5eb13ef1cd37ecf6d2f7"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/final-train-varied_empty_goal-42.log": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/final-train-varied_empty_goal-42.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/validation-pilot-varied_empty_goal-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/validation-pilot-varied_empty_goal-checkpoints64.log",
+    "sha256": "9efd55324ab3b3eecda170d75c241d1f70f0cf51595ef385675ac59ab720c90a"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/protocol.json": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/protocol.json",
+    "sha256": "b30e2d2179784581997f9592bc114fc46a867d0971eea2d99ff3a5ee7289d752"
+  },
+  ".project/native-training/evidence/rejected-task-prototype-20261018-a/validate.py": {
+    "origin": "/tmp/football-generalization-study-20261018-a/evidence/validate.py",
+    "sha256": "8b2914e19b87ba21c07a677467c407959b8ed2a69a2070b5581fb035dcbd0f16"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-2026-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-2026-b1.log",
+    "sha256": "63b6250e0511e14f4371bdeaef198c95703b0ae3d5f286cfb2b8ccef0cda5f11"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-42-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-42-b3.log",
+    "sha256": "9128f7d288adb8e2f6c1b8086d8f104caf7f4c03acbfe575b1ce73e18c1884f9"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-2026-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-2026-b0.log",
+    "sha256": "238ded888d9bab0d4f49b369449388917274827542da208344818b38bfc068db"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-2026-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-2026-b3.log",
+    "sha256": "a03a92cd17427ac62226590387d3d8e41539046e213df5e217e6536557177dd1"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/final-train-varied_empty_goal-271828.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/final-train-varied_empty_goal-271828.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/pilot-varied_empty_goal-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/pilot-varied_empty_goal-sparse64.log",
+    "sha256": "89b62c8b7b4fa7d105a54dcb33634a40205356260d446cd685619e41d59a19dc"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/pilot-varied_empty_goal-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/pilot-varied_empty_goal-checkpoints64.log",
+    "sha256": "26c1976962feba94bdf374a461b1dd9986f1503e6adcdd8d19e333d6b1c57461"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/pilot-varied_keeper-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/pilot-varied_keeper-checkpoints64.log",
+    "sha256": "d28495799a2374b9e19ccf86d8f2b6058eb1f7d7a6bc5330b213c293a954cbbf"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-42-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-42-b2.log",
+    "sha256": "b0f62caed246a55382eed716c9387836607adb727a71632c57d27a1e133bb822"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-42-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-42-b1.log",
+    "sha256": "46be8effb36468b134616294dba6c173cf574810b4f5a692da41911b994b4588"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/validation-pilot-varied_keeper-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/validation-pilot-varied_keeper-checkpoints64.log",
+    "sha256": "2355609c3ade06fc9b11d90d0182e765ad6c88480a2dc81d2454763a2d092d3f"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-123-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-123-b3.log",
+    "sha256": "244390ffa6d9b1cd48f280327a3905cdb88d0537718e649f544b713aa9cc9666"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-2026-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-2026-b2.log",
+    "sha256": "fa0a111a6cda31925a7e0e26a0f9a5e8ac693ee3eb203e7aa195fb20cf49ed06"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-31415-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-31415-b2.log",
+    "sha256": "f652b747d2ce20b552e518a8e161a774a7dc4b78f6c30a1d990a78548458a049"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/report.json": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/report.json",
+    "sha256": "a5eb89ba9d4faba63a78c3788fe0d4c7b217e55c2d5f5cf5288ddd1d94dbf9b5"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/final-train-varied_empty_goal-2026.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/final-train-varied_empty_goal-2026.log",
+    "sha256": "3ee270c935ad45824464858b275d6882ddd959212d0f71564b8d8ca50df79d84"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-2026-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-2026-b3.log",
+    "sha256": "fb4cc26c0e4eb7a064055e000cfde42c13238117813125b5165942a307ca958f"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-123-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-123-b1.log",
+    "sha256": "db3df1bba24579559450b00e467de5c0344b98c1804490489606c9e9f076fc8d"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-31415-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-31415-b0.log",
+    "sha256": "e82f33c15bc6f8b46d2dc23faf32c729d195a0e3d16dac6e6c306841c5c922d1"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/final-train-varied_empty_goal-31415.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/final-train-varied_empty_goal-31415.log",
+    "sha256": "b764b432cf9d4d1d195476d268da9509ccf290a5613e8351a48988e6f54635c4"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-42-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-42-b0.log",
+    "sha256": "7667dfa383ee308a5f2b0214c47cb64f2badce33a2485005fae109f3c271c99f"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/selection-varied_empty_goal.json": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/selection-varied_empty_goal.json",
+    "sha256": "9378eefc3e92421b2f8eabba8909420eeeabb8b87e2a5952f1bccdceb91f791a"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-42-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-42-b0.log",
+    "sha256": "3ccaf4f35af04d8b3428dc41a6620f344675f9b02f7e4c193002525b0593ba7d"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-123-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-123-b2.log",
+    "sha256": "525e07e100213cfc97e2ade58abdcf004bffd82c9dbd64cdafdf8c0ef24bd529"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-42-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-42-b2.log",
+    "sha256": "ae3f772602197adadf44d1805274358d07579240f30cd72c885313cb39340c42"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-123-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-123-b0.log",
+    "sha256": "0f6143566f38945ad9aa5a248f4402d9e01fb65fdc2f1532eb88f38923b99624"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/pilot-varied_keeper-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/pilot-varied_keeper-sparse64.log",
+    "sha256": "79faab7e248f30459952251c4db2ec5342bccacd02fcfb2407c5582e7329c9de"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-42-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-42-b1.log",
+    "sha256": "85a0c3bf211a28141bc992259f0b622dbbcad5e7eb1bbc11461b98dfa9a2eb06"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/validation-pilot-varied_keeper-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/validation-pilot-varied_keeper-sparse64.log",
+    "sha256": "80867adc1fd73bab93703e2fa357d012ae91e1fb65adc49c31a40e33590b0db5"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-31415-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-31415-b3.log",
+    "sha256": "fb26deebefb3bbda1357838ac9cfd256d7ce6cdf1b116ab4d2247355a099ee90"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/progress.json": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/progress.json",
+    "sha256": "726a667ae291fc6a731b10cb7f560a21bf5e8df41044dd3395bb7550cc4b2c31"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/final-train-varied_empty_goal-123.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/final-train-varied_empty_goal-123.log",
+    "sha256": "cf778737fd14d8b4cae92ef2c8368ed2e59d4b39f2ac4c165a77abcabb028174"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/validate_learning.py": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/validate_learning.py",
+    "sha256": "fa641ac78a5831cadc2adfa1ec6f20b0498a89af1d9fc21e6210d18ed9a561cf"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-31415-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-31415-b0.log",
+    "sha256": "5beefeeb0e5348fd6da221e5633af90942e8dc2052111eb38a2f297696275101"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-2026-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-2026-b2.log",
+    "sha256": "a6f87482269a1a5b039bb95f3e1ef1a469a67916bbe18cbb376fd0364481cc98"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-2026-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-2026-b0.log",
+    "sha256": "88e4a530f2f90852329fe2ca0225ab705a7185ff18d3c797768bb671cca40dec"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-123-b0.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-123-b0.log",
+    "sha256": "3dad7b4611b2b6f8730d77677ed074574f6de52317ff7810503a9cf0df69de30"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-123-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-123-b3.log",
+    "sha256": "3274c86bc21783a6b0b4e94e97f82d8f7ab35b4d903191e829e71b1abe7cedc6"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-31415-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-31415-b1.log",
+    "sha256": "57096a7a3be47e08c4c6325d666bcbf69b9bc7379f1ed1e012e79abc74f94f72"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/selection-varied_keeper.json": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/selection-varied_keeper.json",
+    "sha256": "37c47cd3c4ea0ad7bcbd3824be9fe6d094857fae02a0bd7cd22351603801b4d6"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/validate_generalization.py": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/validate_generalization.py",
+    "sha256": "7e31e8ebb9a9eb7874219ba2dc0bff813a16d16b3c8993e027a1f4a751f96fb1"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/validation-pilot-varied_empty_goal-sparse64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/validation-pilot-varied_empty_goal-sparse64.log",
+    "sha256": "dd136b2ec15edf349e549db403da94fb66eb0c443ab79757bff2e9c0850a1b25"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/final-train-varied_empty_goal-42.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/final-train-varied_empty_goal-42.log",
+    "sha256": "f9d9e9d0649c8765db2ee0a94565f9f3d236cff56a826abd7961ecdba0d7795e"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/validation-pilot-varied_empty_goal-checkpoints64.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/validation-pilot-varied_empty_goal-checkpoints64.log",
+    "sha256": "ca8b706cda025b79455bb7b10198757fd19f177faa7fbff7a3e9af5568dc1b89"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-31415-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-31415-b2.log",
+    "sha256": "cc0d99543ebb30abf0126f25d703818e8d4cfba865b0666796e9723b6f587079"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-42-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-42-b3.log",
+    "sha256": "e7b69ab9f5bcdb478eb0873da4ee1dd2ade85705512d6b1a16bce200f9ba8938"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/protocol.json": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/protocol.json",
+    "sha256": "c18bbad7d174c660152b43060201e6b45d529cf877a0207f63a22aec88759b18"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-123-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-123-b1.log",
+    "sha256": "a950476298497131f4f16f8797e83e6335cd5b1622f1dc30394b45aba76574e1"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-31415-b3.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-31415-b3.log",
+    "sha256": "c09821d32f06030e9f3c6e9b28e1940251df5cebcf84f0f71640ca99e9318597"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-31415-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-31415-b1.log",
+    "sha256": "8387e34e643d71a98e4403c35691f9029b710a2f0bc20ca5e1b4ed1ccda2d37b"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/test-varied_empty_goal-123-b2.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/test-varied_empty_goal-123-b2.log",
+    "sha256": "0e14c44fee228d8a2c0d323599019a970956ec01ac63ee85b1d5f7d83e9627c2"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/initial-varied_empty_goal-2026-b1.log": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/initial-varied_empty_goal-2026-b1.log",
+    "sha256": "40355526d2f58d55d715f7ba63c51ff3d1367db5b1068f04c027b11db5727270"
+  },
+  ".project/native-training/evidence/rejected-greedy-study-20261018-b/validate.py": {
+    "origin": "/tmp/football-generalization-study-20261018-b/evidence/validate.py",
+    "sha256": "8b2914e19b87ba21c07a677467c407959b8ed2a69a2070b5581fb035dcbd0f16"
+  },
+  ".project/native-training/evidence/generalization-rejected-context-20261018-a/diagnostic-validation-31415.json": {
+    "sha256": "b17233adfb6bf4f66ef72d6473c509b518428a33ec003c02bcc9463dd2187e93"
+  },
+  ".project/native-training/evidence/generalization-rejected-context-20261018-a/task-correction.json": {
+    "sha256": "b05d9ad1451d741910808cc18afeb8dbdb8c46d87b1773d4a5ad2234465ea669"
+  },
+  ".project/native-training/evidence/generalization-rejected-context-20261018-a/futility-rejection.json": {
+    "sha256": "e35cae06c618541ec0a7b44927dee32a2a3f233cc964f5adba90f7ee06f314e0"
+  }
+}

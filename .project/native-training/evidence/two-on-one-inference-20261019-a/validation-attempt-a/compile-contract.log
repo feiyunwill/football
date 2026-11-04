@@ -1,0 +1,5 @@
+/root/work_space/football/.project/native-training/contract_deterministic_inference.cpp: In function ‘int main()’:
+/root/work_space/football/.project/native-training/contract_deterministic_inference.cpp:19:100: error: unable to deduce ‘std::initializer_list<auto>&&’ from ‘{"bad", std::operator+<char, char_traits<char>, allocator<char> >(before, ((const char*)" trailing")), "DIC1 wrong 0 -1 0", std::__cxx11::basic_string<char>(4097, 'a', std::allocator<char>())}’
+   19 |       for(const std::string bad:{"bad",before+" trailing","DIC1 wrong 0 -1 0",std::string(4097,'a')}) {
+      |                                                                                                    ^
+/root/work_space/football/.project/native-training/contract_deterministic_inference.cpp:19:100: note:   deduced conflicting types for parameter ‘auto’ (‘const char*’ and ‘std::__cxx11::basic_string<char>’)

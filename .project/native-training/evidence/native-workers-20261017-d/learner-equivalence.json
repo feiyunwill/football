@@ -1,0 +1,9 @@
+{
+  "passed": true,
+  "reference": "/root/work_space/football/.project/native-training/evidence/worker-cpu-20261017-b",
+  "updates": 128,
+  "replay_equal": true,
+  "canonical_learner_payload_equal": true,
+  "scope": "Same fixed workload under two different profilers; full learner/model/Adam/shuffle state equal, not independent performance evidence",
+  "state_sha256": "3ae617eafa485a2bb1ad3e396bed46e8792b79f1be84b8b2b8a406b636544bba"
+}

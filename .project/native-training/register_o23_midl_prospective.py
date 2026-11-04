@@ -1,0 +1,59 @@
+"""Register a new, deterministic schema8 prospective validation case set."""
+import argparse
+import hashlib
+import json
+import random
+from pathlib import Path
+
+
+def bounded(rng, lo, hi):
+  return lo + (hi - lo) * rng.random()
+
+
+def case(rng, index, group):
+  seed = rng.randrange(1, 2_000_000_001)
+  action_seed = rng.randrange(1, 2**63)
+  ax, ay, gap = bounded(rng, .44, .68), bounded(rng, -.22, .22), bounded(rng, .12, .20)
+  if group == 1:
+    ax = bounded(rng, .28, .44)
+  if group == 2:
+    ay = (-1 if rng.randrange(2) == 0 else 1) * bounded(rng, .22, .34)
+  if group == 3:
+    gap = bounded(rng, .06, .12)
+  tx, ty = ax + bounded(rng, .08, .18), (-1 if ay > 0 else 1) * bounded(rng, .12, .26)
+  if group == 4:
+    tx, ty = ax + bounded(rng, .025, .21), bounded(rng, -.32, .32)
+    if abs(ty - ay) < .08:
+      ty = -.24 if ay >= 0 else .24
+  dx, dy = ax + gap, ay * .25 + bounded(rng, -.06, .06)
+  return (index, group, 0, seed, action_seed, ax, ay, tx, ty, dx, dy)
+
+
+def main():
+  parser = argparse.ArgumentParser(description=__doc__)
+  parser.add_argument('--output', type=Path, required=True)
+  args = parser.parse_args()
+  out = args.output.resolve(); out.mkdir(parents=True, exist_ok=False)
+  rng_seed = 2026102608
+  rng = random.Random(rng_seed)
+  rows = [case(rng, index, index // 40) for index in range(200)]
+  assert [row[1] for row in rows] == [group for group in range(5) for _ in range(40)]
+  assert len({row[3] for row in rows}) == len(rows)
+  cases = out / 'cases.txt'
+  cases.write_text(''.join(' '.join(format(value, '.17g') if isinstance(value, float) else str(value) for value in row) + '\n' for row in rows))
+  digest = hashlib.sha256(cases.read_bytes()).hexdigest()
+  report = dict(
+      passed=True,
+      purpose='Schema8 prospective validation only; generated before full training and unavailable for pilot selection.',
+      generator='register_o23_midl_prospective.py',
+      generator_seed=rng_seed,
+      cases=200,
+      groups=dict((str(group), 40) for group in range(5)),
+      case_sha256=digest,
+      file=str(cases))
+  (out / 'report.json').write_text(json.dumps(report, indent=2) + '\n')
+  print(json.dumps(report))
+
+
+if __name__ == '__main__':
+  main()

@@ -1,0 +1,18 @@
+Callers and callees sorted by metric: Attributed Total CPU Time
+
+Attr. Total    Name
+CPU
+ sec.      %
+============== Callers
+1.720 100.00   Team::Mirror()
+
+============== Stack Fragment
+0.130   7.56   HumanoidBase::Mirror()
+
+============== Callees
+1.550  90.12   blunted::Node::RecursiveUpdateSpatialData(blunted::e_SpatialDataType, blunted::e_SystemType)
+0.020   1.16   blunted::Spatial::GetRotation() const
+0.010   0.58   blunted::Spatial::GetPosition() const
+0.010   0.58   blunted::Vector3::Vector3(float, float, float)
+
+Print limit set to 30

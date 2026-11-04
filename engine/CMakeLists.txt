@@ -363,6 +363,11 @@ add_executable(engine_training_restore_contract EXCLUDE_FROM_ALL tests/engine_tr
 target_link_libraries(engine_training_restore_contract PRIVATE football_engine)
 set_target_properties(engine_training_restore_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
+# Keep subtree cache read/topology/observer edge cases in native acceptance.
+add_executable(engine_spatial_invalidation_contract EXCLUDE_FROM_ALL tests/engine_spatial_invalidation_contract.cpp)
+target_link_libraries(engine_spatial_invalidation_contract PRIVATE football_engine)
+set_target_properties(engine_spatial_invalidation_contract PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
+
 add_library(football_categorical_policy STATIC EXCLUDE_FROM_ALL ${FOOTBALL_CATEGORICAL_POLICY_SOURCES}
             src/training/categorical_policy.hpp)
 target_include_directories(football_categorical_policy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)

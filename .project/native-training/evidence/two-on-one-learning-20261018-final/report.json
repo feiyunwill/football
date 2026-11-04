@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "learning_passed": true,
+  "tasks": {
+    "2v1": {
+      "learning_passed": true,
+      "selected": "sparse64",
+      "success_mean": 0.799,
+      "versus_initial": {
+        "mean": 0.164,
+        "low": 0.09,
+        "high": 0.236
+      },
+      "versus_random": {
+        "mean": 0.099,
+        "low": 0.011,
+        "high": 0.192
+      },
+      "seeds": [
+        {
+          "seed": 42,
+          "success": 0.79,
+          "initial": 0.635,
+          "random": 0.7,
+          "cooperation": 0.645,
+          "cooperative_success": 0.64,
+          "checkpoint": "/tmp/football-two-on-one-study-20261018-l/work/final-train-2v1-42.fppo",
+          "checkpoint_sha256": "f97a9829174de727380582658b7048da712a132c0da2ca09dfb4ec4ad5309cd5"
+        },
+        {
+          "seed": 123,
+          "success": 0.72,
+          "initial": 0.62,
+          "random": 0.7,
+          "cooperation": 0.55,
+          "cooperative_success": 0.53,
+          "checkpoint": "/tmp/football-two-on-one-study-20261018-l/work/final-train-2v1-123.fppo",
+          "checkpoint_sha256": "77da1032113b8847822d1e733ffb16cc40865dfee4d68d05631067e9f70945e6"
+        },
+        {
+          "seed": 2026,
+          "success": 0.79,
+          "initial": 0.56,
+          "random": 0.7,
+          "cooperation": 0.705,
+          "cooperative_success": 0.695,
+          "checkpoint": "/tmp/football-two-on-one-study-20261018-l/work/final-train-2v1-2026.fppo",
+          "checkpoint_sha256": "7ee899c9e3d4290429708f317bd4075d993053a1d2c7bce826460bf25914392e"
+        },
+        {
+          "seed": 31415,
+          "success": 0.775,
+          "initial": 0.67,
+          "random": 0.7,
+          "cooperation": 0.5,
+          "cooperative_success": 0.485,
+          "checkpoint": "/tmp/football-two-on-one-study-20261018-l/work/final-train-2v1-31415.fppo",
+          "checkpoint_sha256": "d6398893ced9055c14c7ed403738c0feb4f46f99b56604c708d41bd543e14ea1"
+        },
+        {
+          "seed": 271828,
+          "success": 0.92,
+          "initial": 0.69,
+          "random": 0.7,
+          "cooperation": 0.77,
+          "cooperative_success": 0.755,
+          "checkpoint": "/tmp/football-two-on-one-study-20261018-l/work/final-train-2v1-271828.fppo",
+          "checkpoint_sha256": "3b3aa08b0f8ab8cfd9ee0a6a4a1242f8542cc6304b648dacf0bcfbe4b2004ff5"
+        }
+      ]
+    }
+  },
+  "source_sha256": "791f505b9fa664af2598645286b792fc258743caa5d81c602ee3dd2c88c3826f",
+  "report_sha256": "ea21b60c4f3ee97a6e5ba5e53c02036bc993e2ff3937f7a07e3bcc0ebda20c66",
+  "protocol_sha256": "65ece64c5d843e1d5fe70bfb7e25499b0a92d6f955840d051a5e9cc3907964bc",
+  "raw_commands": 47,
+  "stability_raw_commands": 10,
+  "auditor_sha256": "b9e749ee21e5739b82ac16bdb507eda0100a78e66d4d4a16259e30feea813c3e",
+  "primary_policy": "sample",
+  "scope": "Registered bounded2v1 with fixed learning attacker and AI teammate; five seeds,200 confirmation episodes/seed; explicit observed-pass gate. Not11v11."
+}

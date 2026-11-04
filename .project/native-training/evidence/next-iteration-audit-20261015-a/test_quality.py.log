@@ -1,0 +1,14 @@
+test_changed_runtime_dependencies_or_tools_rejected (__main__.QualityTest.test_changed_runtime_dependencies_or_tools_rejected) ... ok
+test_cli_rejects_failed_evidence (__main__.QualityTest.test_cli_rejects_failed_evidence) ... ok
+test_compiler_alias_preserves_cache_and_output_configuration (__main__.QualityTest.test_compiler_alias_preserves_cache_and_output_configuration) ... ok
+test_complete_evidence_passes (__main__.QualityTest.test_complete_evidence_passes) ... ok
+test_failure_missing_duplicate_and_stale_rejected (__main__.QualityTest.test_failure_missing_duplicate_and_stale_rejected) ... ok
+test_modified_or_missing_log_rejected (__main__.QualityTest.test_modified_or_missing_log_rejected) ... ok
+test_run_propagates_validator_failure (__main__.QualityTest.test_run_propagates_validator_failure) ... native-training quality: Command '['validator']' returned non-zero exit status 1.
+ok
+test_skipped_or_short_suite_rejected_even_with_matching_hash (__main__.QualityTest.test_skipped_or_short_suite_rejected_even_with_matching_hash) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.063s
+
+OK

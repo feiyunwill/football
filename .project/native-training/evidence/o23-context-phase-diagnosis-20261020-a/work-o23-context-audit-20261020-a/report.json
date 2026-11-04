@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "episodes": 100,
+  "decisions": 5072,
+  "phase_changes": 99,
+  "phase_different": 55,
+  "all_different": 2997,
+  "low_probability": 238,
+  "phase_low_probability": 0,
+  "report_sha256": "aae894c9b85947b0f65a31bc41c271225382ddee78cd943cfb86762d7083bfdb",
+  "auditor_sha256": "a0527ff083b8f28b6bd45592ebcf1ee53eca5073b421f42cd4a0d1490824678c",
+  "interpretation": "Carried credit changes55/99 phase-entry actions. These100 episodes score99 goals;no causal harm established. No intervention or weight updates."
+}

@@ -1,0 +1,299 @@
+{
+  "passed": true,
+  "generalization_passed": true,
+  "source_sha256": "791f505b9fa664af2598645286b792fc258743caa5d81c602ee3dd2c88c3826f",
+  "report_sha256": "6153f7e373c7548bbe3d1ad0510a4bf6a723034572d7a9b1f648f96fb142755c",
+  "protocol_sha256": "5a6f0e4a508f9dc7495cf160b0b17e956540aa6d9865c84a36e944191b814462",
+  "raw_commands": 32,
+  "legacy_parity_episodes": 250,
+  "primary_episodes": 1000,
+  "all_new_strategy_episodes": 5000,
+  "seeds": [
+    {
+      "seed": 42,
+      "success": 0.875,
+      "initial": 0.68,
+      "random": 0.68,
+      "builtin_ai": 0.98,
+      "argmax": 0.87,
+      "cooperation": 0.845,
+      "cooperative_success": 0.78,
+      "groups": {
+        "interpolation": {
+          "trained_sample": 0.825,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.625,
+          "uniform_random": 0.625,
+          "builtin_ai": 1.0
+        },
+        "deeper_attack": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.975,
+          "initial_sample": 0.725,
+          "uniform_random": 0.775,
+          "builtin_ai": 1.0
+        },
+        "wide_attack": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.575,
+          "uniform_random": 0.55,
+          "builtin_ai": 0.925
+        },
+        "close_defender": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.675,
+          "uniform_random": 0.725,
+          "builtin_ai": 1.0
+        },
+        "varied_support": {
+          "trained_sample": 0.875,
+          "trained_argmax": 0.825,
+          "initial_sample": 0.8,
+          "uniform_random": 0.725,
+          "builtin_ai": 0.975
+        }
+      }
+    },
+    {
+      "seed": 123,
+      "success": 0.795,
+      "initial": 0.66,
+      "random": 0.68,
+      "builtin_ai": 0.98,
+      "argmax": 0.18,
+      "cooperation": 0.645,
+      "cooperative_success": 0.59,
+      "groups": {
+        "interpolation": {
+          "trained_sample": 0.725,
+          "trained_argmax": 0.2,
+          "initial_sample": 0.575,
+          "uniform_random": 0.625,
+          "builtin_ai": 1.0
+        },
+        "deeper_attack": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.325,
+          "initial_sample": 0.8,
+          "uniform_random": 0.775,
+          "builtin_ai": 1.0
+        },
+        "wide_attack": {
+          "trained_sample": 0.725,
+          "trained_argmax": 0.0,
+          "initial_sample": 0.6,
+          "uniform_random": 0.55,
+          "builtin_ai": 0.925
+        },
+        "close_defender": {
+          "trained_sample": 0.825,
+          "trained_argmax": 0.2,
+          "initial_sample": 0.725,
+          "uniform_random": 0.725,
+          "builtin_ai": 1.0
+        },
+        "varied_support": {
+          "trained_sample": 0.725,
+          "trained_argmax": 0.175,
+          "initial_sample": 0.6,
+          "uniform_random": 0.725,
+          "builtin_ai": 0.975
+        }
+      }
+    },
+    {
+      "seed": 2026,
+      "success": 0.885,
+      "initial": 0.625,
+      "random": 0.68,
+      "builtin_ai": 0.98,
+      "argmax": 0.89,
+      "cooperation": 0.885,
+      "cooperative_success": 0.825,
+      "groups": {
+        "interpolation": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.6,
+          "uniform_random": 0.625,
+          "builtin_ai": 1.0
+        },
+        "deeper_attack": {
+          "trained_sample": 1.0,
+          "trained_argmax": 1.0,
+          "initial_sample": 0.575,
+          "uniform_random": 0.775,
+          "builtin_ai": 1.0
+        },
+        "wide_attack": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.65,
+          "uniform_random": 0.55,
+          "builtin_ai": 0.925
+        },
+        "close_defender": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.85,
+          "initial_sample": 0.625,
+          "uniform_random": 0.725,
+          "builtin_ai": 1.0
+        },
+        "varied_support": {
+          "trained_sample": 0.875,
+          "trained_argmax": 0.9,
+          "initial_sample": 0.675,
+          "uniform_random": 0.725,
+          "builtin_ai": 0.975
+        }
+      }
+    },
+    {
+      "seed": 31415,
+      "success": 0.835,
+      "initial": 0.715,
+      "random": 0.68,
+      "builtin_ai": 0.98,
+      "argmax": 0.36,
+      "cooperation": 0.475,
+      "cooperative_success": 0.435,
+      "groups": {
+        "interpolation": {
+          "trained_sample": 0.775,
+          "trained_argmax": 0.4,
+          "initial_sample": 0.625,
+          "uniform_random": 0.625,
+          "builtin_ai": 1.0
+        },
+        "deeper_attack": {
+          "trained_sample": 0.95,
+          "trained_argmax": 0.725,
+          "initial_sample": 0.85,
+          "uniform_random": 0.775,
+          "builtin_ai": 1.0
+        },
+        "wide_attack": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.3,
+          "initial_sample": 0.75,
+          "uniform_random": 0.55,
+          "builtin_ai": 0.925
+        },
+        "close_defender": {
+          "trained_sample": 0.85,
+          "trained_argmax": 0.025,
+          "initial_sample": 0.675,
+          "uniform_random": 0.725,
+          "builtin_ai": 1.0
+        },
+        "varied_support": {
+          "trained_sample": 0.75,
+          "trained_argmax": 0.35,
+          "initial_sample": 0.675,
+          "uniform_random": 0.725,
+          "builtin_ai": 0.975
+        }
+      }
+    },
+    {
+      "seed": 271828,
+      "success": 0.98,
+      "initial": 0.77,
+      "random": 0.68,
+      "builtin_ai": 0.98,
+      "argmax": 0.915,
+      "cooperation": 0.9,
+      "cooperative_success": 0.895,
+      "groups": {
+        "interpolation": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.925,
+          "initial_sample": 0.675,
+          "uniform_random": 0.625,
+          "builtin_ai": 1.0
+        },
+        "deeper_attack": {
+          "trained_sample": 1.0,
+          "trained_argmax": 0.9,
+          "initial_sample": 0.85,
+          "uniform_random": 0.775,
+          "builtin_ai": 1.0
+        },
+        "wide_attack": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.975,
+          "initial_sample": 0.775,
+          "uniform_random": 0.55,
+          "builtin_ai": 0.925
+        },
+        "close_defender": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.975,
+          "initial_sample": 0.75,
+          "uniform_random": 0.725,
+          "builtin_ai": 1.0
+        },
+        "varied_support": {
+          "trained_sample": 0.975,
+          "trained_argmax": 0.8,
+          "initial_sample": 0.8,
+          "uniform_random": 0.725,
+          "builtin_ai": 0.975
+        }
+      }
+    }
+  ],
+  "success_mean": 0.874,
+  "versus_initial": {
+    "mean": 0.184,
+    "low": 0.118,
+    "high": 0.25
+  },
+  "versus_random": {
+    "mean": 0.194,
+    "low": 0.104,
+    "high": 0.284
+  },
+  "groups": {
+    "interpolation": {
+      "trained_sample": 0.8300000000000001,
+      "trained_argmax": 0.645,
+      "initial_sample": 0.62,
+      "uniform_random": 0.625,
+      "builtin_ai": 1.0
+    },
+    "deeper_attack": {
+      "trained_sample": 0.9800000000000001,
+      "trained_argmax": 0.7849999999999999,
+      "initial_sample": 0.76,
+      "uniform_random": 0.775,
+      "builtin_ai": 1.0
+    },
+    "wide_attack": {
+      "trained_sample": 0.85,
+      "trained_argmax": 0.595,
+      "initial_sample": 0.67,
+      "uniform_random": 0.55,
+      "builtin_ai": 0.925
+    },
+    "close_defender": {
+      "trained_sample": 0.8699999999999999,
+      "trained_argmax": 0.58,
+      "initial_sample": 0.6900000000000001,
+      "uniform_random": 0.725,
+      "builtin_ai": 1.0
+    },
+    "varied_support": {
+      "trained_sample": 0.8400000000000001,
+      "trained_argmax": 0.61,
+      "initial_sample": 0.7100000000000001,
+      "uniform_random": 0.725,
+      "builtin_ai": 0.975
+    }
+  },
+  "auditor_sha256": "5be15569792c1a8d203e90245c4b2b90305b4f6a8f6001f96e44d76e99d333fe",
+  "scope": "Five bounded geometry families,200 distinct geometries; selected models frozen. Not arbitrary starts or11v11.",
+  "reuse": "If used to design future training, these cases become diagnostic data; future confirmation must be fresh."
+}

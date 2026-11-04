@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "scope": "one sustained four-worker duration baseline; not a scaling or learning-success gate",
+  "source_sha256": "7640b9befe4155bf3887f4f98e20fd056fc4d09127636c0d23da4a28a21fb96a",
+  "duration_seconds": 5.287262675,
+  "updates": 21,
+  "transitions": 5376,
+  "aggregate_tps": 1016.7832261142577,
+  "stage_fractions_of_iteration": {
+    "callback_ns": 0.043229473593508844,
+    "collection_other_ns": 0.02286676029092199,
+    "diagnostic_ns": 0.021205757902537207,
+    "digest_ns": 0.003922010917173778,
+    "native_update_ns": 0.20590951910499503,
+    "policy_ns": 0.015552497939384164,
+    "reset_ns": 0.11528853896311543,
+    "step_rpc_ns": 0.569712352006187,
+    "update_bridge_ns": 0.0018927716203716075
+  },
+  "iteration_fraction_of_session": 0.9600833856812306,
+  "checkpoint_fraction_of_session": 0.038542003778921384,
+  "minute_windows": [],
+  "minute_tps": null,
+  "memory": {
+    "parent_rss_first": 51023872,
+    "parent_rss_last": 61181952,
+    "parent_rss_peak": 61181952,
+    "worker_rss_sum_first": 552894464,
+    "worker_rss_sum_last": 552960000,
+    "worker_rss_sum_peak": 552960000,
+    "note": "RSS sum double-counts shared pages; instrumentation retains bounded per-window metadata"
+  },
+  "fds": {
+    "parent_min": 18,
+    "parent_max": 20,
+    "worker_sum_min": 32,
+    "worker_sum_max": 32,
+    "parent_before": 6,
+    "parent_after": 6
+  },
+  "worker_cpu_seconds": 9.62,
+  "workers_reaped": true,
+  "runner_sha256": "d9b99704d547c6b8dbf7c62c2c4e2a4719d1ec810904883968ba16635762e5ef",
+  "receipts": {
+    "report.json": "3131b246ad411f72813c0b9725e3f99943cd4e969cebc77335611a49c3604448",
+    "iterations.jsonl": "afdd7a024185ef1c0f2a670064e3ec9fa80d255833b316c6cc19ac8a05a98748",
+    "resources.jsonl": "619769be19c4b4dbd13b8a7a37536f3ba0c366f190e6d536c8909fd07a4a2b15",
+    "latest-checkpoint.json": "bf10c5e2090aa4b4713e58569c19658ec688d013ccc62e87761b40f51ac1fe32"
+  }
+}

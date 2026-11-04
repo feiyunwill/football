@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "global_lr_verified": true,
+  "full_state_and_policy_equal": true,
+  "updates_verified": 64,
+  "optimizer_steps_verified": 1024,
+  "strict_source_and_task_rejection": true,
+  "native_start_verified": true,
+  "report_sha256": "687a7729cccb0248efde22abd07846cd30b1b1055ef82896579ecf43e2aa62a6",
+  "protocol_sha256": "6ceabe4e5e947b6b7fea39d3f9d006a4e8417783bc392c525b35d6916598908b",
+  "source_sha256": "b4a83c75f533dc91becf06f5682794d4ea2f215eb63b6c9776f238aa9e6db98c",
+  "auditor_sha256": "62bf039ddf144d629428aefb46296fcc69be64d078e9fcda44beaa8524a5937a"
+}

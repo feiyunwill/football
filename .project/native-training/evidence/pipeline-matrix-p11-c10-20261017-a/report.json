@@ -1,0 +1,94 @@
+{
+  "status": "completed",
+  "results": {
+    "engine_pipeline": {
+      "pairs": [
+        {
+          "ratio": 0.41683361586587814,
+          "replay_sha256": "df30da270fdc779d74be079a984493f54765bd980d8e7de10f61d1490302953a",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-0-a/report.json": "b35b91625b15a97cdeef001f159eb42ce754e18b53cbef1b956a9c81143aa1d5",
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-0-b/report.json": "d1bcb0ad3c5135f8a56a2105202bd8ad60e5e08fab2812eab661d729fbae9cfc"
+          }
+        },
+        {
+          "ratio": 1.221880203810898,
+          "replay_sha256": "df30da270fdc779d74be079a984493f54765bd980d8e7de10f61d1490302953a",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-1-b/report.json": "ce4b8b520e9904ad051745afc33779e7e2f19e551ee05569134ea264b5d8c9d4",
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-1-a/report.json": "fc70ab47df9f3560458a82fd810037c1af78a25cc1ac4b6d4a39d3d5e5a3f36f"
+          }
+        },
+        {
+          "ratio": 1.1793443671496913,
+          "replay_sha256": "df30da270fdc779d74be079a984493f54765bd980d8e7de10f61d1490302953a",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-2-a/report.json": "52360b7ba0367f45957f19e7037c429d623c14726f63cd26322fddec1b919bed",
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-2-b/report.json": "8aad4154eac78d22141326912da9bb4beff58c3c2fa24a93935fed51898b77a5"
+          }
+        },
+        {
+          "ratio": 1.9155829619364941,
+          "replay_sha256": "df30da270fdc779d74be079a984493f54765bd980d8e7de10f61d1490302953a",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-3-b/report.json": "b8904b1edd98d62bcac1da09e9178857a067cef6a53d7b192aa453a6d51e7615",
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-3-a/report.json": "c2393fe92c73e063148b965baea8534b0c05ded7f4b00efd81580671c8a07c08"
+          }
+        },
+        {
+          "ratio": 1.1349746613615994,
+          "replay_sha256": "df30da270fdc779d74be079a984493f54765bd980d8e7de10f61d1490302953a",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-4-a/report.json": "0b1daa5e9404857c53c681a95761946431719f15ee509c73316d19c2de66a927",
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-4-b/report.json": "a7cf510469e34b734c6b23e84a87f1deab7195859f5ddaaa8469f34961b1c1de"
+          }
+        },
+        {
+          "ratio": 1.4570087772726865,
+          "replay_sha256": "df30da270fdc779d74be079a984493f54765bd980d8e7de10f61d1490302953a",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-5-b/report.json": "1cb6ac05610eac0181419ccc7e70953d2db56f30ef7d967d2e8af8871dcd50c4",
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-5-a/report.json": "91335be7e28a5f5ff7c7f8889f3a6698b9040282ddbb26df3e6cce557165f558"
+          }
+        },
+        {
+          "ratio": 0.5803672208357841,
+          "replay_sha256": "df30da270fdc779d74be079a984493f54765bd980d8e7de10f61d1490302953a",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-6-a/report.json": "6a1868aacdb5379e6dbcdbacf011717287c7088ee6128c439db1ebf61dd0f193",
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-6-b/report.json": "4c1c16def5f9dec1539c7454cf0dbc0d706fe3c456f6e3745e4a3baafa084f05"
+          }
+        },
+        {
+          "ratio": 0.7599718962970923,
+          "replay_sha256": "df30da270fdc779d74be079a984493f54765bd980d8e7de10f61d1490302953a",
+          "learner_equal": true,
+          "receipts": {
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-7-b/report.json": "4d50e4e6e9a7d3d4900eb823161f70269f927194dd0d7970921b5b47c0758e87",
+            "/tmp/football-pipeline-matrix-20261017-a/p11-c10/evidence/engine_pipeline-7-a/report.json": "954e57c62e2800a8a4d4856b5b97c72913a0377acc8209b53fefd21afb723eac"
+          }
+        }
+      ],
+      "median_speedup": 1.1571595142556452,
+      "ci95": [
+        0.5803672208357841,
+        1.4570087772726865
+      ],
+      "median_cost_ratio": 0.8645028463864765,
+      "accepted": true
+    }
+  },
+  "all_primary_gates_passed": true,
+  "protocol_sha256": "4c4253698a548453e5cc5de7fd8e307cb630f4342ea44d90b14492e105d6d284",
+  "source_sha256": "0058952fa3c56c4506a32cd89744a61d265f85fea8f81af14010736b73448011",
+  "runner_sha256": "722148fd40563fdc9e6d1a70479f7675854752f4a77b3a28d9702ca92479892f",
+  "suite_sha256": "95581d73683e9a2b5d632d30b0bec2e62b42e013531614f5ff94e89c3ccd55ef",
+  "scope": "Other three configurations: median candidate total PPO loop cost regression <=3 percent. No positive speedup or scaling claim required. Primary8pair evidence reused unchanged; no reruns."
+}
